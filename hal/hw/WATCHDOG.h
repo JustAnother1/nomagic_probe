@@ -1,0 +1,149 @@
+#ifndef HW_WATCHDOG_H
+#define HW_WATCHDOG_H
+/* Memory Block starting at 0x40058000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
+
+#include <stdint.h>
+
+typedef struct
+{
+
+/* CTRL (offset: 0x0)
+  Watchdog control
+
+ The rst_wdsel register determines which subsystems are reset when the watchdog is triggered.
+
+ The watchdog can be triggered in software.
+  access : read-write
+  reset value : 0x7000000
+  reset mask : 0x0
+  Field: TRIGGER
+  offset: 31, size: 1, access: read-write
+  Trigger a watchdog reset
+  Field: ENABLE
+  offset: 30, size: 1, access: read-write
+  When not enabled the watchdog timer is paused
+  Field: PAUSE_DBG1
+  offset: 26, size: 1, access: read-write
+  Pause the watchdog timer when processor 1 is in debug mode
+  Field: PAUSE_DBG0
+  offset: 25, size: 1, access: read-write
+  Pause the watchdog timer when processor 0 is in debug mode
+  Field: PAUSE_JTAG
+  offset: 24, size: 1, access: read-write
+  Pause the watchdog timer when JTAG is accessing the bus fabric
+  Field: TIME
+  offset: 0, size: 24, access: read-only
+  Indicates the number of ticks / 2 (see errata RP2040-E1) before a watchdog reset will be triggered
+*/
+volatile uint32_t CTRL;
+
+/* LOAD (offset: 0x4)
+  Load the watchdog timer. The maximum setting is 0xffffff which corresponds to 0xffffff / 2 ticks before triggering a watchdog reset (see errata RP2040-E1).
+  access : read-write
+  reset value : 0x0
+  reset mask : 0x0
+  Field: LOAD
+  offset: 0, size: 24, access: write-only
+*/
+volatile uint32_t LOAD;
+
+/* REASON (offset: 0x8)
+  Logs the reason for the last reset. Both bits are zero for the case of a hardware reset.
+  access : read-write
+  reset value : 0x0
+  reset mask : 0x0
+  Field: FORCE
+  offset: 1, size: 1, access: read-only
+  Field: TIMER
+  offset: 0, size: 1, access: read-only
+*/
+volatile uint32_t REASON;
+
+/* SCRATCH0 (offset: 0xc)
+  Scratch register. Information persists through soft reset of the chip.
+  access : read-write
+  reset value : 0x0
+  reset mask : 0x0
+*/
+volatile uint32_t SCRATCH0;
+
+/* SCRATCH1 (offset: 0x10)
+  Scratch register. Information persists through soft reset of the chip.
+  access : read-write
+  reset value : 0x0
+  reset mask : 0x0
+*/
+volatile uint32_t SCRATCH1;
+
+/* SCRATCH2 (offset: 0x14)
+  Scratch register. Information persists through soft reset of the chip.
+  access : read-write
+  reset value : 0x0
+  reset mask : 0x0
+*/
+volatile uint32_t SCRATCH2;
+
+/* SCRATCH3 (offset: 0x18)
+  Scratch register. Information persists through soft reset of the chip.
+  access : read-write
+  reset value : 0x0
+  reset mask : 0x0
+*/
+volatile uint32_t SCRATCH3;
+
+/* SCRATCH4 (offset: 0x1c)
+  Scratch register. Information persists through soft reset of the chip.
+  access : read-write
+  reset value : 0x0
+  reset mask : 0x0
+*/
+volatile uint32_t SCRATCH4;
+
+/* SCRATCH5 (offset: 0x20)
+  Scratch register. Information persists through soft reset of the chip.
+  access : read-write
+  reset value : 0x0
+  reset mask : 0x0
+*/
+volatile uint32_t SCRATCH5;
+
+/* SCRATCH6 (offset: 0x24)
+  Scratch register. Information persists through soft reset of the chip.
+  access : read-write
+  reset value : 0x0
+  reset mask : 0x0
+*/
+volatile uint32_t SCRATCH6;
+
+/* SCRATCH7 (offset: 0x28)
+  Scratch register. Information persists through soft reset of the chip.
+  access : read-write
+  reset value : 0x0
+  reset mask : 0x0
+*/
+volatile uint32_t SCRATCH7;
+
+/* TICK (offset: 0x2c)
+  Controls the tick generator
+  access : read-write
+  reset value : 0x200
+  reset mask : 0x0
+  Field: COUNT
+  offset: 11, size: 9, access: read-only
+  Count down timer: the remaining number clk_tick cycles before the next tick is generated.
+  Field: RUNNING
+  offset: 10, size: 1, access: read-only
+  Is the tick generator running?
+  Field: ENABLE
+  offset: 9, size: 1, access: read-write
+  start / stop tick generation
+  Field: CYCLES
+  offset: 0, size: 9, access: read-write
+  Total number of clk_tick cycles before the next tick.
+*/
+volatile uint32_t TICK;
+} WATCHDOG_type;
+
+#define WATCHDOG ((WATCHDOG_type *) 0x40058000)
+
+#endif // HW_WATCHDOG_H
