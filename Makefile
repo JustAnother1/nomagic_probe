@@ -1,43 +1,92 @@
-# automatically created Makefile
-# created at: 2023-04-26 01:10:10
-# created from blinky.xml
+PROJECT = nomagic_probe
 
+# tools
+CP = arm-none-eabi-objcopy
 CC = arm-none-eabi-gcc
-ASFLAGS = -g -Wall -gdwarf-2 -mthumb -mcpu=cortex-m0plus
-SIZE = size
-project = nomagic_probe
-AS = arm-none-eabi-as
-LKR_SCRIPT = hal/RP2040.ld
-LFLAGS = -nostartfiles -Wl,-Map=app.map -g -T$(LKR_SCRIPT)
-CFLAGS = -c -fno-common -ffreestanding -O3 -g -mcpu=cortex-m0plus -mthumb -I.
-SOURCE_DIR = $(dir $(lastword $(MAKEFILE_LIST)))
-OBJS =  hal/console_uart.o hal/startup.o main.o cli/cli.o
 LD = arm-none-eabi-gcc
-CPFLAGS = -Obinary
+SIZE = size
+MKDIR_P = mkdir -p
+HEX = $(CP) -O ihex
+BIN = $(CP) -O binary -S
+DIS = $(CP) -S
+
+BIN_FOLDER = bin/
+SRC_FOLDER = src/
+
+SOURCE_DIR = $(dir $(lastword $(MAKEFILE_LIST)))
+
+LKR_SCRIPT = $(SRC_FOLDER)hal/RP2040.ld
+
+
+CFLAGS = -c  -O3 -g -mcpu=cortex-m0plus -mthumb
+LFLAGS = -nostartfiles -specs=nano.specs -specs=nosys.specs -Wl,-Map=$(BIN_FOLDER)app.map -g -T$(LKR_SCRIPT)
+# -fno-common -ffreestanding
+
+
+
+# OBJS =  hal/console_uart.o hal/startup.o main.o cli/cli.o cli/cli_sys.o time.o
+SRC += $(SRC_FOLDER)hal/console_uart.c
+SRC += $(SRC_FOLDER)hal/startup.c
+SRC += $(SRC_FOLDER)cli/cli.c
+SRC += $(SRC_FOLDER)cli/cli_sys.c
+SRC += $(SRC_FOLDER)time.c
+SRC += $(SRC_FOLDER)main.c
+
+OBJS = $(addprefix $(BIN_FOLDER),$(SRC:.c=.o))
+
+INCDIRS +=$(SRC_FOLDER)
+#INCDIRS +=$(SRC_FOLDER)hal
+INCDIR = $(patsubst %,-I%, $(INCDIRS))
+
+# make config
 VPATH = $(SOURCE_DIR)
-FILES_TO_CLEAN = app.map
 .DEFAULT_GOAL = all
 
-$(project).elf: $(OBJS)
-	$(LD) $(LFLAGS) -o $(project).elf $(OBJS)
 
-flash: $(project).elf
-	openocd -f board/pico-debug.cfg -c "$(project).elf verify reset exit"
+# targets
 
-$(project).uf2: $(project).elf
-	elf2uf2 -f 0xe48bff56 -p 256 -i $(project).elf
+$(BIN_FOLDER)$(PROJECT).elf: $(OBJS)
+	@echo ""
+	@echo "linking"
+	@echo "======="
+	$(LD) $(LFLAGS) -o $(BIN_FOLDER)$(PROJECT).elf $(OBJS)
 
-all: $(project).uf2
+%hex: %elf
+	$(HEX) $< $@
+
+%bin: %elf
+	$(BIN) $< $@
+
+%txt: %elf
+	$(DIS) $< $@ > $@
+
+flash: $(PROJECT).elf
+	openocd -f board/pico-debug.cfg -c "$(PROJECT).elf verify reset exit"
+
+$(BIN_FOLDER)$(PROJECT).uf2: $(BIN_FOLDER)$(PROJECT).elf
+	elf2uf2 -f 0xe48bff56 -p 256 -i $(BIN_FOLDER)$(PROJECT).elf
+
+all: $(BIN_FOLDER)$(PROJECT).uf2
 	@echo ""
 	@echo "size"
 	@echo "===="
-	$(SIZE) $(project).elf
+	$(SIZE) $(BIN_FOLDER)$(PROJECT).elf
 
-%.o: %.c
-	$(CC) -c $(CFLAGS) $< -o $@
+	
+$(BIN_FOLDER)%o: %c
+	@echo "=== compiling $@"
+	@$(MKDIR_P) $(@D)
+	$(CC) -c $(CFLAGS) $(INCDIR) $< -o $@
+
+list:
+	@echo " READ -> $(BIN_FOLDER)$(PROJECT).rd"
+	@arm-none-eabi-readelf -Wall $(BIN_FOLDER)$(PROJECT).elf > $(BIN_FOLDER)$(PROJECT).rd
+	@echo " LIST -> $(BIN_FOLDER)$(PROJECT).lst"
+	@$(OBJDUMP) -axdDSstr $(BIN_FOLDER)$(PROJECT).elf > $(BIN_FOLDER)$(PROJECT).lst
+	#$(OBJDUMP) -h -S -z $< > $@
 
 clean:
-	rm -rf $(project).elf $(project).uf2 *.o hal/*.o cli/*.o app.map
+	@rm -rf $(BIN_FOLDER) app.map
 
-.PHONY: clean flash all
+.PHONY: clean flash all list
 

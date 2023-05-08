@@ -1,7 +1,7 @@
 ENTRY(Reset_Handler)
 /* 2nd stage bootloader */
 TARGET(binary)
-INPUT("hal/2ndstage.bin")
+INPUT("src/hal/2ndstage.bin")
 OUTPUT_FORMAT(default)
 
 MEMORY
@@ -12,20 +12,25 @@ MEMORY
 SECTIONS
 {
 .text 0x10000000 : {
-    "hal/2ndstage.bin"
+    "src/hal/2ndstage.bin"
     KEEP (*(.vectors))
-  } > FLASH
+} > FLASH
+
 .text : {
     *(.text)
-  } > FLASH
+} > FLASH
+
 .data : {
     *(.data)
-  } > FLASH
+} > FLASH
+
 .bss (NOLOAD) : ALIGN(4) {
     __bss_start = .;
-   *(.bss)
-   *(COMMON)
-   . = ALIGN(4);
+    *(.bss)
+    *(COMMON)
+    . = ALIGN(4);
     __bss_end = .;
-  }> RAM
+    _end = __bss_end;
+    end = _end;
+}> RAM
 }

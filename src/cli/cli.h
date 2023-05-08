@@ -2,6 +2,7 @@
 #define CLI_CLI_H_
 
 #include <stdint.h>
+#include <stdbool.h>
 
 void cli_init(void);
 void cli_tick(void);

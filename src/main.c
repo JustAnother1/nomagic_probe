@@ -10,37 +10,10 @@
 #include <hal/hw/RESETS.h>
 #include <hal/hw/SIO.h>
 #include <hal/hw/XOSC.h>
-#include <stdint.h>
 #include "hal/console_uart.h"
-#include <hal/hw/PPB.h>
 #include "cli/cli.h"
-
-void delay_us(int usec);
-void main(void);
-
-static volatile uint32_t time;
-
-void delay_us(int usec) {
-    while (usec != 0) {
-        volatile uint32_t cnt = 11;
-        while (cnt > 0) {
-            cnt--;
-        }
-        usec--;
-    }
-}
-
-void SysTick_Handler(void) {
-	time++;
-}
-
-void init_time(void)
-{
-	time = 0;
-	PPB->SYST_CSR = 0x7;  // sysTick an
-	PPB->SYST_RVR = 125000;  // reload value
-}
-
+#include "time.h"
+#include <stdint.h>
 
 void main1(void) {
     RESETS->RESET = RESETS->RESET & ~0x00000020; // take IO_BANK0 out of Reset
@@ -66,10 +39,10 @@ void main1(void) {
 }
 
 void main(void) {
-	console_uart_initialize();
-	cli_init();
+    console_uart_initialize();
+    cli_init();
     for (;;) {
-    	cli_tick();
+        cli_tick();
     }
 }
 

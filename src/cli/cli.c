@@ -1,5 +1,6 @@
 #include "cli.h"
 #include "cli_cfg.h"
+#include "cli_commands.h"
 #include <stdint.h>
 #include <string.h>
 
@@ -179,7 +180,7 @@ static void execute(void)
             // help command
             uint32_t i;
             SERIAL_SEND_STRING("\r\navailable commands :\r\n");
-            for(i = 0; i < sizeof(commands)/sizeof(cmd); i++)
+            for(i = 0; i < sizeof(commands)/sizeof(cmd_typ); i++)
             {
                 SERIAL_SEND_STRING(commands[i].name);
                 SERIAL_SEND_STRING(" : ");
@@ -191,7 +192,7 @@ static void execute(void)
         {
             uint32_t i;
             bool found = false;
-            for(i = 0; i < sizeof(commands)/sizeof(cmd); i++)
+            for(i = 0; i < sizeof(commands)/sizeof(cmd_typ); i++)
             {
                 if(0 == strcmp(commands[i].name, line_buffer))
                 {
