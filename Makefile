@@ -9,6 +9,7 @@ MKDIR_P = mkdir -p
 HEX = $(CP) -O ihex
 BIN = $(CP) -O binary -S
 DIS = $(CP) -S
+OBJDUMP = arm-none-eabi-objdump
 
 BIN_FOLDER = bin/
 SRC_FOLDER = src/
@@ -83,7 +84,7 @@ list:
 	@arm-none-eabi-readelf -Wall $(BIN_FOLDER)$(PROJECT).elf > $(BIN_FOLDER)$(PROJECT).rd
 	@echo " LIST -> $(BIN_FOLDER)$(PROJECT).lst"
 	@$(OBJDUMP) -axdDSstr $(BIN_FOLDER)$(PROJECT).elf > $(BIN_FOLDER)$(PROJECT).lst
-	#$(OBJDUMP) -h -S -z $< > $@
+#$(OBJDUMP) -h -S -z $< > $@
 
 clean:
 	@rm -rf $(BIN_FOLDER) app.map
