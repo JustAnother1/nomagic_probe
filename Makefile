@@ -19,17 +19,21 @@ SOURCE_DIR = $(dir $(lastword $(MAKEFILE_LIST)))
 LKR_SCRIPT = $(SRC_FOLDER)hal/RP2040.ld
 
 
-CFLAGS = -c  -O3 -g -mcpu=cortex-m0plus -mthumb
-LFLAGS = -nostartfiles -specs=nano.specs -specs=nosys.specs -Wl,-Map=$(BIN_FOLDER)app.map -g -T$(LKR_SCRIPT)
-# -fno-common -ffreestanding
+CFLAGS  = -c -O3 -g3 -mcpu=cortex-m0plus -mthumb -ffreestanding -funsigned-char -fno-short-enums
+CFLAGS += -Wall  -Wextra -pedantic -Wshadow -Wdouble-promotion -Wconversion -Wpadded 
+CFLAGS += -ffunction-sections -fdata-sections
+LFLAGS  = -ffreestanding -nostdlib -nolibc -nodefaultlibs -nostartfiles -specs=nosys.specs
+LFLAGS += -Wl,--gc-sections,-Map=$(BIN_FOLDER)app.map -g 
+LFLAGS += -fno-common  -T$(LKR_SCRIPT)
 
 
-
-# OBJS =  hal/console_uart.o hal/startup.o main.o cli/cli.o cli/cli_sys.o time.o
-SRC += $(SRC_FOLDER)hal/console_uart.c
+SRC += $(SRC_FOLDER)hal/debug_uart.c
 SRC += $(SRC_FOLDER)hal/startup.c
 SRC += $(SRC_FOLDER)cli/cli.c
 SRC += $(SRC_FOLDER)cli/cli_sys.c
+SRC += $(SRC_FOLDER)lib/printf.c
+SRC += $(SRC_FOLDER)lib/strlen.c
+SRC += $(SRC_FOLDER)lib/strncmp.c
 SRC += $(SRC_FOLDER)time.c
 SRC += $(SRC_FOLDER)main.c
 

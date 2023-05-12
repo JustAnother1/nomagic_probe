@@ -1,11 +1,10 @@
 #include "cli_sys.h"
 #include "time.h"
+#include "hal/debug_uart.h"
 
 bool cmd_time(void)
 {
-    uint8_t buf[30];
-    uint32_t len = snprintf(buf, 30, "\r\ntime since boot up : %d ms", time_get_ms());
-    SERIAL_SEND_STRING(buf);
+    debug_line("\r\ntime since boot up : %d ms", time_get_ms());
     return true;  // we are done
 }
 

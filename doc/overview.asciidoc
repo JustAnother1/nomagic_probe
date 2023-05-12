@@ -1,0 +1,13 @@
+Documentation overview
+======================
+
+https://sourceware.org/gdb/onlinedocs/gdb/Remote-Protocol.html#Remote-Protocol[gdbserver protocol]
+
+https://www.raspberrypi.com/products/raspberry-pi-pico/[RaspberryPi Pico board]
+
+
+https://github.com/raspberrypi/picoprobe[picoprobe]
+
+https://openocd.org/[OpenOCD]
+
+https://black-magic.org/[Black Magic Firmware]

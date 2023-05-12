@@ -1,6 +1,6 @@
 #include "cli.h"
-#include "cli_cfg.h"
-#include "cli_commands.h"
+#include "cfg/cli_cfg.h"
+#include "cfg/cli_commands.h"
 #include <stdint.h>
 #include <string.h>
 
@@ -13,7 +13,7 @@ static bool last_was_r;
 static bool found_end;
 static bool still_executing;
 static cmd_func_typ cur_func;
-static char* parameters[MAX_PARAMETERS];
+static uint8_t* parameters[MAX_PARAMETERS];
 
 static void parse(void);
 static void execute(void);
@@ -34,8 +34,8 @@ void cli_init(void)
     found_end = false;
     still_executing = false;
     cur_func = NULL;
-    SERIAL_SEND_STRING(WELCOME);
-    SERIAL_SEND_STRING(PROMPT);
+    debug_msg(WELCOME);
+    debug_msg(PROMPT);
 }
 
 void cli_tick(void)
@@ -59,7 +59,7 @@ void cli_tick(void)
         found_end = false;
         still_executing = false;
         cur_func = NULL;
-        SERIAL_SEND_STRING(PROMPT);
+        debug_msg(PROMPT);
     }
 
     // now we can check if new data arrived
@@ -85,7 +85,7 @@ void cli_tick(void)
             }
             else
             {
-                SERIAL_SEND_STRING(ERROR_LINE_TOO_LONG);
+                debug_msg(ERROR_LINE_TOO_LONG);
                 line_pos = 0;
             }
         }
@@ -93,7 +93,7 @@ void cli_tick(void)
     // else no new bytes -> nothing to do
 }
 
-char* cli_get_parameter(uint32_t parameter_index)
+uint8_t* cli_get_parameter(uint32_t parameter_index)
 {
     if(parameter_index < MAX_PARAMETERS)
     {
@@ -173,19 +173,21 @@ static void parse()
 
 static void execute(void)
 {
-    if(0 != strlen(line_buffer))
+    uint32_t len = strlen((char*)line_buffer);
+    if(0 != len)
     {
-        if(0 == strcmp("help", line_buffer))
+        if(len > (MAX_LINE_LENGTH -1))
+        {
+            len = MAX_LINE_LENGTH -1;
+        }
+        if(0 == strncmp("help", (char*)line_buffer, 4))
         {
             // help command
             uint32_t i;
-            SERIAL_SEND_STRING("\r\navailable commands :\r\n");
+            debug_msg("\r\navailable commands :\r\n");
             for(i = 0; i < sizeof(commands)/sizeof(cmd_typ); i++)
             {
-                SERIAL_SEND_STRING(commands[i].name);
-                SERIAL_SEND_STRING(" : ");
-                SERIAL_SEND_STRING(commands[i].help);
-                SERIAL_SEND_STRING("\r\n");
+                debug_msg("%s : %s\r\n", commands[i].name, commands[i].help);
             }
         }
         else
@@ -194,7 +196,7 @@ static void execute(void)
             bool found = false;
             for(i = 0; i < sizeof(commands)/sizeof(cmd_typ); i++)
             {
-                if(0 == strcmp(commands[i].name, line_buffer))
+                if(0 == strncmp(commands[i].name, (char*)line_buffer, len))
                 {
                     found = true;
                     break;
@@ -203,9 +205,7 @@ static void execute(void)
             }
             if(false == found)
             {
-                SERIAL_SEND_STRING("\r\nInvalid command (");
-                SERIAL_SEND_STRING(line_buffer);
-                SERIAL_SEND_STRING(") type 'help' for list of available commands.\r\n");
+                debug_msg("\r\nInvalid command (%s) type 'help' for list of available commands.\r\n", (char*)line_buffer);
             }
             else
             {
@@ -234,7 +234,7 @@ static void execute(void)
     found_end = false;
     still_executing = false;
     cur_func = NULL;
-    SERIAL_SEND_STRING(PROMPT);
+    debug_msg(PROMPT);
 }
 
 

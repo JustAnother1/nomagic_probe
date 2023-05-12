@@ -45,6 +45,7 @@ void I2C1_IRQ(void) __attribute__ ((weak, interrupt ("IRQ")));
 void RTC_IRQ(void) __attribute__ ((weak, interrupt ("IRQ")));
 void main(void) __attribute__ ((weak));
 void main1(void) __attribute__ ((weak));
+void error_state(void) __attribute__ ((weak));
 __attribute__((__noreturn__)) void Reset_Handler();
 
 const VECTOR_FUNCTION_Type __VECTOR_TABLE[64] __attribute__((used, section(".vectors")))
@@ -118,163 +119,131 @@ extern uint32_t __bss_start;
 extern uint32_t __bss_end;
 
 void NMI_Handler(void) {
-    while (1)
-        ;
+    error_state();
 }
 
 void Hard_Fault_Handler(void) {
-    while (1)
-        ;
+    error_state();
 }
 
 void SVCall_Handler(void) {
-    while (1)
-        ;
+    error_state();
 }
 
 void PendSV_Handler(void) {
-    while (1)
-        ;
+    error_state();
 }
 
 void SysTick_Handler(void) {
-    while (1)
-        ;
+    error_state();
 }
 
 void TIMER_IRQ_0(void) {
-    while (1)
-        ;
+    error_state();
 }
 
 void TIMER_IRQ_1(void) {
-    while (1)
-        ;
+    error_state();
 }
 
 void TIMER_IRQ_2(void) {
-    while (1)
-        ;
+    error_state();
 }
 
 void TIMER_IRQ_3(void) {
-    while (1)
-        ;
+    error_state();
 }
 
 void PWM_IRQ_WRAP(void) {
-    while (1)
-        ;
+    error_state();
 }
 
 void USBCTRL_IRQ(void) {
-    while (1)
-        ;
+    error_state();
 }
 
 void XIP_IRQ(void) {
-    while (1)
-        ;
+    error_state();
 }
 
 void PIO0_IRQ_0(void) {
-    while (1)
-        ;
+    error_state();
 }
 
 void PIO0_IRQ_1(void) {
-    while (1)
-        ;
+    error_state();
 }
 
 void PIO1_IRQ_0(void) {
-    while (1)
-        ;
+    error_state();
 }
 
 void PIO1_IRQ_1(void) {
-    while (1)
-        ;
+    error_state();
 }
 
 void DMA_IRQ_0(void) {
-    while (1)
-        ;
+    error_state();
 }
 
 void DMA_IRQ_1(void) {
-    while (1)
-        ;
+    error_state();
 }
 
 void IO_IRQ_BANK0(void) {
-    while (1)
-        ;
+    error_state();
 }
 
 void IO_IRQ_QSPI(void) {
-    while (1)
-        ;
+    error_state();
 }
 
 void SIO_IRQ_PROC0(void) {
-    while (1)
-        ;
+    error_state();
 }
 
 void SIO_IRQ_PROC1(void) {
-    while (1)
-        ;
+    error_state();
 }
 
 void CLOCKS_IRQ(void) {
-    while (1)
-        ;
+    error_state();
 }
 
 void SPI0_IRQ(void) {
-    while (1)
-        ;
+    error_state();
 }
 
 void SPI1_IRQ(void) {
-    while (1)
-        ;
+    error_state();
 }
 
 void UART0_IRQ(void) {
- while (1)
- ;
+    error_state();
 }
 
 void UART1_IRQ(void) {
-    while (1)
-        ;
+    error_state();
 }
 
 void ADC_IRQ_FIFO(void) {
-    while (1)
-        ;
+    error_state();
 }
 
 void I2C0_IRQ(void) {
-    while (1)
-        ;
+    error_state();
 }
 
 void I2C1_IRQ(void) {
-    while (1)
-        ;
+    error_state();
 }
 
 void RTC_IRQ(void) {
-    while (1)
-        ;
+    error_state();
 }
 
 void default_Handler(void) {
-    while (1)
-        ;
+    error_state();
 }
 
 void main(void) {
@@ -289,17 +258,23 @@ void main1(void) {
 	}
 }
 
+__attribute__((__noreturn__)) void error_state(void)
+{
+    while (1)
+        ;
+}
+
 __attribute__((__noreturn__)) void Reset_Handler() {
     uint32_t *bss_start_p =  &__bss_start;
     uint32_t *bss_end_p = &__bss_end;
 
     PSM->FRCE_ON = 0x1ffff; // power on all needed blocks
     // wait for powered on blocks to become available
-    while (0xffff != 0xffff & PSM->DONE) {
+    while (0xffff != (0xffff & PSM->DONE)) {
         ;
     }
-    RESETS->RESET &= ~0x1082; // take BUSCTRL, JTAG and PLL_SYS out of Reset state
-    while (0 != 0x1082 & RESETS->RESET_DONE) {
+    RESETS->RESET &= ~0x1082lu; // take BUSCTRL, JTAG and PLL_SYS out of Reset state
+    while (0 != (0x1082 & RESETS->RESET_DONE)) {
         ;
     }
     // configure clock: pico has XOSC = 12 MHz
@@ -307,7 +282,7 @@ __attribute__((__noreturn__)) void Reset_Handler() {
     // power up XOSC
     XOSC->CTRL = 0xfabaa0;
     // wait for XOSC to stabilize
-    while (0 == 0x80000000 & XOSC->STATUS) {
+    while (0 == (0x80000000 & XOSC->STATUS)) {
         ;
     }
     // switch clk_ref and clk_sys to XOSC
@@ -324,7 +299,7 @@ __attribute__((__noreturn__)) void Reset_Handler() {
     // turn on main power and VCO
     PLL_SYS->PWR = 0x0;
     // wait for VCO clock to lock
-    while (0 == 0x80000000 & PLL_SYS->CS) {
+    while (0 == (0x80000000 & PLL_SYS->CS)) {
         ;
     }
     // set up post dividers and turn them on (6, 2)
@@ -337,7 +312,6 @@ __attribute__((__noreturn__)) void Reset_Handler() {
     while (2 != CLOCKS->CLK_SYS_SELECTED) {
         ;
     }
-
 
     // peripheral clock
     // disable clock divider
@@ -354,7 +328,6 @@ __attribute__((__noreturn__)) void Reset_Handler() {
     // ROSC = off; XOSC = 12 MHz; PLL_SYS = 125 MHz
     // clk_ref = 12 MHz; clk_sys = 125 MHz; clk_peri = 125 MHz
 
-
     // initialize global variables to zero
     while (bss_start_p < bss_end_p) {
         *bss_start_p = 0;
@@ -370,8 +343,7 @@ __attribute__((__noreturn__)) void Reset_Handler() {
     	main1();
     }
 
-    for (;;) {
-        ;    // main exited - WTF???
-    }
+    // main exited - WTF???
+    error_state();
 }
 

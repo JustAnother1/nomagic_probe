@@ -6,6 +6,6 @@
 
 void cli_init(void);
 void cli_tick(void);
-char* cli_get_parameter(uint32_t parameter_index);
+uint8_t* cli_get_parameter(uint32_t parameter_index);
 
 #endif /* CLI_CLI_H_ */

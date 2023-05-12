@@ -1,0 +1,34 @@
+nomagic probe
+=============
+
+The nomic probe is a firmware for the https://www.raspberrypi.com/products/raspberry-pi-pico/[RaspberryPi Pico board] that provides a gdbserver interface for debugging other boards.
+That is the functionality of the https://github.com/raspberrypi/picoprobe[picoprobe] and https://openocd.org/[OpenOCD] combined. It is also similar to the https://black-magic.org/[Black Magic Firmware].
+
+== Building and Starting
+
+The firmware can be build using make. The generated Files will be placed in the bin folder. For details try
+
++make help+
+
+for this to work you (obviously) need to have make installed.
+Depending on the target you are building for you might need to have additionaltools installed:
+
+- For linux (Posix systems) you need pthreads and gcc. You can debug using gdb.
+- To build for ARM Cortex-M Targets you need https://launchpad.net/gcc-arm-embedded[GCC ARM Embedded]
+- for automatic generated documentation you need http://www.stack.nl/~dimitri/doxygen/[Doxygen]
+- for unit testing you need https://cpputest.github.io/[CppUTest]
+
+
+== License
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version 2
+as published by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, see <http://www.gnu.org/licenses/>
