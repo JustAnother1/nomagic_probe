@@ -42,10 +42,10 @@ void debug_uart_initialize(void) {
          ;
     }
     // configure GPIO Pins
-    PADS_BANK0->GPIO0 = 0x40;
-    PADS_BANK0->GPIO1 = 0x40;
-    IO_BANK0->GPIO0_CTRL = 0x2;
-    IO_BANK0->GPIO1_CTRL = 0x2;
+    // IO_BANK0->GPIO0_CTRL = 0x2;  TX
+    // IO_BANK0->GPIO1_CTRL = 0x2; RX
+    IO_BANK0->GPIO16_CTRL = 0x2; // TX
+    IO_BANK0->GPIO17_CTRL = 0x2; // RX
 
     // UART0 configuration
     // baud rate:
@@ -57,11 +57,8 @@ void debug_uart_initialize(void) {
     UART0->UARTIMSC = 0x7fe; // enable all IRQs (but nor Ring Indication)
     UART0->UARTLCR_H = 0x60;
     UART0->UARTCR = 0x201; // UART mode + RX enabled
-    // UART0->UARTCR = 0x301; // UART mode + RX + TX enabled
-    // UART0->UARTCR = 0xf01; // UART mode + RX enabled
 
     is_sending = false;
-    // SYSCFG->PROC0_NMI_MASK |= (1 << UART0_IRQ_NUMBER);  // processor 0
     NVIC_EnableIRQ(UART0_IRQ_NUMBER, UART0_IRQ_PRIORITY);
     init_printf(NULL, debug_putc);
 }
