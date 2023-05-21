@@ -21,6 +21,11 @@ uint32_t send_read_pos;
 uint32_t send_write_pos;
 bool echo_enabled;
 
+void mock_tick(void)
+{
+    // nothing to do
+}
+
 bool mock_echo(void)
 {
     return echo_enabled;

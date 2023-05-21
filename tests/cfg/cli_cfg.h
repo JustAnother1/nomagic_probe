@@ -8,6 +8,7 @@
 #include <string.h>
 #include "../src/lib/printf.h"
 
+void mock_tick(void);
 bool mock_echo(void);
 uint32_t mock_send_bytes(uint8_t *data, uint32_t length);
 void mock_send_String(char* str);
@@ -20,6 +21,7 @@ uint8_t mock_get_next_received_byte(void);
 #define SERIAL_NUM_RECEIVED_BYTES     mock_get_num_received_bytes
 #define SERIAL_GET_RECEIVED_BYTES     mock_get_received_bytes
 #define SERIAL_GET_NEXT_RECEIVED_BYTE mock_get_next_received_byte
+#define SERIAL_TICK                   mock_tick
 
 #define MAX_LINE_LENGTH   100
 #define MAX_PARAMETERS    10
