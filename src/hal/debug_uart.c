@@ -57,12 +57,22 @@ void debug_uart_initialize(void) {
     UART0->UARTIMSC = 0x7fe; // enable all IRQs (but nor Ring Indication)
     UART0->UARTLCR_H = 0x60;
     UART0->UARTCR = 0x201; // UART mode + RX enabled
+    // UART0->UARTCR = 0x301; // UART mode + RX + TX enabled
     // UART0->UARTCR = 0xf01; // UART mode + RX enabled
 
     is_sending = false;
     // SYSCFG->PROC0_NMI_MASK |= (1 << UART0_IRQ_NUMBER);  // processor 0
     NVIC_EnableIRQ(UART0_IRQ_NUMBER, UART0_IRQ_PRIORITY);
     init_printf(NULL, debug_putc);
+}
+
+void debug_uart_tick(void)
+{
+    if(send_read_pos != send_write_pos)
+    {
+        is_sending = true;
+        UART0->UARTCR = 0x301; // UART mode + RX+TX enabled
+    }
 }
 
 // send data:
@@ -180,7 +190,6 @@ static void send_a_byte(void)
         UART0->UARTCR = 0x201; // UART mode + RX enabled
         is_sending = false;
     }
-    UART0->UARTICR = 0x20; // clear Interrupt
 }
 
 static void receive_a_byte(void)
@@ -203,7 +212,6 @@ static void receive_a_byte(void)
             recv_write_pos = nextWrite;
         }
     }
-    UART0->UARTICR = 0x10; // clear Interrupt
 }
 
 void UART0_IRQ(void) {
@@ -226,10 +234,12 @@ void UART0_IRQ(void) {
     if (0 != (irq & 0x20)) {  // Transmit
         // we can send a byte
     	send_a_byte();
+    	UART0->UARTICR = 0x20; // clear Interrupt
     }
     if (0 != (irq & 0x10)) {  // Receive
         // we received a byte
     	receive_a_byte();
+    	UART0->UARTICR = 0x10; // clear Interrupt
     }
     if (0 != (irq & 0x8)) {  // DSR
         UART0->UARTICR = 0x8; // clear Interrupt

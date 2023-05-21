@@ -7,6 +7,7 @@
 #include "hal/hw/PSM.h"
 #include "hal/hw/RESETS.h"
 #include "hal/hw/SIO.h"
+#include "main.h"
 
 typedef void (*VECTOR_FUNCTION_Type)(void);
 
@@ -43,10 +44,10 @@ void ADC_IRQ_FIFO(void) __attribute__ ((weak, interrupt ("IRQ")));
 void I2C0_IRQ(void) __attribute__ ((weak, interrupt ("IRQ")));
 void I2C1_IRQ(void) __attribute__ ((weak, interrupt ("IRQ")));
 void RTC_IRQ(void) __attribute__ ((weak, interrupt ("IRQ")));
-void main(void) __attribute__ ((weak));
-void main1(void) __attribute__ ((weak));
-void error_state(void) __attribute__ ((weak));
-__attribute__((__noreturn__)) void Reset_Handler();
+// void main(void) __attribute__ ((weak, __noreturn__));
+// void main1(void) __attribute__ ((weak, __noreturn__));
+void error_state(void) __attribute__ ((weak, __noreturn__));
+void Reset_Handler()__attribute__((__noreturn__));
 
 const VECTOR_FUNCTION_Type __VECTOR_TABLE[64] __attribute__((used, section(".vectors")))
 = {
@@ -246,25 +247,103 @@ void default_Handler(void) {
     error_state();
 }
 
+/*
 void main(void) {
+    // send core to sleep
+    // TODO
 	for(;;) {
 		;
 	}
 }
 
 void main1(void) {
+    // send core to sleep
+    // TODO
 	for(;;) {
 		;
 	}
 }
+*/
 
-__attribute__((__noreturn__)) void error_state(void)
+void error_state(void)
 {
+    // asm("bkpt #0");
     while (1)
         ;
 }
 
-__attribute__((__noreturn__)) void Reset_Handler() {
+/**
+  \brief   Set Priority Mask
+  \details Assigns the given value to the Priority Mask Register.
+  \param [in]    priMask  Priority Mask
+ */
+static inline void __set_PRIMASK(uint32_t priMask)
+{
+  asm volatile ("MSR primask, %0" : : "r" (priMask) : "memory");
+}
+
+uint32_t __aeabi_uidiv(uint32_t numerator, uint32_t denominator)
+{
+    uint32_t div;
+    uint32_t rem;
+
+    // disable all interrupts
+    __set_PRIMASK(1); // PRIMASK = 1;
+    // write values
+    SIO-> DIV_UDIVIDEND = numerator;
+    SIO->DIV_UDIVISOR = denominator;
+    // wait 8 cycles
+    asm("nop");
+    asm("nop");
+    asm("nop");
+    asm("nop");
+
+    asm("nop");
+    asm("nop");
+    asm("nop");
+    asm("nop");
+    // read result
+    rem = SIO->DIV_REMAINDER;
+    div = SIO->DIV_QUOTIENT;
+
+    // restore enabled interrupts
+    __set_PRIMASK(0); // PRIMASK = 0;
+    (void)rem;
+    return div;
+}
+
+uint32_t __aeabi_uidivmod(uint32_t numerator, uint32_t denominator)
+{
+    uint32_t div;
+    uint32_t rem;
+
+    // disable all interrupts
+    __set_PRIMASK(1); // PRIMASK = 1;
+    // write values
+    SIO-> DIV_UDIVIDEND = numerator;
+    SIO->DIV_UDIVISOR = denominator;
+    // wait 8 cycles
+    asm("nop");
+    asm("nop");
+    asm("nop");
+    asm("nop");
+
+    asm("nop");
+    asm("nop");
+    asm("nop");
+    asm("nop");
+    // read result
+    rem = SIO->DIV_REMAINDER;
+    div = SIO->DIV_QUOTIENT;
+
+    // restore enabled interrupts
+    __set_PRIMASK(0); // PRIMASK = 0;
+    (void)div;
+    return rem;
+}
+
+
+void Reset_Handler() {
     uint32_t *bss_start_p =  &__bss_start;
     uint32_t *bss_end_p = &__bss_end;
 
@@ -273,8 +352,17 @@ __attribute__((__noreturn__)) void Reset_Handler() {
     while (0xffff != (0xffff & PSM->DONE)) {
         ;
     }
+
+    if(0 != SIO->CPUID) {
+        // soft reset with core1 active
+        // send core1 to sleep
+        // TODO
+    }
+
+    // RESETS->RESET = 0x1ffef7d;  // Put everything into reset (just to b sure in case of software reset)
+    // asm("nop");  // wait a tiny bit to really have them in reset.
     RESETS->RESET &= ~0x1082lu; // take BUSCTRL, JTAG and PLL_SYS out of Reset state
-    while (0 != (0x1082 & RESETS->RESET_DONE)) {
+    while (0x1082 != (0x1082 & RESETS->RESET_DONE)) {
         ;
     }
     // configure clock: pico has XOSC = 12 MHz
@@ -334,6 +422,11 @@ __attribute__((__noreturn__)) void Reset_Handler() {
         bss_start_p++;
     }
 
+    main();
+
+    // wake core1 up
+    // TODO
+/*
     if(0 == SIO->CPUID)
     {
     	main();
@@ -342,7 +435,7 @@ __attribute__((__noreturn__)) void Reset_Handler() {
     {
     	main1();
     }
-
+*/
     // main exited - WTF???
     error_state();
 }

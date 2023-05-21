@@ -18,6 +18,7 @@ typedef struct {
 #define SERIAL_NUM_RECEIVED_BYTES     debug_uart_get_num_received_bytes
 #define SERIAL_GET_RECEIVED_BYTES     debug_uart_get_received_bytes
 #define SERIAL_GET_NEXT_RECEIVED_BYTE debug_uart_get_next_received_byte
+#define SERIAL_TICK                   debug_uart_tick
 
 #define MAX_LINE_LENGTH   100
 #define MAX_PARAMETERS    10

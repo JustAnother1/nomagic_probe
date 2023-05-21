@@ -41,6 +41,7 @@ void cli_init(void)
 void cli_tick(void)
 {
     uint32_t num_bytes_received;
+    SERIAL_TICK();
     // if a command is still executing then do that
     if(true == still_executing)
     {

@@ -159,9 +159,9 @@ static void ui2a(unsigned int num, // number to convert
     int n = 0;
     unsigned int d = 1;
     // find number of characters needed to present the number
-    while (num >= base)
+    while (num/d >= base)
     {
-        d *= base;
+        d = d * base;
     }
     while (d!=0)
     {
