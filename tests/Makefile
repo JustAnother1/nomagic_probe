@@ -15,6 +15,9 @@ LFLAGS = -lgcov --coverage
 
 SRC += munit.c
 SRC += allTests.c
+SRC += cli_tests.c
+SRC += mocks.c
+SRC += printf_tests.c
 SRC += $(SRC_FOLDER)cli/cli.c
 SRC += $(SRC_FOLDER)lib/printf.c
 
@@ -43,6 +46,9 @@ $(PROJECT): $(OBJS)
 
 
 test: $(PROJECT)
+	@echo ""
+	@echo "executing tests"
+	@echo "==============="
 	./$(PROJECT)
 
 lcov: 
