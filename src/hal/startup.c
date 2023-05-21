@@ -359,9 +359,8 @@ void Reset_Handler() {
         // TODO
     }
 
-    // RESETS->RESET = 0x1ffef7d;  // Put everything into reset (just to b sure in case of software reset)
-    // asm("nop");  // wait a tiny bit to really have them in reset.
-    RESETS->RESET &= ~0x1082lu; // take BUSCTRL, JTAG and PLL_SYS out of Reset state
+    RESETS->RESET = 0x1fbec1d;  // Put everything into reset (just to be sure in case of software reset)
+    // everything excludes: SYSCFG, PLL_SYS, PADS_QSPI, PADS_BANK0, JTAG, IOQSPI, IOBANK0, and BUSCTRL
     while (0x1082 != (0x1082 & RESETS->RESET_DONE)) {
         ;
     }
