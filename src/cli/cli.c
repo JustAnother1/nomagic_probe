@@ -91,11 +91,26 @@ void cli_tick(void)
                 {
                     SERIAL_SEND_BYTES(&data, 1);
                 }
-                line_buffer[line_pos] = data;
-                line_pos++;
-                if(('\r' == data) || ('\n' == data))
+
+                if(0x08 == data)
                 {
-                    parse();
+                    // backspace
+                    if(line_pos > 0)
+                    {
+                        line_pos--;
+                    }
+                }
+                else
+                {
+                    // store the received character
+                    line_buffer[line_pos] = data;
+                    line_pos++;
+
+                    // was that the end of an command?
+                    if(('\r' == data) || ('\n' == data))
+                    {
+                        parse();
+                    }
                 }
             }
             else
