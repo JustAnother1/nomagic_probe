@@ -20,6 +20,7 @@
 
 cmd_typ commands[] = {
         {"time", "time since power on", cmd_time},
+        {"param_dump", "prints the parameters as hex", cmd_parameter_raw},
 };
 
 

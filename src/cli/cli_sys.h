@@ -18,6 +18,7 @@
 #include "cfg/cli_cfg.h"
 
 bool cmd_time(void);
+bool cmd_parameter_raw(void);
 
 
 #endif /* CLI_CLI_SYS_H_ */

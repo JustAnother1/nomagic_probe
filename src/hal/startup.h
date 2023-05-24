@@ -101,4 +101,6 @@ static inline void NVIC_EnableIRQ(uint32_t IRQ_Number, uint32_t priority) {
     __asm volatile("":::"memory");
 }
 
+void div_and_mod(uint32_t divident, uint32_t divisor, uint32_t* quotient, uint32_t* remainder);
+
 #endif // HAL_STARTUP_H

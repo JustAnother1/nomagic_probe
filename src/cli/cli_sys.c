@@ -15,10 +15,33 @@
 #include "cli_sys.h"
 #include "time.h"
 #include "hal/debug_uart.h"
+#include "cli.h"
 
 bool cmd_time(void)
 {
-    debug_line("\r\ntime since boot up : %d ms", time_get_ms());
+    uint32_t now = time_get_ms();
+    debug_line("\r\ntime since boot up : %d ms", now);
     return true;  // we are done
 }
+
+bool cmd_parameter_raw(void)
+{
+    uint32_t i = 0;
+    uint8_t* c = cli_get_parameter(i);
+    while(c != NULL)
+    {
+        debug_msg("\r\nParameter %d :", i);
+        while(*c != 0)
+        {
+            debug_msg(" %02x", *c);
+            c++;
+        }
+        debug_msg("\r\n");
+        i++;
+        c = cli_get_parameter(i);
+    }
+    debug_line("\r\nDone!");
+    return true;  // we are done
+}
+
 

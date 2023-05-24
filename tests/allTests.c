@@ -59,7 +59,10 @@ static MunitTest cli_tests[] = {
   { (char*) "/cli/tick/cmd_invalid", test_cli_tick_cmd_invalid, cli_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
   { (char*) "/cli/tick/cmd_help",    test_cli_tick_cmd_help,    cli_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
 
-  { (char*) "/printf/init",        test_printf_init,        printf_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  { (char*) "/printf/init",          test_printf_init,          printf_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  { (char*) "/printf/printf/string", test_printf_printf_str,    printf_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  { (char*) "/printf/printf/int",    test_printf_printf_int,    printf_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  { (char*) "/printf/printf/digits", test_printf_printf_digits, printf_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
 
   /* To tell the test runner when the array is over, just add a NULL
    * entry at the end. */

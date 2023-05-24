@@ -2,17 +2,30 @@
 #include "mocks.h"
 #include "../src/lib/printf.h"
 
+#define STRING_BUFFER_LENGTH  100
+
+char str_buffer[100];
+unsigned int buf_idx;
+MunitResult res;
+
+static void test_putc(void* p, char c)
+{
+    (void) p; // not used
+    str_buffer[buf_idx] = c;
+    buf_idx++;
+    if(STRING_BUFFER_LENGTH == buf_idx)
+    {
+        buf_idx = 0;
+        res = MUNIT_FAIL;
+    }
+}
+
 void* printf_setup(const MunitParameter params[], void* user_data) {
     (void)params;
     (void)user_data;
-    init_printf(NULL, debug_putc);
-    recv_read_pos = 0;
-    recv_write_pos = 0;
-    send_read_pos = 0;
-    send_write_pos = 0;
-    memset(recv_buf, 0, RECEIVE_BUFFER_SIZE);
-    memset(send_buf, 0, SEND_BUFFER_SIZE);
-    echo_enabled = false;
+    buf_idx = 0;
+    res = MUNIT_OK;
+    init_printf(NULL, test_putc);
     return NULL;
 }
 
@@ -21,5 +34,47 @@ MunitResult test_printf_init(const MunitParameter params[], void* user_data) {
      * being unused. */
     (void) params;
     (void) user_data;
-    return MUNIT_OK;
+    return res;
+}
+
+MunitResult test_printf_printf_str(const MunitParameter params[], void* user_data) {
+    /* These are just to silence compiler warnings about the parameters
+     * being unused. */
+    (void) params;
+    (void) user_data;
+    tfp_printf("Hello World !\r\n");
+    munit_assert_uint32(15, ==, buf_idx);
+    str_buffer[buf_idx] = 0;
+    munit_assert_string_equal("Hello World !\r\n", str_buffer);
+    // munit_assert_memory_equal(78, res_buf, send_buf);
+    return res;
+}
+
+MunitResult test_printf_printf_int(const MunitParameter params[], void* user_data) {
+    /* These are just to silence compiler warnings about the parameters
+     * being unused. */
+    (void) params;
+    (void) user_data;
+    uint32_t val = 5;
+    tfp_printf("Value = %d", val);
+    munit_assert_uint32(9, ==, buf_idx);
+    str_buffer[buf_idx] = 0;
+    munit_assert_string_equal("Value = 5", str_buffer);
+    // munit_assert_memory_equal(78, res_buf, send_buf);
+    return res;
+}
+
+MunitResult test_printf_printf_digits(const MunitParameter params[], void* user_data) {
+    /* These are just to silence compiler warnings about the parameters
+     * being unused. */
+    (void) params;
+    (void) user_data;
+    const char* expected = "Value = 54321";
+    uint32_t val = 54321;
+    tfp_printf("Value = %d", val);
+    munit_assert_uint32(strlen(expected), ==, buf_idx);
+    str_buffer[buf_idx] = 0;
+    munit_assert_string_equal(expected, str_buffer);
+    // munit_assert_memory_equal(78, res_buf, send_buf);
+    return res;
 }

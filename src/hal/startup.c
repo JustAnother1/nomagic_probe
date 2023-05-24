@@ -302,7 +302,7 @@ uint32_t __aeabi_uidiv(uint32_t numerator, uint32_t denominator)
     // disable all interrupts
     __set_PRIMASK(1); // PRIMASK = 1;
     // write values
-    SIO-> DIV_UDIVIDEND = numerator;
+    SIO->DIV_UDIVIDEND = numerator;
     SIO->DIV_UDIVISOR = denominator;
     // wait 8 cycles
     asm("nop");
@@ -332,7 +332,7 @@ uint32_t __aeabi_uidivmod(uint32_t numerator, uint32_t denominator)
     // disable all interrupts
     __set_PRIMASK(1); // PRIMASK = 1;
     // write values
-    SIO-> DIV_UDIVIDEND = numerator;
+    SIO->DIV_UDIVIDEND = numerator;
     SIO->DIV_UDIVISOR = denominator;
     // wait 8 cycles
     asm("nop");
@@ -352,6 +352,34 @@ uint32_t __aeabi_uidivmod(uint32_t numerator, uint32_t denominator)
     __set_PRIMASK(0); // PRIMASK = 0;
     (void)div;
     return rem;
+}
+
+void div_and_mod(uint32_t divident, uint32_t divisor, uint32_t* quotient, uint32_t* remainder)
+{
+    // disable all interrupts
+    __set_PRIMASK(1); // PRIMASK = 1;
+
+    // write values
+    SIO->DIV_UDIVIDEND = divident;
+    SIO->DIV_UDIVISOR = divisor;
+
+    // wait 8 cycles
+    asm("nop");
+    asm("nop");
+    asm("nop");
+    asm("nop");
+
+    asm("nop");
+    asm("nop");
+    asm("nop");
+    asm("nop");
+
+    // read result
+    *remainder = SIO->DIV_REMAINDER;
+    *quotient = SIO->DIV_QUOTIENT;
+
+    // restore enabled interrupts
+    __set_PRIMASK(0); // PRIMASK = 0;
 }
 
 

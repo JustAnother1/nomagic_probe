@@ -7,7 +7,9 @@
 
 void* printf_setup(const MunitParameter params[], void* user_data);
 MunitResult test_printf_init(const MunitParameter params[], void* user_data);
-
+MunitResult test_printf_printf_str(const MunitParameter params[], void* user_data);
+MunitResult test_printf_printf_int(const MunitParameter params[], void* user_data);
+MunitResult test_printf_printf_digits(const MunitParameter params[], void* user_data);
 
 
 #endif /* TESTS_PRINTF_TESTS_H_ */

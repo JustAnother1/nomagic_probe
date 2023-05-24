@@ -211,12 +211,16 @@ static void execute(void)
             bool found = false;
             for(i = 0; i < sizeof(commands)/sizeof(cmd_typ); i++)
             {
-                if(0 == strncmp(commands[i].name, (char*)line_buffer, len))
+                if(len >= strlen(commands[i].name))
                 {
-                    found = true;
-                    break;
+                    if(0 == strncmp(commands[i].name, (char*)line_buffer, len))
+                    {
+                        found = true;
+                        break;
+                    }
+                    // else continue searching
                 }
-                // else continue searching
+                // else input to short to be this command
             }
             if(false == found)
             {
@@ -243,6 +247,13 @@ static void execute(void)
     // else user pressed enter twice -> just a new prompt
 
     // finished executing the command
+    {
+    uint32_t i;
+    for(i = 0; i < MAX_PARAMETERS; i++)
+    {
+        parameters[i] = NULL;
+    }
+    }
     line_pos = 0;
     parse_pos = 0;
     parameter_pos = 0;

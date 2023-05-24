@@ -66,11 +66,12 @@ void debug_uart_initialize(void) {
     UART0->UARTIBRD = 67;
     UART0->UARTFBRD = 52;
     // FIFO enabled + 8,n,1
-    UART0->UARTLCR_H = 0x60;
+    UART0->UARTLCR_H = 0x70;
     UART0->UARTIFLS = 4;  // FIFO Level trigger IRQ
-    UART0->UARTIMSC = 0x7fe; // enable all IRQs (but nor Ring Indication)
+    UART0->UARTIMSC = 0x7fe; // enable all IRQs (but not Ring Indication)
     UART0->UARTLCR_H = 0x60;
-    UART0->UARTCR = 0x201; // UART mode + RX enabled
+    // UART0->UARTCR = 0x201; // UART mode + RX enabled
+    UART0->UARTCR = 0x301; // UART mode + RX+TX enabled
 
     is_sending = false;
     NVIC_EnableIRQ(UART0_IRQ_NUMBER, UART0_IRQ_PRIORITY);
@@ -81,8 +82,12 @@ void debug_uart_tick(void)
 {
     if(send_read_pos != send_write_pos)
     {
-        is_sending = true;
-        UART0->UARTCR = 0x301; // UART mode + RX+TX enabled
+        if(false == is_sending)
+        {
+            is_sending = true;
+            send_a_byte();
+        }
+        //UART0->UARTCR = 0x301; // UART mode + RX+TX enabled
     }
 }
 
@@ -105,9 +110,9 @@ uint32_t debug_uart_send_bytes(uint8_t* data, uint32_t length) {
     }
     if(false == is_sending)
     {
-    	send_a_byte();
-    	is_sending = true;
-    	UART0->UARTCR = 0x301; // UART mode + RX+TX enabled
+    	// send_a_byte();
+    	// is_sending = true;
+    	// UART0->UARTCR = 0x301; // UART mode + RX+TX enabled
     }
     return i;
 }
@@ -131,9 +136,9 @@ void debug_uart_send_String(char* str)
     }
     if(false == is_sending)
     {
-    	send_a_byte();
-    	is_sending = true;
-    	UART0->UARTCR = 0x301; // UART mode + RX+TX enabled
+    	// send_a_byte();
+    	// is_sending = true;
+    	// UART0->UARTCR = 0x301; // UART mode + RX+TX enabled
     }
 }
 
@@ -190,15 +195,9 @@ static void send_a_byte(void)
         if (SEND_BUFFER_SIZE == send_read_pos) {
             send_read_pos = 0;
         }
-        if (send_read_pos == send_write_pos) {
-        	if(0 == (UART0->UARTFR & 0x4)) {  // not busy
-        		// nothing to send anymore -> disable TX
-        		UART0->UARTCR = 0x201; // UART mode + RX enabled
-        	}
-        }
     } else {
         // nothing to send anymore -> disable TX
-        UART0->UARTCR = 0x201; // UART mode + RX enabled
+        // UART0->UARTCR = 0x201; // UART mode + RX enabled
         is_sending = false;
     }
 }
@@ -244,7 +243,8 @@ void UART0_IRQ(void) {
     }
     if (0 != (irq & 0x20)) {  // Transmit
         // we can send a byte
-    	send_a_byte();
+    	// send_a_byte();
+        is_sending = false;
     	UART0->UARTICR = 0x20; // clear Interrupt
     }
     if (0 != (irq & 0x10)) {  // Receive

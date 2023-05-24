@@ -32,6 +32,9 @@
 #include <stdint.h>
 #include <stdio.h>
 #include "printf.h"
+#include "hal/startup.h"
+
+#define PRINTF_LONG_SUPPORT
 
 
 #ifdef PRINTF_FLOAT_SUPPORT
@@ -41,7 +44,7 @@ static void f2a(double num, char * bf);
 static void uli2a(unsigned long int num, unsigned int base, int uc, char * bf);
 static void li2a(long num, char * bf);
 #endif
-static void ui2a(unsigned int num, unsigned int base, int uc, char * bf);
+static void ui2a(uint32_t num, uint32_t base, int uc, char * bf);
 static void i2a(int num, char * bf);
 static int a2d(char ch);
 static char a2i(char ch, char** src, int base, int* nump);
@@ -127,12 +130,12 @@ static void uli2a(unsigned long int num, unsigned int base, int uc, char * bf)
     }
     while (d!=0)
     {
-        int dgt = num / d;
+        int dgt = (int)(num / d);
         num %= d;
         d /= base;
         if(n || (dgt > 0) || (d == 0))
         {
-            *bf++ = dgt + (dgt < 10 ? '0' : (uc ? 'A' : 'a') - 10);
+            *bf++ = (char)(dgt + (dgt < 10 ? '0' : (uc ? 'A' : 'a') - 10));
             ++n;
         }
     }
@@ -146,18 +149,18 @@ static void li2a(long num, char * bf)
         num = -num;
         *bf++ = '-';
     }
-    uli2a(num, 10, 0, bf);
+    uli2a((unsigned long)num, 10, 0, bf);
 }
 
 #endif
 
-static void ui2a(unsigned int num, // number to convert
-                 unsigned int base,  // base of number (decimal=10; hexadecimal=16,..)
+static void ui2a(uint32_t num, // number to convert
+                 uint32_t base,  // base of number (decimal=10; hexadecimal=16,..)
                  int uc, // upper case -> true(1) -> A..F in hex; false(0) -> a..f in hex
                  char * bf)  // output for string
 {
     int n = 0;
-    unsigned int d = 1;
+    uint32_t d = 1;  // ten to the number of digits needed to present the number '5' -> 1; '123' -> 100
     // find number of characters needed to present the number
     while (num/d >= base)
     {
@@ -165,13 +168,31 @@ static void ui2a(unsigned int num, // number to convert
     }
     while (d!=0)
     {
-        unsigned int dgt = num / d;
-        num %= d;
-        d /= base;
-        if(n || (dgt > 0) || (d == 0))
+        // unsigned int digit = num / d;  // current digit
+        // num = num % d; // prepare for next digit
+        uint32_t digit;
+        div_and_mod(num, d, &digit, &num);
+        d = d / base;  // prepare for next digit
+        if(n || (digit > 0) || (d == 0))
         {
-            *bf++ = (char)(dgt + (unsigned int)( dgt < 10 ? '0' : (uc ? 'A' : 'a') - 10));
-            ++n;
+            // *bf++ = (char)(digit + (unsigned int)( digit < 10 ? '0' : (uc ? 'A' : 'a') - 10));
+            if(digit < 10)
+            {
+                *bf = (char)(digit + '0');
+            }
+            else
+            {
+                if(0 == uc)
+                {
+                    *bf = (char)(digit + 'a' -10);
+                }
+                else
+                {
+                    *bf = (char)(digit + 'A' -10);
+                }
+            }
+            bf++;
+            n++;
         }
     }
     // end of string marking
@@ -185,7 +206,7 @@ static void i2a(int num, char * bf)
         num = -num;
         *bf++ = '-';
     }
-    ui2a((unsigned int)num, 10, 0, bf);
+    ui2a((uint32_t)num, 10, 0, bf);
 }
 
 static int a2d(char ch)
@@ -318,7 +339,7 @@ void tfp_format(void* putp, putcf putf, const char* cfmt, va_list va)
 #ifdef PRINTF_LONG_SUPPORT
                 if(lng)
                 {
-                    li2a(va_arg(va, unsigned long int), bf);
+                    li2a(va_arg(va, long int), bf);
                 }
                 else
 #endif
@@ -350,7 +371,7 @@ void tfp_format(void* putp, putcf putf, const char* cfmt, va_list va)
                 else
 #endif
                 {
-                    ui2a(va_arg(va, unsigned int),10,0,bf);
+                    ui2a(va_arg(va, uint32_t),10,0,bf);
                 }
                 putchw(putp, putf, w, lz, bf);
                 break;
