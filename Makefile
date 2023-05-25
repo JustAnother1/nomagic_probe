@@ -34,13 +34,25 @@ SRC += $(SRC_FOLDER)cli/cli_sys.c
 SRC += $(SRC_FOLDER)lib/printf.c
 SRC += $(SRC_FOLDER)lib/strlen.c
 SRC += $(SRC_FOLDER)lib/strncmp.c
+SRC += $(SRC_FOLDER)lib/memset.c
+SRC += $(SRC_FOLDER)lib/memcpy.c
+
+SRC += $(SRC_FOLDER)tinyusb/usb.c
+
+SRC += $(SRC_FOLDER)tinyusb/src/tusb.c
+SRC += $(SRC_FOLDER)tinyusb/src/device/usbd.c
+SRC += $(SRC_FOLDER)tinyusb/src/device/usbd_control.c
+SRC += $(SRC_FOLDER)tinyusb/src/class/cdc/cdc_device.c
+SRC += $(SRC_FOLDER)tinyusb/src/common/tusb_fifo.c
+
 SRC += $(SRC_FOLDER)time.c
 SRC += $(SRC_FOLDER)main.c
 
 OBJS = $(addprefix $(BIN_FOLDER),$(SRC:.c=.o))
 
 INCDIRS +=$(SRC_FOLDER)
-#INCDIRS +=$(SRC_FOLDER)hal
+INCDIRS +=$(SRC_FOLDER)cfg/
+INCDIRS +=$(SRC_FOLDER)tinyusb/src/
 INCDIR = $(patsubst %,-I%, $(INCDIRS))
 
 # make config

@@ -42,8 +42,8 @@ void debug_uart_initialize(void) {
     send_read_pos = 0;
     send_write_pos = 0;
 
-    RESETS->RESET = RESETS->RESET & ~0x00000020lu; // take IO_BANK0 out of Reset
-    PSM->FRCE_ON = PSM->FRCE_ON | 0x00000400; // make sure that SIO is powered on
+    RESETS->RESET = RESETS->RESET & ~0x20lu; // take IO_BANK0 out of Reset
+    PSM->FRCE_ON = PSM->FRCE_ON | 0x400; // make sure that SIO is powered on
     // take UART0 out of Reset
     RESETS->RESET = RESETS->RESET & ~(1ul << 18);  // sysCFG
     while (0 == ((1 << 18) & RESETS->RESET_DONE)) {
@@ -56,8 +56,6 @@ void debug_uart_initialize(void) {
          ;
     }
     // configure GPIO Pins
-    // IO_BANK0->GPIO0_CTRL = 0x2;  TX
-    // IO_BANK0->GPIO1_CTRL = 0x2; RX
     IO_BANK0->GPIO16_CTRL = 0x2; // TX
     IO_BANK0->GPIO17_CTRL = 0x2; // RX
 
@@ -70,7 +68,6 @@ void debug_uart_initialize(void) {
     UART0->UARTIFLS = 4;  // FIFO Level trigger IRQ
     UART0->UARTIMSC = 0x7fe; // enable all IRQs (but not Ring Indication)
     UART0->UARTLCR_H = 0x60;
-    // UART0->UARTCR = 0x201; // UART mode + RX enabled
     UART0->UARTCR = 0x301; // UART mode + RX+TX enabled
 
     is_sending = false;
@@ -87,7 +84,6 @@ void debug_uart_tick(void)
             is_sending = true;
             send_a_byte();
         }
-        //UART0->UARTCR = 0x301; // UART mode + RX+TX enabled
     }
 }
 
@@ -108,12 +104,6 @@ uint32_t debug_uart_send_bytes(uint8_t* data, uint32_t length) {
             break;
         }
     }
-    if(false == is_sending)
-    {
-    	// send_a_byte();
-    	// is_sending = true;
-    	// UART0->UARTCR = 0x301; // UART mode + RX+TX enabled
-    }
     return i;
 }
 
@@ -133,12 +123,6 @@ void debug_uart_send_String(char* str)
             // buffer is full
             break;
         }
-    }
-    if(false == is_sending)
-    {
-    	// send_a_byte();
-    	// is_sending = true;
-    	// UART0->UARTCR = 0x301; // UART mode + RX+TX enabled
     }
 }
 
@@ -197,7 +181,6 @@ static void send_a_byte(void)
         }
     } else {
         // nothing to send anymore -> disable TX
-        // UART0->UARTCR = 0x201; // UART mode + RX enabled
         is_sending = false;
     }
 }
@@ -243,7 +226,6 @@ void UART0_IRQ(void) {
     }
     if (0 != (irq & 0x20)) {  // Transmit
         // we can send a byte
-    	// send_a_byte();
         is_sending = false;
     	UART0->UARTICR = 0x20; // clear Interrupt
     }

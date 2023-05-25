@@ -4,6 +4,10 @@ nomagic probe
 The nomic probe is a firmware for the https://www.raspberrypi.com/products/raspberry-pi-pico/[RaspberryPi Pico board] that provides a gdbserver interface for debugging other boards.
 That is the functionality of the https://github.com/raspberrypi/picoprobe[picoprobe] and https://openocd.org/[OpenOCD] combined. It is also similar to the https://black-magic.org/[Black Magic Firmware].
 
+It does not use external libraries. Therefore all code is in this library, no dependencies!
+
+No dynamic memory allocation, no malloc!
+
 == Building and Starting
 
 The firmware can be build using make. The generated Files will be placed in the bin folder. For details try
@@ -17,6 +21,16 @@ Depending on the target you are building for you might need to have additionalto
 - To build for ARM Cortex-M Targets you need https://launchpad.net/gcc-arm-embedded[GCC ARM Embedded]
 - for automatic generated documentation you need http://www.stack.nl/~dimitri/doxygen/[Doxygen]
 - for unit testing you need https://cpputest.github.io/[CppUTest]
+
+== Pinout
+
+=== pico
+The pico has 20 pins (1..40) Numbered counter clock wise starting at the USB connector.
+
+Pin 21: (GPIO 16) Debug Uart TX (UART0)
+
+Pin 22: (GPIO 17) Debug Uart RX (UART0)
+
 
 
 == License

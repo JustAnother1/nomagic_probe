@@ -22,6 +22,7 @@
 #include "cli/cli.h"
 #include "time.h"
 #include <stdint.h>
+#include "tinyusb/usb.h"
 
 void error_state(void)
 {
@@ -72,8 +73,10 @@ void main(void) {
     init_time();
     debug_uart_initialize();
     cli_init();
+    usb_init();
     for (;;) {
         cli_tick();
+        usb_tick();
     }
 }
 
