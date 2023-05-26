@@ -1,16 +1,16 @@
 #ifndef HW_DMA_H
 #define HW_DMA_H
-/* DMA with separate read and write masters */
-/* Interrupt : DMA_IRQ_0 (Vector: 11)  */
-/* Interrupt : DMA_IRQ_1 (Vector: 12)  */
-/* Memory Block starting at 0x50000000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
+/** DMA with separate read and write masters */
+/** Interrupt : DMA_IRQ_0 (Vector: 11)  */
+/** Interrupt : DMA_IRQ_1 (Vector: 12)  */
+/** Memory Block starting at 0x50000000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
 
 #include <stdint.h>
 
 typedef struct
 {
 
-/* CH0_READ_ADDR (offset: 0x0)
+/** CH0_READ_ADDR (offset: 0x0)
   DMA Channel 0 Read Address pointer
 
  This register updates automatically each time a read completes. The current value is the next address to be read by this channel.
@@ -20,7 +20,7 @@ typedef struct
 */
 volatile uint32_t CH0_READ_ADDR;
 
-/* CH0_WRITE_ADDR (offset: 0x4)
+/** CH0_WRITE_ADDR (offset: 0x4)
   DMA Channel 0 Write Address pointer
 
  This register updates automatically each time a write completes. The current value is the next address to be written by this channel.
@@ -30,7 +30,7 @@ volatile uint32_t CH0_READ_ADDR;
 */
 volatile uint32_t CH0_WRITE_ADDR;
 
-/* CH0_TRANS_COUNT (offset: 0x8)
+/** CH0_TRANS_COUNT (offset: 0x8)
   DMA Channel 0 Transfer Count
 
  Program the number of bus transfers a channel will perform before halting. Note that, if transfers are larger than one byte in size, this is not equal to the number of bytes transferred (see CTRL_DATA_SIZE).
@@ -49,7 +49,7 @@ volatile uint32_t CH0_WRITE_ADDR;
 */
 volatile uint32_t CH0_TRANS_COUNT;
 
-/* CH0_CTRL_TRIG (offset: 0xc)
+/** CH0_CTRL_TRIG (offset: 0xc)
   DMA Channel 0 Control and Status
   access : read-write
   reset value : 0x0
@@ -152,7 +152,7 @@ volatile uint32_t CH0_TRANS_COUNT;
 */
 volatile uint32_t CH0_CTRL_TRIG;
 
-/* CH0_AL1_CTRL (offset: 0x10)
+/** CH0_AL1_CTRL (offset: 0x10)
   Alias for channel 0 CTRL register
   access : read-write
   reset value : 0x0
@@ -160,7 +160,7 @@ volatile uint32_t CH0_CTRL_TRIG;
 */
 volatile uint32_t CH0_AL1_CTRL;
 
-/* CH0_AL1_READ_ADDR (offset: 0x14)
+/** CH0_AL1_READ_ADDR (offset: 0x14)
   Alias for channel 0 READ_ADDR register
   access : read-write
   reset value : 0x0
@@ -168,7 +168,7 @@ volatile uint32_t CH0_AL1_CTRL;
 */
 volatile uint32_t CH0_AL1_READ_ADDR;
 
-/* CH0_AL1_WRITE_ADDR (offset: 0x18)
+/** CH0_AL1_WRITE_ADDR (offset: 0x18)
   Alias for channel 0 WRITE_ADDR register
   access : read-write
   reset value : 0x0
@@ -176,7 +176,7 @@ volatile uint32_t CH0_AL1_READ_ADDR;
 */
 volatile uint32_t CH0_AL1_WRITE_ADDR;
 
-/* CH0_AL1_TRANS_COUNT_TRIG (offset: 0x1c)
+/** CH0_AL1_TRANS_COUNT_TRIG (offset: 0x1c)
   Alias for channel 0 TRANS_COUNT register
 
  This is a trigger register (0xc). Writing a nonzero value will
@@ -188,7 +188,7 @@ volatile uint32_t CH0_AL1_WRITE_ADDR;
 */
 volatile uint32_t CH0_AL1_TRANS_COUNT_TRIG;
 
-/* CH0_AL2_CTRL (offset: 0x20)
+/** CH0_AL2_CTRL (offset: 0x20)
   Alias for channel 0 CTRL register
   access : read-write
   reset value : 0x0
@@ -196,7 +196,7 @@ volatile uint32_t CH0_AL1_TRANS_COUNT_TRIG;
 */
 volatile uint32_t CH0_AL2_CTRL;
 
-/* CH0_AL2_TRANS_COUNT (offset: 0x24)
+/** CH0_AL2_TRANS_COUNT (offset: 0x24)
   Alias for channel 0 TRANS_COUNT register
   access : read-write
   reset value : 0x0
@@ -204,7 +204,7 @@ volatile uint32_t CH0_AL2_CTRL;
 */
 volatile uint32_t CH0_AL2_TRANS_COUNT;
 
-/* CH0_AL2_READ_ADDR (offset: 0x28)
+/** CH0_AL2_READ_ADDR (offset: 0x28)
   Alias for channel 0 READ_ADDR register
   access : read-write
   reset value : 0x0
@@ -212,7 +212,7 @@ volatile uint32_t CH0_AL2_TRANS_COUNT;
 */
 volatile uint32_t CH0_AL2_READ_ADDR;
 
-/* CH0_AL2_WRITE_ADDR_TRIG (offset: 0x2c)
+/** CH0_AL2_WRITE_ADDR_TRIG (offset: 0x2c)
   Alias for channel 0 WRITE_ADDR register
 
  This is a trigger register (0xc). Writing a nonzero value will
@@ -224,7 +224,7 @@ volatile uint32_t CH0_AL2_READ_ADDR;
 */
 volatile uint32_t CH0_AL2_WRITE_ADDR_TRIG;
 
-/* CH0_AL3_CTRL (offset: 0x30)
+/** CH0_AL3_CTRL (offset: 0x30)
   Alias for channel 0 CTRL register
   access : read-write
   reset value : 0x0
@@ -232,7 +232,7 @@ volatile uint32_t CH0_AL2_WRITE_ADDR_TRIG;
 */
 volatile uint32_t CH0_AL3_CTRL;
 
-/* CH0_AL3_WRITE_ADDR (offset: 0x34)
+/** CH0_AL3_WRITE_ADDR (offset: 0x34)
   Alias for channel 0 WRITE_ADDR register
   access : read-write
   reset value : 0x0
@@ -240,7 +240,7 @@ volatile uint32_t CH0_AL3_CTRL;
 */
 volatile uint32_t CH0_AL3_WRITE_ADDR;
 
-/* CH0_AL3_TRANS_COUNT (offset: 0x38)
+/** CH0_AL3_TRANS_COUNT (offset: 0x38)
   Alias for channel 0 TRANS_COUNT register
   access : read-write
   reset value : 0x0
@@ -248,7 +248,7 @@ volatile uint32_t CH0_AL3_WRITE_ADDR;
 */
 volatile uint32_t CH0_AL3_TRANS_COUNT;
 
-/* CH0_AL3_READ_ADDR_TRIG (offset: 0x3c)
+/** CH0_AL3_READ_ADDR_TRIG (offset: 0x3c)
   Alias for channel 0 READ_ADDR register
 
  This is a trigger register (0xc). Writing a nonzero value will
@@ -260,7 +260,7 @@ volatile uint32_t CH0_AL3_TRANS_COUNT;
 */
 volatile uint32_t CH0_AL3_READ_ADDR_TRIG;
 
-/* CH1_READ_ADDR (offset: 0x40)
+/** CH1_READ_ADDR (offset: 0x40)
   DMA Channel 1 Read Address pointer
 
  This register updates automatically each time a read completes. The current value is the next address to be read by this channel.
@@ -270,7 +270,7 @@ volatile uint32_t CH0_AL3_READ_ADDR_TRIG;
 */
 volatile uint32_t CH1_READ_ADDR;
 
-/* CH1_WRITE_ADDR (offset: 0x44)
+/** CH1_WRITE_ADDR (offset: 0x44)
   DMA Channel 1 Write Address pointer
 
  This register updates automatically each time a write completes. The current value is the next address to be written by this channel.
@@ -280,7 +280,7 @@ volatile uint32_t CH1_READ_ADDR;
 */
 volatile uint32_t CH1_WRITE_ADDR;
 
-/* CH1_TRANS_COUNT (offset: 0x48)
+/** CH1_TRANS_COUNT (offset: 0x48)
   DMA Channel 1 Transfer Count
 
  Program the number of bus transfers a channel will perform before halting. Note that, if transfers are larger than one byte in size, this is not equal to the number of bytes transferred (see CTRL_DATA_SIZE).
@@ -299,7 +299,7 @@ volatile uint32_t CH1_WRITE_ADDR;
 */
 volatile uint32_t CH1_TRANS_COUNT;
 
-/* CH1_CTRL_TRIG (offset: 0x4c)
+/** CH1_CTRL_TRIG (offset: 0x4c)
   DMA Channel 1 Control and Status
   access : read-write
   reset value : 0x0
@@ -402,7 +402,7 @@ volatile uint32_t CH1_TRANS_COUNT;
 */
 volatile uint32_t CH1_CTRL_TRIG;
 
-/* CH1_AL1_CTRL (offset: 0x50)
+/** CH1_AL1_CTRL (offset: 0x50)
   Alias for channel 1 CTRL register
   access : read-write
   reset value : 0x0
@@ -410,7 +410,7 @@ volatile uint32_t CH1_CTRL_TRIG;
 */
 volatile uint32_t CH1_AL1_CTRL;
 
-/* CH1_AL1_READ_ADDR (offset: 0x54)
+/** CH1_AL1_READ_ADDR (offset: 0x54)
   Alias for channel 1 READ_ADDR register
   access : read-write
   reset value : 0x0
@@ -418,7 +418,7 @@ volatile uint32_t CH1_AL1_CTRL;
 */
 volatile uint32_t CH1_AL1_READ_ADDR;
 
-/* CH1_AL1_WRITE_ADDR (offset: 0x58)
+/** CH1_AL1_WRITE_ADDR (offset: 0x58)
   Alias for channel 1 WRITE_ADDR register
   access : read-write
   reset value : 0x0
@@ -426,7 +426,7 @@ volatile uint32_t CH1_AL1_READ_ADDR;
 */
 volatile uint32_t CH1_AL1_WRITE_ADDR;
 
-/* CH1_AL1_TRANS_COUNT_TRIG (offset: 0x5c)
+/** CH1_AL1_TRANS_COUNT_TRIG (offset: 0x5c)
   Alias for channel 1 TRANS_COUNT register
 
  This is a trigger register (0xc). Writing a nonzero value will
@@ -438,7 +438,7 @@ volatile uint32_t CH1_AL1_WRITE_ADDR;
 */
 volatile uint32_t CH1_AL1_TRANS_COUNT_TRIG;
 
-/* CH1_AL2_CTRL (offset: 0x60)
+/** CH1_AL2_CTRL (offset: 0x60)
   Alias for channel 1 CTRL register
   access : read-write
   reset value : 0x0
@@ -446,7 +446,7 @@ volatile uint32_t CH1_AL1_TRANS_COUNT_TRIG;
 */
 volatile uint32_t CH1_AL2_CTRL;
 
-/* CH1_AL2_TRANS_COUNT (offset: 0x64)
+/** CH1_AL2_TRANS_COUNT (offset: 0x64)
   Alias for channel 1 TRANS_COUNT register
   access : read-write
   reset value : 0x0
@@ -454,7 +454,7 @@ volatile uint32_t CH1_AL2_CTRL;
 */
 volatile uint32_t CH1_AL2_TRANS_COUNT;
 
-/* CH1_AL2_READ_ADDR (offset: 0x68)
+/** CH1_AL2_READ_ADDR (offset: 0x68)
   Alias for channel 1 READ_ADDR register
   access : read-write
   reset value : 0x0
@@ -462,7 +462,7 @@ volatile uint32_t CH1_AL2_TRANS_COUNT;
 */
 volatile uint32_t CH1_AL2_READ_ADDR;
 
-/* CH1_AL2_WRITE_ADDR_TRIG (offset: 0x6c)
+/** CH1_AL2_WRITE_ADDR_TRIG (offset: 0x6c)
   Alias for channel 1 WRITE_ADDR register
 
  This is a trigger register (0xc). Writing a nonzero value will
@@ -474,7 +474,7 @@ volatile uint32_t CH1_AL2_READ_ADDR;
 */
 volatile uint32_t CH1_AL2_WRITE_ADDR_TRIG;
 
-/* CH1_AL3_CTRL (offset: 0x70)
+/** CH1_AL3_CTRL (offset: 0x70)
   Alias for channel 1 CTRL register
   access : read-write
   reset value : 0x0
@@ -482,7 +482,7 @@ volatile uint32_t CH1_AL2_WRITE_ADDR_TRIG;
 */
 volatile uint32_t CH1_AL3_CTRL;
 
-/* CH1_AL3_WRITE_ADDR (offset: 0x74)
+/** CH1_AL3_WRITE_ADDR (offset: 0x74)
   Alias for channel 1 WRITE_ADDR register
   access : read-write
   reset value : 0x0
@@ -490,7 +490,7 @@ volatile uint32_t CH1_AL3_CTRL;
 */
 volatile uint32_t CH1_AL3_WRITE_ADDR;
 
-/* CH1_AL3_TRANS_COUNT (offset: 0x78)
+/** CH1_AL3_TRANS_COUNT (offset: 0x78)
   Alias for channel 1 TRANS_COUNT register
   access : read-write
   reset value : 0x0
@@ -498,7 +498,7 @@ volatile uint32_t CH1_AL3_WRITE_ADDR;
 */
 volatile uint32_t CH1_AL3_TRANS_COUNT;
 
-/* CH1_AL3_READ_ADDR_TRIG (offset: 0x7c)
+/** CH1_AL3_READ_ADDR_TRIG (offset: 0x7c)
   Alias for channel 1 READ_ADDR register
 
  This is a trigger register (0xc). Writing a nonzero value will
@@ -510,7 +510,7 @@ volatile uint32_t CH1_AL3_TRANS_COUNT;
 */
 volatile uint32_t CH1_AL3_READ_ADDR_TRIG;
 
-/* CH2_READ_ADDR (offset: 0x80)
+/** CH2_READ_ADDR (offset: 0x80)
   DMA Channel 2 Read Address pointer
 
  This register updates automatically each time a read completes. The current value is the next address to be read by this channel.
@@ -520,7 +520,7 @@ volatile uint32_t CH1_AL3_READ_ADDR_TRIG;
 */
 volatile uint32_t CH2_READ_ADDR;
 
-/* CH2_WRITE_ADDR (offset: 0x84)
+/** CH2_WRITE_ADDR (offset: 0x84)
   DMA Channel 2 Write Address pointer
 
  This register updates automatically each time a write completes. The current value is the next address to be written by this channel.
@@ -530,7 +530,7 @@ volatile uint32_t CH2_READ_ADDR;
 */
 volatile uint32_t CH2_WRITE_ADDR;
 
-/* CH2_TRANS_COUNT (offset: 0x88)
+/** CH2_TRANS_COUNT (offset: 0x88)
   DMA Channel 2 Transfer Count
 
  Program the number of bus transfers a channel will perform before halting. Note that, if transfers are larger than one byte in size, this is not equal to the number of bytes transferred (see CTRL_DATA_SIZE).
@@ -549,7 +549,7 @@ volatile uint32_t CH2_WRITE_ADDR;
 */
 volatile uint32_t CH2_TRANS_COUNT;
 
-/* CH2_CTRL_TRIG (offset: 0x8c)
+/** CH2_CTRL_TRIG (offset: 0x8c)
   DMA Channel 2 Control and Status
   access : read-write
   reset value : 0x0
@@ -652,7 +652,7 @@ volatile uint32_t CH2_TRANS_COUNT;
 */
 volatile uint32_t CH2_CTRL_TRIG;
 
-/* CH2_AL1_CTRL (offset: 0x90)
+/** CH2_AL1_CTRL (offset: 0x90)
   Alias for channel 2 CTRL register
   access : read-write
   reset value : 0x0
@@ -660,7 +660,7 @@ volatile uint32_t CH2_CTRL_TRIG;
 */
 volatile uint32_t CH2_AL1_CTRL;
 
-/* CH2_AL1_READ_ADDR (offset: 0x94)
+/** CH2_AL1_READ_ADDR (offset: 0x94)
   Alias for channel 2 READ_ADDR register
   access : read-write
   reset value : 0x0
@@ -668,7 +668,7 @@ volatile uint32_t CH2_AL1_CTRL;
 */
 volatile uint32_t CH2_AL1_READ_ADDR;
 
-/* CH2_AL1_WRITE_ADDR (offset: 0x98)
+/** CH2_AL1_WRITE_ADDR (offset: 0x98)
   Alias for channel 2 WRITE_ADDR register
   access : read-write
   reset value : 0x0
@@ -676,7 +676,7 @@ volatile uint32_t CH2_AL1_READ_ADDR;
 */
 volatile uint32_t CH2_AL1_WRITE_ADDR;
 
-/* CH2_AL1_TRANS_COUNT_TRIG (offset: 0x9c)
+/** CH2_AL1_TRANS_COUNT_TRIG (offset: 0x9c)
   Alias for channel 2 TRANS_COUNT register
 
  This is a trigger register (0xc). Writing a nonzero value will
@@ -688,7 +688,7 @@ volatile uint32_t CH2_AL1_WRITE_ADDR;
 */
 volatile uint32_t CH2_AL1_TRANS_COUNT_TRIG;
 
-/* CH2_AL2_CTRL (offset: 0xa0)
+/** CH2_AL2_CTRL (offset: 0xa0)
   Alias for channel 2 CTRL register
   access : read-write
   reset value : 0x0
@@ -696,7 +696,7 @@ volatile uint32_t CH2_AL1_TRANS_COUNT_TRIG;
 */
 volatile uint32_t CH2_AL2_CTRL;
 
-/* CH2_AL2_TRANS_COUNT (offset: 0xa4)
+/** CH2_AL2_TRANS_COUNT (offset: 0xa4)
   Alias for channel 2 TRANS_COUNT register
   access : read-write
   reset value : 0x0
@@ -704,7 +704,7 @@ volatile uint32_t CH2_AL2_CTRL;
 */
 volatile uint32_t CH2_AL2_TRANS_COUNT;
 
-/* CH2_AL2_READ_ADDR (offset: 0xa8)
+/** CH2_AL2_READ_ADDR (offset: 0xa8)
   Alias for channel 2 READ_ADDR register
   access : read-write
   reset value : 0x0
@@ -712,7 +712,7 @@ volatile uint32_t CH2_AL2_TRANS_COUNT;
 */
 volatile uint32_t CH2_AL2_READ_ADDR;
 
-/* CH2_AL2_WRITE_ADDR_TRIG (offset: 0xac)
+/** CH2_AL2_WRITE_ADDR_TRIG (offset: 0xac)
   Alias for channel 2 WRITE_ADDR register
 
  This is a trigger register (0xc). Writing a nonzero value will
@@ -724,7 +724,7 @@ volatile uint32_t CH2_AL2_READ_ADDR;
 */
 volatile uint32_t CH2_AL2_WRITE_ADDR_TRIG;
 
-/* CH2_AL3_CTRL (offset: 0xb0)
+/** CH2_AL3_CTRL (offset: 0xb0)
   Alias for channel 2 CTRL register
   access : read-write
   reset value : 0x0
@@ -732,7 +732,7 @@ volatile uint32_t CH2_AL2_WRITE_ADDR_TRIG;
 */
 volatile uint32_t CH2_AL3_CTRL;
 
-/* CH2_AL3_WRITE_ADDR (offset: 0xb4)
+/** CH2_AL3_WRITE_ADDR (offset: 0xb4)
   Alias for channel 2 WRITE_ADDR register
   access : read-write
   reset value : 0x0
@@ -740,7 +740,7 @@ volatile uint32_t CH2_AL3_CTRL;
 */
 volatile uint32_t CH2_AL3_WRITE_ADDR;
 
-/* CH2_AL3_TRANS_COUNT (offset: 0xb8)
+/** CH2_AL3_TRANS_COUNT (offset: 0xb8)
   Alias for channel 2 TRANS_COUNT register
   access : read-write
   reset value : 0x0
@@ -748,7 +748,7 @@ volatile uint32_t CH2_AL3_WRITE_ADDR;
 */
 volatile uint32_t CH2_AL3_TRANS_COUNT;
 
-/* CH2_AL3_READ_ADDR_TRIG (offset: 0xbc)
+/** CH2_AL3_READ_ADDR_TRIG (offset: 0xbc)
   Alias for channel 2 READ_ADDR register
 
  This is a trigger register (0xc). Writing a nonzero value will
@@ -760,7 +760,7 @@ volatile uint32_t CH2_AL3_TRANS_COUNT;
 */
 volatile uint32_t CH2_AL3_READ_ADDR_TRIG;
 
-/* CH3_READ_ADDR (offset: 0xc0)
+/** CH3_READ_ADDR (offset: 0xc0)
   DMA Channel 3 Read Address pointer
 
  This register updates automatically each time a read completes. The current value is the next address to be read by this channel.
@@ -770,7 +770,7 @@ volatile uint32_t CH2_AL3_READ_ADDR_TRIG;
 */
 volatile uint32_t CH3_READ_ADDR;
 
-/* CH3_WRITE_ADDR (offset: 0xc4)
+/** CH3_WRITE_ADDR (offset: 0xc4)
   DMA Channel 3 Write Address pointer
 
  This register updates automatically each time a write completes. The current value is the next address to be written by this channel.
@@ -780,7 +780,7 @@ volatile uint32_t CH3_READ_ADDR;
 */
 volatile uint32_t CH3_WRITE_ADDR;
 
-/* CH3_TRANS_COUNT (offset: 0xc8)
+/** CH3_TRANS_COUNT (offset: 0xc8)
   DMA Channel 3 Transfer Count
 
  Program the number of bus transfers a channel will perform before halting. Note that, if transfers are larger than one byte in size, this is not equal to the number of bytes transferred (see CTRL_DATA_SIZE).
@@ -799,7 +799,7 @@ volatile uint32_t CH3_WRITE_ADDR;
 */
 volatile uint32_t CH3_TRANS_COUNT;
 
-/* CH3_CTRL_TRIG (offset: 0xcc)
+/** CH3_CTRL_TRIG (offset: 0xcc)
   DMA Channel 3 Control and Status
   access : read-write
   reset value : 0x0
@@ -902,7 +902,7 @@ volatile uint32_t CH3_TRANS_COUNT;
 */
 volatile uint32_t CH3_CTRL_TRIG;
 
-/* CH3_AL1_CTRL (offset: 0xd0)
+/** CH3_AL1_CTRL (offset: 0xd0)
   Alias for channel 3 CTRL register
   access : read-write
   reset value : 0x0
@@ -910,7 +910,7 @@ volatile uint32_t CH3_CTRL_TRIG;
 */
 volatile uint32_t CH3_AL1_CTRL;
 
-/* CH3_AL1_READ_ADDR (offset: 0xd4)
+/** CH3_AL1_READ_ADDR (offset: 0xd4)
   Alias for channel 3 READ_ADDR register
   access : read-write
   reset value : 0x0
@@ -918,7 +918,7 @@ volatile uint32_t CH3_AL1_CTRL;
 */
 volatile uint32_t CH3_AL1_READ_ADDR;
 
-/* CH3_AL1_WRITE_ADDR (offset: 0xd8)
+/** CH3_AL1_WRITE_ADDR (offset: 0xd8)
   Alias for channel 3 WRITE_ADDR register
   access : read-write
   reset value : 0x0
@@ -926,7 +926,7 @@ volatile uint32_t CH3_AL1_READ_ADDR;
 */
 volatile uint32_t CH3_AL1_WRITE_ADDR;
 
-/* CH3_AL1_TRANS_COUNT_TRIG (offset: 0xdc)
+/** CH3_AL1_TRANS_COUNT_TRIG (offset: 0xdc)
   Alias for channel 3 TRANS_COUNT register
 
  This is a trigger register (0xc). Writing a nonzero value will
@@ -938,7 +938,7 @@ volatile uint32_t CH3_AL1_WRITE_ADDR;
 */
 volatile uint32_t CH3_AL1_TRANS_COUNT_TRIG;
 
-/* CH3_AL2_CTRL (offset: 0xe0)
+/** CH3_AL2_CTRL (offset: 0xe0)
   Alias for channel 3 CTRL register
   access : read-write
   reset value : 0x0
@@ -946,7 +946,7 @@ volatile uint32_t CH3_AL1_TRANS_COUNT_TRIG;
 */
 volatile uint32_t CH3_AL2_CTRL;
 
-/* CH3_AL2_TRANS_COUNT (offset: 0xe4)
+/** CH3_AL2_TRANS_COUNT (offset: 0xe4)
   Alias for channel 3 TRANS_COUNT register
   access : read-write
   reset value : 0x0
@@ -954,7 +954,7 @@ volatile uint32_t CH3_AL2_CTRL;
 */
 volatile uint32_t CH3_AL2_TRANS_COUNT;
 
-/* CH3_AL2_READ_ADDR (offset: 0xe8)
+/** CH3_AL2_READ_ADDR (offset: 0xe8)
   Alias for channel 3 READ_ADDR register
   access : read-write
   reset value : 0x0
@@ -962,7 +962,7 @@ volatile uint32_t CH3_AL2_TRANS_COUNT;
 */
 volatile uint32_t CH3_AL2_READ_ADDR;
 
-/* CH3_AL2_WRITE_ADDR_TRIG (offset: 0xec)
+/** CH3_AL2_WRITE_ADDR_TRIG (offset: 0xec)
   Alias for channel 3 WRITE_ADDR register
 
  This is a trigger register (0xc). Writing a nonzero value will
@@ -974,7 +974,7 @@ volatile uint32_t CH3_AL2_READ_ADDR;
 */
 volatile uint32_t CH3_AL2_WRITE_ADDR_TRIG;
 
-/* CH3_AL3_CTRL (offset: 0xf0)
+/** CH3_AL3_CTRL (offset: 0xf0)
   Alias for channel 3 CTRL register
   access : read-write
   reset value : 0x0
@@ -982,7 +982,7 @@ volatile uint32_t CH3_AL2_WRITE_ADDR_TRIG;
 */
 volatile uint32_t CH3_AL3_CTRL;
 
-/* CH3_AL3_WRITE_ADDR (offset: 0xf4)
+/** CH3_AL3_WRITE_ADDR (offset: 0xf4)
   Alias for channel 3 WRITE_ADDR register
   access : read-write
   reset value : 0x0
@@ -990,7 +990,7 @@ volatile uint32_t CH3_AL3_CTRL;
 */
 volatile uint32_t CH3_AL3_WRITE_ADDR;
 
-/* CH3_AL3_TRANS_COUNT (offset: 0xf8)
+/** CH3_AL3_TRANS_COUNT (offset: 0xf8)
   Alias for channel 3 TRANS_COUNT register
   access : read-write
   reset value : 0x0
@@ -998,7 +998,7 @@ volatile uint32_t CH3_AL3_WRITE_ADDR;
 */
 volatile uint32_t CH3_AL3_TRANS_COUNT;
 
-/* CH3_AL3_READ_ADDR_TRIG (offset: 0xfc)
+/** CH3_AL3_READ_ADDR_TRIG (offset: 0xfc)
   Alias for channel 3 READ_ADDR register
 
  This is a trigger register (0xc). Writing a nonzero value will
@@ -1010,7 +1010,7 @@ volatile uint32_t CH3_AL3_TRANS_COUNT;
 */
 volatile uint32_t CH3_AL3_READ_ADDR_TRIG;
 
-/* CH4_READ_ADDR (offset: 0x100)
+/** CH4_READ_ADDR (offset: 0x100)
   DMA Channel 4 Read Address pointer
 
  This register updates automatically each time a read completes. The current value is the next address to be read by this channel.
@@ -1020,7 +1020,7 @@ volatile uint32_t CH3_AL3_READ_ADDR_TRIG;
 */
 volatile uint32_t CH4_READ_ADDR;
 
-/* CH4_WRITE_ADDR (offset: 0x104)
+/** CH4_WRITE_ADDR (offset: 0x104)
   DMA Channel 4 Write Address pointer
 
  This register updates automatically each time a write completes. The current value is the next address to be written by this channel.
@@ -1030,7 +1030,7 @@ volatile uint32_t CH4_READ_ADDR;
 */
 volatile uint32_t CH4_WRITE_ADDR;
 
-/* CH4_TRANS_COUNT (offset: 0x108)
+/** CH4_TRANS_COUNT (offset: 0x108)
   DMA Channel 4 Transfer Count
 
  Program the number of bus transfers a channel will perform before halting. Note that, if transfers are larger than one byte in size, this is not equal to the number of bytes transferred (see CTRL_DATA_SIZE).
@@ -1049,7 +1049,7 @@ volatile uint32_t CH4_WRITE_ADDR;
 */
 volatile uint32_t CH4_TRANS_COUNT;
 
-/* CH4_CTRL_TRIG (offset: 0x10c)
+/** CH4_CTRL_TRIG (offset: 0x10c)
   DMA Channel 4 Control and Status
   access : read-write
   reset value : 0x0
@@ -1152,7 +1152,7 @@ volatile uint32_t CH4_TRANS_COUNT;
 */
 volatile uint32_t CH4_CTRL_TRIG;
 
-/* CH4_AL1_CTRL (offset: 0x110)
+/** CH4_AL1_CTRL (offset: 0x110)
   Alias for channel 4 CTRL register
   access : read-write
   reset value : 0x0
@@ -1160,7 +1160,7 @@ volatile uint32_t CH4_CTRL_TRIG;
 */
 volatile uint32_t CH4_AL1_CTRL;
 
-/* CH4_AL1_READ_ADDR (offset: 0x114)
+/** CH4_AL1_READ_ADDR (offset: 0x114)
   Alias for channel 4 READ_ADDR register
   access : read-write
   reset value : 0x0
@@ -1168,7 +1168,7 @@ volatile uint32_t CH4_AL1_CTRL;
 */
 volatile uint32_t CH4_AL1_READ_ADDR;
 
-/* CH4_AL1_WRITE_ADDR (offset: 0x118)
+/** CH4_AL1_WRITE_ADDR (offset: 0x118)
   Alias for channel 4 WRITE_ADDR register
   access : read-write
   reset value : 0x0
@@ -1176,7 +1176,7 @@ volatile uint32_t CH4_AL1_READ_ADDR;
 */
 volatile uint32_t CH4_AL1_WRITE_ADDR;
 
-/* CH4_AL1_TRANS_COUNT_TRIG (offset: 0x11c)
+/** CH4_AL1_TRANS_COUNT_TRIG (offset: 0x11c)
   Alias for channel 4 TRANS_COUNT register
 
  This is a trigger register (0xc). Writing a nonzero value will
@@ -1188,7 +1188,7 @@ volatile uint32_t CH4_AL1_WRITE_ADDR;
 */
 volatile uint32_t CH4_AL1_TRANS_COUNT_TRIG;
 
-/* CH4_AL2_CTRL (offset: 0x120)
+/** CH4_AL2_CTRL (offset: 0x120)
   Alias for channel 4 CTRL register
   access : read-write
   reset value : 0x0
@@ -1196,7 +1196,7 @@ volatile uint32_t CH4_AL1_TRANS_COUNT_TRIG;
 */
 volatile uint32_t CH4_AL2_CTRL;
 
-/* CH4_AL2_TRANS_COUNT (offset: 0x124)
+/** CH4_AL2_TRANS_COUNT (offset: 0x124)
   Alias for channel 4 TRANS_COUNT register
   access : read-write
   reset value : 0x0
@@ -1204,7 +1204,7 @@ volatile uint32_t CH4_AL2_CTRL;
 */
 volatile uint32_t CH4_AL2_TRANS_COUNT;
 
-/* CH4_AL2_READ_ADDR (offset: 0x128)
+/** CH4_AL2_READ_ADDR (offset: 0x128)
   Alias for channel 4 READ_ADDR register
   access : read-write
   reset value : 0x0
@@ -1212,7 +1212,7 @@ volatile uint32_t CH4_AL2_TRANS_COUNT;
 */
 volatile uint32_t CH4_AL2_READ_ADDR;
 
-/* CH4_AL2_WRITE_ADDR_TRIG (offset: 0x12c)
+/** CH4_AL2_WRITE_ADDR_TRIG (offset: 0x12c)
   Alias for channel 4 WRITE_ADDR register
 
  This is a trigger register (0xc). Writing a nonzero value will
@@ -1224,7 +1224,7 @@ volatile uint32_t CH4_AL2_READ_ADDR;
 */
 volatile uint32_t CH4_AL2_WRITE_ADDR_TRIG;
 
-/* CH4_AL3_CTRL (offset: 0x130)
+/** CH4_AL3_CTRL (offset: 0x130)
   Alias for channel 4 CTRL register
   access : read-write
   reset value : 0x0
@@ -1232,7 +1232,7 @@ volatile uint32_t CH4_AL2_WRITE_ADDR_TRIG;
 */
 volatile uint32_t CH4_AL3_CTRL;
 
-/* CH4_AL3_WRITE_ADDR (offset: 0x134)
+/** CH4_AL3_WRITE_ADDR (offset: 0x134)
   Alias for channel 4 WRITE_ADDR register
   access : read-write
   reset value : 0x0
@@ -1240,7 +1240,7 @@ volatile uint32_t CH4_AL3_CTRL;
 */
 volatile uint32_t CH4_AL3_WRITE_ADDR;
 
-/* CH4_AL3_TRANS_COUNT (offset: 0x138)
+/** CH4_AL3_TRANS_COUNT (offset: 0x138)
   Alias for channel 4 TRANS_COUNT register
   access : read-write
   reset value : 0x0
@@ -1248,7 +1248,7 @@ volatile uint32_t CH4_AL3_WRITE_ADDR;
 */
 volatile uint32_t CH4_AL3_TRANS_COUNT;
 
-/* CH4_AL3_READ_ADDR_TRIG (offset: 0x13c)
+/** CH4_AL3_READ_ADDR_TRIG (offset: 0x13c)
   Alias for channel 4 READ_ADDR register
 
  This is a trigger register (0xc). Writing a nonzero value will
@@ -1260,7 +1260,7 @@ volatile uint32_t CH4_AL3_TRANS_COUNT;
 */
 volatile uint32_t CH4_AL3_READ_ADDR_TRIG;
 
-/* CH5_READ_ADDR (offset: 0x140)
+/** CH5_READ_ADDR (offset: 0x140)
   DMA Channel 5 Read Address pointer
 
  This register updates automatically each time a read completes. The current value is the next address to be read by this channel.
@@ -1270,7 +1270,7 @@ volatile uint32_t CH4_AL3_READ_ADDR_TRIG;
 */
 volatile uint32_t CH5_READ_ADDR;
 
-/* CH5_WRITE_ADDR (offset: 0x144)
+/** CH5_WRITE_ADDR (offset: 0x144)
   DMA Channel 5 Write Address pointer
 
  This register updates automatically each time a write completes. The current value is the next address to be written by this channel.
@@ -1280,7 +1280,7 @@ volatile uint32_t CH5_READ_ADDR;
 */
 volatile uint32_t CH5_WRITE_ADDR;
 
-/* CH5_TRANS_COUNT (offset: 0x148)
+/** CH5_TRANS_COUNT (offset: 0x148)
   DMA Channel 5 Transfer Count
 
  Program the number of bus transfers a channel will perform before halting. Note that, if transfers are larger than one byte in size, this is not equal to the number of bytes transferred (see CTRL_DATA_SIZE).
@@ -1299,7 +1299,7 @@ volatile uint32_t CH5_WRITE_ADDR;
 */
 volatile uint32_t CH5_TRANS_COUNT;
 
-/* CH5_CTRL_TRIG (offset: 0x14c)
+/** CH5_CTRL_TRIG (offset: 0x14c)
   DMA Channel 5 Control and Status
   access : read-write
   reset value : 0x0
@@ -1402,7 +1402,7 @@ volatile uint32_t CH5_TRANS_COUNT;
 */
 volatile uint32_t CH5_CTRL_TRIG;
 
-/* CH5_AL1_CTRL (offset: 0x150)
+/** CH5_AL1_CTRL (offset: 0x150)
   Alias for channel 5 CTRL register
   access : read-write
   reset value : 0x0
@@ -1410,7 +1410,7 @@ volatile uint32_t CH5_CTRL_TRIG;
 */
 volatile uint32_t CH5_AL1_CTRL;
 
-/* CH5_AL1_READ_ADDR (offset: 0x154)
+/** CH5_AL1_READ_ADDR (offset: 0x154)
   Alias for channel 5 READ_ADDR register
   access : read-write
   reset value : 0x0
@@ -1418,7 +1418,7 @@ volatile uint32_t CH5_AL1_CTRL;
 */
 volatile uint32_t CH5_AL1_READ_ADDR;
 
-/* CH5_AL1_WRITE_ADDR (offset: 0x158)
+/** CH5_AL1_WRITE_ADDR (offset: 0x158)
   Alias for channel 5 WRITE_ADDR register
   access : read-write
   reset value : 0x0
@@ -1426,7 +1426,7 @@ volatile uint32_t CH5_AL1_READ_ADDR;
 */
 volatile uint32_t CH5_AL1_WRITE_ADDR;
 
-/* CH5_AL1_TRANS_COUNT_TRIG (offset: 0x15c)
+/** CH5_AL1_TRANS_COUNT_TRIG (offset: 0x15c)
   Alias for channel 5 TRANS_COUNT register
 
  This is a trigger register (0xc). Writing a nonzero value will
@@ -1438,7 +1438,7 @@ volatile uint32_t CH5_AL1_WRITE_ADDR;
 */
 volatile uint32_t CH5_AL1_TRANS_COUNT_TRIG;
 
-/* CH5_AL2_CTRL (offset: 0x160)
+/** CH5_AL2_CTRL (offset: 0x160)
   Alias for channel 5 CTRL register
   access : read-write
   reset value : 0x0
@@ -1446,7 +1446,7 @@ volatile uint32_t CH5_AL1_TRANS_COUNT_TRIG;
 */
 volatile uint32_t CH5_AL2_CTRL;
 
-/* CH5_AL2_TRANS_COUNT (offset: 0x164)
+/** CH5_AL2_TRANS_COUNT (offset: 0x164)
   Alias for channel 5 TRANS_COUNT register
   access : read-write
   reset value : 0x0
@@ -1454,7 +1454,7 @@ volatile uint32_t CH5_AL2_CTRL;
 */
 volatile uint32_t CH5_AL2_TRANS_COUNT;
 
-/* CH5_AL2_READ_ADDR (offset: 0x168)
+/** CH5_AL2_READ_ADDR (offset: 0x168)
   Alias for channel 5 READ_ADDR register
   access : read-write
   reset value : 0x0
@@ -1462,7 +1462,7 @@ volatile uint32_t CH5_AL2_TRANS_COUNT;
 */
 volatile uint32_t CH5_AL2_READ_ADDR;
 
-/* CH5_AL2_WRITE_ADDR_TRIG (offset: 0x16c)
+/** CH5_AL2_WRITE_ADDR_TRIG (offset: 0x16c)
   Alias for channel 5 WRITE_ADDR register
 
  This is a trigger register (0xc). Writing a nonzero value will
@@ -1474,7 +1474,7 @@ volatile uint32_t CH5_AL2_READ_ADDR;
 */
 volatile uint32_t CH5_AL2_WRITE_ADDR_TRIG;
 
-/* CH5_AL3_CTRL (offset: 0x170)
+/** CH5_AL3_CTRL (offset: 0x170)
   Alias for channel 5 CTRL register
   access : read-write
   reset value : 0x0
@@ -1482,7 +1482,7 @@ volatile uint32_t CH5_AL2_WRITE_ADDR_TRIG;
 */
 volatile uint32_t CH5_AL3_CTRL;
 
-/* CH5_AL3_WRITE_ADDR (offset: 0x174)
+/** CH5_AL3_WRITE_ADDR (offset: 0x174)
   Alias for channel 5 WRITE_ADDR register
   access : read-write
   reset value : 0x0
@@ -1490,7 +1490,7 @@ volatile uint32_t CH5_AL3_CTRL;
 */
 volatile uint32_t CH5_AL3_WRITE_ADDR;
 
-/* CH5_AL3_TRANS_COUNT (offset: 0x178)
+/** CH5_AL3_TRANS_COUNT (offset: 0x178)
   Alias for channel 5 TRANS_COUNT register
   access : read-write
   reset value : 0x0
@@ -1498,7 +1498,7 @@ volatile uint32_t CH5_AL3_WRITE_ADDR;
 */
 volatile uint32_t CH5_AL3_TRANS_COUNT;
 
-/* CH5_AL3_READ_ADDR_TRIG (offset: 0x17c)
+/** CH5_AL3_READ_ADDR_TRIG (offset: 0x17c)
   Alias for channel 5 READ_ADDR register
 
  This is a trigger register (0xc). Writing a nonzero value will
@@ -1510,7 +1510,7 @@ volatile uint32_t CH5_AL3_TRANS_COUNT;
 */
 volatile uint32_t CH5_AL3_READ_ADDR_TRIG;
 
-/* CH6_READ_ADDR (offset: 0x180)
+/** CH6_READ_ADDR (offset: 0x180)
   DMA Channel 6 Read Address pointer
 
  This register updates automatically each time a read completes. The current value is the next address to be read by this channel.
@@ -1520,7 +1520,7 @@ volatile uint32_t CH5_AL3_READ_ADDR_TRIG;
 */
 volatile uint32_t CH6_READ_ADDR;
 
-/* CH6_WRITE_ADDR (offset: 0x184)
+/** CH6_WRITE_ADDR (offset: 0x184)
   DMA Channel 6 Write Address pointer
 
  This register updates automatically each time a write completes. The current value is the next address to be written by this channel.
@@ -1530,7 +1530,7 @@ volatile uint32_t CH6_READ_ADDR;
 */
 volatile uint32_t CH6_WRITE_ADDR;
 
-/* CH6_TRANS_COUNT (offset: 0x188)
+/** CH6_TRANS_COUNT (offset: 0x188)
   DMA Channel 6 Transfer Count
 
  Program the number of bus transfers a channel will perform before halting. Note that, if transfers are larger than one byte in size, this is not equal to the number of bytes transferred (see CTRL_DATA_SIZE).
@@ -1549,7 +1549,7 @@ volatile uint32_t CH6_WRITE_ADDR;
 */
 volatile uint32_t CH6_TRANS_COUNT;
 
-/* CH6_CTRL_TRIG (offset: 0x18c)
+/** CH6_CTRL_TRIG (offset: 0x18c)
   DMA Channel 6 Control and Status
   access : read-write
   reset value : 0x0
@@ -1652,7 +1652,7 @@ volatile uint32_t CH6_TRANS_COUNT;
 */
 volatile uint32_t CH6_CTRL_TRIG;
 
-/* CH6_AL1_CTRL (offset: 0x190)
+/** CH6_AL1_CTRL (offset: 0x190)
   Alias for channel 6 CTRL register
   access : read-write
   reset value : 0x0
@@ -1660,7 +1660,7 @@ volatile uint32_t CH6_CTRL_TRIG;
 */
 volatile uint32_t CH6_AL1_CTRL;
 
-/* CH6_AL1_READ_ADDR (offset: 0x194)
+/** CH6_AL1_READ_ADDR (offset: 0x194)
   Alias for channel 6 READ_ADDR register
   access : read-write
   reset value : 0x0
@@ -1668,7 +1668,7 @@ volatile uint32_t CH6_AL1_CTRL;
 */
 volatile uint32_t CH6_AL1_READ_ADDR;
 
-/* CH6_AL1_WRITE_ADDR (offset: 0x198)
+/** CH6_AL1_WRITE_ADDR (offset: 0x198)
   Alias for channel 6 WRITE_ADDR register
   access : read-write
   reset value : 0x0
@@ -1676,7 +1676,7 @@ volatile uint32_t CH6_AL1_READ_ADDR;
 */
 volatile uint32_t CH6_AL1_WRITE_ADDR;
 
-/* CH6_AL1_TRANS_COUNT_TRIG (offset: 0x19c)
+/** CH6_AL1_TRANS_COUNT_TRIG (offset: 0x19c)
   Alias for channel 6 TRANS_COUNT register
 
  This is a trigger register (0xc). Writing a nonzero value will
@@ -1688,7 +1688,7 @@ volatile uint32_t CH6_AL1_WRITE_ADDR;
 */
 volatile uint32_t CH6_AL1_TRANS_COUNT_TRIG;
 
-/* CH6_AL2_CTRL (offset: 0x1a0)
+/** CH6_AL2_CTRL (offset: 0x1a0)
   Alias for channel 6 CTRL register
   access : read-write
   reset value : 0x0
@@ -1696,7 +1696,7 @@ volatile uint32_t CH6_AL1_TRANS_COUNT_TRIG;
 */
 volatile uint32_t CH6_AL2_CTRL;
 
-/* CH6_AL2_TRANS_COUNT (offset: 0x1a4)
+/** CH6_AL2_TRANS_COUNT (offset: 0x1a4)
   Alias for channel 6 TRANS_COUNT register
   access : read-write
   reset value : 0x0
@@ -1704,7 +1704,7 @@ volatile uint32_t CH6_AL2_CTRL;
 */
 volatile uint32_t CH6_AL2_TRANS_COUNT;
 
-/* CH6_AL2_READ_ADDR (offset: 0x1a8)
+/** CH6_AL2_READ_ADDR (offset: 0x1a8)
   Alias for channel 6 READ_ADDR register
   access : read-write
   reset value : 0x0
@@ -1712,7 +1712,7 @@ volatile uint32_t CH6_AL2_TRANS_COUNT;
 */
 volatile uint32_t CH6_AL2_READ_ADDR;
 
-/* CH6_AL2_WRITE_ADDR_TRIG (offset: 0x1ac)
+/** CH6_AL2_WRITE_ADDR_TRIG (offset: 0x1ac)
   Alias for channel 6 WRITE_ADDR register
 
  This is a trigger register (0xc). Writing a nonzero value will
@@ -1724,7 +1724,7 @@ volatile uint32_t CH6_AL2_READ_ADDR;
 */
 volatile uint32_t CH6_AL2_WRITE_ADDR_TRIG;
 
-/* CH6_AL3_CTRL (offset: 0x1b0)
+/** CH6_AL3_CTRL (offset: 0x1b0)
   Alias for channel 6 CTRL register
   access : read-write
   reset value : 0x0
@@ -1732,7 +1732,7 @@ volatile uint32_t CH6_AL2_WRITE_ADDR_TRIG;
 */
 volatile uint32_t CH6_AL3_CTRL;
 
-/* CH6_AL3_WRITE_ADDR (offset: 0x1b4)
+/** CH6_AL3_WRITE_ADDR (offset: 0x1b4)
   Alias for channel 6 WRITE_ADDR register
   access : read-write
   reset value : 0x0
@@ -1740,7 +1740,7 @@ volatile uint32_t CH6_AL3_CTRL;
 */
 volatile uint32_t CH6_AL3_WRITE_ADDR;
 
-/* CH6_AL3_TRANS_COUNT (offset: 0x1b8)
+/** CH6_AL3_TRANS_COUNT (offset: 0x1b8)
   Alias for channel 6 TRANS_COUNT register
   access : read-write
   reset value : 0x0
@@ -1748,7 +1748,7 @@ volatile uint32_t CH6_AL3_WRITE_ADDR;
 */
 volatile uint32_t CH6_AL3_TRANS_COUNT;
 
-/* CH6_AL3_READ_ADDR_TRIG (offset: 0x1bc)
+/** CH6_AL3_READ_ADDR_TRIG (offset: 0x1bc)
   Alias for channel 6 READ_ADDR register
 
  This is a trigger register (0xc). Writing a nonzero value will
@@ -1760,7 +1760,7 @@ volatile uint32_t CH6_AL3_TRANS_COUNT;
 */
 volatile uint32_t CH6_AL3_READ_ADDR_TRIG;
 
-/* CH7_READ_ADDR (offset: 0x1c0)
+/** CH7_READ_ADDR (offset: 0x1c0)
   DMA Channel 7 Read Address pointer
 
  This register updates automatically each time a read completes. The current value is the next address to be read by this channel.
@@ -1770,7 +1770,7 @@ volatile uint32_t CH6_AL3_READ_ADDR_TRIG;
 */
 volatile uint32_t CH7_READ_ADDR;
 
-/* CH7_WRITE_ADDR (offset: 0x1c4)
+/** CH7_WRITE_ADDR (offset: 0x1c4)
   DMA Channel 7 Write Address pointer
 
  This register updates automatically each time a write completes. The current value is the next address to be written by this channel.
@@ -1780,7 +1780,7 @@ volatile uint32_t CH7_READ_ADDR;
 */
 volatile uint32_t CH7_WRITE_ADDR;
 
-/* CH7_TRANS_COUNT (offset: 0x1c8)
+/** CH7_TRANS_COUNT (offset: 0x1c8)
   DMA Channel 7 Transfer Count
 
  Program the number of bus transfers a channel will perform before halting. Note that, if transfers are larger than one byte in size, this is not equal to the number of bytes transferred (see CTRL_DATA_SIZE).
@@ -1799,7 +1799,7 @@ volatile uint32_t CH7_WRITE_ADDR;
 */
 volatile uint32_t CH7_TRANS_COUNT;
 
-/* CH7_CTRL_TRIG (offset: 0x1cc)
+/** CH7_CTRL_TRIG (offset: 0x1cc)
   DMA Channel 7 Control and Status
   access : read-write
   reset value : 0x0
@@ -1902,7 +1902,7 @@ volatile uint32_t CH7_TRANS_COUNT;
 */
 volatile uint32_t CH7_CTRL_TRIG;
 
-/* CH7_AL1_CTRL (offset: 0x1d0)
+/** CH7_AL1_CTRL (offset: 0x1d0)
   Alias for channel 7 CTRL register
   access : read-write
   reset value : 0x0
@@ -1910,7 +1910,7 @@ volatile uint32_t CH7_CTRL_TRIG;
 */
 volatile uint32_t CH7_AL1_CTRL;
 
-/* CH7_AL1_READ_ADDR (offset: 0x1d4)
+/** CH7_AL1_READ_ADDR (offset: 0x1d4)
   Alias for channel 7 READ_ADDR register
   access : read-write
   reset value : 0x0
@@ -1918,7 +1918,7 @@ volatile uint32_t CH7_AL1_CTRL;
 */
 volatile uint32_t CH7_AL1_READ_ADDR;
 
-/* CH7_AL1_WRITE_ADDR (offset: 0x1d8)
+/** CH7_AL1_WRITE_ADDR (offset: 0x1d8)
   Alias for channel 7 WRITE_ADDR register
   access : read-write
   reset value : 0x0
@@ -1926,7 +1926,7 @@ volatile uint32_t CH7_AL1_READ_ADDR;
 */
 volatile uint32_t CH7_AL1_WRITE_ADDR;
 
-/* CH7_AL1_TRANS_COUNT_TRIG (offset: 0x1dc)
+/** CH7_AL1_TRANS_COUNT_TRIG (offset: 0x1dc)
   Alias for channel 7 TRANS_COUNT register
 
  This is a trigger register (0xc). Writing a nonzero value will
@@ -1938,7 +1938,7 @@ volatile uint32_t CH7_AL1_WRITE_ADDR;
 */
 volatile uint32_t CH7_AL1_TRANS_COUNT_TRIG;
 
-/* CH7_AL2_CTRL (offset: 0x1e0)
+/** CH7_AL2_CTRL (offset: 0x1e0)
   Alias for channel 7 CTRL register
   access : read-write
   reset value : 0x0
@@ -1946,7 +1946,7 @@ volatile uint32_t CH7_AL1_TRANS_COUNT_TRIG;
 */
 volatile uint32_t CH7_AL2_CTRL;
 
-/* CH7_AL2_TRANS_COUNT (offset: 0x1e4)
+/** CH7_AL2_TRANS_COUNT (offset: 0x1e4)
   Alias for channel 7 TRANS_COUNT register
   access : read-write
   reset value : 0x0
@@ -1954,7 +1954,7 @@ volatile uint32_t CH7_AL2_CTRL;
 */
 volatile uint32_t CH7_AL2_TRANS_COUNT;
 
-/* CH7_AL2_READ_ADDR (offset: 0x1e8)
+/** CH7_AL2_READ_ADDR (offset: 0x1e8)
   Alias for channel 7 READ_ADDR register
   access : read-write
   reset value : 0x0
@@ -1962,7 +1962,7 @@ volatile uint32_t CH7_AL2_TRANS_COUNT;
 */
 volatile uint32_t CH7_AL2_READ_ADDR;
 
-/* CH7_AL2_WRITE_ADDR_TRIG (offset: 0x1ec)
+/** CH7_AL2_WRITE_ADDR_TRIG (offset: 0x1ec)
   Alias for channel 7 WRITE_ADDR register
 
  This is a trigger register (0xc). Writing a nonzero value will
@@ -1974,7 +1974,7 @@ volatile uint32_t CH7_AL2_READ_ADDR;
 */
 volatile uint32_t CH7_AL2_WRITE_ADDR_TRIG;
 
-/* CH7_AL3_CTRL (offset: 0x1f0)
+/** CH7_AL3_CTRL (offset: 0x1f0)
   Alias for channel 7 CTRL register
   access : read-write
   reset value : 0x0
@@ -1982,7 +1982,7 @@ volatile uint32_t CH7_AL2_WRITE_ADDR_TRIG;
 */
 volatile uint32_t CH7_AL3_CTRL;
 
-/* CH7_AL3_WRITE_ADDR (offset: 0x1f4)
+/** CH7_AL3_WRITE_ADDR (offset: 0x1f4)
   Alias for channel 7 WRITE_ADDR register
   access : read-write
   reset value : 0x0
@@ -1990,7 +1990,7 @@ volatile uint32_t CH7_AL3_CTRL;
 */
 volatile uint32_t CH7_AL3_WRITE_ADDR;
 
-/* CH7_AL3_TRANS_COUNT (offset: 0x1f8)
+/** CH7_AL3_TRANS_COUNT (offset: 0x1f8)
   Alias for channel 7 TRANS_COUNT register
   access : read-write
   reset value : 0x0
@@ -1998,7 +1998,7 @@ volatile uint32_t CH7_AL3_WRITE_ADDR;
 */
 volatile uint32_t CH7_AL3_TRANS_COUNT;
 
-/* CH7_AL3_READ_ADDR_TRIG (offset: 0x1fc)
+/** CH7_AL3_READ_ADDR_TRIG (offset: 0x1fc)
   Alias for channel 7 READ_ADDR register
 
  This is a trigger register (0xc). Writing a nonzero value will
@@ -2010,7 +2010,7 @@ volatile uint32_t CH7_AL3_TRANS_COUNT;
 */
 volatile uint32_t CH7_AL3_READ_ADDR_TRIG;
 
-/* CH8_READ_ADDR (offset: 0x200)
+/** CH8_READ_ADDR (offset: 0x200)
   DMA Channel 8 Read Address pointer
 
  This register updates automatically each time a read completes. The current value is the next address to be read by this channel.
@@ -2020,7 +2020,7 @@ volatile uint32_t CH7_AL3_READ_ADDR_TRIG;
 */
 volatile uint32_t CH8_READ_ADDR;
 
-/* CH8_WRITE_ADDR (offset: 0x204)
+/** CH8_WRITE_ADDR (offset: 0x204)
   DMA Channel 8 Write Address pointer
 
  This register updates automatically each time a write completes. The current value is the next address to be written by this channel.
@@ -2030,7 +2030,7 @@ volatile uint32_t CH8_READ_ADDR;
 */
 volatile uint32_t CH8_WRITE_ADDR;
 
-/* CH8_TRANS_COUNT (offset: 0x208)
+/** CH8_TRANS_COUNT (offset: 0x208)
   DMA Channel 8 Transfer Count
 
  Program the number of bus transfers a channel will perform before halting. Note that, if transfers are larger than one byte in size, this is not equal to the number of bytes transferred (see CTRL_DATA_SIZE).
@@ -2049,7 +2049,7 @@ volatile uint32_t CH8_WRITE_ADDR;
 */
 volatile uint32_t CH8_TRANS_COUNT;
 
-/* CH8_CTRL_TRIG (offset: 0x20c)
+/** CH8_CTRL_TRIG (offset: 0x20c)
   DMA Channel 8 Control and Status
   access : read-write
   reset value : 0x0
@@ -2152,7 +2152,7 @@ volatile uint32_t CH8_TRANS_COUNT;
 */
 volatile uint32_t CH8_CTRL_TRIG;
 
-/* CH8_AL1_CTRL (offset: 0x210)
+/** CH8_AL1_CTRL (offset: 0x210)
   Alias for channel 8 CTRL register
   access : read-write
   reset value : 0x0
@@ -2160,7 +2160,7 @@ volatile uint32_t CH8_CTRL_TRIG;
 */
 volatile uint32_t CH8_AL1_CTRL;
 
-/* CH8_AL1_READ_ADDR (offset: 0x214)
+/** CH8_AL1_READ_ADDR (offset: 0x214)
   Alias for channel 8 READ_ADDR register
   access : read-write
   reset value : 0x0
@@ -2168,7 +2168,7 @@ volatile uint32_t CH8_AL1_CTRL;
 */
 volatile uint32_t CH8_AL1_READ_ADDR;
 
-/* CH8_AL1_WRITE_ADDR (offset: 0x218)
+/** CH8_AL1_WRITE_ADDR (offset: 0x218)
   Alias for channel 8 WRITE_ADDR register
   access : read-write
   reset value : 0x0
@@ -2176,7 +2176,7 @@ volatile uint32_t CH8_AL1_READ_ADDR;
 */
 volatile uint32_t CH8_AL1_WRITE_ADDR;
 
-/* CH8_AL1_TRANS_COUNT_TRIG (offset: 0x21c)
+/** CH8_AL1_TRANS_COUNT_TRIG (offset: 0x21c)
   Alias for channel 8 TRANS_COUNT register
 
  This is a trigger register (0xc). Writing a nonzero value will
@@ -2188,7 +2188,7 @@ volatile uint32_t CH8_AL1_WRITE_ADDR;
 */
 volatile uint32_t CH8_AL1_TRANS_COUNT_TRIG;
 
-/* CH8_AL2_CTRL (offset: 0x220)
+/** CH8_AL2_CTRL (offset: 0x220)
   Alias for channel 8 CTRL register
   access : read-write
   reset value : 0x0
@@ -2196,7 +2196,7 @@ volatile uint32_t CH8_AL1_TRANS_COUNT_TRIG;
 */
 volatile uint32_t CH8_AL2_CTRL;
 
-/* CH8_AL2_TRANS_COUNT (offset: 0x224)
+/** CH8_AL2_TRANS_COUNT (offset: 0x224)
   Alias for channel 8 TRANS_COUNT register
   access : read-write
   reset value : 0x0
@@ -2204,7 +2204,7 @@ volatile uint32_t CH8_AL2_CTRL;
 */
 volatile uint32_t CH8_AL2_TRANS_COUNT;
 
-/* CH8_AL2_READ_ADDR (offset: 0x228)
+/** CH8_AL2_READ_ADDR (offset: 0x228)
   Alias for channel 8 READ_ADDR register
   access : read-write
   reset value : 0x0
@@ -2212,7 +2212,7 @@ volatile uint32_t CH8_AL2_TRANS_COUNT;
 */
 volatile uint32_t CH8_AL2_READ_ADDR;
 
-/* CH8_AL2_WRITE_ADDR_TRIG (offset: 0x22c)
+/** CH8_AL2_WRITE_ADDR_TRIG (offset: 0x22c)
   Alias for channel 8 WRITE_ADDR register
 
  This is a trigger register (0xc). Writing a nonzero value will
@@ -2224,7 +2224,7 @@ volatile uint32_t CH8_AL2_READ_ADDR;
 */
 volatile uint32_t CH8_AL2_WRITE_ADDR_TRIG;
 
-/* CH8_AL3_CTRL (offset: 0x230)
+/** CH8_AL3_CTRL (offset: 0x230)
   Alias for channel 8 CTRL register
   access : read-write
   reset value : 0x0
@@ -2232,7 +2232,7 @@ volatile uint32_t CH8_AL2_WRITE_ADDR_TRIG;
 */
 volatile uint32_t CH8_AL3_CTRL;
 
-/* CH8_AL3_WRITE_ADDR (offset: 0x234)
+/** CH8_AL3_WRITE_ADDR (offset: 0x234)
   Alias for channel 8 WRITE_ADDR register
   access : read-write
   reset value : 0x0
@@ -2240,7 +2240,7 @@ volatile uint32_t CH8_AL3_CTRL;
 */
 volatile uint32_t CH8_AL3_WRITE_ADDR;
 
-/* CH8_AL3_TRANS_COUNT (offset: 0x238)
+/** CH8_AL3_TRANS_COUNT (offset: 0x238)
   Alias for channel 8 TRANS_COUNT register
   access : read-write
   reset value : 0x0
@@ -2248,7 +2248,7 @@ volatile uint32_t CH8_AL3_WRITE_ADDR;
 */
 volatile uint32_t CH8_AL3_TRANS_COUNT;
 
-/* CH8_AL3_READ_ADDR_TRIG (offset: 0x23c)
+/** CH8_AL3_READ_ADDR_TRIG (offset: 0x23c)
   Alias for channel 8 READ_ADDR register
 
  This is a trigger register (0xc). Writing a nonzero value will
@@ -2260,7 +2260,7 @@ volatile uint32_t CH8_AL3_TRANS_COUNT;
 */
 volatile uint32_t CH8_AL3_READ_ADDR_TRIG;
 
-/* CH9_READ_ADDR (offset: 0x240)
+/** CH9_READ_ADDR (offset: 0x240)
   DMA Channel 9 Read Address pointer
 
  This register updates automatically each time a read completes. The current value is the next address to be read by this channel.
@@ -2270,7 +2270,7 @@ volatile uint32_t CH8_AL3_READ_ADDR_TRIG;
 */
 volatile uint32_t CH9_READ_ADDR;
 
-/* CH9_WRITE_ADDR (offset: 0x244)
+/** CH9_WRITE_ADDR (offset: 0x244)
   DMA Channel 9 Write Address pointer
 
  This register updates automatically each time a write completes. The current value is the next address to be written by this channel.
@@ -2280,7 +2280,7 @@ volatile uint32_t CH9_READ_ADDR;
 */
 volatile uint32_t CH9_WRITE_ADDR;
 
-/* CH9_TRANS_COUNT (offset: 0x248)
+/** CH9_TRANS_COUNT (offset: 0x248)
   DMA Channel 9 Transfer Count
 
  Program the number of bus transfers a channel will perform before halting. Note that, if transfers are larger than one byte in size, this is not equal to the number of bytes transferred (see CTRL_DATA_SIZE).
@@ -2299,7 +2299,7 @@ volatile uint32_t CH9_WRITE_ADDR;
 */
 volatile uint32_t CH9_TRANS_COUNT;
 
-/* CH9_CTRL_TRIG (offset: 0x24c)
+/** CH9_CTRL_TRIG (offset: 0x24c)
   DMA Channel 9 Control and Status
   access : read-write
   reset value : 0x0
@@ -2402,7 +2402,7 @@ volatile uint32_t CH9_TRANS_COUNT;
 */
 volatile uint32_t CH9_CTRL_TRIG;
 
-/* CH9_AL1_CTRL (offset: 0x250)
+/** CH9_AL1_CTRL (offset: 0x250)
   Alias for channel 9 CTRL register
   access : read-write
   reset value : 0x0
@@ -2410,7 +2410,7 @@ volatile uint32_t CH9_CTRL_TRIG;
 */
 volatile uint32_t CH9_AL1_CTRL;
 
-/* CH9_AL1_READ_ADDR (offset: 0x254)
+/** CH9_AL1_READ_ADDR (offset: 0x254)
   Alias for channel 9 READ_ADDR register
   access : read-write
   reset value : 0x0
@@ -2418,7 +2418,7 @@ volatile uint32_t CH9_AL1_CTRL;
 */
 volatile uint32_t CH9_AL1_READ_ADDR;
 
-/* CH9_AL1_WRITE_ADDR (offset: 0x258)
+/** CH9_AL1_WRITE_ADDR (offset: 0x258)
   Alias for channel 9 WRITE_ADDR register
   access : read-write
   reset value : 0x0
@@ -2426,7 +2426,7 @@ volatile uint32_t CH9_AL1_READ_ADDR;
 */
 volatile uint32_t CH9_AL1_WRITE_ADDR;
 
-/* CH9_AL1_TRANS_COUNT_TRIG (offset: 0x25c)
+/** CH9_AL1_TRANS_COUNT_TRIG (offset: 0x25c)
   Alias for channel 9 TRANS_COUNT register
 
  This is a trigger register (0xc). Writing a nonzero value will
@@ -2438,7 +2438,7 @@ volatile uint32_t CH9_AL1_WRITE_ADDR;
 */
 volatile uint32_t CH9_AL1_TRANS_COUNT_TRIG;
 
-/* CH9_AL2_CTRL (offset: 0x260)
+/** CH9_AL2_CTRL (offset: 0x260)
   Alias for channel 9 CTRL register
   access : read-write
   reset value : 0x0
@@ -2446,7 +2446,7 @@ volatile uint32_t CH9_AL1_TRANS_COUNT_TRIG;
 */
 volatile uint32_t CH9_AL2_CTRL;
 
-/* CH9_AL2_TRANS_COUNT (offset: 0x264)
+/** CH9_AL2_TRANS_COUNT (offset: 0x264)
   Alias for channel 9 TRANS_COUNT register
   access : read-write
   reset value : 0x0
@@ -2454,7 +2454,7 @@ volatile uint32_t CH9_AL2_CTRL;
 */
 volatile uint32_t CH9_AL2_TRANS_COUNT;
 
-/* CH9_AL2_READ_ADDR (offset: 0x268)
+/** CH9_AL2_READ_ADDR (offset: 0x268)
   Alias for channel 9 READ_ADDR register
   access : read-write
   reset value : 0x0
@@ -2462,7 +2462,7 @@ volatile uint32_t CH9_AL2_TRANS_COUNT;
 */
 volatile uint32_t CH9_AL2_READ_ADDR;
 
-/* CH9_AL2_WRITE_ADDR_TRIG (offset: 0x26c)
+/** CH9_AL2_WRITE_ADDR_TRIG (offset: 0x26c)
   Alias for channel 9 WRITE_ADDR register
 
  This is a trigger register (0xc). Writing a nonzero value will
@@ -2474,7 +2474,7 @@ volatile uint32_t CH9_AL2_READ_ADDR;
 */
 volatile uint32_t CH9_AL2_WRITE_ADDR_TRIG;
 
-/* CH9_AL3_CTRL (offset: 0x270)
+/** CH9_AL3_CTRL (offset: 0x270)
   Alias for channel 9 CTRL register
   access : read-write
   reset value : 0x0
@@ -2482,7 +2482,7 @@ volatile uint32_t CH9_AL2_WRITE_ADDR_TRIG;
 */
 volatile uint32_t CH9_AL3_CTRL;
 
-/* CH9_AL3_WRITE_ADDR (offset: 0x274)
+/** CH9_AL3_WRITE_ADDR (offset: 0x274)
   Alias for channel 9 WRITE_ADDR register
   access : read-write
   reset value : 0x0
@@ -2490,7 +2490,7 @@ volatile uint32_t CH9_AL3_CTRL;
 */
 volatile uint32_t CH9_AL3_WRITE_ADDR;
 
-/* CH9_AL3_TRANS_COUNT (offset: 0x278)
+/** CH9_AL3_TRANS_COUNT (offset: 0x278)
   Alias for channel 9 TRANS_COUNT register
   access : read-write
   reset value : 0x0
@@ -2498,7 +2498,7 @@ volatile uint32_t CH9_AL3_WRITE_ADDR;
 */
 volatile uint32_t CH9_AL3_TRANS_COUNT;
 
-/* CH9_AL3_READ_ADDR_TRIG (offset: 0x27c)
+/** CH9_AL3_READ_ADDR_TRIG (offset: 0x27c)
   Alias for channel 9 READ_ADDR register
 
  This is a trigger register (0xc). Writing a nonzero value will
@@ -2510,7 +2510,7 @@ volatile uint32_t CH9_AL3_TRANS_COUNT;
 */
 volatile uint32_t CH9_AL3_READ_ADDR_TRIG;
 
-/* CH10_READ_ADDR (offset: 0x280)
+/** CH10_READ_ADDR (offset: 0x280)
   DMA Channel 10 Read Address pointer
 
  This register updates automatically each time a read completes. The current value is the next address to be read by this channel.
@@ -2520,7 +2520,7 @@ volatile uint32_t CH9_AL3_READ_ADDR_TRIG;
 */
 volatile uint32_t CH10_READ_ADDR;
 
-/* CH10_WRITE_ADDR (offset: 0x284)
+/** CH10_WRITE_ADDR (offset: 0x284)
   DMA Channel 10 Write Address pointer
 
  This register updates automatically each time a write completes. The current value is the next address to be written by this channel.
@@ -2530,7 +2530,7 @@ volatile uint32_t CH10_READ_ADDR;
 */
 volatile uint32_t CH10_WRITE_ADDR;
 
-/* CH10_TRANS_COUNT (offset: 0x288)
+/** CH10_TRANS_COUNT (offset: 0x288)
   DMA Channel 10 Transfer Count
 
  Program the number of bus transfers a channel will perform before halting. Note that, if transfers are larger than one byte in size, this is not equal to the number of bytes transferred (see CTRL_DATA_SIZE).
@@ -2549,7 +2549,7 @@ volatile uint32_t CH10_WRITE_ADDR;
 */
 volatile uint32_t CH10_TRANS_COUNT;
 
-/* CH10_CTRL_TRIG (offset: 0x28c)
+/** CH10_CTRL_TRIG (offset: 0x28c)
   DMA Channel 10 Control and Status
   access : read-write
   reset value : 0x0
@@ -2652,7 +2652,7 @@ volatile uint32_t CH10_TRANS_COUNT;
 */
 volatile uint32_t CH10_CTRL_TRIG;
 
-/* CH10_AL1_CTRL (offset: 0x290)
+/** CH10_AL1_CTRL (offset: 0x290)
   Alias for channel 10 CTRL register
   access : read-write
   reset value : 0x0
@@ -2660,7 +2660,7 @@ volatile uint32_t CH10_CTRL_TRIG;
 */
 volatile uint32_t CH10_AL1_CTRL;
 
-/* CH10_AL1_READ_ADDR (offset: 0x294)
+/** CH10_AL1_READ_ADDR (offset: 0x294)
   Alias for channel 10 READ_ADDR register
   access : read-write
   reset value : 0x0
@@ -2668,7 +2668,7 @@ volatile uint32_t CH10_AL1_CTRL;
 */
 volatile uint32_t CH10_AL1_READ_ADDR;
 
-/* CH10_AL1_WRITE_ADDR (offset: 0x298)
+/** CH10_AL1_WRITE_ADDR (offset: 0x298)
   Alias for channel 10 WRITE_ADDR register
   access : read-write
   reset value : 0x0
@@ -2676,7 +2676,7 @@ volatile uint32_t CH10_AL1_READ_ADDR;
 */
 volatile uint32_t CH10_AL1_WRITE_ADDR;
 
-/* CH10_AL1_TRANS_COUNT_TRIG (offset: 0x29c)
+/** CH10_AL1_TRANS_COUNT_TRIG (offset: 0x29c)
   Alias for channel 10 TRANS_COUNT register
 
  This is a trigger register (0xc). Writing a nonzero value will
@@ -2688,7 +2688,7 @@ volatile uint32_t CH10_AL1_WRITE_ADDR;
 */
 volatile uint32_t CH10_AL1_TRANS_COUNT_TRIG;
 
-/* CH10_AL2_CTRL (offset: 0x2a0)
+/** CH10_AL2_CTRL (offset: 0x2a0)
   Alias for channel 10 CTRL register
   access : read-write
   reset value : 0x0
@@ -2696,7 +2696,7 @@ volatile uint32_t CH10_AL1_TRANS_COUNT_TRIG;
 */
 volatile uint32_t CH10_AL2_CTRL;
 
-/* CH10_AL2_TRANS_COUNT (offset: 0x2a4)
+/** CH10_AL2_TRANS_COUNT (offset: 0x2a4)
   Alias for channel 10 TRANS_COUNT register
   access : read-write
   reset value : 0x0
@@ -2704,7 +2704,7 @@ volatile uint32_t CH10_AL2_CTRL;
 */
 volatile uint32_t CH10_AL2_TRANS_COUNT;
 
-/* CH10_AL2_READ_ADDR (offset: 0x2a8)
+/** CH10_AL2_READ_ADDR (offset: 0x2a8)
   Alias for channel 10 READ_ADDR register
   access : read-write
   reset value : 0x0
@@ -2712,7 +2712,7 @@ volatile uint32_t CH10_AL2_TRANS_COUNT;
 */
 volatile uint32_t CH10_AL2_READ_ADDR;
 
-/* CH10_AL2_WRITE_ADDR_TRIG (offset: 0x2ac)
+/** CH10_AL2_WRITE_ADDR_TRIG (offset: 0x2ac)
   Alias for channel 10 WRITE_ADDR register
 
  This is a trigger register (0xc). Writing a nonzero value will
@@ -2724,7 +2724,7 @@ volatile uint32_t CH10_AL2_READ_ADDR;
 */
 volatile uint32_t CH10_AL2_WRITE_ADDR_TRIG;
 
-/* CH10_AL3_CTRL (offset: 0x2b0)
+/** CH10_AL3_CTRL (offset: 0x2b0)
   Alias for channel 10 CTRL register
   access : read-write
   reset value : 0x0
@@ -2732,7 +2732,7 @@ volatile uint32_t CH10_AL2_WRITE_ADDR_TRIG;
 */
 volatile uint32_t CH10_AL3_CTRL;
 
-/* CH10_AL3_WRITE_ADDR (offset: 0x2b4)
+/** CH10_AL3_WRITE_ADDR (offset: 0x2b4)
   Alias for channel 10 WRITE_ADDR register
   access : read-write
   reset value : 0x0
@@ -2740,7 +2740,7 @@ volatile uint32_t CH10_AL3_CTRL;
 */
 volatile uint32_t CH10_AL3_WRITE_ADDR;
 
-/* CH10_AL3_TRANS_COUNT (offset: 0x2b8)
+/** CH10_AL3_TRANS_COUNT (offset: 0x2b8)
   Alias for channel 10 TRANS_COUNT register
   access : read-write
   reset value : 0x0
@@ -2748,7 +2748,7 @@ volatile uint32_t CH10_AL3_WRITE_ADDR;
 */
 volatile uint32_t CH10_AL3_TRANS_COUNT;
 
-/* CH10_AL3_READ_ADDR_TRIG (offset: 0x2bc)
+/** CH10_AL3_READ_ADDR_TRIG (offset: 0x2bc)
   Alias for channel 10 READ_ADDR register
 
  This is a trigger register (0xc). Writing a nonzero value will
@@ -2760,7 +2760,7 @@ volatile uint32_t CH10_AL3_TRANS_COUNT;
 */
 volatile uint32_t CH10_AL3_READ_ADDR_TRIG;
 
-/* CH11_READ_ADDR (offset: 0x2c0)
+/** CH11_READ_ADDR (offset: 0x2c0)
   DMA Channel 11 Read Address pointer
 
  This register updates automatically each time a read completes. The current value is the next address to be read by this channel.
@@ -2770,7 +2770,7 @@ volatile uint32_t CH10_AL3_READ_ADDR_TRIG;
 */
 volatile uint32_t CH11_READ_ADDR;
 
-/* CH11_WRITE_ADDR (offset: 0x2c4)
+/** CH11_WRITE_ADDR (offset: 0x2c4)
   DMA Channel 11 Write Address pointer
 
  This register updates automatically each time a write completes. The current value is the next address to be written by this channel.
@@ -2780,7 +2780,7 @@ volatile uint32_t CH11_READ_ADDR;
 */
 volatile uint32_t CH11_WRITE_ADDR;
 
-/* CH11_TRANS_COUNT (offset: 0x2c8)
+/** CH11_TRANS_COUNT (offset: 0x2c8)
   DMA Channel 11 Transfer Count
 
  Program the number of bus transfers a channel will perform before halting. Note that, if transfers are larger than one byte in size, this is not equal to the number of bytes transferred (see CTRL_DATA_SIZE).
@@ -2799,7 +2799,7 @@ volatile uint32_t CH11_WRITE_ADDR;
 */
 volatile uint32_t CH11_TRANS_COUNT;
 
-/* CH11_CTRL_TRIG (offset: 0x2cc)
+/** CH11_CTRL_TRIG (offset: 0x2cc)
   DMA Channel 11 Control and Status
   access : read-write
   reset value : 0x0
@@ -2902,7 +2902,7 @@ volatile uint32_t CH11_TRANS_COUNT;
 */
 volatile uint32_t CH11_CTRL_TRIG;
 
-/* CH11_AL1_CTRL (offset: 0x2d0)
+/** CH11_AL1_CTRL (offset: 0x2d0)
   Alias for channel 11 CTRL register
   access : read-write
   reset value : 0x0
@@ -2910,7 +2910,7 @@ volatile uint32_t CH11_CTRL_TRIG;
 */
 volatile uint32_t CH11_AL1_CTRL;
 
-/* CH11_AL1_READ_ADDR (offset: 0x2d4)
+/** CH11_AL1_READ_ADDR (offset: 0x2d4)
   Alias for channel 11 READ_ADDR register
   access : read-write
   reset value : 0x0
@@ -2918,7 +2918,7 @@ volatile uint32_t CH11_AL1_CTRL;
 */
 volatile uint32_t CH11_AL1_READ_ADDR;
 
-/* CH11_AL1_WRITE_ADDR (offset: 0x2d8)
+/** CH11_AL1_WRITE_ADDR (offset: 0x2d8)
   Alias for channel 11 WRITE_ADDR register
   access : read-write
   reset value : 0x0
@@ -2926,7 +2926,7 @@ volatile uint32_t CH11_AL1_READ_ADDR;
 */
 volatile uint32_t CH11_AL1_WRITE_ADDR;
 
-/* CH11_AL1_TRANS_COUNT_TRIG (offset: 0x2dc)
+/** CH11_AL1_TRANS_COUNT_TRIG (offset: 0x2dc)
   Alias for channel 11 TRANS_COUNT register
 
  This is a trigger register (0xc). Writing a nonzero value will
@@ -2938,7 +2938,7 @@ volatile uint32_t CH11_AL1_WRITE_ADDR;
 */
 volatile uint32_t CH11_AL1_TRANS_COUNT_TRIG;
 
-/* CH11_AL2_CTRL (offset: 0x2e0)
+/** CH11_AL2_CTRL (offset: 0x2e0)
   Alias for channel 11 CTRL register
   access : read-write
   reset value : 0x0
@@ -2946,7 +2946,7 @@ volatile uint32_t CH11_AL1_TRANS_COUNT_TRIG;
 */
 volatile uint32_t CH11_AL2_CTRL;
 
-/* CH11_AL2_TRANS_COUNT (offset: 0x2e4)
+/** CH11_AL2_TRANS_COUNT (offset: 0x2e4)
   Alias for channel 11 TRANS_COUNT register
   access : read-write
   reset value : 0x0
@@ -2954,7 +2954,7 @@ volatile uint32_t CH11_AL2_CTRL;
 */
 volatile uint32_t CH11_AL2_TRANS_COUNT;
 
-/* CH11_AL2_READ_ADDR (offset: 0x2e8)
+/** CH11_AL2_READ_ADDR (offset: 0x2e8)
   Alias for channel 11 READ_ADDR register
   access : read-write
   reset value : 0x0
@@ -2962,7 +2962,7 @@ volatile uint32_t CH11_AL2_TRANS_COUNT;
 */
 volatile uint32_t CH11_AL2_READ_ADDR;
 
-/* CH11_AL2_WRITE_ADDR_TRIG (offset: 0x2ec)
+/** CH11_AL2_WRITE_ADDR_TRIG (offset: 0x2ec)
   Alias for channel 11 WRITE_ADDR register
 
  This is a trigger register (0xc). Writing a nonzero value will
@@ -2974,7 +2974,7 @@ volatile uint32_t CH11_AL2_READ_ADDR;
 */
 volatile uint32_t CH11_AL2_WRITE_ADDR_TRIG;
 
-/* CH11_AL3_CTRL (offset: 0x2f0)
+/** CH11_AL3_CTRL (offset: 0x2f0)
   Alias for channel 11 CTRL register
   access : read-write
   reset value : 0x0
@@ -2982,7 +2982,7 @@ volatile uint32_t CH11_AL2_WRITE_ADDR_TRIG;
 */
 volatile uint32_t CH11_AL3_CTRL;
 
-/* CH11_AL3_WRITE_ADDR (offset: 0x2f4)
+/** CH11_AL3_WRITE_ADDR (offset: 0x2f4)
   Alias for channel 11 WRITE_ADDR register
   access : read-write
   reset value : 0x0
@@ -2990,7 +2990,7 @@ volatile uint32_t CH11_AL3_CTRL;
 */
 volatile uint32_t CH11_AL3_WRITE_ADDR;
 
-/* CH11_AL3_TRANS_COUNT (offset: 0x2f8)
+/** CH11_AL3_TRANS_COUNT (offset: 0x2f8)
   Alias for channel 11 TRANS_COUNT register
   access : read-write
   reset value : 0x0
@@ -2998,7 +2998,7 @@ volatile uint32_t CH11_AL3_WRITE_ADDR;
 */
 volatile uint32_t CH11_AL3_TRANS_COUNT;
 
-/* CH11_AL3_READ_ADDR_TRIG (offset: 0x2fc)
+/** CH11_AL3_READ_ADDR_TRIG (offset: 0x2fc)
   Alias for channel 11 READ_ADDR register
 
  This is a trigger register (0xc). Writing a nonzero value will
@@ -3011,7 +3011,7 @@ volatile uint32_t CH11_AL3_TRANS_COUNT;
 volatile uint32_t CH11_AL3_READ_ADDR_TRIG;
 volatile uint32_t reserved0[64];
 
-/* INTR (offset: 0x400)
+/** INTR (offset: 0x400)
   Interrupt Status (raw)
   access : read-write
   reset value : 0x0
@@ -3031,7 +3031,7 @@ volatile uint32_t reserved0[64];
 */
 volatile uint32_t INTR;
 
-/* INTE0 (offset: 0x404)
+/** INTE0 (offset: 0x404)
   Interrupt Enables for IRQ 0
   access : read-write
   reset value : 0x0
@@ -3042,7 +3042,7 @@ volatile uint32_t INTR;
 */
 volatile uint32_t INTE0;
 
-/* INTF0 (offset: 0x408)
+/** INTF0 (offset: 0x408)
   Force Interrupts
   access : read-write
   reset value : 0x0
@@ -3053,7 +3053,7 @@ volatile uint32_t INTE0;
 */
 volatile uint32_t INTF0;
 
-/* INTS0 (offset: 0x40c)
+/** INTS0 (offset: 0x40c)
   Interrupt Status for IRQ 0
   access : read-write
   reset value : 0x0
@@ -3067,7 +3067,7 @@ volatile uint32_t INTF0;
 volatile uint32_t INTS0;
 volatile uint32_t reserved1;
 
-/* INTE1 (offset: 0x414)
+/** INTE1 (offset: 0x414)
   Interrupt Enables for IRQ 1
   access : read-write
   reset value : 0x0
@@ -3078,7 +3078,7 @@ volatile uint32_t reserved1;
 */
 volatile uint32_t INTE1;
 
-/* INTF1 (offset: 0x418)
+/** INTF1 (offset: 0x418)
   Force Interrupts for IRQ 1
   access : read-write
   reset value : 0x0
@@ -3089,7 +3089,7 @@ volatile uint32_t INTE1;
 */
 volatile uint32_t INTF1;
 
-/* INTS1 (offset: 0x41c)
+/** INTS1 (offset: 0x41c)
   Interrupt Status (masked) for IRQ 1
   access : read-write
   reset value : 0x0
@@ -3102,7 +3102,7 @@ volatile uint32_t INTF1;
 */
 volatile uint32_t INTS1;
 
-/* TIMER0 (offset: 0x420)
+/** TIMER0 (offset: 0x420)
   Pacing (X/Y) Fractional Timer
 
  The pacing timer produces TREQ assertions at a rate set by ((X/Y) * sys_clk). This equation is evaluated every sys_clk cycles and therefore can only generate TREQs at a rate of 1 per sys_clk (i.e. permanent TREQ) or less.
@@ -3118,7 +3118,7 @@ volatile uint32_t INTS1;
 */
 volatile uint32_t TIMER0;
 
-/* TIMER1 (offset: 0x424)
+/** TIMER1 (offset: 0x424)
   Pacing (X/Y) Fractional Timer
 
  The pacing timer produces TREQ assertions at a rate set by ((X/Y) * sys_clk). This equation is evaluated every sys_clk cycles and therefore can only generate TREQs at a rate of 1 per sys_clk (i.e. permanent TREQ) or less.
@@ -3134,7 +3134,7 @@ volatile uint32_t TIMER0;
 */
 volatile uint32_t TIMER1;
 
-/* TIMER2 (offset: 0x428)
+/** TIMER2 (offset: 0x428)
   Pacing (X/Y) Fractional Timer
 
  The pacing timer produces TREQ assertions at a rate set by ((X/Y) * sys_clk). This equation is evaluated every sys_clk cycles and therefore can only generate TREQs at a rate of 1 per sys_clk (i.e. permanent TREQ) or less.
@@ -3149,7 +3149,7 @@ volatile uint32_t TIMER1;
 */
 volatile uint32_t TIMER2;
 
-/* TIMER3 (offset: 0x42c)
+/** TIMER3 (offset: 0x42c)
   Pacing (X/Y) Fractional Timer
 
  The pacing timer produces TREQ assertions at a rate set by ((X/Y) * sys_clk). This equation is evaluated every sys_clk cycles and therefore can only generate TREQs at a rate of 1 per sys_clk (i.e. permanent TREQ) or less.
@@ -3164,7 +3164,7 @@ volatile uint32_t TIMER2;
 */
 volatile uint32_t TIMER3;
 
-/* MULTI_CHAN_TRIGGER (offset: 0x430)
+/** MULTI_CHAN_TRIGGER (offset: 0x430)
   Trigger one or more channels simultaneously
   access : read-write
   reset value : 0x0
@@ -3175,7 +3175,7 @@ volatile uint32_t TIMER3;
 */
 volatile uint32_t MULTI_CHAN_TRIGGER;
 
-/* SNIFF_CTRL (offset: 0x434)
+/** SNIFF_CTRL (offset: 0x434)
   Sniffer Control
   access : read-write
   reset value : 0x0
@@ -3210,7 +3210,7 @@ volatile uint32_t MULTI_CHAN_TRIGGER;
 */
 volatile uint32_t SNIFF_CTRL;
 
-/* SNIFF_DATA (offset: 0x438)
+/** SNIFF_DATA (offset: 0x438)
   Data accumulator for sniff hardware
 
  Write an initial seed value here before starting a DMA transfer on the channel indicated by SNIFF_CTRL_DMACH. The hardware will update this register each time it observes a read from the indicated channel. Once the channel completes, the final result can be read from this register.
@@ -3221,7 +3221,7 @@ volatile uint32_t SNIFF_CTRL;
 volatile uint32_t SNIFF_DATA;
 volatile uint32_t reserved2;
 
-/* FIFO_LEVELS (offset: 0x440)
+/** FIFO_LEVELS (offset: 0x440)
   Debug RAF, WAF, TDF levels
   access : read-write
   reset value : 0x0
@@ -3238,7 +3238,7 @@ volatile uint32_t reserved2;
 */
 volatile uint32_t FIFO_LEVELS;
 
-/* CHAN_ABORT (offset: 0x444)
+/** CHAN_ABORT (offset: 0x444)
   Abort an in-progress transfer sequence on one or more channels
   access : read-write
   reset value : 0x0
@@ -3252,7 +3252,7 @@ volatile uint32_t FIFO_LEVELS;
 */
 volatile uint32_t CHAN_ABORT;
 
-/* N_CHANNELS (offset: 0x448)
+/** N_CHANNELS (offset: 0x448)
   The number of channels this DMA instance is equipped with. This DMA supports up to 16 hardware channels, but can be configured with as few as one, to minimise silicon area.
   access : read-write
   reset value : 0x0
@@ -3263,7 +3263,7 @@ volatile uint32_t CHAN_ABORT;
 volatile uint32_t N_CHANNELS;
 volatile uint32_t reserved3[237];
 
-/* CH0_DBG_CTDREQ (offset: 0x800)
+/** CH0_DBG_CTDREQ (offset: 0x800)
   Read: get channel DREQ counter (i.e. how many accesses the DMA expects it can perform on the peripheral without overflow/underflow. Write any value: clears the counter, and cause channel to re-initiate DREQ handshake.
   access : read-write
   reset value : 0x0
@@ -3273,7 +3273,7 @@ volatile uint32_t reserved3[237];
 */
 volatile uint32_t CH0_DBG_CTDREQ;
 
-/* CH0_DBG_TCR (offset: 0x804)
+/** CH0_DBG_TCR (offset: 0x804)
   Read to get channel TRANS_COUNT reload value, i.e. the length of the next transfer
   access : read-only
   reset value : 0x0
@@ -3282,7 +3282,7 @@ volatile uint32_t CH0_DBG_CTDREQ;
 volatile uint32_t CH0_DBG_TCR;
 volatile uint32_t reserved4[14];
 
-/* CH1_DBG_CTDREQ (offset: 0x840)
+/** CH1_DBG_CTDREQ (offset: 0x840)
   Read: get channel DREQ counter (i.e. how many accesses the DMA expects it can perform on the peripheral without overflow/underflow. Write any value: clears the counter, and cause channel to re-initiate DREQ handshake.
   access : read-write
   reset value : 0x0
@@ -3292,7 +3292,7 @@ volatile uint32_t reserved4[14];
 */
 volatile uint32_t CH1_DBG_CTDREQ;
 
-/* CH1_DBG_TCR (offset: 0x844)
+/** CH1_DBG_TCR (offset: 0x844)
   Read to get channel TRANS_COUNT reload value, i.e. the length of the next transfer
   access : read-only
   reset value : 0x0
@@ -3301,7 +3301,7 @@ volatile uint32_t CH1_DBG_CTDREQ;
 volatile uint32_t CH1_DBG_TCR;
 volatile uint32_t reserved5[14];
 
-/* CH2_DBG_CTDREQ (offset: 0x880)
+/** CH2_DBG_CTDREQ (offset: 0x880)
   Read: get channel DREQ counter (i.e. how many accesses the DMA expects it can perform on the peripheral without overflow/underflow. Write any value: clears the counter, and cause channel to re-initiate DREQ handshake.
   access : read-write
   reset value : 0x0
@@ -3311,7 +3311,7 @@ volatile uint32_t reserved5[14];
 */
 volatile uint32_t CH2_DBG_CTDREQ;
 
-/* CH2_DBG_TCR (offset: 0x884)
+/** CH2_DBG_TCR (offset: 0x884)
   Read to get channel TRANS_COUNT reload value, i.e. the length of the next transfer
   access : read-only
   reset value : 0x0
@@ -3320,7 +3320,7 @@ volatile uint32_t CH2_DBG_CTDREQ;
 volatile uint32_t CH2_DBG_TCR;
 volatile uint32_t reserved6[14];
 
-/* CH3_DBG_CTDREQ (offset: 0x8c0)
+/** CH3_DBG_CTDREQ (offset: 0x8c0)
   Read: get channel DREQ counter (i.e. how many accesses the DMA expects it can perform on the peripheral without overflow/underflow. Write any value: clears the counter, and cause channel to re-initiate DREQ handshake.
   access : read-write
   reset value : 0x0
@@ -3330,7 +3330,7 @@ volatile uint32_t reserved6[14];
 */
 volatile uint32_t CH3_DBG_CTDREQ;
 
-/* CH3_DBG_TCR (offset: 0x8c4)
+/** CH3_DBG_TCR (offset: 0x8c4)
   Read to get channel TRANS_COUNT reload value, i.e. the length of the next transfer
   access : read-only
   reset value : 0x0
@@ -3339,7 +3339,7 @@ volatile uint32_t CH3_DBG_CTDREQ;
 volatile uint32_t CH3_DBG_TCR;
 volatile uint32_t reserved7[14];
 
-/* CH4_DBG_CTDREQ (offset: 0x900)
+/** CH4_DBG_CTDREQ (offset: 0x900)
   Read: get channel DREQ counter (i.e. how many accesses the DMA expects it can perform on the peripheral without overflow/underflow. Write any value: clears the counter, and cause channel to re-initiate DREQ handshake.
   access : read-write
   reset value : 0x0
@@ -3349,7 +3349,7 @@ volatile uint32_t reserved7[14];
 */
 volatile uint32_t CH4_DBG_CTDREQ;
 
-/* CH4_DBG_TCR (offset: 0x904)
+/** CH4_DBG_TCR (offset: 0x904)
   Read to get channel TRANS_COUNT reload value, i.e. the length of the next transfer
   access : read-only
   reset value : 0x0
@@ -3358,7 +3358,7 @@ volatile uint32_t CH4_DBG_CTDREQ;
 volatile uint32_t CH4_DBG_TCR;
 volatile uint32_t reserved8[14];
 
-/* CH5_DBG_CTDREQ (offset: 0x940)
+/** CH5_DBG_CTDREQ (offset: 0x940)
   Read: get channel DREQ counter (i.e. how many accesses the DMA expects it can perform on the peripheral without overflow/underflow. Write any value: clears the counter, and cause channel to re-initiate DREQ handshake.
   access : read-write
   reset value : 0x0
@@ -3368,7 +3368,7 @@ volatile uint32_t reserved8[14];
 */
 volatile uint32_t CH5_DBG_CTDREQ;
 
-/* CH5_DBG_TCR (offset: 0x944)
+/** CH5_DBG_TCR (offset: 0x944)
   Read to get channel TRANS_COUNT reload value, i.e. the length of the next transfer
   access : read-only
   reset value : 0x0
@@ -3377,7 +3377,7 @@ volatile uint32_t CH5_DBG_CTDREQ;
 volatile uint32_t CH5_DBG_TCR;
 volatile uint32_t reserved9[14];
 
-/* CH6_DBG_CTDREQ (offset: 0x980)
+/** CH6_DBG_CTDREQ (offset: 0x980)
   Read: get channel DREQ counter (i.e. how many accesses the DMA expects it can perform on the peripheral without overflow/underflow. Write any value: clears the counter, and cause channel to re-initiate DREQ handshake.
   access : read-write
   reset value : 0x0
@@ -3387,7 +3387,7 @@ volatile uint32_t reserved9[14];
 */
 volatile uint32_t CH6_DBG_CTDREQ;
 
-/* CH6_DBG_TCR (offset: 0x984)
+/** CH6_DBG_TCR (offset: 0x984)
   Read to get channel TRANS_COUNT reload value, i.e. the length of the next transfer
   access : read-only
   reset value : 0x0
@@ -3396,7 +3396,7 @@ volatile uint32_t CH6_DBG_CTDREQ;
 volatile uint32_t CH6_DBG_TCR;
 volatile uint32_t reserved10[14];
 
-/* CH7_DBG_CTDREQ (offset: 0x9c0)
+/** CH7_DBG_CTDREQ (offset: 0x9c0)
   Read: get channel DREQ counter (i.e. how many accesses the DMA expects it can perform on the peripheral without overflow/underflow. Write any value: clears the counter, and cause channel to re-initiate DREQ handshake.
   access : read-write
   reset value : 0x0
@@ -3406,7 +3406,7 @@ volatile uint32_t reserved10[14];
 */
 volatile uint32_t CH7_DBG_CTDREQ;
 
-/* CH7_DBG_TCR (offset: 0x9c4)
+/** CH7_DBG_TCR (offset: 0x9c4)
   Read to get channel TRANS_COUNT reload value, i.e. the length of the next transfer
   access : read-only
   reset value : 0x0
@@ -3415,7 +3415,7 @@ volatile uint32_t CH7_DBG_CTDREQ;
 volatile uint32_t CH7_DBG_TCR;
 volatile uint32_t reserved11[14];
 
-/* CH8_DBG_CTDREQ (offset: 0xa00)
+/** CH8_DBG_CTDREQ (offset: 0xa00)
   Read: get channel DREQ counter (i.e. how many accesses the DMA expects it can perform on the peripheral without overflow/underflow. Write any value: clears the counter, and cause channel to re-initiate DREQ handshake.
   access : read-write
   reset value : 0x0
@@ -3425,7 +3425,7 @@ volatile uint32_t reserved11[14];
 */
 volatile uint32_t CH8_DBG_CTDREQ;
 
-/* CH8_DBG_TCR (offset: 0xa04)
+/** CH8_DBG_TCR (offset: 0xa04)
   Read to get channel TRANS_COUNT reload value, i.e. the length of the next transfer
   access : read-only
   reset value : 0x0
@@ -3434,7 +3434,7 @@ volatile uint32_t CH8_DBG_CTDREQ;
 volatile uint32_t CH8_DBG_TCR;
 volatile uint32_t reserved12[14];
 
-/* CH9_DBG_CTDREQ (offset: 0xa40)
+/** CH9_DBG_CTDREQ (offset: 0xa40)
   Read: get channel DREQ counter (i.e. how many accesses the DMA expects it can perform on the peripheral without overflow/underflow. Write any value: clears the counter, and cause channel to re-initiate DREQ handshake.
   access : read-write
   reset value : 0x0
@@ -3444,7 +3444,7 @@ volatile uint32_t reserved12[14];
 */
 volatile uint32_t CH9_DBG_CTDREQ;
 
-/* CH9_DBG_TCR (offset: 0xa44)
+/** CH9_DBG_TCR (offset: 0xa44)
   Read to get channel TRANS_COUNT reload value, i.e. the length of the next transfer
   access : read-only
   reset value : 0x0
@@ -3453,7 +3453,7 @@ volatile uint32_t CH9_DBG_CTDREQ;
 volatile uint32_t CH9_DBG_TCR;
 volatile uint32_t reserved13[14];
 
-/* CH10_DBG_CTDREQ (offset: 0xa80)
+/** CH10_DBG_CTDREQ (offset: 0xa80)
   Read: get channel DREQ counter (i.e. how many accesses the DMA expects it can perform on the peripheral without overflow/underflow. Write any value: clears the counter, and cause channel to re-initiate DREQ handshake.
   access : read-write
   reset value : 0x0
@@ -3463,7 +3463,7 @@ volatile uint32_t reserved13[14];
 */
 volatile uint32_t CH10_DBG_CTDREQ;
 
-/* CH10_DBG_TCR (offset: 0xa84)
+/** CH10_DBG_TCR (offset: 0xa84)
   Read to get channel TRANS_COUNT reload value, i.e. the length of the next transfer
   access : read-only
   reset value : 0x0
@@ -3472,7 +3472,7 @@ volatile uint32_t CH10_DBG_CTDREQ;
 volatile uint32_t CH10_DBG_TCR;
 volatile uint32_t reserved14[14];
 
-/* CH11_DBG_CTDREQ (offset: 0xac0)
+/** CH11_DBG_CTDREQ (offset: 0xac0)
   Read: get channel DREQ counter (i.e. how many accesses the DMA expects it can perform on the peripheral without overflow/underflow. Write any value: clears the counter, and cause channel to re-initiate DREQ handshake.
   access : read-write
   reset value : 0x0
@@ -3482,7 +3482,7 @@ volatile uint32_t reserved14[14];
 */
 volatile uint32_t CH11_DBG_CTDREQ;
 
-/* CH11_DBG_TCR (offset: 0xac4)
+/** CH11_DBG_TCR (offset: 0xac4)
   Read to get channel TRANS_COUNT reload value, i.e. the length of the next transfer
   access : read-only
   reset value : 0x0

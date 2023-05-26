@@ -1,13 +1,13 @@
 #ifndef HW_ROSC_H
 #define HW_ROSC_H
-/* Memory Block starting at 0x40060000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
+/** Memory Block starting at 0x40060000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
 
 #include <stdint.h>
 
 typedef struct
 {
 
-/* CTRL (offset: 0x0)
+/** CTRL (offset: 0x0)
   Ring Oscillator control
   access : read-write
   reset value : 0xAA0
@@ -47,7 +47,7 @@ typedef struct
 */
 volatile uint32_t CTRL;
 
-/* FREQA (offset: 0x4)
+/** FREQA (offset: 0x4)
   The FREQA &amp; FREQB registers control the frequency by controlling the drive strength of each stage
 
  The drive strength has 4 levels determined by the number of bits set
@@ -86,7 +86,7 @@ volatile uint32_t CTRL;
 */
 volatile uint32_t FREQA;
 
-/* FREQB (offset: 0x8)
+/** FREQB (offset: 0x8)
   For a detailed description see freqa register
   access : read-write
   reset value : 0x0
@@ -113,7 +113,7 @@ volatile uint32_t FREQA;
 */
 volatile uint32_t FREQB;
 
-/* DORMANT (offset: 0xc)
+/** DORMANT (offset: 0xc)
   Ring Oscillator pause control
 
  This is used to save power by pausing the ROSC
@@ -129,7 +129,7 @@ volatile uint32_t FREQB;
 */
 volatile uint32_t DORMANT;
 
-/* DIV (offset: 0x10)
+/** DIV (offset: 0x10)
   Controls the output divider
   access : read-write
   reset value : 0x0
@@ -150,7 +150,7 @@ volatile uint32_t DORMANT;
 */
 volatile uint32_t DIV;
 
-/* PHASE (offset: 0x14)
+/** PHASE (offset: 0x14)
   Controls the phase shifted output
   access : read-write
   reset value : 0x8
@@ -180,7 +180,7 @@ volatile uint32_t DIV;
 */
 volatile uint32_t PHASE;
 
-/* STATUS (offset: 0x18)
+/** STATUS (offset: 0x18)
   Ring Oscillator Status
   access : read-write
   reset value : 0x0
@@ -204,7 +204,7 @@ volatile uint32_t PHASE;
 */
 volatile uint32_t STATUS;
 
-/* RANDOMBIT (offset: 0x1c)
+/** RANDOMBIT (offset: 0x1c)
   This just reads the state of the oscillator output so randomness is compromised if the ring oscillator is stopped or run at a harmonic of the bus frequency
   access : read-write
   reset value : 0x1
@@ -214,7 +214,7 @@ volatile uint32_t STATUS;
 */
 volatile uint32_t RANDOMBIT;
 
-/* COUNT (offset: 0x20)
+/** COUNT (offset: 0x20)
   A down counter running at the ROSC frequency which counts to zero and stops.
 
  To start the counter write a non-zero value.

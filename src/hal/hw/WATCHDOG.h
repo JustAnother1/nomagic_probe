@@ -1,13 +1,13 @@
 #ifndef HW_WATCHDOG_H
 #define HW_WATCHDOG_H
-/* Memory Block starting at 0x40058000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
+/** Memory Block starting at 0x40058000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
 
 #include <stdint.h>
 
 typedef struct
 {
 
-/* CTRL (offset: 0x0)
+/** CTRL (offset: 0x0)
   Watchdog control
 
  The rst_wdsel register determines which subsystems are reset when the watchdog is triggered.
@@ -37,7 +37,7 @@ typedef struct
 */
 volatile uint32_t CTRL;
 
-/* LOAD (offset: 0x4)
+/** LOAD (offset: 0x4)
   Load the watchdog timer. The maximum setting is 0xffffff which corresponds to 0xffffff / 2 ticks before triggering a watchdog reset (see errata RP2040-E1).
   access : read-write
   reset value : 0x0
@@ -47,7 +47,7 @@ volatile uint32_t CTRL;
 */
 volatile uint32_t LOAD;
 
-/* REASON (offset: 0x8)
+/** REASON (offset: 0x8)
   Logs the reason for the last reset. Both bits are zero for the case of a hardware reset.
   access : read-write
   reset value : 0x0
@@ -59,7 +59,7 @@ volatile uint32_t LOAD;
 */
 volatile uint32_t REASON;
 
-/* SCRATCH0 (offset: 0xc)
+/** SCRATCH0 (offset: 0xc)
   Scratch register. Information persists through soft reset of the chip.
   access : read-write
   reset value : 0x0
@@ -67,7 +67,7 @@ volatile uint32_t REASON;
 */
 volatile uint32_t SCRATCH0;
 
-/* SCRATCH1 (offset: 0x10)
+/** SCRATCH1 (offset: 0x10)
   Scratch register. Information persists through soft reset of the chip.
   access : read-write
   reset value : 0x0
@@ -75,7 +75,7 @@ volatile uint32_t SCRATCH0;
 */
 volatile uint32_t SCRATCH1;
 
-/* SCRATCH2 (offset: 0x14)
+/** SCRATCH2 (offset: 0x14)
   Scratch register. Information persists through soft reset of the chip.
   access : read-write
   reset value : 0x0
@@ -83,7 +83,7 @@ volatile uint32_t SCRATCH1;
 */
 volatile uint32_t SCRATCH2;
 
-/* SCRATCH3 (offset: 0x18)
+/** SCRATCH3 (offset: 0x18)
   Scratch register. Information persists through soft reset of the chip.
   access : read-write
   reset value : 0x0
@@ -91,7 +91,7 @@ volatile uint32_t SCRATCH2;
 */
 volatile uint32_t SCRATCH3;
 
-/* SCRATCH4 (offset: 0x1c)
+/** SCRATCH4 (offset: 0x1c)
   Scratch register. Information persists through soft reset of the chip.
   access : read-write
   reset value : 0x0
@@ -99,7 +99,7 @@ volatile uint32_t SCRATCH3;
 */
 volatile uint32_t SCRATCH4;
 
-/* SCRATCH5 (offset: 0x20)
+/** SCRATCH5 (offset: 0x20)
   Scratch register. Information persists through soft reset of the chip.
   access : read-write
   reset value : 0x0
@@ -107,7 +107,7 @@ volatile uint32_t SCRATCH4;
 */
 volatile uint32_t SCRATCH5;
 
-/* SCRATCH6 (offset: 0x24)
+/** SCRATCH6 (offset: 0x24)
   Scratch register. Information persists through soft reset of the chip.
   access : read-write
   reset value : 0x0
@@ -115,7 +115,7 @@ volatile uint32_t SCRATCH5;
 */
 volatile uint32_t SCRATCH6;
 
-/* SCRATCH7 (offset: 0x28)
+/** SCRATCH7 (offset: 0x28)
   Scratch register. Information persists through soft reset of the chip.
   access : read-write
   reset value : 0x0
@@ -123,7 +123,7 @@ volatile uint32_t SCRATCH6;
 */
 volatile uint32_t SCRATCH7;
 
-/* TICK (offset: 0x2c)
+/** TICK (offset: 0x2c)
   Controls the tick generator
   access : read-write
   reset value : 0x200

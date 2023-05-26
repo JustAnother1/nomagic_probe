@@ -1,14 +1,14 @@
 #ifndef HW_XOSC_H
 #define HW_XOSC_H
-/* Controls the crystal oscillator */
-/* Memory Block starting at 0x40024000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
+/** Controls the crystal oscillator */
+/** Memory Block starting at 0x40024000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
 
 #include <stdint.h>
 
 typedef struct
 {
 
-/* CTRL (offset: 0x0)
+/** CTRL (offset: 0x0)
   Crystal Oscillator Control
   access : read-write
   reset value : 0x0
@@ -34,7 +34,7 @@ typedef struct
 */
 volatile uint32_t CTRL;
 
-/* STATUS (offset: 0x4)
+/** STATUS (offset: 0x4)
   Crystal Oscillator Status
   access : read-write
   reset value : 0x0
@@ -59,7 +59,7 @@ volatile uint32_t CTRL;
 */
 volatile uint32_t STATUS;
 
-/* DORMANT (offset: 0x8)
+/** DORMANT (offset: 0x8)
   Crystal Oscillator pause control
 
  This is used to save power by pausing the XOSC
@@ -77,7 +77,7 @@ volatile uint32_t STATUS;
 */
 volatile uint32_t DORMANT;
 
-/* STARTUP (offset: 0xc)
+/** STARTUP (offset: 0xc)
   Controls the startup delay
   access : read-write
   reset value : 0xC4
@@ -92,7 +92,7 @@ volatile uint32_t DORMANT;
 volatile uint32_t STARTUP;
 volatile uint32_t reserved0[3];
 
-/* COUNT (offset: 0x1c)
+/** COUNT (offset: 0x1c)
   A down counter running at the xosc frequency which counts to zero and stops.
 
  To start the counter write a non-zero value.

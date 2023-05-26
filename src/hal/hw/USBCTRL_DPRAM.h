@@ -1,14 +1,14 @@
 #ifndef HW_USBCTRL_DPRAM_H
 #define HW_USBCTRL_DPRAM_H
-/* DPRAM layout for USB device. */
-/* Memory Block starting at 0x50100000 + 0x0 is 0x100 bytes in size. It is used for registers. Protection:  */
+/** DPRAM layout for USB device. */
+/** Memory Block starting at 0x50100000 + 0x0 is 0x100 bytes in size. It is used for registers. Protection:  */
 
 #include <stdint.h>
 
 typedef struct
 {
 
-/* SETUP_PACKET_LOW (offset: 0x0)
+/** SETUP_PACKET_LOW (offset: 0x0)
   Bytes 0-3 of the SETUP packet from the host.
   reset value : 0x0
   reset mask : 0x0
@@ -21,7 +21,7 @@ typedef struct
 */
 volatile uint32_t SETUP_PACKET_LOW;
 
-/* SETUP_PACKET_HIGH (offset: 0x4)
+/** SETUP_PACKET_HIGH (offset: 0x4)
   Bytes 4-7 of the setup packet from the host.
   reset value : 0x0
   reset mask : 0x0
@@ -32,7 +32,7 @@ volatile uint32_t SETUP_PACKET_LOW;
 */
 volatile uint32_t SETUP_PACKET_HIGH;
 
-/* EP1_IN_CONTROL (offset: 0x8)
+/** EP1_IN_CONTROL (offset: 0x8)
   reset value : 0x0
   reset mask : 0x0
   Field: ENABLE
@@ -66,7 +66,7 @@ volatile uint32_t SETUP_PACKET_HIGH;
 */
 volatile uint32_t EP1_IN_CONTROL;
 
-/* EP1_OUT_CONTROL (offset: 0xc)
+/** EP1_OUT_CONTROL (offset: 0xc)
   reset value : 0x0
   reset mask : 0x0
   Field: ENABLE
@@ -100,7 +100,7 @@ volatile uint32_t EP1_IN_CONTROL;
 */
 volatile uint32_t EP1_OUT_CONTROL;
 
-/* EP2_IN_CONTROL (offset: 0x10)
+/** EP2_IN_CONTROL (offset: 0x10)
   reset value : 0x0
   reset mask : 0x0
   Field: ENABLE
@@ -134,7 +134,7 @@ volatile uint32_t EP1_OUT_CONTROL;
 */
 volatile uint32_t EP2_IN_CONTROL;
 
-/* EP2_OUT_CONTROL (offset: 0x14)
+/** EP2_OUT_CONTROL (offset: 0x14)
   reset value : 0x0
   reset mask : 0x0
   Field: ENABLE
@@ -168,7 +168,7 @@ volatile uint32_t EP2_IN_CONTROL;
 */
 volatile uint32_t EP2_OUT_CONTROL;
 
-/* EP3_IN_CONTROL (offset: 0x18)
+/** EP3_IN_CONTROL (offset: 0x18)
   reset value : 0x0
   reset mask : 0x0
   Field: ENABLE
@@ -202,7 +202,7 @@ volatile uint32_t EP2_OUT_CONTROL;
 */
 volatile uint32_t EP3_IN_CONTROL;
 
-/* EP3_OUT_CONTROL (offset: 0x1c)
+/** EP3_OUT_CONTROL (offset: 0x1c)
   reset value : 0x0
   reset mask : 0x0
   Field: ENABLE
@@ -236,7 +236,7 @@ volatile uint32_t EP3_IN_CONTROL;
 */
 volatile uint32_t EP3_OUT_CONTROL;
 
-/* EP4_IN_CONTROL (offset: 0x20)
+/** EP4_IN_CONTROL (offset: 0x20)
   reset value : 0x0
   reset mask : 0x0
   Field: ENABLE
@@ -270,7 +270,7 @@ volatile uint32_t EP3_OUT_CONTROL;
 */
 volatile uint32_t EP4_IN_CONTROL;
 
-/* EP4_OUT_CONTROL (offset: 0x24)
+/** EP4_OUT_CONTROL (offset: 0x24)
   reset value : 0x0
   reset mask : 0x0
   Field: ENABLE
@@ -304,7 +304,7 @@ volatile uint32_t EP4_IN_CONTROL;
 */
 volatile uint32_t EP4_OUT_CONTROL;
 
-/* EP5_IN_CONTROL (offset: 0x28)
+/** EP5_IN_CONTROL (offset: 0x28)
   reset value : 0x0
   reset mask : 0x0
   Field: ENABLE
@@ -338,7 +338,7 @@ volatile uint32_t EP4_OUT_CONTROL;
 */
 volatile uint32_t EP5_IN_CONTROL;
 
-/* EP5_OUT_CONTROL (offset: 0x2c)
+/** EP5_OUT_CONTROL (offset: 0x2c)
   reset value : 0x0
   reset mask : 0x0
   Field: ENABLE
@@ -372,7 +372,7 @@ volatile uint32_t EP5_IN_CONTROL;
 */
 volatile uint32_t EP5_OUT_CONTROL;
 
-/* EP6_IN_CONTROL (offset: 0x30)
+/** EP6_IN_CONTROL (offset: 0x30)
   reset value : 0x0
   reset mask : 0x0
   Field: ENABLE
@@ -406,7 +406,7 @@ volatile uint32_t EP5_OUT_CONTROL;
 */
 volatile uint32_t EP6_IN_CONTROL;
 
-/* EP6_OUT_CONTROL (offset: 0x34)
+/** EP6_OUT_CONTROL (offset: 0x34)
   reset value : 0x0
   reset mask : 0x0
   Field: ENABLE
@@ -440,7 +440,7 @@ volatile uint32_t EP6_IN_CONTROL;
 */
 volatile uint32_t EP6_OUT_CONTROL;
 
-/* EP7_IN_CONTROL (offset: 0x38)
+/** EP7_IN_CONTROL (offset: 0x38)
   reset value : 0x0
   reset mask : 0x0
   Field: ENABLE
@@ -474,7 +474,7 @@ volatile uint32_t EP6_OUT_CONTROL;
 */
 volatile uint32_t EP7_IN_CONTROL;
 
-/* EP7_OUT_CONTROL (offset: 0x3c)
+/** EP7_OUT_CONTROL (offset: 0x3c)
   reset value : 0x0
   reset mask : 0x0
   Field: ENABLE
@@ -508,7 +508,7 @@ volatile uint32_t EP7_IN_CONTROL;
 */
 volatile uint32_t EP7_OUT_CONTROL;
 
-/* EP8_IN_CONTROL (offset: 0x40)
+/** EP8_IN_CONTROL (offset: 0x40)
   reset value : 0x0
   reset mask : 0x0
   Field: ENABLE
@@ -542,7 +542,7 @@ volatile uint32_t EP7_OUT_CONTROL;
 */
 volatile uint32_t EP8_IN_CONTROL;
 
-/* EP8_OUT_CONTROL (offset: 0x44)
+/** EP8_OUT_CONTROL (offset: 0x44)
   reset value : 0x0
   reset mask : 0x0
   Field: ENABLE
@@ -576,7 +576,7 @@ volatile uint32_t EP8_IN_CONTROL;
 */
 volatile uint32_t EP8_OUT_CONTROL;
 
-/* EP9_IN_CONTROL (offset: 0x48)
+/** EP9_IN_CONTROL (offset: 0x48)
   reset value : 0x0
   reset mask : 0x0
   Field: ENABLE
@@ -610,7 +610,7 @@ volatile uint32_t EP8_OUT_CONTROL;
 */
 volatile uint32_t EP9_IN_CONTROL;
 
-/* EP9_OUT_CONTROL (offset: 0x4c)
+/** EP9_OUT_CONTROL (offset: 0x4c)
   reset value : 0x0
   reset mask : 0x0
   Field: ENABLE
@@ -644,7 +644,7 @@ volatile uint32_t EP9_IN_CONTROL;
 */
 volatile uint32_t EP9_OUT_CONTROL;
 
-/* EP10_IN_CONTROL (offset: 0x50)
+/** EP10_IN_CONTROL (offset: 0x50)
   reset value : 0x0
   reset mask : 0x0
   Field: ENABLE
@@ -678,7 +678,7 @@ volatile uint32_t EP9_OUT_CONTROL;
 */
 volatile uint32_t EP10_IN_CONTROL;
 
-/* EP10_OUT_CONTROL (offset: 0x54)
+/** EP10_OUT_CONTROL (offset: 0x54)
   reset value : 0x0
   reset mask : 0x0
   Field: ENABLE
@@ -712,7 +712,7 @@ volatile uint32_t EP10_IN_CONTROL;
 */
 volatile uint32_t EP10_OUT_CONTROL;
 
-/* EP11_IN_CONTROL (offset: 0x58)
+/** EP11_IN_CONTROL (offset: 0x58)
   reset value : 0x0
   reset mask : 0x0
   Field: ENABLE
@@ -746,7 +746,7 @@ volatile uint32_t EP10_OUT_CONTROL;
 */
 volatile uint32_t EP11_IN_CONTROL;
 
-/* EP11_OUT_CONTROL (offset: 0x5c)
+/** EP11_OUT_CONTROL (offset: 0x5c)
   reset value : 0x0
   reset mask : 0x0
   Field: ENABLE
@@ -780,7 +780,7 @@ volatile uint32_t EP11_IN_CONTROL;
 */
 volatile uint32_t EP11_OUT_CONTROL;
 
-/* EP12_IN_CONTROL (offset: 0x60)
+/** EP12_IN_CONTROL (offset: 0x60)
   reset value : 0x0
   reset mask : 0x0
   Field: ENABLE
@@ -814,7 +814,7 @@ volatile uint32_t EP11_OUT_CONTROL;
 */
 volatile uint32_t EP12_IN_CONTROL;
 
-/* EP12_OUT_CONTROL (offset: 0x64)
+/** EP12_OUT_CONTROL (offset: 0x64)
   reset value : 0x0
   reset mask : 0x0
   Field: ENABLE
@@ -848,7 +848,7 @@ volatile uint32_t EP12_IN_CONTROL;
 */
 volatile uint32_t EP12_OUT_CONTROL;
 
-/* EP13_IN_CONTROL (offset: 0x68)
+/** EP13_IN_CONTROL (offset: 0x68)
   reset value : 0x0
   reset mask : 0x0
   Field: ENABLE
@@ -882,7 +882,7 @@ volatile uint32_t EP12_OUT_CONTROL;
 */
 volatile uint32_t EP13_IN_CONTROL;
 
-/* EP13_OUT_CONTROL (offset: 0x6c)
+/** EP13_OUT_CONTROL (offset: 0x6c)
   reset value : 0x0
   reset mask : 0x0
   Field: ENABLE
@@ -916,7 +916,7 @@ volatile uint32_t EP13_IN_CONTROL;
 */
 volatile uint32_t EP13_OUT_CONTROL;
 
-/* EP14_IN_CONTROL (offset: 0x70)
+/** EP14_IN_CONTROL (offset: 0x70)
   reset value : 0x0
   reset mask : 0x0
   Field: ENABLE
@@ -950,7 +950,7 @@ volatile uint32_t EP13_OUT_CONTROL;
 */
 volatile uint32_t EP14_IN_CONTROL;
 
-/* EP14_OUT_CONTROL (offset: 0x74)
+/** EP14_OUT_CONTROL (offset: 0x74)
   reset value : 0x0
   reset mask : 0x0
   Field: ENABLE
@@ -984,7 +984,7 @@ volatile uint32_t EP14_IN_CONTROL;
 */
 volatile uint32_t EP14_OUT_CONTROL;
 
-/* EP15_IN_CONTROL (offset: 0x78)
+/** EP15_IN_CONTROL (offset: 0x78)
   reset value : 0x0
   reset mask : 0x0
   Field: ENABLE
@@ -1018,7 +1018,7 @@ volatile uint32_t EP14_OUT_CONTROL;
 */
 volatile uint32_t EP15_IN_CONTROL;
 
-/* EP15_OUT_CONTROL (offset: 0x7c)
+/** EP15_OUT_CONTROL (offset: 0x7c)
   reset value : 0x0
   reset mask : 0x0
   Field: ENABLE
@@ -1052,7 +1052,7 @@ volatile uint32_t EP15_IN_CONTROL;
 */
 volatile uint32_t EP15_OUT_CONTROL;
 
-/* EP0_IN_BUFFER_CONTROL (offset: 0x80)
+/** EP0_IN_BUFFER_CONTROL (offset: 0x80)
   Buffer control for both buffers of an endpoint. Fields ending in a _1 are for buffer 1.
 
  Fields ending in a _0 are for buffer 0. Buffer 1 controls are only valid if the endpoint is in double buffered mode.
@@ -1107,7 +1107,7 @@ volatile uint32_t EP15_OUT_CONTROL;
 */
 volatile uint32_t EP0_IN_BUFFER_CONTROL;
 
-/* EP0_OUT_BUFFER_CONTROL (offset: 0x84)
+/** EP0_OUT_BUFFER_CONTROL (offset: 0x84)
   Buffer control for both buffers of an endpoint. Fields ending in a _1 are for buffer 1.
 
  Fields ending in a _0 are for buffer 0. Buffer 1 controls are only valid if the endpoint is in double buffered mode.
@@ -1162,7 +1162,7 @@ volatile uint32_t EP0_IN_BUFFER_CONTROL;
 */
 volatile uint32_t EP0_OUT_BUFFER_CONTROL;
 
-/* EP1_IN_BUFFER_CONTROL (offset: 0x88)
+/** EP1_IN_BUFFER_CONTROL (offset: 0x88)
   Buffer control for both buffers of an endpoint. Fields ending in a _1 are for buffer 1.
 
  Fields ending in a _0 are for buffer 0. Buffer 1 controls are only valid if the endpoint is in double buffered mode.
@@ -1217,7 +1217,7 @@ volatile uint32_t EP0_OUT_BUFFER_CONTROL;
 */
 volatile uint32_t EP1_IN_BUFFER_CONTROL;
 
-/* EP1_OUT_BUFFER_CONTROL (offset: 0x8c)
+/** EP1_OUT_BUFFER_CONTROL (offset: 0x8c)
   Buffer control for both buffers of an endpoint. Fields ending in a _1 are for buffer 1.
 
  Fields ending in a _0 are for buffer 0. Buffer 1 controls are only valid if the endpoint is in double buffered mode.
@@ -1272,7 +1272,7 @@ volatile uint32_t EP1_IN_BUFFER_CONTROL;
 */
 volatile uint32_t EP1_OUT_BUFFER_CONTROL;
 
-/* EP2_IN_BUFFER_CONTROL (offset: 0x90)
+/** EP2_IN_BUFFER_CONTROL (offset: 0x90)
   Buffer control for both buffers of an endpoint. Fields ending in a _1 are for buffer 1.
 
  Fields ending in a _0 are for buffer 0. Buffer 1 controls are only valid if the endpoint is in double buffered mode.
@@ -1327,7 +1327,7 @@ volatile uint32_t EP1_OUT_BUFFER_CONTROL;
 */
 volatile uint32_t EP2_IN_BUFFER_CONTROL;
 
-/* EP2_OUT_BUFFER_CONTROL (offset: 0x94)
+/** EP2_OUT_BUFFER_CONTROL (offset: 0x94)
   Buffer control for both buffers of an endpoint. Fields ending in a _1 are for buffer 1.
 
  Fields ending in a _0 are for buffer 0. Buffer 1 controls are only valid if the endpoint is in double buffered mode.
@@ -1382,7 +1382,7 @@ volatile uint32_t EP2_IN_BUFFER_CONTROL;
 */
 volatile uint32_t EP2_OUT_BUFFER_CONTROL;
 
-/* EP3_IN_BUFFER_CONTROL (offset: 0x98)
+/** EP3_IN_BUFFER_CONTROL (offset: 0x98)
   Buffer control for both buffers of an endpoint. Fields ending in a _1 are for buffer 1.
 
  Fields ending in a _0 are for buffer 0. Buffer 1 controls are only valid if the endpoint is in double buffered mode.
@@ -1437,7 +1437,7 @@ volatile uint32_t EP2_OUT_BUFFER_CONTROL;
 */
 volatile uint32_t EP3_IN_BUFFER_CONTROL;
 
-/* EP3_OUT_BUFFER_CONTROL (offset: 0x9c)
+/** EP3_OUT_BUFFER_CONTROL (offset: 0x9c)
   Buffer control for both buffers of an endpoint. Fields ending in a _1 are for buffer 1.
 
  Fields ending in a _0 are for buffer 0. Buffer 1 controls are only valid if the endpoint is in double buffered mode.
@@ -1492,7 +1492,7 @@ volatile uint32_t EP3_IN_BUFFER_CONTROL;
 */
 volatile uint32_t EP3_OUT_BUFFER_CONTROL;
 
-/* EP4_IN_BUFFER_CONTROL (offset: 0xa0)
+/** EP4_IN_BUFFER_CONTROL (offset: 0xa0)
   Buffer control for both buffers of an endpoint. Fields ending in a _1 are for buffer 1.
 
  Fields ending in a _0 are for buffer 0. Buffer 1 controls are only valid if the endpoint is in double buffered mode.
@@ -1547,7 +1547,7 @@ volatile uint32_t EP3_OUT_BUFFER_CONTROL;
 */
 volatile uint32_t EP4_IN_BUFFER_CONTROL;
 
-/* EP4_OUT_BUFFER_CONTROL (offset: 0xa4)
+/** EP4_OUT_BUFFER_CONTROL (offset: 0xa4)
   Buffer control for both buffers of an endpoint. Fields ending in a _1 are for buffer 1.
 
  Fields ending in a _0 are for buffer 0. Buffer 1 controls are only valid if the endpoint is in double buffered mode.
@@ -1602,7 +1602,7 @@ volatile uint32_t EP4_IN_BUFFER_CONTROL;
 */
 volatile uint32_t EP4_OUT_BUFFER_CONTROL;
 
-/* EP5_IN_BUFFER_CONTROL (offset: 0xa8)
+/** EP5_IN_BUFFER_CONTROL (offset: 0xa8)
   Buffer control for both buffers of an endpoint. Fields ending in a _1 are for buffer 1.
 
  Fields ending in a _0 are for buffer 0. Buffer 1 controls are only valid if the endpoint is in double buffered mode.
@@ -1657,7 +1657,7 @@ volatile uint32_t EP4_OUT_BUFFER_CONTROL;
 */
 volatile uint32_t EP5_IN_BUFFER_CONTROL;
 
-/* EP5_OUT_BUFFER_CONTROL (offset: 0xac)
+/** EP5_OUT_BUFFER_CONTROL (offset: 0xac)
   Buffer control for both buffers of an endpoint. Fields ending in a _1 are for buffer 1.
 
  Fields ending in a _0 are for buffer 0. Buffer 1 controls are only valid if the endpoint is in double buffered mode.
@@ -1712,7 +1712,7 @@ volatile uint32_t EP5_IN_BUFFER_CONTROL;
 */
 volatile uint32_t EP5_OUT_BUFFER_CONTROL;
 
-/* EP6_IN_BUFFER_CONTROL (offset: 0xb0)
+/** EP6_IN_BUFFER_CONTROL (offset: 0xb0)
   Buffer control for both buffers of an endpoint. Fields ending in a _1 are for buffer 1.
 
  Fields ending in a _0 are for buffer 0. Buffer 1 controls are only valid if the endpoint is in double buffered mode.
@@ -1767,7 +1767,7 @@ volatile uint32_t EP5_OUT_BUFFER_CONTROL;
 */
 volatile uint32_t EP6_IN_BUFFER_CONTROL;
 
-/* EP6_OUT_BUFFER_CONTROL (offset: 0xb4)
+/** EP6_OUT_BUFFER_CONTROL (offset: 0xb4)
   Buffer control for both buffers of an endpoint. Fields ending in a _1 are for buffer 1.
 
  Fields ending in a _0 are for buffer 0. Buffer 1 controls are only valid if the endpoint is in double buffered mode.
@@ -1822,7 +1822,7 @@ volatile uint32_t EP6_IN_BUFFER_CONTROL;
 */
 volatile uint32_t EP6_OUT_BUFFER_CONTROL;
 
-/* EP7_IN_BUFFER_CONTROL (offset: 0xb8)
+/** EP7_IN_BUFFER_CONTROL (offset: 0xb8)
   Buffer control for both buffers of an endpoint. Fields ending in a _1 are for buffer 1.
 
  Fields ending in a _0 are for buffer 0. Buffer 1 controls are only valid if the endpoint is in double buffered mode.
@@ -1877,7 +1877,7 @@ volatile uint32_t EP6_OUT_BUFFER_CONTROL;
 */
 volatile uint32_t EP7_IN_BUFFER_CONTROL;
 
-/* EP7_OUT_BUFFER_CONTROL (offset: 0xbc)
+/** EP7_OUT_BUFFER_CONTROL (offset: 0xbc)
   Buffer control for both buffers of an endpoint. Fields ending in a _1 are for buffer 1.
 
  Fields ending in a _0 are for buffer 0. Buffer 1 controls are only valid if the endpoint is in double buffered mode.
@@ -1932,7 +1932,7 @@ volatile uint32_t EP7_IN_BUFFER_CONTROL;
 */
 volatile uint32_t EP7_OUT_BUFFER_CONTROL;
 
-/* EP8_IN_BUFFER_CONTROL (offset: 0xc0)
+/** EP8_IN_BUFFER_CONTROL (offset: 0xc0)
   Buffer control for both buffers of an endpoint. Fields ending in a _1 are for buffer 1.
 
  Fields ending in a _0 are for buffer 0. Buffer 1 controls are only valid if the endpoint is in double buffered mode.
@@ -1987,7 +1987,7 @@ volatile uint32_t EP7_OUT_BUFFER_CONTROL;
 */
 volatile uint32_t EP8_IN_BUFFER_CONTROL;
 
-/* EP8_OUT_BUFFER_CONTROL (offset: 0xc4)
+/** EP8_OUT_BUFFER_CONTROL (offset: 0xc4)
   Buffer control for both buffers of an endpoint. Fields ending in a _1 are for buffer 1.
 
  Fields ending in a _0 are for buffer 0. Buffer 1 controls are only valid if the endpoint is in double buffered mode.
@@ -2042,7 +2042,7 @@ volatile uint32_t EP8_IN_BUFFER_CONTROL;
 */
 volatile uint32_t EP8_OUT_BUFFER_CONTROL;
 
-/* EP9_IN_BUFFER_CONTROL (offset: 0xc8)
+/** EP9_IN_BUFFER_CONTROL (offset: 0xc8)
   Buffer control for both buffers of an endpoint. Fields ending in a _1 are for buffer 1.
 
  Fields ending in a _0 are for buffer 0. Buffer 1 controls are only valid if the endpoint is in double buffered mode.
@@ -2097,7 +2097,7 @@ volatile uint32_t EP8_OUT_BUFFER_CONTROL;
 */
 volatile uint32_t EP9_IN_BUFFER_CONTROL;
 
-/* EP9_OUT_BUFFER_CONTROL (offset: 0xcc)
+/** EP9_OUT_BUFFER_CONTROL (offset: 0xcc)
   Buffer control for both buffers of an endpoint. Fields ending in a _1 are for buffer 1.
 
  Fields ending in a _0 are for buffer 0. Buffer 1 controls are only valid if the endpoint is in double buffered mode.
@@ -2152,7 +2152,7 @@ volatile uint32_t EP9_IN_BUFFER_CONTROL;
 */
 volatile uint32_t EP9_OUT_BUFFER_CONTROL;
 
-/* EP10_IN_BUFFER_CONTROL (offset: 0xd0)
+/** EP10_IN_BUFFER_CONTROL (offset: 0xd0)
   Buffer control for both buffers of an endpoint. Fields ending in a _1 are for buffer 1.
 
  Fields ending in a _0 are for buffer 0. Buffer 1 controls are only valid if the endpoint is in double buffered mode.
@@ -2207,7 +2207,7 @@ volatile uint32_t EP9_OUT_BUFFER_CONTROL;
 */
 volatile uint32_t EP10_IN_BUFFER_CONTROL;
 
-/* EP10_OUT_BUFFER_CONTROL (offset: 0xd4)
+/** EP10_OUT_BUFFER_CONTROL (offset: 0xd4)
   Buffer control for both buffers of an endpoint. Fields ending in a _1 are for buffer 1.
 
  Fields ending in a _0 are for buffer 0. Buffer 1 controls are only valid if the endpoint is in double buffered mode.
@@ -2262,7 +2262,7 @@ volatile uint32_t EP10_IN_BUFFER_CONTROL;
 */
 volatile uint32_t EP10_OUT_BUFFER_CONTROL;
 
-/* EP11_IN_BUFFER_CONTROL (offset: 0xd8)
+/** EP11_IN_BUFFER_CONTROL (offset: 0xd8)
   Buffer control for both buffers of an endpoint. Fields ending in a _1 are for buffer 1.
 
  Fields ending in a _0 are for buffer 0. Buffer 1 controls are only valid if the endpoint is in double buffered mode.
@@ -2317,7 +2317,7 @@ volatile uint32_t EP10_OUT_BUFFER_CONTROL;
 */
 volatile uint32_t EP11_IN_BUFFER_CONTROL;
 
-/* EP11_OUT_BUFFER_CONTROL (offset: 0xdc)
+/** EP11_OUT_BUFFER_CONTROL (offset: 0xdc)
   Buffer control for both buffers of an endpoint. Fields ending in a _1 are for buffer 1.
 
  Fields ending in a _0 are for buffer 0. Buffer 1 controls are only valid if the endpoint is in double buffered mode.
@@ -2372,7 +2372,7 @@ volatile uint32_t EP11_IN_BUFFER_CONTROL;
 */
 volatile uint32_t EP11_OUT_BUFFER_CONTROL;
 
-/* EP12_IN_BUFFER_CONTROL (offset: 0xe0)
+/** EP12_IN_BUFFER_CONTROL (offset: 0xe0)
   Buffer control for both buffers of an endpoint. Fields ending in a _1 are for buffer 1.
 
  Fields ending in a _0 are for buffer 0. Buffer 1 controls are only valid if the endpoint is in double buffered mode.
@@ -2427,7 +2427,7 @@ volatile uint32_t EP11_OUT_BUFFER_CONTROL;
 */
 volatile uint32_t EP12_IN_BUFFER_CONTROL;
 
-/* EP12_OUT_BUFFER_CONTROL (offset: 0xe4)
+/** EP12_OUT_BUFFER_CONTROL (offset: 0xe4)
   Buffer control for both buffers of an endpoint. Fields ending in a _1 are for buffer 1.
 
  Fields ending in a _0 are for buffer 0. Buffer 1 controls are only valid if the endpoint is in double buffered mode.
@@ -2482,7 +2482,7 @@ volatile uint32_t EP12_IN_BUFFER_CONTROL;
 */
 volatile uint32_t EP12_OUT_BUFFER_CONTROL;
 
-/* EP13_IN_BUFFER_CONTROL (offset: 0xe8)
+/** EP13_IN_BUFFER_CONTROL (offset: 0xe8)
   Buffer control for both buffers of an endpoint. Fields ending in a _1 are for buffer 1.
 
  Fields ending in a _0 are for buffer 0. Buffer 1 controls are only valid if the endpoint is in double buffered mode.
@@ -2537,7 +2537,7 @@ volatile uint32_t EP12_OUT_BUFFER_CONTROL;
 */
 volatile uint32_t EP13_IN_BUFFER_CONTROL;
 
-/* EP13_OUT_BUFFER_CONTROL (offset: 0xec)
+/** EP13_OUT_BUFFER_CONTROL (offset: 0xec)
   Buffer control for both buffers of an endpoint. Fields ending in a _1 are for buffer 1.
 
  Fields ending in a _0 are for buffer 0. Buffer 1 controls are only valid if the endpoint is in double buffered mode.
@@ -2592,7 +2592,7 @@ volatile uint32_t EP13_IN_BUFFER_CONTROL;
 */
 volatile uint32_t EP13_OUT_BUFFER_CONTROL;
 
-/* EP14_IN_BUFFER_CONTROL (offset: 0xf0)
+/** EP14_IN_BUFFER_CONTROL (offset: 0xf0)
   Buffer control for both buffers of an endpoint. Fields ending in a _1 are for buffer 1.
 
  Fields ending in a _0 are for buffer 0. Buffer 1 controls are only valid if the endpoint is in double buffered mode.
@@ -2647,7 +2647,7 @@ volatile uint32_t EP13_OUT_BUFFER_CONTROL;
 */
 volatile uint32_t EP14_IN_BUFFER_CONTROL;
 
-/* EP14_OUT_BUFFER_CONTROL (offset: 0xf4)
+/** EP14_OUT_BUFFER_CONTROL (offset: 0xf4)
   Buffer control for both buffers of an endpoint. Fields ending in a _1 are for buffer 1.
 
  Fields ending in a _0 are for buffer 0. Buffer 1 controls are only valid if the endpoint is in double buffered mode.
@@ -2702,7 +2702,7 @@ volatile uint32_t EP14_IN_BUFFER_CONTROL;
 */
 volatile uint32_t EP14_OUT_BUFFER_CONTROL;
 
-/* EP15_IN_BUFFER_CONTROL (offset: 0xf8)
+/** EP15_IN_BUFFER_CONTROL (offset: 0xf8)
   Buffer control for both buffers of an endpoint. Fields ending in a _1 are for buffer 1.
 
  Fields ending in a _0 are for buffer 0. Buffer 1 controls are only valid if the endpoint is in double buffered mode.
@@ -2757,7 +2757,7 @@ volatile uint32_t EP14_OUT_BUFFER_CONTROL;
 */
 volatile uint32_t EP15_IN_BUFFER_CONTROL;
 
-/* EP15_OUT_BUFFER_CONTROL (offset: 0xfc)
+/** EP15_OUT_BUFFER_CONTROL (offset: 0xfc)
   Buffer control for both buffers of an endpoint. Fields ending in a _1 are for buffer 1.
 
  Fields ending in a _0 are for buffer 0. Buffer 1 controls are only valid if the endpoint is in double buffered mode.

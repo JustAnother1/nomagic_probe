@@ -1,6 +1,6 @@
 #ifndef HW_PPB_H
 #define HW_PPB_H
-/* Memory Block starting at 0xE0000000 + 0x0 is 0x10000 bytes in size. It is used for registers. Protection: n */
+/** Memory Block starting at 0xE0000000 + 0x0 is 0x10000 bytes in size. It is used for registers. Protection: n */
 
 #include <stdint.h>
 
@@ -8,7 +8,7 @@ typedef struct
 {
 volatile uint32_t reserved0[14340];
 
-/* SYST_CSR (offset: 0xe010)
+/** SYST_CSR (offset: 0xe010)
   Use the SysTick Control and Status Register to enable the SysTick features.
   access : read-write
   reset value : 0x0
@@ -42,7 +42,7 @@ volatile uint32_t reserved0[14340];
 */
 volatile uint32_t SYST_CSR;
 
-/* SYST_RVR (offset: 0xe014)
+/** SYST_RVR (offset: 0xe014)
   Use the SysTick Reload Value Register to specify the start value to load into the current value register when the counter reaches 0. It can be any value between 0 and 0x00FFFFFF. A start value of 0 is possible, but has no effect because the SysTick interrupt and COUNTFLAG are activated when counting from 1 to 0. The reset value of this register is UNKNOWN.
 
  To generate a multi-shot timer with a period of N processor clock cycles, use a RELOAD value of N-1. For example, if the SysTick interrupt is required every 100 clock pulses, set RELOAD to 99.
@@ -55,7 +55,7 @@ volatile uint32_t SYST_CSR;
 */
 volatile uint32_t SYST_RVR;
 
-/* SYST_CVR (offset: 0xe018)
+/** SYST_CVR (offset: 0xe018)
   Use the SysTick Current Value Register to find the current value in the register. The reset value of this register is UNKNOWN.
   access : read-write
   reset value : 0x0
@@ -66,7 +66,7 @@ volatile uint32_t SYST_RVR;
 */
 volatile uint32_t SYST_CVR;
 
-/* SYST_CALIB (offset: 0xe01c)
+/** SYST_CALIB (offset: 0xe01c)
   Use the SysTick Calibration Value Register to enable software to scale to any required speed using divide and multiply.
   access : read-write
   reset value : 0x0
@@ -84,7 +84,7 @@ volatile uint32_t SYST_CVR;
 volatile uint32_t SYST_CALIB;
 volatile uint32_t reserved1[56];
 
-/* NVIC_ISER (offset: 0xe100)
+/** NVIC_ISER (offset: 0xe100)
   Use the Interrupt Set-Enable Register to enable interrupts and determine which interrupts are currently enabled.
 
  If a pending interrupt is enabled, the NVIC activates the interrupt based on its priority. If an interrupt is not enabled, asserting its interrupt signal changes the interrupt state to pending, but the NVIC never activates the interrupt, regardless of its priority.
@@ -110,7 +110,7 @@ volatile uint32_t reserved1[56];
 volatile uint32_t NVIC_ISER;
 volatile uint32_t reserved2[31];
 
-/* NVIC_ICER (offset: 0xe180)
+/** NVIC_ICER (offset: 0xe180)
   Use the Interrupt Clear-Enable Registers to disable interrupts and determine which interrupts are currently enabled.
   access : read-write
   reset value : 0x0
@@ -134,7 +134,7 @@ volatile uint32_t reserved2[31];
 volatile uint32_t NVIC_ICER;
 volatile uint32_t reserved3[31];
 
-/* NVIC_ISPR (offset: 0xe200)
+/** NVIC_ISPR (offset: 0xe200)
   The NVIC_ISPR forces interrupts into the pending state, and shows which interrupts are pending.
   access : read-write
   reset value : 0x0
@@ -164,7 +164,7 @@ volatile uint32_t reserved3[31];
 volatile uint32_t NVIC_ISPR;
 volatile uint32_t reserved4[31];
 
-/* NVIC_ICPR (offset: 0xe280)
+/** NVIC_ICPR (offset: 0xe280)
   Use the Interrupt Clear-Pending Register to clear pending interrupts and determine which interrupts are currently pending.
   access : read-write
   reset value : 0x0
@@ -188,7 +188,7 @@ volatile uint32_t reserved4[31];
 volatile uint32_t NVIC_ICPR;
 volatile uint32_t reserved5[95];
 
-/* NVIC_IPR0 (offset: 0xe400)
+/** NVIC_IPR0 (offset: 0xe400)
   Use the Interrupt Priority Registers to assign a priority from 0 to 3 to each of the available interrupts. 0 is the highest priority, and 3 is the lowest.
 
  Note: Writing 1 to an NVIC_ICPR bit does not affect the active state of the corresponding interrupt.
@@ -212,7 +212,7 @@ volatile uint32_t reserved5[95];
 */
 volatile uint32_t NVIC_IPR0;
 
-/* NVIC_IPR1 (offset: 0xe404)
+/** NVIC_IPR1 (offset: 0xe404)
   Use the Interrupt Priority Registers to assign a priority from 0 to 3 to each of the available interrupts. 0 is the highest priority, and 3 is the lowest.
   access : read-write
   reset value : 0x0
@@ -232,7 +232,7 @@ volatile uint32_t NVIC_IPR0;
 */
 volatile uint32_t NVIC_IPR1;
 
-/* NVIC_IPR2 (offset: 0xe408)
+/** NVIC_IPR2 (offset: 0xe408)
   Use the Interrupt Priority Registers to assign a priority from 0 to 3 to each of the available interrupts. 0 is the highest priority, and 3 is the lowest.
   access : read-write
   reset value : 0x0
@@ -252,7 +252,7 @@ volatile uint32_t NVIC_IPR1;
 */
 volatile uint32_t NVIC_IPR2;
 
-/* NVIC_IPR3 (offset: 0xe40c)
+/** NVIC_IPR3 (offset: 0xe40c)
   Use the Interrupt Priority Registers to assign a priority from 0 to 3 to each of the available interrupts. 0 is the highest priority, and 3 is the lowest.
   access : read-write
   reset value : 0x0
@@ -272,7 +272,7 @@ volatile uint32_t NVIC_IPR2;
 */
 volatile uint32_t NVIC_IPR3;
 
-/* NVIC_IPR4 (offset: 0xe410)
+/** NVIC_IPR4 (offset: 0xe410)
   Use the Interrupt Priority Registers to assign a priority from 0 to 3 to each of the available interrupts. 0 is the highest priority, and 3 is the lowest.
   access : read-write
   reset value : 0x0
@@ -292,7 +292,7 @@ volatile uint32_t NVIC_IPR3;
 */
 volatile uint32_t NVIC_IPR4;
 
-/* NVIC_IPR5 (offset: 0xe414)
+/** NVIC_IPR5 (offset: 0xe414)
   Use the Interrupt Priority Registers to assign a priority from 0 to 3 to each of the available interrupts. 0 is the highest priority, and 3 is the lowest.
   access : read-write
   reset value : 0x0
@@ -312,7 +312,7 @@ volatile uint32_t NVIC_IPR4;
 */
 volatile uint32_t NVIC_IPR5;
 
-/* NVIC_IPR6 (offset: 0xe418)
+/** NVIC_IPR6 (offset: 0xe418)
   Use the Interrupt Priority Registers to assign a priority from 0 to 3 to each of the available interrupts. 0 is the highest priority, and 3 is the lowest.
   access : read-write
   reset value : 0x0
@@ -332,7 +332,7 @@ volatile uint32_t NVIC_IPR5;
 */
 volatile uint32_t NVIC_IPR6;
 
-/* NVIC_IPR7 (offset: 0xe41c)
+/** NVIC_IPR7 (offset: 0xe41c)
   Use the Interrupt Priority Registers to assign a priority from 0 to 3 to each of the available interrupts. 0 is the highest priority, and 3 is the lowest.
   access : read-write
   reset value : 0x0
@@ -353,7 +353,7 @@ volatile uint32_t NVIC_IPR6;
 volatile uint32_t NVIC_IPR7;
 volatile uint32_t reserved6[568];
 
-/* CPUID (offset: 0xed00)
+/** CPUID (offset: 0xed00)
   Read the CPU ID Base Register to determine: the ID number of the processor core, the version number of the processor core, the implementation details of the processor core.
   access : read-write
   reset value : 0x410CC601
@@ -382,7 +382,7 @@ volatile uint32_t reserved6[568];
 */
 volatile uint32_t CPUID;
 
-/* ICSR (offset: 0xed04)
+/** ICSR (offset: 0xed04)
   Use the Interrupt Control State Register to set a pending Non-Maskable Interrupt (NMI), set or clear a pending PendSV, set or clear a pending SysTick, check for pending exceptions, check the vector number of the highest priority pended exception, check the vector number of the active exception.
   access : read-write
   reset value : 0x0
@@ -479,7 +479,7 @@ volatile uint32_t CPUID;
 */
 volatile uint32_t ICSR;
 
-/* VTOR (offset: 0xed08)
+/** VTOR (offset: 0xed08)
   The VTOR holds the vector table offset address.
   access : read-write
   reset value : 0x0
@@ -490,7 +490,7 @@ volatile uint32_t ICSR;
 */
 volatile uint32_t VTOR;
 
-/* AIRCR (offset: 0xed0c)
+/** AIRCR (offset: 0xed0c)
   Use the Application Interrupt and Reset Control Register to: determine data endianness, clear all active state information from debug halt mode, request a system reset.
   access : read-write
   reset value : 0x0
@@ -516,7 +516,7 @@ volatile uint32_t VTOR;
 */
 volatile uint32_t AIRCR;
 
-/* SCR (offset: 0xed10)
+/** SCR (offset: 0xed10)
   System Control Register. Use the System Control Register for power-management functions: signal to the system when the processor can enter a low power state, control how the processor enters and exits low power states.
   access : read-write
   reset value : 0x0
@@ -553,7 +553,7 @@ volatile uint32_t AIRCR;
 */
 volatile uint32_t SCR;
 
-/* CCR (offset: 0xed14)
+/** CCR (offset: 0xed14)
   The Configuration and Control Register permanently enables stack alignment and causes unaligned accesses to result in a Hard Fault.
   access : read-write
   reset value : 0x0
@@ -568,7 +568,7 @@ volatile uint32_t SCR;
 volatile uint32_t CCR;
 volatile uint32_t reserved7;
 
-/* SHPR2 (offset: 0xed1c)
+/** SHPR2 (offset: 0xed1c)
   System handlers are a special class of exception handler that can have their priority set to any of the priority levels. Use the System Handler Priority Register 2 to set the priority of SVCall.
   access : read-write
   reset value : 0x0
@@ -579,7 +579,7 @@ volatile uint32_t reserved7;
 */
 volatile uint32_t SHPR2;
 
-/* SHPR3 (offset: 0xed20)
+/** SHPR3 (offset: 0xed20)
   System handlers are a special class of exception handler that can have their priority set to any of the priority levels. Use the System Handler Priority Register 3 to set the priority of PendSV and SysTick.
   access : read-write
   reset value : 0x0
@@ -593,7 +593,7 @@ volatile uint32_t SHPR2;
 */
 volatile uint32_t SHPR3;
 
-/* SHCSR (offset: 0xed24)
+/** SHCSR (offset: 0xed24)
   Use the System Handler Control and State Register to determine or clear the pending status of SVCall.
   access : read-write
   reset value : 0x0
@@ -605,7 +605,7 @@ volatile uint32_t SHPR3;
 volatile uint32_t SHCSR;
 volatile uint32_t reserved8[26];
 
-/* MPU_TYPE (offset: 0xed90)
+/** MPU_TYPE (offset: 0xed90)
   Read the MPU Type Register to determine if the processor implements an MPU, and how many regions the MPU supports.
   access : read-write
   reset value : 0x800
@@ -622,7 +622,7 @@ volatile uint32_t reserved8[26];
 */
 volatile uint32_t MPU_TYPE;
 
-/* MPU_CTRL (offset: 0xed94)
+/** MPU_CTRL (offset: 0xed94)
   Use the MPU Control Register to enable and disable the MPU, and to control whether the default memory map is enabled as a background region for privileged accesses, and whether the MPU is enabled for HardFaults and NMIs.
   access : read-write
   reset value : 0x0
@@ -657,7 +657,7 @@ volatile uint32_t MPU_TYPE;
 */
 volatile uint32_t MPU_CTRL;
 
-/* MPU_RNR (offset: 0xed98)
+/** MPU_RNR (offset: 0xed98)
   Use the MPU Region Number Register to select the region currently accessed by MPU_RBAR and MPU_RASR.
   access : read-write
   reset value : 0x0
@@ -670,7 +670,7 @@ volatile uint32_t MPU_CTRL;
 */
 volatile uint32_t MPU_RNR;
 
-/* MPU_RBAR (offset: 0xed9c)
+/** MPU_RBAR (offset: 0xed9c)
   Read the MPU Region Base Address Register to determine the base address of the region identified by MPU_RNR. Write to update the base address of said region or that of a specified region, with whose number MPU_RNR will also be updated.
   access : read-write
   reset value : 0x0
@@ -703,7 +703,7 @@ volatile uint32_t MPU_RNR;
 */
 volatile uint32_t MPU_RBAR;
 
-/* MPU_RASR (offset: 0xeda0)
+/** MPU_RASR (offset: 0xeda0)
   Use the MPU Region Attribute and Size Register to define the size, access behaviour and memory type of the region identified by MPU_RNR, and enable that region.
   access : read-write
   reset value : 0x0

@@ -1,13 +1,13 @@
 #ifndef HW_PLL_USB_H
 #define HW_PLL_USB_H
-/* Memory Block starting at 0x4002C000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
+/** Memory Block starting at 0x4002C000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
 
 #include <stdint.h>
 
 typedef struct
 {
 
-/* CS (offset: 0x0)
+/** CS (offset: 0x0)
   Control and Status
 
  GENERAL CONSTRAINTS:
@@ -36,7 +36,7 @@ typedef struct
 */
 volatile uint32_t CS;
 
-/* PWR (offset: 0x4)
+/** PWR (offset: 0x4)
   Controls the PLL power modes.
   access : read-write
   reset value : 0x2D
@@ -64,7 +64,7 @@ volatile uint32_t CS;
 */
 volatile uint32_t PWR;
 
-/* FBDIV_INT (offset: 0x8)
+/** FBDIV_INT (offset: 0x8)
   Feedback divisor
 
  (note: this PLL does not support fractional division)
@@ -77,7 +77,7 @@ volatile uint32_t PWR;
 */
 volatile uint32_t FBDIV_INT;
 
-/* PRIM (offset: 0xc)
+/** PRIM (offset: 0xc)
   Controls the PLL post dividers for the primary output
 
  (note: this PLL does not have a secondary output)

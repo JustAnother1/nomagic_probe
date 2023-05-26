@@ -1,14 +1,14 @@
 #ifndef HW_UART0_H
 #define HW_UART0_H
-/* Interrupt : UART0_IRQ (Vector: 20)  */
-/* Memory Block starting at 0x40034000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
+/** Interrupt : UART0_IRQ (Vector: 20)  */
+/** Memory Block starting at 0x40034000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
 
 #include <stdint.h>
 
 typedef struct
 {
 
-/* UARTDR (offset: 0x0)
+/** UARTDR (offset: 0x0)
   Data Register, UARTDR
   access : read-write
   reset value : 0x0
@@ -31,7 +31,7 @@ typedef struct
 */
 volatile uint32_t UARTDR;
 
-/* UARTRSR (offset: 0x4)
+/** UARTRSR (offset: 0x4)
   Receive Status Register/Error Clear Register, UARTRSR/UARTECR
   access : read-write
   reset value : 0x0
@@ -52,7 +52,7 @@ volatile uint32_t UARTDR;
 volatile uint32_t UARTRSR;
 volatile uint32_t reserved0[4];
 
-/* UARTFR (offset: 0x18)
+/** UARTFR (offset: 0x18)
   Flag Register, UARTFR
   access : read-write
   reset value : 0x90
@@ -88,7 +88,7 @@ volatile uint32_t reserved0[4];
 volatile uint32_t UARTFR;
 volatile uint32_t reserved1;
 
-/* UARTILPR (offset: 0x20)
+/** UARTILPR (offset: 0x20)
   IrDA Low-Power Counter Register, UARTILPR
   access : read-write
   reset value : 0x0
@@ -99,7 +99,7 @@ volatile uint32_t reserved1;
 */
 volatile uint32_t UARTILPR;
 
-/* UARTIBRD (offset: 0x24)
+/** UARTIBRD (offset: 0x24)
   Integer Baud Rate Register, UARTIBRD
   access : read-write
   reset value : 0x0
@@ -110,7 +110,7 @@ volatile uint32_t UARTILPR;
 */
 volatile uint32_t UARTIBRD;
 
-/* UARTFBRD (offset: 0x28)
+/** UARTFBRD (offset: 0x28)
   Fractional Baud Rate Register, UARTFBRD
   access : read-write
   reset value : 0x0
@@ -121,7 +121,7 @@ volatile uint32_t UARTIBRD;
 */
 volatile uint32_t UARTFBRD;
 
-/* UARTLCR_H (offset: 0x2c)
+/** UARTLCR_H (offset: 0x2c)
   Line Control Register, UARTLCR_H
   access : read-write
   reset value : 0x0
@@ -150,7 +150,7 @@ volatile uint32_t UARTFBRD;
 */
 volatile uint32_t UARTLCR_H;
 
-/* UARTCR (offset: 0x30)
+/** UARTCR (offset: 0x30)
   Control Register, UARTCR
   access : read-write
   reset value : 0x300
@@ -194,7 +194,7 @@ volatile uint32_t UARTLCR_H;
 */
 volatile uint32_t UARTCR;
 
-/* UARTIFLS (offset: 0x34)
+/** UARTIFLS (offset: 0x34)
   Interrupt FIFO Level Select Register, UARTIFLS
   access : read-write
   reset value : 0x12
@@ -208,7 +208,7 @@ volatile uint32_t UARTCR;
 */
 volatile uint32_t UARTIFLS;
 
-/* UARTIMSC (offset: 0x38)
+/** UARTIMSC (offset: 0x38)
   Interrupt Mask Set/Clear Register, UARTIMSC
   access : read-write
   reset value : 0x0
@@ -249,7 +249,7 @@ volatile uint32_t UARTIFLS;
 */
 volatile uint32_t UARTIMSC;
 
-/* UARTRIS (offset: 0x3c)
+/** UARTRIS (offset: 0x3c)
   Raw Interrupt Status Register, UARTRIS
   access : read-write
   reset value : 0x0
@@ -290,7 +290,7 @@ volatile uint32_t UARTIMSC;
 */
 volatile uint32_t UARTRIS;
 
-/* UARTMIS (offset: 0x40)
+/** UARTMIS (offset: 0x40)
   Masked Interrupt Status Register, UARTMIS
   access : read-write
   reset value : 0x0
@@ -331,7 +331,7 @@ volatile uint32_t UARTRIS;
 */
 volatile uint32_t UARTMIS;
 
-/* UARTICR (offset: 0x44)
+/** UARTICR (offset: 0x44)
   Interrupt Clear Register, UARTICR
   access : read-write
   reset value : 0x0
@@ -372,7 +372,7 @@ volatile uint32_t UARTMIS;
 */
 volatile uint32_t UARTICR;
 
-/* UARTDMACR (offset: 0x48)
+/** UARTDMACR (offset: 0x48)
   DMA Control Register, UARTDMACR
   access : read-write
   reset value : 0x0
@@ -390,7 +390,7 @@ volatile uint32_t UARTICR;
 volatile uint32_t UARTDMACR;
 volatile uint32_t reserved2[997];
 
-/* UARTPERIPHID0 (offset: 0xfe0)
+/** UARTPERIPHID0 (offset: 0xfe0)
   UARTPeriphID0 Register
   access : read-write
   reset value : 0x11
@@ -401,7 +401,7 @@ volatile uint32_t reserved2[997];
 */
 volatile uint32_t UARTPERIPHID0;
 
-/* UARTPERIPHID1 (offset: 0xfe4)
+/** UARTPERIPHID1 (offset: 0xfe4)
   UARTPeriphID1 Register
   access : read-write
   reset value : 0x10
@@ -415,7 +415,7 @@ volatile uint32_t UARTPERIPHID0;
 */
 volatile uint32_t UARTPERIPHID1;
 
-/* UARTPERIPHID2 (offset: 0xfe8)
+/** UARTPERIPHID2 (offset: 0xfe8)
   UARTPeriphID2 Register
   access : read-write
   reset value : 0x34
@@ -429,7 +429,7 @@ volatile uint32_t UARTPERIPHID1;
 */
 volatile uint32_t UARTPERIPHID2;
 
-/* UARTPERIPHID3 (offset: 0xfec)
+/** UARTPERIPHID3 (offset: 0xfec)
   UARTPeriphID3 Register
   access : read-write
   reset value : 0x0
@@ -440,7 +440,7 @@ volatile uint32_t UARTPERIPHID2;
 */
 volatile uint32_t UARTPERIPHID3;
 
-/* UARTPCELLID0 (offset: 0xff0)
+/** UARTPCELLID0 (offset: 0xff0)
   UARTPCellID0 Register
   access : read-write
   reset value : 0xD
@@ -451,7 +451,7 @@ volatile uint32_t UARTPERIPHID3;
 */
 volatile uint32_t UARTPCELLID0;
 
-/* UARTPCELLID1 (offset: 0xff4)
+/** UARTPCELLID1 (offset: 0xff4)
   UARTPCellID1 Register
   access : read-write
   reset value : 0xF0
@@ -462,7 +462,7 @@ volatile uint32_t UARTPCELLID0;
 */
 volatile uint32_t UARTPCELLID1;
 
-/* UARTPCELLID2 (offset: 0xff8)
+/** UARTPCELLID2 (offset: 0xff8)
   UARTPCellID2 Register
   access : read-write
   reset value : 0x5
@@ -473,7 +473,7 @@ volatile uint32_t UARTPCELLID1;
 */
 volatile uint32_t UARTPCELLID2;
 
-/* UARTPCELLID3 (offset: 0xffc)
+/** UARTPCELLID3 (offset: 0xffc)
   UARTPCellID3 Register
   access : read-write
   reset value : 0xB1
@@ -485,6 +485,6 @@ volatile uint32_t UARTPCELLID2;
 volatile uint32_t UARTPCELLID3;
 } UART0_type;
 
-#define UART0 ((volatile UART0_type *) 0x40034000)
+#define UART0 ((UART0_type *) 0x40034000)
 
 #endif // HW_UART0_H

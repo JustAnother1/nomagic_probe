@@ -1,15 +1,15 @@
 #ifndef HW_USBCTRL_REGS_H
 #define HW_USBCTRL_REGS_H
-/* USB FS/LS controller device registers */
-/* Interrupt : USBCTRL_IRQ (Vector: 5)  */
-/* Memory Block starting at 0x50110000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
+/** USB FS/LS controller device registers */
+/** Interrupt : USBCTRL_IRQ (Vector: 5)  */
+/** Memory Block starting at 0x50110000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
 
 #include <stdint.h>
 
 typedef struct
 {
 
-/* ADDR_ENDP (offset: 0x0)
+/** ADDR_ENDP (offset: 0x0)
   Device address and endpoint control
   access : read-write
   reset value : 0x0
@@ -23,7 +23,7 @@ typedef struct
 */
 volatile uint32_t ADDR_ENDP;
 
-/* ADDR_ENDP1 (offset: 0x4)
+/** ADDR_ENDP1 (offset: 0x4)
   Interrupt endpoint 1. Only valid for HOST mode.
   access : read-write
   reset value : 0x0
@@ -43,7 +43,7 @@ volatile uint32_t ADDR_ENDP;
 */
 volatile uint32_t ADDR_ENDP1;
 
-/* ADDR_ENDP2 (offset: 0x8)
+/** ADDR_ENDP2 (offset: 0x8)
   Interrupt endpoint 2. Only valid for HOST mode.
   access : read-write
   reset value : 0x0
@@ -63,7 +63,7 @@ volatile uint32_t ADDR_ENDP1;
 */
 volatile uint32_t ADDR_ENDP2;
 
-/* ADDR_ENDP3 (offset: 0xc)
+/** ADDR_ENDP3 (offset: 0xc)
   Interrupt endpoint 3. Only valid for HOST mode.
   access : read-write
   reset value : 0x0
@@ -83,7 +83,7 @@ volatile uint32_t ADDR_ENDP2;
 */
 volatile uint32_t ADDR_ENDP3;
 
-/* ADDR_ENDP4 (offset: 0x10)
+/** ADDR_ENDP4 (offset: 0x10)
   Interrupt endpoint 4. Only valid for HOST mode.
   access : read-write
   reset value : 0x0
@@ -103,7 +103,7 @@ volatile uint32_t ADDR_ENDP3;
 */
 volatile uint32_t ADDR_ENDP4;
 
-/* ADDR_ENDP5 (offset: 0x14)
+/** ADDR_ENDP5 (offset: 0x14)
   Interrupt endpoint 5. Only valid for HOST mode.
   access : read-write
   reset value : 0x0
@@ -123,7 +123,7 @@ volatile uint32_t ADDR_ENDP4;
 */
 volatile uint32_t ADDR_ENDP5;
 
-/* ADDR_ENDP6 (offset: 0x18)
+/** ADDR_ENDP6 (offset: 0x18)
   Interrupt endpoint 6. Only valid for HOST mode.
   access : read-write
   reset value : 0x0
@@ -143,7 +143,7 @@ volatile uint32_t ADDR_ENDP5;
 */
 volatile uint32_t ADDR_ENDP6;
 
-/* ADDR_ENDP7 (offset: 0x1c)
+/** ADDR_ENDP7 (offset: 0x1c)
   Interrupt endpoint 7. Only valid for HOST mode.
   access : read-write
   reset value : 0x0
@@ -163,7 +163,7 @@ volatile uint32_t ADDR_ENDP6;
 */
 volatile uint32_t ADDR_ENDP7;
 
-/* ADDR_ENDP8 (offset: 0x20)
+/** ADDR_ENDP8 (offset: 0x20)
   Interrupt endpoint 8. Only valid for HOST mode.
   access : read-write
   reset value : 0x0
@@ -183,7 +183,7 @@ volatile uint32_t ADDR_ENDP7;
 */
 volatile uint32_t ADDR_ENDP8;
 
-/* ADDR_ENDP9 (offset: 0x24)
+/** ADDR_ENDP9 (offset: 0x24)
   Interrupt endpoint 9. Only valid for HOST mode.
   access : read-write
   reset value : 0x0
@@ -203,7 +203,7 @@ volatile uint32_t ADDR_ENDP8;
 */
 volatile uint32_t ADDR_ENDP9;
 
-/* ADDR_ENDP10 (offset: 0x28)
+/** ADDR_ENDP10 (offset: 0x28)
   Interrupt endpoint 10. Only valid for HOST mode.
   access : read-write
   reset value : 0x0
@@ -223,7 +223,7 @@ volatile uint32_t ADDR_ENDP9;
 */
 volatile uint32_t ADDR_ENDP10;
 
-/* ADDR_ENDP11 (offset: 0x2c)
+/** ADDR_ENDP11 (offset: 0x2c)
   Interrupt endpoint 11. Only valid for HOST mode.
   access : read-write
   reset value : 0x0
@@ -243,7 +243,7 @@ volatile uint32_t ADDR_ENDP10;
 */
 volatile uint32_t ADDR_ENDP11;
 
-/* ADDR_ENDP12 (offset: 0x30)
+/** ADDR_ENDP12 (offset: 0x30)
   Interrupt endpoint 12. Only valid for HOST mode.
   access : read-write
   reset value : 0x0
@@ -263,7 +263,7 @@ volatile uint32_t ADDR_ENDP11;
 */
 volatile uint32_t ADDR_ENDP12;
 
-/* ADDR_ENDP13 (offset: 0x34)
+/** ADDR_ENDP13 (offset: 0x34)
   Interrupt endpoint 13. Only valid for HOST mode.
   access : read-write
   reset value : 0x0
@@ -283,7 +283,7 @@ volatile uint32_t ADDR_ENDP12;
 */
 volatile uint32_t ADDR_ENDP13;
 
-/* ADDR_ENDP14 (offset: 0x38)
+/** ADDR_ENDP14 (offset: 0x38)
   Interrupt endpoint 14. Only valid for HOST mode.
   access : read-write
   reset value : 0x0
@@ -303,7 +303,7 @@ volatile uint32_t ADDR_ENDP13;
 */
 volatile uint32_t ADDR_ENDP14;
 
-/* ADDR_ENDP15 (offset: 0x3c)
+/** ADDR_ENDP15 (offset: 0x3c)
   Interrupt endpoint 15. Only valid for HOST mode.
   access : read-write
   reset value : 0x0
@@ -323,7 +323,7 @@ volatile uint32_t ADDR_ENDP14;
 */
 volatile uint32_t ADDR_ENDP15;
 
-/* MAIN_CTRL (offset: 0x40)
+/** MAIN_CTRL (offset: 0x40)
   Main control register
   access : read-write
   reset value : 0x0
@@ -340,7 +340,7 @@ volatile uint32_t ADDR_ENDP15;
 */
 volatile uint32_t MAIN_CTRL;
 
-/* SOF_WR (offset: 0x44)
+/** SOF_WR (offset: 0x44)
   Set the SOF (Start of Frame) frame number in the host controller. The SOF packet is sent every 1ms and the host will increment the frame number by 1 each time.
   access : read-write
   reset value : 0x0
@@ -350,7 +350,7 @@ volatile uint32_t MAIN_CTRL;
 */
 volatile uint32_t SOF_WR;
 
-/* SOF_RD (offset: 0x48)
+/** SOF_RD (offset: 0x48)
   Read the last SOF (Start of Frame) frame number seen. In device mode the last SOF received from the host. In host mode the last SOF sent by the host.
   access : read-write
   reset value : 0x0
@@ -360,7 +360,7 @@ volatile uint32_t SOF_WR;
 */
 volatile uint32_t SOF_RD;
 
-/* SIE_CTRL (offset: 0x4c)
+/** SIE_CTRL (offset: 0x4c)
   SIE control register
   access : read-write
   reset value : 0x0
@@ -440,7 +440,7 @@ volatile uint32_t SOF_RD;
 */
 volatile uint32_t SIE_CTRL;
 
-/* SIE_STATUS (offset: 0x50)
+/** SIE_STATUS (offset: 0x50)
   SIE status register
   access : read-write
   reset value : 0x0
@@ -526,7 +526,7 @@ volatile uint32_t SIE_CTRL;
 */
 volatile uint32_t SIE_STATUS;
 
-/* INT_EP_CTRL (offset: 0x54)
+/** INT_EP_CTRL (offset: 0x54)
   interrupt endpoint control register
   access : read-write
   reset value : 0x0
@@ -537,7 +537,7 @@ volatile uint32_t SIE_STATUS;
 */
 volatile uint32_t INT_EP_CTRL;
 
-/* BUFF_STATUS (offset: 0x58)
+/** BUFF_STATUS (offset: 0x58)
   Buffer status register. A bit set here indicates that a buffer has completed on the endpoint (if the buffer interrupt is enabled). It is possible for 2 buffers to be completed, so clearing the buffer status bit may instantly re set it on the next clock cycle.
   access : read-write
   reset value : 0x0
@@ -609,7 +609,7 @@ volatile uint32_t INT_EP_CTRL;
 */
 volatile uint32_t BUFF_STATUS;
 
-/* BUFF_CPU_SHOULD_HANDLE (offset: 0x5c)
+/** BUFF_CPU_SHOULD_HANDLE (offset: 0x5c)
   Which of the double buffers should be handled. Only valid if using an interrupt per buffer (i.e. not per 2 buffers). Not valid for host interrupt endpoint polling because they are only single buffered.
   access : read-write
   reset value : 0x0
@@ -681,7 +681,7 @@ volatile uint32_t BUFF_STATUS;
 */
 volatile uint32_t BUFF_CPU_SHOULD_HANDLE;
 
-/* EP_ABORT (offset: 0x60)
+/** EP_ABORT (offset: 0x60)
   Device only: Can be set to ignore the buffer control register for this endpoint in case you would like to revoke a buffer. A NAK will be sent for every access to the endpoint until this bit is cleared. A corresponding bit in `EP_ABORT_DONE` is set when it is safe to modify the buffer control register.
   access : read-write
   reset value : 0x0
@@ -753,7 +753,7 @@ volatile uint32_t BUFF_CPU_SHOULD_HANDLE;
 */
 volatile uint32_t EP_ABORT;
 
-/* EP_ABORT_DONE (offset: 0x64)
+/** EP_ABORT_DONE (offset: 0x64)
   Device only: Used in conjunction with `EP_ABORT`. Set once an endpoint is idle so the programmer knows it is safe to modify the buffer control register.
   access : read-write
   reset value : 0x0
@@ -825,7 +825,7 @@ volatile uint32_t EP_ABORT;
 */
 volatile uint32_t EP_ABORT_DONE;
 
-/* EP_STALL_ARM (offset: 0x68)
+/** EP_STALL_ARM (offset: 0x68)
   Device: this bit must be set in conjunction with the `STALL` bit in the buffer control register to send a STALL on EP0. The device controller clears these bits when a SETUP packet is received because the USB spec requires that a STALL condition is cleared when a SETUP packet is received.
   access : read-write
   reset value : 0x0
@@ -837,7 +837,7 @@ volatile uint32_t EP_ABORT_DONE;
 */
 volatile uint32_t EP_STALL_ARM;
 
-/* NAK_POLL (offset: 0x6c)
+/** NAK_POLL (offset: 0x6c)
   Used by the host controller. Sets the wait time in microseconds before trying again if the device replies with a NAK.
   access : read-write
   reset value : 0x100010
@@ -851,7 +851,7 @@ volatile uint32_t EP_STALL_ARM;
 */
 volatile uint32_t NAK_POLL;
 
-/* EP_STATUS_STALL_NAK (offset: 0x70)
+/** EP_STATUS_STALL_NAK (offset: 0x70)
   Device: bits are set when the `IRQ_ON_NAK` or `IRQ_ON_STALL` bits are set. For EP0 this comes from `SIE_CTRL`. For all other endpoints it comes from the endpoint control register.
   access : read-write
   reset value : 0x0
@@ -923,7 +923,7 @@ volatile uint32_t NAK_POLL;
 */
 volatile uint32_t EP_STATUS_STALL_NAK;
 
-/* USB_MUXING (offset: 0x74)
+/** USB_MUXING (offset: 0x74)
   Where to connect the USB controller. Should be to_phy by default.
   access : read-write
   reset value : 0x0
@@ -939,7 +939,7 @@ volatile uint32_t EP_STATUS_STALL_NAK;
 */
 volatile uint32_t USB_MUXING;
 
-/* USB_PWR (offset: 0x78)
+/** USB_PWR (offset: 0x78)
   Overrides for the power signals in the event that the VBUS signals are not hooked up to GPIO. Set the value of the override and then the override enable to switch over to the override value.
   access : read-write
   reset value : 0x0
@@ -959,7 +959,7 @@ volatile uint32_t USB_MUXING;
 */
 volatile uint32_t USB_PWR;
 
-/* USBPHY_DIRECT (offset: 0x7c)
+/** USBPHY_DIRECT (offset: 0x7c)
   This register allows for direct control of the USB phy. Use in conjunction with usbphy_direct_override register to enable each override bit.
   access : read-write
   reset value : 0x0
@@ -1042,7 +1042,7 @@ volatile uint32_t USB_PWR;
 */
 volatile uint32_t USBPHY_DIRECT;
 
-/* USBPHY_DIRECT_OVERRIDE (offset: 0x80)
+/** USBPHY_DIRECT_OVERRIDE (offset: 0x80)
   Override enable for each control in usbphy_direct
   access : read-write
   reset value : 0x0
@@ -1078,7 +1078,7 @@ volatile uint32_t USBPHY_DIRECT;
 */
 volatile uint32_t USBPHY_DIRECT_OVERRIDE;
 
-/* USBPHY_TRIM (offset: 0x84)
+/** USBPHY_TRIM (offset: 0x84)
   Used to adjust trim values of USB phy pull down resistors.
   access : read-write
   reset value : 0x1F1F
@@ -1101,7 +1101,7 @@ volatile uint32_t USBPHY_DIRECT_OVERRIDE;
 volatile uint32_t USBPHY_TRIM;
 volatile uint32_t reserved0;
 
-/* INTR (offset: 0x8c)
+/** INTR (offset: 0x8c)
   Raw Interrupts
   access : read-write
   reset value : 0x0
@@ -1169,7 +1169,7 @@ volatile uint32_t reserved0;
 */
 volatile uint32_t INTR;
 
-/* INTE (offset: 0x90)
+/** INTE (offset: 0x90)
   Interrupt Enable
   access : read-write
   reset value : 0x0
@@ -1237,7 +1237,7 @@ volatile uint32_t INTR;
 */
 volatile uint32_t INTE;
 
-/* INTF (offset: 0x94)
+/** INTF (offset: 0x94)
   Interrupt Force
   access : read-write
   reset value : 0x0
@@ -1305,7 +1305,7 @@ volatile uint32_t INTE;
 */
 volatile uint32_t INTF;
 
-/* INTS (offset: 0x98)
+/** INTS (offset: 0x98)
   Interrupt status after masking &amp; forcing
   access : read-write
   reset value : 0x0

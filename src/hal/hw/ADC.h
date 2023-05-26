@@ -1,15 +1,15 @@
 #ifndef HW_ADC_H
 #define HW_ADC_H
-/* Control and data interface to SAR ADC */
-/* Interrupt : ADC_IRQ_FIFO (Vector: 22)  */
-/* Memory Block starting at 0x4004C000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
+/** Control and data interface to SAR ADC */
+/** Interrupt : ADC_IRQ_FIFO (Vector: 22)  */
+/** Memory Block starting at 0x4004C000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
 
 #include <stdint.h>
 
 typedef struct
 {
 
-/* CS (offset: 0x0)
+/** CS (offset: 0x0)
   ADC Control and Status
   access : read-write
   reset value : 0x0
@@ -54,7 +54,7 @@ typedef struct
 */
 volatile uint32_t CS;
 
-/* RESULT (offset: 0x4)
+/** RESULT (offset: 0x4)
   Result of most recent ADC conversion
   access : read-write
   reset value : 0x0
@@ -64,7 +64,7 @@ volatile uint32_t CS;
 */
 volatile uint32_t RESULT;
 
-/* FCS (offset: 0x8)
+/** FCS (offset: 0x8)
   FIFO control and status
   access : read-write
   reset value : 0x0
@@ -100,7 +100,7 @@ volatile uint32_t RESULT;
 */
 volatile uint32_t FCS;
 
-/* FIFO (offset: 0xc)
+/** FIFO (offset: 0xc)
   Conversion result FIFO
   access : read-write
   reset value : 0x0
@@ -113,7 +113,7 @@ volatile uint32_t FCS;
 */
 volatile uint32_t FIFO;
 
-/* DIV (offset: 0x10)
+/** DIV (offset: 0x10)
   Clock divider. If non-zero, CS_START_MANY will start conversions
 
  at regular intervals rather than back-to-back.
@@ -133,7 +133,7 @@ volatile uint32_t FIFO;
 */
 volatile uint32_t DIV;
 
-/* INTR (offset: 0x14)
+/** INTR (offset: 0x14)
   Raw Interrupts
   access : read-write
   reset value : 0x0
@@ -146,7 +146,7 @@ volatile uint32_t DIV;
 */
 volatile uint32_t INTR;
 
-/* INTE (offset: 0x18)
+/** INTE (offset: 0x18)
   Interrupt Enable
   access : read-write
   reset value : 0x0
@@ -159,7 +159,7 @@ volatile uint32_t INTR;
 */
 volatile uint32_t INTE;
 
-/* INTF (offset: 0x1c)
+/** INTF (offset: 0x1c)
   Interrupt Force
   access : read-write
   reset value : 0x0
@@ -172,7 +172,7 @@ volatile uint32_t INTE;
 */
 volatile uint32_t INTF;
 
-/* INTS (offset: 0x20)
+/** INTS (offset: 0x20)
   Interrupt status after masking &amp; forcing
   access : read-write
   reset value : 0x0

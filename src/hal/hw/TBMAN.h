@@ -1,14 +1,14 @@
 #ifndef HW_TBMAN_H
 #define HW_TBMAN_H
-/* Testbench manager. Allows the programmer to know what platform their software is running on. */
-/* Memory Block starting at 0x4006C000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
+/** Testbench manager. Allows the programmer to know what platform their software is running on. */
+/** Memory Block starting at 0x4006C000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
 
 #include <stdint.h>
 
 typedef struct
 {
 
-/* PLATFORM (offset: 0x0)
+/** PLATFORM (offset: 0x0)
   Indicates the type of platform in use
   access : read-write
   reset value : 0x5

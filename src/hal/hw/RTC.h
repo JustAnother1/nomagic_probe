@@ -1,15 +1,15 @@
 #ifndef HW_RTC_H
 #define HW_RTC_H
-/* Register block to control RTC */
-/* Interrupt : RTC_IRQ (Vector: 25)  */
-/* Memory Block starting at 0x4005C000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
+/** Register block to control RTC */
+/** Interrupt : RTC_IRQ (Vector: 25)  */
+/** Memory Block starting at 0x4005C000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
 
 #include <stdint.h>
 
 typedef struct
 {
 
-/* CLKDIV_M1 (offset: 0x0)
+/** CLKDIV_M1 (offset: 0x0)
   Divider minus 1 for the 1 second counter. Safe to change the value when RTC is not enabled.
   access : read-write
   reset value : 0x0
@@ -19,7 +19,7 @@ typedef struct
 */
 volatile uint32_t CLKDIV_M1;
 
-/* SETUP_0 (offset: 0x4)
+/** SETUP_0 (offset: 0x4)
   RTC setup register 0
   access : read-write
   reset value : 0x0
@@ -36,7 +36,7 @@ volatile uint32_t CLKDIV_M1;
 */
 volatile uint32_t SETUP_0;
 
-/* SETUP_1 (offset: 0x8)
+/** SETUP_1 (offset: 0x8)
   RTC setup register 1
   access : read-write
   reset value : 0x0
@@ -56,7 +56,7 @@ volatile uint32_t SETUP_0;
 */
 volatile uint32_t SETUP_1;
 
-/* CTRL (offset: 0xc)
+/** CTRL (offset: 0xc)
   RTC Control and status
   access : read-write
   reset value : 0x0
@@ -78,7 +78,7 @@ volatile uint32_t SETUP_1;
 */
 volatile uint32_t CTRL;
 
-/* IRQ_SETUP_0 (offset: 0x10)
+/** IRQ_SETUP_0 (offset: 0x10)
   Interrupt setup register 0
   access : read-write
   reset value : 0x0
@@ -109,7 +109,7 @@ volatile uint32_t CTRL;
 */
 volatile uint32_t IRQ_SETUP_0;
 
-/* IRQ_SETUP_1 (offset: 0x14)
+/** IRQ_SETUP_1 (offset: 0x14)
   Interrupt setup register 1
   access : read-write
   reset value : 0x0
@@ -141,7 +141,7 @@ volatile uint32_t IRQ_SETUP_0;
 */
 volatile uint32_t IRQ_SETUP_1;
 
-/* RTC_1 (offset: 0x18)
+/** RTC_1 (offset: 0x18)
   RTC register 1.
   reset value : 0x0
   reset mask : 0x0
@@ -157,7 +157,7 @@ volatile uint32_t IRQ_SETUP_1;
 */
 volatile uint32_t RTC_1;
 
-/* RTC_0 (offset: 0x1c)
+/** RTC_0 (offset: 0x1c)
   RTC register 0
 
  Read this before RTC 1!
@@ -178,7 +178,7 @@ volatile uint32_t RTC_1;
 */
 volatile uint32_t RTC_0;
 
-/* INTR (offset: 0x20)
+/** INTR (offset: 0x20)
   Raw Interrupts
   access : read-write
   reset value : 0x0
@@ -188,7 +188,7 @@ volatile uint32_t RTC_0;
 */
 volatile uint32_t INTR;
 
-/* INTE (offset: 0x24)
+/** INTE (offset: 0x24)
   Interrupt Enable
   access : read-write
   reset value : 0x0
@@ -198,7 +198,7 @@ volatile uint32_t INTR;
 */
 volatile uint32_t INTE;
 
-/* INTF (offset: 0x28)
+/** INTF (offset: 0x28)
   Interrupt Force
   access : read-write
   reset value : 0x0
@@ -208,7 +208,7 @@ volatile uint32_t INTE;
 */
 volatile uint32_t INTF;
 
-/* INTS (offset: 0x2c)
+/** INTS (offset: 0x2c)
   Interrupt status after masking &amp; forcing
   access : read-write
   reset value : 0x0

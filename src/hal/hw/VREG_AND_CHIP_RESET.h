@@ -1,14 +1,14 @@
 #ifndef HW_VREG_AND_CHIP_RESET_H
 #define HW_VREG_AND_CHIP_RESET_H
-/* control and status for on-chip voltage regulator and chip level reset subsystem */
-/* Memory Block starting at 0x40064000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
+/** control and status for on-chip voltage regulator and chip level reset subsystem */
+/** Memory Block starting at 0x40064000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
 
 #include <stdint.h>
 
 typedef struct
 {
 
-/* VREG (offset: 0x0)
+/** VREG (offset: 0x0)
   Voltage regulator control and status
   access : read-write
   reset value : 0xB1
@@ -56,7 +56,7 @@ typedef struct
 */
 volatile uint32_t VREG;
 
-/* BOD (offset: 0x4)
+/** BOD (offset: 0x4)
   brown-out detection control
   access : read-write
   reset value : 0x91
@@ -104,7 +104,7 @@ volatile uint32_t VREG;
 */
 volatile uint32_t BOD;
 
-/* CHIP_RESET (offset: 0x8)
+/** CHIP_RESET (offset: 0x8)
   Chip reset control and status
   access : read-write
   reset value : 0x0

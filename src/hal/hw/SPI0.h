@@ -1,14 +1,14 @@
 #ifndef HW_SPI0_H
 #define HW_SPI0_H
-/* Interrupt : SPI0_IRQ (Vector: 18)  */
-/* Memory Block starting at 0x4003C000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
+/** Interrupt : SPI0_IRQ (Vector: 18)  */
+/** Memory Block starting at 0x4003C000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
 
 #include <stdint.h>
 
 typedef struct
 {
 
-/* SSPCR0 (offset: 0x0)
+/** SSPCR0 (offset: 0x0)
   Control register 0, SSPCR0 on page 3-4
   access : read-write
   reset value : 0x0
@@ -31,7 +31,7 @@ typedef struct
 */
 volatile uint32_t SSPCR0;
 
-/* SSPCR1 (offset: 0x4)
+/** SSPCR1 (offset: 0x4)
   Control register 1, SSPCR1 on page 3-5
   access : read-write
   reset value : 0x0
@@ -51,7 +51,7 @@ volatile uint32_t SSPCR0;
 */
 volatile uint32_t SSPCR1;
 
-/* SSPDR (offset: 0x8)
+/** SSPDR (offset: 0x8)
   Data register, SSPDR on page 3-6
   access : read-write
   reset value : 0x0
@@ -62,7 +62,7 @@ volatile uint32_t SSPCR1;
 */
 volatile uint32_t SSPDR;
 
-/* SSPSR (offset: 0xc)
+/** SSPSR (offset: 0xc)
   Status register, SSPSR on page 3-7
   access : read-write
   reset value : 0x3
@@ -85,7 +85,7 @@ volatile uint32_t SSPDR;
 */
 volatile uint32_t SSPSR;
 
-/* SSPCPSR (offset: 0x10)
+/** SSPCPSR (offset: 0x10)
   Clock prescale register, SSPCPSR on page 3-8
   access : read-write
   reset value : 0x0
@@ -96,7 +96,7 @@ volatile uint32_t SSPSR;
 */
 volatile uint32_t SSPCPSR;
 
-/* SSPIMSC (offset: 0x14)
+/** SSPIMSC (offset: 0x14)
   Interrupt mask set or clear register, SSPIMSC on page 3-9
   access : read-write
   reset value : 0x0
@@ -116,7 +116,7 @@ volatile uint32_t SSPCPSR;
 */
 volatile uint32_t SSPIMSC;
 
-/* SSPRIS (offset: 0x18)
+/** SSPRIS (offset: 0x18)
   Raw interrupt status register, SSPRIS on page 3-10
   access : read-write
   reset value : 0x8
@@ -136,7 +136,7 @@ volatile uint32_t SSPIMSC;
 */
 volatile uint32_t SSPRIS;
 
-/* SSPMIS (offset: 0x1c)
+/** SSPMIS (offset: 0x1c)
   Masked interrupt status register, SSPMIS on page 3-11
   access : read-write
   reset value : 0x0
@@ -156,7 +156,7 @@ volatile uint32_t SSPRIS;
 */
 volatile uint32_t SSPMIS;
 
-/* SSPICR (offset: 0x20)
+/** SSPICR (offset: 0x20)
   Interrupt clear register, SSPICR on page 3-11
   access : read-write
   reset value : 0x0
@@ -170,7 +170,7 @@ volatile uint32_t SSPMIS;
 */
 volatile uint32_t SSPICR;
 
-/* SSPDMACR (offset: 0x24)
+/** SSPDMACR (offset: 0x24)
   DMA control register, SSPDMACR on page 3-12
   access : read-write
   reset value : 0x0
@@ -185,7 +185,7 @@ volatile uint32_t SSPICR;
 volatile uint32_t SSPDMACR;
 volatile uint32_t reserved0[1006];
 
-/* SSPPERIPHID0 (offset: 0xfe0)
+/** SSPPERIPHID0 (offset: 0xfe0)
   Peripheral identification registers, SSPPeriphID0-3 on page 3-13
   access : read-write
   reset value : 0x22
@@ -196,7 +196,7 @@ volatile uint32_t reserved0[1006];
 */
 volatile uint32_t SSPPERIPHID0;
 
-/* SSPPERIPHID1 (offset: 0xfe4)
+/** SSPPERIPHID1 (offset: 0xfe4)
   Peripheral identification registers, SSPPeriphID0-3 on page 3-13
   access : read-write
   reset value : 0x10
@@ -210,7 +210,7 @@ volatile uint32_t SSPPERIPHID0;
 */
 volatile uint32_t SSPPERIPHID1;
 
-/* SSPPERIPHID2 (offset: 0xfe8)
+/** SSPPERIPHID2 (offset: 0xfe8)
   Peripheral identification registers, SSPPeriphID0-3 on page 3-13
   access : read-write
   reset value : 0x34
@@ -224,7 +224,7 @@ volatile uint32_t SSPPERIPHID1;
 */
 volatile uint32_t SSPPERIPHID2;
 
-/* SSPPERIPHID3 (offset: 0xfec)
+/** SSPPERIPHID3 (offset: 0xfec)
   Peripheral identification registers, SSPPeriphID0-3 on page 3-13
   access : read-write
   reset value : 0x0
@@ -235,7 +235,7 @@ volatile uint32_t SSPPERIPHID2;
 */
 volatile uint32_t SSPPERIPHID3;
 
-/* SSPPCELLID0 (offset: 0xff0)
+/** SSPPCELLID0 (offset: 0xff0)
   PrimeCell identification registers, SSPPCellID0-3 on page 3-16
   access : read-write
   reset value : 0xD
@@ -246,7 +246,7 @@ volatile uint32_t SSPPERIPHID3;
 */
 volatile uint32_t SSPPCELLID0;
 
-/* SSPPCELLID1 (offset: 0xff4)
+/** SSPPCELLID1 (offset: 0xff4)
   PrimeCell identification registers, SSPPCellID0-3 on page 3-16
   access : read-write
   reset value : 0xF0
@@ -257,7 +257,7 @@ volatile uint32_t SSPPCELLID0;
 */
 volatile uint32_t SSPPCELLID1;
 
-/* SSPPCELLID2 (offset: 0xff8)
+/** SSPPCELLID2 (offset: 0xff8)
   PrimeCell identification registers, SSPPCellID0-3 on page 3-16
   access : read-write
   reset value : 0x5
@@ -268,7 +268,7 @@ volatile uint32_t SSPPCELLID1;
 */
 volatile uint32_t SSPPCELLID2;
 
-/* SSPPCELLID3 (offset: 0xffc)
+/** SSPPCELLID3 (offset: 0xffc)
   PrimeCell identification registers, SSPPCellID0-3 on page 3-16
   access : read-write
   reset value : 0xB1

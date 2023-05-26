@@ -1,13 +1,13 @@
 #ifndef HW_SYSINFO_H
 #define HW_SYSINFO_H
-/* Memory Block starting at 0x40000000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
+/** Memory Block starting at 0x40000000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
 
 #include <stdint.h>
 
 typedef struct
 {
 
-/* CHIP_ID (offset: 0x0)
+/** CHIP_ID (offset: 0x0)
   JEDEC JEP-106 compliant chip identifier.
   access : read-write
   reset value : 0x0
@@ -21,7 +21,7 @@ typedef struct
 */
 volatile uint32_t CHIP_ID;
 
-/* PLATFORM (offset: 0x4)
+/** PLATFORM (offset: 0x4)
   Platform register. Allows software to know what environment it is running in.
   access : read-write
   reset value : 0x0
@@ -34,7 +34,7 @@ volatile uint32_t CHIP_ID;
 volatile uint32_t PLATFORM;
 volatile uint32_t reserved0[14];
 
-/* GITREF_RP2040 (offset: 0x40)
+/** GITREF_RP2040 (offset: 0x40)
   Git hash of the chip source. Used to identify chip version.
   access : read-only
   reset value : 0x0

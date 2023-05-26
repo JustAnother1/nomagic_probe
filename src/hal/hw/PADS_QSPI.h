@@ -1,13 +1,13 @@
 #ifndef HW_PADS_QSPI_H
 #define HW_PADS_QSPI_H
-/* Memory Block starting at 0x40020000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
+/** Memory Block starting at 0x40020000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
 
 #include <stdint.h>
 
 typedef struct
 {
 
-/* VOLTAGE_SELECT (offset: 0x0)
+/** VOLTAGE_SELECT (offset: 0x0)
   Voltage select. Per bank control
   access : read-write
   reset value : 0x0
@@ -20,7 +20,7 @@ typedef struct
 */
 volatile uint32_t VOLTAGE_SELECT;
 
-/* GPIO_QSPI_SCLK (offset: 0x4)
+/** GPIO_QSPI_SCLK (offset: 0x4)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -54,7 +54,7 @@ volatile uint32_t VOLTAGE_SELECT;
 */
 volatile uint32_t GPIO_QSPI_SCLK;
 
-/* GPIO_QSPI_SD0 (offset: 0x8)
+/** GPIO_QSPI_SD0 (offset: 0x8)
   Pad control register
   access : read-write
   reset value : 0x52
@@ -88,7 +88,7 @@ volatile uint32_t GPIO_QSPI_SCLK;
 */
 volatile uint32_t GPIO_QSPI_SD0;
 
-/* GPIO_QSPI_SD1 (offset: 0xc)
+/** GPIO_QSPI_SD1 (offset: 0xc)
   Pad control register
   access : read-write
   reset value : 0x52
@@ -122,7 +122,7 @@ volatile uint32_t GPIO_QSPI_SD0;
 */
 volatile uint32_t GPIO_QSPI_SD1;
 
-/* GPIO_QSPI_SD2 (offset: 0x10)
+/** GPIO_QSPI_SD2 (offset: 0x10)
   Pad control register
   access : read-write
   reset value : 0x52
@@ -156,7 +156,7 @@ volatile uint32_t GPIO_QSPI_SD1;
 */
 volatile uint32_t GPIO_QSPI_SD2;
 
-/* GPIO_QSPI_SD3 (offset: 0x14)
+/** GPIO_QSPI_SD3 (offset: 0x14)
   Pad control register
   access : read-write
   reset value : 0x52
@@ -190,7 +190,7 @@ volatile uint32_t GPIO_QSPI_SD2;
 */
 volatile uint32_t GPIO_QSPI_SD3;
 
-/* GPIO_QSPI_SS (offset: 0x18)
+/** GPIO_QSPI_SS (offset: 0x18)
   Pad control register
   access : read-write
   reset value : 0x5A

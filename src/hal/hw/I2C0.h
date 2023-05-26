@@ -1,6 +1,6 @@
 #ifndef HW_I2C0_H
 #define HW_I2C0_H
-/* DW_apb_i2c address block
+/** DW_apb_i2c address block
 
 
  List of configuration constants for the Synopsys I2C hardware (you may see references to these in I2C register header these are *fixed* values, set at hardware design time):
@@ -141,15 +141,15 @@
  IC_DEFAULT_UFM_SPKLEN ............. 0x1
 
  IC_TX_BUFFER_DEPTH ................ 16 */
-/* Interrupt : I2C0_IRQ (Vector: 23)  */
-/* Memory Block starting at 0x40044000 + 0x0 is 0x100 bytes in size. It is used for registers. Protection: n */
+/** Interrupt : I2C0_IRQ (Vector: 23)  */
+/** Memory Block starting at 0x40044000 + 0x0 is 0x100 bytes in size. It is used for registers. Protection: n */
 
 #include <stdint.h>
 
 typedef struct
 {
 
-/* IC_CON (offset: 0x0)
+/** IC_CON (offset: 0x0)
   I2C Control Register. This register can be written only when the DW_apb_i2c is disabled, which corresponds to the IC_ENABLE[0] register being set to 0. Writes at other times have no effect.
 
 
@@ -254,7 +254,7 @@ typedef struct
 */
 volatile uint32_t IC_CON;
 
-/* IC_TAR (offset: 0x4)
+/** IC_TAR (offset: 0x4)
   I2C Target Address Register
 
 
@@ -286,7 +286,7 @@ volatile uint32_t IC_CON;
 */
 volatile uint32_t IC_TAR;
 
-/* IC_SAR (offset: 0x8)
+/** IC_SAR (offset: 0x8)
   I2C Slave Address Register
   access : read-write
   reset value : 0x55
@@ -304,7 +304,7 @@ volatile uint32_t IC_TAR;
 volatile uint32_t IC_SAR;
 volatile uint32_t reserved0;
 
-/* IC_DATA_CMD (offset: 0x10)
+/** IC_DATA_CMD (offset: 0x10)
   I2C Rx/Tx Data Buffer and Command Register this is the register the CPU writes to when filling the TX FIFO and the CPU reads from when retrieving bytes from RX FIFO.
 
 
@@ -384,7 +384,7 @@ volatile uint32_t reserved0;
 */
 volatile uint32_t IC_DATA_CMD;
 
-/* IC_SS_SCL_HCNT (offset: 0x14)
+/** IC_SS_SCL_HCNT (offset: 0x14)
   Standard Speed I2C Clock SCL High Count Register
   access : read-write
   reset value : 0x28
@@ -404,7 +404,7 @@ volatile uint32_t IC_DATA_CMD;
 */
 volatile uint32_t IC_SS_SCL_HCNT;
 
-/* IC_SS_SCL_LCNT (offset: 0x18)
+/** IC_SS_SCL_LCNT (offset: 0x18)
   Standard Speed I2C Clock SCL Low Count Register
   access : read-write
   reset value : 0x2F
@@ -421,7 +421,7 @@ volatile uint32_t IC_SS_SCL_HCNT;
 */
 volatile uint32_t IC_SS_SCL_LCNT;
 
-/* IC_FS_SCL_HCNT (offset: 0x1c)
+/** IC_FS_SCL_HCNT (offset: 0x1c)
   Fast Mode or Fast Mode Plus I2C Clock SCL High Count Register
   access : read-write
   reset value : 0x6
@@ -438,7 +438,7 @@ volatile uint32_t IC_SS_SCL_LCNT;
 */
 volatile uint32_t IC_FS_SCL_HCNT;
 
-/* IC_FS_SCL_LCNT (offset: 0x20)
+/** IC_FS_SCL_LCNT (offset: 0x20)
   Fast Mode or Fast Mode Plus I2C Clock SCL Low Count Register
   access : read-write
   reset value : 0xD
@@ -459,7 +459,7 @@ volatile uint32_t IC_FS_SCL_HCNT;
 volatile uint32_t IC_FS_SCL_LCNT;
 volatile uint32_t reserved1[2];
 
-/* IC_INTR_STAT (offset: 0x2c)
+/** IC_INTR_STAT (offset: 0x2c)
   I2C Interrupt Status Register
 
 
@@ -595,7 +595,7 @@ volatile uint32_t reserved1[2];
 */
 volatile uint32_t IC_INTR_STAT;
 
-/* IC_INTR_MASK (offset: 0x30)
+/** IC_INTR_MASK (offset: 0x30)
   I2C Interrupt Mask Register.
 
 
@@ -731,7 +731,7 @@ volatile uint32_t IC_INTR_STAT;
 */
 volatile uint32_t IC_INTR_MASK;
 
-/* IC_RAW_INTR_STAT (offset: 0x34)
+/** IC_RAW_INTR_STAT (offset: 0x34)
   I2C Raw Interrupt Status Register
 
 
@@ -876,7 +876,7 @@ volatile uint32_t IC_INTR_MASK;
 */
 volatile uint32_t IC_RAW_INTR_STAT;
 
-/* IC_RX_TL (offset: 0x38)
+/** IC_RX_TL (offset: 0x38)
   I2C Receive FIFO Threshold Register
   access : read-write
   reset value : 0x0
@@ -890,7 +890,7 @@ volatile uint32_t IC_RAW_INTR_STAT;
 */
 volatile uint32_t IC_RX_TL;
 
-/* IC_TX_TL (offset: 0x3c)
+/** IC_TX_TL (offset: 0x3c)
   I2C Transmit FIFO Threshold Register
   access : read-write
   reset value : 0x0
@@ -904,7 +904,7 @@ volatile uint32_t IC_RX_TL;
 */
 volatile uint32_t IC_TX_TL;
 
-/* IC_CLR_INTR (offset: 0x40)
+/** IC_CLR_INTR (offset: 0x40)
   Clear Combined and Individual Interrupt Register
   access : read-write
   reset value : 0x0
@@ -918,7 +918,7 @@ volatile uint32_t IC_TX_TL;
 */
 volatile uint32_t IC_CLR_INTR;
 
-/* IC_CLR_RX_UNDER (offset: 0x44)
+/** IC_CLR_RX_UNDER (offset: 0x44)
   Clear RX_UNDER Interrupt Register
   access : read-write
   reset value : 0x0
@@ -932,7 +932,7 @@ volatile uint32_t IC_CLR_INTR;
 */
 volatile uint32_t IC_CLR_RX_UNDER;
 
-/* IC_CLR_RX_OVER (offset: 0x48)
+/** IC_CLR_RX_OVER (offset: 0x48)
   Clear RX_OVER Interrupt Register
   access : read-write
   reset value : 0x0
@@ -946,7 +946,7 @@ volatile uint32_t IC_CLR_RX_UNDER;
 */
 volatile uint32_t IC_CLR_RX_OVER;
 
-/* IC_CLR_TX_OVER (offset: 0x4c)
+/** IC_CLR_TX_OVER (offset: 0x4c)
   Clear TX_OVER Interrupt Register
   access : read-write
   reset value : 0x0
@@ -960,7 +960,7 @@ volatile uint32_t IC_CLR_RX_OVER;
 */
 volatile uint32_t IC_CLR_TX_OVER;
 
-/* IC_CLR_RD_REQ (offset: 0x50)
+/** IC_CLR_RD_REQ (offset: 0x50)
   Clear RD_REQ Interrupt Register
   access : read-write
   reset value : 0x0
@@ -974,7 +974,7 @@ volatile uint32_t IC_CLR_TX_OVER;
 */
 volatile uint32_t IC_CLR_RD_REQ;
 
-/* IC_CLR_TX_ABRT (offset: 0x54)
+/** IC_CLR_TX_ABRT (offset: 0x54)
   Clear TX_ABRT Interrupt Register
   access : read-write
   reset value : 0x0
@@ -988,7 +988,7 @@ volatile uint32_t IC_CLR_RD_REQ;
 */
 volatile uint32_t IC_CLR_TX_ABRT;
 
-/* IC_CLR_RX_DONE (offset: 0x58)
+/** IC_CLR_RX_DONE (offset: 0x58)
   Clear RX_DONE Interrupt Register
   access : read-write
   reset value : 0x0
@@ -1002,7 +1002,7 @@ volatile uint32_t IC_CLR_TX_ABRT;
 */
 volatile uint32_t IC_CLR_RX_DONE;
 
-/* IC_CLR_ACTIVITY (offset: 0x5c)
+/** IC_CLR_ACTIVITY (offset: 0x5c)
   Clear ACTIVITY Interrupt Register
   access : read-write
   reset value : 0x0
@@ -1016,7 +1016,7 @@ volatile uint32_t IC_CLR_RX_DONE;
 */
 volatile uint32_t IC_CLR_ACTIVITY;
 
-/* IC_CLR_STOP_DET (offset: 0x60)
+/** IC_CLR_STOP_DET (offset: 0x60)
   Clear STOP_DET Interrupt Register
   access : read-write
   reset value : 0x0
@@ -1030,7 +1030,7 @@ volatile uint32_t IC_CLR_ACTIVITY;
 */
 volatile uint32_t IC_CLR_STOP_DET;
 
-/* IC_CLR_START_DET (offset: 0x64)
+/** IC_CLR_START_DET (offset: 0x64)
   Clear START_DET Interrupt Register
   access : read-write
   reset value : 0x0
@@ -1044,7 +1044,7 @@ volatile uint32_t IC_CLR_STOP_DET;
 */
 volatile uint32_t IC_CLR_START_DET;
 
-/* IC_CLR_GEN_CALL (offset: 0x68)
+/** IC_CLR_GEN_CALL (offset: 0x68)
   Clear GEN_CALL Interrupt Register
   access : read-write
   reset value : 0x0
@@ -1058,7 +1058,7 @@ volatile uint32_t IC_CLR_START_DET;
 */
 volatile uint32_t IC_CLR_GEN_CALL;
 
-/* IC_ENABLE (offset: 0x6c)
+/** IC_ENABLE (offset: 0x6c)
   I2C Enable Register
   access : read-write
   reset value : 0x0
@@ -1099,7 +1099,7 @@ volatile uint32_t IC_CLR_GEN_CALL;
 */
 volatile uint32_t IC_ENABLE;
 
-/* IC_STATUS (offset: 0x70)
+/** IC_STATUS (offset: 0x70)
   I2C Status Register
 
 
@@ -1158,7 +1158,7 @@ volatile uint32_t IC_ENABLE;
 */
 volatile uint32_t IC_STATUS;
 
-/* IC_TXFLR (offset: 0x74)
+/** IC_TXFLR (offset: 0x74)
   I2C Transmit FIFO Level Register This register contains the number of valid data entries in the transmit FIFO buffer. It is cleared whenever: - The I2C is disabled - There is a transmit abort - that is, TX_ABRT bit is set in the IC_RAW_INTR_STAT register - The slave bulk transmit mode is aborted The register increments whenever data is placed into the transmit FIFO and decrements when data is taken from the transmit FIFO.
   access : read-write
   reset value : 0x0
@@ -1172,7 +1172,7 @@ volatile uint32_t IC_STATUS;
 */
 volatile uint32_t IC_TXFLR;
 
-/* IC_RXFLR (offset: 0x78)
+/** IC_RXFLR (offset: 0x78)
   I2C Receive FIFO Level Register This register contains the number of valid data entries in the receive FIFO buffer. It is cleared whenever: - The I2C is disabled - Whenever there is a transmit abort caused by any of the events tracked in IC_TX_ABRT_SOURCE The register increments whenever data is placed into the receive FIFO and decrements when data is taken from the receive FIFO.
   access : read-write
   reset value : 0x0
@@ -1186,7 +1186,7 @@ volatile uint32_t IC_TXFLR;
 */
 volatile uint32_t IC_RXFLR;
 
-/* IC_SDA_HOLD (offset: 0x7c)
+/** IC_SDA_HOLD (offset: 0x7c)
   I2C SDA Hold Time Length Register
 
 
@@ -1221,7 +1221,7 @@ volatile uint32_t IC_RXFLR;
 */
 volatile uint32_t IC_SDA_HOLD;
 
-/* IC_TX_ABRT_SOURCE (offset: 0x80)
+/** IC_TX_ABRT_SOURCE (offset: 0x80)
   I2C Transmit Abort Source Register
 
 
@@ -1448,7 +1448,7 @@ volatile uint32_t IC_SDA_HOLD;
 */
 volatile uint32_t IC_TX_ABRT_SOURCE;
 
-/* IC_SLV_DATA_NACK_ONLY (offset: 0x84)
+/** IC_SLV_DATA_NACK_ONLY (offset: 0x84)
   Generate Slave Data NACK Register
 
 
@@ -1471,7 +1471,7 @@ volatile uint32_t IC_TX_ABRT_SOURCE;
 */
 volatile uint32_t IC_SLV_DATA_NACK_ONLY;
 
-/* IC_DMA_CR (offset: 0x88)
+/** IC_DMA_CR (offset: 0x88)
   DMA Control Register
 
 
@@ -1494,7 +1494,7 @@ volatile uint32_t IC_SLV_DATA_NACK_ONLY;
 */
 volatile uint32_t IC_DMA_CR;
 
-/* IC_DMA_TDLR (offset: 0x8c)
+/** IC_DMA_TDLR (offset: 0x8c)
   DMA Transmit Data Level Register
   access : read-write
   reset value : 0x0
@@ -1508,7 +1508,7 @@ volatile uint32_t IC_DMA_CR;
 */
 volatile uint32_t IC_DMA_TDLR;
 
-/* IC_DMA_RDLR (offset: 0x90)
+/** IC_DMA_RDLR (offset: 0x90)
   I2C Receive Data Level Register
   access : read-write
   reset value : 0x0
@@ -1522,7 +1522,7 @@ volatile uint32_t IC_DMA_TDLR;
 */
 volatile uint32_t IC_DMA_RDLR;
 
-/* IC_SDA_SETUP (offset: 0x94)
+/** IC_SDA_SETUP (offset: 0x94)
   I2C SDA Setup Register
 
 
@@ -1542,7 +1542,7 @@ volatile uint32_t IC_DMA_RDLR;
 */
 volatile uint32_t IC_SDA_SETUP;
 
-/* IC_ACK_GENERAL_CALL (offset: 0x98)
+/** IC_ACK_GENERAL_CALL (offset: 0x98)
   I2C ACK General Call Register
 
 
@@ -1562,7 +1562,7 @@ volatile uint32_t IC_SDA_SETUP;
 */
 volatile uint32_t IC_ACK_GENERAL_CALL;
 
-/* IC_ENABLE_STATUS (offset: 0x9c)
+/** IC_ENABLE_STATUS (offset: 0x9c)
   I2C Enable Status Register
 
 
@@ -1639,7 +1639,7 @@ volatile uint32_t IC_ACK_GENERAL_CALL;
 */
 volatile uint32_t IC_ENABLE_STATUS;
 
-/* IC_FS_SPKLEN (offset: 0xa0)
+/** IC_FS_SPKLEN (offset: 0xa0)
   I2C SS, FS or FM+ spike suppression limit
 
 
@@ -1654,7 +1654,7 @@ volatile uint32_t IC_ENABLE_STATUS;
 volatile uint32_t IC_FS_SPKLEN;
 volatile uint32_t reserved2;
 
-/* IC_CLR_RESTART_DET (offset: 0xa8)
+/** IC_CLR_RESTART_DET (offset: 0xa8)
   Clear RESTART_DET Interrupt Register
   access : read-write
   reset value : 0x0
@@ -1669,7 +1669,7 @@ volatile uint32_t reserved2;
 volatile uint32_t IC_CLR_RESTART_DET;
 volatile uint32_t reserved3[18];
 
-/* IC_COMP_PARAM_1 (offset: 0xf4)
+/** IC_COMP_PARAM_1 (offset: 0xf4)
   Component Parameter Register 1
 
 
@@ -1704,7 +1704,7 @@ volatile uint32_t reserved3[18];
 */
 volatile uint32_t IC_COMP_PARAM_1;
 
-/* IC_COMP_VERSION (offset: 0xf8)
+/** IC_COMP_VERSION (offset: 0xf8)
   I2C Component Version Register
   access : read-write
   reset value : 0x3230312A
@@ -1714,7 +1714,7 @@ volatile uint32_t IC_COMP_PARAM_1;
 */
 volatile uint32_t IC_COMP_VERSION;
 
-/* IC_COMP_TYPE (offset: 0xfc)
+/** IC_COMP_TYPE (offset: 0xfc)
   I2C Component Type Register
   access : read-write
   reset value : 0x44570140

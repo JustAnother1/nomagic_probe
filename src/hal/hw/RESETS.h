@@ -1,13 +1,13 @@
 #ifndef HW_RESETS_H
 #define HW_RESETS_H
-/* Memory Block starting at 0x4000C000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
+/** Memory Block starting at 0x4000C000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
 
 #include <stdint.h>
 
 typedef struct
 {
 
-/* RESET (offset: 0x0)
+/** RESET (offset: 0x0)
   Reset control. If a bit is set it means the peripheral is in reset. 0 means the peripheral&apos;s reset is deasserted.
   access : read-write
   reset value : 0x1FFFFFF
@@ -65,7 +65,7 @@ typedef struct
 */
 volatile uint32_t RESET;
 
-/* WDSEL (offset: 0x4)
+/** WDSEL (offset: 0x4)
   Watchdog select. If a bit is set then the watchdog will reset this peripheral when the watchdog fires.
   access : read-write
   reset value : 0x0
@@ -123,7 +123,7 @@ volatile uint32_t RESET;
 */
 volatile uint32_t WDSEL;
 
-/* RESET_DONE (offset: 0x8)
+/** RESET_DONE (offset: 0x8)
   Reset done. If a bit is set then a reset done signal has been returned by the peripheral. This indicates that the peripheral&apos;s registers are ready to be accessed.
   access : read-write
   reset value : 0x0

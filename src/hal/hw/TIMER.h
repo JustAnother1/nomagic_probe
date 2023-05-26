@@ -1,6 +1,6 @@
 #ifndef HW_TIMER_H
 #define HW_TIMER_H
-/* Controls time and alarms
+/** Controls time and alarms
 
  time is a 64 bit value indicating the time in usec since power-on
 
@@ -19,18 +19,18 @@
  When an alarm fires, the corresponding alarm_irq is set and alarm_running is cleared
 
  To clear the interrupt write a 1 to the corresponding alarm_irq */
-/* Interrupt : TIMER_IRQ_0 (Vector: 0)  */
-/* Interrupt : TIMER_IRQ_1 (Vector: 1)  */
-/* Interrupt : TIMER_IRQ_2 (Vector: 2)  */
-/* Interrupt : TIMER_IRQ_3 (Vector: 3)  */
-/* Memory Block starting at 0x40054000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
+/** Interrupt : TIMER_IRQ_0 (Vector: 0)  */
+/** Interrupt : TIMER_IRQ_1 (Vector: 1)  */
+/** Interrupt : TIMER_IRQ_2 (Vector: 2)  */
+/** Interrupt : TIMER_IRQ_3 (Vector: 3)  */
+/** Memory Block starting at 0x40054000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
 
 #include <stdint.h>
 
 typedef struct
 {
 
-/* TIMEHW (offset: 0x0)
+/** TIMEHW (offset: 0x0)
   Write to bits 63:32 of time
 
  always write timelw before timehw
@@ -40,7 +40,7 @@ typedef struct
 */
 volatile uint32_t TIMEHW;
 
-/* TIMELW (offset: 0x4)
+/** TIMELW (offset: 0x4)
   Write to bits 31:0 of time
 
  writes do not get copied to time until timehw is written
@@ -50,7 +50,7 @@ volatile uint32_t TIMEHW;
 */
 volatile uint32_t TIMELW;
 
-/* TIMEHR (offset: 0x8)
+/** TIMEHR (offset: 0x8)
   Read from bits 63:32 of time
 
  always read timelr before timehr
@@ -60,7 +60,7 @@ volatile uint32_t TIMELW;
 */
 volatile uint32_t TIMEHR;
 
-/* TIMELR (offset: 0xc)
+/** TIMELR (offset: 0xc)
   Read from bits 31:0 of time
   access : read-only
   reset value : 0x0
@@ -68,7 +68,7 @@ volatile uint32_t TIMEHR;
 */
 volatile uint32_t TIMELR;
 
-/* ALARM0 (offset: 0x10)
+/** ALARM0 (offset: 0x10)
   Arm alarm 0, and configure the time it will fire.
 
  Once armed, the alarm fires when TIMER_ALARM0 == TIMELR.
@@ -82,7 +82,7 @@ volatile uint32_t TIMELR;
 */
 volatile uint32_t ALARM0;
 
-/* ALARM1 (offset: 0x14)
+/** ALARM1 (offset: 0x14)
   Arm alarm 1, and configure the time it will fire.
 
  Once armed, the alarm fires when TIMER_ALARM1 == TIMELR.
@@ -96,7 +96,7 @@ volatile uint32_t ALARM0;
 */
 volatile uint32_t ALARM1;
 
-/* ALARM2 (offset: 0x18)
+/** ALARM2 (offset: 0x18)
   Arm alarm 2, and configure the time it will fire.
 
  Once armed, the alarm fires when TIMER_ALARM2 == TIMELR.
@@ -110,7 +110,7 @@ volatile uint32_t ALARM1;
 */
 volatile uint32_t ALARM2;
 
-/* ALARM3 (offset: 0x1c)
+/** ALARM3 (offset: 0x1c)
   Arm alarm 3, and configure the time it will fire.
 
  Once armed, the alarm fires when TIMER_ALARM3 == TIMELR.
@@ -124,7 +124,7 @@ volatile uint32_t ALARM2;
 */
 volatile uint32_t ALARM3;
 
-/* ARMED (offset: 0x20)
+/** ARMED (offset: 0x20)
   Indicates the armed/disarmed status of each alarm.
 
  A write to the corresponding ALARMx register arms the alarm.
@@ -140,7 +140,7 @@ volatile uint32_t ALARM3;
 */
 volatile uint32_t ARMED;
 
-/* TIMERAWH (offset: 0x24)
+/** TIMERAWH (offset: 0x24)
   Raw read from bits 63:32 of time (no side effects)
   access : read-only
   reset value : 0x0
@@ -148,7 +148,7 @@ volatile uint32_t ARMED;
 */
 volatile uint32_t TIMERAWH;
 
-/* TIMERAWL (offset: 0x28)
+/** TIMERAWL (offset: 0x28)
   Raw read from bits 31:0 of time (no side effects)
   access : read-only
   reset value : 0x0
@@ -156,7 +156,7 @@ volatile uint32_t TIMERAWH;
 */
 volatile uint32_t TIMERAWL;
 
-/* DBGPAUSE (offset: 0x2c)
+/** DBGPAUSE (offset: 0x2c)
   Set bits high to enable pause when the corresponding debug ports are active
   access : read-write
   reset value : 0x7
@@ -170,7 +170,7 @@ volatile uint32_t TIMERAWL;
 */
 volatile uint32_t DBGPAUSE;
 
-/* PAUSE (offset: 0x30)
+/** PAUSE (offset: 0x30)
   Set high to pause the timer
   access : read-write
   reset value : 0x0
@@ -180,7 +180,7 @@ volatile uint32_t DBGPAUSE;
 */
 volatile uint32_t PAUSE;
 
-/* INTR (offset: 0x34)
+/** INTR (offset: 0x34)
   Raw Interrupts
   access : read-write
   reset value : 0x0
@@ -196,7 +196,7 @@ volatile uint32_t PAUSE;
 */
 volatile uint32_t INTR;
 
-/* INTE (offset: 0x38)
+/** INTE (offset: 0x38)
   Interrupt Enable
   access : read-write
   reset value : 0x0
@@ -212,7 +212,7 @@ volatile uint32_t INTR;
 */
 volatile uint32_t INTE;
 
-/* INTF (offset: 0x3c)
+/** INTF (offset: 0x3c)
   Interrupt Force
   access : read-write
   reset value : 0x0
@@ -228,7 +228,7 @@ volatile uint32_t INTE;
 */
 volatile uint32_t INTF;
 
-/* INTS (offset: 0x40)
+/** INTS (offset: 0x40)
   Interrupt status after masking &amp; forcing
   access : read-write
   reset value : 0x0

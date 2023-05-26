@@ -1,13 +1,13 @@
 #ifndef HW_PSM_H
 #define HW_PSM_H
-/* Memory Block starting at 0x40010000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
+/** Memory Block starting at 0x40010000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
 
 #include <stdint.h>
 
 typedef struct
 {
 
-/* FRCE_ON (offset: 0x0)
+/** FRCE_ON (offset: 0x0)
   Force block out of reset (i.e. power it on)
   access : read-write
   reset value : 0x0
@@ -49,7 +49,7 @@ typedef struct
 */
 volatile uint32_t FRCE_ON;
 
-/* FRCE_OFF (offset: 0x4)
+/** FRCE_OFF (offset: 0x4)
   Force into reset (i.e. power it off)
   access : read-write
   reset value : 0x0
@@ -91,7 +91,7 @@ volatile uint32_t FRCE_ON;
 */
 volatile uint32_t FRCE_OFF;
 
-/* WDSEL (offset: 0x8)
+/** WDSEL (offset: 0x8)
   Set to 1 if this peripheral should be reset when the watchdog fires.
   access : read-write
   reset value : 0x0
@@ -133,7 +133,7 @@ volatile uint32_t FRCE_OFF;
 */
 volatile uint32_t WDSEL;
 
-/* DONE (offset: 0xc)
+/** DONE (offset: 0xc)
   Indicates the peripheral&apos;s registers are ready to access.
   access : read-write
   reset value : 0x0

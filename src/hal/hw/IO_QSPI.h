@@ -1,14 +1,14 @@
 #ifndef HW_IO_QSPI_H
 #define HW_IO_QSPI_H
-/* Interrupt : IO_IRQ_QSPI (Vector: 14)  */
-/* Memory Block starting at 0x40018000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
+/** Interrupt : IO_IRQ_QSPI (Vector: 14)  */
+/** Memory Block starting at 0x40018000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
 
 #include <stdint.h>
 
 typedef struct
 {
 
-/* GPIO_QSPI_SCLK_STATUS (offset: 0x0)
+/** GPIO_QSPI_SCLK_STATUS (offset: 0x0)
   GPIO status
   access : read-write
   reset value : 0x0
@@ -40,7 +40,7 @@ typedef struct
 */
 volatile uint32_t GPIO_QSPI_SCLK_STATUS;
 
-/* GPIO_QSPI_SCLK_CTRL (offset: 0x4)
+/** GPIO_QSPI_SCLK_CTRL (offset: 0x4)
   GPIO control including function select and overrides.
   access : read-write
   reset value : 0x1F
@@ -85,7 +85,7 @@ volatile uint32_t GPIO_QSPI_SCLK_STATUS;
 */
 volatile uint32_t GPIO_QSPI_SCLK_CTRL;
 
-/* GPIO_QSPI_SS_STATUS (offset: 0x8)
+/** GPIO_QSPI_SS_STATUS (offset: 0x8)
   GPIO status
   access : read-write
   reset value : 0x0
@@ -117,7 +117,7 @@ volatile uint32_t GPIO_QSPI_SCLK_CTRL;
 */
 volatile uint32_t GPIO_QSPI_SS_STATUS;
 
-/* GPIO_QSPI_SS_CTRL (offset: 0xc)
+/** GPIO_QSPI_SS_CTRL (offset: 0xc)
   GPIO control including function select and overrides.
   access : read-write
   reset value : 0x1F
@@ -162,7 +162,7 @@ volatile uint32_t GPIO_QSPI_SS_STATUS;
 */
 volatile uint32_t GPIO_QSPI_SS_CTRL;
 
-/* GPIO_QSPI_SD0_STATUS (offset: 0x10)
+/** GPIO_QSPI_SD0_STATUS (offset: 0x10)
   GPIO status
   access : read-write
   reset value : 0x0
@@ -194,7 +194,7 @@ volatile uint32_t GPIO_QSPI_SS_CTRL;
 */
 volatile uint32_t GPIO_QSPI_SD0_STATUS;
 
-/* GPIO_QSPI_SD0_CTRL (offset: 0x14)
+/** GPIO_QSPI_SD0_CTRL (offset: 0x14)
   GPIO control including function select and overrides.
   access : read-write
   reset value : 0x1F
@@ -239,7 +239,7 @@ volatile uint32_t GPIO_QSPI_SD0_STATUS;
 */
 volatile uint32_t GPIO_QSPI_SD0_CTRL;
 
-/* GPIO_QSPI_SD1_STATUS (offset: 0x18)
+/** GPIO_QSPI_SD1_STATUS (offset: 0x18)
   GPIO status
   access : read-write
   reset value : 0x0
@@ -271,7 +271,7 @@ volatile uint32_t GPIO_QSPI_SD0_CTRL;
 */
 volatile uint32_t GPIO_QSPI_SD1_STATUS;
 
-/* GPIO_QSPI_SD1_CTRL (offset: 0x1c)
+/** GPIO_QSPI_SD1_CTRL (offset: 0x1c)
   GPIO control including function select and overrides.
   access : read-write
   reset value : 0x1F
@@ -316,7 +316,7 @@ volatile uint32_t GPIO_QSPI_SD1_STATUS;
 */
 volatile uint32_t GPIO_QSPI_SD1_CTRL;
 
-/* GPIO_QSPI_SD2_STATUS (offset: 0x20)
+/** GPIO_QSPI_SD2_STATUS (offset: 0x20)
   GPIO status
   access : read-write
   reset value : 0x0
@@ -348,7 +348,7 @@ volatile uint32_t GPIO_QSPI_SD1_CTRL;
 */
 volatile uint32_t GPIO_QSPI_SD2_STATUS;
 
-/* GPIO_QSPI_SD2_CTRL (offset: 0x24)
+/** GPIO_QSPI_SD2_CTRL (offset: 0x24)
   GPIO control including function select and overrides.
   access : read-write
   reset value : 0x1F
@@ -393,7 +393,7 @@ volatile uint32_t GPIO_QSPI_SD2_STATUS;
 */
 volatile uint32_t GPIO_QSPI_SD2_CTRL;
 
-/* GPIO_QSPI_SD3_STATUS (offset: 0x28)
+/** GPIO_QSPI_SD3_STATUS (offset: 0x28)
   GPIO status
   access : read-write
   reset value : 0x0
@@ -425,7 +425,7 @@ volatile uint32_t GPIO_QSPI_SD2_CTRL;
 */
 volatile uint32_t GPIO_QSPI_SD3_STATUS;
 
-/* GPIO_QSPI_SD3_CTRL (offset: 0x2c)
+/** GPIO_QSPI_SD3_CTRL (offset: 0x2c)
   GPIO control including function select and overrides.
   access : read-write
   reset value : 0x1F
@@ -470,7 +470,7 @@ volatile uint32_t GPIO_QSPI_SD3_STATUS;
 */
 volatile uint32_t GPIO_QSPI_SD3_CTRL;
 
-/* INTR (offset: 0x30)
+/** INTR (offset: 0x30)
   Raw Interrupts
   access : read-write
   reset value : 0x0
@@ -526,7 +526,7 @@ volatile uint32_t GPIO_QSPI_SD3_CTRL;
 */
 volatile uint32_t INTR;
 
-/* PROC0_INTE (offset: 0x34)
+/** PROC0_INTE (offset: 0x34)
   Interrupt Enable for proc0
   access : read-write
   reset value : 0x0
@@ -582,7 +582,7 @@ volatile uint32_t INTR;
 */
 volatile uint32_t PROC0_INTE;
 
-/* PROC0_INTF (offset: 0x38)
+/** PROC0_INTF (offset: 0x38)
   Interrupt Force for proc0
   access : read-write
   reset value : 0x0
@@ -638,7 +638,7 @@ volatile uint32_t PROC0_INTE;
 */
 volatile uint32_t PROC0_INTF;
 
-/* PROC0_INTS (offset: 0x3c)
+/** PROC0_INTS (offset: 0x3c)
   Interrupt status after masking &amp; forcing for proc0
   access : read-write
   reset value : 0x0
@@ -694,7 +694,7 @@ volatile uint32_t PROC0_INTF;
 */
 volatile uint32_t PROC0_INTS;
 
-/* PROC1_INTE (offset: 0x40)
+/** PROC1_INTE (offset: 0x40)
   Interrupt Enable for proc1
   access : read-write
   reset value : 0x0
@@ -750,7 +750,7 @@ volatile uint32_t PROC0_INTS;
 */
 volatile uint32_t PROC1_INTE;
 
-/* PROC1_INTF (offset: 0x44)
+/** PROC1_INTF (offset: 0x44)
   Interrupt Force for proc1
   access : read-write
   reset value : 0x0
@@ -806,7 +806,7 @@ volatile uint32_t PROC1_INTE;
 */
 volatile uint32_t PROC1_INTF;
 
-/* PROC1_INTS (offset: 0x48)
+/** PROC1_INTS (offset: 0x48)
   Interrupt status after masking &amp; forcing for proc1
   access : read-write
   reset value : 0x0
@@ -862,7 +862,7 @@ volatile uint32_t PROC1_INTF;
 */
 volatile uint32_t PROC1_INTS;
 
-/* DORMANT_WAKE_INTE (offset: 0x4c)
+/** DORMANT_WAKE_INTE (offset: 0x4c)
   Interrupt Enable for dormant_wake
   access : read-write
   reset value : 0x0
@@ -918,7 +918,7 @@ volatile uint32_t PROC1_INTS;
 */
 volatile uint32_t DORMANT_WAKE_INTE;
 
-/* DORMANT_WAKE_INTF (offset: 0x50)
+/** DORMANT_WAKE_INTF (offset: 0x50)
   Interrupt Force for dormant_wake
   access : read-write
   reset value : 0x0
@@ -974,7 +974,7 @@ volatile uint32_t DORMANT_WAKE_INTE;
 */
 volatile uint32_t DORMANT_WAKE_INTF;
 
-/* DORMANT_WAKE_INTS (offset: 0x54)
+/** DORMANT_WAKE_INTS (offset: 0x54)
   Interrupt status after masking &amp; forcing for dormant_wake
   access : read-write
   reset value : 0x0

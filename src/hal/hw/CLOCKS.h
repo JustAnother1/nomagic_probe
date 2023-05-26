@@ -1,14 +1,14 @@
 #ifndef HW_CLOCKS_H
 #define HW_CLOCKS_H
-/* Interrupt : CLOCKS_IRQ (Vector: 17)  */
-/* Memory Block starting at 0x40008000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
+/** Interrupt : CLOCKS_IRQ (Vector: 17)  */
+/** Memory Block starting at 0x40008000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
 
 #include <stdint.h>
 
 typedef struct
 {
 
-/* CLK_GPOUT0_CTRL (offset: 0x0)
+/** CLK_GPOUT0_CTRL (offset: 0x0)
   Clock control, can be changed on-the-fly (except for auxsrc)
   access : read-write
   reset value : 0x0
@@ -50,7 +50,7 @@ typedef struct
 */
 volatile uint32_t CLK_GPOUT0_CTRL;
 
-/* CLK_GPOUT0_DIV (offset: 0x4)
+/** CLK_GPOUT0_DIV (offset: 0x4)
   Clock divisor, can be changed on-the-fly
   access : read-write
   reset value : 0x100
@@ -64,7 +64,7 @@ volatile uint32_t CLK_GPOUT0_CTRL;
 */
 volatile uint32_t CLK_GPOUT0_DIV;
 
-/* CLK_GPOUT0_SELECTED (offset: 0x8)
+/** CLK_GPOUT0_SELECTED (offset: 0x8)
   Indicates which SRC is currently selected by the glitchless mux (one-hot).
 
  This slice does not have a glitchless mux (only the AUX_SRC field is present, not SRC) so this register is hardwired to 0x1.
@@ -74,7 +74,7 @@ volatile uint32_t CLK_GPOUT0_DIV;
 */
 volatile uint32_t CLK_GPOUT0_SELECTED;
 
-/* CLK_GPOUT1_CTRL (offset: 0xc)
+/** CLK_GPOUT1_CTRL (offset: 0xc)
   Clock control, can be changed on-the-fly (except for auxsrc)
   access : read-write
   reset value : 0x0
@@ -116,7 +116,7 @@ volatile uint32_t CLK_GPOUT0_SELECTED;
 */
 volatile uint32_t CLK_GPOUT1_CTRL;
 
-/* CLK_GPOUT1_DIV (offset: 0x10)
+/** CLK_GPOUT1_DIV (offset: 0x10)
   Clock divisor, can be changed on-the-fly
   access : read-write
   reset value : 0x100
@@ -130,7 +130,7 @@ volatile uint32_t CLK_GPOUT1_CTRL;
 */
 volatile uint32_t CLK_GPOUT1_DIV;
 
-/* CLK_GPOUT1_SELECTED (offset: 0x14)
+/** CLK_GPOUT1_SELECTED (offset: 0x14)
   Indicates which SRC is currently selected by the glitchless mux (one-hot).
 
  This slice does not have a glitchless mux (only the AUX_SRC field is present, not SRC) so this register is hardwired to 0x1.
@@ -140,7 +140,7 @@ volatile uint32_t CLK_GPOUT1_DIV;
 */
 volatile uint32_t CLK_GPOUT1_SELECTED;
 
-/* CLK_GPOUT2_CTRL (offset: 0x18)
+/** CLK_GPOUT2_CTRL (offset: 0x18)
   Clock control, can be changed on-the-fly (except for auxsrc)
   access : read-write
   reset value : 0x0
@@ -182,7 +182,7 @@ volatile uint32_t CLK_GPOUT1_SELECTED;
 */
 volatile uint32_t CLK_GPOUT2_CTRL;
 
-/* CLK_GPOUT2_DIV (offset: 0x1c)
+/** CLK_GPOUT2_DIV (offset: 0x1c)
   Clock divisor, can be changed on-the-fly
   access : read-write
   reset value : 0x100
@@ -196,7 +196,7 @@ volatile uint32_t CLK_GPOUT2_CTRL;
 */
 volatile uint32_t CLK_GPOUT2_DIV;
 
-/* CLK_GPOUT2_SELECTED (offset: 0x20)
+/** CLK_GPOUT2_SELECTED (offset: 0x20)
   Indicates which SRC is currently selected by the glitchless mux (one-hot).
 
  This slice does not have a glitchless mux (only the AUX_SRC field is present, not SRC) so this register is hardwired to 0x1.
@@ -206,7 +206,7 @@ volatile uint32_t CLK_GPOUT2_DIV;
 */
 volatile uint32_t CLK_GPOUT2_SELECTED;
 
-/* CLK_GPOUT3_CTRL (offset: 0x24)
+/** CLK_GPOUT3_CTRL (offset: 0x24)
   Clock control, can be changed on-the-fly (except for auxsrc)
   access : read-write
   reset value : 0x0
@@ -248,7 +248,7 @@ volatile uint32_t CLK_GPOUT2_SELECTED;
 */
 volatile uint32_t CLK_GPOUT3_CTRL;
 
-/* CLK_GPOUT3_DIV (offset: 0x28)
+/** CLK_GPOUT3_DIV (offset: 0x28)
   Clock divisor, can be changed on-the-fly
   access : read-write
   reset value : 0x100
@@ -262,7 +262,7 @@ volatile uint32_t CLK_GPOUT3_CTRL;
 */
 volatile uint32_t CLK_GPOUT3_DIV;
 
-/* CLK_GPOUT3_SELECTED (offset: 0x2c)
+/** CLK_GPOUT3_SELECTED (offset: 0x2c)
   Indicates which SRC is currently selected by the glitchless mux (one-hot).
 
  This slice does not have a glitchless mux (only the AUX_SRC field is present, not SRC) so this register is hardwired to 0x1.
@@ -272,7 +272,7 @@ volatile uint32_t CLK_GPOUT3_DIV;
 */
 volatile uint32_t CLK_GPOUT3_SELECTED;
 
-/* CLK_REF_CTRL (offset: 0x30)
+/** CLK_REF_CTRL (offset: 0x30)
   Clock control, can be changed on-the-fly (except for auxsrc)
   access : read-write
   reset value : 0x0
@@ -294,7 +294,7 @@ volatile uint32_t CLK_GPOUT3_SELECTED;
 */
 volatile uint32_t CLK_REF_CTRL;
 
-/* CLK_REF_DIV (offset: 0x34)
+/** CLK_REF_DIV (offset: 0x34)
   Clock divisor, can be changed on-the-fly
   access : read-write
   reset value : 0x100
@@ -305,7 +305,7 @@ volatile uint32_t CLK_REF_CTRL;
 */
 volatile uint32_t CLK_REF_DIV;
 
-/* CLK_REF_SELECTED (offset: 0x38)
+/** CLK_REF_SELECTED (offset: 0x38)
   Indicates which SRC is currently selected by the glitchless mux (one-hot).
 
  The glitchless multiplexer does not switch instantaneously (to avoid glitches), so software should poll this register to wait for the switch to complete. This register contains one decoded bit for each of the clock sources enumerated in the CTRL SRC field. At most one of these bits will be set at any time, indicating that clock is currently present at the output of the glitchless mux. Whilst switching is in progress, this register may briefly show all-0s.
@@ -315,7 +315,7 @@ volatile uint32_t CLK_REF_DIV;
 */
 volatile uint32_t CLK_REF_SELECTED;
 
-/* CLK_SYS_CTRL (offset: 0x3c)
+/** CLK_SYS_CTRL (offset: 0x3c)
   Clock control, can be changed on-the-fly (except for auxsrc)
   access : read-write
   reset value : 0x0
@@ -339,7 +339,7 @@ volatile uint32_t CLK_REF_SELECTED;
 */
 volatile uint32_t CLK_SYS_CTRL;
 
-/* CLK_SYS_DIV (offset: 0x40)
+/** CLK_SYS_DIV (offset: 0x40)
   Clock divisor, can be changed on-the-fly
   access : read-write
   reset value : 0x100
@@ -353,7 +353,7 @@ volatile uint32_t CLK_SYS_CTRL;
 */
 volatile uint32_t CLK_SYS_DIV;
 
-/* CLK_SYS_SELECTED (offset: 0x44)
+/** CLK_SYS_SELECTED (offset: 0x44)
   Indicates which SRC is currently selected by the glitchless mux (one-hot).
 
  The glitchless multiplexer does not switch instantaneously (to avoid glitches), so software should poll this register to wait for the switch to complete. This register contains one decoded bit for each of the clock sources enumerated in the CTRL SRC field. At most one of these bits will be set at any time, indicating that clock is currently present at the output of the glitchless mux. Whilst switching is in progress, this register may briefly show all-0s.
@@ -363,7 +363,7 @@ volatile uint32_t CLK_SYS_DIV;
 */
 volatile uint32_t CLK_SYS_SELECTED;
 
-/* CLK_PERI_CTRL (offset: 0x48)
+/** CLK_PERI_CTRL (offset: 0x48)
   Clock control, can be changed on-the-fly (except for auxsrc)
   access : read-write
   reset value : 0x0
@@ -389,7 +389,7 @@ volatile uint32_t CLK_SYS_SELECTED;
 volatile uint32_t CLK_PERI_CTRL;
 volatile uint32_t reserved0;
 
-/* CLK_PERI_SELECTED (offset: 0x50)
+/** CLK_PERI_SELECTED (offset: 0x50)
   Indicates which SRC is currently selected by the glitchless mux (one-hot).
 
  This slice does not have a glitchless mux (only the AUX_SRC field is present, not SRC) so this register is hardwired to 0x1.
@@ -399,7 +399,7 @@ volatile uint32_t reserved0;
 */
 volatile uint32_t CLK_PERI_SELECTED;
 
-/* CLK_USB_CTRL (offset: 0x54)
+/** CLK_USB_CTRL (offset: 0x54)
   Clock control, can be changed on-the-fly (except for auxsrc)
   access : read-write
   reset value : 0x0
@@ -433,7 +433,7 @@ volatile uint32_t CLK_PERI_SELECTED;
 */
 volatile uint32_t CLK_USB_CTRL;
 
-/* CLK_USB_DIV (offset: 0x58)
+/** CLK_USB_DIV (offset: 0x58)
   Clock divisor, can be changed on-the-fly
   access : read-write
   reset value : 0x100
@@ -444,7 +444,7 @@ volatile uint32_t CLK_USB_CTRL;
 */
 volatile uint32_t CLK_USB_DIV;
 
-/* CLK_USB_SELECTED (offset: 0x5c)
+/** CLK_USB_SELECTED (offset: 0x5c)
   Indicates which SRC is currently selected by the glitchless mux (one-hot).
 
  This slice does not have a glitchless mux (only the AUX_SRC field is present, not SRC) so this register is hardwired to 0x1.
@@ -454,7 +454,7 @@ volatile uint32_t CLK_USB_DIV;
 */
 volatile uint32_t CLK_USB_SELECTED;
 
-/* CLK_ADC_CTRL (offset: 0x60)
+/** CLK_ADC_CTRL (offset: 0x60)
   Clock control, can be changed on-the-fly (except for auxsrc)
   access : read-write
   reset value : 0x0
@@ -488,7 +488,7 @@ volatile uint32_t CLK_USB_SELECTED;
 */
 volatile uint32_t CLK_ADC_CTRL;
 
-/* CLK_ADC_DIV (offset: 0x64)
+/** CLK_ADC_DIV (offset: 0x64)
   Clock divisor, can be changed on-the-fly
   access : read-write
   reset value : 0x100
@@ -499,7 +499,7 @@ volatile uint32_t CLK_ADC_CTRL;
 */
 volatile uint32_t CLK_ADC_DIV;
 
-/* CLK_ADC_SELECTED (offset: 0x68)
+/** CLK_ADC_SELECTED (offset: 0x68)
   Indicates which SRC is currently selected by the glitchless mux (one-hot).
 
  This slice does not have a glitchless mux (only the AUX_SRC field is present, not SRC) so this register is hardwired to 0x1.
@@ -509,7 +509,7 @@ volatile uint32_t CLK_ADC_DIV;
 */
 volatile uint32_t CLK_ADC_SELECTED;
 
-/* CLK_RTC_CTRL (offset: 0x6c)
+/** CLK_RTC_CTRL (offset: 0x6c)
   Clock control, can be changed on-the-fly (except for auxsrc)
   access : read-write
   reset value : 0x0
@@ -543,7 +543,7 @@ volatile uint32_t CLK_ADC_SELECTED;
 */
 volatile uint32_t CLK_RTC_CTRL;
 
-/* CLK_RTC_DIV (offset: 0x70)
+/** CLK_RTC_DIV (offset: 0x70)
   Clock divisor, can be changed on-the-fly
   access : read-write
   reset value : 0x100
@@ -557,7 +557,7 @@ volatile uint32_t CLK_RTC_CTRL;
 */
 volatile uint32_t CLK_RTC_DIV;
 
-/* CLK_RTC_SELECTED (offset: 0x74)
+/** CLK_RTC_SELECTED (offset: 0x74)
   Indicates which SRC is currently selected by the glitchless mux (one-hot).
 
  This slice does not have a glitchless mux (only the AUX_SRC field is present, not SRC) so this register is hardwired to 0x1.
@@ -567,7 +567,7 @@ volatile uint32_t CLK_RTC_DIV;
 */
 volatile uint32_t CLK_RTC_SELECTED;
 
-/* CLK_SYS_RESUS_CTRL (offset: 0x78)
+/** CLK_SYS_RESUS_CTRL (offset: 0x78)
   access : read-write
   reset value : 0xFF
   reset mask : 0x0
@@ -588,7 +588,7 @@ volatile uint32_t CLK_RTC_SELECTED;
 */
 volatile uint32_t CLK_SYS_RESUS_CTRL;
 
-/* CLK_SYS_RESUS_STATUS (offset: 0x7c)
+/** CLK_SYS_RESUS_STATUS (offset: 0x7c)
   access : read-write
   reset value : 0x0
   reset mask : 0x0
@@ -598,7 +598,7 @@ volatile uint32_t CLK_SYS_RESUS_CTRL;
 */
 volatile uint32_t CLK_SYS_RESUS_STATUS;
 
-/* FC0_REF_KHZ (offset: 0x80)
+/** FC0_REF_KHZ (offset: 0x80)
   Reference clock frequency in kHz
   access : read-write
   reset value : 0x0
@@ -608,7 +608,7 @@ volatile uint32_t CLK_SYS_RESUS_STATUS;
 */
 volatile uint32_t FC0_REF_KHZ;
 
-/* FC0_MIN_KHZ (offset: 0x84)
+/** FC0_MIN_KHZ (offset: 0x84)
   Minimum pass frequency in kHz. This is optional. Set to 0 if you are not using the pass/fail flags
   access : read-write
   reset value : 0x0
@@ -618,7 +618,7 @@ volatile uint32_t FC0_REF_KHZ;
 */
 volatile uint32_t FC0_MIN_KHZ;
 
-/* FC0_MAX_KHZ (offset: 0x88)
+/** FC0_MAX_KHZ (offset: 0x88)
   Maximum pass frequency in kHz. This is optional. Set to 0x1ffffff if you are not using the pass/fail flags
   access : read-write
   reset value : 0x1FFFFFF
@@ -628,7 +628,7 @@ volatile uint32_t FC0_MIN_KHZ;
 */
 volatile uint32_t FC0_MAX_KHZ;
 
-/* FC0_DELAY (offset: 0x8c)
+/** FC0_DELAY (offset: 0x8c)
   Delays the start of frequency counting to allow the mux to settle
 
  Delay is measured in multiples of the reference clock period
@@ -640,7 +640,7 @@ volatile uint32_t FC0_MAX_KHZ;
 */
 volatile uint32_t FC0_DELAY;
 
-/* FC0_INTERVAL (offset: 0x90)
+/** FC0_INTERVAL (offset: 0x90)
   The test interval is 0.98us * 2**interval, but let&apos;s call it 1us * 2**interval
 
  The default gives a test interval of 250us
@@ -652,7 +652,7 @@ volatile uint32_t FC0_DELAY;
 */
 volatile uint32_t FC0_INTERVAL;
 
-/* FC0_SRC (offset: 0x94)
+/** FC0_SRC (offset: 0x94)
   Clock sent to frequency counter, set to 0 when not required
 
  Writing to this register initiates the frequency count
@@ -679,7 +679,7 @@ volatile uint32_t FC0_INTERVAL;
 */
 volatile uint32_t FC0_SRC;
 
-/* FC0_STATUS (offset: 0x98)
+/** FC0_STATUS (offset: 0x98)
   Frequency counter status
   access : read-write
   reset value : 0x0
@@ -711,7 +711,7 @@ volatile uint32_t FC0_SRC;
 */
 volatile uint32_t FC0_STATUS;
 
-/* FC0_RESULT (offset: 0x9c)
+/** FC0_RESULT (offset: 0x9c)
   Result of frequency measurement, only valid when status_done=1
   access : read-write
   reset value : 0x0
@@ -723,7 +723,7 @@ volatile uint32_t FC0_STATUS;
 */
 volatile uint32_t FC0_RESULT;
 
-/* WAKE_EN0 (offset: 0xa0)
+/** WAKE_EN0 (offset: 0xa0)
   enable clock in wake mode
   access : read-write
   reset value : 0xFFFFFFFF
@@ -795,7 +795,7 @@ volatile uint32_t FC0_RESULT;
 */
 volatile uint32_t WAKE_EN0;
 
-/* WAKE_EN1 (offset: 0xa4)
+/** WAKE_EN1 (offset: 0xa4)
   enable clock in wake mode
   access : read-write
   reset value : 0x7FFF
@@ -833,7 +833,7 @@ volatile uint32_t WAKE_EN0;
 */
 volatile uint32_t WAKE_EN1;
 
-/* SLEEP_EN0 (offset: 0xa8)
+/** SLEEP_EN0 (offset: 0xa8)
   enable clock in sleep mode
   access : read-write
   reset value : 0xFFFFFFFF
@@ -905,7 +905,7 @@ volatile uint32_t WAKE_EN1;
 */
 volatile uint32_t SLEEP_EN0;
 
-/* SLEEP_EN1 (offset: 0xac)
+/** SLEEP_EN1 (offset: 0xac)
   enable clock in sleep mode
   access : read-write
   reset value : 0x7FFF
@@ -943,7 +943,7 @@ volatile uint32_t SLEEP_EN0;
 */
 volatile uint32_t SLEEP_EN1;
 
-/* ENABLED0 (offset: 0xb0)
+/** ENABLED0 (offset: 0xb0)
   indicates the state of the clock enable
   access : read-write
   reset value : 0x0
@@ -1015,7 +1015,7 @@ volatile uint32_t SLEEP_EN1;
 */
 volatile uint32_t ENABLED0;
 
-/* ENABLED1 (offset: 0xb4)
+/** ENABLED1 (offset: 0xb4)
   indicates the state of the clock enable
   access : read-write
   reset value : 0x0
@@ -1053,7 +1053,7 @@ volatile uint32_t ENABLED0;
 */
 volatile uint32_t ENABLED1;
 
-/* INTR (offset: 0xb8)
+/** INTR (offset: 0xb8)
   Raw Interrupts
   access : read-write
   reset value : 0x0
@@ -1063,7 +1063,7 @@ volatile uint32_t ENABLED1;
 */
 volatile uint32_t INTR;
 
-/* INTE (offset: 0xbc)
+/** INTE (offset: 0xbc)
   Interrupt Enable
   access : read-write
   reset value : 0x0
@@ -1073,7 +1073,7 @@ volatile uint32_t INTR;
 */
 volatile uint32_t INTE;
 
-/* INTF (offset: 0xc0)
+/** INTF (offset: 0xc0)
   Interrupt Force
   access : read-write
   reset value : 0x0
@@ -1083,7 +1083,7 @@ volatile uint32_t INTE;
 */
 volatile uint32_t INTF;
 
-/* INTS (offset: 0xc4)
+/** INTS (offset: 0xc4)
   Interrupt status after masking &amp; forcing
   access : read-write
   reset value : 0x0

@@ -1,14 +1,14 @@
 #ifndef HW_SYSCFG_H
 #define HW_SYSCFG_H
-/* Register block for various chip control signals */
-/* Memory Block starting at 0x40004000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
+/** Register block for various chip control signals */
+/** Memory Block starting at 0x40004000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
 
 #include <stdint.h>
 
 typedef struct
 {
 
-/* PROC0_NMI_MASK (offset: 0x0)
+/** PROC0_NMI_MASK (offset: 0x0)
   Processor core 0 NMI source mask
 
  Set a bit high to enable NMI from that IRQ
@@ -18,7 +18,7 @@ typedef struct
 */
 volatile uint32_t PROC0_NMI_MASK;
 
-/* PROC1_NMI_MASK (offset: 0x4)
+/** PROC1_NMI_MASK (offset: 0x4)
   Processor core 1 NMI source mask
 
  Set a bit high to enable NMI from that IRQ
@@ -28,7 +28,7 @@ volatile uint32_t PROC0_NMI_MASK;
 */
 volatile uint32_t PROC1_NMI_MASK;
 
-/* PROC_CONFIG (offset: 0x8)
+/** PROC_CONFIG (offset: 0x8)
   Configuration for processors
   access : read-write
   reset value : 0x10000000
@@ -56,7 +56,7 @@ volatile uint32_t PROC1_NMI_MASK;
 */
 volatile uint32_t PROC_CONFIG;
 
-/* PROC_IN_SYNC_BYPASS (offset: 0xc)
+/** PROC_IN_SYNC_BYPASS (offset: 0xc)
   For each bit, if 1, bypass the input synchronizer between that GPIO
 
  and the GPIO input register in the SIO. The input synchronizers should
@@ -74,7 +74,7 @@ volatile uint32_t PROC_CONFIG;
 */
 volatile uint32_t PROC_IN_SYNC_BYPASS;
 
-/* PROC_IN_SYNC_BYPASS_HI (offset: 0x10)
+/** PROC_IN_SYNC_BYPASS_HI (offset: 0x10)
   For each bit, if 1, bypass the input synchronizer between that GPIO
 
  and the GPIO input register in the SIO. The input synchronizers should
@@ -92,7 +92,7 @@ volatile uint32_t PROC_IN_SYNC_BYPASS;
 */
 volatile uint32_t PROC_IN_SYNC_BYPASS_HI;
 
-/* DBGFORCE (offset: 0x14)
+/** DBGFORCE (offset: 0x14)
   Directly control the SWD debug port of either processor
   access : read-write
   reset value : 0x66
@@ -124,7 +124,7 @@ volatile uint32_t PROC_IN_SYNC_BYPASS_HI;
 */
 volatile uint32_t DBGFORCE;
 
-/* MEMPOWERDOWN (offset: 0x18)
+/** MEMPOWERDOWN (offset: 0x18)
   Control power downs to memories. Set high to power down memories.
 
  Use with extreme caution

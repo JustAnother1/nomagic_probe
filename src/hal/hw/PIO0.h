@@ -1,16 +1,16 @@
 #ifndef HW_PIO0_H
 #define HW_PIO0_H
-/* Programmable IO block */
-/* Interrupt : PIO0_IRQ_0 (Vector: 7)  */
-/* Interrupt : PIO0_IRQ_1 (Vector: 8)  */
-/* Memory Block starting at 0x50200000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
+/** Programmable IO block */
+/** Interrupt : PIO0_IRQ_0 (Vector: 7)  */
+/** Interrupt : PIO0_IRQ_1 (Vector: 8)  */
+/** Memory Block starting at 0x50200000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
 
 #include <stdint.h>
 
 typedef struct
 {
 
-/* CTRL (offset: 0x0)
+/** CTRL (offset: 0x0)
   PIO control register
   access : read-write
   reset value : 0x0
@@ -39,7 +39,7 @@ typedef struct
 */
 volatile uint32_t CTRL;
 
-/* FSTAT (offset: 0x4)
+/** FSTAT (offset: 0x4)
   FIFO status register
   access : read-write
   reset value : 0xF000F00
@@ -59,7 +59,7 @@ volatile uint32_t CTRL;
 */
 volatile uint32_t FSTAT;
 
-/* FDEBUG (offset: 0x8)
+/** FDEBUG (offset: 0x8)
   FIFO debug register
   access : read-write
   reset value : 0x0
@@ -79,7 +79,7 @@ volatile uint32_t FSTAT;
 */
 volatile uint32_t FDEBUG;
 
-/* FLEVEL (offset: 0xc)
+/** FLEVEL (offset: 0xc)
   FIFO levels
   access : read-write
   reset value : 0x0
@@ -103,7 +103,7 @@ volatile uint32_t FDEBUG;
 */
 volatile uint32_t FLEVEL;
 
-/* TXF0 (offset: 0x10)
+/** TXF0 (offset: 0x10)
   Direct write access to the TX FIFO for this state machine. Each write pushes one word to the FIFO. Attempting to write to a full FIFO has no effect on the FIFO state or contents, and sets the sticky FDEBUG_TXOVER error flag for this FIFO.
   access : write-only
   reset value : 0x0
@@ -111,7 +111,7 @@ volatile uint32_t FLEVEL;
 */
 volatile uint32_t TXF0;
 
-/* TXF1 (offset: 0x14)
+/** TXF1 (offset: 0x14)
   Direct write access to the TX FIFO for this state machine. Each write pushes one word to the FIFO. Attempting to write to a full FIFO has no effect on the FIFO state or contents, and sets the sticky FDEBUG_TXOVER error flag for this FIFO.
   access : write-only
   reset value : 0x0
@@ -119,7 +119,7 @@ volatile uint32_t TXF0;
 */
 volatile uint32_t TXF1;
 
-/* TXF2 (offset: 0x18)
+/** TXF2 (offset: 0x18)
   Direct write access to the TX FIFO for this state machine. Each write pushes one word to the FIFO. Attempting to write to a full FIFO has no effect on the FIFO state or contents, and sets the sticky FDEBUG_TXOVER error flag for this FIFO.
   access : write-only
   reset value : 0x0
@@ -127,7 +127,7 @@ volatile uint32_t TXF1;
 */
 volatile uint32_t TXF2;
 
-/* TXF3 (offset: 0x1c)
+/** TXF3 (offset: 0x1c)
   Direct write access to the TX FIFO for this state machine. Each write pushes one word to the FIFO. Attempting to write to a full FIFO has no effect on the FIFO state or contents, and sets the sticky FDEBUG_TXOVER error flag for this FIFO.
   access : write-only
   reset value : 0x0
@@ -135,7 +135,7 @@ volatile uint32_t TXF2;
 */
 volatile uint32_t TXF3;
 
-/* RXF0 (offset: 0x20)
+/** RXF0 (offset: 0x20)
   Direct read access to the RX FIFO for this state machine. Each read pops one word from the FIFO. Attempting to read from an empty FIFO has no effect on the FIFO state, and sets the sticky FDEBUG_RXUNDER error flag for this FIFO. The data returned to the system on a read from an empty FIFO is undefined.
   access : read-only
   reset value : 0x0
@@ -143,7 +143,7 @@ volatile uint32_t TXF3;
 */
 volatile uint32_t RXF0;
 
-/* RXF1 (offset: 0x24)
+/** RXF1 (offset: 0x24)
   Direct read access to the RX FIFO for this state machine. Each read pops one word from the FIFO. Attempting to read from an empty FIFO has no effect on the FIFO state, and sets the sticky FDEBUG_RXUNDER error flag for this FIFO. The data returned to the system on a read from an empty FIFO is undefined.
   access : read-only
   reset value : 0x0
@@ -151,7 +151,7 @@ volatile uint32_t RXF0;
 */
 volatile uint32_t RXF1;
 
-/* RXF2 (offset: 0x28)
+/** RXF2 (offset: 0x28)
   Direct read access to the RX FIFO for this state machine. Each read pops one word from the FIFO. Attempting to read from an empty FIFO has no effect on the FIFO state, and sets the sticky FDEBUG_RXUNDER error flag for this FIFO. The data returned to the system on a read from an empty FIFO is undefined.
   access : read-only
   reset value : 0x0
@@ -159,7 +159,7 @@ volatile uint32_t RXF1;
 */
 volatile uint32_t RXF2;
 
-/* RXF3 (offset: 0x2c)
+/** RXF3 (offset: 0x2c)
   Direct read access to the RX FIFO for this state machine. Each read pops one word from the FIFO. Attempting to read from an empty FIFO has no effect on the FIFO state, and sets the sticky FDEBUG_RXUNDER error flag for this FIFO. The data returned to the system on a read from an empty FIFO is undefined.
   access : read-only
   reset value : 0x0
@@ -167,7 +167,7 @@ volatile uint32_t RXF2;
 */
 volatile uint32_t RXF3;
 
-/* IRQ (offset: 0x30)
+/** IRQ (offset: 0x30)
   State machine IRQ flags register. Write 1 to clear. There are 8 state machine IRQ flags, which can be set, cleared, and waited on by the state machines. There&apos;s no fixed association between flags and state machines -- any state machine can use any flag.
 
 
@@ -180,7 +180,7 @@ volatile uint32_t RXF3;
 */
 volatile uint32_t IRQ;
 
-/* IRQ_FORCE (offset: 0x34)
+/** IRQ_FORCE (offset: 0x34)
   Writing a 1 to each of these bits will forcibly assert the corresponding IRQ. Note this is different to the INTF register: writing here affects PIO internal state. INTF just asserts the processor-facing IRQ signal for testing ISRs, and is not visible to the state machines.
   access : read-write
   reset value : 0x0
@@ -190,7 +190,7 @@ volatile uint32_t IRQ;
 */
 volatile uint32_t IRQ_FORCE;
 
-/* INPUT_SYNC_BYPASS (offset: 0x38)
+/** INPUT_SYNC_BYPASS (offset: 0x38)
   There is a 2-flipflop synchronizer on each GPIO input, which protects PIO logic from metastabilities. This increases input delay, and for fast synchronous IO (e.g. SPI) these synchronizers may need to be bypassed. Each bit in this register corresponds to one GPIO.
 
  0 -&gt; input is synchronized (default)
@@ -204,7 +204,7 @@ volatile uint32_t IRQ_FORCE;
 */
 volatile uint32_t INPUT_SYNC_BYPASS;
 
-/* DBG_PADOUT (offset: 0x3c)
+/** DBG_PADOUT (offset: 0x3c)
   Read to sample the pad output values PIO is currently driving to the GPIOs. On RP2040 there are 30 GPIOs, so the two most significant bits are hardwired to 0.
   access : read-only
   reset value : 0x0
@@ -212,7 +212,7 @@ volatile uint32_t INPUT_SYNC_BYPASS;
 */
 volatile uint32_t DBG_PADOUT;
 
-/* DBG_PADOE (offset: 0x40)
+/** DBG_PADOE (offset: 0x40)
   Read to sample the pad output enables (direction) PIO is currently driving to the GPIOs. On RP2040 there are 30 GPIOs, so the two most significant bits are hardwired to 0.
   access : read-only
   reset value : 0x0
@@ -220,7 +220,7 @@ volatile uint32_t DBG_PADOUT;
 */
 volatile uint32_t DBG_PADOE;
 
-/* DBG_CFGINFO (offset: 0x44)
+/** DBG_CFGINFO (offset: 0x44)
   The PIO hardware has some free parameters that may vary between chip products.
 
  These should be provided in the chip datasheet, but are also exposed here.
@@ -243,7 +243,7 @@ volatile uint32_t DBG_PADOE;
 */
 volatile uint32_t DBG_CFGINFO;
 
-/* INSTR_MEM0 (offset: 0x48)
+/** INSTR_MEM0 (offset: 0x48)
   Write-only access to instruction memory location 0
   access : read-write
   reset value : 0x0
@@ -253,7 +253,7 @@ volatile uint32_t DBG_CFGINFO;
 */
 volatile uint32_t INSTR_MEM0;
 
-/* INSTR_MEM1 (offset: 0x4c)
+/** INSTR_MEM1 (offset: 0x4c)
   Write-only access to instruction memory location 1
   access : read-write
   reset value : 0x0
@@ -263,7 +263,7 @@ volatile uint32_t INSTR_MEM0;
 */
 volatile uint32_t INSTR_MEM1;
 
-/* INSTR_MEM2 (offset: 0x50)
+/** INSTR_MEM2 (offset: 0x50)
   Write-only access to instruction memory location 2
   access : read-write
   reset value : 0x0
@@ -273,7 +273,7 @@ volatile uint32_t INSTR_MEM1;
 */
 volatile uint32_t INSTR_MEM2;
 
-/* INSTR_MEM3 (offset: 0x54)
+/** INSTR_MEM3 (offset: 0x54)
   Write-only access to instruction memory location 3
   access : read-write
   reset value : 0x0
@@ -283,7 +283,7 @@ volatile uint32_t INSTR_MEM2;
 */
 volatile uint32_t INSTR_MEM3;
 
-/* INSTR_MEM4 (offset: 0x58)
+/** INSTR_MEM4 (offset: 0x58)
   Write-only access to instruction memory location 4
   access : read-write
   reset value : 0x0
@@ -293,7 +293,7 @@ volatile uint32_t INSTR_MEM3;
 */
 volatile uint32_t INSTR_MEM4;
 
-/* INSTR_MEM5 (offset: 0x5c)
+/** INSTR_MEM5 (offset: 0x5c)
   Write-only access to instruction memory location 5
   access : read-write
   reset value : 0x0
@@ -303,7 +303,7 @@ volatile uint32_t INSTR_MEM4;
 */
 volatile uint32_t INSTR_MEM5;
 
-/* INSTR_MEM6 (offset: 0x60)
+/** INSTR_MEM6 (offset: 0x60)
   Write-only access to instruction memory location 6
   access : read-write
   reset value : 0x0
@@ -313,7 +313,7 @@ volatile uint32_t INSTR_MEM5;
 */
 volatile uint32_t INSTR_MEM6;
 
-/* INSTR_MEM7 (offset: 0x64)
+/** INSTR_MEM7 (offset: 0x64)
   Write-only access to instruction memory location 7
   access : read-write
   reset value : 0x0
@@ -323,7 +323,7 @@ volatile uint32_t INSTR_MEM6;
 */
 volatile uint32_t INSTR_MEM7;
 
-/* INSTR_MEM8 (offset: 0x68)
+/** INSTR_MEM8 (offset: 0x68)
   Write-only access to instruction memory location 8
   access : read-write
   reset value : 0x0
@@ -333,7 +333,7 @@ volatile uint32_t INSTR_MEM7;
 */
 volatile uint32_t INSTR_MEM8;
 
-/* INSTR_MEM9 (offset: 0x6c)
+/** INSTR_MEM9 (offset: 0x6c)
   Write-only access to instruction memory location 9
   access : read-write
   reset value : 0x0
@@ -343,7 +343,7 @@ volatile uint32_t INSTR_MEM8;
 */
 volatile uint32_t INSTR_MEM9;
 
-/* INSTR_MEM10 (offset: 0x70)
+/** INSTR_MEM10 (offset: 0x70)
   Write-only access to instruction memory location 10
   access : read-write
   reset value : 0x0
@@ -353,7 +353,7 @@ volatile uint32_t INSTR_MEM9;
 */
 volatile uint32_t INSTR_MEM10;
 
-/* INSTR_MEM11 (offset: 0x74)
+/** INSTR_MEM11 (offset: 0x74)
   Write-only access to instruction memory location 11
   access : read-write
   reset value : 0x0
@@ -363,7 +363,7 @@ volatile uint32_t INSTR_MEM10;
 */
 volatile uint32_t INSTR_MEM11;
 
-/* INSTR_MEM12 (offset: 0x78)
+/** INSTR_MEM12 (offset: 0x78)
   Write-only access to instruction memory location 12
   access : read-write
   reset value : 0x0
@@ -373,7 +373,7 @@ volatile uint32_t INSTR_MEM11;
 */
 volatile uint32_t INSTR_MEM12;
 
-/* INSTR_MEM13 (offset: 0x7c)
+/** INSTR_MEM13 (offset: 0x7c)
   Write-only access to instruction memory location 13
   access : read-write
   reset value : 0x0
@@ -383,7 +383,7 @@ volatile uint32_t INSTR_MEM12;
 */
 volatile uint32_t INSTR_MEM13;
 
-/* INSTR_MEM14 (offset: 0x80)
+/** INSTR_MEM14 (offset: 0x80)
   Write-only access to instruction memory location 14
   access : read-write
   reset value : 0x0
@@ -393,7 +393,7 @@ volatile uint32_t INSTR_MEM13;
 */
 volatile uint32_t INSTR_MEM14;
 
-/* INSTR_MEM15 (offset: 0x84)
+/** INSTR_MEM15 (offset: 0x84)
   Write-only access to instruction memory location 15
   access : read-write
   reset value : 0x0
@@ -403,7 +403,7 @@ volatile uint32_t INSTR_MEM14;
 */
 volatile uint32_t INSTR_MEM15;
 
-/* INSTR_MEM16 (offset: 0x88)
+/** INSTR_MEM16 (offset: 0x88)
   Write-only access to instruction memory location 16
   access : read-write
   reset value : 0x0
@@ -413,7 +413,7 @@ volatile uint32_t INSTR_MEM15;
 */
 volatile uint32_t INSTR_MEM16;
 
-/* INSTR_MEM17 (offset: 0x8c)
+/** INSTR_MEM17 (offset: 0x8c)
   Write-only access to instruction memory location 17
   access : read-write
   reset value : 0x0
@@ -423,7 +423,7 @@ volatile uint32_t INSTR_MEM16;
 */
 volatile uint32_t INSTR_MEM17;
 
-/* INSTR_MEM18 (offset: 0x90)
+/** INSTR_MEM18 (offset: 0x90)
   Write-only access to instruction memory location 18
   access : read-write
   reset value : 0x0
@@ -433,7 +433,7 @@ volatile uint32_t INSTR_MEM17;
 */
 volatile uint32_t INSTR_MEM18;
 
-/* INSTR_MEM19 (offset: 0x94)
+/** INSTR_MEM19 (offset: 0x94)
   Write-only access to instruction memory location 19
   access : read-write
   reset value : 0x0
@@ -443,7 +443,7 @@ volatile uint32_t INSTR_MEM18;
 */
 volatile uint32_t INSTR_MEM19;
 
-/* INSTR_MEM20 (offset: 0x98)
+/** INSTR_MEM20 (offset: 0x98)
   Write-only access to instruction memory location 20
   access : read-write
   reset value : 0x0
@@ -453,7 +453,7 @@ volatile uint32_t INSTR_MEM19;
 */
 volatile uint32_t INSTR_MEM20;
 
-/* INSTR_MEM21 (offset: 0x9c)
+/** INSTR_MEM21 (offset: 0x9c)
   Write-only access to instruction memory location 21
   access : read-write
   reset value : 0x0
@@ -463,7 +463,7 @@ volatile uint32_t INSTR_MEM20;
 */
 volatile uint32_t INSTR_MEM21;
 
-/* INSTR_MEM22 (offset: 0xa0)
+/** INSTR_MEM22 (offset: 0xa0)
   Write-only access to instruction memory location 22
   access : read-write
   reset value : 0x0
@@ -473,7 +473,7 @@ volatile uint32_t INSTR_MEM21;
 */
 volatile uint32_t INSTR_MEM22;
 
-/* INSTR_MEM23 (offset: 0xa4)
+/** INSTR_MEM23 (offset: 0xa4)
   Write-only access to instruction memory location 23
   access : read-write
   reset value : 0x0
@@ -483,7 +483,7 @@ volatile uint32_t INSTR_MEM22;
 */
 volatile uint32_t INSTR_MEM23;
 
-/* INSTR_MEM24 (offset: 0xa8)
+/** INSTR_MEM24 (offset: 0xa8)
   Write-only access to instruction memory location 24
   access : read-write
   reset value : 0x0
@@ -493,7 +493,7 @@ volatile uint32_t INSTR_MEM23;
 */
 volatile uint32_t INSTR_MEM24;
 
-/* INSTR_MEM25 (offset: 0xac)
+/** INSTR_MEM25 (offset: 0xac)
   Write-only access to instruction memory location 25
   access : read-write
   reset value : 0x0
@@ -503,7 +503,7 @@ volatile uint32_t INSTR_MEM24;
 */
 volatile uint32_t INSTR_MEM25;
 
-/* INSTR_MEM26 (offset: 0xb0)
+/** INSTR_MEM26 (offset: 0xb0)
   Write-only access to instruction memory location 26
   access : read-write
   reset value : 0x0
@@ -513,7 +513,7 @@ volatile uint32_t INSTR_MEM25;
 */
 volatile uint32_t INSTR_MEM26;
 
-/* INSTR_MEM27 (offset: 0xb4)
+/** INSTR_MEM27 (offset: 0xb4)
   Write-only access to instruction memory location 27
   access : read-write
   reset value : 0x0
@@ -523,7 +523,7 @@ volatile uint32_t INSTR_MEM26;
 */
 volatile uint32_t INSTR_MEM27;
 
-/* INSTR_MEM28 (offset: 0xb8)
+/** INSTR_MEM28 (offset: 0xb8)
   Write-only access to instruction memory location 28
   access : read-write
   reset value : 0x0
@@ -533,7 +533,7 @@ volatile uint32_t INSTR_MEM27;
 */
 volatile uint32_t INSTR_MEM28;
 
-/* INSTR_MEM29 (offset: 0xbc)
+/** INSTR_MEM29 (offset: 0xbc)
   Write-only access to instruction memory location 29
   access : read-write
   reset value : 0x0
@@ -543,7 +543,7 @@ volatile uint32_t INSTR_MEM28;
 */
 volatile uint32_t INSTR_MEM29;
 
-/* INSTR_MEM30 (offset: 0xc0)
+/** INSTR_MEM30 (offset: 0xc0)
   Write-only access to instruction memory location 30
   access : read-write
   reset value : 0x0
@@ -553,7 +553,7 @@ volatile uint32_t INSTR_MEM29;
 */
 volatile uint32_t INSTR_MEM30;
 
-/* INSTR_MEM31 (offset: 0xc4)
+/** INSTR_MEM31 (offset: 0xc4)
   Write-only access to instruction memory location 31
   access : read-write
   reset value : 0x0
@@ -563,7 +563,7 @@ volatile uint32_t INSTR_MEM30;
 */
 volatile uint32_t INSTR_MEM31;
 
-/* SM0_CLKDIV (offset: 0xc8)
+/** SM0_CLKDIV (offset: 0xc8)
   Clock divisor register for state machine 0
 
  Frequency = clock freq / (CLKDIV_INT + CLKDIV_FRAC / 256)
@@ -581,7 +581,7 @@ volatile uint32_t INSTR_MEM31;
 */
 volatile uint32_t SM0_CLKDIV;
 
-/* SM0_EXECCTRL (offset: 0xcc)
+/** SM0_EXECCTRL (offset: 0xcc)
   Execution/behavioural settings for state machine 0
   access : read-write
   reset value : 0x1F000
@@ -633,7 +633,7 @@ volatile uint32_t SM0_CLKDIV;
 */
 volatile uint32_t SM0_EXECCTRL;
 
-/* SM0_SHIFTCTRL (offset: 0xd0)
+/** SM0_SHIFTCTRL (offset: 0xd0)
   Control behaviour of the input/output shift registers for state machine 0
   access : read-write
   reset value : 0xC0000
@@ -677,7 +677,7 @@ volatile uint32_t SM0_EXECCTRL;
 */
 volatile uint32_t SM0_SHIFTCTRL;
 
-/* SM0_ADDR (offset: 0xd4)
+/** SM0_ADDR (offset: 0xd4)
   Current instruction address of state machine 0
   access : read-write
   reset value : 0x0
@@ -687,7 +687,7 @@ volatile uint32_t SM0_SHIFTCTRL;
 */
 volatile uint32_t SM0_ADDR;
 
-/* SM0_INSTR (offset: 0xd8)
+/** SM0_INSTR (offset: 0xd8)
   Read to see the instruction currently addressed by state machine 0&apos;s program counter
 
  Write to execute an instruction immediately (including jumps) and then resume execution.
@@ -699,7 +699,7 @@ volatile uint32_t SM0_ADDR;
 */
 volatile uint32_t SM0_INSTR;
 
-/* SM0_PINCTRL (offset: 0xdc)
+/** SM0_PINCTRL (offset: 0xdc)
   State machine pin control
   access : read-write
   reset value : 0x14000000
@@ -728,7 +728,7 @@ volatile uint32_t SM0_INSTR;
 */
 volatile uint32_t SM0_PINCTRL;
 
-/* SM1_CLKDIV (offset: 0xe0)
+/** SM1_CLKDIV (offset: 0xe0)
   Clock divisor register for state machine 1
 
  Frequency = clock freq / (CLKDIV_INT + CLKDIV_FRAC / 256)
@@ -746,7 +746,7 @@ volatile uint32_t SM0_PINCTRL;
 */
 volatile uint32_t SM1_CLKDIV;
 
-/* SM1_EXECCTRL (offset: 0xe4)
+/** SM1_EXECCTRL (offset: 0xe4)
   Execution/behavioural settings for state machine 1
   access : read-write
   reset value : 0x1F000
@@ -798,7 +798,7 @@ volatile uint32_t SM1_CLKDIV;
 */
 volatile uint32_t SM1_EXECCTRL;
 
-/* SM1_SHIFTCTRL (offset: 0xe8)
+/** SM1_SHIFTCTRL (offset: 0xe8)
   Control behaviour of the input/output shift registers for state machine 1
   access : read-write
   reset value : 0xC0000
@@ -842,7 +842,7 @@ volatile uint32_t SM1_EXECCTRL;
 */
 volatile uint32_t SM1_SHIFTCTRL;
 
-/* SM1_ADDR (offset: 0xec)
+/** SM1_ADDR (offset: 0xec)
   Current instruction address of state machine 1
   access : read-write
   reset value : 0x0
@@ -852,7 +852,7 @@ volatile uint32_t SM1_SHIFTCTRL;
 */
 volatile uint32_t SM1_ADDR;
 
-/* SM1_INSTR (offset: 0xf0)
+/** SM1_INSTR (offset: 0xf0)
   Read to see the instruction currently addressed by state machine 1&apos;s program counter
 
  Write to execute an instruction immediately (including jumps) and then resume execution.
@@ -864,7 +864,7 @@ volatile uint32_t SM1_ADDR;
 */
 volatile uint32_t SM1_INSTR;
 
-/* SM1_PINCTRL (offset: 0xf4)
+/** SM1_PINCTRL (offset: 0xf4)
   State machine pin control
   access : read-write
   reset value : 0x14000000
@@ -893,7 +893,7 @@ volatile uint32_t SM1_INSTR;
 */
 volatile uint32_t SM1_PINCTRL;
 
-/* SM2_CLKDIV (offset: 0xf8)
+/** SM2_CLKDIV (offset: 0xf8)
   Clock divisor register for state machine 2
 
  Frequency = clock freq / (CLKDIV_INT + CLKDIV_FRAC / 256)
@@ -911,7 +911,7 @@ volatile uint32_t SM1_PINCTRL;
 */
 volatile uint32_t SM2_CLKDIV;
 
-/* SM2_EXECCTRL (offset: 0xfc)
+/** SM2_EXECCTRL (offset: 0xfc)
   Execution/behavioural settings for state machine 2
   access : read-write
   reset value : 0x1F000
@@ -963,7 +963,7 @@ volatile uint32_t SM2_CLKDIV;
 */
 volatile uint32_t SM2_EXECCTRL;
 
-/* SM2_SHIFTCTRL (offset: 0x100)
+/** SM2_SHIFTCTRL (offset: 0x100)
   Control behaviour of the input/output shift registers for state machine 2
   access : read-write
   reset value : 0xC0000
@@ -1007,7 +1007,7 @@ volatile uint32_t SM2_EXECCTRL;
 */
 volatile uint32_t SM2_SHIFTCTRL;
 
-/* SM2_ADDR (offset: 0x104)
+/** SM2_ADDR (offset: 0x104)
   Current instruction address of state machine 2
   access : read-write
   reset value : 0x0
@@ -1017,7 +1017,7 @@ volatile uint32_t SM2_SHIFTCTRL;
 */
 volatile uint32_t SM2_ADDR;
 
-/* SM2_INSTR (offset: 0x108)
+/** SM2_INSTR (offset: 0x108)
   Read to see the instruction currently addressed by state machine 2&apos;s program counter
 
  Write to execute an instruction immediately (including jumps) and then resume execution.
@@ -1029,7 +1029,7 @@ volatile uint32_t SM2_ADDR;
 */
 volatile uint32_t SM2_INSTR;
 
-/* SM2_PINCTRL (offset: 0x10c)
+/** SM2_PINCTRL (offset: 0x10c)
   State machine pin control
   access : read-write
   reset value : 0x14000000
@@ -1058,7 +1058,7 @@ volatile uint32_t SM2_INSTR;
 */
 volatile uint32_t SM2_PINCTRL;
 
-/* SM3_CLKDIV (offset: 0x110)
+/** SM3_CLKDIV (offset: 0x110)
   Clock divisor register for state machine 3
 
  Frequency = clock freq / (CLKDIV_INT + CLKDIV_FRAC / 256)
@@ -1076,7 +1076,7 @@ volatile uint32_t SM2_PINCTRL;
 */
 volatile uint32_t SM3_CLKDIV;
 
-/* SM3_EXECCTRL (offset: 0x114)
+/** SM3_EXECCTRL (offset: 0x114)
   Execution/behavioural settings for state machine 3
   access : read-write
   reset value : 0x1F000
@@ -1128,7 +1128,7 @@ volatile uint32_t SM3_CLKDIV;
 */
 volatile uint32_t SM3_EXECCTRL;
 
-/* SM3_SHIFTCTRL (offset: 0x118)
+/** SM3_SHIFTCTRL (offset: 0x118)
   Control behaviour of the input/output shift registers for state machine 3
   access : read-write
   reset value : 0xC0000
@@ -1172,7 +1172,7 @@ volatile uint32_t SM3_EXECCTRL;
 */
 volatile uint32_t SM3_SHIFTCTRL;
 
-/* SM3_ADDR (offset: 0x11c)
+/** SM3_ADDR (offset: 0x11c)
   Current instruction address of state machine 3
   access : read-write
   reset value : 0x0
@@ -1182,7 +1182,7 @@ volatile uint32_t SM3_SHIFTCTRL;
 */
 volatile uint32_t SM3_ADDR;
 
-/* SM3_INSTR (offset: 0x120)
+/** SM3_INSTR (offset: 0x120)
   Read to see the instruction currently addressed by state machine 3&apos;s program counter
 
  Write to execute an instruction immediately (including jumps) and then resume execution.
@@ -1194,7 +1194,7 @@ volatile uint32_t SM3_ADDR;
 */
 volatile uint32_t SM3_INSTR;
 
-/* SM3_PINCTRL (offset: 0x124)
+/** SM3_PINCTRL (offset: 0x124)
   State machine pin control
   access : read-write
   reset value : 0x14000000
@@ -1223,7 +1223,7 @@ volatile uint32_t SM3_INSTR;
 */
 volatile uint32_t SM3_PINCTRL;
 
-/* INTR (offset: 0x128)
+/** INTR (offset: 0x128)
   Raw Interrupts
   access : read-write
   reset value : 0x0
@@ -1255,7 +1255,7 @@ volatile uint32_t SM3_PINCTRL;
 */
 volatile uint32_t INTR;
 
-/* IRQ0_INTE (offset: 0x12c)
+/** IRQ0_INTE (offset: 0x12c)
   Interrupt Enable for irq0
   access : read-write
   reset value : 0x0
@@ -1287,7 +1287,7 @@ volatile uint32_t INTR;
 */
 volatile uint32_t IRQ0_INTE;
 
-/* IRQ0_INTF (offset: 0x130)
+/** IRQ0_INTF (offset: 0x130)
   Interrupt Force for irq0
   access : read-write
   reset value : 0x0
@@ -1319,7 +1319,7 @@ volatile uint32_t IRQ0_INTE;
 */
 volatile uint32_t IRQ0_INTF;
 
-/* IRQ0_INTS (offset: 0x134)
+/** IRQ0_INTS (offset: 0x134)
   Interrupt status after masking &amp; forcing for irq0
   access : read-write
   reset value : 0x0
@@ -1351,7 +1351,7 @@ volatile uint32_t IRQ0_INTF;
 */
 volatile uint32_t IRQ0_INTS;
 
-/* IRQ1_INTE (offset: 0x138)
+/** IRQ1_INTE (offset: 0x138)
   Interrupt Enable for irq1
   access : read-write
   reset value : 0x0
@@ -1383,7 +1383,7 @@ volatile uint32_t IRQ0_INTS;
 */
 volatile uint32_t IRQ1_INTE;
 
-/* IRQ1_INTF (offset: 0x13c)
+/** IRQ1_INTF (offset: 0x13c)
   Interrupt Force for irq1
   access : read-write
   reset value : 0x0
@@ -1415,7 +1415,7 @@ volatile uint32_t IRQ1_INTE;
 */
 volatile uint32_t IRQ1_INTF;
 
-/* IRQ1_INTS (offset: 0x140)
+/** IRQ1_INTS (offset: 0x140)
   Interrupt status after masking &amp; forcing for irq1
   access : read-write
   reset value : 0x0

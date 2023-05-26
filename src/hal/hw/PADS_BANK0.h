@@ -1,13 +1,13 @@
 #ifndef HW_PADS_BANK0_H
 #define HW_PADS_BANK0_H
-/* Memory Block starting at 0x4001C000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
+/** Memory Block starting at 0x4001C000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
 
 #include <stdint.h>
 
 typedef struct
 {
 
-/* VOLTAGE_SELECT (offset: 0x0)
+/** VOLTAGE_SELECT (offset: 0x0)
   Voltage select. Per bank control
   access : read-write
   reset value : 0x0
@@ -20,7 +20,7 @@ typedef struct
 */
 volatile uint32_t VOLTAGE_SELECT;
 
-/* GPIO0 (offset: 0x4)
+/** GPIO0 (offset: 0x4)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -54,7 +54,7 @@ volatile uint32_t VOLTAGE_SELECT;
 */
 volatile uint32_t GPIO0;
 
-/* GPIO1 (offset: 0x8)
+/** GPIO1 (offset: 0x8)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -88,7 +88,7 @@ volatile uint32_t GPIO0;
 */
 volatile uint32_t GPIO1;
 
-/* GPIO2 (offset: 0xc)
+/** GPIO2 (offset: 0xc)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -122,7 +122,7 @@ volatile uint32_t GPIO1;
 */
 volatile uint32_t GPIO2;
 
-/* GPIO3 (offset: 0x10)
+/** GPIO3 (offset: 0x10)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -156,7 +156,7 @@ volatile uint32_t GPIO2;
 */
 volatile uint32_t GPIO3;
 
-/* GPIO4 (offset: 0x14)
+/** GPIO4 (offset: 0x14)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -190,7 +190,7 @@ volatile uint32_t GPIO3;
 */
 volatile uint32_t GPIO4;
 
-/* GPIO5 (offset: 0x18)
+/** GPIO5 (offset: 0x18)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -224,7 +224,7 @@ volatile uint32_t GPIO4;
 */
 volatile uint32_t GPIO5;
 
-/* GPIO6 (offset: 0x1c)
+/** GPIO6 (offset: 0x1c)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -258,7 +258,7 @@ volatile uint32_t GPIO5;
 */
 volatile uint32_t GPIO6;
 
-/* GPIO7 (offset: 0x20)
+/** GPIO7 (offset: 0x20)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -292,7 +292,7 @@ volatile uint32_t GPIO6;
 */
 volatile uint32_t GPIO7;
 
-/* GPIO8 (offset: 0x24)
+/** GPIO8 (offset: 0x24)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -326,7 +326,7 @@ volatile uint32_t GPIO7;
 */
 volatile uint32_t GPIO8;
 
-/* GPIO9 (offset: 0x28)
+/** GPIO9 (offset: 0x28)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -360,7 +360,7 @@ volatile uint32_t GPIO8;
 */
 volatile uint32_t GPIO9;
 
-/* GPIO10 (offset: 0x2c)
+/** GPIO10 (offset: 0x2c)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -394,7 +394,7 @@ volatile uint32_t GPIO9;
 */
 volatile uint32_t GPIO10;
 
-/* GPIO11 (offset: 0x30)
+/** GPIO11 (offset: 0x30)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -428,7 +428,7 @@ volatile uint32_t GPIO10;
 */
 volatile uint32_t GPIO11;
 
-/* GPIO12 (offset: 0x34)
+/** GPIO12 (offset: 0x34)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -462,7 +462,7 @@ volatile uint32_t GPIO11;
 */
 volatile uint32_t GPIO12;
 
-/* GPIO13 (offset: 0x38)
+/** GPIO13 (offset: 0x38)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -496,7 +496,7 @@ volatile uint32_t GPIO12;
 */
 volatile uint32_t GPIO13;
 
-/* GPIO14 (offset: 0x3c)
+/** GPIO14 (offset: 0x3c)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -530,7 +530,7 @@ volatile uint32_t GPIO13;
 */
 volatile uint32_t GPIO14;
 
-/* GPIO15 (offset: 0x40)
+/** GPIO15 (offset: 0x40)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -564,7 +564,7 @@ volatile uint32_t GPIO14;
 */
 volatile uint32_t GPIO15;
 
-/* GPIO16 (offset: 0x44)
+/** GPIO16 (offset: 0x44)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -598,7 +598,7 @@ volatile uint32_t GPIO15;
 */
 volatile uint32_t GPIO16;
 
-/* GPIO17 (offset: 0x48)
+/** GPIO17 (offset: 0x48)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -632,7 +632,7 @@ volatile uint32_t GPIO16;
 */
 volatile uint32_t GPIO17;
 
-/* GPIO18 (offset: 0x4c)
+/** GPIO18 (offset: 0x4c)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -666,7 +666,7 @@ volatile uint32_t GPIO17;
 */
 volatile uint32_t GPIO18;
 
-/* GPIO19 (offset: 0x50)
+/** GPIO19 (offset: 0x50)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -700,7 +700,7 @@ volatile uint32_t GPIO18;
 */
 volatile uint32_t GPIO19;
 
-/* GPIO20 (offset: 0x54)
+/** GPIO20 (offset: 0x54)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -734,7 +734,7 @@ volatile uint32_t GPIO19;
 */
 volatile uint32_t GPIO20;
 
-/* GPIO21 (offset: 0x58)
+/** GPIO21 (offset: 0x58)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -768,7 +768,7 @@ volatile uint32_t GPIO20;
 */
 volatile uint32_t GPIO21;
 
-/* GPIO22 (offset: 0x5c)
+/** GPIO22 (offset: 0x5c)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -802,7 +802,7 @@ volatile uint32_t GPIO21;
 */
 volatile uint32_t GPIO22;
 
-/* GPIO23 (offset: 0x60)
+/** GPIO23 (offset: 0x60)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -836,7 +836,7 @@ volatile uint32_t GPIO22;
 */
 volatile uint32_t GPIO23;
 
-/* GPIO24 (offset: 0x64)
+/** GPIO24 (offset: 0x64)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -870,7 +870,7 @@ volatile uint32_t GPIO23;
 */
 volatile uint32_t GPIO24;
 
-/* GPIO25 (offset: 0x68)
+/** GPIO25 (offset: 0x68)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -904,7 +904,7 @@ volatile uint32_t GPIO24;
 */
 volatile uint32_t GPIO25;
 
-/* GPIO26 (offset: 0x6c)
+/** GPIO26 (offset: 0x6c)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -938,7 +938,7 @@ volatile uint32_t GPIO25;
 */
 volatile uint32_t GPIO26;
 
-/* GPIO27 (offset: 0x70)
+/** GPIO27 (offset: 0x70)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -972,7 +972,7 @@ volatile uint32_t GPIO26;
 */
 volatile uint32_t GPIO27;
 
-/* GPIO28 (offset: 0x74)
+/** GPIO28 (offset: 0x74)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -1006,7 +1006,7 @@ volatile uint32_t GPIO27;
 */
 volatile uint32_t GPIO28;
 
-/* GPIO29 (offset: 0x78)
+/** GPIO29 (offset: 0x78)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -1040,7 +1040,7 @@ volatile uint32_t GPIO28;
 */
 volatile uint32_t GPIO29;
 
-/* SWCLK (offset: 0x7c)
+/** SWCLK (offset: 0x7c)
   Pad control register
   access : read-write
   reset value : 0xDA
@@ -1074,7 +1074,7 @@ volatile uint32_t GPIO29;
 */
 volatile uint32_t SWCLK;
 
-/* SWD (offset: 0x80)
+/** SWD (offset: 0x80)
   Pad control register
   access : read-write
   reset value : 0x5A

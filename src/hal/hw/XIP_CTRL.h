@@ -1,15 +1,15 @@
 #ifndef HW_XIP_CTRL_H
 #define HW_XIP_CTRL_H
-/* QSPI flash execute-in-place block */
-/* Interrupt : XIP_IRQ (Vector: 6)  */
-/* Memory Block starting at 0x14000000 + 0x0 is 0x20 bytes in size. It is used for registers. Protection: n */
+/** QSPI flash execute-in-place block */
+/** Interrupt : XIP_IRQ (Vector: 6)  */
+/** Memory Block starting at 0x14000000 + 0x0 is 0x20 bytes in size. It is used for registers. Protection: n */
 
 #include <stdint.h>
 
 typedef struct
 {
 
-/* CTRL (offset: 0x0)
+/** CTRL (offset: 0x0)
   Cache control
   access : read-write
   reset value : 0x3
@@ -53,7 +53,7 @@ typedef struct
 */
 volatile uint32_t CTRL;
 
-/* FLUSH (offset: 0x4)
+/** FLUSH (offset: 0x4)
   Cache Flush control
   access : read-write
   reset value : 0x0
@@ -72,7 +72,7 @@ volatile uint32_t CTRL;
 */
 volatile uint32_t FLUSH;
 
-/* STAT (offset: 0x8)
+/** STAT (offset: 0x8)
   Cache Status
   access : read-write
   reset value : 0x2
@@ -97,7 +97,7 @@ volatile uint32_t FLUSH;
 */
 volatile uint32_t STAT;
 
-/* CTR_HIT (offset: 0xc)
+/** CTR_HIT (offset: 0xc)
   Cache Hit counter
 
  A 32 bit saturating counter that increments upon each cache hit,
@@ -111,7 +111,7 @@ volatile uint32_t STAT;
 */
 volatile uint32_t CTR_HIT;
 
-/* CTR_ACC (offset: 0x10)
+/** CTR_ACC (offset: 0x10)
   Cache Access counter
 
  A 32 bit saturating counter that increments upon each XIP access,
@@ -125,7 +125,7 @@ volatile uint32_t CTR_HIT;
 */
 volatile uint32_t CTR_ACC;
 
-/* STREAM_ADDR (offset: 0x14)
+/** STREAM_ADDR (offset: 0x14)
   FIFO stream address
   access : read-write
   reset value : 0x0
@@ -140,7 +140,7 @@ volatile uint32_t CTR_ACC;
 */
 volatile uint32_t STREAM_ADDR;
 
-/* STREAM_CTR (offset: 0x18)
+/** STREAM_CTR (offset: 0x18)
   FIFO stream control
   access : read-write
   reset value : 0x0
@@ -165,7 +165,7 @@ volatile uint32_t STREAM_ADDR;
 */
 volatile uint32_t STREAM_CTR;
 
-/* STREAM_FIFO (offset: 0x1c)
+/** STREAM_FIFO (offset: 0x1c)
   FIFO stream data
 
  Streamed data is buffered here, for retrieval by the system DMA.

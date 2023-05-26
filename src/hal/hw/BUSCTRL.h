@@ -1,14 +1,14 @@
 #ifndef HW_BUSCTRL_H
 #define HW_BUSCTRL_H
-/* Register block for busfabric control signals and performance counters */
-/* Memory Block starting at 0x40030000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
+/** Register block for busfabric control signals and performance counters */
+/** Memory Block starting at 0x40030000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
 
 #include <stdint.h>
 
 typedef struct
 {
 
-/* BUS_PRIORITY (offset: 0x0)
+/** BUS_PRIORITY (offset: 0x0)
   Set the priority of each master for bus arbitration.
   access : read-write
   reset value : 0x0
@@ -28,7 +28,7 @@ typedef struct
 */
 volatile uint32_t BUS_PRIORITY;
 
-/* BUS_PRIORITY_ACK (offset: 0x4)
+/** BUS_PRIORITY_ACK (offset: 0x4)
   Bus priority acknowledge
   access : read-write
   reset value : 0x0
@@ -43,7 +43,7 @@ volatile uint32_t BUS_PRIORITY;
 */
 volatile uint32_t BUS_PRIORITY_ACK;
 
-/* PERFCTR0 (offset: 0x8)
+/** PERFCTR0 (offset: 0x8)
   Bus fabric performance counter 0
   access : read-write
   reset value : 0x0
@@ -58,7 +58,7 @@ volatile uint32_t BUS_PRIORITY_ACK;
 */
 volatile uint32_t PERFCTR0;
 
-/* PERFSEL0 (offset: 0xc)
+/** PERFSEL0 (offset: 0xc)
   Bus fabric performance event select for PERFCTR0
   access : read-write
   reset value : 0x1F
@@ -90,7 +90,7 @@ volatile uint32_t PERFCTR0;
 */
 volatile uint32_t PERFSEL0;
 
-/* PERFCTR1 (offset: 0x10)
+/** PERFCTR1 (offset: 0x10)
   Bus fabric performance counter 1
   access : read-write
   reset value : 0x0
@@ -105,7 +105,7 @@ volatile uint32_t PERFSEL0;
 */
 volatile uint32_t PERFCTR1;
 
-/* PERFSEL1 (offset: 0x14)
+/** PERFSEL1 (offset: 0x14)
   Bus fabric performance event select for PERFCTR1
   access : read-write
   reset value : 0x1F
@@ -137,7 +137,7 @@ volatile uint32_t PERFCTR1;
 */
 volatile uint32_t PERFSEL1;
 
-/* PERFCTR2 (offset: 0x18)
+/** PERFCTR2 (offset: 0x18)
   Bus fabric performance counter 2
   access : read-write
   reset value : 0x0
@@ -152,7 +152,7 @@ volatile uint32_t PERFSEL1;
 */
 volatile uint32_t PERFCTR2;
 
-/* PERFSEL2 (offset: 0x1c)
+/** PERFSEL2 (offset: 0x1c)
   Bus fabric performance event select for PERFCTR2
   access : read-write
   reset value : 0x1F
@@ -184,7 +184,7 @@ volatile uint32_t PERFCTR2;
 */
 volatile uint32_t PERFSEL2;
 
-/* PERFCTR3 (offset: 0x20)
+/** PERFCTR3 (offset: 0x20)
   Bus fabric performance counter 3
   access : read-write
   reset value : 0x0
@@ -199,7 +199,7 @@ volatile uint32_t PERFSEL2;
 */
 volatile uint32_t PERFCTR3;
 
-/* PERFSEL3 (offset: 0x24)
+/** PERFSEL3 (offset: 0x24)
   Bus fabric performance event select for PERFCTR3
   access : read-write
   reset value : 0x1F

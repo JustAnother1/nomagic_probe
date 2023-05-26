@@ -1,15 +1,15 @@
 #ifndef HW_PWM_H
 #define HW_PWM_H
-/* Simple PWM */
-/* Interrupt : PWM_IRQ_WRAP (Vector: 4)  */
-/* Memory Block starting at 0x40050000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
+/** Simple PWM */
+/** Interrupt : PWM_IRQ_WRAP (Vector: 4)  */
+/** Memory Block starting at 0x40050000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
 
 #include <stdint.h>
 
 typedef struct
 {
 
-/* CH0_CSR (offset: 0x0)
+/** CH0_CSR (offset: 0x0)
   Control and status register
   access : read-write
   reset value : 0x0
@@ -48,7 +48,7 @@ typedef struct
 */
 volatile uint32_t CH0_CSR;
 
-/* CH0_DIV (offset: 0x4)
+/** CH0_DIV (offset: 0x4)
   INT and FRAC form a fixed-point fractional number.
 
  Counting rate is system clock frequency divided by this number.
@@ -64,7 +64,7 @@ volatile uint32_t CH0_CSR;
 */
 volatile uint32_t CH0_DIV;
 
-/* CH0_CTR (offset: 0x8)
+/** CH0_CTR (offset: 0x8)
   Direct access to the PWM counter
   access : read-write
   reset value : 0x0
@@ -74,7 +74,7 @@ volatile uint32_t CH0_DIV;
 */
 volatile uint32_t CH0_CTR;
 
-/* CH0_CC (offset: 0xc)
+/** CH0_CC (offset: 0xc)
   Counter compare values
   access : read-write
   reset value : 0x0
@@ -86,7 +86,7 @@ volatile uint32_t CH0_CTR;
 */
 volatile uint32_t CH0_CC;
 
-/* CH0_TOP (offset: 0x10)
+/** CH0_TOP (offset: 0x10)
   Counter wrap value
   access : read-write
   reset value : 0xFFFF
@@ -96,7 +96,7 @@ volatile uint32_t CH0_CC;
 */
 volatile uint32_t CH0_TOP;
 
-/* CH1_CSR (offset: 0x14)
+/** CH1_CSR (offset: 0x14)
   Control and status register
   access : read-write
   reset value : 0x0
@@ -135,7 +135,7 @@ volatile uint32_t CH0_TOP;
 */
 volatile uint32_t CH1_CSR;
 
-/* CH1_DIV (offset: 0x18)
+/** CH1_DIV (offset: 0x18)
   INT and FRAC form a fixed-point fractional number.
 
  Counting rate is system clock frequency divided by this number.
@@ -151,7 +151,7 @@ volatile uint32_t CH1_CSR;
 */
 volatile uint32_t CH1_DIV;
 
-/* CH1_CTR (offset: 0x1c)
+/** CH1_CTR (offset: 0x1c)
   Direct access to the PWM counter
   access : read-write
   reset value : 0x0
@@ -161,7 +161,7 @@ volatile uint32_t CH1_DIV;
 */
 volatile uint32_t CH1_CTR;
 
-/* CH1_CC (offset: 0x20)
+/** CH1_CC (offset: 0x20)
   Counter compare values
   access : read-write
   reset value : 0x0
@@ -173,7 +173,7 @@ volatile uint32_t CH1_CTR;
 */
 volatile uint32_t CH1_CC;
 
-/* CH1_TOP (offset: 0x24)
+/** CH1_TOP (offset: 0x24)
   Counter wrap value
   access : read-write
   reset value : 0xFFFF
@@ -183,7 +183,7 @@ volatile uint32_t CH1_CC;
 */
 volatile uint32_t CH1_TOP;
 
-/* CH2_CSR (offset: 0x28)
+/** CH2_CSR (offset: 0x28)
   Control and status register
   access : read-write
   reset value : 0x0
@@ -222,7 +222,7 @@ volatile uint32_t CH1_TOP;
 */
 volatile uint32_t CH2_CSR;
 
-/* CH2_DIV (offset: 0x2c)
+/** CH2_DIV (offset: 0x2c)
   INT and FRAC form a fixed-point fractional number.
 
  Counting rate is system clock frequency divided by this number.
@@ -238,7 +238,7 @@ volatile uint32_t CH2_CSR;
 */
 volatile uint32_t CH2_DIV;
 
-/* CH2_CTR (offset: 0x30)
+/** CH2_CTR (offset: 0x30)
   Direct access to the PWM counter
   access : read-write
   reset value : 0x0
@@ -248,7 +248,7 @@ volatile uint32_t CH2_DIV;
 */
 volatile uint32_t CH2_CTR;
 
-/* CH2_CC (offset: 0x34)
+/** CH2_CC (offset: 0x34)
   Counter compare values
   access : read-write
   reset value : 0x0
@@ -260,7 +260,7 @@ volatile uint32_t CH2_CTR;
 */
 volatile uint32_t CH2_CC;
 
-/* CH2_TOP (offset: 0x38)
+/** CH2_TOP (offset: 0x38)
   Counter wrap value
   access : read-write
   reset value : 0xFFFF
@@ -270,7 +270,7 @@ volatile uint32_t CH2_CC;
 */
 volatile uint32_t CH2_TOP;
 
-/* CH3_CSR (offset: 0x3c)
+/** CH3_CSR (offset: 0x3c)
   Control and status register
   access : read-write
   reset value : 0x0
@@ -309,7 +309,7 @@ volatile uint32_t CH2_TOP;
 */
 volatile uint32_t CH3_CSR;
 
-/* CH3_DIV (offset: 0x40)
+/** CH3_DIV (offset: 0x40)
   INT and FRAC form a fixed-point fractional number.
 
  Counting rate is system clock frequency divided by this number.
@@ -325,7 +325,7 @@ volatile uint32_t CH3_CSR;
 */
 volatile uint32_t CH3_DIV;
 
-/* CH3_CTR (offset: 0x44)
+/** CH3_CTR (offset: 0x44)
   Direct access to the PWM counter
   access : read-write
   reset value : 0x0
@@ -335,7 +335,7 @@ volatile uint32_t CH3_DIV;
 */
 volatile uint32_t CH3_CTR;
 
-/* CH3_CC (offset: 0x48)
+/** CH3_CC (offset: 0x48)
   Counter compare values
   access : read-write
   reset value : 0x0
@@ -347,7 +347,7 @@ volatile uint32_t CH3_CTR;
 */
 volatile uint32_t CH3_CC;
 
-/* CH3_TOP (offset: 0x4c)
+/** CH3_TOP (offset: 0x4c)
   Counter wrap value
   access : read-write
   reset value : 0xFFFF
@@ -357,7 +357,7 @@ volatile uint32_t CH3_CC;
 */
 volatile uint32_t CH3_TOP;
 
-/* CH4_CSR (offset: 0x50)
+/** CH4_CSR (offset: 0x50)
   Control and status register
   access : read-write
   reset value : 0x0
@@ -396,7 +396,7 @@ volatile uint32_t CH3_TOP;
 */
 volatile uint32_t CH4_CSR;
 
-/* CH4_DIV (offset: 0x54)
+/** CH4_DIV (offset: 0x54)
   INT and FRAC form a fixed-point fractional number.
 
  Counting rate is system clock frequency divided by this number.
@@ -412,7 +412,7 @@ volatile uint32_t CH4_CSR;
 */
 volatile uint32_t CH4_DIV;
 
-/* CH4_CTR (offset: 0x58)
+/** CH4_CTR (offset: 0x58)
   Direct access to the PWM counter
   access : read-write
   reset value : 0x0
@@ -422,7 +422,7 @@ volatile uint32_t CH4_DIV;
 */
 volatile uint32_t CH4_CTR;
 
-/* CH4_CC (offset: 0x5c)
+/** CH4_CC (offset: 0x5c)
   Counter compare values
   access : read-write
   reset value : 0x0
@@ -434,7 +434,7 @@ volatile uint32_t CH4_CTR;
 */
 volatile uint32_t CH4_CC;
 
-/* CH4_TOP (offset: 0x60)
+/** CH4_TOP (offset: 0x60)
   Counter wrap value
   access : read-write
   reset value : 0xFFFF
@@ -444,7 +444,7 @@ volatile uint32_t CH4_CC;
 */
 volatile uint32_t CH4_TOP;
 
-/* CH5_CSR (offset: 0x64)
+/** CH5_CSR (offset: 0x64)
   Control and status register
   access : read-write
   reset value : 0x0
@@ -483,7 +483,7 @@ volatile uint32_t CH4_TOP;
 */
 volatile uint32_t CH5_CSR;
 
-/* CH5_DIV (offset: 0x68)
+/** CH5_DIV (offset: 0x68)
   INT and FRAC form a fixed-point fractional number.
 
  Counting rate is system clock frequency divided by this number.
@@ -499,7 +499,7 @@ volatile uint32_t CH5_CSR;
 */
 volatile uint32_t CH5_DIV;
 
-/* CH5_CTR (offset: 0x6c)
+/** CH5_CTR (offset: 0x6c)
   Direct access to the PWM counter
   access : read-write
   reset value : 0x0
@@ -509,7 +509,7 @@ volatile uint32_t CH5_DIV;
 */
 volatile uint32_t CH5_CTR;
 
-/* CH5_CC (offset: 0x70)
+/** CH5_CC (offset: 0x70)
   Counter compare values
   access : read-write
   reset value : 0x0
@@ -521,7 +521,7 @@ volatile uint32_t CH5_CTR;
 */
 volatile uint32_t CH5_CC;
 
-/* CH5_TOP (offset: 0x74)
+/** CH5_TOP (offset: 0x74)
   Counter wrap value
   access : read-write
   reset value : 0xFFFF
@@ -531,7 +531,7 @@ volatile uint32_t CH5_CC;
 */
 volatile uint32_t CH5_TOP;
 
-/* CH6_CSR (offset: 0x78)
+/** CH6_CSR (offset: 0x78)
   Control and status register
   access : read-write
   reset value : 0x0
@@ -570,7 +570,7 @@ volatile uint32_t CH5_TOP;
 */
 volatile uint32_t CH6_CSR;
 
-/* CH6_DIV (offset: 0x7c)
+/** CH6_DIV (offset: 0x7c)
   INT and FRAC form a fixed-point fractional number.
 
  Counting rate is system clock frequency divided by this number.
@@ -586,7 +586,7 @@ volatile uint32_t CH6_CSR;
 */
 volatile uint32_t CH6_DIV;
 
-/* CH6_CTR (offset: 0x80)
+/** CH6_CTR (offset: 0x80)
   Direct access to the PWM counter
   access : read-write
   reset value : 0x0
@@ -596,7 +596,7 @@ volatile uint32_t CH6_DIV;
 */
 volatile uint32_t CH6_CTR;
 
-/* CH6_CC (offset: 0x84)
+/** CH6_CC (offset: 0x84)
   Counter compare values
   access : read-write
   reset value : 0x0
@@ -608,7 +608,7 @@ volatile uint32_t CH6_CTR;
 */
 volatile uint32_t CH6_CC;
 
-/* CH6_TOP (offset: 0x88)
+/** CH6_TOP (offset: 0x88)
   Counter wrap value
   access : read-write
   reset value : 0xFFFF
@@ -618,7 +618,7 @@ volatile uint32_t CH6_CC;
 */
 volatile uint32_t CH6_TOP;
 
-/* CH7_CSR (offset: 0x8c)
+/** CH7_CSR (offset: 0x8c)
   Control and status register
   access : read-write
   reset value : 0x0
@@ -657,7 +657,7 @@ volatile uint32_t CH6_TOP;
 */
 volatile uint32_t CH7_CSR;
 
-/* CH7_DIV (offset: 0x90)
+/** CH7_DIV (offset: 0x90)
   INT and FRAC form a fixed-point fractional number.
 
  Counting rate is system clock frequency divided by this number.
@@ -673,7 +673,7 @@ volatile uint32_t CH7_CSR;
 */
 volatile uint32_t CH7_DIV;
 
-/* CH7_CTR (offset: 0x94)
+/** CH7_CTR (offset: 0x94)
   Direct access to the PWM counter
   access : read-write
   reset value : 0x0
@@ -683,7 +683,7 @@ volatile uint32_t CH7_DIV;
 */
 volatile uint32_t CH7_CTR;
 
-/* CH7_CC (offset: 0x98)
+/** CH7_CC (offset: 0x98)
   Counter compare values
   access : read-write
   reset value : 0x0
@@ -695,7 +695,7 @@ volatile uint32_t CH7_CTR;
 */
 volatile uint32_t CH7_CC;
 
-/* CH7_TOP (offset: 0x9c)
+/** CH7_TOP (offset: 0x9c)
   Counter wrap value
   access : read-write
   reset value : 0xFFFF
@@ -705,7 +705,7 @@ volatile uint32_t CH7_CC;
 */
 volatile uint32_t CH7_TOP;
 
-/* EN (offset: 0xa0)
+/** EN (offset: 0xa0)
   This register aliases the CSR_EN bits for all channels.
 
  Writing to this register allows multiple channels to be enabled
@@ -737,7 +737,7 @@ volatile uint32_t CH7_TOP;
 */
 volatile uint32_t EN;
 
-/* INTR (offset: 0xa4)
+/** INTR (offset: 0xa4)
   Raw Interrupts
   access : read-write
   reset value : 0x0
@@ -761,7 +761,7 @@ volatile uint32_t EN;
 */
 volatile uint32_t INTR;
 
-/* INTE (offset: 0xa8)
+/** INTE (offset: 0xa8)
   Interrupt Enable
   access : read-write
   reset value : 0x0
@@ -785,7 +785,7 @@ volatile uint32_t INTR;
 */
 volatile uint32_t INTE;
 
-/* INTF (offset: 0xac)
+/** INTF (offset: 0xac)
   Interrupt Force
   access : read-write
   reset value : 0x0
@@ -809,7 +809,7 @@ volatile uint32_t INTE;
 */
 volatile uint32_t INTF;
 
-/* INTS (offset: 0xb0)
+/** INTS (offset: 0xb0)
   Interrupt status after masking &amp; forcing
   access : read-write
   reset value : 0x0

@@ -1,6 +1,6 @@
 #ifndef HW_XIP_SSI_H
 #define HW_XIP_SSI_H
-/* DW_apb_ssi has the following features:
+/** DW_apb_ssi has the following features:
 
  * APB interface – Allows for easy integration into a DesignWare Synthesizable Components for AMBA 2 implementation.
 
@@ -51,14 +51,14 @@
  - Serial clock polarity – low serial-clock polarity directly after reset.
 
  - Serial clock phase – capture on first edge of serial-clock directly after reset. */
-/* Memory Block starting at 0x18000000 + 0x0 is 0x100 bytes in size. It is used for registers. Protection: n */
+/** Memory Block starting at 0x18000000 + 0x0 is 0x100 bytes in size. It is used for registers. Protection: n */
 
 #include <stdint.h>
 
 typedef struct
 {
 
-/* CTRLR0 (offset: 0x0)
+/** CTRLR0 (offset: 0x0)
   Control register 0
   access : read-write
   reset value : 0x0
@@ -112,7 +112,7 @@ typedef struct
 */
 volatile uint32_t CTRLR0;
 
-/* CTRLR1 (offset: 0x4)
+/** CTRLR1 (offset: 0x4)
   Master Control register 1
   access : read-write
   reset value : 0x0
@@ -123,7 +123,7 @@ volatile uint32_t CTRLR0;
 */
 volatile uint32_t CTRLR1;
 
-/* SSIENR (offset: 0x8)
+/** SSIENR (offset: 0x8)
   SSI Enable
   access : read-write
   reset value : 0x0
@@ -134,7 +134,7 @@ volatile uint32_t CTRLR1;
 */
 volatile uint32_t SSIENR;
 
-/* MWCR (offset: 0xc)
+/** MWCR (offset: 0xc)
   Microwire Control
   access : read-write
   reset value : 0x0
@@ -151,7 +151,7 @@ volatile uint32_t SSIENR;
 */
 volatile uint32_t MWCR;
 
-/* SER (offset: 0x10)
+/** SER (offset: 0x10)
   Slave enable
   access : read-write
   reset value : 0x0
@@ -166,7 +166,7 @@ volatile uint32_t MWCR;
 */
 volatile uint32_t SER;
 
-/* BAUDR (offset: 0x14)
+/** BAUDR (offset: 0x14)
   Baud rate
   access : read-write
   reset value : 0x0
@@ -177,7 +177,7 @@ volatile uint32_t SER;
 */
 volatile uint32_t BAUDR;
 
-/* TXFTLR (offset: 0x18)
+/** TXFTLR (offset: 0x18)
   TX FIFO threshold level
   access : read-write
   reset value : 0x0
@@ -188,7 +188,7 @@ volatile uint32_t BAUDR;
 */
 volatile uint32_t TXFTLR;
 
-/* RXFTLR (offset: 0x1c)
+/** RXFTLR (offset: 0x1c)
   RX FIFO threshold level
   access : read-write
   reset value : 0x0
@@ -199,7 +199,7 @@ volatile uint32_t TXFTLR;
 */
 volatile uint32_t RXFTLR;
 
-/* TXFLR (offset: 0x20)
+/** TXFLR (offset: 0x20)
   TX FIFO level
   access : read-write
   reset value : 0x0
@@ -210,7 +210,7 @@ volatile uint32_t RXFTLR;
 */
 volatile uint32_t TXFLR;
 
-/* RXFLR (offset: 0x24)
+/** RXFLR (offset: 0x24)
   RX FIFO level
   access : read-write
   reset value : 0x0
@@ -221,7 +221,7 @@ volatile uint32_t TXFLR;
 */
 volatile uint32_t RXFLR;
 
-/* SR (offset: 0x28)
+/** SR (offset: 0x28)
   Status register
   access : read-write
   reset value : 0x0
@@ -250,7 +250,7 @@ volatile uint32_t RXFLR;
 */
 volatile uint32_t SR;
 
-/* IMR (offset: 0x2c)
+/** IMR (offset: 0x2c)
   Interrupt mask
   access : read-write
   reset value : 0x0
@@ -276,7 +276,7 @@ volatile uint32_t SR;
 */
 volatile uint32_t IMR;
 
-/* ISR (offset: 0x30)
+/** ISR (offset: 0x30)
   Interrupt status
   access : read-write
   reset value : 0x0
@@ -302,7 +302,7 @@ volatile uint32_t IMR;
 */
 volatile uint32_t ISR;
 
-/* RISR (offset: 0x34)
+/** RISR (offset: 0x34)
   Raw interrupt status
   access : read-write
   reset value : 0x0
@@ -328,7 +328,7 @@ volatile uint32_t ISR;
 */
 volatile uint32_t RISR;
 
-/* TXOICR (offset: 0x38)
+/** TXOICR (offset: 0x38)
   TX FIFO overflow interrupt clear
   access : read-write
   reset value : 0x0
@@ -339,7 +339,7 @@ volatile uint32_t RISR;
 */
 volatile uint32_t TXOICR;
 
-/* RXOICR (offset: 0x3c)
+/** RXOICR (offset: 0x3c)
   RX FIFO overflow interrupt clear
   access : read-write
   reset value : 0x0
@@ -350,7 +350,7 @@ volatile uint32_t TXOICR;
 */
 volatile uint32_t RXOICR;
 
-/* RXUICR (offset: 0x40)
+/** RXUICR (offset: 0x40)
   RX FIFO underflow interrupt clear
   access : read-write
   reset value : 0x0
@@ -361,7 +361,7 @@ volatile uint32_t RXOICR;
 */
 volatile uint32_t RXUICR;
 
-/* MSTICR (offset: 0x44)
+/** MSTICR (offset: 0x44)
   Multi-master interrupt clear
   access : read-write
   reset value : 0x0
@@ -372,7 +372,7 @@ volatile uint32_t RXUICR;
 */
 volatile uint32_t MSTICR;
 
-/* ICR (offset: 0x48)
+/** ICR (offset: 0x48)
   Interrupt clear
   access : read-write
   reset value : 0x0
@@ -383,7 +383,7 @@ volatile uint32_t MSTICR;
 */
 volatile uint32_t ICR;
 
-/* DMACR (offset: 0x4c)
+/** DMACR (offset: 0x4c)
   DMA control
   access : read-write
   reset value : 0x0
@@ -397,7 +397,7 @@ volatile uint32_t ICR;
 */
 volatile uint32_t DMACR;
 
-/* DMATDLR (offset: 0x50)
+/** DMATDLR (offset: 0x50)
   DMA TX data level
   access : read-write
   reset value : 0x0
@@ -408,7 +408,7 @@ volatile uint32_t DMACR;
 */
 volatile uint32_t DMATDLR;
 
-/* DMARDLR (offset: 0x54)
+/** DMARDLR (offset: 0x54)
   DMA RX data level
   access : read-write
   reset value : 0x0
@@ -419,7 +419,7 @@ volatile uint32_t DMATDLR;
 */
 volatile uint32_t DMARDLR;
 
-/* IDR (offset: 0x58)
+/** IDR (offset: 0x58)
   Identification register
   access : read-write
   reset value : 0x51535049
@@ -430,7 +430,7 @@ volatile uint32_t DMARDLR;
 */
 volatile uint32_t IDR;
 
-/* SSI_VERSION_ID (offset: 0x5c)
+/** SSI_VERSION_ID (offset: 0x5c)
   Version ID
   access : read-write
   reset value : 0x3430312A
@@ -441,7 +441,7 @@ volatile uint32_t IDR;
 */
 volatile uint32_t SSI_VERSION_ID;
 
-/* DR0 (offset: 0x60)
+/** DR0 (offset: 0x60)
   Data Register 0 (of 36)
   access : read-write
   reset value : 0x0
@@ -453,7 +453,7 @@ volatile uint32_t SSI_VERSION_ID;
 volatile uint32_t DR0;
 volatile uint32_t reserved0[35];
 
-/* RX_SAMPLE_DLY (offset: 0xf0)
+/** RX_SAMPLE_DLY (offset: 0xf0)
   RX sample delay
   access : read-write
   reset value : 0x0
@@ -464,7 +464,7 @@ volatile uint32_t reserved0[35];
 */
 volatile uint32_t RX_SAMPLE_DLY;
 
-/* SPI_CTRLR0 (offset: 0xf4)
+/** SPI_CTRLR0 (offset: 0xf4)
   SPI control
   access : read-write
   reset value : 0x3000000
@@ -505,7 +505,7 @@ volatile uint32_t RX_SAMPLE_DLY;
 */
 volatile uint32_t SPI_CTRLR0;
 
-/* TXD_DRIVE_EDGE (offset: 0xf8)
+/** TXD_DRIVE_EDGE (offset: 0xf8)
   TX drive edge
   access : read-write
   reset value : 0x0
