@@ -20,6 +20,7 @@
 #include "hal/hw/RESETS.h"
 #include "hal/hw/SIO.h"
 #include "main.h"
+#include <stdnoreturn.h>
 
 typedef void (*VECTOR_FUNCTION_Type)(void);
 
@@ -56,10 +57,14 @@ void ADC_IRQ_FIFO(void) __attribute__ ((weak, interrupt ("IRQ")));
 void I2C0_IRQ(void) __attribute__ ((weak, interrupt ("IRQ")));
 void I2C1_IRQ(void) __attribute__ ((weak, interrupt ("IRQ")));
 void RTC_IRQ(void) __attribute__ ((weak, interrupt ("IRQ")));
+
 // void main(void) __attribute__ ((weak, __noreturn__));
 // void main1(void) __attribute__ ((weak, __noreturn__));
-void error_state(void) __attribute__ ((weak, __noreturn__));
-void Reset_Handler()__attribute__((__noreturn__));
+_Noreturn void error_state(void) __attribute__ ((weak, __noreturn__));
+_Noreturn void Reset_Handler()__attribute__((__noreturn__));
+
+static inline void __set_PRIMASK(uint32_t priMask);
+static inline void waitForDivisor(void);
 
 const VECTOR_FUNCTION_Type __VECTOR_TABLE[64] __attribute__((used, section(".vectors")))
 = {
@@ -277,7 +282,7 @@ void main1(void) {
 }
 */
 
-void error_state(void)
+_Noreturn void error_state(void)
 {
     // asm("bkpt #0");
     while (1)
@@ -291,7 +296,21 @@ void error_state(void)
  */
 static inline void __set_PRIMASK(uint32_t priMask)
 {
-  asm volatile ("MSR primask, %0" : : "r" (priMask) : "memory");
+  __asm__ __volatile__ ("MSR primask, %0" : : "r" (priMask) : "memory");
+}
+
+static inline void waitForDivisor(void)
+{
+    // wait 8 cycles
+    __asm__ __volatile__ ("nop");
+    __asm__ __volatile__ ("nop");
+    __asm__ __volatile__ ("nop");
+    __asm__ __volatile__ ("nop");
+
+    __asm__ __volatile__ ("nop");
+    __asm__ __volatile__ ("nop");
+    __asm__ __volatile__ ("nop");
+    __asm__ __volatile__ ("nop");
 }
 
 uint32_t __aeabi_uidiv(uint32_t numerator, uint32_t denominator)
@@ -304,16 +323,9 @@ uint32_t __aeabi_uidiv(uint32_t numerator, uint32_t denominator)
     // write values
     SIO->DIV_UDIVIDEND = numerator;
     SIO->DIV_UDIVISOR = denominator;
-    // wait 8 cycles
-    asm("nop");
-    asm("nop");
-    asm("nop");
-    asm("nop");
 
-    asm("nop");
-    asm("nop");
-    asm("nop");
-    asm("nop");
+    waitForDivisor();
+
     // read result
     rem = SIO->DIV_REMAINDER;
     div = SIO->DIV_QUOTIENT;
@@ -334,16 +346,9 @@ uint32_t __aeabi_uidivmod(uint32_t numerator, uint32_t denominator)
     // write values
     SIO->DIV_UDIVIDEND = numerator;
     SIO->DIV_UDIVISOR = denominator;
-    // wait 8 cycles
-    asm("nop");
-    asm("nop");
-    asm("nop");
-    asm("nop");
 
-    asm("nop");
-    asm("nop");
-    asm("nop");
-    asm("nop");
+    waitForDivisor();
+
     // read result
     rem = SIO->DIV_REMAINDER;
     div = SIO->DIV_QUOTIENT;
@@ -363,16 +368,7 @@ void div_and_mod(uint32_t divident, uint32_t divisor, uint32_t* quotient, uint32
     SIO->DIV_UDIVIDEND = divident;
     SIO->DIV_UDIVISOR = divisor;
 
-    // wait 8 cycles
-    asm("nop");
-    asm("nop");
-    asm("nop");
-    asm("nop");
-
-    asm("nop");
-    asm("nop");
-    asm("nop");
-    asm("nop");
+    waitForDivisor();
 
     // read result
     *remainder = SIO->DIV_REMAINDER;
@@ -383,7 +379,7 @@ void div_and_mod(uint32_t divident, uint32_t divisor, uint32_t* quotient, uint32
 }
 
 
-void Reset_Handler() {
+_Noreturn void Reset_Handler() {
     uint32_t *bss_start_p =  &__bss_start;
     uint32_t *bss_end_p = &__bss_end;
 

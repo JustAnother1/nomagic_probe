@@ -238,7 +238,7 @@ typedef enum
   GAMEPAD_BUTTON_28 = TU_BIT(28),
   GAMEPAD_BUTTON_29 = TU_BIT(29),
   GAMEPAD_BUTTON_30 = TU_BIT(30),
-  GAMEPAD_BUTTON_31 = TU_BIT(31),
+  // GAMEPAD_BUTTON_31 = TU_BIT(31),
 }hid_gamepad_button_bm_t;
 
 /// Standard Gamepad Buttons Naming from Linux input event codes

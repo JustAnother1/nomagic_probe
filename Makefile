@@ -19,9 +19,10 @@ SOURCE_DIR = $(dir $(lastword $(MAKEFILE_LIST)))
 LKR_SCRIPT = $(SRC_FOLDER)hal/RP2040.ld
 
 
-CFLAGS  = -c -O3 -g3 -mcpu=cortex-m0plus -mthumb -ffreestanding -funsigned-char -fno-short-enums
+CFLAGS  = -c -O3 -g3 -std=c17 -mcpu=cortex-m0plus -mthumb -ffreestanding -funsigned-char -fno-short-enums
 CFLAGS += -Wall  -Wextra -pedantic -Wshadow -Wdouble-promotion -Wconversion -Wpadded 
 CFLAGS += -ffunction-sections -fdata-sections
+
 LFLAGS  = -ffreestanding -nostdlib -nolibc -nodefaultlibs -nostartfiles -specs=nosys.specs
 LFLAGS += -Wl,--gc-sections,-Map=$(BIN_FOLDER)app.map -g 
 LFLAGS += -fno-common  -T$(LKR_SCRIPT)
@@ -38,6 +39,7 @@ SRC += $(SRC_FOLDER)lib/memset.c
 SRC += $(SRC_FOLDER)lib/memcpy.c
 
 SRC += $(SRC_FOLDER)tinyusb/usb.c
+SRC += $(SRC_FOLDER)tinyusb/usb_descriptors.c
 
 SRC += $(SRC_FOLDER)tinyusb/src/tusb.c
 SRC += $(SRC_FOLDER)tinyusb/src/device/usbd.c
@@ -77,8 +79,8 @@ $(BIN_FOLDER)$(PROJECT).elf: $(OBJS)
 %txt: %elf
 	$(DIS) $< $@ > $@
 
-flash: $(PROJECT).elf
-	openocd -f board/pico-debug.cfg -c "$(PROJECT).elf verify reset exit"
+flash: $(BIN_FOLDER)$(PROJECT).elf
+	openocd  -f interface/cmsis-dap.cfg -f target/rp2040.cfg -c "program $(BIN_FOLDER)$(PROJECT).elf verify reset exit"
 
 $(BIN_FOLDER)$(PROJECT).uf2: $(BIN_FOLDER)$(PROJECT).elf
 	elf2uf2 -f 0xe48bff56 -p 256 -i $(BIN_FOLDER)$(PROJECT).elf
@@ -100,10 +102,13 @@ list:
 	@arm-none-eabi-readelf -Wall $(BIN_FOLDER)$(PROJECT).elf > $(BIN_FOLDER)$(PROJECT).rd
 	@echo " LIST -> $(BIN_FOLDER)$(PROJECT).lst"
 	@$(OBJDUMP) -axdDSstr $(BIN_FOLDER)$(PROJECT).elf > $(BIN_FOLDER)$(PROJECT).lst
-#$(OBJDUMP) -h -S -z $< > $@
+	#$(OBJDUMP) -h -S -z $< > $@
+
+doc:
+	doxygen
 
 clean:
-	@rm -rf $(BIN_FOLDER) app.map
+	@rm -rf $(BIN_FOLDER) app.map doc/doxygen/
 
 .PHONY: clean flash all list
 
