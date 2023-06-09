@@ -74,10 +74,10 @@ void main(void) {
     init_time();
     debug_uart_initialize();
     cli_init();
-    // tusb_init(); // initialize tinyusb stack
+    tusb_init(); // initialize tinyusb stack
     for (;;) {
         cli_tick();
-        // usb_tick();
+        usb_tick();
     }
 }
 
