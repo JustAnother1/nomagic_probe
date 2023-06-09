@@ -17,9 +17,12 @@ SRC_FOLDER = src/
 SOURCE_DIR = $(dir $(lastword $(MAKEFILE_LIST)))
 
 LKR_SCRIPT = $(SRC_FOLDER)hal/RP2040.ld
+#LKR_SCRIPT = $(SRC_FOLDER)hal/RP2040_RAM.ld
+
+DDEFS += -DCFG_TUSB_DEBUG
 
 
-CFLAGS  = -c -O3 -g3 -std=c17 -mcpu=cortex-m0plus -mthumb -ffreestanding -funsigned-char -fno-short-enums
+CFLAGS  = -c -O0 -g3 -std=c17 -mcpu=cortex-m0plus -mthumb -ffreestanding -funsigned-char -fno-short-enums
 CFLAGS += -Wall  -Wextra -pedantic -Wshadow -Wdouble-promotion -Wconversion -Wpadded 
 CFLAGS += -ffunction-sections -fdata-sections
 
@@ -95,7 +98,7 @@ all: $(BIN_FOLDER)$(PROJECT).uf2
 $(BIN_FOLDER)%o: %c
 	@echo "=== compiling $@"
 	@$(MKDIR_P) $(@D)
-	$(CC) -c $(CFLAGS) $(INCDIR) $< -o $@
+	$(CC) -c $(CFLAGS) $(DDEFS) $(INCDIR) $< -o $@
 
 list:
 	@echo " READ -> $(BIN_FOLDER)$(PROJECT).rd"

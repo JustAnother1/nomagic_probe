@@ -16,11 +16,16 @@
 #define TIME_H_
 
 #include <stdint.h>
+#include <hal/hw/PPB.h>
 
 void delay_us(int usec);
 
 void init_time(void);
 uint32_t time_get_ms(void);
 
+static inline uint32_t time_us_32(void) {
+    // TODO fix
+    return PPB->SYST_CVR;
+}
 
 #endif /* TIME_H_ */

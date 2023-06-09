@@ -114,10 +114,10 @@ typedef void (*putcf) (void*, char);
 
 void init_printf(void* putp, void (*putf) (void*, char));
 
-void tfp_printf(const char *fmt, ...);
-void tfp_sprintf(char* s, char *fmt, ...);
+int printf(const char *__restrict, ...);
+int sprintf(char* __restrict, const char *__restrict, ...);
 
-void tfp_format(void* putp, void (*putf) (void*, char), const char *fmt, va_list va);
+int format(void* __restrict putp, void (*putf) (void*, char), const char *fmt, va_list va);
 
 #endif
 

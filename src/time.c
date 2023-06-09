@@ -34,7 +34,7 @@ void SysTick_Handler(void) {
 void init_time(void)
 {
     ms_since_boot = 0;
-    PPB->SYST_CSR = 0x7;  // sysTick an
+    PPB->SYST_CSR = 0x7;  // SysTick on
     PPB->SYST_RVR = 125000;  // reload value
 }
 
@@ -42,5 +42,4 @@ uint32_t time_get_ms(void)
 {
     return ms_since_boot;
 }
-
 

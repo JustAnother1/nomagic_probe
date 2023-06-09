@@ -20,6 +20,7 @@
 #include "hal/hw/USBCTRL_REGS.h"
 #include "hal/hw/USBCTRL_DPRAM.h"
 #include "hal/startup.h"
+#include "time.h"
 
 // tinyusb:
 #include "tusb.h"
@@ -27,6 +28,8 @@
 #include "device/dcd.h"
 #include "common/tusb_types.h"
 
+
+#define FORCE_VBUS_DETECT 1
 // 0-15
 #define USB_NUM_ENDPOINTS 16
 
@@ -55,6 +58,10 @@
 #define USB_INTF_DEV_SOF_BITS   (0x00020000u)
 #define EP_CTRL_ENABLE_BITS (1u << 31u)
 #define USB_INTS_BUFF_STATUS_BITS   (0x00000010u)
+#define USB_USB_PWR_VBUS_DETECT_BITS   0x00000004
+#define USB_USB_PWR_VBUS_DETECT_OVERRIDE_EN_BITS   0x00000008
+#define USB_MAIN_CTRL_CONTROLLER_EN_BITS   0x00000001
+#define USB_SIE_CTRL_EP0_INT_1BUF_BITS   0x20000000
 
 // ep_inout_ctrl bits
 #define EP_CTRL_ENABLE_BITS (1u << 31u)
@@ -211,16 +218,14 @@ typedef struct
 #define hw_clear_alias_untyped(addr) ((void *)(REG_ALIAS_CLR_BITS | hw_alias_check_addr(addr)))
 
 
+#define usb_dpram ((usb_device_dpram_t *)USBCTRL_DPRAM)
 
-#define USBCTRL_DPRAM_BASE 0x50100000u
-#define usb_dpram ((usb_device_dpram_t *)USBCTRL_DPRAM_BASE)
-#define usbh_dpram ((usb_host_dpram_t *)USBCTRL_DPRAM_BASE)
 
 // static_assert( USB_HOST_INTERRUPT_ENDPOINTS == 15, "");
 
 #if TUD_OPT_RP2040_USB_DEVICE_UFRAME_FIX
-  static bool e15_is_bulkin_ep(struct hw_endpoint *ep);
-  static bool e15_is_critical_frame_period(struct hw_endpoint *ep);
+  static bool e15_is_bulkin_ep(hw_endpoint_t *ep);
+  static bool e15_is_critical_frame_period(hw_endpoint_t *ep);
 #else
   #define e15_is_bulkin_ep(x)             (false)
   #define e15_is_critical_frame_period(x) (false)
@@ -243,6 +248,8 @@ static void dcd_rp2040_irq(void);
 static void hw_endpoint_reset_transfer(hw_endpoint_t* ep);
 static uint32_t prepare_ep_buffer(hw_endpoint_t* ep, uint8_t buf_id);
 TU_ATTR_ALWAYS_INLINE static inline void _hw_endpoint_buffer_control_clear_mask32 (hw_endpoint_t* ep, uint32_t value);
+static void usb_init(void);
+
 
 #define pico_info(...)  TU_LOG(2, __VA_ARGS__)
 #define pico_trace(...) TU_LOG(3, __VA_ARGS__)
@@ -260,7 +267,7 @@ static hw_endpoint_t hw_endpoints[USB_MAX_ENDPOINTS][2];
 // Init these in dcd_init
 static uint8_t *next_buffer_ptr;
 
-void usb_init(void)
+static void usb_init(void)
 {
     RESETS->RESET = RESETS->RESET & ~0x1002000ul; // take USB_CTRL, PLL_USB out of Reset
     // configure GPIO Pins
@@ -288,8 +295,10 @@ void usb_init(void)
         ;
     }
 
-    NVIC_EnableIRQ(USBCTRL_IRQ_NUMBER, USBCTRL_IRQ_PRIORITY);
-    tusb_init(); // initialize tinyusb stack
+    memset(USBCTRL_REGS, 0, sizeof(USBCTRL_REGS_type));
+    memset(usb_dpram, 0, sizeof(*usb_dpram));
+    // Mux the controller to the onboard usb phy
+    USBCTRL_REGS->USB_MUXING = 0x9;
 }
 
 //! USB "Task"
@@ -308,6 +317,18 @@ void dcd_int_handler(uint8_t rhport)
 {
     (void) rhport;
     dcd_rp2040_irq();
+}
+
+void dcd_int_enable(uint8_t rhport)
+{
+    (void) rhport;
+    NVIC_EnableIRQ(USBCTRL_IRQ_NUMBER, USBCTRL_IRQ_PRIORITY);
+}
+
+void dcd_int_disable(uint8_t rhport)
+{
+    (void) rhport;
+    NVIC_DisableIRQ(USBCTRL_IRQ_NUMBER);
 }
 
 //! Stall endpoint, any queuing transfer should be removed from endpoint
@@ -795,6 +816,57 @@ static void hw_handle_buff_status(void)
     }
 }
 
+//--------------------------------------------------------------------+
+// Errata 15
+//--------------------------------------------------------------------+
+
+#if TUD_OPT_RP2040_USB_DEVICE_UFRAME_FIX
+
+/* Don't mark IN buffers as available during the last 200us of a full-speed
+   frame. This avoids a situation seen with the USB2.0 hub on a Raspberry
+   Pi 4 where a late IN token before the next full-speed SOF can cause port
+   babble and a corrupt ACK packet. The nature of the data corruption has a
+   chance to cause device lockup.
+
+   Use the next SOF to mark delayed buffers as available. This reduces
+   available Bulk IN bandwidth by approximately 20%, and requires that the
+   SOF interrupt is enabled while these transfers are ongoing.
+
+   Inherit the top-level enable from the corresponding Pico-SDK flag.
+   Applications that will not use the device in a situation where it could
+   be plugged into a Pi 4 or Pi 400 (for example, when directly connected
+   to a commodity hub or other host) can turn off the flag in the SDK.
+*/
+
+volatile uint32_t e15_last_sof = 0;
+
+// check if Errata 15 is needed for this endpoint i.e device bulk-in
+static bool e15_is_bulkin_ep (hw_endpoint_t *ep)
+{
+  return (!is_host_mode() && tu_edpt_dir(ep->ep_addr) == TUSB_DIR_IN &&
+          ep->transfer_type == TUSB_XFER_BULK);
+}
+
+// check if we need to apply Errata 15 workaround : i.e
+// Endpoint is BULK IN and is currently in critical frame period i.e 20% of last usb frame
+static bool e15_is_critical_frame_period (hw_endpoint_t *ep)
+{
+  TU_VERIFY(e15_is_bulkin_ep(ep));
+
+  /* Avoid the last 200us (uframe 6.5-7) of a frame, up to the EOF2 point.
+   * The device state machine cannot recover from receiving an incorrect PID
+   * when it is expecting an ACK.
+   */
+  uint32_t delta = time_us_32() - e15_last_sof;
+  if (delta < 800 || delta > 998) {
+    return false;
+  }
+  TU_LOG(3, "Avoiding sof %u now %lu last %lu\n", (USBCTRL_REGS->sof_rd + 1) & USB_SOF_RD_BITS, time_us_32(), e15_last_sof);
+  return true;
+}
+
+#endif
+
 static void dcd_rp2040_irq(void)
 {
     uint32_t const status = USBCTRL_REGS->INTS;
@@ -812,7 +884,7 @@ static void dcd_rp2040_irq(void)
 
         for ( uint8_t i = 0; i < USB_MAX_ENDPOINTS; i++ )
         {
-            struct hw_endpoint * ep = hw_endpoint_get_by_num(i, TUSB_DIR_IN);
+            hw_endpoint_t * ep = hw_endpoint_get_by_num(i, TUSB_DIR_IN);
 
             // Active Bulk IN endpoint requires SOF
             if ( (ep->transfer_type == TUSB_XFER_BULK) && ep->active )
@@ -933,57 +1005,6 @@ static void hw_endpoint_reset_transfer(hw_endpoint_t* ep)
     ep->user_buf = 0;
 }
 
-//--------------------------------------------------------------------+
-// Errata 15
-//--------------------------------------------------------------------+
-
-#if TUD_OPT_RP2040_USB_DEVICE_UFRAME_FIX
-
-/* Don't mark IN buffers as available during the last 200us of a full-speed
-   frame. This avoids a situation seen with the USB2.0 hub on a Raspberry
-   Pi 4 where a late IN token before the next full-speed SOF can cause port
-   babble and a corrupt ACK packet. The nature of the data corruption has a
-   chance to cause device lockup.
-
-   Use the next SOF to mark delayed buffers as available. This reduces
-   available Bulk IN bandwidth by approximately 20%, and requires that the
-   SOF interrupt is enabled while these transfers are ongoing.
-
-   Inherit the top-level enable from the corresponding Pico-SDK flag.
-   Applications that will not use the device in a situation where it could
-   be plugged into a Pi 4 or Pi 400 (for example, when directly connected
-   to a commodity hub or other host) can turn off the flag in the SDK.
-*/
-
-volatile uint32_t e15_last_sof = 0;
-
-// check if Errata 15 is needed for this endpoint i.e device bulk-in
-static bool e15_is_bulkin_ep (struct hw_endpoint *ep)
-{
-  return (!is_host_mode() && tu_edpt_dir(ep->ep_addr) == TUSB_DIR_IN &&
-          ep->transfer_type == TUSB_XFER_BULK);
-}
-
-// check if we need to apply Errata 15 workaround : i.e
-// Endpoint is BULK IN and is currently in critical frame period i.e 20% of last usb frame
-static bool e15_is_critical_frame_period (struct hw_endpoint *ep)
-{
-  TU_VERIFY(e15_is_bulkin_ep(ep));
-
-  /* Avoid the last 200us (uframe 6.5-7) of a frame, up to the EOF2 point.
-   * The device state machine cannot recover from receiving an incorrect PID
-   * when it is expecting an ACK.
-   */
-  uint32_t delta = time_us_32() - e15_last_sof;
-  if (delta < 800 || delta > 998) {
-    return false;
-  }
-  TU_LOG(3, "Avoiding sof %u now %lu last %lu\n", (USBCTRL_REGS->sof_rd + 1) & USB_SOF_RD_BITS, time_us_32(), e15_last_sof);
-  return true;
-}
-
-#endif
-
 // prepare buffer, return buffer control
 static uint32_t prepare_ep_buffer(hw_endpoint_t* ep, uint8_t buf_id)
 {
@@ -1027,3 +1048,37 @@ TU_ATTR_ALWAYS_INLINE static inline void _hw_endpoint_buffer_control_clear_mask3
     _hw_endpoint_buffer_control_update32(ep, ~value, 0);
 }
 
+void dcd_init (uint8_t rhport)
+{
+    (void) rhport;
+
+    // Reset hardware to default state
+    usb_init();
+
+    #if FORCE_VBUS_DETECT
+    // Force VBUS detect so the device thinks it is plugged into a host
+    USBCTRL_REGS_CLR->USB_PWR = USB_USB_PWR_VBUS_DETECT_BITS | USB_USB_PWR_VBUS_DETECT_OVERRIDE_EN_BITS;
+    #endif
+
+    // Init control endpoints
+    tu_memclr(hw_endpoints[0], 2*sizeof(hw_endpoint_t));
+    hw_endpoint_init(0x0, 64, TUSB_XFER_CONTROL);
+    hw_endpoint_init(0x80, 64, TUSB_XFER_CONTROL);
+
+    // Init non-control endpoints
+    reset_non_control_endpoints();
+
+    // Initializes the USB peripheral for device mode and enables it.
+    // Don't need to enable the pull up here. Force VBUS
+    USBCTRL_REGS_CLR->MAIN_CTRL = USB_MAIN_CTRL_CONTROLLER_EN_BITS;
+
+    // Enable individual controller IRQS here. Processor interrupt enable will be used
+    // for the global interrupt enable...
+    // Note: Force VBUS detect cause disconnection not detectable
+    USBCTRL_REGS_CLR->SIE_CTRL = USB_SIE_CTRL_EP0_INT_1BUF_BITS;
+    USBCTRL_REGS_CLR->INTE     = USB_INTS_BUFF_STATUS_BITS | USB_INTS_BUS_RESET_BITS | USB_INTS_SETUP_REQ_BITS |
+                     USB_INTS_DEV_SUSPEND_BITS | USB_INTS_DEV_RESUME_FROM_HOST_BITS |
+                     (FORCE_VBUS_DETECT ? 0 : USB_INTS_DEV_CONN_DIS_BITS);
+
+    dcd_connect(rhport);
+}

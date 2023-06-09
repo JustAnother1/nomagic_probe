@@ -42,7 +42,7 @@ MunitResult test_printf_printf_str(const MunitParameter params[], void* user_dat
      * being unused. */
     (void) params;
     (void) user_data;
-    tfp_printf("Hello World !\r\n");
+    printf("Hello World !\r\n");
     munit_assert_uint32(15, ==, buf_idx);
     str_buffer[buf_idx] = 0;
     munit_assert_string_equal("Hello World !\r\n", str_buffer);
@@ -56,7 +56,7 @@ MunitResult test_printf_printf_int(const MunitParameter params[], void* user_dat
     (void) params;
     (void) user_data;
     uint32_t val = 5;
-    tfp_printf("Value = %d", val);
+    printf("Value = %d", val);
     munit_assert_uint32(9, ==, buf_idx);
     str_buffer[buf_idx] = 0;
     munit_assert_string_equal("Value = 5", str_buffer);
@@ -71,7 +71,7 @@ MunitResult test_printf_printf_digits(const MunitParameter params[], void* user_
     (void) user_data;
     const char* expected = "Value = 54321";
     uint32_t val = 54321;
-    tfp_printf("Value = %d", val);
+    printf("Value = %d", val);
     munit_assert_uint32(strlen(expected), ==, buf_idx);
     str_buffer[buf_idx] = 0;
     munit_assert_string_equal(expected, str_buffer);

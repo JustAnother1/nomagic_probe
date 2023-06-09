@@ -23,8 +23,8 @@
 #define RECEIVE_BUFFER_SIZE      100
 #define SEND_BUFFER_SIZE         500
 
-#define debug_msg(...)  tfp_printf(__VA_ARGS__)
-#define debug_line(...) tfp_printf(__VA_ARGS__); tfp_printf("\r\n")
+#define debug_msg(...)  printf(__VA_ARGS__)
+#define debug_line(...) printf(__VA_ARGS__); printf("\r\n")
 
 // initialize:
 void debug_uart_initialize(void);

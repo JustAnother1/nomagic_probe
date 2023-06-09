@@ -284,7 +284,7 @@ void main1(void) {
 
 _Noreturn void error_state(void)
 {
-    // asm("bkpt #0");
+    __asm__ __volatile__ ("bkpt #0");
     while (1)
         ;
 }

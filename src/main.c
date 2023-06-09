@@ -23,6 +23,7 @@
 #include "time.h"
 #include <stdint.h>
 #include "tinyusb/usb.h"
+#include "tinyusb/src/tusb.h"
 
 void error_state(void)
 {
@@ -73,10 +74,10 @@ void main(void) {
     init_time();
     debug_uart_initialize();
     cli_init();
-    usb_init();
+    // tusb_init(); // initialize tinyusb stack
     for (;;) {
         cli_tick();
-        usb_tick();
+        // usb_tick();
     }
 }
 

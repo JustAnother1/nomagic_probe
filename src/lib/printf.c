@@ -49,7 +49,7 @@ static void i2a(int num, char * bf);
 static int a2d(char ch);
 static char a2i(char ch, char** src, int base, int* nump);
 static void putchw(void* putp, putcf putf, int n, char z, char* bf);
-static void putcp(void* p, char c);
+static void putcp(void* __restrict p, char c);
 
 
 static putcf stdout_putf;
@@ -271,7 +271,7 @@ static void putchw(void* putp,
     }
 }
 
-void tfp_format(void* putp, putcf putf, const char* cfmt, va_list va)
+int format(void* __restrict putp, putcf putf, const char* cfmt, va_list va)
 {
     char bf[12];
     char ch;
@@ -283,7 +283,7 @@ void tfp_format(void* putp, putcf putf, const char* cfmt, va_list va)
     if(NULL == putf)
     {
         // ...then there is nothing we can do.
-        return;
+        return -1;
     }
 
     while((length < MAX_STRING_LENGTH) && (ch = *(fmt++)) )
@@ -328,7 +328,7 @@ void tfp_format(void* putp, putcf putf, const char* cfmt, va_list va)
             switch (ch)
             {
             case 0:
-                return;
+                return length;
 
             case 'c' :
                 putf(putp, (char)(va_arg(va, int)));
@@ -401,6 +401,7 @@ void tfp_format(void* putp, putcf putf, const char* cfmt, va_list va)
             }
         }
     }
+    return length;
 }
 
 void init_printf(void* putp, void (*putf) (void*, char))
@@ -409,25 +410,29 @@ void init_printf(void* putp, void (*putf) (void*, char))
     stdout_putp = putp;
 }
 
-void tfp_printf(const char *fmt, ...)
+int printf(const char *fmt, ...)
 {
+    int len;
     va_list va;
     va_start(va, fmt);
-    tfp_format(stdout_putp, stdout_putf, fmt, va);
+    len = format(stdout_putp, stdout_putf, fmt, va);
     va_end(va);
+    return len;
 }
 
-static void putcp(void* p, char c)
+static void putcp(void* __restrict p, char c)
 {
     *(*((char**)p))++ = c;
 }
 
-void tfp_sprintf(char* s, char *fmt, ...)
+int sprintf(char * __restrict s, const char * __restrict fmt, ...)
 {
+    int len;
     va_list va;
     va_start(va,fmt);
-    tfp_format(&s, putcp, fmt, va);
-    putcp(&s, 0);
+    len = format((void* __restrict)&s, putcp, fmt, va);
+    putcp((void* __restrict)&s, 0);
     va_end(va);
+    return len;
 }
 

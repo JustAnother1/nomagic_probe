@@ -101,6 +101,23 @@ static inline void NVIC_EnableIRQ(uint32_t IRQ_Number, uint32_t priority) {
     __asm volatile("":::"memory");
 }
 
+/**
+  \brief   Disable Interrupt
+  \details Disables a device specific interrupt in the NVIC interrupt controller.
+  \param [in]      IRQn  Device specific interrupt number.
+  \note    IRQn must not be negative.
+ */
+static inline void NVIC_DisableIRQ(int32_t IRQn)
+{
+  if (IRQn >= 0)
+  {
+    NVIC->ICER = (uint32_t)(1UL << (((uint32_t)IRQn) & 0x1FUL));
+    __asm volatile ("dsb 0xF":::"memory");
+    __asm volatile ("isb 0xF":::"memory");
+  }
+}
+
+
 void div_and_mod(uint32_t divident, uint32_t divisor, uint32_t* quotient, uint32_t* remainder);
 
 #endif // HAL_STARTUP_H
