@@ -34,18 +34,12 @@
 #include "printf.h"
 #include "hal/startup.h"
 
-#define PRINTF_LONG_SUPPORT
-
 
 #ifdef PRINTF_FLOAT_SUPPORT
 static void f2a(double num, char * bf);
 #endif
-#ifdef PRINTF_LONG_SUPPORT
-static void uli2a(unsigned long int num, unsigned int base, int uc, char * bf);
-static void li2a(long num, char * bf);
-#endif
 static void ui2a(uint32_t num, uint32_t base, int uc, char * bf);
-static void i2a(int num, char * bf);
+static void i2a(int32_t num, char * bf);
 static int a2d(char ch);
 static char a2i(char ch, char** src, int base, int* nump);
 static void putchw(void* putp, putcf putf, int n, char z, char* bf);
@@ -118,41 +112,6 @@ static void f2a(double num, char * bf)
 }
 #endif
 
-#ifdef PRINTF_LONG_SUPPORT
-
-static void uli2a(unsigned long int num, unsigned int base, int uc, char * bf)
-{
-    int n = 0;
-    unsigned int d = 1;
-    while (num/d >= base)
-    {
-        d *= base;
-    }
-    while (d!=0)
-    {
-        int dgt = (int)(num / d);
-        num %= d;
-        d /= base;
-        if(n || (dgt > 0) || (d == 0))
-        {
-            *bf++ = (char)(dgt + (dgt < 10 ? '0' : (uc ? 'A' : 'a') - 10));
-            ++n;
-        }
-    }
-    *bf = 0;
-}
-
-static void li2a(long num, char * bf)
-{
-    if (num<0)
-    {
-        num = -num;
-        *bf++ = '-';
-    }
-    uli2a((unsigned long)num, 10, 0, bf);
-}
-
-#endif
 
 static void ui2a(uint32_t num, // number to convert
                  uint32_t base,  // base of number (decimal=10; hexadecimal=16,..)
@@ -199,7 +158,7 @@ static void ui2a(uint32_t num, // number to convert
     *bf = 0;
 }
 
-static void i2a(int num, char * bf)
+static void i2a(int32_t num, char * bf)
 {
     if (num<0)
     {
@@ -298,9 +257,6 @@ int format(void* __restrict putp, putcf putf, const char* cfmt, va_list va)
 
             // lz = leading Zeros -> 0 = no leading zeros; 1= leading Zeros
             char lz = 0;
-#ifdef PRINTF_LONG_SUPPORT
-            char lng = 0;
-#endif
             // w = width -> number of characters used to print the number
 
             // %03d with number 23 -> lz=1, w=3 ->   "023"
@@ -318,13 +274,10 @@ int format(void* __restrict putp, putcf putf, const char* cfmt, va_list va)
             {
                 ch = a2i(ch, &fmt, 10, &w);
             }
-#ifdef PRINTF_LONG_SUPPORT
             if(ch == 'l')
             {
                 ch = *(fmt++);
-                lng = 1;
             }
-#endif
             switch (ch)
             {
             case 0:
@@ -336,16 +289,7 @@ int format(void* __restrict putp, putcf putf, const char* cfmt, va_list va)
 
             case 'd' :
             {
-#ifdef PRINTF_LONG_SUPPORT
-                if(lng)
-                {
-                    li2a(va_arg(va, long int), bf);
-                }
-                else
-#endif
-                {
-                    i2a(va_arg(va, int),bf);
-                }
+                i2a(va_arg(va, int32_t),bf);
                 putchw(putp, putf, w, lz, bf);
                 break;
             }
@@ -363,32 +307,14 @@ int format(void* __restrict putp, putcf putf, const char* cfmt, va_list va)
 
             case 'u' :
             {
-#ifdef PRINTF_LONG_SUPPORT
-                if(lng)
-                {
-                    uli2a(va_arg(va, unsigned long int),10,0,bf);
-                }
-                else
-#endif
-                {
-                    ui2a(va_arg(va, uint32_t),10,0,bf);
-                }
+                ui2a(va_arg(va, uint32_t),10,0,bf);
                 putchw(putp, putf, w, lz, bf);
                 break;
             }
 
             case 'x':
             case 'X' :
-#ifdef PRINTF_LONG_SUPPORT
-                if (lng)
-                {
-                    uli2a(va_arg(va, unsigned long int), 16, (ch == 'X'), bf);
-                }
-                else
-#endif
-                {
-                    ui2a(va_arg(va, unsigned int), 16, (ch == 'X'), bf);
-                }
+                ui2a(va_arg(va, uint32_t), 16, (ch == 'X'), bf);
                 putchw(putp, putf, w, lz, bf);
                 break;
 

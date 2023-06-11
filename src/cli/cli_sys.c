@@ -22,11 +22,11 @@ bool cmd_time(void)
 {
     uint32_t now = time_get_ms();
 
-    debug_line("\r\ntime since boot up : %d ms", now);
+    //debug_line("\r\ntime since boot up : %ld ms", now);
     debug_msg("\r\ntime since boot up : ");
     if(now < 1000)
     {
-        debug_line("%d ms", now);
+        debug_line("%ld ms", now);
     }
     else
     {
@@ -39,7 +39,7 @@ bool cmd_time(void)
         // debug_line(STR("seconds : %lu"), seconds);
         if(seconds < 60)
         {
-            debug_line("%u,%03u s", seconds, millis);
+            debug_line("%lu,%03lu s", seconds, millis);
         }
         else
         {
@@ -52,7 +52,7 @@ bool cmd_time(void)
             // debug_line(STR("minutes : %lu"), minutes);
             if(minutes < 60)
             {
-                debug_line("%u:%02u,%03u mm:ss",minutes, seconds, millis);
+                debug_line("%lu:%02lu,%03lu mm:ss",minutes, seconds, millis);
             }
             else
             {
@@ -62,7 +62,7 @@ bool cmd_time(void)
                 // minutes = minutes % 60;
                 // debug_line(STR("minutes : %u"), minutes);
                 // hours = now / 60;
-                debug_line("%u:%02lu:%02u,%03u hh:mm:ss", hours, minutes, seconds, millis);
+                debug_line("%lu:%02lu:%02lu,%03lu hh:mm:ss", hours, minutes, seconds, millis);
             }
         }
     }
@@ -75,13 +75,12 @@ bool cmd_parameter_raw(void)
     uint8_t* c = cli_get_parameter(i);
     while(c != NULL)
     {
-        debug_msg("\r\nParameter %d :", i);
+        debug_msg("\r\nParameter %ld :", i);
         while(*c != 0)
         {
             debug_msg(" %02x", *c);
             c++;
         }
-        debug_msg("\r\n");
         i++;
         c = cli_get_parameter(i);
     }
