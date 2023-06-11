@@ -1,8 +1,8 @@
 #include "usb_descriptors.h"
 // tinyusb:
-#include "tusb.h"
-#include "device/usbd.h"
-#include "common/tusb_types.h"
+#include "tinyusb/src/tusb.h"
+#include "tinyusb/src/device/usbd.h"
+#include "tinyusb/src/common/tusb_types.h"
 
 #define DESC_STR_MAX 20
 #define USBD_MAX_POWER_MA 250
@@ -12,15 +12,11 @@
 #define USBD_PID 0x000A /* Raspberry Pi Pico SDK CDC */
 
 #define USBD_ITF_CDC_0 0
-#define USBD_ITF_CDC_1 2
 #define USBD_ITF_MAX 4
 
 #define USBD_CDC_0_EP_CMD 0x81
-#define USBD_CDC_1_EP_CMD 0x84
 #define USBD_CDC_0_EP_OUT 0x02
-#define USBD_CDC_1_EP_OUT 0x05
 #define USBD_CDC_0_EP_IN 0x82
-#define USBD_CDC_1_EP_IN 0x85
 #define USBD_CDC_CMD_MAX_SIZE 8
 #define USBD_CDC_IN_OUT_MAX_SIZE 64
 
@@ -61,14 +57,6 @@ static const uint8_t usbd_desc_cfg[USBD_DESC_LEN] = {
                        USBD_CDC_CMD_MAX_SIZE,
                        USBD_CDC_0_EP_OUT,
                        USBD_CDC_0_EP_IN,
-                       USBD_CDC_IN_OUT_MAX_SIZE),
-
-    TUD_CDC_DESCRIPTOR(USBD_ITF_CDC_1,
-                       USBD_STR_CDC,
-                       USBD_CDC_1_EP_CMD,
-                       USBD_CDC_CMD_MAX_SIZE,
-                       USBD_CDC_1_EP_OUT,
-                       USBD_CDC_1_EP_IN,
                        USBD_CDC_IN_OUT_MAX_SIZE),
 };
 

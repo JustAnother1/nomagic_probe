@@ -22,13 +22,17 @@ LKR_SCRIPT = $(SRC_FOLDER)hal/RP2040.ld
 DDEFS += -DCFG_TUSB_DEBUG
 
 
-CFLAGS  = -c -O0 -g3 -std=c17 -mcpu=cortex-m0plus -mthumb -ffreestanding -funsigned-char -fno-short-enums
-CFLAGS += -Wall  -Wextra -pedantic -Wshadow -Wdouble-promotion -Wconversion -Wpadded 
+CFLAGS  = -c -g3
+CFLAGS += -O3
+#CFLAGS += -std=c17
+CFLAGS += -mcpu=cortex-m0plus -mthumb
+CFLAGS += -ffreestanding -funsigned-char -fno-short-enums
+CFLAGS += -Wall -Wextra -pedantic -Wshadow -Wdouble-promotion -Wconversion -Wpadded 
 CFLAGS += -ffunction-sections -fdata-sections
 
 LFLAGS  = -ffreestanding -nostdlib -nolibc -nodefaultlibs -nostartfiles -specs=nosys.specs
 LFLAGS += -Wl,--gc-sections,-Map=$(BIN_FOLDER)app.map -g 
-LFLAGS += -fno-common  -T$(LKR_SCRIPT)
+LFLAGS += -fno-common -T$(LKR_SCRIPT)
 
 
 SRC += $(SRC_FOLDER)hal/debug_uart.c
