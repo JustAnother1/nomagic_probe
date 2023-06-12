@@ -299,6 +299,16 @@ static void usb_init(void)
     memset(usb_dpram, 0, sizeof(*usb_dpram));
     // Mux the controller to the onboard usb phy
     USBCTRL_REGS->USB_MUXING = 0x9;
+    // Tell device that it is already plugged into the host (as we do not have VBus detection)
+    USBCTRL_REGS->USB_PWR = 0xc;
+    // enable USB device mode
+    USBCTRL_REGS->MAIN_CTRL = 1;
+    // enable Interrupt for EP0
+    USBCTRL_REGS->SIE_CTRL = 0x20000000;
+    // enable interrupts on buffer done(4), bus reset(12), setup paket received(16)
+    USBCTRL_REGS->INTE = 0x11010;
+    // activate full speed device mode
+    USBCTRL_REGS->SIE_CTRL = 0x20010000;
 }
 
 //! USB "Task"
