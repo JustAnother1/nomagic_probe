@@ -1,0 +1,11 @@
+
+Links:
+======
+
+https://users.informatik.haw-hamburg.de/~krabat/FH-Labor/gnupro/5_GNUPro_Utilities/c_Using_LD/ldLinker_scripts.html
+
+https://blog.thea.codes/the-most-thoroughly-commented-linker-script/
+
+https://ftp.gnu.org/old-gnu/Manuals/ld-2.9.1/html_chapter/ld_3.html
+
+https://interrupt.memfault.com/blog/how-to-write-linker-scripts-for-firmware
