@@ -59,6 +59,8 @@ SRC += $(SRC_FOLDER)tinyusb/src/class/cdc/cdc_device.c
 SRC += $(SRC_FOLDER)tinyusb/src/common/tusb_fifo.c
 # time base
 SRC += $(SRC_FOLDER)time.c
+# user feedback
+SRC += $(SRC_FOLDER)led.c
 # main
 SRC += $(SRC_FOLDER)main.c
 

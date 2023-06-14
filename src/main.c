@@ -24,10 +24,13 @@
 #include <stdint.h>
 #include "tinyusb/usb.h"
 #include "tinyusb/src/tusb.h"
+#include "led.h"
 
+/*
 void error_state(void)
 {
-    for (;;) {
+    for (;;)
+    {
         // uint8_t data = 23;
         SIO->GPIO_OUT_SET = 1 << 25;
         // Delay
@@ -37,45 +40,24 @@ void error_state(void)
         delay_us(190 * 1000);
     }
 }
+*/
 
 /* TODO Stack pointer
-void main1(void) {
-    RESETS->RESET = RESETS->RESET & ~0x00000020; // take IO_BANK0 out of Reset
-    PSM->FRCE_ON = PSM->FRCE_ON | 0x00000400; // make sure that SIO is powered on
-    SIO->GPIO_OE_CLR = 1ul << 25;
-    SIO->GPIO_OUT_CLR = 1ul << 25;
-    PADS_BANK0->GPIO25 = 0x00000030;
-    IO_BANK0->GPIO25_CTRL = 5;
-    SIO->GPIO_OE_SET = 1ul << 25;
-    init_time();
-
-    // console_uart_initialize();
-    for (;;) {
-        // uint8_t data = 23;
-        SIO->GPIO_OUT_SET = 1 << 25;
-        // Delay
-        delay_us((10 / 1 * 60) * 1000);
-        SIO->GPIO_OUT_CLR = 1 << 25;
-        // Delay
-        delay_us((10 / 1 * (100 - 60)) * 1000);
-        // console_uart_send_bytes(&data, 1);
-    }
+void main1(void)
+{
 }
 */
 
-void main(void) {
-    RESETS->RESET = RESETS->RESET & ~0x00000020lu; // take IO_BANK0 out of Reset
-    PSM->FRCE_ON = PSM->FRCE_ON | 0x00000400; // make sure that SIO is powered on
-    SIO->GPIO_OE_CLR = 1ul << 25;
-    SIO->GPIO_OUT_CLR = 1ul << 25;
-    PADS_BANK0->GPIO25 = 0x00000030;
-    IO_BANK0->GPIO25_CTRL = 5;
-    SIO->GPIO_OE_SET = 1ul << 25;
+void main(void)
+{
     init_time();
+    led_init();
     debug_uart_initialize();
     cli_init();
     tusb_init(); // initialize tinyusb stack
-    for (;;) {
+    for (;;)
+    {
+        led_tick();
         cli_tick();
         usb_tick();
     }
