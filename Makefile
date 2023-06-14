@@ -23,7 +23,7 @@ DDEFS += -DCFG_TUSB_DEBUG
 
 
 CFLAGS  = -c -g3
-CFLAGS += -O3
+CFLAGS += -O0
 #CFLAGS += -std=c17
 CFLAGS += -mcpu=cortex-m0plus -mthumb
 CFLAGS += -ffreestanding -funsigned-char -fno-short-enums
@@ -31,31 +31,38 @@ CFLAGS += -Wall -Wextra -pedantic -Wshadow -Wdouble-promotion -Wconversion -Wpad
 CFLAGS += -ffunction-sections -fdata-sections
 
 LFLAGS  = -ffreestanding -nostdlib -nolibc -nodefaultlibs -nostartfiles -specs=nosys.specs
-LFLAGS += -Wl,--gc-sections,-Map=$(BIN_FOLDER)app.map -g 
+LFLAGS += -Wl,--gc-sections,-Map=$(BIN_FOLDER)app.map -g
 LFLAGS += -fno-common -T$(LKR_SCRIPT)
 
 
+# Hardware abstraction layer
 SRC += $(SRC_FOLDER)hal/debug_uart.c
 SRC += $(SRC_FOLDER)hal/startup.c
+# command line interface (debug - UART0)
 SRC += $(SRC_FOLDER)cli/cli.c
 SRC += $(SRC_FOLDER)cli/cli_sys.c
+SRC += $(SRC_FOLDER)cli/cli_usb.c
+# functions usually available from standard libraries
 SRC += $(SRC_FOLDER)lib/printf.c
 SRC += $(SRC_FOLDER)lib/strlen.c
 SRC += $(SRC_FOLDER)lib/strncmp.c
 SRC += $(SRC_FOLDER)lib/memset.c
 SRC += $(SRC_FOLDER)lib/memcpy.c
-
+# USB driver
 SRC += $(SRC_FOLDER)tinyusb/usb.c
 SRC += $(SRC_FOLDER)tinyusb/usb_descriptors.c
-
+# USB stack (tinyusb
 SRC += $(SRC_FOLDER)tinyusb/src/tusb.c
 SRC += $(SRC_FOLDER)tinyusb/src/device/usbd.c
 SRC += $(SRC_FOLDER)tinyusb/src/device/usbd_control.c
 SRC += $(SRC_FOLDER)tinyusb/src/class/cdc/cdc_device.c
 SRC += $(SRC_FOLDER)tinyusb/src/common/tusb_fifo.c
-
+# time base
 SRC += $(SRC_FOLDER)time.c
+# main
 SRC += $(SRC_FOLDER)main.c
+
+
 
 OBJS = $(addprefix $(BIN_FOLDER),$(SRC:.c=.o))
 

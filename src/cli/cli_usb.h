@@ -12,18 +12,12 @@
  * with this program; if not, see <http://www.gnu.org/licenses/>
  *
  */
-#ifndef CLI_CLI_COMMANDS_H_
-#define CLI_CLI_COMMANDS_H_
+#ifndef CLI_CLI_USB_H_
+#define CLI_CLI_USB_H_
 
-#include "cli_cfg.h"
-#include "cli/cli_sys.h"
-#include "cli/cli_usb.h"
+#include <stdbool.h>
 
-cmd_typ commands[] = {
-        {"time", "time since power on", cmd_time},
-        {"param_dump", "prints the parameters as hex", cmd_parameter_raw},
-        {"usb_info", "display USB status information", cmd_usb_info},
-};
+bool cmd_usb_info(void);
 
 
-#endif /* CLI_CLI_COMMANDS_H_ */
+#endif /* CLI_CLI_USB_H_ */

@@ -12,18 +12,32 @@
  * with this program; if not, see <http://www.gnu.org/licenses/>
  *
  */
-#ifndef CLI_CLI_COMMANDS_H_
-#define CLI_CLI_COMMANDS_H_
 
-#include "cli_cfg.h"
-#include "cli/cli_sys.h"
-#include "cli/cli_usb.h"
+#include "cli_usb.h"
+#include "hal/debug_uart.h"
+#include "tinyusb/src/device/usbd.h"
 
-cmd_typ commands[] = {
-        {"time", "time since power on", cmd_time},
-        {"param_dump", "prints the parameters as hex", cmd_parameter_raw},
-        {"usb_info", "display USB status information", cmd_usb_info},
-};
+static void print_bool(bool val)
+{
+    if(true == val)
+    {
+        debug_line("true");
+    }
+    else
+    {
+        debug_line("false");
+    }
+}
 
+bool cmd_usb_info(void)
+{
+    debug_line("\r\nUSB Status:");
+    debug_msg("connected : ");
+    print_bool(tud_connected());
+    debug_msg("mounted   : ");
+    print_bool(tud_mounted());
+    debug_msg("suspended : ");
+    print_bool(tud_suspended());
 
-#endif /* CLI_CLI_COMMANDS_H_ */
+    return true; // true == Done; false = call me again
+}
