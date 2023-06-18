@@ -19,12 +19,12 @@ SOURCE_DIR = $(dir $(lastword $(MAKEFILE_LIST)))
 LKR_SCRIPT = $(SRC_FOLDER)hal/RP2040.ld
 #LKR_SCRIPT = $(SRC_FOLDER)hal/RP2040_RAM.ld
 
-DDEFS += -DCFG_TUSB_DEBUG
+DDEFS += -DCFG_TUSB_DEBUG=3
 
 
 CFLAGS  = -c -g3
-CFLAGS += -O0
-#CFLAGS += -std=c17
+CFLAGS += -O3
+CFLAGS += -std=c17
 CFLAGS += -mcpu=cortex-m0plus -mthumb
 CFLAGS += -ffreestanding -funsigned-char -fno-short-enums
 CFLAGS += -Wall -Wextra -pedantic -Wshadow -Wdouble-promotion -Wconversion -Wpadded 
@@ -43,11 +43,13 @@ SRC += $(SRC_FOLDER)cli/cli.c
 SRC += $(SRC_FOLDER)cli/cli_sys.c
 SRC += $(SRC_FOLDER)cli/cli_usb.c
 # functions usually available from standard libraries
+SRC += $(SRC_FOLDER)lib/ctype.c
+SRC += $(SRC_FOLDER)lib/memcpy.c
+SRC += $(SRC_FOLDER)lib/memset.c
 SRC += $(SRC_FOLDER)lib/printf.c
 SRC += $(SRC_FOLDER)lib/strlen.c
 SRC += $(SRC_FOLDER)lib/strncmp.c
-SRC += $(SRC_FOLDER)lib/memset.c
-SRC += $(SRC_FOLDER)lib/memcpy.c
+
 # USB driver
 SRC += $(SRC_FOLDER)tinyusb/usb.c
 SRC += $(SRC_FOLDER)tinyusb/usb_descriptors.c
@@ -70,6 +72,7 @@ OBJS = $(addprefix $(BIN_FOLDER),$(SRC:.c=.o))
 
 INCDIRS +=$(SRC_FOLDER)
 INCDIRS +=$(SRC_FOLDER)cfg/
+INCDIRS +=$(SRC_FOLDER)lib/
 INCDIRS +=$(SRC_FOLDER)tinyusb/src/
 INCDIR = $(patsubst %,-I%, $(INCDIRS))
 
