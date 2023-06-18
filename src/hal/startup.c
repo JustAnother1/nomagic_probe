@@ -136,6 +136,10 @@ const VECTOR_FUNCTION_Type __VECTOR_TABLE[64] __attribute__((used, section(".vec
 extern uint32_t __bss_start;
 extern uint32_t __bss_end;
 
+extern uint32_t __data_start;
+extern uint32_t __data_end;
+extern uint32_t __data_in_flash;
+
 void NMI_Handler(void) {
     error_state();
 }
@@ -321,8 +325,8 @@ int32_t __aeabi_idiv(int32_t numerator, int32_t denominator)
     // disable all interrupts
     __set_PRIMASK(1); // PRIMASK = 1;
     // write values
-    SIO->DIV_UDIVIDEND = numerator;
-    SIO->DIV_UDIVISOR = denominator;
+    SIO->DIV_UDIVIDEND = (uint32_t)numerator;
+    SIO->DIV_UDIVISOR = (uint32_t)denominator;
 
     waitForDivisor();
 
@@ -408,9 +412,14 @@ _Noreturn void Reset_Handler() {
     uint32_t *bss_start_p =  &__bss_start;
     uint32_t *bss_end_p = &__bss_end;
 
+    uint32_t *data_start_p =  &__data_start;
+    uint32_t *data_end_p = &__data_end;
+    uint32_t *data_src_p = &__data_in_flash;
+
     PSM->FRCE_ON = 0x1ffff; // power on all needed blocks
     // wait for powered on blocks to become available
-    while (0xffff != (0xffff & PSM->DONE)) {
+    while (0xffff != (0xffff & PSM->DONE))
+    {
         ;
     }
 
@@ -422,7 +431,8 @@ _Noreturn void Reset_Handler() {
 
     RESETS->RESET = 0x1fbec1d;  // Put everything into reset (just to be sure in case of software reset)
     // everything excludes: SYSCFG, PLL_SYS, PADS_QSPI, PADS_BANK0, JTAG, IOQSPI, IOBANK0, and BUSCTRL
-    while (0x1082 != (0x1082 & RESETS->RESET_DONE)) {
+    while (0x1082 != (0x1082 & RESETS->RESET_DONE))
+    {
         ;
     }
     // configure clock: pico has XOSC = 12 MHz
@@ -430,13 +440,15 @@ _Noreturn void Reset_Handler() {
     // power up XOSC
     XOSC->CTRL = 0xfabaa0;
     // wait for XOSC to stabilize
-    while (0 == (0x80000000 & XOSC->STATUS)) {
+    while (0 == (0x80000000 & XOSC->STATUS))
+    {
         ;
     }
     // switch clk_ref and clk_sys to XOSC
     CLOCKS->CLK_REF_CTRL = 0x2;
     // wait for switch to happen
-    while (0x4 != CLOCKS->CLK_REF_SELECTED) {
+    while (0x4 != CLOCKS->CLK_REF_SELECTED)
+    {
         ;
     }
     // configure system PLL
@@ -447,7 +459,8 @@ _Noreturn void Reset_Handler() {
     // turn on main power and VCO
     PLL_SYS->PWR = 0x0;
     // wait for VCO clock to lock
-    while (0 == (0x80000000 & PLL_SYS->CS)) {
+    while (0 == (0x80000000 & PLL_SYS->CS))
+    {
         ;
     }
     // set up post dividers and turn them on (6, 2)
@@ -457,7 +470,8 @@ _Noreturn void Reset_Handler() {
     // switch sys mux to aux
     CLOCKS->CLK_SYS_CTRL = 1;
     // wait for locked
-    while (2 != CLOCKS->CLK_SYS_SELECTED) {
+    while (2 != CLOCKS->CLK_SYS_SELECTED)
+    {
         ;
     }
 
@@ -477,10 +491,24 @@ _Noreturn void Reset_Handler() {
     // clk_ref = 12 MHz; clk_sys = 125 MHz; clk_peri = 125 MHz
 
     // initialize global variables to zero
-    while (bss_start_p < bss_end_p) {
+    while(bss_start_p < bss_end_p)
+    {
         *bss_start_p = 0;
         bss_start_p++;
     }
+
+    // initialize variables to their initialization value
+    if (data_src_p != data_start_p)
+    {
+        while(data_start_p < data_end_p)
+        {
+            *data_start_p = *data_src_p;
+            data_start_p++;
+            data_src_p++;
+        }
+    }
+    // else data already in RAM
+
 
     main();
 

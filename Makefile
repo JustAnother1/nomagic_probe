@@ -31,7 +31,7 @@ CFLAGS += -Wall -Wextra -pedantic -Wshadow -Wdouble-promotion -Wconversion -Wpad
 CFLAGS += -ffunction-sections -fdata-sections
 
 LFLAGS  = -ffreestanding -nostdlib -nolibc -nodefaultlibs -nostartfiles -specs=nosys.specs
-LFLAGS += -Wl,--gc-sections,-Map=$(BIN_FOLDER)app.map -g
+LFLAGS += -Wl,--gc-sections,-Map=$(BIN_FOLDER)$(PROJECT).map -g
 LFLAGS += -fno-common -T$(LKR_SCRIPT)
 
 

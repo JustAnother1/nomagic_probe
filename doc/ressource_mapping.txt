@@ -1,0 +1,19 @@
+Clock cfg
+---------
+
+External crystal 12 MHz
+CPU (PLL running at 125 MHz
+
+ROSC = off; XOSC = 12 MHz; PLL_SYS = 125 MHz
+clk_ref = 12 MHz; clk_sys = 125 MHz; clk_peri = 125 MHz
+
+
+Peripheral - used for
+---------------------
+
+UART0 - debug uart (GPIO + GPIO )
+
+SysTick - ms timer
+
+USBCTRL - USB
+
