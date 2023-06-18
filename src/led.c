@@ -29,14 +29,14 @@
 typedef struct {
     uint32_t duration;
     uint32_t action;
-}step;
+}step_typ;
 
 typedef struct {
     uint32_t num_steps;
-    step steps[NUM_MAX_STEPS];
-}pattern;
+    step_typ steps[NUM_MAX_STEPS];
+}pattern_typ;
 
-const pattern patterns[] = {
+const pattern_typ patterns[] = {
         // 0 : Normal Operation
         {
                 2,
