@@ -21,9 +21,6 @@
 #include <hal/hw/SIO.h>
 #include "time.h"
 
-#define PATTERN_NORMAL 0
-#define PATTERN_ERROR  1
-
 #define NUM_MAX_STEPS  2
 
 #define LED_OFF_ACTION 0
@@ -39,7 +36,7 @@ typedef struct {
     step steps[NUM_MAX_STEPS];
 }pattern;
 
-pattern patterns[] = {
+const pattern patterns[] = {
         // 0 : Normal Operation
         {
                 2,
@@ -59,10 +56,10 @@ pattern patterns[] = {
 };
 
 
-uint32_t nextActionTime;
-uint32_t lastTime;
-uint32_t curPattern;
-uint32_t next_step;
+static uint32_t nextActionTime;
+static uint32_t lastTime;
+static uint32_t curPattern;
+static uint32_t next_step;
 
 
 // on pico the LED is connected to GPIO 25
@@ -77,10 +74,15 @@ void led_init(void)
     IO_BANK0->GPIO25_CTRL = 5;
     SIO->GPIO_OE_SET = 1ul << 25;
 
-    nextActionTime = 0;  // do something immediately.
-    lastTime = 0;
-    curPattern = PATTERN_NORMAL;
+    led_set_pattern(PATTERN_NORMAL);
+}
+
+void led_set_pattern(uint32_t pattern)
+{
+    curPattern = pattern;
     next_step = 0;
+    nextActionTime = 0;
+    lastTime = 0;
 }
 
 void led_tick(void)
@@ -104,10 +106,8 @@ void led_tick(void)
                 break;
 
             default:
-                curPattern = PATTERN_ERROR;
-                next_step = 0;
-                nextActionTime = 0;
-                break;
+                led_set_pattern(PATTERN_ERROR);
+                return;
             }
             next_step++;
             if(next_step >= patterns[curPattern].num_steps)

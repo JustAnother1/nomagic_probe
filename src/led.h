@@ -15,8 +15,15 @@
 #ifndef LED_H_
 #define LED_H_
 
+#include <stdint.h>
+
+// blink patterns
+#define PATTERN_NORMAL 0
+#define PATTERN_ERROR  1
+
+
 void led_init(void);
 void led_tick(void);
-
+void led_set_pattern(uint32_t pattern);
 
 #endif /* LED_H_ */
