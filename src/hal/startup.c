@@ -313,6 +313,30 @@ static inline void waitForDivisor(void)
     __asm__ __volatile__ ("nop");
 }
 
+int32_t __aeabi_idiv(int32_t numerator, int32_t denominator)
+{
+    int32_t div;
+    int32_t rem;
+
+    // disable all interrupts
+    __set_PRIMASK(1); // PRIMASK = 1;
+    // write values
+    SIO->DIV_UDIVIDEND = numerator;
+    SIO->DIV_UDIVISOR = denominator;
+
+    waitForDivisor();
+
+    // read result
+    rem = SIO->DIV_REMAINDER;
+    div = SIO->DIV_QUOTIENT;
+
+    // restore enabled interrupts
+    __set_PRIMASK(0); // PRIMASK = 0;
+    (void)rem;
+    return div;
+}
+
+
 uint32_t __aeabi_uidiv(uint32_t numerator, uint32_t denominator)
 {
     uint32_t div;
@@ -335,6 +359,7 @@ uint32_t __aeabi_uidiv(uint32_t numerator, uint32_t denominator)
     (void)rem;
     return div;
 }
+
 
 uint32_t __aeabi_uidivmod(uint32_t numerator, uint32_t denominator)
 {
