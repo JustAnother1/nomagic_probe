@@ -12,11 +12,12 @@
  * with this program; if not, see <http://www.gnu.org/licenses/>
  *
  */
+
 #include "usb.h"
-#include "hal/hw/RESETS.h"
+#include "hal/hw/CLOCKS.h"
 #include "hal/hw/IO_BANK0.h"
 #include "hal/hw/PLL_USB.h"
-#include "hal/hw/CLOCKS.h"
+#include "hal/hw/RESETS.h"
 #include "hal/hw/USBCTRL_REGS.h"
 #include "hal/hw/USBCTRL_DPRAM.h"
 #include "hal/startup.h"
@@ -24,99 +25,97 @@
 
 // tinyusb:
 #include "tusb.h"
-#include "device/usbd.h"
-#include "device/dcd.h"
 #include "common/tusb_types.h"
+#include "device/dcd.h"
+#include "device/usbd.h"
 
 
-#define FORCE_VBUS_DETECT 1
+#define FORCE_VBUS_DETECT             1
 // 0-15
-#define USB_NUM_ENDPOINTS 16
-
-// allow user to restrict number of endpoints available to save RAN
-#ifndef USB_MAX_ENDPOINTS
-#define USB_MAX_ENDPOINTS USB_NUM_ENDPOINTS
-#endif
-
+#define USB_NUM_ENDPOINTS             16
 // 1-15
-#define USB_HOST_INTERRUPT_ENDPOINTS (USB_NUM_ENDPOINTS - 1)
+#define USB_HOST_INTERRUPT_ENDPOINTS  (USB_NUM_ENDPOINTS - 1)
 
-// Endpoint buffer control bits
-#define USB_BUF_CTRL_FULL      0x00008000u
-#define USB_BUF_CTRL_LAST      0x00004000u
-#define USB_BUF_CTRL_DATA0_PID 0x00000000u
-#define USB_BUF_CTRL_DATA1_PID 0x00002000u
-#define USB_BUF_CTRL_SEL       0x00001000u
-#define USB_BUF_CTRL_STALL     0x00000800u
-#define USB_BUF_CTRL_AVAIL     0x00000400u
-#define USB_BUF_CTRL_LEN_MASK  0x000003FFu
-#define USB_BUF_CTRL_LEN_LSB   0
-#define USB_MAIN_CTRL_HOST_NDEVICE_BITS   0x00000002u
-
-#define USB_EP_STALL_ARM_EP0_OUT_BITS   (0x00000002u)
-#define USB_INTS_DEV_SOF_BITS   (0x00020000u)
-#define USB_INTF_DEV_SOF_BITS   (0x00020000u)
-#define EP_CTRL_ENABLE_BITS (1u << 31u)
-#define USB_INTS_BUFF_STATUS_BITS   (0x00000010u)
-#define USB_USB_PWR_VBUS_DETECT_BITS   0x00000004
-#define USB_USB_PWR_VBUS_DETECT_OVERRIDE_EN_BITS   0x00000008
-#define USB_MAIN_CTRL_CONTROLLER_EN_BITS   0x00000001
-#define USB_SIE_CTRL_EP0_INT_1BUF_BITS   0x20000000
-
-// ep_inout_ctrl bits
-#define EP_CTRL_ENABLE_BITS (1u << 31u)
-#define EP_CTRL_DOUBLE_BUFFERED_BITS (1u << 30)
-#define EP_CTRL_INTERRUPT_PER_BUFFER (1u << 29)
-#define EP_CTRL_INTERRUPT_PER_DOUBLE_BUFFER (1u << 28)
-#define EP_CTRL_INTERRUPT_ON_NAK (1u << 16)
-#define EP_CTRL_INTERRUPT_ON_STALL (1u << 17)
-#define EP_CTRL_BUFFER_TYPE_LSB 26u
-#define EP_CTRL_HOST_INTERRUPT_INTERVAL_LSB 16u
-
-#define USB_DPRAM_SIZE 4096u
-
-// PICO_CONFIG: USB_DPRAM_MAX, Set amount of USB RAM used by USB system, min=0, max=4096, default=4096, group=hardware_usb
-// Allow user to claim some of the USB RAM for themselves
-#ifndef USB_DPRAM_MAX
-#define USB_DPRAM_MAX USB_DPRAM_SIZE
-#endif
+#define USB_DPRAM_SIZE                4096u
 
 // Define maximum packet sizes
-#define USB_MAX_ISO_PACKET_SIZE 1023
-#define USB_MAX_PACKET_SIZE 64
+#define USB_MAX_ISO_PACKET_SIZE       1023
+#define USB_MAX_PACKET_SIZE           64
+
+#define usb_dpram ((usb_device_dpram_t *)USBCTRL_DPRAM)
+
+#define EP_CTRL_ENABLE_BITS                        (1u << 31u)
+#define EP_CTRL_DOUBLE_BUFFERED_BITS               (1u << 30)
+#define EP_CTRL_INTERRUPT_PER_BUFFER               (1u << 29)
+#define EP_CTRL_INTERRUPT_PER_DOUBLE_BUFFER        (1u << 28)
+#define EP_CTRL_INTERRUPT_ON_NAK                   (1u << 16)
+#define EP_CTRL_INTERRUPT_ON_STALL                 (1u << 17)
+#define EP_CTRL_BUFFER_TYPE_LSB                    26u
+#define EP_CTRL_HOST_INTERRUPT_INTERVAL_LSB        16u
+
+#define USB_BUF_CTRL_FULL                          0x00008000u
+#define USB_BUF_CTRL_LAST                          0x00004000u
+#define USB_BUF_CTRL_DATA0_PID                     0x00000000u
+#define USB_BUF_CTRL_DATA1_PID                     0x00002000u
+#define USB_BUF_CTRL_SEL                           0x00001000u
+#define USB_BUF_CTRL_STALL                         0x00000800u
+#define USB_BUF_CTRL_AVAIL                         0x00000400u
+#define USB_BUF_CTRL_LEN_MASK                      0x000003FFu
+#define USB_MAIN_CTRL_HOST_NDEVICE_BITS            0x00000002u
+#define USB_MAIN_CTRL_CONTROLLER_EN_BITS           0x00000001u
+#define USB_EP_STALL_ARM_EP0_OUT_BITS              0x00000002u
+#define USB_EP_STALL_ARM_EP0_IN_BITS               0x00000001u
+#define USB_INTS_DEV_SOF_BITS                      0x00020000u
+#define USB_INTS_BUFF_STATUS_BITS                  0x00000010u
+#define USB_INTS_SETUP_REQ_BITS                    0x00010000u
+#define USB_INTS_DEV_CONN_DIS_BITS                 0x00002000u
+#define USB_INTS_BUS_RESET_BITS                    0x00001000u
+#define USB_INTS_DEV_SUSPEND_BITS                  0x00004000u
+#define USB_INTS_DEV_RESUME_FROM_HOST_BITS         0x00008000u
+#define USB_INTF_DEV_SOF_BITS                      0x00020000u
+#define USB_USB_PWR_VBUS_DETECT_BITS               0x00000004u
+#define USB_USB_PWR_VBUS_DETECT_OVERRIDE_EN_BITS   0x00000008u
+#define USB_SOF_RD_BITS                            0x000007ffu
+#define USB_SIE_CTRL_EP0_INT_1BUF_BITS             0x20000000u
+#define USB_SIE_CTRL_RESUME_BITS                   0x00001000u
+#define USB_SIE_CTRL_PULLUP_EN_BITS                0x00010000u
+#define USB_SIE_STATUS_SETUP_REC_BITS              0x00020000u
+#define USB_SIE_STATUS_CONNECTED_BITS              0x00010000u
+#define USB_SIE_STATUS_SUSPENDED_BITS              0x00000010u
+#define USB_SIE_STATUS_BUS_RESET_BITS              0x00080000u
+#define USB_SIE_STATUS_RESUME_BITS                 0x00000800u
+
+
 
 typedef struct {
     // 4K of DPSRAM at beginning. Note this supports 8, 16, and 32 bit accesses
-    volatile uint8_t setup_packet[8]; // First 8 bytes are always for setup packets
+    volatile uint8_t setup_packet[8]; //! First 8 bytes are always for setup packets
 
-    // Starts at ep1
+    //! Starts at ep1
     struct usb_device_dpram_ep_ctrl {
         volatile uint32_t in;
         volatile uint32_t out;
     } ep_ctrl[USB_NUM_ENDPOINTS - 1];
 
-    // Starts at ep0
+    //! Starts at ep0
     struct usb_device_dpram_ep_buf_ctrl {
         volatile uint32_t in;
         volatile uint32_t out;
     } ep_buf_ctrl[USB_NUM_ENDPOINTS];
 
-    // EP0 buffers are fixed. Assumes single buffered mode for EP0
+    //! EP0 buffers are fixed. Assumes single buffered mode for EP0
     uint8_t ep0_buf_a[0x40];
     uint8_t ep0_buf_b[0x40];
 
-    // Rest of DPRAM can be carved up as needed
-    uint8_t epx_data[USB_DPRAM_MAX - 0x180];
+    //! Rest of DPRAM can be carved up as needed
+    uint8_t epx_data[USB_DPRAM_SIZE - 0x180];
 } usb_device_dpram_t;
-
-// static_assert(sizeof(usb_device_dpram_t) == USB_DPRAM_MAX, "");
-// static_assert(offsetof(usb_device_dpram_t, epx_data) == 0x180, "");
 
 typedef struct {
     // 4K of DPSRAM at beginning. Note this supports 8, 16, and 32 bit accesses
-    volatile uint8_t setup_packet[8]; // First 8 bytes are always for setup packets
+    volatile uint8_t setup_packet[8]; //! First 8 bytes are always for setup packets
 
-    // Interrupt endpoint control 1 -> 15
+    //! Interrupt endpoint control 1 -> 15
     struct usb_host_dpram_ep_ctrl {
         volatile uint32_t ctrl;
         volatile uint32_t spare;
@@ -125,7 +124,7 @@ typedef struct {
     volatile uint32_t epx_buf_ctrl;
     volatile uint32_t _spare0;
 
-    // Interrupt endpoint buffer control
+    //! Interrupt endpoint buffer control
     struct usb_host_dpram_ep_buf_ctrl {
         volatile uint32_t ctrl;
         volatile uint32_t spare;
@@ -135,93 +134,76 @@ typedef struct {
 
     uint8_t _spare1[124];
 
-    // Should start at 0x180
-    uint8_t epx_data[USB_DPRAM_MAX - 0x180];
+    //! Should start at 0x180
+    uint8_t epx_data[USB_DPRAM_SIZE - 0x180];
 } usb_host_dpram_t;
 
-// static_assert(sizeof(usb_host_dpram_t) == USB_DPRAM_MAX, "");
-// static_assert(offsetof(usb_host_dpram_t, epx_data) == 0x180, "");
-
-
-// Hardware information per endpoint
+//! Hardware information per endpoint
 typedef struct
 {
-    // Is this a valid struct
+    //! Is this a valid struct
     bool configured;
 
-    // Transfer direction (i.e. IN is rx for host but tx for device)
-    // allows us to common up transfer functions
+    //! Transfer direction (i.e. IN is rx for host but tx for device)
+    //! allows us to common up transfer functions
     bool rx;
 
     uint8_t ep_addr;
     uint8_t next_pid;
 
-    // Endpoint control register
+    //! Endpoint control register
     volatile uint32_t *endpoint_control;
 
-    // Buffer control register
+    //! Buffer control register
     volatile uint32_t *buffer_control;
 
-    // Buffer pointer in usb dpram
+    //! Buffer pointer in usb dpram
     uint8_t *hw_data_buf;
 
-    // User buffer in main memory
+    //! User buffer in main memory
     uint8_t *user_buf;
 
-    // Current transfer information
+    //! Current transfer information
     uint16_t remaining_len;
     uint16_t xferred_len;
 
-    // Data needed from EP descriptor
+    //! Data needed from EP descriptor
     uint16_t wMaxPacketSize;
 
-    // Endpoint is in use
+    //! Endpoint is in use
     bool active;
 
-    // Interrupt, bulk, etc
+    //! Interrupt, bulk, etc
     uint8_t transfer_type;
 
-    // Transfer scheduled but not active
+    //! Transfer scheduled but not active
     uint8_t pending;
 
 #if CFG_TUH_ENABLED
-    // Only needed for host
+    //! Only needed for host
     uint8_t dev_addr;
 
-    // If interrupt endpoint
+    //! If interrupt endpoint
     uint8_t interrupt_num;
 #endif
 
 } hw_endpoint_t;
 
 
-#define USB_SOF_RD_BITS   0x000007ffu
-#define USB_INTS_SETUP_REQ_BITS   0x00010000u
-#define USB_SIE_STATUS_SETUP_REC_BITS   0x00020000u
-#define USB_INTS_DEV_CONN_DIS_BITS   0x00002000u
-#define USB_SIE_STATUS_CONNECTED_BITS   0x00010000u
-#define USB_INTS_BUS_RESET_BITS   0x00001000u
-#define USB_INTS_DEV_SUSPEND_BITS   0x00004000u
-#define USB_SIE_STATUS_SUSPENDED_BITS   0x00000010u
-#define USB_SIE_STATUS_BUS_RESET_BITS   0x00080000u
-#define USB_INTS_DEV_RESUME_FROM_HOST_BITS   0x00008000u
-#define USB_SIE_STATUS_RESUME_BITS   0x00000800u
+//! SOF may be used by remote wakeup as RESUME, this indicate whether SOF is actually used by usbd
+static bool _sof_enable = false;
+//! Direction strings for debug
+const char *ep_dir_string[] = {
+        "out",
+        "in",
+};
 
-// Register address offsets for atomic RMW aliases
-#define REG_ALIAS_RW_BITS  (0x0u << 12u)
-#define REG_ALIAS_XOR_BITS (0x1u << 12u)
-#define REG_ALIAS_SET_BITS (0x2u << 12u)
-#define REG_ALIAS_CLR_BITS (0x3u << 12u)
+//! USB_NUM_ENDPOINTS Endpoints, direction TUSB_DIR_OUT for out and TUSB_DIR_IN for in.
+static hw_endpoint_t hw_endpoints[USB_NUM_ENDPOINTS][2];
 
-#define hw_alias_check_addr(addr) ((uintptr_t)(addr))
+//! Init these in dcd_init
+static uint8_t *next_buffer_ptr;
 
-#define hw_clear_alias_untyped(addr) ((void *)(REG_ALIAS_CLR_BITS | hw_alias_check_addr(addr)))
-
-
-#define usb_dpram ((usb_device_dpram_t *)USBCTRL_DPRAM)
-
-
-// static_assert( USB_HOST_INTERRUPT_ENDPOINTS == 15, "");
 
 #if TUD_OPT_RP2040_USB_DEVICE_UFRAME_FIX
   static bool e15_is_bulkin_ep(hw_endpoint_t *ep);
@@ -230,10 +212,6 @@ typedef struct
   #define e15_is_bulkin_ep(x)             (false)
   #define e15_is_critical_frame_period(x) (false)
 #endif
-
-// SOF may be used by remote wakeup as RESUME, this indicate whether SOF is actually used by usbd
-static bool _sof_enable = false;
-
 static void hw_endpoint_xfer(uint8_t ep_addr, uint8_t* buffer, uint16_t total_bytes);
 static void hw_endpoint_xfer_start(hw_endpoint_t* ep, uint8_t* buffer, uint16_t total_len);
 static void hw_endpoint_start_next_buffer(hw_endpoint_t* ep);
@@ -250,23 +228,7 @@ static uint32_t prepare_ep_buffer(hw_endpoint_t* ep, uint8_t buf_id);
 TU_ATTR_ALWAYS_INLINE static inline void _hw_endpoint_buffer_control_clear_mask32 (hw_endpoint_t* ep, uint32_t value);
 static void usb_init(void);
 
-
-#define pico_info(...)  TU_LOG(2, __VA_ARGS__)
-#define pico_trace(...) TU_LOG(3, __VA_ARGS__)
-
-
-// Direction strings for debug
-const char *ep_dir_string[] = {
-        "out",
-        "in",
-};
-
-// USB_MAX_ENDPOINTS Endpoints, direction TUSB_DIR_OUT for out and TUSB_DIR_IN for in.
-static hw_endpoint_t hw_endpoints[USB_MAX_ENDPOINTS][2];
-
-// Init these in dcd_init
-static uint8_t *next_buffer_ptr;
-
+//! initialize the USB peripheral
 static void usb_init(void)
 {
     RESETS->RESET = RESETS->RESET & ~0x1002000ul; // take USB_CTRL, PLL_USB out of Reset
@@ -323,18 +285,21 @@ void USBCTRL_IRQ(void)
     tud_int_handler(0);
 }
 
+//! interrupt handler
 void dcd_int_handler(uint8_t rhport)
 {
     (void) rhport;
     dcd_rp2040_irq();
 }
 
+//! enable interrupt
 void dcd_int_enable(uint8_t rhport)
 {
     (void) rhport;
     NVIC_EnableIRQ(USBCTRL_IRQ_NUMBER, USBCTRL_IRQ_PRIORITY);
 }
 
+//! disable interrupt
 void dcd_int_disable(uint8_t rhport)
 {
     (void) rhport;
@@ -348,9 +313,7 @@ void dcd_edpt_stall(uint8_t rhport, uint8_t ep_addr)
     if ( tu_edpt_number(ep_addr) == 0 )
     {
         // A stall on EP0 has to be armed so it can be cleared on the next setup packet
-        // usb_hw_set->ep_stall_arm = (tu_edpt_dir(ep_addr) == TUSB_DIR_IN) ? USB_EP_STALL_ARM_EP0_IN_BITS : USB_EP_STALL_ARM_EP0_OUT_BITS;
-
-        USBCTRL_REGS_SET->EP_STALL_ARM = (tu_edpt_dir(ep_addr) == TUSB_DIR_IN) ? 1 : USB_EP_STALL_ARM_EP0_OUT_BITS;
+        USBCTRL_REGS_SET->EP_STALL_ARM = (tu_edpt_dir(ep_addr) == TUSB_DIR_IN) ? USB_EP_STALL_ARM_EP0_IN_BITS : USB_EP_STALL_ARM_EP0_OUT_BITS;
     }
 
     hw_endpoint_t* ep = hw_endpoint_get_by_addr(ep_addr);
@@ -423,7 +386,7 @@ static void hw_endpoint_xfer_start(hw_endpoint_t* ep, uint8_t* buffer, uint16_t 
     {
         // TODO: Is this acceptable for interrupt packets?
         TU_LOG(1, "WARN: starting new transfer on already active ep %d %s\n", tu_edpt_number(ep->ep_addr),
-        ep_dir_string[tu_edpt_dir(ep->ep_addr)]);
+                   ep_dir_string[tu_edpt_dir(ep->ep_addr)]);
 
         hw_endpoint_reset_transfer(ep);
     }
@@ -449,14 +412,14 @@ static void hw_endpoint_xfer_start(hw_endpoint_t* ep, uint8_t* buffer, uint16_t 
     }
 }
 
-// if usb hardware is in host mode
+//! if usb hardware is in host mode
 TU_ATTR_ALWAYS_INLINE static inline bool is_host_mode(void)
 {
-  return (USBCTRL_REGS->MAIN_CTRL & USB_MAIN_CTRL_HOST_NDEVICE_BITS) ? true : false;
+    return (USBCTRL_REGS->MAIN_CTRL & USB_MAIN_CTRL_HOST_NDEVICE_BITS) ? true : false;
 }
 
 
-// Prepare buffer control register value
+//! Prepare buffer control register value
 static void hw_endpoint_start_next_buffer(hw_endpoint_t* ep)
 {
     uint32_t ep_ctrl = *ep->endpoint_control;
@@ -521,19 +484,19 @@ static void _hw_endpoint_buffer_control_update32(hw_endpoint_t* ep, uint32_t and
 {
     uint32_t value = 0;
 
-    if ( and_mask )
+    if(0 !=  and_mask )
     {
         value = *ep->buffer_control & and_mask;
     }
 
-    if ( or_mask )
+    if(0 != or_mask )
     {
         value |= or_mask;
-        if ( or_mask & USB_BUF_CTRL_AVAIL )
+        if( or_mask & USB_BUF_CTRL_AVAIL )
         {
-            if ( *ep->buffer_control & USB_BUF_CTRL_AVAIL )
+            if( *ep->buffer_control & USB_BUF_CTRL_AVAIL )
             {
-                // panic("ep %d %s was already available", tu_edpt_number(ep->ep_addr), ep_dir_string[tu_edpt_dir(ep->ep_addr)]);
+                TU_LOG(1, "ep %d %s was already available", tu_edpt_number(ep->ep_addr), ep_dir_string[tu_edpt_dir(ep->ep_addr)]);
             }
             *ep->buffer_control = value & ~USB_BUF_CTRL_AVAIL;
             // 12 cycle delay.. (should be good for 48*12Mhz = 576Mhz)
@@ -558,7 +521,7 @@ static void _hw_endpoint_buffer_control_update32(hw_endpoint_t* ep, uint32_t and
 static void reset_non_control_endpoints(void)
 {
     // Disable all non-control
-    for(uint8_t i = 0; i < USB_MAX_ENDPOINTS-1; i++ )
+    for(uint8_t i = 0; i < USB_NUM_ENDPOINTS-1; i++ )
     {
         usb_dpram->ep_ctrl[i].in = 0;
         usb_dpram->ep_ctrl[i].out = 0;
@@ -627,34 +590,34 @@ static void hw_endpoint_init(uint8_t ep_addr, uint16_t wMaxPacketSize, uint8_t t
 
 static inline uintptr_t hw_data_offset (uint8_t *buf)
 {
-  // Remove usb base from buffer pointer
-  return (uintptr_t) buf ^ (uintptr_t) usb_dpram;
+    // Remove usb base from buffer pointer
+    return (uintptr_t) buf ^ (uintptr_t) usb_dpram;
 }
 
 static void _hw_endpoint_alloc(hw_endpoint_t* ep, uint8_t transfer_type)
 {
-  // size must be multiple of 64
-  uint32_t size = tu_div_ceil(ep->wMaxPacketSize, 64) * 64u;
+    // size must be multiple of 64
+    uint32_t size = tu_div_ceil(ep->wMaxPacketSize, 64) * 64u;
 
-  // double buffered Bulk endpoint
-  if ( transfer_type == TUSB_XFER_BULK )
-  {
-    size *= 2u;
-  }
+    // double buffered Bulk endpoint
+    if( transfer_type == TUSB_XFER_BULK )
+    {
+        size *= 2u;
+    }
 
-  ep->hw_data_buf = next_buffer_ptr;
-  next_buffer_ptr += size;
+    ep->hw_data_buf = next_buffer_ptr;
+    next_buffer_ptr += size;
 
-  // assert(((uintptr_t )next_buffer_ptr & 0b111111u) == 0);
-  uint32_t dpram_offset = hw_data_offset(ep->hw_data_buf);
-  // hard_assert(hw_data_offset(next_buffer_ptr) <= USB_DPRAM_MAX);
+    // assert(((uintptr_t )next_buffer_ptr & 0b111111u) == 0);
+    uint32_t dpram_offset = hw_data_offset(ep->hw_data_buf);
+    // hard_assert(hw_data_offset(next_buffer_ptr) <= USB_DPRAM_SIZE);
 
-  pico_info("  Allocated %d bytes at offset 0x%x (0x%p)\r\n", size, dpram_offset, ep->hw_data_buf);
+    TU_LOG(2, "  Allocated %d bytes at offset 0x%x (0x%p)\r\n", size, dpram_offset, ep->hw_data_buf);
 
-  // Fill in endpoint control register with buffer offset
-  uint32_t const reg = EP_CTRL_ENABLE_BITS | ((uint32_t)transfer_type << EP_CTRL_BUFFER_TYPE_LSB) | dpram_offset;
+    // Fill in endpoint control register with buffer offset
+    uint32_t const reg = EP_CTRL_ENABLE_BITS | ((uint32_t)transfer_type << EP_CTRL_BUFFER_TYPE_LSB) | dpram_offset;
 
-  *ep->endpoint_control = reg;
+    *ep->endpoint_control = reg;
 }
 
 TU_ATTR_ALWAYS_INLINE static inline void reset_ep0_pid(void)
@@ -671,140 +634,148 @@ TU_ATTR_ALWAYS_INLINE static inline void reset_ep0_pid(void)
 
 TU_ATTR_ALWAYS_INLINE static inline uint32_t _hw_endpoint_buffer_control_get_value32(hw_endpoint_t *ep)
 {
-  return *ep->buffer_control;
+    return *ep->buffer_control;
 }
 
-// sync endpoint buffer and return transferred bytes
+//! sync endpoint buffer and return transferred bytes
 static uint16_t sync_ep_buffer(hw_endpoint_t* ep, uint8_t buf_id)
 {
-  uint32_t buf_ctrl = _hw_endpoint_buffer_control_get_value32(ep);
-  if (buf_id)  buf_ctrl = buf_ctrl >> 16;
+    uint32_t buf_ctrl = _hw_endpoint_buffer_control_get_value32(ep);
+    if(buf_id)
+    {
+        buf_ctrl = buf_ctrl >> 16;
+    }
 
-  uint16_t xferred_bytes = buf_ctrl & USB_BUF_CTRL_LEN_MASK;
+    uint16_t xferred_bytes = buf_ctrl & USB_BUF_CTRL_LEN_MASK;
 
-  if ( !ep->rx )
-  {
-    // We are continuing a transfer here. If we are TX, we have successfully
-    // sent some data can increase the length we have sent
-    // assert(!(buf_ctrl & USB_BUF_CTRL_FULL));
+    if( !ep->rx )
+    {
+        // We are continuing a transfer here. If we are TX, we have successfully
+        // sent some data can increase the length we have sent
+        // assert(!(buf_ctrl & USB_BUF_CTRL_FULL));
 
-    ep->xferred_len = (uint16_t)(ep->xferred_len + xferred_bytes);
-  }else
-  {
-    // If we have received some data, so can increase the length
-    // we have received AFTER we have copied it to the user buffer at the appropriate offset
-    // assert(buf_ctrl & USB_BUF_CTRL_FULL);
+        ep->xferred_len = (uint16_t)(ep->xferred_len + xferred_bytes);
+    }
+    else
+    {
+        // If we have received some data, so can increase the length
+        // we have received AFTER we have copied it to the user buffer at the appropriate offset
+        // assert(buf_ctrl & USB_BUF_CTRL_FULL);
 
-    memcpy(ep->user_buf, ep->hw_data_buf + buf_id*64, xferred_bytes);
-    ep->xferred_len = (uint16_t)(ep->xferred_len + xferred_bytes);
-    ep->user_buf += xferred_bytes;
-  }
+        memcpy(ep->user_buf, ep->hw_data_buf + buf_id*64, xferred_bytes);
+        ep->xferred_len = (uint16_t)(ep->xferred_len + xferred_bytes);
+        ep->user_buf += xferred_bytes;
+    }
 
-  // Short packet
-  if (xferred_bytes < ep->wMaxPacketSize)
-  {
-    pico_trace("  Short packet on buffer %d with %u bytes\n", buf_id, xferred_bytes);
-    // Reduce total length as this is last packet
-    ep->remaining_len = 0;
-  }
+    // Short packet
+    if (xferred_bytes < ep->wMaxPacketSize)
+    {
+        TU_LOG(3, "  Short packet on buffer %d with %u bytes\n", buf_id, xferred_bytes);
+        // Reduce total length as this is last packet
+        ep->remaining_len = 0;
+    }
 
-  return xferred_bytes;
+    return xferred_bytes;
 }
 
 static void _hw_endpoint_xfer_sync(hw_endpoint_t *ep)
 {
-  // Update hw endpoint struct with info from hardware
-  // after a buff status interrupt
+    // Update hw endpoint struct with info from hardware
+    // after a buff status interrupt
 
-  uint32_t __unused buf_ctrl = _hw_endpoint_buffer_control_get_value32(ep);
-  TU_LOG(3, "  Sync BufCtrl: [0] = 0x%04x  [1] = 0x%04x\r\n", tu_u32_low16(buf_ctrl), tu_u32_high16(buf_ctrl));
+    uint32_t __unused buf_ctrl = _hw_endpoint_buffer_control_get_value32(ep);
+    TU_LOG(3, "  Sync BufCtrl: [0] = 0x%04x  [1] = 0x%04x\r\n", tu_u32_low16(buf_ctrl), tu_u32_high16(buf_ctrl));
 
-  // always sync buffer 0
-  uint16_t buf0_bytes = sync_ep_buffer(ep, 0);
+    // always sync buffer 0
+    uint16_t buf0_bytes = sync_ep_buffer(ep, 0);
 
-  // sync buffer 1 if double buffered
-  if ( (*ep->endpoint_control) & EP_CTRL_DOUBLE_BUFFERED_BITS )
-  {
-    if (buf0_bytes == ep->wMaxPacketSize)
+    // sync buffer 1 if double buffered
+    if ( (*ep->endpoint_control) & EP_CTRL_DOUBLE_BUFFERED_BITS )
     {
-      // sync buffer 1 if not short packet
-      sync_ep_buffer(ep, 1);
-    }else
-    {
-      // short packet on buffer 0
-      // TODO couldn't figure out how to handle this case which happen with net_lwip_webserver example
-      // At this time (currently trigger per 2 buffer), the buffer1 is probably filled with data from
-      // the next transfer (not current one). For now we disable double buffered for device OUT
-      // NOTE this could happen to Host IN
-#if 0
-      uint8_t const ep_num = tu_edpt_number(ep->ep_addr);
-      uint8_t const dir =  (uint8_t) tu_edpt_dir(ep->ep_addr);
-      uint8_t const ep_id = 2*ep_num + (dir ? 0 : 1);
+        if (buf0_bytes == ep->wMaxPacketSize)
+        {
+            // sync buffer 1 if not short packet
+            sync_ep_buffer(ep, 1);
+        }
+        else
+        {
+            // short packet on buffer 0
+            // TODO couldn't figure out how to handle this case which happen with net_lwip_webserver example
+            // At this time (currently trigger per 2 buffer), the buffer1 is probably filled with data from
+            // the next transfer (not current one). For now we disable double buffered for device OUT
+            // NOTE this could happen to Host IN
+            #if 0
+                uint8_t const ep_num = tu_edpt_number(ep->ep_addr);
+                uint8_t const dir =  (uint8_t) tu_edpt_dir(ep->ep_addr);
+                uint8_t const ep_id = 2*ep_num + (dir ? 0 : 1);
 
-      // abort queued transfer on buffer 1
-      usb_hw->abort |= TU_BIT(ep_id);
+                // abort queued transfer on buffer 1
+                USBCTRL_REGS->abort |= TU_BIT(ep_id);
 
-      while ( !(usb_hw->abort_done & TU_BIT(ep_id)) ) {}
+                while ( !(USBCTRL_REGS->abort_done & TU_BIT(ep_id)) ) {}
 
-      uint32_t ep_ctrl = *ep->endpoint_control;
-      ep_ctrl &= ~(EP_CTRL_DOUBLE_BUFFERED_BITS | EP_CTRL_INTERRUPT_PER_DOUBLE_BUFFER);
-      ep_ctrl |= EP_CTRL_INTERRUPT_PER_BUFFER;
+                uint32_t ep_ctrl = *ep->endpoint_control;
+                ep_ctrl &= ~(EP_CTRL_DOUBLE_BUFFERED_BITS | EP_CTRL_INTERRUPT_PER_DOUBLE_BUFFER);
+                ep_ctrl |= EP_CTRL_INTERRUPT_PER_BUFFER;
 
-      _hw_endpoint_buffer_control_set_value32(ep, 0);
+                _hw_endpoint_buffer_control_set_value32(ep, 0);
 
-      usb_hw->abort &= ~TU_BIT(ep_id);
+                USBCTRL_REGS->abort &= ~TU_BIT(ep_id);
 
-      TU_LOG(3, "----SHORT PACKET buffer0 on EP %02X:\r\n", ep->ep_addr);
-      TU_LOG(3, "  BufCtrl: [0] = 0x%04x  [1] = 0x%04x\r\n", tu_u32_low16(buf_ctrl), tu_u32_high16(buf_ctrl));
-#endif
+                TU_LOG(3, "----SHORT PACKET buffer0 on EP %02X:\r\n", ep->ep_addr);
+                TU_LOG(3, "  BufCtrl: [0] = 0x%04x  [1] = 0x%04x\r\n", tu_u32_low16(buf_ctrl), tu_u32_high16(buf_ctrl));
+            #endif
+        }
     }
-  }
 }
 
-// Returns true if transfer is complete
+//! Returns true if transfer is complete
 bool hw_endpoint_xfer_continue(hw_endpoint_t *ep)
 {
-  // Part way through a transfer
-  if (!ep->active)
-  {
-    // panic("Can't continue xfer on inactive ep %d %s", tu_edpt_number(ep->ep_addr), ep_dir_string[tu_edpt_dir(ep->ep_addr)]);
-  }
-
-  // Update EP struct from hardware state
-  _hw_endpoint_xfer_sync(ep);
-
-  // Now we have synced our state with the hardware. Is there more data to transfer?
-  // If we are done then notify tinyusb
-  if (ep->remaining_len == 0)
-  {
-    pico_trace("Completed transfer of %d bytes on ep %d %s\n",
-               ep->xferred_len, tu_edpt_number(ep->ep_addr), ep_dir_string[tu_edpt_dir(ep->ep_addr)]);
-    // Notify caller we are done so it can notify the tinyusb stack
-    return true;
-  }
-  else
-  {
-    if ( e15_is_critical_frame_period(ep) )
+    // Part way through a transfer
+    if (!ep->active)
     {
-      ep->pending = 1;
-    } else
-    {
-      hw_endpoint_start_next_buffer(ep);
+        TU_LOG(1, "Can't continue xfer on inactive ep %d %s", tu_edpt_number(ep->ep_addr), ep_dir_string[tu_edpt_dir(ep->ep_addr)]);
     }
-  }
 
-  // More work to do
-  return false;
+    // Update EP struct from hardware state
+    _hw_endpoint_xfer_sync(ep);
+
+    // Now we have synced our state with the hardware. Is there more data to transfer?
+    // If we are done then notify tinyusb
+    if (ep->remaining_len == 0)
+    {
+        TU_LOG(3, "Completed transfer of %d bytes on ep %d %s\n",
+        ep->xferred_len, tu_edpt_number(ep->ep_addr), ep_dir_string[tu_edpt_dir(ep->ep_addr)]);
+        // Notify caller we are done so it can notify the tinyusb stack
+        return true;
+    }
+    else
+    {
+        if ( e15_is_critical_frame_period(ep) )
+        {
+            ep->pending = 1;
+        }
+        else
+        {
+            hw_endpoint_start_next_buffer(ep);
+        }
+    }
+
+    // More work to do
+    return false;
 }
 
 static void hw_handle_buff_status(void)
 {
-    uint32_t remaining_buffers = USBCTRL_REGS->BUFF_STATUS;
-    pico_trace("buf_status = 0x%08x\n", remaining_buffers);
     uint32_t bit = 1u;
-    for (uint8_t i = 0; remaining_buffers && i < USB_MAX_ENDPOINTS * 2; i++)
+    uint32_t remaining_buffers = USBCTRL_REGS->BUFF_STATUS;
+
+    TU_LOG(3, "buf_status = 0x%08x\n", remaining_buffers);
+
+    for(uint8_t i = 0; remaining_buffers && i < USB_NUM_ENDPOINTS * 2; i++)
     {
-        if (remaining_buffers & bit)
+        if(remaining_buffers & bit)
         {
             // clear this in advance
             USBCTRL_REGS_CLR->BUFF_STATUS = bit;
@@ -814,7 +785,7 @@ static void hw_handle_buff_status(void)
 
             // Continue xfer
             bool done = hw_endpoint_xfer_continue(ep);
-            if (done)
+            if(done)
             {
                 // Notify
                 dcd_event_xfer_complete(0, ep->ep_addr, ep->xferred_len, XFER_RESULT_SUCCESS, true);
@@ -850,29 +821,30 @@ static void hw_handle_buff_status(void)
 
 volatile uint32_t e15_last_sof = 0;
 
-// check if Errata 15 is needed for this endpoint i.e device bulk-in
+//! check if Errata 15 is needed for this endpoint i.e device bulk-in
 static bool e15_is_bulkin_ep (hw_endpoint_t *ep)
 {
-  return (!is_host_mode() && tu_edpt_dir(ep->ep_addr) == TUSB_DIR_IN &&
-          ep->transfer_type == TUSB_XFER_BULK);
+    return (!is_host_mode() && tu_edpt_dir(ep->ep_addr) == TUSB_DIR_IN &&
+            ep->transfer_type == TUSB_XFER_BULK);
 }
 
-// check if we need to apply Errata 15 workaround : i.e
-// Endpoint is BULK IN and is currently in critical frame period i.e 20% of last usb frame
+//! check if we need to apply Errata 15 workaround : i.e
+//! Endpoint is BULK IN and is currently in critical frame period i.e 20% of last usb frame
 static bool e15_is_critical_frame_period (hw_endpoint_t *ep)
 {
-  TU_VERIFY(e15_is_bulkin_ep(ep));
+    TU_VERIFY(e15_is_bulkin_ep(ep));
 
-  /* Avoid the last 200us (uframe 6.5-7) of a frame, up to the EOF2 point.
-   * The device state machine cannot recover from receiving an incorrect PID
-   * when it is expecting an ACK.
-   */
-  uint32_t delta = time_us_32() - e15_last_sof;
-  if (delta < 800 || delta > 998) {
-    return false;
-  }
-  TU_LOG(3, "Avoiding sof %u now %lu last %lu\n", (USBCTRL_REGS->sof_rd + 1) & USB_SOF_RD_BITS, time_us_32(), e15_last_sof);
-  return true;
+    /* Avoid the last 200us (uframe 6.5-7) of a frame, up to the EOF2 point.
+    * The device state machine cannot recover from receiving an incorrect PID
+    * when it is expecting an ACK.
+    */
+    uint32_t delta = time_us_32() - e15_last_sof;
+    if (delta < 800 || delta > 998)
+    {
+        return false;
+    }
+    TU_LOG(3, "Avoiding sof %u now %lu last %lu\n", (USBCTRL_REGS->SOF_RD + 1) & USB_SOF_RD_BITS, time_us_32(), e15_last_sof);
+    return true;
 }
 
 #endif
@@ -882,7 +854,7 @@ static void dcd_rp2040_irq(void)
     uint32_t const status = USBCTRL_REGS->INTS;
     uint32_t handled = 0;
 
-    if ( status & USB_INTF_DEV_SOF_BITS )
+    if( status & USB_INTF_DEV_SOF_BITS )
     {
         bool keep_sof_alive = false;
 
@@ -892,17 +864,17 @@ static void dcd_rp2040_irq(void)
         // Errata 15 workaround for Device Bulk-In endpoint
         e15_last_sof = time_us_32();
 
-        for ( uint8_t i = 0; i < USB_MAX_ENDPOINTS; i++ )
+        for( uint8_t i = 0; i < USB_NUM_ENDPOINTS; i++ )
         {
             hw_endpoint_t * ep = hw_endpoint_get_by_num(i, TUSB_DIR_IN);
 
             // Active Bulk IN endpoint requires SOF
-            if ( (ep->transfer_type == TUSB_XFER_BULK) && ep->active )
+            if( (ep->transfer_type == TUSB_XFER_BULK) && ep->active )
             {
                 keep_sof_alive = true;
 
                 // Deferred enable?
-                if ( ep->pending )
+                if( ep->pending )
                 {
                     ep->pending = 0;
                     hw_endpoint_start_next_buffer(ep);
@@ -912,7 +884,7 @@ static void dcd_rp2040_irq(void)
         #endif
 
         // disable SOF interrupt if it is used for RESUME in remote wakeup
-        if ( !keep_sof_alive && !_sof_enable )
+        if( !keep_sof_alive && !_sof_enable )
         {
             USBCTRL_REGS_CLR->INTE = USB_INTS_DEV_SOF_BITS;
         }
@@ -921,13 +893,13 @@ static void dcd_rp2040_irq(void)
 
     // xfer events are handled before setup req. So if a transfer completes immediately
     // before closing the EP, the events will be delivered in same order.
-    if ( status & USB_INTS_BUFF_STATUS_BITS )
+    if( status & USB_INTS_BUFF_STATUS_BITS )
     {
         handled |= USB_INTS_BUFF_STATUS_BITS;
         hw_handle_buff_status();
     }
 
-    if ( status & USB_INTS_SETUP_REQ_BITS )
+    if( status & USB_INTS_SETUP_REQ_BITS )
     {
         handled |= USB_INTS_SETUP_REQ_BITS;
         uint8_t const * setup = (uint8_t const*) &usb_dpram->setup_packet;
@@ -962,9 +934,9 @@ static void dcd_rp2040_irq(void)
     #endif
 
     // SE0 for 2.5 us or more (will last at least 10ms)
-    if ( status & USB_INTS_BUS_RESET_BITS )
+    if( status & USB_INTS_BUS_RESET_BITS )
     {
-        pico_trace("BUS RESET\n");
+        TU_LOG(3, "BUS RESET\n");
 
         handled |= USB_INTS_BUS_RESET_BITS;
 
@@ -987,21 +959,21 @@ static void dcd_rp2040_irq(void)
     * because without VBUS detection, it is impossible to tell the difference between
     * being disconnected and suspended.
     */
-    if ( status & USB_INTS_DEV_SUSPEND_BITS )
+    if( status & USB_INTS_DEV_SUSPEND_BITS )
     {
         handled |= USB_INTS_DEV_SUSPEND_BITS;
         dcd_event_bus_signal(0, DCD_EVENT_SUSPEND, true);
         USBCTRL_REGS_CLR->SIE_STATUS = USB_SIE_STATUS_SUSPENDED_BITS;
     }
 
-    if ( status & USB_INTS_DEV_RESUME_FROM_HOST_BITS )
+    if( status & USB_INTS_DEV_RESUME_FROM_HOST_BITS )
     {
         handled |= USB_INTS_DEV_RESUME_FROM_HOST_BITS;
         dcd_event_bus_signal(0, DCD_EVENT_RESUME, true);
         USBCTRL_REGS_CLR->SIE_STATUS = USB_SIE_STATUS_RESUME_BITS;
     }
 
-    if ( status ^ handled )
+    if( status ^ handled )
     {
         // panic("Unhandled IRQ 0x%x\n", (uint32_t) (status ^ handled));
     }
@@ -1015,7 +987,7 @@ static void hw_endpoint_reset_transfer(hw_endpoint_t* ep)
     ep->user_buf = 0;
 }
 
-// prepare buffer, return buffer control
+//! prepare buffer, return buffer control
 static uint32_t prepare_ep_buffer(hw_endpoint_t* ep, uint8_t buf_id)
 {
     uint16_t const buflen = tu_min16(ep->remaining_len, ep->wMaxPacketSize);
@@ -1027,7 +999,7 @@ static uint32_t prepare_ep_buffer(hw_endpoint_t* ep, uint8_t buf_id)
     buf_ctrl |= ep->next_pid ? USB_BUF_CTRL_DATA1_PID : USB_BUF_CTRL_DATA0_PID;
     ep->next_pid ^= 1u;
 
-    if ( !ep->rx )
+    if( !ep->rx )
     {
         // Copy data from user buffer to hw buffer
         memcpy(ep->hw_data_buf + buf_id*64, ep->user_buf, buflen);
@@ -1040,12 +1012,12 @@ static uint32_t prepare_ep_buffer(hw_endpoint_t* ep, uint8_t buf_id)
     // Is this the last buffer? Only really matters for host mode. Will trigger
     // the trans complete irq but also stop it polling. We only really care about
     // trans complete for setup packets being sent
-    if (ep->remaining_len == 0)
+    if(ep->remaining_len == 0)
     {
         buf_ctrl |= USB_BUF_CTRL_LAST;
     }
 
-    if (buf_id)
+    if(buf_id)
     {
         buf_ctrl = buf_ctrl << 16;
     }
@@ -1058,7 +1030,7 @@ TU_ATTR_ALWAYS_INLINE static inline void _hw_endpoint_buffer_control_clear_mask3
     _hw_endpoint_buffer_control_update32(ep, ~value, 0);
 }
 
-void dcd_init (uint8_t rhport)
+void dcd_init(uint8_t rhport)
 {
     (void) rhport;
 
@@ -1091,4 +1063,60 @@ void dcd_init (uint8_t rhport)
                      (FORCE_VBUS_DETECT ? 0 : USB_INTS_DEV_CONN_DIS_BITS);
 
     dcd_connect(rhport);
+}
+
+void dcd_sof_enable(uint8_t rhport, bool en)
+{
+    (void) rhport;
+
+    _sof_enable = en;
+
+    if(en)
+    {
+        USBCTRL_REGS_CLR->INTE = USB_INTS_DEV_SOF_BITS;
+    }
+    else
+    {
+        // Don't clear immediately if the SOF workaround is in use.
+        // The SOF handler will conditionally disable the interrupt.
+        #if !TUD_OPT_RP2040_USB_DEVICE_UFRAME_FIX
+        USBCTRL_REGS_CLR->INTE = USB_INTS_DEV_SOF_BITS;
+        #endif
+    }
+}
+
+void dcd_remote_wakeup(__unused uint8_t rhport)
+{
+    TU_LOG(2, "dcd_remote_wakeup %d\n", rhport);
+
+    // since RESUME interrupt is not triggered if we are the one initiate
+    // briefly enable SOF to notify usbd when bus is ready
+    USBCTRL_REGS_SET->INTE = USB_INTS_DEV_SOF_BITS;
+    USBCTRL_REGS_SET->SIE_CTRL = USB_SIE_CTRL_RESUME_BITS;
+}
+
+//! connect by enabling internal pull-up resistor on D+/D-
+void dcd_connect(__unused uint8_t rhport)
+{
+  (void) rhport;
+  USBCTRL_REGS_SET->SIE_CTRL = USB_SIE_CTRL_PULLUP_EN_BITS;
+}
+
+//! disconnect by disabling internal pull-up resistor on D+/D-
+void dcd_disconnect(__unused uint8_t rhport)
+{
+    (void) rhport;
+    USBCTRL_REGS_CLR->SIE_CTRL = USB_SIE_CTRL_PULLUP_EN_BITS;
+}
+
+void dcd_edpt0_status_complete(uint8_t rhport, tusb_control_request_t const * request)
+{
+    (void) rhport;
+
+    if( request->bmRequestType_bit.recipient == TUSB_REQ_RCPT_DEVICE &&
+        request->bmRequestType_bit.type == TUSB_REQ_TYPE_STANDARD &&
+        request->bRequest == TUSB_REQ_SET_ADDRESS )
+    {
+        USBCTRL_REGS->ADDR_ENDP = (uint8_t) request->wValue;
+    }
 }
