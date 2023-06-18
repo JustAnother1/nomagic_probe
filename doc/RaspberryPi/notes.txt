@@ -1,0 +1,5 @@
+// Register address offsets for atomic RMW aliases
+#define REG_ALIAS_RW_BITS  (0x0u << 12u)
+#define REG_ALIAS_XOR_BITS (0x1u << 12u)
+#define REG_ALIAS_SET_BITS (0x2u << 12u)
+#define REG_ALIAS_CLR_BITS (0x3u << 12u)
