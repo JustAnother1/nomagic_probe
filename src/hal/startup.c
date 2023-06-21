@@ -331,8 +331,8 @@ int32_t __aeabi_idiv(int32_t numerator, int32_t denominator)
     waitForDivisor();
 
     // read result
-    rem = SIO->DIV_REMAINDER;
-    div = SIO->DIV_QUOTIENT;
+    rem = (int32_t)SIO->DIV_REMAINDER;
+    div = (int32_t)SIO->DIV_QUOTIENT;
 
     // restore enabled interrupts
     __set_PRIMASK(0); // PRIMASK = 0;

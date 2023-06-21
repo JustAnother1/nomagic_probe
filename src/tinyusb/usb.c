@@ -271,6 +271,8 @@ static void usb_init(void)
     USBCTRL_REGS->INTE = 0x11010;
     // activate full speed device mode
     USBCTRL_REGS->SIE_CTRL = 0x20010000;
+
+    NVIC_EnableIRQ(USBCTRL_IRQ_NUMBER, USBCTRL_IRQ_PRIORITY);
 }
 
 //! USB "Task"
@@ -296,14 +298,14 @@ void dcd_int_handler(uint8_t rhport)
 void dcd_int_enable(uint8_t rhport)
 {
     (void) rhport;
-    NVIC_EnableIRQ(USBCTRL_IRQ_NUMBER, USBCTRL_IRQ_PRIORITY);
+    // NVIC_EnableIRQ(USBCTRL_IRQ_NUMBER, USBCTRL_IRQ_PRIORITY);
 }
 
 //! disable interrupt
 void dcd_int_disable(uint8_t rhport)
 {
     (void) rhport;
-    NVIC_DisableIRQ(USBCTRL_IRQ_NUMBER);
+    // NVIC_DisableIRQ(USBCTRL_IRQ_NUMBER);
 }
 
 //! Stall endpoint, any queuing transfer should be removed from endpoint
@@ -612,7 +614,7 @@ static void _hw_endpoint_alloc(hw_endpoint_t* ep, uint8_t transfer_type)
     uint32_t dpram_offset = hw_data_offset(ep->hw_data_buf);
     // hard_assert(hw_data_offset(next_buffer_ptr) <= USB_DPRAM_SIZE);
 
-    TU_LOG(2, "  Allocated %d bytes at offset 0x%x (0x%p)\r\n", size, dpram_offset, ep->hw_data_buf);
+    TU_LOG(2, "  Allocated %ld bytes at offset 0x%lx (0x%p)\r\n", size, dpram_offset, ep->hw_data_buf);
 
     // Fill in endpoint control register with buffer offset
     uint32_t const reg = EP_CTRL_ENABLE_BITS | ((uint32_t)transfer_type << EP_CTRL_BUFFER_TYPE_LSB) | dpram_offset;
@@ -771,7 +773,7 @@ static void hw_handle_buff_status(void)
     uint32_t bit = 1u;
     uint32_t remaining_buffers = USBCTRL_REGS->BUFF_STATUS;
 
-    TU_LOG(3, "buf_status = 0x%08x\n", remaining_buffers);
+    TU_LOG(3, "buf_status = 0x%08lx\n", remaining_buffers);
 
     for(uint8_t i = 0; remaining_buffers && i < USB_NUM_ENDPOINTS * 2; i++)
     {
@@ -843,7 +845,7 @@ static bool e15_is_critical_frame_period (hw_endpoint_t *ep)
     {
         return false;
     }
-    TU_LOG(3, "Avoiding sof %u now %lu last %lu\n", (USBCTRL_REGS->SOF_RD + 1) & USB_SOF_RD_BITS, time_us_32(), e15_last_sof);
+    TU_LOG(3, "Avoiding sof %lu now %lu last %lu\n", (USBCTRL_REGS->SOF_RD + 1) & USB_SOF_RD_BITS, time_us_32(), e15_last_sof);
     return true;
 }
 

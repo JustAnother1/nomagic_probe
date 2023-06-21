@@ -27,7 +27,8 @@ CFLAGS += -O3
 CFLAGS += -std=c17
 CFLAGS += -mcpu=cortex-m0plus -mthumb
 CFLAGS += -ffreestanding -funsigned-char -fno-short-enums
-CFLAGS += -Wall -Wextra -pedantic -Wshadow -Wdouble-promotion -Wconversion -Wpadded 
+CFLAGS += -Wall -Wextra -pedantic -Wshadow -Wdouble-promotion -Wconversion 
+# -Wpadded : tinyUSB creates warnings with this enabled. :-( 
 CFLAGS += -ffunction-sections -fdata-sections
 
 LFLAGS  = -ffreestanding -nostdlib -nolibc -nodefaultlibs -nostartfiles -specs=nosys.specs
@@ -40,6 +41,7 @@ SRC += $(SRC_FOLDER)hal/debug_uart.c
 SRC += $(SRC_FOLDER)hal/startup.c
 # command line interface (debug - UART0)
 SRC += $(SRC_FOLDER)cli/cli.c
+SRC += $(SRC_FOLDER)cli/cli_memory.c
 SRC += $(SRC_FOLDER)cli/cli_sys.c
 SRC += $(SRC_FOLDER)cli/cli_usb.c
 # functions usually available from standard libraries
@@ -102,6 +104,9 @@ flash: $(BIN_FOLDER)$(PROJECT).elf
 	openocd  -f interface/cmsis-dap.cfg -f target/rp2040.cfg -c "program $(BIN_FOLDER)$(PROJECT).elf verify reset exit"
 
 $(BIN_FOLDER)$(PROJECT).uf2: $(BIN_FOLDER)$(PROJECT).elf
+	@echo ""
+	@echo "elf -> uf2"
+	@echo "=========="
 	elf2uf2 -f 0xe48bff56 -p 256 -i $(BIN_FOLDER)$(PROJECT).elf
 
 all: $(BIN_FOLDER)$(PROJECT).uf2
