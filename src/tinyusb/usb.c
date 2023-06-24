@@ -1042,7 +1042,7 @@ void dcd_init(uint8_t rhport)
 
     #if FORCE_VBUS_DETECT
     // Force VBUS detect so the device thinks it is plugged into a host
-    USBCTRL_REGS_CLR->USB_PWR = USB_USB_PWR_VBUS_DETECT_BITS | USB_USB_PWR_VBUS_DETECT_OVERRIDE_EN_BITS;
+    USBCTRL_REGS->USB_PWR = USB_USB_PWR_VBUS_DETECT_BITS | USB_USB_PWR_VBUS_DETECT_OVERRIDE_EN_BITS;
     #endif
 
     // Init control endpoints
@@ -1055,13 +1055,13 @@ void dcd_init(uint8_t rhport)
 
     // Initializes the USB peripheral for device mode and enables it.
     // Don't need to enable the pull up here. Force VBUS
-    USBCTRL_REGS_CLR->MAIN_CTRL = USB_MAIN_CTRL_CONTROLLER_EN_BITS;
+    USBCTRL_REGS->MAIN_CTRL = USB_MAIN_CTRL_CONTROLLER_EN_BITS;
 
     // Enable individual controller IRQS here. Processor interrupt enable will be used
     // for the global interrupt enable...
     // Note: Force VBUS detect cause disconnection not detectable
-    USBCTRL_REGS_CLR->SIE_CTRL = USB_SIE_CTRL_EP0_INT_1BUF_BITS;
-    USBCTRL_REGS_CLR->INTE     = USB_INTS_BUFF_STATUS_BITS | USB_INTS_BUS_RESET_BITS | USB_INTS_SETUP_REQ_BITS |
+    USBCTRL_REGS->SIE_CTRL = USB_SIE_CTRL_EP0_INT_1BUF_BITS;
+    USBCTRL_REGS->INTE     = USB_INTS_BUFF_STATUS_BITS | USB_INTS_BUS_RESET_BITS | USB_INTS_SETUP_REQ_BITS |
                      USB_INTS_DEV_SUSPEND_BITS | USB_INTS_DEV_RESUME_FROM_HOST_BITS |
                      (FORCE_VBUS_DETECT ? 0 : USB_INTS_DEV_CONN_DIS_BITS);
 
@@ -1076,7 +1076,7 @@ void dcd_sof_enable(uint8_t rhport, bool en)
 
     if(en)
     {
-        USBCTRL_REGS_CLR->INTE = USB_INTS_DEV_SOF_BITS;
+        USBCTRL_REGS->INTE = USB_INTS_DEV_SOF_BITS;
     }
     else
     {
