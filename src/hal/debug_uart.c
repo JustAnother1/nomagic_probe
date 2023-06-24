@@ -36,7 +36,8 @@ static void send_a_byte(void);
 static void receive_a_byte(void);
 static void debug_putc(void* p, char c);
 
-void debug_uart_initialize(void) {
+void debug_uart_initialize(void)
+{
     recv_read_pos = 0;
     recv_write_pos = 0;
     send_read_pos = 0;
@@ -46,13 +47,15 @@ void debug_uart_initialize(void) {
     PSM->FRCE_ON = PSM->FRCE_ON | 0x400; // make sure that SIO is powered on
     // take UART0 out of Reset
     RESETS->RESET = RESETS->RESET & ~(1ul << 18);  // sysCFG
-    while (0 == ((1 << 18) & RESETS->RESET_DONE)) {
+    while (0 == ((1 << 18) & RESETS->RESET_DONE))
+    {
         ;
     }
 
     RESETS->RESET = RESETS->RESET & ~(1ul << 22);
     // wait for UART0 to come out of Reset
-    while (0 == ((1 << 22) & RESETS->RESET_DONE)) {
+    while (0 == ((1 << 22) & RESETS->RESET_DONE))
+    {
          ;
     }
     // configure GPIO Pins
@@ -88,78 +91,96 @@ void debug_uart_tick(void)
 }
 
 // send data:
-uint32_t debug_uart_send_bytes(uint8_t* data, uint32_t length) {
+uint32_t debug_uart_send_bytes(uint8_t* data, uint32_t length)
+{
     uint32_t i;
-    for (i = 0; i < length; i++) {
+    for (i = 0; i < length; i++)
+    {
         uint32_t next_write = send_write_pos;
         next_write++;
-        if (SEND_BUFFER_SIZE <= next_write) {
+        if (SEND_BUFFER_SIZE <= next_write)
+        {
             next_write = 0;
         }
-        if (next_write != send_read_pos) {
-            send_buf[send_write_pos] = data[i];
-            send_write_pos = next_write;
-        } else {
+        while(next_write == send_read_pos)
+        {
             // buffer is full
-            break;
+            // -> wait for space to become available
+            debug_uart_tick();
         }
+        send_buf[send_write_pos] = data[i];
+        send_write_pos = next_write;
     }
     return i;
 }
 
 void debug_uart_send_String(char* str)
 {
-    while(*str != 0) {
+    while(*str != 0)
+    {
         uint32_t next_write = send_write_pos;
         next_write++;
-        if (SEND_BUFFER_SIZE <= next_write) {
+        if (SEND_BUFFER_SIZE <= next_write)
+        {
             next_write = 0;
         }
-        if (next_write != send_read_pos) {
-            send_buf[send_write_pos] = *str;
-            str++;
-            send_write_pos = next_write;
-        } else {
+        while(next_write == send_read_pos)
+        {
             // buffer is full
-            break;
+            // -> wait for space to become available
+            debug_uart_tick();
         }
+        send_buf[send_write_pos] = *str;
+        str++;
+        send_write_pos = next_write;
     }
 }
 
 // get received data:
-uint32_t debug_uart_get_num_received_bytes(void) {
-    if (recv_read_pos == recv_write_pos) {
+uint32_t debug_uart_get_num_received_bytes(void)
+{
+    if (recv_read_pos == recv_write_pos)
+    {
         // buffer empty
         return 0;
     }
-    if (recv_read_pos < recv_write_pos) {
+    if (recv_read_pos < recv_write_pos)
+    {
         return recv_write_pos - recv_read_pos;
-    } else {
+    }
+    else
+    {
         // wrap around
         return (RECEIVE_BUFFER_SIZE - recv_read_pos) + recv_write_pos;
     }
 }
 
-uint8_t debug_uart_get_next_received_byte(void) {
+uint8_t debug_uart_get_next_received_byte(void)
+{
     uint8_t res;
-    if (recv_read_pos == recv_write_pos) {
+    if (recv_read_pos == recv_write_pos)
+    {
         // buffer empty
         return 0;
     }
     res = recv_buf[recv_read_pos];
     recv_read_pos++;
-    if (RECEIVE_BUFFER_SIZE == recv_read_pos) {
+    if (RECEIVE_BUFFER_SIZE == recv_read_pos)
+    {
         recv_read_pos = 0;
     }
     return res;
 }
 
-bool debug_uart_get_received_bytes(uint8_t *buf, uint32_t length) {
+bool debug_uart_get_received_bytes(uint8_t *buf, uint32_t length)
+{
     uint32_t i;
-    if (length < debug_uart_get_num_received_bytes()) {
+    if (length < debug_uart_get_num_received_bytes())
+    {
         return false;
     }
-    for (i = 0; i < length; i++) {
+    for (i = 0; i < length; i++)
+    {
         buf[i] = debug_uart_get_next_received_byte();
     }
     return true;
@@ -173,13 +194,17 @@ static void debug_putc(void* p, char c)
 
 static void send_a_byte(void)
 {
-    if (send_read_pos != send_write_pos) {
+    if (send_read_pos != send_write_pos)
+    {
         UART0->UARTDR = send_buf[send_read_pos];
         send_read_pos++;
-        if (SEND_BUFFER_SIZE == send_read_pos) {
+        if (SEND_BUFFER_SIZE == send_read_pos)
+        {
             send_read_pos = 0;
         }
-    } else {
+    }
+    else
+    {
         // nothing to send anymore -> disable TX
         is_sending = false;
     }
@@ -188,40 +213,53 @@ static void send_a_byte(void)
 static void receive_a_byte(void)
 {
     uint32_t data = UART0->UARTDR;
-    if (0 != (data & 0xf00)) {
+    if (0 != (data & 0xf00))
+    {
         // error
         // TODO report
-    } else {
+    }
+    else
+    {
         uint32_t nextWrite;
         recv_buf[recv_write_pos] = (uint8_t)(data & 0xff);
         nextWrite = recv_write_pos + 1;
-        if (RECEIVE_BUFFER_SIZE == nextWrite) {
+        if (RECEIVE_BUFFER_SIZE == nextWrite)
+        {
             nextWrite = 0;
         }
-        if (nextWrite == recv_read_pos) {
+        if (nextWrite == recv_read_pos)
+        {
             // buffer full -> lost Byte
             // TODO report
-        } else {
+        }
+        else
+        {
             recv_write_pos = nextWrite;
         }
     }
 }
 
-void UART0_IRQ(void) {
+void UART0_IRQ(void)
+{
     uint32_t irq = UART0->UARTMIS;
-    if (0 != (irq & 0x400)) {  // Overrun error
+    if (0 != (irq & 0x400)) // Overrun error
+    {
         UART0->UARTICR = 0x400; // clear Interrupt
     }
-    if (0 != (irq & 0x200)) {  // Break error
+    if (0 != (irq & 0x200)) // Break error
+    {
         UART0->UARTICR = 0x200; // clear Interrupt
     }
-    if (0 != (irq & 0x100)) {  // Parity error
+    if (0 != (irq & 0x100)) // Parity error
+    {
         UART0->UARTICR = 0x100; // clear Interrupt
     }
-    if (0 != (irq & 0x80)) {  // Framing error
+    if (0 != (irq & 0x80)) // Framing error
+    {
         UART0->UARTICR = 0x80; // clear Interrupt
     }
-    if (0 != (irq & 0x40)) {  // Receive timeout
+    if (0 != (irq & 0x40)) // Receive timeout
+    {
         UART0->UARTICR = 0x40; // clear Interrupt
     }
     if (0 != (irq & 0x20)) {  // Transmit
@@ -229,21 +267,26 @@ void UART0_IRQ(void) {
         is_sending = false;
     	UART0->UARTICR = 0x20; // clear Interrupt
     }
-    if (0 != (irq & 0x10)) {  // Receive
+    if (0 != (irq & 0x10)) // Receive
+    {
         // we received a byte
-    	receive_a_byte();
-    	UART0->UARTICR = 0x10; // clear Interrupt
+        receive_a_byte();
+        UART0->UARTICR = 0x10; // clear Interrupt
     }
-    if (0 != (irq & 0x8)) {  // DSR
+    if (0 != (irq & 0x8)) // DSR
+    {
         UART0->UARTICR = 0x8; // clear Interrupt
     }
-    if (0 != (irq & 0x4)) {  // DCD
+    if (0 != (irq & 0x4)) // DCD
+    {
         UART0->UARTICR = 0x4; // clear Interrupt
     }
-    if (0 != (irq & 0x2)) {  // CTS
+    if (0 != (irq & 0x2)) // CTS
+    {
         UART0->UARTICR = 0x2; // clear Interrupt
     }
-    if (0 != (irq & 0x1)) {  // RI
+    if (0 != (irq & 0x1)) // RI
+    {
         UART0->UARTICR = 0x1; // clear Interrupt
     }
 }

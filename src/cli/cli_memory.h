@@ -12,32 +12,14 @@
  * with this program; if not, see <http://www.gnu.org/licenses/>
  *
  */
+#ifndef CLI_CLI_MEMORY_H_
+#define CLI_CLI_MEMORY_H_
 
-#include "cli_usb.h"
-#include "hal/debug_uart.h"
-#include "tinyusb/src/device/usbd.h"
+#include <stdbool.h>
 
-static void print_bool(bool val)
-{
-    if(true == val)
-    {
-        debug_line("true");
-    }
-    else
-    {
-        debug_line("false");
-    }
-}
+bool cmd_memory_display(void);
 
-bool cmd_usb_info(void)
-{
-    debug_line("USB Status:");
-    debug_msg("connected : ");
-    print_bool(tud_connected());
-    debug_msg("mounted   : ");
-    print_bool(tud_mounted());
-    debug_msg("suspended : ");
-    print_bool(tud_suspended());
 
-    return true; // true == Done; false = call me again
-}
+
+
+#endif /* CLI_CLI_MEMORY_H_ */

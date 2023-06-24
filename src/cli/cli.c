@@ -206,6 +206,7 @@ static void execute(void)
     uint32_t len = strlen((char*)line_buffer);
     if(0 != len)
     {
+        debug_line("\r\n");
         if(len > (MAX_LINE_LENGTH -1))
         {
             len = MAX_LINE_LENGTH -1;
@@ -214,7 +215,7 @@ static void execute(void)
         {
             // help command
             uint32_t i;
-            debug_msg("\r\navailable commands :\r\n");
+            debug_msg("available commands :\r\n");
             for(i = 0; i < sizeof(commands)/sizeof(cmd_typ); i++)
             {
                 debug_msg("%s : %s\r\n", commands[i].name, commands[i].help);
@@ -239,7 +240,7 @@ static void execute(void)
             }
             if(false == found)
             {
-                debug_msg("\r\nInvalid command (%s) type 'help' for list of available commands.\r\n", (char*)line_buffer);
+                debug_line("Invalid command (%s) type 'help' for list of available commands", (char*)line_buffer);
             }
             else
             {

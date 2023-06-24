@@ -18,11 +18,13 @@
 #include "cli_cfg.h"
 #include "cli/cli_sys.h"
 #include "cli/cli_usb.h"
+#include "cli/cli_memory.h"
 
 cmd_typ commands[] = {
         {"time", "time since power on", cmd_time},
         {"param_dump", "prints the parameters as hex", cmd_parameter_raw},
         {"usb_info", "display USB status information", cmd_usb_info},
+        {"md", "display memory", cmd_memory_display},
 };
 
 

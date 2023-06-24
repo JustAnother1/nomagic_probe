@@ -23,7 +23,7 @@ bool cmd_time(void)
     uint32_t now = time_get_ms();
 
     //debug_line("\r\ntime since boot up : %ld ms", now);
-    debug_msg("\r\ntime since boot up : ");
+    debug_msg("time since boot up : ");
     if(now < 1000)
     {
         debug_line("%ld ms", now);
@@ -75,7 +75,7 @@ bool cmd_parameter_raw(void)
     uint8_t* c = cli_get_parameter(i);
     while(c != NULL)
     {
-        debug_msg("\r\nParameter %ld :", i);
+        debug_msg("Parameter %ld :", i);
         while(*c != 0)
         {
             debug_msg(" %02x", *c);

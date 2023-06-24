@@ -259,10 +259,11 @@ static void usb_init(void)
 
     memset(USBCTRL_REGS, 0, sizeof(USBCTRL_REGS_type));
     memset(usb_dpram, 0, sizeof(*usb_dpram));
+    USBCTRL_REGS->USBPHY_TRIM = 0x1F1F;  // restore default
     // Mux the controller to the onboard usb phy
     USBCTRL_REGS->USB_MUXING = 0x9;
     // Tell device that it is already plugged into the host (as we do not have VBus detection)
-    USBCTRL_REGS->USB_PWR = 0xc;
+    // USBCTRL_REGS->USB_PWR = 0xc; - also done in dcd_init
     // enable USB device mode
     USBCTRL_REGS->MAIN_CTRL = 1;
     // enable Interrupt for EP0

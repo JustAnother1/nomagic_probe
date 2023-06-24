@@ -46,6 +46,7 @@ SRC += $(SRC_FOLDER)cli/cli_sys.c
 SRC += $(SRC_FOLDER)cli/cli_usb.c
 # functions usually available from standard libraries
 SRC += $(SRC_FOLDER)lib/ctype.c
+SRC += $(SRC_FOLDER)lib/atoi.c
 SRC += $(SRC_FOLDER)lib/memcpy.c
 SRC += $(SRC_FOLDER)lib/memset.c
 SRC += $(SRC_FOLDER)lib/printf.c
