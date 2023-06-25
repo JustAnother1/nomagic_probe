@@ -325,8 +325,8 @@ int32_t __aeabi_idiv(int32_t numerator, int32_t denominator)
     // disable all interrupts
     __set_PRIMASK(1); // PRIMASK = 1;
     // write values
-    SIO->DIV_UDIVIDEND = (uint32_t)numerator;
-    SIO->DIV_UDIVISOR = (uint32_t)denominator;
+    SIO->DIV_SDIVIDEND = (uint32_t)numerator;
+    SIO->DIV_SDIVISOR = (uint32_t)denominator;
 
     waitForDivisor();
 
