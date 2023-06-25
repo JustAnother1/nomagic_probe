@@ -91,7 +91,8 @@ void cli_tick(void)
                 {
                     SERIAL_SEND_BYTES(&data, 1);
                 }
-
+                // TODO filter out more stuff:
+                // up arrow = 0x1B 0x5B 0x41
                 if(0x08 == data)
                 {
                     // backspace

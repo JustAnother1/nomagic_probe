@@ -16,6 +16,7 @@
 #include "cli_usb.h"
 #include "hal/debug_uart.h"
 #include "tinyusb/src/device/usbd.h"
+#include "tinyusb/src/class/cdc/cdc_device.h"
 
 static void print_bool(bool val)
 {
@@ -31,13 +32,16 @@ static void print_bool(bool val)
 
 bool cmd_usb_info(void)
 {
-    debug_line("USB Status:");
-    debug_msg("connected : ");
+    debug_line("USB Status");
+    debug_line("==========");
+    debug_msg("connected     : ");
     print_bool(tud_connected());
-    debug_msg("mounted   : ");
+    debug_msg("mounted       : ");
     print_bool(tud_mounted());
-    debug_msg("suspended : ");
+    debug_msg("suspended     : ");
     print_bool(tud_suspended());
+    debug_msg("CDC connected : ");
+    print_bool(tud_cdc_connected());
 
     return true; // true == Done; false = call me again
 }
