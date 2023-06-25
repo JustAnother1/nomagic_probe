@@ -19,7 +19,7 @@ SOURCE_DIR = $(dir $(lastword $(MAKEFILE_LIST)))
 LKR_SCRIPT = $(SRC_FOLDER)hal/RP2040.ld
 #LKR_SCRIPT = $(SRC_FOLDER)hal/RP2040_RAM.ld
 
-DDEFS += -DCFG_TUSB_DEBUG=3
+DDEFS += -DCFG_TUSB_DEBUG=0
 
 
 CFLAGS  = -c -g3
@@ -62,6 +62,8 @@ SRC += $(SRC_FOLDER)tinyusb/src/device/usbd.c
 SRC += $(SRC_FOLDER)tinyusb/src/device/usbd_control.c
 SRC += $(SRC_FOLDER)tinyusb/src/class/cdc/cdc_device.c
 SRC += $(SRC_FOLDER)tinyusb/src/common/tusb_fifo.c
+# USB serial interface (CDC)
+SRC += $(SRC_FOLDER)tinyusb/usb_cdc.c
 # time base
 SRC += $(SRC_FOLDER)time.c
 # user feedback

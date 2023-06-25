@@ -23,6 +23,8 @@
 #include "hal/startup.h"
 #include "time.h"
 
+#include "usb_cdc.h"
+
 // tinyusb:
 #include "tusb.h"
 #include "common/tusb_types.h"
@@ -280,6 +282,7 @@ static void usb_init(void)
 void usb_tick(void)
 {
     tud_task(); // device task
+    cdc_task(); // serial interface
 }
 
 //! USB interrupt
