@@ -39,7 +39,7 @@ typedef struct {
 #define ECHO_ENABLED      true
 
 #define PROMPT "\r\n$ "
-#define WELCOME "\r\nMBSP Command Line Interface\r\n"
+#define WELCOME "\r\n\r\n\r\n\r\n\r\nMBSP Command Line Interface\r\n"
 #define ERROR_LINE_TOO_LONG "\r\n The command is too long! please try again!\r\n"
 
 

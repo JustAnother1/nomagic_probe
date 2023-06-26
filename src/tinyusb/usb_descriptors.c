@@ -45,13 +45,23 @@
 
 #define DESC_STR_MAX       20
 #define USBD_MAX_POWER_MA  250
-#define USBD_DESC_LEN      (TUD_CONFIG_DESC_LEN + TUD_CDC_DESC_LEN * CFG_TUD_CDC)
+#define USBD_DESC_LEN      (TUD_CONFIG_DESC_LEN + TUD_CDC_DESC_LEN * CFG_TUD_CDC + TUD_MSC_DESC_LEN * CFG_TUD_MSC)
 
 #define USBD_VID           0x2E8A /* Raspberry Pi */
-#define USBD_PID           0x000A /* Raspberry Pi Pico SDK CDC */
+#define USB_BCD            0x0200
+/* A combination of interfaces must have a unique product id, since PC will save device driver after the first plug.
+ * Same VID/PID with different interface e.g MSC (first), then CDC (later) will possibly cause system error on PC.
+ *
+ * Auto ProductID layout's Bitmap:
+ *   [MSB]         HID | MSC | CDC          [LSB]
+ */
+#define _PID_MAP(itf, n)  ( (CFG_TUD_##itf) << (n) )
+#define USBD_PID           (0x4000 | _PID_MAP(CDC, 0) | _PID_MAP(MSC, 1) | _PID_MAP(HID, 2) | \
+                           _PID_MAP(MIDI, 3) | _PID_MAP(VENDOR, 4) )
 
 #define USBD_ITF_CDC_0     0
-#define USBD_ITF_MAX       4
+#define ITF_NUM_MSC        2
+#define USBD_ITF_MAX       3
 
 #define USBD_CDC_0_EP_CMD         0x81
 #define USBD_CDC_0_EP_OUT         0x02
@@ -59,16 +69,23 @@
 #define USBD_CDC_CMD_MAX_SIZE     8
 #define USBD_CDC_IN_OUT_MAX_SIZE  64
 
+#define EPNUM_MSC_OUT     0x03
+#define EPNUM_MSC_IN      0x83
+
+
 #define USBD_STR_0        0x00
 #define USBD_STR_MANUF    0x01
 #define USBD_STR_PRODUCT  0x02
 #define USBD_STR_SERIAL   0x03
 #define USBD_STR_CDC      0x04
+#define USBD_STR_MSC      0x05
 
+
+//! device descriptor
 static const tusb_desc_device_t usbd_desc_device = {
     .bLength            = sizeof(tusb_desc_device_t),
     .bDescriptorType    = TUSB_DESC_DEVICE,
-    .bcdUSB             = 0x0200,
+    .bcdUSB             = USB_BCD,  // supported USB Version in BCD : 0x0200 = USB 2.00
     .bDeviceClass       = TUSB_CLASS_MISC,
     .bDeviceSubClass    = MISC_SUBCLASS_COMMON,
     .bDeviceProtocol    = MISC_PROTOCOL_IAD,
@@ -82,28 +99,38 @@ static const tusb_desc_device_t usbd_desc_device = {
     .bNumConfigurations = 1,
 };
 
+//! configuration descriptor
 static const uint8_t usbd_desc_cfg[USBD_DESC_LEN] = {
-    TUD_CONFIG_DESCRIPTOR(1,
-                          USBD_ITF_MAX,
-                          USBD_STR_0,
-                          USBD_DESC_LEN,
-                          TUSB_DESC_CONFIG_ATT_REMOTE_WAKEUP,
-                          USBD_MAX_POWER_MA),
 
-    TUD_CDC_DESCRIPTOR(USBD_ITF_CDC_0,
-                       USBD_STR_CDC,
-                       USBD_CDC_0_EP_CMD,
-                       USBD_CDC_CMD_MAX_SIZE,
-                       USBD_CDC_0_EP_OUT,
-                       USBD_CDC_0_EP_IN,
-                       USBD_CDC_IN_OUT_MAX_SIZE),
+    TUD_CONFIG_DESCRIPTOR(1,                                  // configuration number
+                          USBD_ITF_MAX,                       // interface count
+                          USBD_STR_0,                         // string index
+                          USBD_DESC_LEN,                      // total length
+                          TUSB_DESC_CONFIG_ATT_REMOTE_WAKEUP, // attribute
+                          USBD_MAX_POWER_MA),                 // max power in mA
+
+    TUD_CDC_DESCRIPTOR(USBD_ITF_CDC_0,            // interface number
+                       USBD_STR_CDC,              // string index
+                       USBD_CDC_0_EP_CMD,         // interrupt notification end point
+                       USBD_CDC_CMD_MAX_SIZE,     // notification end point size
+                       USBD_CDC_0_EP_OUT,         // bulk end point out number
+                       USBD_CDC_0_EP_IN,          // bulk end point in number
+                       USBD_CDC_IN_OUT_MAX_SIZE), // bulk end point size
+
+    TUD_MSC_DESCRIPTOR(ITF_NUM_MSC,   // interface number
+                       USBD_STR_MSC,  // string index
+                       EPNUM_MSC_OUT, // bulk end point out number
+                       EPNUM_MSC_IN,  // bulk end point in number
+                       64),           // end point size (bytes)
 };
 
 static const char *const usbd_desc_str[] = {
+        // index 0 is not used
     [USBD_STR_MANUF]   = "Raspberry Pi",
     [USBD_STR_PRODUCT] = "nomagic probe",
     [USBD_STR_SERIAL]  = "000000000001",
-    [USBD_STR_CDC]     = "Pico",
+    [USBD_STR_CDC]     = "nomagic cdc",
+    [USBD_STR_MSC]     = "nomagic msc",
 };
 
 //! Invoked when received GET STRING DESCRIPTOR request

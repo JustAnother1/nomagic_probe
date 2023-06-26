@@ -48,6 +48,7 @@ SRC += $(SRC_FOLDER)cli/cli_usb.c
 SRC += $(SRC_FOLDER)lib/ctype.c
 SRC += $(SRC_FOLDER)lib/atoi.c
 SRC += $(SRC_FOLDER)lib/memcpy.c
+SRC += $(SRC_FOLDER)lib/memmove.c
 SRC += $(SRC_FOLDER)lib/memset.c
 SRC += $(SRC_FOLDER)lib/printf.c
 SRC += $(SRC_FOLDER)lib/strlen.c
@@ -60,10 +61,13 @@ SRC += $(SRC_FOLDER)tinyusb/usb_descriptors.c
 SRC += $(SRC_FOLDER)tinyusb/src/tusb.c
 SRC += $(SRC_FOLDER)tinyusb/src/device/usbd.c
 SRC += $(SRC_FOLDER)tinyusb/src/device/usbd_control.c
-SRC += $(SRC_FOLDER)tinyusb/src/class/cdc/cdc_device.c
 SRC += $(SRC_FOLDER)tinyusb/src/common/tusb_fifo.c
 # USB serial interface (CDC)
 SRC += $(SRC_FOLDER)tinyusb/usb_cdc.c
+SRC += $(SRC_FOLDER)tinyusb/src/class/cdc/cdc_device.c
+# USB thumb drive (MSC)
+SRC += $(SRC_FOLDER)tinyusb/usb_msc.c
+SRC += $(SRC_FOLDER)tinyusb/src/class/msc/msc_device.c
 # time base
 SRC += $(SRC_FOLDER)time.c
 # user feedback

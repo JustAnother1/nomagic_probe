@@ -866,12 +866,12 @@ static bool e15_is_critical_frame_period (hw_endpoint_t *ep)
     /* Avoid the last 200us (uframe 6.5-7) of a frame, up to the EOF2 point.
     * The device state machine cannot recover from receiving an incorrect PID
     * when it is expecting an ACK.
-    */
+    */ /*
     uint32_t delta = time_us_32() - e15_last_sof;
     if (delta < 800 || delta > 998)
     {
         return false;
-    }
+    }*/
     TU_LOG(3, "Avoiding sof %lu now %lu last %lu\n", (USBCTRL_REGS->SOF_RD + 1) & USB_SOF_RD_BITS, time_us_32(), e15_last_sof);
     return true;
 }
