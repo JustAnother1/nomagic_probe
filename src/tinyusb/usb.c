@@ -44,7 +44,7 @@
 #include "hal/hw/USBCTRL_REGS.h"
 #include "hal/hw/USBCTRL_DPRAM.h"
 #include "hal/startup.h"
-#include "time.h"
+#include "time_base.h"
 
 #include "usb_cdc.h"
 
@@ -325,14 +325,14 @@ void dcd_int_handler(uint8_t rhport)
 void dcd_int_enable(uint8_t rhport)
 {
     (void) rhport;
-    // NVIC_EnableIRQ(USBCTRL_IRQ_NUMBER, USBCTRL_IRQ_PRIORITY);
+    // NVIC_EnableIRQ(USBCTRL_IRQ_NUMBER, USBCTRL_IRQ_PRIORITY);   TODO
 }
 
 //! disable interrupt
 void dcd_int_disable(uint8_t rhport)
 {
     (void) rhport;
-    // NVIC_DisableIRQ(USBCTRL_IRQ_NUMBER);
+    // NVIC_DisableIRQ(USBCTRL_IRQ_NUMBER);   TODO
 }
 
 //! Stall endpoint, any queuing transfer should be removed from endpoint
@@ -414,7 +414,7 @@ static void hw_endpoint_xfer_start(hw_endpoint_t* ep, uint8_t* buffer, uint16_t 
     if ( ep->active )
     {
         // TODO: Is this acceptable for interrupt packets?
-        TU_LOG(1, "WARN: starting new transfer on already active ep %d %s\n", tu_edpt_number(ep->ep_addr),
+        TU_LOG(1, "WARN: starting new transfer on already active ep %d %s\r\n", tu_edpt_number(ep->ep_addr),
                    ep_dir_string[tu_edpt_dir(ep->ep_addr)]);
 
         hw_endpoint_reset_transfer(ep);
@@ -525,7 +525,7 @@ static void _hw_endpoint_buffer_control_update32(hw_endpoint_t* ep, uint32_t and
         {
             if( *ep->buffer_control & USB_BUF_CTRL_AVAIL )
             {
-                TU_LOG(1, "ep %d %s was already available", tu_edpt_number(ep->ep_addr), ep_dir_string[tu_edpt_dir(ep->ep_addr)]);
+                TU_LOG(1, "ep %d %s was already available\r\n", tu_edpt_number(ep->ep_addr), ep_dir_string[tu_edpt_dir(ep->ep_addr)]);
             }
             *ep->buffer_control = value & ~USB_BUF_CTRL_AVAIL;
             // 12 cycle delay.. (should be good for 48*12Mhz = 576Mhz)
@@ -699,7 +699,7 @@ static uint16_t sync_ep_buffer(hw_endpoint_t* ep, uint8_t buf_id)
     // Short packet
     if (xferred_bytes < ep->wMaxPacketSize)
     {
-        TU_LOG(3, "  Short packet on buffer %d with %u bytes\n", buf_id, xferred_bytes);
+        TU_LOG(3, "  Short packet on buffer %d with %u bytes\r\n", buf_id, xferred_bytes);
         // Reduce total length as this is last packet
         ep->remaining_len = 0;
     }
@@ -764,7 +764,7 @@ bool hw_endpoint_xfer_continue(hw_endpoint_t *ep)
     // Part way through a transfer
     if (!ep->active)
     {
-        TU_LOG(1, "Can't continue xfer on inactive ep %d %s", tu_edpt_number(ep->ep_addr), ep_dir_string[tu_edpt_dir(ep->ep_addr)]);
+        TU_LOG(1, "Can't continue xfer on inactive ep %d %s\r\n", tu_edpt_number(ep->ep_addr), ep_dir_string[tu_edpt_dir(ep->ep_addr)]);
     }
 
     // Update EP struct from hardware state
@@ -774,7 +774,7 @@ bool hw_endpoint_xfer_continue(hw_endpoint_t *ep)
     // If we are done then notify tinyusb
     if (ep->remaining_len == 0)
     {
-        TU_LOG(3, "Completed transfer of %d bytes on ep %d %s\n",
+        TU_LOG(3, "Completed transfer of %d bytes on ep %d %s\r\n",
         ep->xferred_len, tu_edpt_number(ep->ep_addr), ep_dir_string[tu_edpt_dir(ep->ep_addr)]);
         // Notify caller we are done so it can notify the tinyusb stack
         return true;
@@ -800,7 +800,7 @@ static void hw_handle_buff_status(void)
     uint32_t bit = 1u;
     uint32_t remaining_buffers = USBCTRL_REGS->BUFF_STATUS;
 
-    TU_LOG(3, "buf_status = 0x%08lx\n", remaining_buffers);
+    TU_LOG(3, "buf_status = 0x%08lx\r\n", remaining_buffers);
 
     for(uint8_t i = 0; remaining_buffers && i < USB_NUM_ENDPOINTS * 2; i++)
     {
@@ -872,7 +872,7 @@ static bool e15_is_critical_frame_period (hw_endpoint_t *ep)
     {
         return false;
     }*/
-    TU_LOG(3, "Avoiding sof %lu now %lu last %lu\n", (USBCTRL_REGS->SOF_RD + 1) & USB_SOF_RD_BITS, time_us_32(), e15_last_sof);
+    TU_LOG(3, "Avoiding sof %lu now %lu last %lu\r\n", (USBCTRL_REGS->SOF_RD + 1) & USB_SOF_RD_BITS, time_us_32(), e15_last_sof);
     return true;
 }
 
@@ -965,7 +965,7 @@ static void dcd_rp2040_irq(void)
     // SE0 for 2.5 us or more (will last at least 10ms)
     if( status & USB_INTS_BUS_RESET_BITS )
     {
-        TU_LOG(3, "BUS RESET\n");
+        TU_LOG(3, "BUS RESET\r\n");
 
         handled |= USB_INTS_BUS_RESET_BITS;
 
@@ -1116,7 +1116,7 @@ void dcd_sof_enable(uint8_t rhport, bool en)
 
 void dcd_remote_wakeup(__unused uint8_t rhport)
 {
-    TU_LOG(2, "dcd_remote_wakeup %d\n", rhport);
+    TU_LOG(2, "dcd_remote_wakeup %d\r\n", rhport);
 
     // since RESUME interrupt is not triggered if we are the one initiate
     // briefly enable SOF to notify usbd when bus is ready

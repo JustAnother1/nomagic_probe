@@ -110,12 +110,19 @@ regs Kusti, 23.10.2004
 
 #define MAX_STRING_LENGTH     120
 
+#ifdef UNIT_TEST
+#define PRINTF_NAME my_printf
+#else
+#define PRINTF_NAME printf
+#endif
+
 typedef void (*putcf) (void*, char);
 
 void init_printf(void* putp, void (*putf) (void*, char));
 
-int printf(const char *__restrict, ...);
+int PRINTF_NAME(const char *__restrict, ...);
 int sprintf(char* __restrict, const char *__restrict, ...);
+int snprintf (char * __restrict s, size_t size, const char * __restrict fmt, ...);
 
 int format(void* __restrict putp, void (*putf) (void*, char), const char *fmt, va_list va);
 

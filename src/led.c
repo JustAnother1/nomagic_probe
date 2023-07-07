@@ -19,7 +19,7 @@
 #include <hal/hw/PSM.h>
 #include <hal/hw/RESETS.h>
 #include <hal/hw/SIO.h>
-#include "time.h"
+#include "time_base.h"
 
 #define NUM_MAX_STEPS  2
 

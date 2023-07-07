@@ -19,6 +19,7 @@
 
 bool cmd_time(void);
 bool cmd_parameter_raw(void);
+bool cmd_hil_test(void);
 
 
 #endif /* CLI_CLI_SYS_H_ */

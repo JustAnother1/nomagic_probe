@@ -12,21 +12,34 @@
  * with this program; if not, see <http://www.gnu.org/licenses/>
  *
  */
-#ifndef CLI_CLI_COMMANDS_H_
-#define CLI_CLI_COMMANDS_H_
+#include "time_base.h"
+#include <hal/hw/PPB.h>
 
-#include "cli_cfg.h"
-#include "cli/cli_sys.h"
-#include "cli/cli_usb.h"
-#include "cli/cli_memory.h"
+volatile uint32_t ms_since_boot;
 
-cmd_typ commands[] = {
-        {"time", "time since power on", cmd_time},
-        {"param_dump", "prints the parameters as hex", cmd_parameter_raw},
-        {"usb_info", "display USB status information", cmd_usb_info},
-        {"md", "display memory", cmd_memory_display},
-        {"hil", "hardware in the loop tests", cmd_hil_test},
-};
+void delay_us(int usec) {
+    while (usec != 0) {
+        volatile uint32_t cnt = 11;
+        while (cnt > 0) {
+            cnt--;
+        }
+        usec--;
+    }
+}
 
+void SysTick_Handler(void) {
+    ms_since_boot++;
+}
 
-#endif /* CLI_CLI_COMMANDS_H_ */
+void init_time(void)
+{
+    ms_since_boot = 0;
+    PPB->SYST_CSR = 0x7;  // SysTick on
+    PPB->SYST_RVR = 125000;  // reload value
+}
+
+uint32_t time_get_ms(void)
+{
+    return ms_since_boot;
+}
+

@@ -20,7 +20,7 @@
 #include <hal/hw/SIO.h>
 #include <hal/hw/XOSC.h>
 #include "cli/cli.h"
-#include "time.h"
+#include "time_base.h"
 #include <stdint.h>
 #include "tinyusb/usb.h"
 #include "tinyusb/src/tusb.h"

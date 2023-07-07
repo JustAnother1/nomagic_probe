@@ -12,20 +12,11 @@
  * with this program; if not, see <http://www.gnu.org/licenses/>
  *
  */
-#ifndef TIME_H_
-#define TIME_H_
+#ifndef HAL_HW_DIVIDER_H_
+#define HAL_HW_DIVIDER_H_
 
 #include <stdint.h>
-#include <hal/hw/PPB.h>
 
-void delay_us(int usec);
+void div_and_mod(uint32_t divident, uint32_t divisor, uint32_t* quotient, uint32_t* remainder);
 
-void init_time(void);
-uint32_t time_get_ms(void);
-
-static inline uint32_t time_us_32(void) {
-    // TODO fix
-    return PPB->SYST_CVR;
-}
-
-#endif /* TIME_H_ */
+#endif /* HAL_HW_DIVIDER_H_ */

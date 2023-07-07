@@ -12,21 +12,20 @@
  * with this program; if not, see <http://www.gnu.org/licenses/>
  *
  */
-#ifndef CLI_CLI_COMMANDS_H_
-#define CLI_CLI_COMMANDS_H_
+#ifndef TIME_BASE_H_
+#define TIME_BASE_H_
 
-#include "cli_cfg.h"
-#include "cli/cli_sys.h"
-#include "cli/cli_usb.h"
-#include "cli/cli_memory.h"
+#include <stdint.h>
+#include <hal/hw/PPB.h>
 
-cmd_typ commands[] = {
-        {"time", "time since power on", cmd_time},
-        {"param_dump", "prints the parameters as hex", cmd_parameter_raw},
-        {"usb_info", "display USB status information", cmd_usb_info},
-        {"md", "display memory", cmd_memory_display},
-        {"hil", "hardware in the loop tests", cmd_hil_test},
-};
+void delay_us(int usec);
 
+void init_time(void);
+uint32_t time_get_ms(void);
 
-#endif /* CLI_CLI_COMMANDS_H_ */
+static inline uint32_t time_us_32(void) {
+    // TODO fix
+    return PPB->SYST_CVR;
+}
+
+#endif /* TIME_BASE_H_ */

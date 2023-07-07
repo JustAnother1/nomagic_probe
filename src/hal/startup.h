@@ -117,7 +117,4 @@ static inline void NVIC_DisableIRQ(int32_t IRQn)
   }
 }
 
-
-void div_and_mod(uint32_t divident, uint32_t divisor, uint32_t* quotient, uint32_t* remainder);
-
 #endif // HAL_STARTUP_H

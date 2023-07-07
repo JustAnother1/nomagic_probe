@@ -19,11 +19,13 @@ SOURCE_DIR = $(dir $(lastword $(MAKEFILE_LIST)))
 LKR_SCRIPT = $(SRC_FOLDER)hal/RP2040.ld
 #LKR_SCRIPT = $(SRC_FOLDER)hal/RP2040_RAM.ld
 
-DDEFS += -DCFG_TUSB_DEBUG=0
+# tinyUSB logging has different levels 0 = no logging,1= some logging, 2 = more logging, 3= all logging
+DDEFS += -DCFG_TUSB_DEBUG=1
 
 
 CFLAGS  = -c -g3
 CFLAGS += -O3
+#CFLAGS += -O0
 CFLAGS += -std=c17
 CFLAGS += -mcpu=cortex-m0plus -mthumb
 CFLAGS += -ffreestanding -funsigned-char -fno-short-enums
@@ -39,6 +41,7 @@ LFLAGS += -fno-common -T$(LKR_SCRIPT)
 # Hardware abstraction layer
 SRC += $(SRC_FOLDER)hal/debug_uart.c
 SRC += $(SRC_FOLDER)hal/startup.c
+SRC += $(SRC_FOLDER)hal/hw_divider.c
 # command line interface (debug - UART0)
 SRC += $(SRC_FOLDER)cli/cli.c
 SRC += $(SRC_FOLDER)cli/cli_memory.c
@@ -53,7 +56,9 @@ SRC += $(SRC_FOLDER)lib/memset.c
 SRC += $(SRC_FOLDER)lib/printf.c
 SRC += $(SRC_FOLDER)lib/strlen.c
 SRC += $(SRC_FOLDER)lib/strncmp.c
-
+# file handling
+SRC += $(SRC_FOLDER)file/faked_disk.c
+SRC += $(SRC_FOLDER)file/file_storage.c
 # USB driver
 SRC += $(SRC_FOLDER)tinyusb/usb.c
 SRC += $(SRC_FOLDER)tinyusb/usb_descriptors.c
@@ -69,7 +74,7 @@ SRC += $(SRC_FOLDER)tinyusb/src/class/cdc/cdc_device.c
 SRC += $(SRC_FOLDER)tinyusb/usb_msc.c
 SRC += $(SRC_FOLDER)tinyusb/src/class/msc/msc_device.c
 # time base
-SRC += $(SRC_FOLDER)time.c
+SRC += $(SRC_FOLDER)time_base.c
 # user feedback
 SRC += $(SRC_FOLDER)led.c
 # main

@@ -12,21 +12,19 @@
  * with this program; if not, see <http://www.gnu.org/licenses/>
  *
  */
-#ifndef CLI_CLI_COMMANDS_H_
-#define CLI_CLI_COMMANDS_H_
 
-#include "cli_cfg.h"
-#include "cli/cli_sys.h"
-#include "cli/cli_usb.h"
-#include "cli/cli_memory.h"
+#ifndef FILE_FILE_STORAGE_H_
+#define FILE_FILE_STORAGE_H_
 
-cmd_typ commands[] = {
-        {"time", "time since power on", cmd_time},
-        {"param_dump", "prints the parameters as hex", cmd_parameter_raw},
-        {"usb_info", "display USB status information", cmd_usb_info},
-        {"md", "display memory", cmd_memory_display},
-        {"hil", "hardware in the loop tests", cmd_hil_test},
-};
+#include <stdint.h>
 
+#define BLOCK_SIZE        512
+#define NUM_FLASH_BLOCKS  2043
+#define MAX_FIRMWARE_SIZE (1024*1024)
 
-#endif /* CLI_CLI_COMMANDS_H_ */
+uint32_t file_storage_get_block_count(void);
+uint16_t file_storage_getblock_size(void);
+int32_t  file_storage_read(uint32_t block, uint32_t offset, uint8_t* buffer, uint32_t bufsize);
+int32_t  file_storage_write(uint32_t block, uint32_t offset, uint8_t* buffer, uint32_t bufsize);
+
+#endif /* FILE_FILE_STORAGE_H_ */

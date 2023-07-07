@@ -13,16 +13,16 @@
  *
  */
 #include "cli_sys.h"
-#include "time.h"
+#include "time_base.h"
 #include "hal/debug_uart.h"
 #include "hal/startup.h"
+#include "hal/hw_divider.h"
 #include "cli.h"
 
 bool cmd_time(void)
 {
     uint32_t now = time_get_ms();
 
-    //debug_line("\r\ntime since boot up : %ld ms", now);
     debug_msg("time since boot up : ");
     if(now < 1000)
     {
@@ -33,7 +33,7 @@ bool cmd_time(void)
         uint32_t millis;
         uint32_t seconds;
         div_and_mod(now, 1000, &seconds, &millis);
-        //millis = now % 1000;
+        // millis = now % 1000;
         // debug_line(STR("millis : %u"), millis);
         // seconds = now / 1000;
         // debug_line(STR("seconds : %lu"), seconds);
@@ -88,4 +88,40 @@ bool cmd_parameter_raw(void)
     return true;  // we are done
 }
 
+bool cmd_hil_test(void)
+{
+    uint32_t a;
+    uint32_t b;
+    uint32_t c;
+    a = 40;
+    b = 5;
+    c = a%b;
+    debug_line("40 mod 5 = %ld", c);
+    a = 0;
+    b = 512;
+    c = a%b;
+    debug_line("0 mod 512 = %ld", c);
+    a = 512;
+    b = 512;
+    c = a%b;
+    debug_line("512 mod 512 = %ld", c);
+    a = 1024;
+    b = 512;
+    c = a%b;
+    debug_line("%ld mod %ld = %ld", a, b, c);
+    a = 0;
+    b = 1;
+    c = a%b;
+    debug_line("%ld mod %ld = %ld", a, b, c);
+    a = 0;
+    b = 2;
+    c = a%b;
+    debug_line("%ld mod %ld = %ld", a, b, c);
+    a = 2;
+    b = 4;
+    c = a%b;
+    debug_line("%ld mod %ld = %ld", a, b, c);
 
+    debug_line("\r\nDone!");
+    return true;  // we are done
+}

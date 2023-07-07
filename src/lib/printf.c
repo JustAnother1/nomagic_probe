@@ -32,7 +32,6 @@
 #include <stdint.h>
 #include <stdio.h>
 #include "printf.h"
-#include "hal/startup.h"
 
 
 #ifdef PRINTF_FLOAT_SUPPORT
@@ -44,10 +43,11 @@ static int a2d(char ch);
 static char a2i(char ch, char** src, int base, int* nump);
 static void putchw(void* putp, putcf putf, int n, char z, char* bf);
 static void putcp(void* __restrict p, char c);
-
+static void putcp_n(void* __restrict p, char c);
 
 static putcf stdout_putf;
 static void* stdout_putp;
+static size_t leng_limit;
 
 
 #ifdef PRINTF_FLOAT_SUPPORT
@@ -111,6 +111,9 @@ static void f2a(double num, char * bf)
     }
 }
 #endif
+
+
+extern void div_and_mod(uint32_t divident, uint32_t divisor, uint32_t* quotient, uint32_t* remainder);
 
 
 static void ui2a(uint32_t num, // number to convert
@@ -336,7 +339,7 @@ void init_printf(void* putp, void (*putf) (void*, char))
     stdout_putp = putp;
 }
 
-int printf(const char *fmt, ...)
+int PRINTF_NAME(const char *fmt, ...)
 {
     int len;
     va_list va;
@@ -351,6 +354,15 @@ static void putcp(void* __restrict p, char c)
     *(*((char**)p))++ = c;
 }
 
+static void putcp_n(void* __restrict p, char c)
+{
+    leng_limit--;
+    if(0 < leng_limit)
+    {
+        *(*((char**)p))++ = c;
+    }
+}
+
 int sprintf(char * __restrict s, const char * __restrict fmt, ...)
 {
     int len;
@@ -362,3 +374,14 @@ int sprintf(char * __restrict s, const char * __restrict fmt, ...)
     return len;
 }
 
+int snprintf (char * __restrict s, size_t size, const char * __restrict fmt, ...)
+{
+    int len;
+    leng_limit = size;
+    va_list va;
+    va_start(va,fmt);
+    len = format((void* __restrict)&s, putcp_n, fmt, va);
+    putcp_n((void* __restrict)&s, 0);
+    va_end(va);
+    return len;
+}
