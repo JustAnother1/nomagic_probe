@@ -39,7 +39,7 @@ typedef struct {
     cmd_func_typ func;
 }cmd_typ;
 
-#define debug_msg(...)  printf(__VA_ARGS__)
-#define debug_line(...) printf(__VA_ARGS__); printf("\r\n")
+#define debug_msg(...)  my_printf(__VA_ARGS__)
+#define debug_line(...) my_printf(__VA_ARGS__); printf("\r\n")
 
 #endif /* CLI_CLI_CFG_H_ */

@@ -4,68 +4,72 @@
 #include "../src/cli/cli.h"
 #include "../src/lib/printf.h"
 #include "cli_tests.h"
+#include "usb_msc_tests.h"
 #include "printf_tests.h"
 
 
 
 
-/* Creating a test suite is pretty simple.  First, you'll need an
- * array of tests: */
+// Creating a test suite is pretty simple.  First, you'll need an
+// array of tests:
 static MunitTest cli_tests[] = {
   {
-    /* The name is just a unique human-readable way to identify the
-     * test. You can use it to run a specific test if you want, but
-     * usually it's mostly decorative. */
+    // The name is just a unique human-readable way to identify the
+    // test. You can use it to run a specific test if you want, but
+    // usually it's mostly decorative.
     (char*) "/cli/init",
-    /* You probably won't be surprised to learn that the tests are
-     * functions. */
+    // You probably won't be surprised to learn that the tests are
+    // functions.
     test_cli_init,
-    /* If you want, you can supply a function to set up a fixture.  If
-     * you supply NULL, the user_data parameter from munit_suite_main
-     * will be used directly.  If, however, you provide a callback
-     * here the user_data parameter will be passed to this callback,
-     * and the return value from this callback will be passed to the
-     * test function.
-     *
-     * For our example we don't really need a fixture, but lets
-     * provide one anyways. */
+    // If you want, you can supply a function to set up a fixture.  If
+    // you supply NULL, the user_data parameter from munit_suite_main
+    // will be used directly.  If, however, you provide a callback
+    // here the user_data parameter will be passed to this callback,
+    // and the return value from this callback will be passed to the
+    // test function.
+    //
+    // For our example we don't really need a fixture, but lets
+    // provide one anyways.
     cli_setup,
-    /* If you passed a callback for the fixture setup function, you
-     * may want to pass a corresponding callback here to reverse the
-     * operation. */
+    // If you passed a callback for the fixture setup function, you
+    // may want to pass a corresponding callback here to reverse the
+    // operation.
     NULL,
-    /* Finally, there is a bitmask for options you can pass here.  You
-     * can provide either MUNIT_TEST_OPTION_NONE or 0 here to use the
-     * defaults. */
+    // Finally, there is a bitmask for options you can pass here.  You
+    // can provide either MUNIT_TEST_OPTION_NONE or 0 here to use the
+    // defaults.
     MUNIT_TEST_OPTION_NONE,
     NULL
   },
-  /* Usually this is written in a much more compact format; all these
-   * comments kind of ruin that, though.  Here is how you'll usually
-   * see entries written: */
-  { (char*) "/cli/tick/idle",        test_cli_tick_idle,        cli_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
-  { (char*) "/cli/tick/echo",        test_cli_tick_echo,        cli_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
-  { (char*) "/cli/tick/no_echo",     test_cli_tick_no_echo,     cli_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
-  { (char*) "/cli/tick/prompt_r",    test_cli_tick_prompt_r,    cli_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
-  { (char*) "/cli/tick/prompt_n",    test_cli_tick_prompt_n,    cli_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
-  { (char*) "/cli/tick/prompt_rn",   test_cli_tick_prompt_rn,   cli_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
-  { (char*) "/cli/tick/prompt_nr",   test_cli_tick_prompt_nr,   cli_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
-  { (char*) "/cli/tick/prompt_nn",   test_cli_tick_prompt_nn,   cli_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
-  { (char*) "/cli/tick/prompt_rr",   test_cli_tick_prompt_rr,   cli_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
-  { (char*) "/cli/tick/prompt_rnr",  test_cli_tick_prompt_rnr,  cli_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
-  { (char*) "/cli/tick/prompt_nrn",  test_cli_tick_prompt_nrn,  cli_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
-  { (char*) "/cli/tick/prompt_rnrn", test_cli_tick_prompt_rnrn, cli_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
-  { (char*) "/cli/tick/prompt_nrnr", test_cli_tick_prompt_nrnr, cli_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
-  { (char*) "/cli/tick/cmd_invalid", test_cli_tick_cmd_invalid, cli_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
-  { (char*) "/cli/tick/cmd_help",    test_cli_tick_cmd_help,    cli_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  // Usually this is written in a much more compact format; all these
+  // comments kind of ruin that, though.  Here is how you'll usually
+  // see entries written:
+  { (char*) "/cli/tick/idle",        test_cli_tick_idle,         cli_setup,     NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  { (char*) "/cli/tick/echo",        test_cli_tick_echo,         cli_setup,     NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  { (char*) "/cli/tick/no_echo",     test_cli_tick_no_echo,      cli_setup,     NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  { (char*) "/cli/tick/prompt_r",    test_cli_tick_prompt_r,     cli_setup,     NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  { (char*) "/cli/tick/prompt_n",    test_cli_tick_prompt_n,     cli_setup,     NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  { (char*) "/cli/tick/prompt_rn",   test_cli_tick_prompt_rn,    cli_setup,     NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  { (char*) "/cli/tick/prompt_nr",   test_cli_tick_prompt_nr,    cli_setup,     NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  { (char*) "/cli/tick/prompt_nn",   test_cli_tick_prompt_nn,    cli_setup,     NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  { (char*) "/cli/tick/prompt_rr",   test_cli_tick_prompt_rr,    cli_setup,     NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  { (char*) "/cli/tick/prompt_rnr",  test_cli_tick_prompt_rnr,   cli_setup,     NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  { (char*) "/cli/tick/prompt_nrn",  test_cli_tick_prompt_nrn,   cli_setup,     NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  { (char*) "/cli/tick/prompt_rnrn", test_cli_tick_prompt_rnrn,  cli_setup,     NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  { (char*) "/cli/tick/prompt_nrnr", test_cli_tick_prompt_nrnr,  cli_setup,     NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  { (char*) "/cli/tick/cmd_invalid", test_cli_tick_cmd_invalid,  cli_setup,     NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  { (char*) "/cli/tick/cmd_help",    test_cli_tick_cmd_help,     cli_setup,     NULL, MUNIT_TEST_OPTION_NONE, NULL },
 
-  { (char*) "/printf/init",          test_printf_init,          printf_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
-  { (char*) "/printf/printf/string", test_printf_printf_str,    printf_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
-  { (char*) "/printf/printf/int",    test_printf_printf_int,    printf_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
-  { (char*) "/printf/printf/digits", test_printf_printf_digits, printf_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  { (char*) "/printf/init",          test_printf_init,           printf_setup,  NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  { (char*) "/printf/printf/string", test_printf_printf_str,     printf_setup,  NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  { (char*) "/printf/printf/int",    test_printf_printf_int,     printf_setup,  NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  { (char*) "/printf/printf/digits", test_printf_printf_digits,  printf_setup,  NULL, MUNIT_TEST_OPTION_NONE, NULL },
 
-  /* To tell the test runner when the array is over, just add a NULL
-   * entry at the end. */
+  { (char*) "/usb_msc/unit_ready",   test_usb_msc_unit_ready_cb, usb_msc_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  { (char*) "/usb_msc/read_10",      test_usb_msc_read10_cb,     usb_msc_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
+
+  // To tell the test runner when the array is over, just add a NULL
+  // entry at the end. */
   { NULL, NULL, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL }
 };
 

@@ -301,7 +301,7 @@ MunitResult test_cli_tick_cmd_invalid(const MunitParameter params[], void* user_
     uint8_t res_buf[] = {'\r', '\n',
 'I', 'n', 'v', 'a', 'l', 'i', 'd', ' ', 'c', 'o', 'm', 'm', 'a', 'n', 'd', ' ', '(', 'b', 'l', 'a', ')', ' ',
 't', 'y', 'p', 'e', ' ', '\'', 'h', 'e', 'l', 'p', '\'', ' ', 'f', 'o', 'r', ' ', 'l', 'i', 's', 't', ' ',
-'o', 'f', ' ', 'a', 'v', 'a', 'i', 'l', 'a', 'b', 'l', 'e', ' ', 'c', 'o', 'm', 'm', 'a', 'n', 'd', 's', '.',
+'o', 'f', ' ', 'a', 'v', 'a', 'i', 'l', 'a', 'b', 'l', 'e', ' ', 'c', 'o', 'm', 'm', 'a', 'n', 'd', 's',
         '\r', '\n',
         ' ', '$', ' '};
     /* These are just to silence compiler warnings about the parameters
@@ -317,7 +317,7 @@ MunitResult test_cli_tick_cmd_invalid(const MunitParameter params[], void* user_
     munit_assert_uint32(4, ==, recv_read_pos);
     munit_assert_uint32(4, ==, recv_write_pos);
     munit_assert_uint32(0, ==, send_read_pos);
-    munit_assert_uint32(74, ==, send_write_pos);
+    munit_assert_uint32(71, ==, send_write_pos);
     munit_assert_memory_equal(36, res_buf, send_buf);
     return MUNIT_OK;
 }

@@ -123,4 +123,18 @@ void debug_putc(void* p, char c)
     mock_send_bytes((uint8_t *)&c, 1);
 }
 
+void div_and_mod(uint32_t divident, uint32_t divisor, uint32_t* quotient, uint32_t* remainder)
+{
+    *remainder = divident%divisor;
+    *quotient = divident/divisor;
+}
+
+bool tud_msc_set_sense(uint8_t lun, uint8_t sense_key, uint8_t add_sense_code, uint8_t add_sense_qualifier)
+{
+  (void) lun;
+  (void) sense_key;
+  (void) add_sense_code;
+  (void) add_sense_qualifier;
+  return true;
+}
 
