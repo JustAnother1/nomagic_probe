@@ -232,6 +232,9 @@ enum {
 
 #define TUSB_DESC_CONFIG_POWER_MA(x)  ((x)/2)
 
+//--------------------------------------------------------------------+
+//
+//--------------------------------------------------------------------+
 typedef enum
 {
   XFER_RESULT_SUCCESS = 0,
@@ -275,7 +278,7 @@ enum
 
 enum
 {
-  TUSB_INDEX_INVALID = 0xff
+  TUSB_INDEX_INVALID_8 = 0xFFu
 };
 
 //--------------------------------------------------------------------+
@@ -474,9 +477,10 @@ typedef struct TU_ATTR_PACKED
   uint16_t bcdDFUVersion;
 } tusb_desc_dfu_functional_t;
 
-/*------------------------------------------------------------------*/
-/* Types
- *------------------------------------------------------------------*/
+//--------------------------------------------------------------------+
+//
+//--------------------------------------------------------------------+
+
 typedef struct TU_ATTR_PACKED{
   union {
     struct TU_ATTR_PACKED {
@@ -529,13 +533,13 @@ TU_ATTR_ALWAYS_INLINE static inline uint16_t tu_edpt_packet_size(tusb_desc_endpo
 #if CFG_TUSB_DEBUG
 TU_ATTR_ALWAYS_INLINE static inline const char *tu_edpt_dir_str(tusb_dir_t dir)
 {
-  static const char *str[] = {"out", "in"};
+  tu_static const char *str[] = {"out", "in"};
   return str[dir];
 }
 
 TU_ATTR_ALWAYS_INLINE static inline const char *tu_edpt_type_str(tusb_xfer_type_t t)
 {
-  static const char *str[] = {"control", "isochronous", "bulk", "interrupt"};
+  tu_static const char *str[] = {"control", "isochronous", "bulk", "interrupt"};
   return str[t];
 }
 #endif

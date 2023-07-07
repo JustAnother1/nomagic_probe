@@ -46,6 +46,7 @@
 #if CFG_TUSB_DEBUG >= 2
 extern char const* const tu_str_speed[];
 extern char const* const tu_str_std_request[];
+extern char const* const tu_str_xfer_result[];
 #endif
 
 void tu_print_mem(void const *buf, uint32_t count, uint8_t indent);
@@ -114,7 +115,7 @@ typedef struct
 
 static inline const char* tu_lookup_find(tu_lookup_table_t const* p_table, uint32_t key)
 {
-  static char not_found[11];
+  tu_static char not_found[11];
 
   for(uint16_t i=0; i<p_table->count; i++)
   {

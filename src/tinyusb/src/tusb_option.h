@@ -82,6 +82,7 @@
 #define OPT_MCU_STM32G4           311 ///< ST G4
 #define OPT_MCU_STM32WB           312 ///< ST WB
 #define OPT_MCU_STM32U5           313 ///< ST U5
+#define OPT_MCU_STM32L5           314 ///< ST L5
 
 // Sony
 #define OPT_MCU_CXD56             400 ///< SONY CXD56
@@ -96,9 +97,9 @@
 #define OPT_MCU_VALENTYUSB_EPTRI  600 ///< Fomu eptri config
 
 // NXP iMX RT
-#define OPT_MCU_MIMXRT            700             ///< NXP iMX RT Series
-#define OPT_MCU_MIMXRT10XX        OPT_MCU_MIMXRT  ///< RT10xx
-#define OPT_MCU_MIMXRT11XX        OPT_MCU_MIMXRT  ///< RT11xx
+#define OPT_MCU_MIMXRT1XXX        700                 ///< NXP iMX RT1xxx Series
+#define OPT_MCU_MIMXRT10XX        OPT_MCU_MIMXRT1XXX  ///< RT10xx
+#define OPT_MCU_MIMXRT11XX        OPT_MCU_MIMXRT1XXX  ///< RT11xx
 
 // Nuvoton
 #define OPT_MCU_NUC121            800
@@ -117,8 +118,12 @@
 #define OPT_MCU_RP2040           1100 ///< Raspberry Pi RP2040
 
 // NXP Kinetis
-#define OPT_MCU_MKL25ZXX         1200 ///< NXP MKL25Zxx
-#define OPT_MCU_K32L2BXX         1201 ///< NXP K32L2Bxx
+#define OPT_MCU_KINETIS_KL       1200 ///< NXP KL series
+#define OPT_MCU_KINETIS_K32L     1201 ///< NXP K32L series
+#define OPT_MCU_KINETIS_K32      1201 ///< Alias to K32L
+
+#define OPT_MCU_MKL25ZXX         1200 ///< Alias to KL (obsolete)
+#define OPT_MCU_K32L2BXX         1201 ///< Alias to K32 (obsolete)
 
 // Silabs
 #define OPT_MCU_EFM32GG          1300 ///< Silabs EFM32GG
@@ -127,6 +132,8 @@
 #define OPT_MCU_RX63X            1400 ///< Renesas RX63N/631
 #define OPT_MCU_RX65X            1401 ///< Renesas RX65N/RX651
 #define OPT_MCU_RX72N            1402 ///< Renesas RX72N
+#define OPT_MCU_RAXXX            1403 ///< Renesas RAxxx families
+
 
 // Mind Motion
 #define OPT_MCU_MM32F327X        1500 ///< Mind Motion MM32F327
@@ -159,6 +166,10 @@
 
 // WCH
 #define OPT_MCU_CH32V307         2200 ///< WCH CH32V307
+
+
+// NXP LPC MCX
+#define OPT_MCU_MCXN9            2300  ///< NXP MCX N9 Series
 
 // Helper to check if configured MCU is one of listed
 // Apply _TU_CHECK_MCU with || as separator to list of input
@@ -268,7 +279,7 @@
 // In case TUP_MCU_STRICT_ALIGN = 1 and TUP_ARCH_STRICT_ALIGN =0, we will not reply on compiler
 // to generate unaligned access code.
 // LPC_IP3511 Highspeed cannot access unaligned memory on USB_RAM
-#if TUD_OPT_HIGH_SPEED && (CFG_TUSB_MCU == OPT_MCU_LPC54XXX || CFG_TUSB_MCU == OPT_MCU_LPC55XX)
+#if TUD_OPT_HIGH_SPEED && TU_CHECK_MCU(OPT_MCU_LPC54XXX, OPT_MCU_LPC55XX)
   #define TUP_MCU_STRICT_ALIGN   1
 #else
   #define TUP_MCU_STRICT_ALIGN   0
@@ -284,12 +295,15 @@
   #define CFG_TUSB_DEBUG 0
 #endif
 
-// place data in accessible RAM for usb controller
+// TODO MEM_SECTION can be different for host and device controller
+// should use CFG_TUD_MEM_SECTION, CFG_TUH_MEM_SECTION
 #ifndef CFG_TUSB_MEM_SECTION
   #define CFG_TUSB_MEM_SECTION
 #endif
 
 // alignment requirement of buffer used for endpoint transferring
+// TODO MEM_ALIGN can be different for host and device controller
+// should use CFG_TUD_MEM_ALIGN, CFG_TUH_MEM_ALIGN
 #ifndef CFG_TUSB_MEM_ALIGN
   #define CFG_TUSB_MEM_ALIGN      TU_ATTR_ALIGNED(4)
 #endif
@@ -306,6 +320,26 @@
 //--------------------------------------------------------------------
 // Device Options (Default)
 //--------------------------------------------------------------------
+
+// Attribute to place data in accessible RAM for device controller
+// default to CFG_TUSB_MEM_SECTION for backward-compatible
+#ifndef CFG_TUD_MEM_SECTION
+  #ifdef CFG_TUSB_MEM_SECTION
+    #define CFG_TUD_MEM_SECTION   CFG_TUSB_MEM_SECTION
+  #else
+    #define CFG_TUD_MEM_SECTION
+  #endif
+#endif
+
+// Attribute to align memory for device controller
+// default to CFG_TUSB_MEM_ALIGN for backward-compatible
+#ifndef CFG_TUD_MEM_ALIGN
+  #ifdef CFG_TUSB_MEM_ALIGN
+    #define CFG_TUD_MEM_ALIGN   CFG_TUSB_MEM_ALIGN
+  #else
+    #define CFG_TUD_MEM_ALIGN   TU_ATTR_ALIGNED(4)
+  #endif
+#endif
 
 #ifndef CFG_TUD_ENDPOINT0_SIZE
   #define CFG_TUD_ENDPOINT0_SIZE  64
@@ -385,6 +419,21 @@
   #endif
 #endif // CFG_TUH_ENABLED
 
+// Attribute to place data in accessible RAM for host controller
+// default to CFG_TUSB_MEM_SECTION for backward-compatible
+#ifndef CFG_TUH_MEM_SECTION
+  #ifdef CFG_TUSB_MEM_SECTION
+    #define CFG_TUH_MEM_SECTION   CFG_TUSB_MEM_SECTION
+  #else
+    #define CFG_TUH_MEM_SECTION
+  #endif
+#endif
+
+// Attribute to align memory for host controller
+#ifndef CFG_TUH_MEM_ALIGN
+  #define CFG_TUH_MEM_ALIGN   TU_ATTR_ALIGNED(4)
+#endif
+
 //------------- CLASS -------------//
 
 #ifndef CFG_TUH_HUB
@@ -393,6 +442,16 @@
 
 #ifndef CFG_TUH_CDC
 #define CFG_TUH_CDC    0
+#endif
+
+#ifndef CFG_TUH_CDC_FTDI
+  // FTDI is not part of CDC class, only to re-use CDC driver API
+  #define CFG_TUH_CDC_FTDI 0
+#endif
+
+#ifndef CFG_TUH_CDC_CP210X
+  // CP210X is not part of CDC class, only to re-use CDC driver API
+  #define CFG_TUH_CDC_CP210X 0
 #endif
 
 #ifndef CFG_TUH_HID
@@ -424,6 +483,16 @@
 #define CFG_TUD_RPI_PIO_USB 0
 #endif
 
+
+//--------------------------------------------------------------------+
+// TypeC Options (Default)
+//--------------------------------------------------------------------+
+
+#ifndef CFG_TUC_ENABLED
+#define CFG_TUC_ENABLED 0
+
+#define tuc_int_handler(_p)
+#endif
 
 //------------------------------------------------------------------
 // Configuration Validation

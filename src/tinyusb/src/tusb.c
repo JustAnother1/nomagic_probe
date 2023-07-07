@@ -45,10 +45,10 @@
 
 bool tusb_init(void)
 {
-// #if CFG_TUD_ENABLED && defined(TUD_OPT_RHPORT)
+#if CFG_TUD_ENABLED && defined(TUD_OPT_RHPORT)
   // init device stack CFG_TUSB_RHPORTx_MODE must be defined
   TU_ASSERT ( tud_init(TUD_OPT_RHPORT) );
-// #endif
+#endif
 
 #if CFG_TUH_ENABLED && defined(TUH_OPT_RHPORT)
   // init host stack CFG_TUSB_RHPORTx_MODE must be defined
@@ -439,6 +439,10 @@ char const* const tu_str_std_request[] =
   "Synch Frame"
 };
 
+char const* const tu_str_xfer_result[] = {
+    "OK", "FAILED", "STALLED", "TIMEOUT"
+};
+
 #endif
 
 static void dump_str_line(uint8_t const* buf, uint16_t count)
@@ -495,7 +499,7 @@ void tu_print_mem(void const *buf, uint32_t count, uint8_t indent)
       tu_printf("%04X: ", 16*i/item_per_line);
     }
 
-    memcpy(&value, buf8, size);
+    tu_memcpy_s(&value, sizeof(value), buf8, size);
     buf8 += size;
 
     tu_printf(" ");
