@@ -17,11 +17,15 @@
 #include "cfg/cli_cfg.h"
 #include "hal/startup.h"
 #include "hal/hw_divider.h"
+#include <hal/hw/TIMER.h>
 #include "cli.h"
 
 bool cmd_time(void)
 {
     uint32_t now = time_get_ms();
+
+    uint32_t micro_now = TIMER->TIMERAWL;
+    debug_line("micro seconds: %ld µs", micro_now);
 
     debug_msg("time since boot up : ");
     if(now < 1000)
