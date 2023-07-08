@@ -17,6 +17,7 @@
 #include "cfg/cli_commands.h"
 #include <stdint.h>
 #include <string.h>
+#include "hal/watchdog.h"
 
 static uint8_t line_buffer[MAX_LINE_LENGTH];
 static uint32_t line_pos;
@@ -49,6 +50,7 @@ void cli_init(void)
     still_executing = false;
     cur_func = NULL;
     debug_msg(WELCOME);
+    watchdog_report();
     debug_msg(PROMPT);
 }
 
@@ -68,6 +70,13 @@ void cli_tick(void)
             }
         }
         // finished executing the command
+        {
+        uint32_t i;
+        for(i = 0; i < MAX_PARAMETERS; i++)
+        {
+            parameters[i] = NULL;
+        }
+        }
         line_pos = 0;
         parse_pos = 0;
         parameter_pos = 0;

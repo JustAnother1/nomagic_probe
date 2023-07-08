@@ -26,6 +26,7 @@ cmd_typ commands[] = {
         {"usb_info", "display USB status information", cmd_usb_info},
         {"md", "display memory", cmd_memory_display},
         {"hil", "hardware in the loop tests", cmd_hil_test},
+        {"die", "test the watch dog", cmd_die},
 };
 
 

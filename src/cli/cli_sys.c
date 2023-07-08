@@ -14,7 +14,7 @@
  */
 #include "cli_sys.h"
 #include "time_base.h"
-#include "hal/debug_uart.h"
+#include "cfg/cli_cfg.h"
 #include "hal/startup.h"
 #include "hal/hw_divider.h"
 #include "cli.h"
@@ -87,6 +87,16 @@ bool cmd_parameter_raw(void)
     debug_line("\r\nDone!");
     return true;  // we are done
 }
+
+bool cmd_die(void)
+{
+    for(;;)
+    {
+        ;
+    }
+    return false;  // will never happen
+}
+
 
 bool cmd_hil_test(void)
 {

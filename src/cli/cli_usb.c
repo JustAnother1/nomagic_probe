@@ -14,7 +14,7 @@
  */
 
 #include "cli_usb.h"
-#include "hal/debug_uart.h"
+#include "cfg/cli_cfg.h"
 #include "tinyusb/src/device/usbd.h"
 #include "tinyusb/src/class/cdc/cdc_device.h"
 

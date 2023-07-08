@@ -17,7 +17,7 @@
 
 #include "file_storage.h"
 #include "faked_disk.h"
-#include "hal/debug_uart.h"
+#include "cfg/cli_cfg.h"
 
 
 #define BLOCK_COUNT 2048

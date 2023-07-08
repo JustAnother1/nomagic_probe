@@ -312,6 +312,8 @@ _Noreturn void Reset_Handler() {
     }
     // switch clk_ref and clk_sys to XOSC
     CLOCKS->CLK_REF_CTRL = 0x2;
+    CLOCKS->WAKE_EN0 = 0xffffffff;
+    CLOCKS->WAKE_EN1 = 0x7fff;
     // wait for switch to happen
     while (0x4 != CLOCKS->CLK_REF_SELECTED)
     {

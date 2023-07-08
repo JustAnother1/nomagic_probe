@@ -12,15 +12,14 @@
  * with this program; if not, see <http://www.gnu.org/licenses/>
  *
  */
-#ifndef CLI_CLI_SYS_H_
-#define CLI_CLI_SYS_H_
+#ifndef HAL_WATCHDOG_H_
+#define HAL_WATCHDOG_H_
 
-#include "cfg/cli_cfg.h"
+void watchdog_enable(void);
+//! if you don't feed the watch dog regularly it gets angry!
+void watchdog_feed(void);
+//! reports type of reset
+void watchdog_report(void);
 
-bool cmd_time(void);
-bool cmd_parameter_raw(void);
-bool cmd_hil_test(void);
-bool cmd_die(void);
 
-
-#endif /* CLI_CLI_SYS_H_ */
+#endif /* HAL_WATCHDOG_H_ */

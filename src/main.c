@@ -19,12 +19,14 @@
 #include <hal/hw/RESETS.h>
 #include <hal/hw/SIO.h>
 #include <hal/hw/XOSC.h>
+#include "hal/watchdog.h"
 #include "cli/cli.h"
 #include "time_base.h"
 #include <stdint.h>
 #include "tinyusb/usb.h"
 #include "tinyusb/src/tusb.h"
 #include "led.h"
+
 
 /*
 void error_state(void)
@@ -50,6 +52,7 @@ void main1(void)
 
 void main(void)
 {
+    watchdog_enable();
     init_time();
     led_init();
     debug_uart_initialize();
@@ -57,6 +60,7 @@ void main(void)
     tusb_init(); // initialize tinyusb stack
     for (;;)
     {
+        watchdog_feed();
         led_tick();
         cli_tick();
         usb_tick();
