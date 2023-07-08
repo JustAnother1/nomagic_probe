@@ -26,6 +26,7 @@
 #include "tinyusb/usb.h"
 #include "tinyusb/src/tusb.h"
 #include "led.h"
+#include "gdbserver/gdbserver.h"
 
 
 /*
@@ -58,12 +59,14 @@ void main(void)
     debug_uart_initialize();
     cli_init();
     tusb_init(); // initialize tinyusb stack
+    gdbserver_init();
     for (;;)
     {
         watchdog_feed();
         led_tick();
         cli_tick();
         usb_tick();
+        gdbserver_tick();
     }
 }
 

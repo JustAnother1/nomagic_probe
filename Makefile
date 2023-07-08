@@ -39,7 +39,10 @@ LFLAGS  = -ffreestanding -nostdlib -nolibc -nodefaultlibs -nostartfiles -specs=n
 LFLAGS += -Wl,--gc-sections,-Map=$(BIN_FOLDER)$(PROJECT).map -g
 LFLAGS += -fno-common -T$(LKR_SCRIPT)
 
-
+#gdb server
+SRC += $(SRC_FOLDER)gdbserver/commands.c
+SRC += $(SRC_FOLDER)gdbserver/gdbserver.c
+SRC += $(SRC_FOLDER)gdbserver/util.c
 # Hardware abstraction layer
 SRC += $(SRC_FOLDER)hal/debug_uart.c
 SRC += $(SRC_FOLDER)hal/startup.c

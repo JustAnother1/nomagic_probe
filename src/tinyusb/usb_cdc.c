@@ -62,3 +62,28 @@ static void echo_serial_port(uint8_t buf[], uint32_t count)
     tud_cdc_n_write_flush(0);
 }
 
+void usb_cdc_send_string(char* str)
+{
+    // TODO
+    (void)str;
+}
+
+uint32_t usb_cdc_send_bytes(uint8_t *data, uint32_t length)
+{
+    // TODO
+    (void)data;
+    return length;
+}
+
+uint32_t usb_cdc_get_num_received_bytes(void)
+{
+    // TODO
+    return 0;
+}
+
+uint8_t  usb_cdc_get_next_received_byte(void)
+{
+    // TODO
+    return 0;
+}
+
