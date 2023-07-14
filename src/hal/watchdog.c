@@ -18,6 +18,7 @@
 #include <hal/hw/WATCHDOG.h>
 #include <hal/hw/PSM.h>
 #include <hal/hw/RESETS.h>
+#include <hal/hw/TIMER.h>
 #include "cfg/cli_cfg.h"
 
 
@@ -28,6 +29,7 @@ static uint32_t reaload_value = 10000000; // 100ms = 100000 * 2 = 200000;
 void watchdog_enable(void)
 {
     RESETS->RESET &= ~0x200000ul;  // enable TIMER
+    TIMER->DBGPAUSE = 0;
     WATCHDOG->CTRL = 0; // reaload_value| 0x6000000; // disable + stop when debugging
     WATCHDOG->TICK = 12 + 0x200;  // 12 MHz -> 12 ticks per µs, 0x200 = Enable
     watchdog_feed();

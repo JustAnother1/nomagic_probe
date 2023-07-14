@@ -12,8 +12,6 @@ static uint32_t line_pos;
 static uint32_t reply_length;
 static uint8_t reply_buffer[MAX_REPLY_LENGTH];
 
-// +$qSupported:multiprocess+;swbreak+;hwbreak+;qRelocInsn+;fork-events+;vfork-events+;exec-events+;vContSupported+;QThreadEvents+;no-resumed+;memory-tagging+;xmlRegisters=i386#77$qSupported:multiprocess+;swbreak+;hwbreak+;qRelocInsn+;fork-events+;vfork-events+;exec-events+;vContSupported+;QThreadEvents+;no-resumed+;memory-tagging+;xmlRegisters=i386#77$qSupported:multiprocess+;swbreak+;hwbreak+;qRelocInsn+;fork-events+;vfork-events+;exec-events+;vContSupported+;QThreadEvents+;no-resumed+;memory-tagging+;xmlRegisters=i386#77$qSupported:multiprocess+;swbreak+;hwbreak+;qRelocInsn+;fork-events+;vfork-events+;exec-events+;vContSupported+;QThreadEvents+;no-resumed+;memory-tagging+;xmlRegisters=i386#77---+$vMustReplyEmpty#3a$vMustReplyEmpty#3a$vMustReplyEmpty#3a$vMustReplyEmpty#3a
-// ---+
 
 // defines what we have received and have processed
 typedef enum parseState {UNKNOWN, IN_PACKET, FOUND_END, CHECKSUM_HIGH, CHECKSUM_LOW} state_typ;
