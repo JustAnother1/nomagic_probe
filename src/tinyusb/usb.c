@@ -305,7 +305,6 @@ static void usb_init(void)
 void usb_tick(void)
 {
     tud_task(); // device task
-    cdc_task(); // serial interface
 }
 
 //! USB interrupt

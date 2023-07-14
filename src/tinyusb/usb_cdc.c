@@ -40,50 +40,36 @@
 #include <stdint.h>
 #include "tinyusb/src/class/cdc/cdc_device.h"
 
-static void echo_serial_port(uint8_t buf[], uint32_t count);
+static uint8_t nextChar = 0;
 
-void cdc_task(void)
+void usb_cdc_send_string(char* str)
 {
-    if(tud_cdc_n_available(0))
+    while(0 != *str)
     {
-        uint8_t buf[64];
-        uint32_t count = tud_cdc_n_read(0, buf, sizeof(buf));
-        // echo back to serial port
-        echo_serial_port(buf, count);
-    }
-}
-
-static void echo_serial_port(uint8_t buf[], uint32_t count)
-{
-    for(uint32_t i = 0; i < count; i++)
-    {
-        tud_cdc_n_write_char(0, buf[i]);
+        tud_cdc_n_write_char(0, *str);
     }
     tud_cdc_n_write_flush(0);
 }
 
-void usb_cdc_send_string(char* str)
-{
-    // TODO
-    (void)str;
-}
-
 uint32_t usb_cdc_send_bytes(uint8_t *data, uint32_t length)
 {
-    // TODO
-    (void)data;
+    for(uint32_t i = 0; i < length; i++)
+    {
+        tud_cdc_n_write_char(0, data[i]);
+    }
+    tud_cdc_n_write_flush(0);
     return length;
 }
 
 uint32_t usb_cdc_get_num_received_bytes(void)
 {
-    // TODO
-    return 0;
+    return tud_cdc_n_available(0);
 }
 
 uint8_t  usb_cdc_get_next_received_byte(void)
 {
-    // TODO
-    return 0;
+    nextChar = 0;
+    tud_cdc_n_read(0, &nextChar, 1);
+    return nextChar;
 }
 
