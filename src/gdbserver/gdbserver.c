@@ -35,7 +35,7 @@ void gdbserver_tick(void)
     uint32_t num_bytes_received;
 
     num_bytes_received = GDBSERVER_NUM_RECEIVED_BYTES();
-    if(0 < num_bytes_received)
+    while(0 < num_bytes_received)
     {
         uint32_t i;
         for(i = 0; i < num_bytes_received; i++)
@@ -45,6 +45,7 @@ void gdbserver_tick(void)
             {
                 case CHECKSUM_LOW:
                 case UNKNOWN:
+                    // Between packets:
                     if('$' == data)
                     {
                         line_pos = 0;
@@ -60,6 +61,11 @@ void gdbserver_tick(void)
                         // Transmit error
                         // -> Resent last message
                         GDBSERVER_SEND_BYTES(reply_buffer, reply_length);
+                    }
+                    else if(0x03 == data)
+                    {
+                        // BREAK
+                        // TODO
                     }
                     else
                     {
@@ -104,6 +110,7 @@ void gdbserver_tick(void)
                     break;
             }
         }
+        num_bytes_received = GDBSERVER_NUM_RECEIVED_BYTES();
     }
     // else no new bytes -> nothing to do
 }
