@@ -15,6 +15,8 @@ static config_typ cfg;
 static bool checksumOK(char* received, uint32_t length, char* checksum);
 static void handle_general_query(char* received, uint32_t length);
 static void handle_general_set(char* received, uint32_t length);
+static void handle_vee(char* received, uint32_t length);
+static void handle_tee(char* received, uint32_t length);
 
 void commands_init(void)
 {
@@ -57,6 +59,27 @@ void commands_execute(char* received, uint32_t length, char* checksum)
             }
             break;
 
+        case '?':  // Report why the target halted
+            // TODO
+            send_unknown_command_reply();
+            break;
+
+        case 'c':  // continue
+        case 'C':  // continue
+        case 'D':  // Detach from client
+        case 'G':  // read  or write general Registers
+        case 'g':  // read  or write general Registers
+        case 'H':  // report the current tread
+            // Hc ?
+        case 'k':  // kill the target
+        case 'M':  // read  or write main memory
+        case 'm':  // read  or write main memory
+        case 'P':  // read  or write specific Register
+        case 'p':  // read  or write specific Register
+            // TODO
+            send_unknown_command_reply();
+            break;
+
         case 'q': // general query
             if(1 < length)
             {
@@ -79,14 +102,31 @@ void commands_execute(char* received, uint32_t length, char* checksum)
             }
             break;
 
-        case '?':
-        case 'G':
-        case 'g':
-        case 'M':
-        case 'm':
-        case 'c':  // continue
+        case 'R':  // Restart the program being run
+        case 's':  // step
+        case 'S':  // step
+            // TODO
+            send_unknown_command_reply();
+            break;
+
+        case 'T':  // report if a particular Thread is alive
+            // TODO
+            send_unknown_command_reply();
+            break;
+
+        case 't':
+            handle_tee(received, length);
+            break;
+
         case 'v':
-            // vCont
+            handle_vee(received, length);
+            break;
+
+        case 'X':  // load binary data
+        case 'Z':  // clear or set breakpoints or watchpoints
+            // TODO
+            send_unknown_command_reply();
+            break;
 
         default : // unknown or unsupported command
             send_unknown_command_reply();
@@ -113,16 +153,124 @@ bool checksumOK(char* received, uint32_t length, char* checksum)
     }
 }
 
-static void handle_general_query(char* received, uint32_t length)
+static void handle_vee(char* received, uint32_t length)
 {
     (void)length; // TODO
-    if(0 == strncmp(received, "qSupported", 10))
+    if(0 == strncmp(received, "v", 10))
     {
+        // Report the features supported by the server.
         // TODO parse parameters
         reply_packet_prepare();
         // TODO add supported features
         reply_packet_add("hwbreak+");
         reply_packet_send();
+    }
+    else if(0 == strncmp(received, "vCont", 10))
+    {
+        // specify step or continue actions specific to one or more threads
+        // TODO
+        send_unknown_command_reply();
+    }
+    else if(0 == strncmp(received, "vCont?", 10))
+    {
+        // report the supported vCont actions
+        // TODO
+        send_unknown_command_reply();
+    }
+    else if(0 == strncmp(received, "vAttach", 10))
+    {
+        // Attach to (new) process
+        // TODO
+        send_unknown_command_reply();
+    }
+    else if(0 == strncmp(received, "vRun", 10))
+    {
+        // run program
+        // TODO
+        send_unknown_command_reply();
+    }
+    else
+    {
+        send_unknown_command_reply();
+    }
+}
+
+static void handle_tee(char* received, uint32_t length)
+{
+    (void)length; // TODO
+    if(0 == strncmp(received, "target async", 10))
+    {
+        // debug with other core running
+        // TODO
+        send_unknown_command_reply();
+    }
+    else if(0 == strncmp(received, "target extended-async", 10))
+    {
+        // debug with other core running
+        // TODO
+        send_unknown_command_reply();
+    }
+    else
+    {
+        send_unknown_command_reply();
+    }
+}
+
+static void handle_general_query(char* received, uint32_t length)
+{
+    (void)length; // TODO
+    if(0 == strncmp(received, "qSupported", 10))
+    {
+        // Report the features supported by the server.
+        // TODO parse parameters
+        reply_packet_prepare();
+        reply_packet_add("hwbreak+");
+        reply_packet_add("PacketSize=1f0");
+        // TODO add supported features
+        reply_packet_send();
+    }
+    else if(0 == strncmp(received, "qC", 10))
+    {
+        // report the current tread
+        // TODO
+        send_unknown_command_reply();
+    }
+    else if(0 == strncmp(received, "qOffsets", 10))
+    {
+        // report the offsets to use when relocating downloaded code
+        reply_packet_prepare();
+        reply_packet_add("Text=0;Data=0;Bss=0;");
+        reply_packet_send();
+    }
+    else if(0 == strncmp(received, "qSymbol", 10))
+    {
+        // request any symbol data
+        // TODO
+        send_unknown_command_reply();
+    }
+    else if(0 == strncmp(received, "qfThreadInfo", 10))
+    {
+        // report the current tread
+        // TODO
+        send_unknown_command_reply();
+    }
+    else if(0 == strncmp(received, "qsThreadInfo", 10))
+    {
+        // report the current tread
+        // TODO
+        send_unknown_command_reply();
+    }
+    else if(0 == strncmp(received, "qGetTLSAddr", 10))
+    {
+        // report the current tread
+        // TODO
+        send_unknown_command_reply();
+    }
+    else if(0 == strncmp(received, "qThreadExtraInfo", 10))
+    {
+        // report the current tread
+        // TODO
+        send_unknown_command_reply();
     }
     else
     {
@@ -135,5 +283,6 @@ static void handle_general_set(char* received, uint32_t length)
     // TODO
     (void) received;
     (void) length;
+    send_unknown_command_reply();
 }
 
