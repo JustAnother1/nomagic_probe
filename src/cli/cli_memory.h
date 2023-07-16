@@ -18,7 +18,7 @@
 #include <stdbool.h>
 
 bool cmd_memory_display(void);
-
+bool cmd_memory_dump(void);
 
 
 
