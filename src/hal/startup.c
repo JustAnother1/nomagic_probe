@@ -340,11 +340,13 @@ void startup_report(void)
     debug_line(".code start:          0x%08lx", (uint32_t)&__code_start);
     debug_line(".code end:            0x%08lx", (uint32_t)&__code_end);
     debug_line(".code start in flash: 0x%08lx", (uint32_t)&__code_in_flash);
+    debug_line(".code end in flash:   0x%08lx", (uint32_t)(&__code_in_flash + (&__code_end - &__code_start)));
     debug_line(".bss start:           0x%08lx", (uint32_t)&__bss_start);
     debug_line(".bss end:             0x%08lx", (uint32_t)&__bss_end);
     debug_line(".data start:          0x%08lx", (uint32_t)&__data_start);
     debug_line(".data end:            0x%08lx", (uint32_t)&__data_end);
     debug_line(".data start in flash: 0x%08lx", (uint32_t)&__data_in_flash);
+    debug_line(".data end in flash:   0x%08lx", (uint32_t)(&__data_in_flash + (&__data_end - &__data_start)));
     debug_line(".rodata start:        0x%08lx", (uint32_t)&__ro_data_start);
     debug_line(".rodata end:          0x%08lx", (uint32_t)&__ro_data_end);
 }
