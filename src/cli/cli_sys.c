@@ -44,7 +44,7 @@ bool cmd_time(void)
         // debug_line(STR("seconds : %lu"), seconds);
         if(seconds < 60)
         {
-            debug_line("%lu,%03lu s", seconds, millis);
+            debug_line("%lu.%03lu s", seconds, millis);
         }
         else
         {
@@ -57,7 +57,7 @@ bool cmd_time(void)
             // debug_line(STR("minutes : %lu"), minutes);
             if(minutes < 60)
             {
-                debug_line("%lu:%02lu,%03lu mm:ss",minutes, seconds, millis);
+                debug_line("%lu:%02lu.%03lu mm:ss",minutes, seconds, millis);
             }
             else
             {
@@ -67,7 +67,7 @@ bool cmd_time(void)
                 // minutes = minutes % 60;
                 // debug_line(STR("minutes : %u"), minutes);
                 // hours = now / 60;
-                debug_line("%lu:%02lu:%02lu,%03lu hh:mm:ss", hours, minutes, seconds, millis);
+                debug_line("%lu:%02lu:%02lu.%03lu hh:mm:ss", hours, minutes, seconds, millis);
             }
         }
     }
