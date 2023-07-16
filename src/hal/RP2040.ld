@@ -14,49 +14,49 @@ MEMORY
 SECTIONS
 {
 /* second stage boot loader: (needed for ROM boot loader to work) */
-  .text 0x10000000 : {
-    "src/hal/2ndstage.bin"
-    KEEP (*(.vectors))
-  } > FLASH
+    .text 0x10000000 : {
+        "src/hal/2ndstage.bin"
+        KEEP (*(.vectors))
+    } > FLASH
 
 /* executeable code for functions*/
-  .text : {
-    *(.text)
-    *(.text.*)
-  } > FLASH
+    .text : {
+      *(.text)
+      *(.text.*)
+    } > FLASH
 
 /* read only data (const,..) */
-  .rodata : {
-    *(.rodata)
-    *(.rodata.*)
-  } > FLASH
+    .rodata : {
+      *(.rodata)
+      *(.rodata.*)
+    } > FLASH
 
 /* initialized data */
-  .data : {
-    . = ALIGN(4);
-    __data_start = .;
+    .data : {
+        . = ALIGN(4);
+        __data_start = .;
     
-    *(.data)
-    *(.data.*)
+        *(.data)
+        *(.data.*)
     
-    . = ALIGN(4);
-    __data_end = .;
-  } >RAM AT> FLASH
+        . = ALIGN(4);
+        __data_end = .;
+    } >RAM AT> FLASH
 
-  /* used by the startup to initialize data */
-  __data_in_flash = LOADADDR(.data);
+    /* used by the startup to initialize data */
+    __data_in_flash = LOADADDR(.data);
 
 /* zero initialized variables */
-  .bss (NOLOAD) : {
-    . = ALIGN(4);
-    __bss_start = .;
+    .bss (NOLOAD) : {
+        . = ALIGN(4);
+        __bss_start = .;
     
-    *(.bss)
-    *(.bss.*)
-    *(COMMON)
+        *(.bss)
+        *(.bss.*)
+        *(COMMON)
     
-    . = ALIGN(4);
-    __bss_end = .;
-  }> RAM
+        . = ALIGN(4);
+        __bss_end = .;
+    }> RAM
 
 }
