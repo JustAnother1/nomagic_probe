@@ -63,7 +63,7 @@ void RTC_IRQ(void) __attribute__ ((weak, interrupt ("IRQ")));
 // void main(void) __attribute__ ((weak, __noreturn__));
 // void main1(void) __attribute__ ((weak, __noreturn__));
 _Noreturn void error_state(void) __attribute__ ((weak, __noreturn__));
-_Noreturn void Reset_Handler()__attribute__((__noreturn__));
+_Noreturn void Reset_Handler()__attribute__((__noreturn__, section(".third_stage_boot")));
 
 
 const VECTOR_FUNCTION_Type __VECTOR_TABLE[64] __attribute__((used, section(".vectors")))
@@ -139,6 +139,16 @@ extern uint32_t __bss_end;
 extern uint32_t __data_start;
 extern uint32_t __data_end;
 extern uint32_t __data_in_flash;
+
+extern uint32_t __code_start;
+extern uint32_t __code_end;
+extern uint32_t __code_in_flash;
+
+extern uint32_t __third_boot_start;
+extern uint32_t __third_boot_end;
+
+extern uint32_t __ro_data_start;
+extern uint32_t __ro_data_end;
 
 void NMI_Handler(void) {
     watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_NMI);
@@ -325,14 +335,26 @@ void error_state(void)
 
 void startup_report(void)
 {
+    debug_line("3rd stage boot start: 0x%08lx", (uint32_t)&__third_boot_start);
+    debug_line("3rd stage boot end:   0x%08lx", (uint32_t)&__third_boot_end);
+    debug_line(".code start:          0x%08lx", (uint32_t)&__code_start);
+    debug_line(".code end:            0x%08lx", (uint32_t)&__code_end);
+    debug_line(".code start in flash: 0x%08lx", (uint32_t)&__code_in_flash);
     debug_line(".bss start:           0x%08lx", (uint32_t)&__bss_start);
     debug_line(".bss end:             0x%08lx", (uint32_t)&__bss_end);
     debug_line(".data start:          0x%08lx", (uint32_t)&__data_start);
     debug_line(".data end:            0x%08lx", (uint32_t)&__data_end);
     debug_line(".data start in flash: 0x%08lx", (uint32_t)&__data_in_flash);
+    debug_line(".rodata start:        0x%08lx", (uint32_t)&__ro_data_start);
+    debug_line(".rodata end:          0x%08lx", (uint32_t)&__ro_data_end);
 }
 
-_Noreturn void Reset_Handler() {
+_Noreturn void Reset_Handler()
+{
+    uint32_t *code_start_p =  &__code_start;
+    uint32_t *code_end_p = &__code_end;
+    uint32_t *code_src_p = &__code_in_flash;
+
     uint32_t *bss_start_p =  &__bss_start;
     uint32_t *bss_end_p = &__bss_end;
 
@@ -416,6 +438,14 @@ _Noreturn void Reset_Handler() {
     // ROSC = off; XOSC = 12 MHz; PLL_SYS = 125 MHz
     // clk_ref = 12 MHz; clk_sys = 125 MHz; clk_peri = 125 MHz
 
+    // copy code from Flash to RAM
+    while(code_start_p < code_end_p)
+    {
+        *code_start_p = *code_src_p;
+        code_start_p++;
+        code_src_p++;
+    }
+
     // initialize global variables to zero
     while(bss_start_p < bss_end_p)
     {
@@ -424,17 +454,12 @@ _Noreturn void Reset_Handler() {
     }
 
     // initialize variables to their initialization value
-    if (data_src_p != data_start_p)
+    while(data_start_p < data_end_p)
     {
-        while(data_start_p < data_end_p)
-        {
-            *data_start_p = *data_src_p;
-            data_start_p++;
-            data_src_p++;
-        }
+        *data_start_p = *data_src_p;
+        data_start_p++;
+        data_src_p++;
     }
-    // else data already in RAM
-
 
     main();
 

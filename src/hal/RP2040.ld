@@ -19,16 +19,42 @@ SECTIONS
         KEEP (*(.vectors))
     } > FLASH
 
-/* executeable code for functions*/
-    .text : {
-      *(.text)
-      *(.text.*)
+/* executeable code for boot functions*/
+    .third_stage_boot : {
+        . = ALIGN(4);
+        __third_boot_start = .;
+        
+        *(.third_stage_boot .third_stage_boot.*)
+        
+        . = ALIGN(4);
+        __third_boot_end = .;
     } > FLASH
+
+/* executeable code for functions*/
+    .code : {
+        . = ALIGN(4);
+        __code_start = .;
+        
+        *(.text)
+        *(.text.*)
+        
+        . = ALIGN(4);
+        __code_end = .;
+    }  >RAM AT> FLASH
+
+    /* used by the startup to copy code */
+    __code_in_flash = LOADADDR(.code);
 
 /* read only data (const,..) */
     .rodata : {
-      *(.rodata)
-      *(.rodata.*)
+        . = ALIGN(4);
+        __ro_data_start = .;
+        
+        *(.rodata)
+        *(.rodata.*)
+        
+        . = ALIGN(4);
+        __ro_data_end = .;
     } > FLASH
 
 /* initialized data */

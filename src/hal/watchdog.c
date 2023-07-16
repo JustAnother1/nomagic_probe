@@ -51,11 +51,11 @@ void watchdog_report(void)
     uint32_t i = WATCHDOG->REASON;
     switch(i)
     {
-        case 0:  debug_line("watch dog: normal reset"); break;
-        case 1:  debug_line("watch dog: timer reset"); break;
-        case 2:  debug_line("watch dog: forced reset"); break;
-        case 3:  debug_line("watch dog: timer + forced reset"); break;
-        default: debug_line("watch dog: undocumented reset (%ld)", i); break;
+        case 0:  debug_line("watch dog : normal reset"); break;
+        case 1:  debug_line("watch dog : timer reset"); break;
+        case 2:  debug_line("watch dog : forced reset"); break;
+        case 3:  debug_line("watch dog : timer + forced reset"); break;
+        default: debug_line("watch dog : undocumented reset (%ld)", i); break;
     }
     i = WATCHDOG->SCRATCH0;
     if(0 != i)
