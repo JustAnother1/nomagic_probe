@@ -29,21 +29,7 @@
 #include "gdbserver/gdbserver.h"
 
 
-/*
-void error_state(void)
-{
-    for (;;)
-    {
-        // uint8_t data = 23;
-        SIO->GPIO_OUT_SET = 1 << 25;
-        // Delay
-        delay_us(10 * 1000);
-        SIO->GPIO_OUT_CLR = 1 << 25;
-        // Delay
-        delay_us(190 * 1000);
-    }
-}
-*/
+
 
 /* TODO Stack pointer
 void main1(void)

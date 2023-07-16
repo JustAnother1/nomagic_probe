@@ -9,3 +9,27 @@ https://blog.thea.codes/the-most-thoroughly-commented-linker-script/
 https://ftp.gnu.org/old-gnu/Manuals/ld-2.9.1/html_chapter/ld_3.html
 
 https://interrupt.memfault.com/blog/how-to-write-linker-scripts-for-firmware
+
+
+Discussion:
+===========
+
+striped vs non striped RAM
+--------------------------
+
+Striped means that after 4 Bytes of RAm the RAm segment is changed between the 4 64kB RAM segments.
+Non striped means that there are 4 seperate 64kB memeory areas.
+Each memeory area can be accessed in each cycle.
+
+Splitting code between the processors is complicated (what about libraries?) And only gives a slight benefit over striped RAm for code.
+
+-> use striped RAM for code space
+
+RAM 4 + RAM5 (4KB)
+------------------
+
+Are intended to be used as Stack for both cores. One RAM segment per Core. There address areas are right next to each other. This way they can be used as part of the single RAM area approach. If used as Stack areas, if the stack grows bigger than 4KB the stack of the other processor gets overwritten.
+
+
+
+

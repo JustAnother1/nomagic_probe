@@ -117,4 +117,6 @@ static inline void NVIC_DisableIRQ(int32_t IRQn)
   }
 }
 
+void startup_report(void);
+
 #endif // HAL_STARTUP_H

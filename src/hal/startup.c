@@ -22,6 +22,7 @@
 #include "main.h"
 #include <stdnoreturn.h>
 #include "hal/debug_uart.h"
+#include "hal/watchdog.h"
 
 typedef void (*VECTOR_FUNCTION_Type)(void);
 
@@ -140,130 +141,162 @@ extern uint32_t __data_end;
 extern uint32_t __data_in_flash;
 
 void NMI_Handler(void) {
+    watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_NMI);
     error_state();
 }
 
 void Hard_Fault_Handler(void) {
+    watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_HARD_FAULT);
     error_state();
 }
 
 void SVCall_Handler(void) {
+    watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_SVCALL);
     error_state();
 }
 
 void PendSV_Handler(void) {
+    watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_PENDSV);
     error_state();
 }
 
 void SysTick_Handler(void) {
+    watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_SYSTICK);
     error_state();
 }
 
 void TIMER_IRQ_0(void) {
+    watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_TIMER_0);
     error_state();
 }
 
 void TIMER_IRQ_1(void) {
+    watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_TIMER_1);
     error_state();
 }
 
 void TIMER_IRQ_2(void) {
+    watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_TIMER_2);
     error_state();
 }
 
 void TIMER_IRQ_3(void) {
+    watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_TIMER_3);
     error_state();
 }
 
 void PWM_IRQ_WRAP(void) {
+    watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_PWM);
     error_state();
 }
 
 void USBCTRL_IRQ(void) {
+    watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_USB_CTRL);
     error_state();
 }
 
 void XIP_IRQ(void) {
+    watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_XIP);
     error_state();
 }
 
 void PIO0_IRQ_0(void) {
+    watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_PIO_0_0);
     error_state();
 }
 
 void PIO0_IRQ_1(void) {
+    watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_PIO_0_1);
     error_state();
 }
 
 void PIO1_IRQ_0(void) {
+    watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_PIO_1_0);
     error_state();
 }
 
 void PIO1_IRQ_1(void) {
+    watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_PIO_1_1);
     error_state();
 }
 
 void DMA_IRQ_0(void) {
+    watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_DMA_0);
     error_state();
 }
 
 void DMA_IRQ_1(void) {
+    watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_DMA_1);
     error_state();
 }
 
 void IO_IRQ_BANK0(void) {
+    watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_GPIO_BANK_0);
     error_state();
 }
 
 void IO_IRQ_QSPI(void) {
+    watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_GPIO_QSPI);
     error_state();
 }
 
 void SIO_IRQ_PROC0(void) {
+    watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_SIO_PROC_0);
     error_state();
 }
 
 void SIO_IRQ_PROC1(void) {
+    watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_SIO_PROC_1);
     error_state();
 }
 
 void CLOCKS_IRQ(void) {
+    watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_CLOCKS);
     error_state();
 }
 
 void SPI0_IRQ(void) {
+    watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_SPI_0);
     error_state();
 }
 
 void SPI1_IRQ(void) {
+    watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_SPI_1);
     error_state();
 }
 
 void UART0_IRQ(void) {
+    watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_UART_0);
     error_state();
 }
 
 void UART1_IRQ(void) {
+    watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_UART_1);
     error_state();
 }
 
 void ADC_IRQ_FIFO(void) {
+    watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_ADC_FIFO);
     error_state();
 }
 
 void I2C0_IRQ(void) {
+    watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_I2C_0);
     error_state();
 }
 
 void I2C1_IRQ(void) {
+    watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_I2C_1);
     error_state();
 }
 
 void RTC_IRQ(void) {
+    watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_RTC);
     error_state();
 }
 
 void default_Handler(void) {
+    watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_DEFAULT);
     error_state();
 }
 
@@ -272,6 +305,31 @@ _Noreturn void error_state(void)
     __asm__ __volatile__ ("bkpt #0");
     while (1)
         ;
+}
+
+/*  no debugger version
+void error_state(void)
+{
+    for (;;)
+    {
+        // uint8_t data = 23;
+        SIO->GPIO_OUT_SET = 1 << 25;
+        // Delay
+        delay_us(10 * 1000);
+        SIO->GPIO_OUT_CLR = 1 << 25;
+        // Delay
+        delay_us(190 * 1000);
+    }
+}
+*/
+
+void startup_report(void)
+{
+    debug_line(".bss start:           0x%08lx", (uint32_t)&__bss_start);
+    debug_line(".bss end:             0x%08lx", (uint32_t)&__bss_end);
+    debug_line(".data start:          0x%08lx", (uint32_t)&__data_start);
+    debug_line(".data end:            0x%08lx", (uint32_t)&__data_end);
+    debug_line(".data start in flash: 0x%08lx", (uint32_t)&__data_in_flash);
 }
 
 _Noreturn void Reset_Handler() {
@@ -393,6 +451,7 @@ _Noreturn void Reset_Handler() {
     }
 */
     // main exited - WTF???
+    watchdog_report_issue(ISSUE_UNEXPECTED_CODE_REACHED_MAIN_EXITED);
     error_state();
 }
 

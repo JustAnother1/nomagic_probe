@@ -19,6 +19,7 @@
 #include "hal/hw_divider.h"
 #include <hal/hw/TIMER.h>
 #include "cli.h"
+#include "hal/watchdog.h"
 
 bool cmd_time(void)
 {
@@ -101,7 +102,6 @@ bool cmd_die(void)
     return false;  // will never happen
 }
 
-
 bool cmd_hil_test(void)
 {
     uint32_t a;
@@ -139,3 +139,15 @@ bool cmd_hil_test(void)
     debug_line("\r\nDone!");
     return true;  // we are done
 }
+
+bool cmd_info(void)
+{
+    debug_line("Startup:");
+    startup_report();
+    debug_line("Watchdog:");
+    watchdog_report();
+
+    debug_line("Done");
+    return true;  // we are done
+}
+

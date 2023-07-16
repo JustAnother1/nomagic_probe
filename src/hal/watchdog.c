@@ -111,3 +111,8 @@ void watchdog_report(void)
         debug_line("chip reset: power on or brown out reset");
     }
 }
+
+void watchdog_report_issue(uint32_t issue)
+{
+    WATCHDOG->SCRATCH7 = WATCHDOG->SCRATCH7 | issue;
+}

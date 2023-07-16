@@ -27,6 +27,7 @@ cmd_typ commands[] = {
         {"md", "display memory", cmd_memory_display},
         {"hil", "hardware in the loop tests", cmd_hil_test},
         {"die", "test the watch dog", cmd_die},
+        {"info", "low level firmware information", cmd_info},
 };
 
 

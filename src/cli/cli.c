@@ -228,7 +228,7 @@ static void execute(void)
             debug_msg("available commands :\r\n");
             for(i = 0; i < sizeof(commands)/sizeof(cmd_typ); i++)
             {
-                debug_msg("%s : %s\r\n", commands[i].name, commands[i].help);
+                debug_msg("%15s : %s\r\n", commands[i].name, commands[i].help);
             }
         }
         else
