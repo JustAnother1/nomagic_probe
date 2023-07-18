@@ -22,12 +22,14 @@ LKR_SCRIPT = $(SRC_FOLDER)hal/RP2040.ld
 # tinyUSB logging has different levels 0 = no logging,1= some logging, 2 = more logging, 3= all logging
 DDEFS += -DCFG_TUSB_DEBUG=1
 # with this the watchdog is only active if the debugger is not connected
-#DDEFS += -DDISABLE_WATCHDOG_FOR_DEBUG=1
+DDEFS += -DDISABLE_WATCHDOG_FOR_DEBUG=1
 
 
 CFLAGS  = -c -g3
 CFLAGS += -O3
+# sometimes helps with debugging:
 #CFLAGS += -O0
+#CFLAGS += -save-temps=obj
 CFLAGS += -std=c17
 CFLAGS += -mcpu=cortex-m0plus -mthumb
 CFLAGS += -ffreestanding -funsigned-char -fno-short-enums
@@ -48,6 +50,8 @@ SRC += $(SRC_FOLDER)hal/debug_uart.c
 SRC += $(SRC_FOLDER)hal/startup.c
 SRC += $(SRC_FOLDER)hal/hw_divider.c
 SRC += $(SRC_FOLDER)hal/watchdog.c
+SRC += $(SRC_FOLDER)hal/boot_rom.c
+SRC += $(SRC_FOLDER)hal/flash.c
 # command line interface (debug - UART0)
 SRC += $(SRC_FOLDER)cli/cli.c
 SRC += $(SRC_FOLDER)cli/cli_memory.c

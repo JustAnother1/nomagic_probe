@@ -20,6 +20,7 @@
 #include <hal/hw/TIMER.h>
 #include "cli.h"
 #include "hal/watchdog.h"
+#include "hal/boot_rom.h"
 
 bool cmd_time(void)
 {
@@ -146,7 +147,8 @@ bool cmd_info(void)
     startup_report();
     debug_line("Watchdog:");
     watchdog_report();
-
+    debug_line("boot ROM:");
+    boot_rom_report();
     debug_line("Done");
     return true;  // we are done
 }

@@ -29,6 +29,10 @@ cmd_typ commands[] = {
         {"hil", "hardware in the loop tests", cmd_hil_test},
         {"die", "test the watch dog", cmd_die},
         {"info", "low level firmware information", cmd_info},
+        {"flash_write", "write to flash memory <address> <length>", cmd_flash_memory_write},
+        {"flash_erase", "erase one flash memory sector <index>", cmd_flash_memory_write},
+        {"xip_off", "disable XIP on FLash", cmd_flash_disable_XIP},
+        {"xip_on", "enable XIP on FLash", cmd_flash_enable_XIP},
 };
 
 

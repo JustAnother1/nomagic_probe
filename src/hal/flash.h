@@ -12,16 +12,16 @@
  * with this program; if not, see <http://www.gnu.org/licenses/>
  *
  */
-#ifndef CLI_CLI_MEMORY_H_
-#define CLI_CLI_MEMORY_H_
 
-#include <stdbool.h>
+#ifndef HAL_FLASH_H_
+#define HAL_FLASH_H_
 
-bool cmd_memory_display(void);
-bool cmd_memory_dump(void);
-bool cmd_flash_memory_erase(void);
-bool cmd_flash_memory_write(void);
-bool cmd_flash_disable_XIP(void);
-bool cmd_flash_enable_XIP(void);
+#include <stdint.h>
 
-#endif /* CLI_CLI_MEMORY_H_ */
+void flash_init(void);
+void flash_write_block(uint32_t start_address, uint8_t* data, uint32_t length);
+void flash_erase_page(uint32_t number);
+
+
+
+#endif /* HAL_FLASH_H_ */

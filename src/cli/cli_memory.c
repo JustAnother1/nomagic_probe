@@ -16,7 +16,8 @@
 #include "cli_memory.h"
 #include "cli.h"
 #include "cli_cfg.h"
-
+#include "hal/flash.h"
+#include "hal/boot_rom.h"
 #include <stdlib.h>
 
 
@@ -111,14 +112,63 @@ bool cmd_memory_dump(void)
     }
 }
 
-/*
- * XIP Address alias:
- 0x10... XIP access, cacheable, allocating - Normal cache operation
- 0x11... XIP access, cacheable, non-allocating - Check for hit, don’t update cache on miss
- 0x12... XIP access, non-cacheable, allocating - Don’t check for hit, always update cache
- 0x13... XIP access, non-cacheable, non-allocating - Bypass cache completely
- 0x15... Use XIP cache as SRAM bank, mirrored across entire segment
-*/
+bool cmd_flash_memory_erase(void)
+{
+    uint8_t* addr_str = cli_get_parameter(0);
+    uint32_t address = (uint32_t)atoi((const char*)addr_str);
+    flash_erase_page(address);
+    return true; // we are done
+}
 
+bool cmd_flash_memory_write(void)
+{
+    uint32_t i;
+    uint8_t data[256];
+    uint8_t* addr_str = cli_get_parameter(0);
+    uint8_t* numBytes_str = cli_get_parameter(1);
+    uint32_t numBytes = (uint32_t)atoi((const char*)numBytes_str);
+    uint32_t address = (uint32_t)atoi((const char*)addr_str);
 
+    // limit length
+    if(numBytes > 256)
+    {
+        numBytes = 256;
+    }
 
+    // initialize data
+    for(i = 0; i < numBytes; i++)
+    {
+        data[i] = (uint8_t)(i & 0xff);
+    }
+
+    debug_line("writing to address: 0x%lx", address);
+    debug_line("writing %lu bytes", numBytes);
+    // write data
+    flash_write_block(address, data, numBytes);
+
+    return true; // we are done
+}
+
+bool cmd_flash_disable_XIP(void)
+{
+    boot_rom_flash_functions* flash_funcs = NULL;
+    flash_funcs = boot_rom_get_flash_functions();
+    if(NULL != flash_funcs)
+    {
+        flash_funcs->_connect_internal_flash();
+        flash_funcs->_flash_exit_xip();
+    }
+    return true; // we are done
+}
+
+bool cmd_flash_enable_XIP(void)
+{
+    boot_rom_flash_functions* flash_funcs = NULL;
+    flash_funcs = boot_rom_get_flash_functions();
+    if(NULL != flash_funcs)
+    {
+        flash_funcs->_flash_flush_cache();
+        flash_funcs->_flash_enter_cmd_xip();
+    }
+    return true; // we are done
+}
