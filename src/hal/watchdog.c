@@ -24,7 +24,7 @@
 
 static uint32_t reaload_value = 10000000; // 100ms = 100000 * 2 = 200000;
 // counter counts down 2 times see RP2040-E1
-// maximum is 0xff ff ff (16777215)!
+// maximum is 0xff ff ff (16777215µs/2 = 16777.215ms/2 = 16.777215s/2)!
 
 void watchdog_enable(void)
 {

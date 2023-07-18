@@ -1,0 +1,5 @@
+1. create hex file from nomagic probe CLI "md" commend
+2. use replace to get rid off address part
+3. use  linux command "xxd -r -p boot_rom_hex.txt  bootrom.bin"
+4. disassemble using ""arm-none-eabi-objdump -D -b binary -marm bootrom.bin -Mforce-thumb > disassemled.txt"
+
