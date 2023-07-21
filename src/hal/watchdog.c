@@ -19,12 +19,18 @@
 #include <hal/hw/PSM.h>
 #include <hal/hw/RESETS.h>
 #include <hal/hw/TIMER.h>
+#include <hal/hw/SIO.h>
 #include "cfg/cli_cfg.h"
 
 
 static uint32_t reaload_value = 10000000; // 100ms = 100000 * 2 = 200000;
 // counter counts down 2 times see RP2040-E1
 // maximum is 0xff ff ff (16777215µs/2 = 16777.215ms/2 = 16.777215s/2)!
+
+void watchdog_disable(void)
+{
+    WATCHDOG->CTRL = 0;
+}
 
 void watchdog_enable(void)
 {
@@ -85,17 +91,23 @@ void watchdog_report(void)
     i = WATCHDOG->SCRATCH5;
     if(0 != i)
     {
-        debug_line("data in scratch5 : 0x%08lx", i);
+        // debug_line("data in scratch5 : 0x%08lx", i);
+        debug_line("Core 1 was in section : 0x%08lx", i);
+        WATCHDOG->SCRATCH5 = 0;
     }
     i = WATCHDOG->SCRATCH6;
     if(0 != i)
     {
-        debug_line("data in scratch6 : 0x%08lx", i);
+        // debug_line("data in scratch6 : 0x%08lx", i);
+        debug_line("Core 0 was in section : 0x%08lx", i);
+        WATCHDOG->SCRATCH6 = 0;
     }
     i = WATCHDOG->SCRATCH7;
     if(0 != i)
     {
-        debug_line("data in scratch7 : 0x%08lx", i);
+        // debug_line("data in scratch7 : 0x%08lx", i);
+        debug_line("reported reset reason : 0x%08lx", i);
+        WATCHDOG->SCRATCH7 = 0;
     }
     i = VREG_AND_CHIP_RESET->CHIP_RESET;
     if(0 != (i & 0x100000))
@@ -115,4 +127,27 @@ void watchdog_report(void)
 void watchdog_report_issue(uint32_t issue)
 {
     WATCHDOG->SCRATCH7 = WATCHDOG->SCRATCH7 | issue;
+}
+
+void watchdog_enter_section(uint32_t section)
+{
+    if(0 == SIO->CPUID)
+    {
+        WATCHDOG->SCRATCH6 = WATCHDOG->SCRATCH6 | section;
+    }
+    else
+    {
+        WATCHDOG->SCRATCH5 = WATCHDOG->SCRATCH5 | section;
+    }
+}
+void watchdog_leave_section(uint32_t section)
+{
+    if(0 == SIO->CPUID)
+    {
+        WATCHDOG->SCRATCH6 = WATCHDOG->SCRATCH6 & ~section;
+    }
+    else
+    {
+        WATCHDOG->SCRATCH5 = WATCHDOG->SCRATCH5 & ~section;
+    }
 }

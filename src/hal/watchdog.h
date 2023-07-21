@@ -52,12 +52,22 @@
 #define ISSUE_UNEXPECTED_HANDLER_CALLED_DEFAULT     32
 #define ISSUE_UNEXPECTED_CODE_REACHED_MAIN_EXITED   33
 
+#define SECTION_INIT                                1
+#define SECTION_LED                                 2
+#define SECTION_WATCHDOG                            4
+#define SECTION_USB                                 8
+#define SECTION_CLI                              0x10
+#define SECTION_GDBSERVER                        0x20
 
+void watchdog_disable(void);
 void watchdog_enable(void);
 //! if you don't feed the watch dog regularly it gets angry!
 void watchdog_feed(void);
 //! reports type of reset
 void watchdog_report(void);
 void watchdog_report_issue(uint32_t issue);
+
+void watchdog_enter_section(uint32_t section);
+void watchdog_leave_section(uint32_t section);
 
 #endif /* HAL_WATCHDOG_H_ */

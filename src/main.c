@@ -30,33 +30,87 @@
 #include "led.h"
 #include "gdbserver/gdbserver.h"
 
+static void init_0(void);
+static void init_1(void);
+static void loop_0(void);
+static void loop_1(void);
 
 
-
-/* TODO Stack pointer
-void main1(void)
-{
-}
-*/
-
-void main(void)
+static void init_0(void)
 {
     boot_rom_check_if_valid();
     watchdog_enable();
     init_time();
-    led_init();
     flash_init();
     debug_uart_initialize();
     cli_init();
     tusb_init(); // initialize tinyusb stack
     gdbserver_init();
+}
+
+static void init_1(void)
+{
+    led_init();
+}
+
+static void loop_0(void)
+{
+    watchdog_enter_section(SECTION_WATCHDOG);
+    watchdog_feed();
+    watchdog_leave_section(SECTION_WATCHDOG);
+
+    watchdog_enter_section(SECTION_CLI);
+    cli_tick();
+    watchdog_leave_section(SECTION_CLI);
+
+    watchdog_enter_section(SECTION_USB);
+    usb_tick();
+    watchdog_leave_section(SECTION_USB);
+
+    watchdog_enter_section(SECTION_GDBSERVER);
+    gdbserver_tick();
+    watchdog_leave_section(SECTION_GDBSERVER);
+}
+
+static void loop_1(void)
+{
+    watchdog_enter_section(SECTION_LED);
+    led_tick();
+    watchdog_leave_section(SECTION_LED);
+}
+
+#ifdef ENABLE_CORE_1
+void main1(void)
+{
+    watchdog_enter_section(SECTION_INIT);
+    init_1();
+    watchdog_leave_section(SECTION_INIT);
     for(;;)
     {
-        watchdog_feed();
-        led_tick();
-        cli_tick();
-        usb_tick();
-        gdbserver_tick();
+        loop_1();
+    }
+}
+
+#endif
+
+void main(void)
+{
+    watchdog_enter_section(SECTION_INIT);
+#ifdef ENABLE_CORE_1
+    init_0();
+#else
+    init_0();
+    init_1();
+#endif
+    watchdog_leave_section(SECTION_INIT);
+    for(;;)
+    {
+#ifdef ENABLE_CORE_1
+        loop_0();
+#else
+        loop_0();
+        loop_1();
+#endif
     }
 }
 

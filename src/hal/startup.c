@@ -60,15 +60,16 @@ void I2C0_IRQ(void) __attribute__ ((weak, interrupt ("IRQ")));
 void I2C1_IRQ(void) __attribute__ ((weak, interrupt ("IRQ")));
 void RTC_IRQ(void) __attribute__ ((weak, interrupt ("IRQ")));
 
-// void main(void) __attribute__ ((weak, __noreturn__));
-// void main1(void) __attribute__ ((weak, __noreturn__));
+#ifdef ENABLE_CORE_1
+static void wake_up_core1(void);
+#endif
 _Noreturn void error_state(void) __attribute__ ((weak, __noreturn__));
 _Noreturn void Reset_Handler()__attribute__((__noreturn__, section(".third_stage_boot")));
 
 
 const VECTOR_FUNCTION_Type __VECTOR_TABLE[64] __attribute__((used, section(".vectors")))
 = {
-/*  0: Initial Stack Pointer    */(VECTOR_FUNCTION_Type) (0x20040000),
+/*  0: Initial Stack Pointer    */(VECTOR_FUNCTION_Type) (0x20041fff),  // Core 0
 /*  1: Reset Handler            */Reset_Handler,
 /*  2: NMI Handler        (-14) */NMI_Handler,
 /*  3: Hard Fault Handler (-13) */Hard_Fault_Handler,
@@ -313,15 +314,10 @@ void default_Handler(void) {
 _Noreturn void error_state(void)
 {
     __asm__ __volatile__ ("bkpt #0");
-    while (1)
-        ;
-}
 
-/*  no debugger version
-void error_state(void)
-{
     for (;;)
     {
+        /*
         // uint8_t data = 23;
         SIO->GPIO_OUT_SET = 1 << 25;
         // Delay
@@ -329,9 +325,9 @@ void error_state(void)
         SIO->GPIO_OUT_CLR = 1 << 25;
         // Delay
         delay_us(190 * 1000);
+        */
     }
 }
-*/
 
 void startup_report(void)
 {
@@ -351,8 +347,70 @@ void startup_report(void)
     debug_line(".rodata end:          0x%08lx", (uint32_t)&__ro_data_end);
 }
 
+#ifdef ENABLE_CORE_1
+static void wake_up_core1(void)
+{
+    // if you are using the SDK then you can simply use the multicore_launch_core1 function to launch code on processor core 1.
+
+    // values to be sent in order over the FIFO from core 0 to core 1
+    //
+    // vector_table is value for VTOR register
+    // sp is initial stack pointer (SP)
+    // entry is the initial program counter (PC) (don't forget to set the thumb bit!)
+    const uint32_t cmd_sequence[6] = {0, 0, 1, (uintptr_t) &__VECTOR_TABLE, (uintptr_t) 0x20040fff, (uintptr_t) ((uint32_t)(&main1) | 1)};
+    uint32_t seq = 0;
+    uint32_t response = 0;
+    uint32_t tries = 0;
+    do {
+        uint32_t cmd = cmd_sequence[seq];
+        // always drain the READ FIFO (from core 1) before sending a 0
+        if (!cmd)
+        {
+            // discard data from read FIFO until empty
+            while (0 != (SIO->FIFO_ST & 1))
+            {
+                response = SIO->FIFO_RD;
+            }
+            // execute a SEV as core 1 may be waiting for FIFO space
+            __asm volatile ("sev");
+        }
+        // write 32 bit value to write FIFO
+        // We wait for the fifo to have some space
+        while (0 == (SIO->FIFO_ST & 2))
+            ;
+
+        SIO->FIFO_WR = cmd;
+
+        // Fire off an event to the other core
+        __asm volatile ("sev");
+
+        // read 32 bit value from read FIFO once available
+        // If nothing there yet, we wait for an event first,
+        // to try and avoid too much busy waiting
+        while (1 == (SIO->FIFO_ST & 1))
+        {
+            response = SIO->FIFO_RD;
+        }
+
+        response = SIO->FIFO_RD;
+
+        // move to next state on correct response (echo-d value) otherwise start over
+        if(cmd == response)
+        {
+            seq = seq +1;
+        }
+        else
+        {
+            seq = 0;
+            tries++;
+        }
+    } while ((seq < 6) && (tries < 6));
+}
+#endif
+
 _Noreturn void Reset_Handler()
 {
+    /// !!! DO NOT CALL ANY FUNCTIONS BETWEEN THIS LINE
     uint32_t *code_start_p =  &__code_start;
     uint32_t *code_end_p = &__code_end;
     uint32_t *code_src_p = &__code_in_flash;
@@ -369,12 +427,6 @@ _Noreturn void Reset_Handler()
     while (0xffff != (0xffff & PSM->DONE))
     {
         ;
-    }
-
-    if(0 != SIO->CPUID) {
-        // soft reset with core1 active
-        // send core1 to sleep
-        // TODO
     }
 
     RESETS->RESET = 0x1fbec1d;  // Put everything into reset (just to be sure in case of software reset)
@@ -463,20 +515,22 @@ _Noreturn void Reset_Handler()
         data_src_p++;
     }
 
-    main();
+    /// !!! AND THIS LINE  !!!
 
-    // wake core1 up
-    // TODO
-/*
-    if(0 == SIO->CPUID)
+#ifdef ENABLE_CORE_1
+    if(0 != SIO->CPUID)
     {
-    	main();
+        // soft reset with core1 active ?
+        main1();
     }
     else
     {
-    	main1();
+        wake_up_core1();
     }
-*/
+    main();
+#endif
+
+    main();
     // main exited - WTF???
     watchdog_report_issue(ISSUE_UNEXPECTED_CODE_REACHED_MAIN_EXITED);
     error_state();

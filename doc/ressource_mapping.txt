@@ -12,6 +12,27 @@ clk_sys = 125 MHz;
 clk_peri = 125 MHz
 
 
+Memmories
+---------
+
+Flash
+-----
+0..0x100: seond stage bootloader
+
+
+RAM
+---
+
+SRAM0-3 are used in striped configuration for:
+- code
+- variables
+
+SRAM 4 is used as Stack for Core 1. Stack Pointer: 0x20 04 0f ff
+
+SRAM 5 is used as Stack for Core 0. Stack Pointer: 0x20 04 1f ff
+
+
+
 Peripheral - used for
 ---------------------
 

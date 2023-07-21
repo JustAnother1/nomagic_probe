@@ -16,7 +16,12 @@
 #define SRC_MAIN_H_
 
 
-void main(void);
+#ifdef ENABLE_CORE_1
+    void main(void);
+    void main1(void);
+#else
+    void main(void);
+#endif
 
 
 #endif /* SRC_MAIN_H_ */

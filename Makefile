@@ -17,13 +17,16 @@ SRC_FOLDER = src/
 SOURCE_DIR = $(dir $(lastword $(MAKEFILE_LIST)))
 
 LKR_SCRIPT = $(SRC_FOLDER)hal/RP2040.ld
-#LKR_SCRIPT = $(SRC_FOLDER)hal/RP2040_RAM.ld
 
+# COMPILER SWITCHES
+# =================
+# These switches enable or disable functionality
 # tinyUSB logging has different levels 0 = no logging,1= some logging, 2 = more logging, 3= all logging
 DDEFS += -DCFG_TUSB_DEBUG=1
 # with this the watchdog is only active if the debugger is not connected
 DDEFS += -DDISABLE_WATCHDOG_FOR_DEBUG=1
-
+# use both cores
+#DDEFS += -DENABLE_CORE_1=1
 
 CFLAGS  = -c -g3
 CFLAGS += -O3
