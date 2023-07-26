@@ -16,8 +16,9 @@
 #define CLI_CLI_USB_H_
 
 #include <stdbool.h>
+#include <stdint.h>
 
-bool cmd_usb_info(void);
+bool cmd_usb_info(uint32_t loop);
 
 
 #endif /* CLI_CLI_USB_H_ */

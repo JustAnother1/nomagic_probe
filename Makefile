@@ -29,10 +29,12 @@ DDEFS += -DDISABLE_WATCHDOG_FOR_DEBUG=1
 #DDEFS += -DENABLE_CORE_1=1
 
 CFLAGS  = -c -g3
+
 CFLAGS += -O3
 # sometimes helps with debugging:
 #CFLAGS += -O0
 #CFLAGS += -save-temps=obj
+
 CFLAGS += -std=c17
 CFLAGS += -mcpu=cortex-m0plus -mthumb
 CFLAGS += -ffreestanding -funsigned-char -fno-short-enums
@@ -138,7 +140,7 @@ all: $(BIN_FOLDER)$(PROJECT).uf2
 	@echo ""
 	@echo "size"
 	@echo "===="
-	$(SIZE) $(BIN_FOLDER)$(PROJECT).elf
+	$(SIZE) --format=GNU $(BIN_FOLDER)$(PROJECT).elf
 
 	
 $(BIN_FOLDER)%o: %c

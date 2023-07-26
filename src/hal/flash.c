@@ -14,7 +14,7 @@
  */
 
 #include "flash.h"
-#include "hal/boot_rom.h"
+
 
 /*
  * XIP Address alias:
@@ -34,6 +34,9 @@ A typical call sequence for erasing a flash sector from user code would be:
 • _flash_range_erase(addr, 1 << 12, 1 << 16, 0xd8)
 • _flash_flush_cache
 */
+/* BOOT ROM Version
+
+#include "hal/boot_rom.h"
 
 static boot_rom_flash_functions* flash_funcs = NULL;
 
@@ -63,5 +66,92 @@ void flash_erase_page(uint32_t number)
         flash_funcs->_flash_range_erase(number*4096, 4096, 0, 0);
     }
 }
+*/
 
+#include "hal/hw/XIP_CTRL.h"
+#include "hal/hw/XIP_SSI.h"
+#include "hal/hw/RESETS.h"
+#include "cfg/cli_cfg.h"
 
+void flash_init(void)
+{
+
+}
+
+void XIP_IRQ(void)
+{
+
+}
+
+void flash_write_block(uint32_t start_address, uint8_t* data, uint32_t length)
+{
+    (void)start_address;
+    (void)data;
+    (void)length;
+}
+
+//! erases one page (smalles erase possible) that is 4096 bytes.
+void flash_erase_page(uint32_t number)
+{
+    (void)number;
+}
+
+void flash_read(uint32_t start_address, uint8_t* data, uint32_t length)
+{
+    (void)start_address;
+    (void)data;
+    (void)length;
+}
+
+void flash_report(void)
+{
+    // uint32_t i = 0;
+    debug_line("QSPI Flash:");
+}
+
+/*
+    // init
+    XIP_CTRL->CTRL = 0xa;
+    / *
+    RESETS->RESET = 0x240;
+    while (0x240 != (0x240 & RESETS->RESET_DONE))
+    {
+        ;
+    }
+    * /
+    XIP_SSI->SSIENR = 0; // aus
+    XIP_SSI->CTRLR0 = 0x1403; // Slave selct togle disabled,
+    XIP_SSI->CTRLR1 = 3; // Number of data frames
+    XIP_SSI->BAUDR = 10; // TODO
+
+    XIP_SSI->TXFTLR = 0;// TODO
+    XIP_SSI->RXFTLR = 0;// TODO
+    XIP_SSI->IMR = 0; // TODO
+    XIP_SSI->SER = 1; // slave selected
+    XIP_SSI->DMACR = 0; // do no use DMA
+    XIP_SSI->RX_SAMPLE_DLY = 0; // delay sample due to long lines
+    XIP_SSI->SPI_CTRLR0 = 0; //TODO
+    XIP_SSI->TXD_DRIVE_EDGE = 0; // TODO
+    XIP_SSI->SSIENR = 1; // ein
+
+    XIP_SSI->DR0 = 0x9f;
+    XIP_SSI->DR0 = 0;
+    XIP_SSI->DR0 = 0;
+    XIP_SSI->DR0 = 0;
+    while (0 != (4 & XIP_SSI->SR))
+    {
+        ;
+    }
+    while (0 != (1 & XIP_SSI->SR))
+    {
+        ;
+    }
+    while (0 != (8 & XIP_SSI->SR))
+    {
+        uint32_t data = XIP_SSI->DR0;
+        debug_line("%3ld : 0x%08lx", i, data);
+        i++;
+    }
+    debug_line("End of Data!");
+}
+*/

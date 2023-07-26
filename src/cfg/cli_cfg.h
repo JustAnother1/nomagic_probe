@@ -20,7 +20,7 @@
 
 #include "../hal/debug_uart.h"
 
-typedef bool (*cmd_func_typ)(void);
+typedef bool (*cmd_func_typ)(uint32_t loop);
 
 typedef struct {
     char name[12];

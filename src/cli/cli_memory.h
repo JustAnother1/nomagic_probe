@@ -16,12 +16,13 @@
 #define CLI_CLI_MEMORY_H_
 
 #include <stdbool.h>
+#include <stdint.h>
 
-bool cmd_memory_display(void);
-bool cmd_memory_dump(void);
-bool cmd_flash_memory_erase(void);
-bool cmd_flash_memory_write(void);
-bool cmd_flash_disable_XIP(void);
-bool cmd_flash_enable_XIP(void);
+bool cmd_memory_display(uint32_t loop);
+bool cmd_memory_dump(uint32_t loop);
+bool cmd_flash_memory_erase(uint32_t loop);
+bool cmd_flash_memory_write(uint32_t loop);
+bool cmd_flash_disable_XIP(uint32_t loop);
+bool cmd_flash_enable_XIP(uint32_t loop);
 
 #endif /* CLI_CLI_MEMORY_H_ */

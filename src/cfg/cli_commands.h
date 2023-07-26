@@ -21,18 +21,21 @@
 #include "cli/cli_memory.h"
 
 cmd_typ commands[] = {
-        {"time", "time since power on", cmd_time},
-        {"param_dump", "prints the parameters as hex", cmd_parameter_raw},
-        {"usb_info", "display USB status information", cmd_usb_info},
-        {"md", "display memory", cmd_memory_dump},
-        {"mdr", "display memory as registers", cmd_memory_display},
-        {"hil", "hardware in the loop tests", cmd_hil_test},
-        {"die", "test the watch dog", cmd_die},
-        {"info", "low level firmware information", cmd_info},
-        {"flash_write", "write to flash memory <address> <length>", cmd_flash_memory_write},
-        {"flash_erase", "erase one flash memory sector <index>", cmd_flash_memory_write},
-        {"xip_off", "disable XIP on FLash", cmd_flash_disable_XIP},
-        {"xip_on", "enable XIP on FLash", cmd_flash_enable_XIP},
+        //         11             1         2         3         4         5         6
+        //12345678901    123456789012345678901234567890123456789012345678901234567890
+        {"help",        "list all available commands", cmd_help},
+        {"time",        "time since power on", cmd_time},
+        {"param_dump",  "prints the parameters as hex", cmd_parameter_raw},
+        {"usb_info",    "display USB status information", cmd_usb_info},
+        {"md",          "display memory", cmd_memory_dump},
+        {"mdr",         "display memory as registers", cmd_memory_display},
+        {"hil",         "hardware in the loop tests", cmd_hil_test},
+        {"die",         "test the watch dog", cmd_die},
+        {"info",        "low level firmware information", cmd_info},
+        {"fl_write",    "write to flash memory <address> <length>", cmd_flash_memory_write},
+        {"fl_erase",    "erase one flash memory sector <index>", cmd_flash_memory_write},
+        {"xip_off",     "disable XIP on FLash", cmd_flash_disable_XIP},
+        {"xip_on",      "enable XIP on FLash", cmd_flash_enable_XIP},
 };
 
 

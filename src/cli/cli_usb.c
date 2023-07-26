@@ -30,8 +30,9 @@ static void print_bool(bool val)
     }
 }
 
-bool cmd_usb_info(void)
+bool cmd_usb_info(uint32_t loop)
 {
+    (void)loop;
     debug_line("USB Status");
     debug_line("==========");
     debug_msg("connected     : ");

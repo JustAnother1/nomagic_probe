@@ -17,10 +17,10 @@
 
 #include "cfg/cli_cfg.h"
 
-bool cmd_die(void);
-bool cmd_hil_test(void);
-bool cmd_info(void);
-bool cmd_parameter_raw(void);
-bool cmd_time(void);
+bool cmd_die(uint32_t loop);
+bool cmd_hil_test(uint32_t loop);
+bool cmd_info(uint32_t loop);
+bool cmd_parameter_raw(uint32_t loop);
+bool cmd_time(uint32_t loop);
 
 #endif /* CLI_CLI_SYS_H_ */

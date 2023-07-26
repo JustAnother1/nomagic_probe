@@ -21,9 +21,11 @@
 #include "cli.h"
 #include "hal/watchdog.h"
 #include "hal/boot_rom.h"
+#include "hal/flash.h"
 
-bool cmd_time(void)
+bool cmd_time(uint32_t loop)
 {
+    (void)loop;
     uint32_t now = time_get_ms();
 
     uint32_t micro_now = TIMER->TIMERAWL;
@@ -75,8 +77,9 @@ bool cmd_time(void)
     return true;  // we are done
 }
 
-bool cmd_parameter_raw(void)
+bool cmd_parameter_raw(uint32_t loop)
 {
+    (void)loop;
     uint32_t i = 0;
     uint8_t* c = cli_get_parameter(i);
     while(c != NULL)
@@ -87,6 +90,7 @@ bool cmd_parameter_raw(void)
             debug_msg(" %02x", *c);
             c++;
         }
+        debug_msg("\r\n");
         i++;
         c = cli_get_parameter(i);
     }
@@ -94,8 +98,9 @@ bool cmd_parameter_raw(void)
     return true;  // we are done
 }
 
-bool cmd_die(void)
+bool cmd_die(uint32_t loop)
 {
+    (void)loop;
     for(;;)
     {
         ;
@@ -103,8 +108,9 @@ bool cmd_die(void)
     return false;  // will never happen
 }
 
-bool cmd_hil_test(void)
+bool cmd_hil_test(uint32_t loop)
 {
+    (void)loop;
     uint32_t a;
     uint32_t b;
     uint32_t c;
@@ -141,15 +147,21 @@ bool cmd_hil_test(void)
     return true;  // we are done
 }
 
-bool cmd_info(void)
+bool cmd_info(uint32_t loop)
 {
-    debug_line("Startup:");
-    startup_report();
-    debug_line("Watchdog:");
-    watchdog_report();
-    debug_line("boot ROM:");
-    boot_rom_report();
-    debug_line("Done");
-    return true;  // we are done
+    switch(loop)
+    {
+        case 0: debug_line("Startup:"); break;
+        case 1: startup_report(); break;
+        case 2: debug_line("Watchdog:"); break;
+        case 3: watchdog_report(); break;
+        case 4: debug_line("boot ROM:"); break;
+        case 5: boot_rom_report(); break;
+        case 6: debug_line("QSPI:"); break;
+        case 7: flash_report(); break;
+        case 8: debug_line("Done"); break;
+        case 9: return true;  // we are done
+    }
+    return false;
 }
 

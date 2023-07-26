@@ -104,7 +104,9 @@ void boot_rom_check_if_valid(void)
     rom_table_lookup = (rom_table_lookup_fn) ptr;
     // rom_table_lookup = (rom_table_lookup_fn) *(uint16_t *)(0x18);
     */
+#pragma GCC diagnostic ignored "-Wpedantic"
     rom_table_lookup = rom_hword_as_ptr(0x18);
+#pragma GCC diagnostic pop
     valid = true;
 }
 

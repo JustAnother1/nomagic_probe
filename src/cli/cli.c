@@ -19,10 +19,13 @@
 #include <string.h>
 #include "hal/watchdog.h"
 
+#define NUM_COMMANDS  (sizeof(commands)/sizeof(cmd_typ))
+
 static uint8_t line_buffer[MAX_LINE_LENGTH];
 static uint32_t line_pos;
 static uint32_t parse_pos;
 static uint32_t parameter_pos;
+static uint32_t num_calls;
 static bool last_was_n;
 static bool last_was_r;
 static bool found_end;
@@ -46,6 +49,7 @@ void cli_init(void)
     line_pos = 0;
     parse_pos = 0;
     parameter_pos = 0;
+    num_calls = 0;
     found_end = false;
     still_executing = false;
     cur_func = NULL;
@@ -63,7 +67,8 @@ void cli_tick(void)
     {
         if(NULL != cur_func)
         {
-            bool done = cur_func();
+            bool done = cur_func(num_calls);
+            num_calls++;
             if(false == done)
             {
                 return;
@@ -80,6 +85,7 @@ void cli_tick(void)
         line_pos = 0;
         parse_pos = 0;
         parameter_pos = 0;
+        num_calls = 0;
         found_end = false;
         still_executing = false;
         cur_func = NULL;
@@ -216,69 +222,58 @@ static void execute(void)
     uint32_t len = strlen((char*)line_buffer);
     if(0 != len)
     {
+        uint32_t i;
+        bool found = false;
         debug_line("\r\n");
         if(len > (MAX_LINE_LENGTH -1))
         {
             len = MAX_LINE_LENGTH -1;
         }
-        if(0 == strncmp("help", (char*)line_buffer, 4))
+        for(i = 0; i < NUM_COMMANDS; i++)
         {
-            // help command
-            uint32_t i;
-            debug_msg("available commands :\r\n");
-            for(i = 0; i < sizeof(commands)/sizeof(cmd_typ); i++)
+            if(len >= strlen(commands[i].name))
             {
-                debug_msg("%15s : %s\r\n", commands[i].name, commands[i].help);
+                if(0 == strncmp(commands[i].name, (char*)line_buffer, len))
+                {
+                    found = true;
+                    break;
+                }
+                // else continue searching
             }
+            // else input to short to be this command
+        }
+        if((false == found) || (i >= NUM_COMMANDS))
+        {
+            debug_line("Invalid command (%s) type 'help' for list of available commands", (char*)line_buffer);
         }
         else
         {
-            uint32_t i;
-            bool found = false;
-            for(i = 0; i < sizeof(commands)/sizeof(cmd_typ); i++)
+            // found the command
+            num_calls = 0;
+            if(NULL != commands[i].func)
             {
-                if(len >= strlen(commands[i].name))
+                bool done = commands[i].func(num_calls);
+                if((false == done) && (i < NUM_COMMANDS))
                 {
-                    if(0 == strncmp(commands[i].name, (char*)line_buffer, len))
-                    {
-                        found = true;
-                        break;
-                    }
-                    // else continue searching
+                    num_calls++;
+                    still_executing = true;
+                    cur_func = commands[i].func;
+                    return;
                 }
-                // else input to short to be this command
+                // else command has finished
             }
-            if(false == found)
-            {
-                debug_line("Invalid command (%s) type 'help' for list of available commands", (char*)line_buffer);
-            }
-            else
-            {
-                // found the command
-                if(NULL != commands[i].func)
-                {
-                    bool done = commands[i].func();
-                    if(false == done)
-                    {
-                        still_executing = true;
-                        cur_func = commands[i].func;
-                        return;
-                    }
-                    // else command has finished
-                }
-                // else ERROR implementation is missing !
-            }
+            // else ERROR implementation is missing !
         }
     }
     // else user pressed enter twice -> just a new prompt
 
     // finished executing the command
     {
-    uint32_t i;
-    for(i = 0; i < MAX_PARAMETERS; i++)
-    {
-        parameters[i] = NULL;
-    }
+        uint32_t i;
+        for(i = 0; i < MAX_PARAMETERS; i++)
+        {
+            parameters[i] = NULL;
+        }
     }
     line_pos = 0;
     parse_pos = 0;
@@ -289,4 +284,21 @@ static void execute(void)
     debug_msg(PROMPT);
 }
 
+bool cmd_help(uint32_t loop)
+{
+    // help command
+    if(0 == loop)
+    {
+        debug_msg("available commands :\r\n");
+    }
+    if(loop < NUM_COMMANDS)
+    {
+        debug_msg("%15s : %s\r\n", commands[loop].name, commands[loop].help);
+    }
+    else
+    {
+        return true;
+    }
+    return false;
+}
 

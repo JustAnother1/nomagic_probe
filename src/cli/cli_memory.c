@@ -22,87 +22,89 @@
 
 
 static uint32_t addr;
-static uint32_t loops = 0;
+static uint32_t num_loops = 0;
 
-bool cmd_memory_display(void)
+bool cmd_memory_display(uint32_t loop)
 {
-    if(0 == loops)
+    if(0 == loop)
     {
         // first call
         uint8_t* addr_str = cli_get_parameter(0);
         uint8_t* numBytes_str = cli_get_parameter(1);
         uint32_t numBytes = (uint32_t)atoi((const char*)numBytes_str);
         addr = (uint32_t)atoi((const char*)addr_str);
-        loops = numBytes/4;
+        num_loops = numBytes/4;
     }
     else
     {
-        loops--;
+        if(loop <= num_loops)
+        {
+            uint32_t val = *((uint32_t*)addr);
+            debug_msg("Address 0x%08lx : 0x%08lx (%ld)\r\n", addr, val, val);
+            addr = addr + 4;
+        }
+        else
+        {
+            return true; // we are done
+        }
     }
-    uint32_t val = *((uint32_t*)addr);
-    debug_msg("Address 0x%08lx : 0x%08lx (%ld)\r\n", addr, val, val);
-    addr = addr + 4;
-    if(0 == loops)
-    {
-        return true; // we are done
-    }
-    else
-    {
-        return false; // we need to do more
-    }
+    return false; // we need to do more
 }
 
-bool cmd_memory_dump(void)
+bool cmd_memory_dump(uint32_t loop)
 {
     uint32_t i = 0;
     uint32_t val = 0;
     uint32_t pos = 0;
     uint32_t bytes_to_dump = 16;
 
-    if(0 == loops)
+    if(0 == loop)
     {
         // first call
         uint8_t* addr_str = cli_get_parameter(0);
         uint8_t* numBytes_str = cli_get_parameter(1);
         uint32_t numBytes = (uint32_t)atoi((const char*)numBytes_str);
         addr = (uint32_t)atoi((const char*)addr_str);
-        loops = numBytes;
-    }
-
-    if(loops < bytes_to_dump)
-    {
-        bytes_to_dump = loops;
-        loops = 0;
+        num_loops = numBytes;
     }
     else
     {
-        loops = loops - bytes_to_dump;
-    }
-    debug_msg("Address 0x%08lx :", addr);
+        if(num_loops < bytes_to_dump)
+        {
+            bytes_to_dump = num_loops;
+            num_loops = 0;
+        }
+        else
+        {
+            num_loops = num_loops - bytes_to_dump;
+        }
+        debug_msg("Address 0x%08lx :", addr);
 
-    for(i = 0; i < bytes_to_dump; i++)
-    {
-        if(0 == pos)
+        for(i = 0; i < bytes_to_dump; i++)
         {
-            val = *((uint32_t*)addr);
-            addr = addr + 4;
-        }
-        switch(pos)
-        {
-        case 0: debug_msg(" %02lx",  val     & 0xff); break;
-        case 1: debug_msg(" %02lx", (val>>8) & 0xff); break;
-        case 2: debug_msg(" %02lx", (val>>16)& 0xff); break;
-        case 3: debug_msg(" %02lx", (val>>24)& 0xff); break;
-        }
-        pos++;
-        if(pos > 3)
-        {
-            pos = 0;
+            if(0 == pos)
+            {
+                val = *((uint32_t*)addr);
+                addr = addr + 4;
+            }
+            switch(pos)
+            {
+            case 0: debug_msg(" %02lx",  val     & 0xff); break;
+            case 1: debug_msg(" %02lx", (val>>8) & 0xff); break;
+            case 2: debug_msg(" %02lx", (val>>16)& 0xff); break;
+            case 3: debug_msg(" %02lx", (val>>24)& 0xff); break;
+            }
+            pos++;
+            if(pos > 3)
+            {
+                pos = 0;
+            }
         }
     }
+
     debug_msg("\r\n");
 
-    if(0 == loops)
+    if(0 == num_loops)
     {
         return true; // we are done
     }
@@ -112,16 +114,21 @@ bool cmd_memory_dump(void)
     }
 }
 
-bool cmd_flash_memory_erase(void)
+bool cmd_flash_memory_erase(uint32_t loop)
 {
+    (void) loop;
+    /*
     uint8_t* addr_str = cli_get_parameter(0);
     uint32_t address = (uint32_t)atoi((const char*)addr_str);
     flash_erase_page(address);
+    */
     return true; // we are done
 }
 
-bool cmd_flash_memory_write(void)
+bool cmd_flash_memory_write(uint32_t loop)
 {
+    (void) loop;
+    /*
     uint32_t i;
     uint8_t data[256];
     uint8_t* addr_str = cli_get_parameter(0);
@@ -145,12 +152,14 @@ bool cmd_flash_memory_write(void)
     debug_line("writing %lu bytes", numBytes);
     // write data
     flash_write_block(address, data, numBytes);
-
+*/
     return true; // we are done
 }
 
-bool cmd_flash_disable_XIP(void)
+bool cmd_flash_disable_XIP(uint32_t loop)
 {
+    (void) loop;
+    /*
     boot_rom_flash_functions* flash_funcs = NULL;
     flash_funcs = boot_rom_get_flash_functions();
     if(NULL != flash_funcs)
@@ -158,11 +167,14 @@ bool cmd_flash_disable_XIP(void)
         flash_funcs->_connect_internal_flash();
         flash_funcs->_flash_exit_xip();
     }
+    */
     return true; // we are done
 }
 
-bool cmd_flash_enable_XIP(void)
+bool cmd_flash_enable_XIP(uint32_t loop)
 {
+    (void)loop;
+    /*
     boot_rom_flash_functions* flash_funcs = NULL;
     flash_funcs = boot_rom_get_flash_functions();
     if(NULL != flash_funcs)
@@ -170,5 +182,6 @@ bool cmd_flash_enable_XIP(void)
         flash_funcs->_flash_flush_cache();
         flash_funcs->_flash_enter_cmd_xip();
     }
+    */
     return true; // we are done
 }
