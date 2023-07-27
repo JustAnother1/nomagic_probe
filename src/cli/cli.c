@@ -244,7 +244,14 @@ static void execute(void)
         }
         if((false == found) || (i >= NUM_COMMANDS))
         {
-            debug_line("Invalid command (%s) type 'help' for list of available commands", (char*)line_buffer);
+            uint8_t* c = line_buffer;
+            debug_msg("Invalid command (%s) [", (char*)line_buffer);
+            while(*c != 0)
+            {
+                debug_msg(" %02x", *c);
+                c++;
+            }
+            debug_line(" ] type 'help' for list of available commands");
         }
         else
         {

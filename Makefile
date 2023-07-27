@@ -28,7 +28,7 @@ DDEFS += -DDISABLE_WATCHDOG_FOR_DEBUG=1
 # use both cores
 #DDEFS += -DENABLE_CORE_1=1
 
-CFLAGS  = -c -g3
+CFLAGS  = -c -ggdb3
 
 CFLAGS += -O3
 # sometimes helps with debugging:
