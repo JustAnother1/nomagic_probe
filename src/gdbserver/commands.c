@@ -32,6 +32,7 @@ void commands_init(void)
 
 void commands_execute(char* received, uint32_t length, char* checksum)
 {
+    DEBUG_LOG("\ngdbserver received: %s\n", received);
     if(false == checksumOK(received, length, checksum))
     {
         DEBUG_LOG("\nchecksum is wrong($%s#%s)!\n", received, checksum);
@@ -41,7 +42,7 @@ void commands_execute(char* received, uint32_t length, char* checksum)
     // else OK
     send_ack_packet();  // ack the received packet
 
-    DEBUG_LOG("\nparsing command %s!\n", received);
+    DEBUG_LOG("\nparsing command '%s' !\n", received);
 
     switch(*received)
     {
@@ -134,7 +135,7 @@ void commands_execute(char* received, uint32_t length, char* checksum)
     }
 }
 
-bool checksumOK(char* received, uint32_t length, char* checksum)
+static bool checksumOK(char* received, uint32_t length, char* checksum)
 {
     uint32_t calculated_sum = 0;
     uint32_t recieved_sum;

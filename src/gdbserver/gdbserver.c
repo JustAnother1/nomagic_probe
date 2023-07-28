@@ -35,6 +35,8 @@ void gdbserver_tick(void)
     uint32_t num_bytes_received;
 
     num_bytes_received = GDBSERVER_NUM_RECEIVED_BYTES();
+    DEBUG_LOG("received: %ld Bytes\n", num_bytes_received);
+
     while(0 < num_bytes_received)
     {
         uint32_t i;
@@ -51,6 +53,13 @@ void gdbserver_tick(void)
                         line_pos = 0;
                         state = IN_PACKET;
                     }
+                    else if('%' == data)
+                    {
+                        // notification from Host
+                        // -> ignore
+                        DEBUG_LOG("ERROR: not implemented !\n");
+                        // TODO Notification is "% data # checksum"
+                    }
                     else if('+' == data)
                     {
                         // ACK from Host
@@ -60,18 +69,27 @@ void gdbserver_tick(void)
                     {
                         // Transmit error
                         // -> Resent last message
+                        DEBUG_LOG("resending: %s\n", reply_buffer);
                         GDBSERVER_SEND_BYTES(reply_buffer, reply_length);
                     }
                     else if(0x03 == data)
                     {
                         // BREAK
                         // TODO
+                        DEBUG_LOG("ERROR: not implemented !\n");
                     }
                     else
                     {
                         if(0 != data)
                         {
-                            DEBUG_LOG("skipping %s(0x%02x) !\n", (char*)&data, data);
+                            if((32 > data) || (126 < data))
+                            {
+                                DEBUG_LOG("skipping 0x%02x !\n", data);
+                            }
+                            else
+                            {
+                                DEBUG_LOG("skipping %s(0x%02x) !\n", (char*)&data, data);
+                            }
                         }
                     }
                     break;
@@ -111,6 +129,7 @@ void gdbserver_tick(void)
             }
         }
         num_bytes_received = GDBSERVER_NUM_RECEIVED_BYTES();
+        DEBUG_LOG("received: %ld Bytes\n", num_bytes_received);
     }
     // else no new bytes -> nothing to do
 }
@@ -142,7 +161,8 @@ void reply_packet_send(void)
     reply_buffer[reply_length] = '#';
     reply_buffer[reply_length + 1] = (uint8_t)reply_checksum[1]; // high nibble
     reply_buffer[reply_length + 2] = (uint8_t)reply_checksum[0]; // low nibble
-
+    reply_buffer[reply_length + 3]  = 0;
+    DEBUG_LOG("sending: %s\n", reply_buffer);
     GDBSERVER_SEND_BYTES(reply_buffer, reply_length + 3);
 }
 
