@@ -35,7 +35,10 @@ void gdbserver_tick(void)
     uint32_t num_bytes_received;
 
     num_bytes_received = GDBSERVER_NUM_RECEIVED_BYTES();
-    DEBUG_LOG("received: %ld Bytes\n", num_bytes_received);
+    if(0 < num_bytes_received)
+    {
+        DEBUG_LOG("received: %ld Bytes\r\n", num_bytes_received);
+    }
 
     while(0 < num_bytes_received)
     {
@@ -129,7 +132,10 @@ void gdbserver_tick(void)
             }
         }
         num_bytes_received = GDBSERVER_NUM_RECEIVED_BYTES();
-        DEBUG_LOG("received: %ld Bytes\n", num_bytes_received);
+        if(0 < num_bytes_received)
+        {
+            DEBUG_LOG("received: %ld Bytes\r\n", num_bytes_received);
+        }
     }
     // else no new bytes -> nothing to do
 }

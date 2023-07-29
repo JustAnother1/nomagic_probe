@@ -55,7 +55,10 @@ SECTIONS
         
         . = ALIGN(4);
         __ro_data_end = .;
-    } > FLASH
+    } >RAM AT> FLASH
+
+    /* used by the startup to copy rodata */
+    __ro_data_in_flash = LOADADDR(.rodata);
 
 /* initialized data */
     .data : {

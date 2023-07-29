@@ -150,6 +150,7 @@ extern uint32_t __third_boot_end;
 
 extern uint32_t __ro_data_start;
 extern uint32_t __ro_data_end;
+extern uint32_t __ro_data_in_flash;
 
 void NMI_Handler(void) {
     watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_NMI);
@@ -415,6 +416,10 @@ _Noreturn void Reset_Handler()
     uint32_t *code_end_p = &__code_end;
     uint32_t *code_src_p = &__code_in_flash;
 
+    uint32_t *rodata_start_p =  &__ro_data_start;
+    uint32_t *rodata_end_p = &__ro_data_end;
+    uint32_t *rodata_src_p = &__ro_data_in_flash;
+
     uint32_t *bss_start_p =  &__bss_start;
     uint32_t *bss_end_p = &__bss_end;
 
@@ -500,11 +505,12 @@ _Noreturn void Reset_Handler()
         code_src_p++;
     }
 
-    // initialize global variables to zero
-    while(bss_start_p < bss_end_p)
+    // copy read only data from flash to RAM
+    while(rodata_start_p < rodata_end_p)
     {
-        *bss_start_p = 0;
-        bss_start_p++;
+        *rodata_start_p = *rodata_src_p;
+        rodata_start_p++;
+        rodata_src_p++;
     }
 
     // initialize variables to their initialization value
@@ -513,6 +519,13 @@ _Noreturn void Reset_Handler()
         *data_start_p = *data_src_p;
         data_start_p++;
         data_src_p++;
+    }
+
+    // initialize global variables to zero
+    while(bss_start_p < bss_end_p)
+    {
+        *bss_start_p = 0;
+        bss_start_p++;
     }
 
     /// !!! AND THIS LINE  !!!
