@@ -69,7 +69,7 @@ _Noreturn void Reset_Handler()__attribute__((__noreturn__, section(".third_stage
 
 const VECTOR_FUNCTION_Type __VECTOR_TABLE[64] __attribute__((used, section(".vectors")))
 = {
-/*  0: Initial Stack Pointer    */(VECTOR_FUNCTION_Type) (0x20041fff),  // Core 0
+/*  0: Initial Stack Pointer    */(VECTOR_FUNCTION_Type) (0x20041ffc),  // Core 0
 /*  1: Reset Handler            */Reset_Handler,
 /*  2: NMI Handler        (-14) */NMI_Handler,
 /*  3: Hard Fault Handler (-13) */Hard_Fault_Handler,
