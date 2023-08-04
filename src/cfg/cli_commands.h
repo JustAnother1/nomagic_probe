@@ -34,8 +34,10 @@ cmd_typ commands[] = {
         {"info",        "low level firmware information", cmd_info},
         {"fl_write",    "write to flash memory <address> <length>", cmd_flash_memory_write},
         {"fl_erase",    "erase one flash memory sector <index>", cmd_flash_memory_write},
+#ifdef BOOT_ROM_ENABLED
         {"xip_off",     "disable XIP on FLash", cmd_flash_disable_XIP},
         {"xip_on",      "enable XIP on FLash", cmd_flash_enable_XIP},
+#endif
 };
 
 

@@ -18,6 +18,7 @@
 #include "cli_cfg.h"
 #include "hal/flash.h"
 #include "hal/boot_rom.h"
+#include <hal/hw/TIMER.h>
 #include <stdlib.h>
 
 
@@ -37,13 +38,41 @@ bool cmd_memory_display(uint32_t loop)
     }
     else
     {
-        if(loop <= num_loops)
+        // max 16 MB (0x1 00 00 00)  starting at 0x 10 00 00 00
+        if((addr > 0xfffffff) && (addr < 0x11000000))
         {
-            uint32_t val = *((uint32_t*)addr);
-            debug_msg("Address 0x%08lx : 0x%08lx (%ld)\r\n", addr, val, val);
-            addr = addr + 4;
+            // QSPI Flash
+            uint32_t i;
+            uint32_t line[4];
+            flash_read(addr & 0xffffff, (uint8_t*)line, 16);
+            for(i = 0; i < 4; i++)
+            {
+                debug_msg("Address 0x%08lx : 0x%08lx (%ld)\r\n", addr, line[i], line[i]);
+                addr = addr + 4;
+                num_loops--;
+                if(0 == num_loops)
+                {
+                    break;
+                }
+            }
         }
         else
+        {
+            uint32_t val;
+            uint32_t i;
+            for(i = 0; i < 4; i++)
+            {
+                if(0 == num_loops)
+                {
+                    break;
+                }
+                val = *((uint32_t*)addr);
+                debug_msg("Address 0x%08lx : 0x%08lx (%ld)\r\n", addr, val, val);
+                addr = addr + 4;
+                num_loops--;
+            }
+        }
+        if(0 == num_loops)
         {
             return true; // we are done
         }
@@ -53,10 +82,9 @@ bool cmd_memory_display(uint32_t loop)
 
 bool cmd_memory_dump(uint32_t loop)
 {
-    uint32_t i = 0;
-    uint32_t val = 0;
-    uint32_t pos = 0;
-    uint32_t bytes_to_dump = 16;
+    uint8_t line_buffer[16];
+    uint8_t* line;
+    uint32_t i;
 
     if(0 == loop)
     {
@@ -69,36 +97,27 @@ bool cmd_memory_dump(uint32_t loop)
     }
     else
     {
-        if(num_loops < bytes_to_dump)
+        if((addr > 0xfffffff) && (addr < 0x20000000))
         {
-            bytes_to_dump = num_loops;
-            num_loops = 0;
+            // QSPI Flash
+            flash_read(addr & 0xffffff, line_buffer, 16);
+            line = line_buffer;
         }
         else
         {
-            num_loops = num_loops - bytes_to_dump;
+            line = ((uint8_t*)addr);
         }
-        debug_msg("Address 0x%08lx :", addr);
 
-        for(i = 0; i < bytes_to_dump; i++)
+        debug_msg("Address 0x%08lx :", addr);
+        for(i = 0; i < 16; i++)
         {
-            if(0 == pos)
+            if(0 == num_loops)
             {
-                val = *((uint32_t*)addr);
-                addr = addr + 4;
+                break;
             }
-            switch(pos)
-            {
-            case 0: debug_msg(" %02lx",  val     & 0xff); break;
-            case 1: debug_msg(" %02lx", (val>>8) & 0xff); break;
-            case 2: debug_msg(" %02lx", (val>>16)& 0xff); break;
-            case 3: debug_msg(" %02lx", (val>>24)& 0xff); break;
-            }
-            pos++;
-            if(pos > 3)
-            {
-                pos = 0;
-            }
+            debug_msg(" %02x", line[i]);
+            num_loops --;
+            addr++;
         }
     }
 
@@ -116,20 +135,22 @@ bool cmd_memory_dump(uint32_t loop)
 
 bool cmd_flash_memory_erase(uint32_t loop)
 {
+    uint32_t diff;
     (void) loop;
-    /*
     uint8_t* addr_str = cli_get_parameter(0);
     uint32_t address = (uint32_t)atoi((const char*)addr_str);
+    diff = TIMER->TIMERAWL;
     flash_erase_page(address);
-    */
+    diff = TIMER->TIMERAWL - diff;
+    debug_line("operation took %lu µs", diff);
     return true; // we are done
 }
 
 bool cmd_flash_memory_write(uint32_t loop)
 {
     (void) loop;
-    /*
     uint32_t i;
+    uint32_t diff;
     uint8_t data[256];
     uint8_t* addr_str = cli_get_parameter(0);
     uint8_t* numBytes_str = cli_get_parameter(1);
@@ -151,37 +172,45 @@ bool cmd_flash_memory_write(uint32_t loop)
     debug_line("writing to address: 0x%lx", address);
     debug_line("writing %lu bytes", numBytes);
     // write data
+    diff = TIMER->TIMERAWL;
     flash_write_block(address, data, numBytes);
-*/
+    diff = TIMER->TIMERAWL - diff;
+    debug_line("operation took %lu µs", diff);
     return true; // we are done
 }
 
+#ifdef BOOT_ROM_ENABLED
 bool cmd_flash_disable_XIP(uint32_t loop)
 {
+    uint32_t diff;
     (void) loop;
-    /*
     boot_rom_flash_functions* flash_funcs = NULL;
+    diff = TIMER->TIMERAWL;
     flash_funcs = boot_rom_get_flash_functions();
     if(NULL != flash_funcs)
     {
         flash_funcs->_connect_internal_flash();
         flash_funcs->_flash_exit_xip();
+        diff = TIMER->TIMERAWL - diff;
+        debug_line("operation took %lu µs", diff);
     }
-    */
     return true; // we are done
 }
 
 bool cmd_flash_enable_XIP(uint32_t loop)
 {
+    uint32_t diff;
     (void)loop;
-    /*
     boot_rom_flash_functions* flash_funcs = NULL;
+    diff = TIMER->TIMERAWL;
     flash_funcs = boot_rom_get_flash_functions();
     if(NULL != flash_funcs)
     {
         flash_funcs->_flash_flush_cache();
         flash_funcs->_flash_enter_cmd_xip();
+        diff = TIMER->TIMERAWL - diff;
+        debug_line("operation took %lu µs", diff);
     }
-    */
     return true; // we are done
 }
+#endif
