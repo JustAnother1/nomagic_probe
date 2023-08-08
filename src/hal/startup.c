@@ -19,6 +19,8 @@
 #include "hal/hw/PSM.h"
 #include "hal/hw/RESETS.h"
 #include "hal/hw/SIO.h"
+#include "hal/hw/XIP_CTRL.h"
+#include "hal/hw/XIP_SSI.h"
 #include "main.h"
 #include <stdnoreturn.h>
 #include "hal/debug_uart.h"
@@ -528,6 +530,9 @@ _Noreturn void Reset_Handler()
         bss_start_p++;
     }
 
+    // disable XIP / QSPI Flash Interrupts as the (boot loader) handlers are gone now.
+    XIP_SSI->IMR = 0x3f; // all interrupt are masked
+    (void)XIP_SSI->ICR;  // clear all active interrupts
     /// !!! AND THIS LINE  !!!
 
 #ifdef ENABLE_CORE_1
