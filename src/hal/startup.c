@@ -17,6 +17,7 @@
 #include "hal/hw/ROSC.h"
 #include "hal/hw/PLL_SYS.h"
 #include "hal/hw/PSM.h"
+#include "hal/hw/PPB.h"
 #include "hal/hw/RESETS.h"
 #include "hal/hw/SIO.h"
 #include "hal/hw/XIP_CTRL.h"
@@ -67,9 +68,76 @@ static void wake_up_core1(void);
 #endif
 _Noreturn void error_state(void) __attribute__ ((weak, __noreturn__));
 _Noreturn void Reset_Handler()__attribute__((__noreturn__, section(".third_stage_boot")));
+_Noreturn void Int_Handler()__attribute__((__noreturn__, section(".third_stage_boot")));
 
+const VECTOR_FUNCTION_Type __STAGE_3_VECTOR_TABLE[64] __attribute__((used, section(".vectors")))
+= {
+/*  0: Initial Stack Pointer    */(VECTOR_FUNCTION_Type) (0x20041ffc),  // Core 0
+/*  1: Reset Handler            */Reset_Handler,
+/*  2: NMI Handler        (-14) */Int_Handler,
+/*  3: Hard Fault Handler (-13) */Int_Handler,
+/*  4: reserved           (-12) */Int_Handler,
+/*  5: reserved           (-11) */Int_Handler,
+/*  6: reserved           (-10) */Int_Handler,
+/*  7: reserved           ( -9) */Int_Handler,
+/*  8: reserved           ( -8) */Int_Handler,
+/*  9: reserved           ( -7) */Int_Handler,
+/* 10: reserved           ( -6) */Int_Handler,
+/* 11: SVCall Handler     ( -5) */Int_Handler,
+/* 12: reserved           ( -4) */Int_Handler,
+/* 13: reserved           ( -3) */Int_Handler,
+/* 14: PendSV Handler     ( -2) */Int_Handler,
+/* 15: SysTick Handler    ( -1) */Int_Handler,
+/* 16: TIMER_IRQ_0        (  0) */Int_Handler,
+/* 17: TIMER_IRQ_1        (  1) */Int_Handler,
+/* 18: TIMER_IRQ_2        (  2) */Int_Handler,
+/* 19: TIMER_IRQ_3        (  3) */Int_Handler,
+/* 20: PWM_IRQ_WRAP       (  4) */Int_Handler,
+/* 21: USBCTRL_IRQ        (  5) */Int_Handler,
+/* 22: XIP_IRQ            (  6) */Int_Handler,
+/* 23: PIO0_IRQ_0         (  7) */Int_Handler,
+/* 24: PIO0_IRQ_1         (  8) */Int_Handler,
+/* 25: PIO1_IRQ_0         (  9) */Int_Handler,
+/* 26: PIO1_IRQ_1         ( 10) */Int_Handler,
+/* 27: DMA_IRQ_0          ( 11) */Int_Handler,
+/* 28: DMA_IRQ_1          ( 12) */Int_Handler,
+/* 29: IO_IRQ_BANK0       ( 13) */Int_Handler,
+/* 30: IO_IRQ_QSPI        ( 14) */Int_Handler,
+/* 31: SIO_IRQ_PROC0      ( 15) */Int_Handler,
+/* 32: SIO_IRQ_PROC1      ( 16) */Int_Handler,
+/* 33: CLOCKS_IRQ         ( 17) */Int_Handler,
+/* 34: SPI0_IRQ           ( 18) */Int_Handler,
+/* 35: SPI1_IRQ           ( 19) */Int_Handler,
+/* 36: UART0_IRQ          ( 20) */Int_Handler,
+/* 37: UART1_IRQ          ( 21) */Int_Handler,
+/* 38: ADC_IRQ_FIFO       ( 22) */Int_Handler,
+/* 39: I2C0_IRQ           ( 23) */Int_Handler,
+/* 40: I2C1_IRQ           ( 24) */Int_Handler,
+/* 41: RTC_IRQ            ( 25) */Int_Handler,
+/* 42: reserved           ( 26) */Int_Handler,
+/* 43: reserved           ( 27) */Int_Handler,
+/* 44: reserved           ( 28) */Int_Handler,
+/* 45: reserved           ( 29) */Int_Handler,
+/* 46: reserved           ( 30) */Int_Handler,
+/* 47: reserved           ( 31) */Int_Handler,
+/* 48: reserved           ( 32) */Int_Handler,
+/* 49: reserved           ( 33) */Int_Handler,
+/* 50: reserved           ( 34) */Int_Handler,
+/* 51: reserved           ( 35) */Int_Handler,
+/* 52: reserved           ( 36) */Int_Handler,
+/* 53: reserved           ( 37) */Int_Handler,
+/* 54: reserved           ( 38) */Int_Handler,
+/* 55: reserved           ( 39) */Int_Handler,
+/* 56: reserved           ( 40) */Int_Handler,
+/* 57: reserved           ( 41) */Int_Handler,
+/* 58: reserved           ( 42) */Int_Handler,
+/* 59: reserved           ( 43) */Int_Handler,
+/* 60: reserved           ( 44) */Int_Handler,
+/* 61: reserved           ( 45) */Int_Handler,
+/* 62: reserved           ( 46) */Int_Handler,
+/* 63: reserved           ( 47) */Int_Handler, };
 
-const VECTOR_FUNCTION_Type __VECTOR_TABLE[64] __attribute__((used, section(".vectors")))
+const VECTOR_FUNCTION_Type __VECTOR_TABLE_RAM[64] __attribute__((used, aligned(0x100u)))
 = {
 /*  0: Initial Stack Pointer    */(VECTOR_FUNCTION_Type) (0x20041ffc),  // Core 0
 /*  1: Reset Handler            */Reset_Handler,
@@ -153,6 +221,25 @@ extern uint32_t __third_boot_end;
 extern uint32_t __ro_data_start;
 extern uint32_t __ro_data_end;
 extern uint32_t __ro_data_in_flash;
+
+_Noreturn void Int_Handler()
+{
+    // No Interrupts during 3rd stage boot loader !!!
+    __asm__ __volatile__ ("bkpt #0");
+
+    for (;;)
+    {
+        /*
+        // uint8_t data = 23;
+        SIO->GPIO_OUT_SET = 1 << 25;
+        // Delay
+        delay_us(10 * 1000);
+        SIO->GPIO_OUT_CLR = 1 << 25;
+        // Delay
+        delay_us(190 * 1000);
+        */
+    }
+}
 
 void NMI_Handler(void) {
     watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_NMI);
@@ -533,6 +620,7 @@ _Noreturn void Reset_Handler()
     // disable XIP / QSPI Flash Interrupts as the (boot loader) handlers are gone now.
     XIP_SSI->IMR = 0x3f; // all interrupt are masked
     (void)XIP_SSI->ICR;  // clear all active interrupts
+    PPB->VTOR = (uint32_t)&__VECTOR_TABLE_RAM;
     /// !!! AND THIS LINE  !!!
 
 #ifdef ENABLE_CORE_1
