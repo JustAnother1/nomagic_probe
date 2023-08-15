@@ -10,6 +10,8 @@ HEX = $(CP) -O ihex
 BIN = $(CP) -O binary -S
 DIS = $(CP) -S
 OBJDUMP = arm-none-eabi-objdump
+TST_CC = gcc
+TST_LD = cc
 
 BIN_FOLDER = bin/
 SRC_FOLDER = src/
@@ -27,6 +29,8 @@ DDEFS += -DCFG_TUSB_DEBUG=1
 DDEFS += -DDISABLE_WATCHDOG_FOR_DEBUG=1
 # use both cores
 #DDEFS += -DENABLE_CORE_1=1
+# use BOOT ROM (for flash functions,...)
+DDEFS += -DBOOT_ROM_ENABLED=1
 
 CFLAGS  = -c -ggdb3
 
@@ -105,6 +109,30 @@ INCDIRS +=$(SRC_FOLDER)lib/
 INCDIRS +=$(SRC_FOLDER)tinyusb/src/
 INCDIR = $(patsubst %,-I%, $(INCDIRS))
 
+# test configuration
+
+TST_LFLAGS = -lgcov --coverage
+TST_CFLAGS =  -Wall -Wextra -g3 -fprofile-arcs -ftest-coverage -Wno-int-to-pointer-cast
+TST_DDEFS = -DUNIT_TEST=1
+TST_INCDIRS = tests/
+TST_INCDIRS += tests/cfg/
+TST_INCDIRS += src/
+TST_INCDIRS += src/tinyusb/src/
+TST_INCDIRS += /usr/include/
+TST_INCDIR = $(patsubst %,-I%, $(TST_INCDIRS))
+TST_OBJS  = tests/bin/tests/cli_tests.o
+TST_OBJS += tests/bin/tests/mocks.o
+TST_OBJS += tests/bin/tests/printf_tests.o
+TST_OBJS += tests/bin/src/cli/cli.o
+TST_OBJS += tests/bin/src/lib/printf.o
+TST_OBJS += tests/bin/tests/usb_msc_tests.o
+TST_OBJS += tests/bin/src/tinyusb/usb_msc.o
+TST_OBJS += tests/bin/src/file/file_storage.o
+TST_OBJS += tests/bin/src/file/faked_disk.o
+TST_OBJS += tests/bin/tests/munit.o
+TST_OBJS += tests/bin/tests/allTests.o
+
+
 # make config
 VPATH = $(SOURCE_DIR)
 .DEFAULT_GOAL = all
@@ -153,13 +181,36 @@ list:
 	@arm-none-eabi-readelf -Wall $(BIN_FOLDER)$(PROJECT).elf > $(BIN_FOLDER)$(PROJECT).rd
 	@echo " LIST -> $(BIN_FOLDER)$(PROJECT).lst"
 	@$(OBJDUMP) -axdDSstr $(BIN_FOLDER)$(PROJECT).elf > $(BIN_FOLDER)$(PROJECT).lst
-	#$(OBJDUMP) -h -S -z $< > $@
 
 doc:
 	doxygen
 
-clean:
-	@rm -rf $(BIN_FOLDER) app.map doc/doxygen/
+tests/bin/%o: %c
+	@echo "=== compiling $@"
+	@$(MKDIR_P) $(@D)
+	$(TST_CC) -c $(TST_CFLAGS) $(TST_DDEFS) $(TST_INCDIR) $< -o $@
 
-.PHONY: clean flash all list
+$(PROJECT)_tests: $(TST_OBJS)
+	@echo ""
+	@echo "linking"
+	@echo "======="
+	$(TST_LD) $(TST_LFLAGS) -o tests/bin/$(PROJECT)_tests $(TST_OBJS)
+
+
+test: $(PROJECT)_tests
+	@echo ""
+	@echo "executing tests"
+	@echo "==============="
+	tests/bin/$(PROJECT)_tests
+
+lcov: 
+	lcov --base-directory tests/ --directory tests/ -c -o tests/bin/lcov.info --exclude "*tests/*"
+	#--exclude "*cpputest/*"
+	genhtml -o test_coverage -t "coverage" --num-spaces 4 tests/bin/lcov.info -o tests/bin/test_coverage/
+
+
+clean:
+	@rm -rf $(BIN_FOLDER) app.map doc/doxygen/ tests/$(PROJECT)_tests tests/bin/
+
+.PHONY: clean flash all list test
 
