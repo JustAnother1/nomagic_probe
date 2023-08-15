@@ -31,7 +31,7 @@ uint8_t mock_get_next_received_byte(void);
 #define WELCOME "\r\nMBSP Command Line Interface\r\n"
 #define ERROR_LINE_TOO_LONG "\r\n The command is too long! please try again!\r\n"
 
-typedef bool (*cmd_func_typ)(void);
+typedef bool (*cmd_func_typ)(uint32_t loop);
 
 typedef struct {
     char name[10];

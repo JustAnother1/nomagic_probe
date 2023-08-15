@@ -300,10 +300,11 @@ MunitResult test_cli_tick_cmd_invalid(const MunitParameter params[], void* user_
     uint8_t data[] = {'b', 'l', 'a', '\r'};
     uint8_t res_buf[] = {'\r', '\n',
 'I', 'n', 'v', 'a', 'l', 'i', 'd', ' ', 'c', 'o', 'm', 'm', 'a', 'n', 'd', ' ', '(', 'b', 'l', 'a', ')', ' ',
-'t', 'y', 'p', 'e', ' ', '\'', 'h', 'e', 'l', 'p', '\'', ' ', 'f', 'o', 'r', ' ', 'l', 'i', 's', 't', ' ',
-'o', 'f', ' ', 'a', 'v', 'a', 'i', 'l', 'a', 'b', 'l', 'e', ' ', 'c', 'o', 'm', 'm', 'a', 'n', 'd', 's',
-        '\r', '\n',
-        ' ', '$', ' '};
+'[', ' ', '6', '2', ' ', '6', 'c', ' ', '6', '1', ' ', ']',' ',' ', 't', 'y', 'p', 'e', ' ',
+'\'', 'h', 'e', 'l', 'p', '\'', ' ',
+'f', 'o', 'r', ' ', 'l', 'i', 's', 't', ' ','o', 'f', ' ', 'a', 'v', 'a', 'i', 'l', 'a', 'b', 'l', 'e', ' ',
+'c', 'o', 'm', 'm', 'a', 'n', 'd', 's', '\r', '\n',
+' ', '$', ' '};
     /* These are just to silence compiler warnings about the parameters
      * being unused. */
     (void) params;
@@ -317,7 +318,7 @@ MunitResult test_cli_tick_cmd_invalid(const MunitParameter params[], void* user_
     munit_assert_uint32(4, ==, recv_read_pos);
     munit_assert_uint32(4, ==, recv_write_pos);
     munit_assert_uint32(0, ==, send_read_pos);
-    munit_assert_uint32(71, ==, send_write_pos);
+    munit_assert_uint32(84, ==, send_write_pos);
     munit_assert_memory_equal(36, res_buf, send_buf);
     return MUNIT_OK;
 }
@@ -327,6 +328,7 @@ MunitResult test_cli_tick_cmd_help(const MunitParameter params[], void* user_dat
     uint8_t data[] = {'h', 'e', 'l', 'p', '\r'};
     uint8_t res_buf[] = {'\r', '\n',
 'a', 'v', 'a', 'i', 'l', 'a', 'b', 'l', 'e', ' ', 'c', 'o', 'm', 'm', 'a', 'n', 'd', 's', ' ', ':', '\r', '\n',
+' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'h', 'e', 'l', 'p', ' ', ':', ' ', 'l', 'i', 's', 't', ' ', 'a', 'l', 'l', ' ', 'a', 'v', 'a', 'i', 'l', 'a', 'b', 'l', 'e', ' ', 'c', 'o', 'm', 'm', 'a', 'n', 'd', 's', '\r', '\n',
 ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 't', 'i', 'm', 'e', ' ', ':', ' ', 't', 'i', 'm', 'e', ' ', 's', 'i', 'n', 'c', 'e', ' ', 'p', 'o', 'w', 'e', 'r', ' ', 'o', 'n', '\r', '\n',
 ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 't', 'e', 's', 't', ' ', ':', ' ', 't', 'e', 's', 't', ' ', 'c', 'o', 'm', 'm', 'a', 'n', 'd', '\r', '\n',
 '\r', '\n',' ', '$', ' '};
@@ -340,10 +342,14 @@ MunitResult test_cli_tick_cmd_help(const MunitParameter params[], void* user_dat
     send_write_pos = 0;
     send_bytes_to_cli(data, 5);
     cli_tick();
+    cli_tick();
+    cli_tick();
+    cli_tick();
+    cli_tick();
     munit_assert_uint32(5, ==, recv_read_pos);
     munit_assert_uint32(5, ==, recv_write_pos);
     munit_assert_uint32(0, ==, send_read_pos);
-    munit_assert_uint32(100, ==, send_write_pos);
+    munit_assert_uint32(147, ==, send_write_pos);
     // STRNCMP_EQUAL("\r\navailable commands :\r\ntime : time since power on\r\ntest : test command\r\n $ ", (const char*)send_buf, 82);
     munit_assert_memory_equal(78, res_buf, send_buf);
     return MUNIT_OK;
