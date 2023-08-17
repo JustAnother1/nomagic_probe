@@ -1,7 +1,7 @@
 #include "cli_tests.h"
 #include "mocks.h"
-#include "../src/cli/cli.h"
-#include "../src/lib/printf.h"
+#include "../source/cli/cli.h"
+#include "../source/lib/printf.h"
 
 void* cli_setup(const MunitParameter params[], void* user_data) {
     (void)params;

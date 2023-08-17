@@ -1,6 +1,6 @@
 #include "usb_msc_tests.h"
 #include "mocks.h"
-#include "../src/tinyusb/src/class/msc/msc_device.h"
+#include "../source/tinyusb/src/class/msc/msc_device.h"
 
 void* usb_msc_setup(const MunitParameter params[], void* user_data) {
     (void)params;

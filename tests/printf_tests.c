@@ -1,6 +1,6 @@
 #include "printf_tests.h"
 #include "mocks.h"
-#include "../src/lib/printf.h"
+#include "../source/lib/printf.h"
 
 #define STRING_BUFFER_LENGTH  100
 

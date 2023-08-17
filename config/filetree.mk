@@ -57,7 +57,6 @@ project/source/cli/cli_sys.c.o \
 project/source/cli/cli_usb.c.o \
 project/source/file/faked_disk.c.o \
 project/source/file/file_storage.c.o \
-project/source/file/file_system.c.o \
 project/source/gdbserver/commands.c.o \
 project/source/gdbserver/gdbserver.c.o \
 project/source/gdbserver/util.c.o \
