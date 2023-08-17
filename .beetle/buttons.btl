@@ -1,0 +1,27 @@
+# BUTTON DEFINITIONS
+# ===================
+# Modify this file to change/add buttons in the top toolbar.
+# Tip: refer to icons in the 'beetle_core/resources/icons/' folder,
+# in your Embeetle installation directory.
+{
+    "clean":
+    {
+        "icon": "icons/gen/clean.png",
+        "hover-text": "Run 'clean' target in makefile",
+        "help-text": "Run 'clean' target in makefile"
+    },
+
+    "build":
+    {
+        "icon": "icons/gen/build.png",
+        "hover-text": "Run 'build' target in makefile",
+        "help-text": "Run 'build' target in makefile"
+    },
+
+    "flash":
+    {
+        "icon": "icons/gen/flash.png",
+        "hover-text": "Run 'flash' target in makefile",
+        "help-text": "Run 'flash' target in makefile"
+    }
+}

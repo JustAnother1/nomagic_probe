@@ -1,0 +1,59 @@
+//=============================================================================//
+//                               DASHBOARD CONFIG                              //
+//=============================================================================//
+// COPYRIGHT (c) 2023 Embeetle                                                 //
+// This software component is licensed by Embeetle under the MIT license. Con- //
+// sult the license text at the bottom of this file.                           //
+//                                                                             //
+// SUMMARY                                                                     //
+// This file saves all your settings from the Dashboard.                       //
+//                                                                             //
+
+
+{
+  "project_type": "makefile",
+  "project_version": "7",
+  "chip_name": "rp2040",
+  "board_name": "rpi-pico",
+  "probe_name": "swdap",
+  "transport_protocol": "swd",
+  "COM_port": "None",
+  "BIN_FILE": "<project>/build/nomagic_probe.bin",
+  "BOOTLOADER_FILE": "None",
+  "BOOTSWITCH_FILE": "None",
+  "BUILD_DIR": "<project>/build",
+  "ELF_FILE": "<project>/build/nomagic_probe.elf",
+  "GDB_FLASHFILE": "None",
+  "LINKERSCRIPT": "<project>/config/linkerscript.ld",
+  "MAKEFILE": "<project>/config/makefile",
+  "OPENOCD_CHIPFILE": "<project>/config/openocd_chip.cfg",
+  "OPENOCD_PROBEFILE": "<project>/config/openocd_probe.cfg",
+  "PACKPATH": "None",
+  "PARTITIONS_CSV_FILE": "None",
+  "COMPILER_TOOLCHAIN": "gnu_arm_toolchain_10.3.1_20210824_64b",
+  "BUILD_AUTOMATION": "gnu_make_4.2.1_64b",
+  "FLASHTOOL": "openocd_0.12.0_dev01004_64b",
+  "hash_value": "b174a595ecdac67ab4779ad69f356bc4"
+}
+
+// MIT LICENSE
+// ===========
+// COPYRIGHT (c) 2023 Embeetle
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is furn-
+// ished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.

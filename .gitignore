@@ -1,4 +1,9 @@
 /bin/
+/build/
+/.beetle/.cache/
+/.beetle/.cache*/
+/.beetle/window_config.btl
+/.beetle/outut.txt
 /zzz/
 .~lock.*
 /*.txt
