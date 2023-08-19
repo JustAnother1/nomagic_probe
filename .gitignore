@@ -3,7 +3,7 @@ build/
 .beetle/.cache/
 .beetle/.cache*/
 .beetle/window_config.btl
-.beetle/outut.txt
+.beetle/output.txt
 .beetle/filetree_config.btl
 /*.~lock.*
 /*.txt
