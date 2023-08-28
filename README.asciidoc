@@ -1,26 +1,38 @@
 nomagic probe
 =============
 
-The nomic probe is a firmware for the https://www.raspberrypi.com/products/raspberry-pi-pico/[RaspberryPi Pico board] that provides a gdbserver interface for debugging other boards.
-That is the functionality of the https://github.com/raspberrypi/picoprobe[picoprobe] and https://openocd.org/[OpenOCD] combined. It is also similar to the https://black-magic.org/[Black Magic Firmware].
+The nomagic probe is a firmware for the https://www.raspberrypi.com/products/raspberry-pi-pico/[RaspberryPi Pico board] that provides a gdbserver interface for debugging other boards.
+That is the functionality of the https://github.com/raspberrypi/picoprobe[picoprobe] and https://openocd.org/[OpenOCD] combined. It is therefore similar to the https://black-magic.org/[Black Magic Firmware].
 
-It does not use external libraries. Therefore all code is in this library, no dependencies!
+It does not use external libraries. Therefore all code is in this project, no dependencies!
 
 No dynamic memory allocation, no malloc!
 
-== Building and Starting
+== Building
 
-The firmware can be build using make. The generated Files will be placed in the bin folder. For details try
+This project contains the necessary project files to be opened by the https://embeetle.com/[Embeetle IDE].
 
-+make help+
+This project also has https://www.eclipse.org/[Eclipse] project files.
 
-for this to work you (obviously) need to have make installed.
+The firmware can also be build using make. To build using make you first need to change into the build directory. The build directory can be any folder you like. This allows also to have dmore than one build directory.
+In the build directory you can make normally, but need to provide the path to the makefile.
+
+----
+cd build/
+
+# to build:
+make -f ../config/makefile
+# to flash
+make -f ../config/makefile flash
+# to clean
+make -f ../config/makefile clean
+----
+
+For this to work you (obviously) need to have make installed.
 Depending on the target you are building for you might need to have additionaltools installed:
 
-- For linux (Posix systems) you need pthreads and gcc. You can debug using gdb.
 - To build for ARM Cortex-M Targets you need https://launchpad.net/gcc-arm-embedded[GCC ARM Embedded]
 - for automatic generated documentation you need http://www.stack.nl/~dimitri/doxygen/[Doxygen]
-- for unit testing you need https://cpputest.github.io/[CppUTest]
 
 == Pinout
 
