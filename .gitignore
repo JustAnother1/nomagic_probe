@@ -4,7 +4,6 @@ build/
 .beetle/.cache*/
 .beetle/window_config.btl
 .beetle/output.txt
-.beetle/filetree_config.btl
 /*.~lock.*
 /*.txt
 /*.sh
