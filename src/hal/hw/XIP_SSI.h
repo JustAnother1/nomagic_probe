@@ -55,6 +55,229 @@
 
 #include <stdint.h>
 
+
+#define XIP_SSI_CTRLR0_SSTE_OFFSET                         24
+#define XIP_SSI_CTRLR0_SSTE_MASK                           0x1000000
+
+#define XIP_SSI_CTRLR0_SPI_FRF_OFFSET                      21
+#define XIP_SSI_CTRLR0_SPI_FRF_MASK                        0x600000
+#define XIP_SSI_CTRLR0_SPI_FRF_STD                         0
+#define XIP_SSI_CTRLR0_SPI_FRF_DUAL                        1
+#define XIP_SSI_CTRLR0_SPI_FRF_QUAD                        2
+
+#define XIP_SSI_CTRLR0_DFS_32_OFFSET                       16
+#define XIP_SSI_CTRLR0_DFS_32_MASK                         0x1f0000
+
+#define XIP_SSI_CTRLR0_CFS_OFFSET                          12
+#define XIP_SSI_CTRLR0_CFS_MASK                            0xf000
+
+#define XIP_SSI_CTRLR0_SRL_OFFSET                          11
+#define XIP_SSI_CTRLR0_SRL_MASK                            0x800
+
+#define XIP_SSI_CTRLR0_SLV_OE_OFFSET                       10
+#define XIP_SSI_CTRLR0_SLV_OE_MASK                         0x400
+
+#define XIP_SSI_CTRLR0_TMOD_OFFSET                         8
+#define XIP_SSI_CTRLR0_TMOD_MASK                           0x300
+#define XIP_SSI_CTRLR0_TMOD_TX_AND_RX                      0
+#define XIP_SSI_CTRLR0_TMOD_TX_ONLY                        1
+#define XIP_SSI_CTRLR0_TMOD_RX_ONLY                        2
+#define XIP_SSI_CTRLR0_TMOD_EEPROM_READ                    3
+
+#define XIP_SSI_CTRLR0_SCPOL_OFFSET                        7
+#define XIP_SSI_CTRLR0_SCPOL_MASK                          0x80
+
+#define XIP_SSI_CTRLR0_SCPH_OFFSET                         6
+#define XIP_SSI_CTRLR0_SCPH_MASK                           0x40
+
+#define XIP_SSI_CTRLR0_FRF_OFFSET                          4
+#define XIP_SSI_CTRLR0_FRF_MASK                            0x30
+
+#define XIP_SSI_CTRLR0_DFS_OFFSET                          0
+#define XIP_SSI_CTRLR0_DFS_MASK                            0xf
+
+#define XIP_SSI_CTRLR1_NDF_OFFSET                          0
+#define XIP_SSI_CTRLR1_NDF_MASK                            0xffff
+
+#define XIP_SSI_SSIENR_SSI_EN_OFFSET                       0
+#define XIP_SSI_SSIENR_SSI_EN_MASK                         1
+
+#define XIP_SSI_MWCR_MHS_OFFSET                            2
+#define XIP_SSI_MWCR_MHS_MASK                              4
+
+#define XIP_SSI_MWCR_MDD_OFFSET                            1
+#define XIP_SSI_MWCR_MDD_MASK                              2
+
+#define XIP_SSI_MWCR_MWMOD_OFFSET                          0
+#define XIP_SSI_MWCR_MWMOD_MASK                            1
+
+#define XIP_SSI_SER_SER_OFFSET                             0
+#define XIP_SSI_SER_SER_MASK                               1
+
+#define XIP_SSI_BAUDR_SCKDV_OFFSET                         0
+#define XIP_SSI_BAUDR_SCKDV_MASK                           0xffff
+
+#define XIP_SSI_TXFTLR_TFT_OFFSET                          0
+#define XIP_SSI_TXFTLR_TFT_MASK                            0xff
+
+#define XIP_SSI_RXFTLR_RFT_OFFSET                          0
+#define XIP_SSI_RXFTLR_RFT_MASK                            0xff
+
+#define XIP_SSI_TXFLR_TFTFL_OFFSET                         0
+#define XIP_SSI_TXFLR_TFTFL_MASK                           0xff
+
+#define XIP_SSI_RXFLR_RXTFL_OFFSET                         0
+#define XIP_SSI_RXFLR_RXTFL_MASK                           0xff
+
+#define XIP_SSI_SR_DCOL_OFFSET                             6
+#define XIP_SSI_SR_DCOL_MASK                               0x40
+
+#define XIP_SSI_SR_TXE_OFFSET                              5
+#define XIP_SSI_SR_TXE_MASK                                0x20
+
+#define XIP_SSI_SR_RFF_OFFSET                              4
+#define XIP_SSI_SR_RFF_MASK                                0x10
+
+#define XIP_SSI_SR_RFNE_OFFSET                             3
+#define XIP_SSI_SR_RFNE_MASK                               8
+
+#define XIP_SSI_SR_TFE_OFFSET                              2
+#define XIP_SSI_SR_TFE_MASK                                4
+
+#define XIP_SSI_SR_TFNF_OFFSET                             1
+#define XIP_SSI_SR_TFNF_MASK                               2
+
+#define XIP_SSI_SR_BUSY_OFFSET                             0
+#define XIP_SSI_SR_BUSY_MASK                               1
+
+#define XIP_SSI_IMR_MSTIM_OFFSET                           5
+#define XIP_SSI_IMR_MSTIM_MASK                             0x20
+
+#define XIP_SSI_IMR_RXFIM_OFFSET                           4
+#define XIP_SSI_IMR_RXFIM_MASK                             0x10
+
+#define XIP_SSI_IMR_RXOIM_OFFSET                           3
+#define XIP_SSI_IMR_RXOIM_MASK                             8
+
+#define XIP_SSI_IMR_RXUIM_OFFSET                           2
+#define XIP_SSI_IMR_RXUIM_MASK                             4
+
+#define XIP_SSI_IMR_TXOIM_OFFSET                           1
+#define XIP_SSI_IMR_TXOIM_MASK                             2
+
+#define XIP_SSI_IMR_TXEIM_OFFSET                           0
+#define XIP_SSI_IMR_TXEIM_MASK                             1
+
+#define XIP_SSI_ISR_MSTIS_OFFSET                           5
+#define XIP_SSI_ISR_MSTIS_MASK                             0x20
+
+#define XIP_SSI_ISR_RXFIS_OFFSET                           4
+#define XIP_SSI_ISR_RXFIS_MASK                             0x10
+
+#define XIP_SSI_ISR_RXOIS_OFFSET                           3
+#define XIP_SSI_ISR_RXOIS_MASK                             8
+
+#define XIP_SSI_ISR_RXUIS_OFFSET                           2
+#define XIP_SSI_ISR_RXUIS_MASK                             4
+
+#define XIP_SSI_ISR_TXOIS_OFFSET                           1
+#define XIP_SSI_ISR_TXOIS_MASK                             2
+
+#define XIP_SSI_ISR_TXEIS_OFFSET                           0
+#define XIP_SSI_ISR_TXEIS_MASK                             1
+
+#define XIP_SSI_RISR_MSTIR_OFFSET                          5
+#define XIP_SSI_RISR_MSTIR_MASK                            0x20
+
+#define XIP_SSI_RISR_RXFIR_OFFSET                          4
+#define XIP_SSI_RISR_RXFIR_MASK                            0x10
+
+#define XIP_SSI_RISR_RXOIR_OFFSET                          3
+#define XIP_SSI_RISR_RXOIR_MASK                            8
+
+#define XIP_SSI_RISR_RXUIR_OFFSET                          2
+#define XIP_SSI_RISR_RXUIR_MASK                            4
+
+#define XIP_SSI_RISR_TXOIR_OFFSET                          1
+#define XIP_SSI_RISR_TXOIR_MASK                            2
+
+#define XIP_SSI_RISR_TXEIR_OFFSET                          0
+#define XIP_SSI_RISR_TXEIR_MASK                            1
+
+#define XIP_SSI_TXOICR_TXOICR_OFFSET                       0
+#define XIP_SSI_TXOICR_TXOICR_MASK                         1
+
+#define XIP_SSI_RXOICR_RXOICR_OFFSET                       0
+#define XIP_SSI_RXOICR_RXOICR_MASK                         1
+
+#define XIP_SSI_RXUICR_RXUICR_OFFSET                       0
+#define XIP_SSI_RXUICR_RXUICR_MASK                         1
+
+#define XIP_SSI_MSTICR_MSTICR_OFFSET                       0
+#define XIP_SSI_MSTICR_MSTICR_MASK                         1
+
+#define XIP_SSI_ICR_ICR_OFFSET                             0
+#define XIP_SSI_ICR_ICR_MASK                               1
+
+#define XIP_SSI_DMACR_TDMAE_OFFSET                         1
+#define XIP_SSI_DMACR_TDMAE_MASK                           2
+
+#define XIP_SSI_DMACR_RDMAE_OFFSET                         0
+#define XIP_SSI_DMACR_RDMAE_MASK                           1
+
+#define XIP_SSI_DMATDLR_DMATDL_OFFSET                      0
+#define XIP_SSI_DMATDLR_DMATDL_MASK                        0xff
+
+#define XIP_SSI_DMARDLR_DMARDL_OFFSET                      0
+#define XIP_SSI_DMARDLR_DMARDL_MASK                        0xff
+
+#define XIP_SSI_IDR_IDCODE_OFFSET                          0
+#define XIP_SSI_IDR_IDCODE_MASK                            0x7ffffffe
+
+#define XIP_SSI_SSI_VERSION_ID_SSI_COMP_VERSION_OFFSET     0
+#define XIP_SSI_SSI_VERSION_ID_SSI_COMP_VERSION_MASK       0x7ffffffe
+
+#define XIP_SSI_DR0_DR_OFFSET                              0
+#define XIP_SSI_DR0_DR_MASK                                0x7ffffffe
+
+#define XIP_SSI_RX_SAMPLE_DLY_RSD_OFFSET                   0
+#define XIP_SSI_RX_SAMPLE_DLY_RSD_MASK                     0xff
+
+#define XIP_SSI_SPI_CTRLR0_XIP_CMD_OFFSET                  24
+#define XIP_SSI_SPI_CTRLR0_XIP_CMD_MASK                    -16777216
+
+#define XIP_SSI_SPI_CTRLR0_SPI_RXDS_EN_OFFSET              18
+#define XIP_SSI_SPI_CTRLR0_SPI_RXDS_EN_MASK                0x40000
+
+#define XIP_SSI_SPI_CTRLR0_INST_DDR_EN_OFFSET              17
+#define XIP_SSI_SPI_CTRLR0_INST_DDR_EN_MASK                0x20000
+
+#define XIP_SSI_SPI_CTRLR0_SPI_DDR_EN_OFFSET               16
+#define XIP_SSI_SPI_CTRLR0_SPI_DDR_EN_MASK                 0x10000
+
+#define XIP_SSI_SPI_CTRLR0_WAIT_CYCLES_OFFSET              11
+#define XIP_SSI_SPI_CTRLR0_WAIT_CYCLES_MASK                0xf800
+
+#define XIP_SSI_SPI_CTRLR0_INST_L_OFFSET                   8
+#define XIP_SSI_SPI_CTRLR0_INST_L_MASK                     0x300
+#define XIP_SSI_SPI_CTRLR0_INST_L_NONE                     0
+#define XIP_SSI_SPI_CTRLR0_INST_L_4B                       1
+#define XIP_SSI_SPI_CTRLR0_INST_L_8B                       2
+#define XIP_SSI_SPI_CTRLR0_INST_L_16B                      3
+
+#define XIP_SSI_SPI_CTRLR0_ADDR_L_OFFSET                   2
+#define XIP_SSI_SPI_CTRLR0_ADDR_L_MASK                     0x3c
+
+#define XIP_SSI_SPI_CTRLR0_TRANS_TYPE_OFFSET               0
+#define XIP_SSI_SPI_CTRLR0_TRANS_TYPE_MASK                 3
+#define XIP_SSI_SPI_CTRLR0_TRANS_TYPE_1C1A                 0
+#define XIP_SSI_SPI_CTRLR0_TRANS_TYPE_1C2A                 1
+#define XIP_SSI_SPI_CTRLR0_TRANS_TYPE_2C2A                 2
+
+#define XIP_SSI_TXD_DRIVE_EDGE_TDE_OFFSET                  0
+#define XIP_SSI_TXD_DRIVE_EDGE_TDE_MASK                    0xff
+
+
 typedef struct
 {
 

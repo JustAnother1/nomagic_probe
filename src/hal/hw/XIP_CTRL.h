@@ -6,6 +6,35 @@
 
 #include <stdint.h>
 
+
+#define XIP_CTRL_CTRL_POWER_DOWN_OFFSET                    3
+#define XIP_CTRL_CTRL_POWER_DOWN_MASK                      8
+
+#define XIP_CTRL_CTRL_ERR_BADWRITE_OFFSET                  1
+#define XIP_CTRL_CTRL_ERR_BADWRITE_MASK                    2
+
+#define XIP_CTRL_CTRL_EN_OFFSET                            0
+#define XIP_CTRL_CTRL_EN_MASK                              1
+
+#define XIP_CTRL_FLUSH_FLUSH_OFFSET                        0
+#define XIP_CTRL_FLUSH_FLUSH_MASK                          1
+
+#define XIP_CTRL_STAT_FIFO_FULL_OFFSET                     2
+#define XIP_CTRL_STAT_FIFO_FULL_MASK                       4
+
+#define XIP_CTRL_STAT_FIFO_EMPTY_OFFSET                    1
+#define XIP_CTRL_STAT_FIFO_EMPTY_MASK                      2
+
+#define XIP_CTRL_STAT_FLUSH_READY_OFFSET                   0
+#define XIP_CTRL_STAT_FLUSH_READY_MASK                     1
+
+#define XIP_CTRL_STREAM_ADDR_STREAM_ADDR_OFFSET            2
+#define XIP_CTRL_STREAM_ADDR_STREAM_ADDR_MASK              -4
+
+#define XIP_CTRL_STREAM_CTR_STREAM_CTR_OFFSET              0
+#define XIP_CTRL_STREAM_CTR_STREAM_CTR_MASK                0x3fffff
+
+
 typedef struct
 {
 

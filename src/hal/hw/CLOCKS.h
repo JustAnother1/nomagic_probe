@@ -5,6 +5,786 @@
 
 #include <stdint.h>
 
+
+#define CLOCKS_CLK_GPOUT0_CTRL_NUDGE_OFFSET                20
+#define CLOCKS_CLK_GPOUT0_CTRL_NUDGE_MASK                  0x100000
+
+#define CLOCKS_CLK_GPOUT0_CTRL_PHASE_OFFSET                16
+#define CLOCKS_CLK_GPOUT0_CTRL_PHASE_MASK                  0x30000
+
+#define CLOCKS_CLK_GPOUT0_CTRL_DC50_OFFSET                 12
+#define CLOCKS_CLK_GPOUT0_CTRL_DC50_MASK                   0x1000
+
+#define CLOCKS_CLK_GPOUT0_CTRL_ENABLE_OFFSET               11
+#define CLOCKS_CLK_GPOUT0_CTRL_ENABLE_MASK                 0x800
+
+#define CLOCKS_CLK_GPOUT0_CTRL_KILL_OFFSET                 10
+#define CLOCKS_CLK_GPOUT0_CTRL_KILL_MASK                   0x400
+
+#define CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_OFFSET               5
+#define CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_MASK                 0x1e0
+#define CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_clksrc_pll_sys       0
+#define CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_clksrc_gpin0         1
+#define CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_clksrc_gpin1         2
+#define CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_clksrc_pll_usb       3
+#define CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_rosc_clksrc          4
+#define CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_xosc_clksrc          5
+#define CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_clk_sys              6
+#define CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_clk_usb              7
+#define CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_clk_adc              8
+#define CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_clk_rtc              9
+#define CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_clk_ref              0xa
+
+#define CLOCKS_CLK_GPOUT0_DIV_INT_OFFSET                   8
+#define CLOCKS_CLK_GPOUT0_DIV_INT_MASK                     -256
+
+#define CLOCKS_CLK_GPOUT0_DIV_FRAC_OFFSET                  0
+#define CLOCKS_CLK_GPOUT0_DIV_FRAC_MASK                    0xff
+
+#define CLOCKS_CLK_GPOUT1_CTRL_NUDGE_OFFSET                20
+#define CLOCKS_CLK_GPOUT1_CTRL_NUDGE_MASK                  0x100000
+
+#define CLOCKS_CLK_GPOUT1_CTRL_PHASE_OFFSET                16
+#define CLOCKS_CLK_GPOUT1_CTRL_PHASE_MASK                  0x30000
+
+#define CLOCKS_CLK_GPOUT1_CTRL_DC50_OFFSET                 12
+#define CLOCKS_CLK_GPOUT1_CTRL_DC50_MASK                   0x1000
+
+#define CLOCKS_CLK_GPOUT1_CTRL_ENABLE_OFFSET               11
+#define CLOCKS_CLK_GPOUT1_CTRL_ENABLE_MASK                 0x800
+
+#define CLOCKS_CLK_GPOUT1_CTRL_KILL_OFFSET                 10
+#define CLOCKS_CLK_GPOUT1_CTRL_KILL_MASK                   0x400
+
+#define CLOCKS_CLK_GPOUT1_CTRL_AUXSRC_OFFSET               5
+#define CLOCKS_CLK_GPOUT1_CTRL_AUXSRC_MASK                 0x1e0
+#define CLOCKS_CLK_GPOUT1_CTRL_AUXSRC_clksrc_pll_sys       0
+#define CLOCKS_CLK_GPOUT1_CTRL_AUXSRC_clksrc_gpin0         1
+#define CLOCKS_CLK_GPOUT1_CTRL_AUXSRC_clksrc_gpin1         2
+#define CLOCKS_CLK_GPOUT1_CTRL_AUXSRC_clksrc_pll_usb       3
+#define CLOCKS_CLK_GPOUT1_CTRL_AUXSRC_rosc_clksrc          4
+#define CLOCKS_CLK_GPOUT1_CTRL_AUXSRC_xosc_clksrc          5
+#define CLOCKS_CLK_GPOUT1_CTRL_AUXSRC_clk_sys              6
+#define CLOCKS_CLK_GPOUT1_CTRL_AUXSRC_clk_usb              7
+#define CLOCKS_CLK_GPOUT1_CTRL_AUXSRC_clk_adc              8
+#define CLOCKS_CLK_GPOUT1_CTRL_AUXSRC_clk_rtc              9
+#define CLOCKS_CLK_GPOUT1_CTRL_AUXSRC_clk_ref              0xa
+
+#define CLOCKS_CLK_GPOUT1_DIV_INT_OFFSET                   8
+#define CLOCKS_CLK_GPOUT1_DIV_INT_MASK                     -256
+
+#define CLOCKS_CLK_GPOUT1_DIV_FRAC_OFFSET                  0
+#define CLOCKS_CLK_GPOUT1_DIV_FRAC_MASK                    0xff
+
+#define CLOCKS_CLK_GPOUT2_CTRL_NUDGE_OFFSET                20
+#define CLOCKS_CLK_GPOUT2_CTRL_NUDGE_MASK                  0x100000
+
+#define CLOCKS_CLK_GPOUT2_CTRL_PHASE_OFFSET                16
+#define CLOCKS_CLK_GPOUT2_CTRL_PHASE_MASK                  0x30000
+
+#define CLOCKS_CLK_GPOUT2_CTRL_DC50_OFFSET                 12
+#define CLOCKS_CLK_GPOUT2_CTRL_DC50_MASK                   0x1000
+
+#define CLOCKS_CLK_GPOUT2_CTRL_ENABLE_OFFSET               11
+#define CLOCKS_CLK_GPOUT2_CTRL_ENABLE_MASK                 0x800
+
+#define CLOCKS_CLK_GPOUT2_CTRL_KILL_OFFSET                 10
+#define CLOCKS_CLK_GPOUT2_CTRL_KILL_MASK                   0x400
+
+#define CLOCKS_CLK_GPOUT2_CTRL_AUXSRC_OFFSET               5
+#define CLOCKS_CLK_GPOUT2_CTRL_AUXSRC_MASK                 0x1e0
+#define CLOCKS_CLK_GPOUT2_CTRL_AUXSRC_clksrc_pll_sys       0
+#define CLOCKS_CLK_GPOUT2_CTRL_AUXSRC_clksrc_gpin0         1
+#define CLOCKS_CLK_GPOUT2_CTRL_AUXSRC_clksrc_gpin1         2
+#define CLOCKS_CLK_GPOUT2_CTRL_AUXSRC_clksrc_pll_usb       3
+#define CLOCKS_CLK_GPOUT2_CTRL_AUXSRC_rosc_clksrc_ph       4
+#define CLOCKS_CLK_GPOUT2_CTRL_AUXSRC_xosc_clksrc          5
+#define CLOCKS_CLK_GPOUT2_CTRL_AUXSRC_clk_sys              6
+#define CLOCKS_CLK_GPOUT2_CTRL_AUXSRC_clk_usb              7
+#define CLOCKS_CLK_GPOUT2_CTRL_AUXSRC_clk_adc              8
+#define CLOCKS_CLK_GPOUT2_CTRL_AUXSRC_clk_rtc              9
+#define CLOCKS_CLK_GPOUT2_CTRL_AUXSRC_clk_ref              0xa
+
+#define CLOCKS_CLK_GPOUT2_DIV_INT_OFFSET                   8
+#define CLOCKS_CLK_GPOUT2_DIV_INT_MASK                     -256
+
+#define CLOCKS_CLK_GPOUT2_DIV_FRAC_OFFSET                  0
+#define CLOCKS_CLK_GPOUT2_DIV_FRAC_MASK                    0xff
+
+#define CLOCKS_CLK_GPOUT3_CTRL_NUDGE_OFFSET                20
+#define CLOCKS_CLK_GPOUT3_CTRL_NUDGE_MASK                  0x100000
+
+#define CLOCKS_CLK_GPOUT3_CTRL_PHASE_OFFSET                16
+#define CLOCKS_CLK_GPOUT3_CTRL_PHASE_MASK                  0x30000
+
+#define CLOCKS_CLK_GPOUT3_CTRL_DC50_OFFSET                 12
+#define CLOCKS_CLK_GPOUT3_CTRL_DC50_MASK                   0x1000
+
+#define CLOCKS_CLK_GPOUT3_CTRL_ENABLE_OFFSET               11
+#define CLOCKS_CLK_GPOUT3_CTRL_ENABLE_MASK                 0x800
+
+#define CLOCKS_CLK_GPOUT3_CTRL_KILL_OFFSET                 10
+#define CLOCKS_CLK_GPOUT3_CTRL_KILL_MASK                   0x400
+
+#define CLOCKS_CLK_GPOUT3_CTRL_AUXSRC_OFFSET               5
+#define CLOCKS_CLK_GPOUT3_CTRL_AUXSRC_MASK                 0x1e0
+#define CLOCKS_CLK_GPOUT3_CTRL_AUXSRC_clksrc_pll_sys       0
+#define CLOCKS_CLK_GPOUT3_CTRL_AUXSRC_clksrc_gpin0         1
+#define CLOCKS_CLK_GPOUT3_CTRL_AUXSRC_clksrc_gpin1         2
+#define CLOCKS_CLK_GPOUT3_CTRL_AUXSRC_clksrc_pll_usb       3
+#define CLOCKS_CLK_GPOUT3_CTRL_AUXSRC_rosc_clksrc_ph       4
+#define CLOCKS_CLK_GPOUT3_CTRL_AUXSRC_xosc_clksrc          5
+#define CLOCKS_CLK_GPOUT3_CTRL_AUXSRC_clk_sys              6
+#define CLOCKS_CLK_GPOUT3_CTRL_AUXSRC_clk_usb              7
+#define CLOCKS_CLK_GPOUT3_CTRL_AUXSRC_clk_adc              8
+#define CLOCKS_CLK_GPOUT3_CTRL_AUXSRC_clk_rtc              9
+#define CLOCKS_CLK_GPOUT3_CTRL_AUXSRC_clk_ref              0xa
+
+#define CLOCKS_CLK_GPOUT3_DIV_INT_OFFSET                   8
+#define CLOCKS_CLK_GPOUT3_DIV_INT_MASK                     -256
+
+#define CLOCKS_CLK_GPOUT3_DIV_FRAC_OFFSET                  0
+#define CLOCKS_CLK_GPOUT3_DIV_FRAC_MASK                    0xff
+
+#define CLOCKS_CLK_REF_CTRL_AUXSRC_OFFSET                  5
+#define CLOCKS_CLK_REF_CTRL_AUXSRC_MASK                    0x60
+#define CLOCKS_CLK_REF_CTRL_AUXSRC_clksrc_pll_usb          0
+#define CLOCKS_CLK_REF_CTRL_AUXSRC_clksrc_gpin0            1
+#define CLOCKS_CLK_REF_CTRL_AUXSRC_clksrc_gpin1            2
+
+#define CLOCKS_CLK_REF_CTRL_SRC_OFFSET                     0
+#define CLOCKS_CLK_REF_CTRL_SRC_MASK                       3
+#define CLOCKS_CLK_REF_CTRL_SRC_rosc_clksrc_ph             0
+#define CLOCKS_CLK_REF_CTRL_SRC_clksrc_clk_ref_aux         1
+#define CLOCKS_CLK_REF_CTRL_SRC_xosc_clksrc                2
+
+#define CLOCKS_CLK_REF_DIV_INT_OFFSET                      8
+#define CLOCKS_CLK_REF_DIV_INT_MASK                        0x300
+
+#define CLOCKS_CLK_SYS_CTRL_AUXSRC_OFFSET                  5
+#define CLOCKS_CLK_SYS_CTRL_AUXSRC_MASK                    0xe0
+#define CLOCKS_CLK_SYS_CTRL_AUXSRC_clksrc_pll_sys          0
+#define CLOCKS_CLK_SYS_CTRL_AUXSRC_clksrc_pll_usb          1
+#define CLOCKS_CLK_SYS_CTRL_AUXSRC_rosc_clksrc             2
+#define CLOCKS_CLK_SYS_CTRL_AUXSRC_xosc_clksrc             3
+#define CLOCKS_CLK_SYS_CTRL_AUXSRC_clksrc_gpin0            4
+#define CLOCKS_CLK_SYS_CTRL_AUXSRC_clksrc_gpin1            5
+
+#define CLOCKS_CLK_SYS_CTRL_SRC_OFFSET                     0
+#define CLOCKS_CLK_SYS_CTRL_SRC_MASK                       1
+#define CLOCKS_CLK_SYS_CTRL_SRC_clk_ref                    0
+#define CLOCKS_CLK_SYS_CTRL_SRC_clksrc_clk_sys_aux         1
+
+#define CLOCKS_CLK_SYS_DIV_INT_OFFSET                      8
+#define CLOCKS_CLK_SYS_DIV_INT_MASK                        -256
+
+#define CLOCKS_CLK_SYS_DIV_FRAC_OFFSET                     0
+#define CLOCKS_CLK_SYS_DIV_FRAC_MASK                       0xff
+
+#define CLOCKS_CLK_PERI_CTRL_ENABLE_OFFSET                 11
+#define CLOCKS_CLK_PERI_CTRL_ENABLE_MASK                   0x800
+
+#define CLOCKS_CLK_PERI_CTRL_KILL_OFFSET                   10
+#define CLOCKS_CLK_PERI_CTRL_KILL_MASK                     0x400
+
+#define CLOCKS_CLK_PERI_CTRL_AUXSRC_OFFSET                 5
+#define CLOCKS_CLK_PERI_CTRL_AUXSRC_MASK                   0xe0
+#define CLOCKS_CLK_PERI_CTRL_AUXSRC_clk_sys                0
+#define CLOCKS_CLK_PERI_CTRL_AUXSRC_clksrc_pll_sys         1
+#define CLOCKS_CLK_PERI_CTRL_AUXSRC_clksrc_pll_usb         2
+#define CLOCKS_CLK_PERI_CTRL_AUXSRC_rosc_clksrc_ph         3
+#define CLOCKS_CLK_PERI_CTRL_AUXSRC_xosc_clksrc            4
+#define CLOCKS_CLK_PERI_CTRL_AUXSRC_clksrc_gpin0           5
+#define CLOCKS_CLK_PERI_CTRL_AUXSRC_clksrc_gpin1           6
+
+#define CLOCKS_CLK_USB_CTRL_NUDGE_OFFSET                   20
+#define CLOCKS_CLK_USB_CTRL_NUDGE_MASK                     0x100000
+
+#define CLOCKS_CLK_USB_CTRL_PHASE_OFFSET                   16
+#define CLOCKS_CLK_USB_CTRL_PHASE_MASK                     0x30000
+
+#define CLOCKS_CLK_USB_CTRL_ENABLE_OFFSET                  11
+#define CLOCKS_CLK_USB_CTRL_ENABLE_MASK                    0x800
+
+#define CLOCKS_CLK_USB_CTRL_KILL_OFFSET                    10
+#define CLOCKS_CLK_USB_CTRL_KILL_MASK                      0x400
+
+#define CLOCKS_CLK_USB_CTRL_AUXSRC_OFFSET                  5
+#define CLOCKS_CLK_USB_CTRL_AUXSRC_MASK                    0xe0
+#define CLOCKS_CLK_USB_CTRL_AUXSRC_clksrc_pll_usb          0
+#define CLOCKS_CLK_USB_CTRL_AUXSRC_clksrc_pll_sys          1
+#define CLOCKS_CLK_USB_CTRL_AUXSRC_rosc_clksrc_ph          2
+#define CLOCKS_CLK_USB_CTRL_AUXSRC_xosc_clksrc             3
+#define CLOCKS_CLK_USB_CTRL_AUXSRC_clksrc_gpin0            4
+#define CLOCKS_CLK_USB_CTRL_AUXSRC_clksrc_gpin1            5
+
+#define CLOCKS_CLK_USB_DIV_INT_OFFSET                      8
+#define CLOCKS_CLK_USB_DIV_INT_MASK                        0x300
+
+#define CLOCKS_CLK_ADC_CTRL_NUDGE_OFFSET                   20
+#define CLOCKS_CLK_ADC_CTRL_NUDGE_MASK                     0x100000
+
+#define CLOCKS_CLK_ADC_CTRL_PHASE_OFFSET                   16
+#define CLOCKS_CLK_ADC_CTRL_PHASE_MASK                     0x30000
+
+#define CLOCKS_CLK_ADC_CTRL_ENABLE_OFFSET                  11
+#define CLOCKS_CLK_ADC_CTRL_ENABLE_MASK                    0x800
+
+#define CLOCKS_CLK_ADC_CTRL_KILL_OFFSET                    10
+#define CLOCKS_CLK_ADC_CTRL_KILL_MASK                      0x400
+
+#define CLOCKS_CLK_ADC_CTRL_AUXSRC_OFFSET                  5
+#define CLOCKS_CLK_ADC_CTRL_AUXSRC_MASK                    0xe0
+#define CLOCKS_CLK_ADC_CTRL_AUXSRC_clksrc_pll_usb          0
+#define CLOCKS_CLK_ADC_CTRL_AUXSRC_clksrc_pll_sys          1
+#define CLOCKS_CLK_ADC_CTRL_AUXSRC_rosc_clksrc_ph          2
+#define CLOCKS_CLK_ADC_CTRL_AUXSRC_xosc_clksrc             3
+#define CLOCKS_CLK_ADC_CTRL_AUXSRC_clksrc_gpin0            4
+#define CLOCKS_CLK_ADC_CTRL_AUXSRC_clksrc_gpin1            5
+
+#define CLOCKS_CLK_ADC_DIV_INT_OFFSET                      8
+#define CLOCKS_CLK_ADC_DIV_INT_MASK                        0x300
+
+#define CLOCKS_CLK_RTC_CTRL_NUDGE_OFFSET                   20
+#define CLOCKS_CLK_RTC_CTRL_NUDGE_MASK                     0x100000
+
+#define CLOCKS_CLK_RTC_CTRL_PHASE_OFFSET                   16
+#define CLOCKS_CLK_RTC_CTRL_PHASE_MASK                     0x30000
+
+#define CLOCKS_CLK_RTC_CTRL_ENABLE_OFFSET                  11
+#define CLOCKS_CLK_RTC_CTRL_ENABLE_MASK                    0x800
+
+#define CLOCKS_CLK_RTC_CTRL_KILL_OFFSET                    10
+#define CLOCKS_CLK_RTC_CTRL_KILL_MASK                      0x400
+
+#define CLOCKS_CLK_RTC_CTRL_AUXSRC_OFFSET                  5
+#define CLOCKS_CLK_RTC_CTRL_AUXSRC_MASK                    0xe0
+#define CLOCKS_CLK_RTC_CTRL_AUXSRC_clksrc_pll_usb          0
+#define CLOCKS_CLK_RTC_CTRL_AUXSRC_clksrc_pll_sys          1
+#define CLOCKS_CLK_RTC_CTRL_AUXSRC_rosc_clksrc_ph          2
+#define CLOCKS_CLK_RTC_CTRL_AUXSRC_xosc_clksrc             3
+#define CLOCKS_CLK_RTC_CTRL_AUXSRC_clksrc_gpin0            4
+#define CLOCKS_CLK_RTC_CTRL_AUXSRC_clksrc_gpin1            5
+
+#define CLOCKS_CLK_RTC_DIV_INT_OFFSET                      8
+#define CLOCKS_CLK_RTC_DIV_INT_MASK                        -256
+
+#define CLOCKS_CLK_RTC_DIV_FRAC_OFFSET                     0
+#define CLOCKS_CLK_RTC_DIV_FRAC_MASK                       0xff
+
+#define CLOCKS_CLK_SYS_RESUS_CTRL_CLEAR_OFFSET             16
+#define CLOCKS_CLK_SYS_RESUS_CTRL_CLEAR_MASK               0x10000
+
+#define CLOCKS_CLK_SYS_RESUS_CTRL_FRCE_OFFSET              12
+#define CLOCKS_CLK_SYS_RESUS_CTRL_FRCE_MASK                0x1000
+
+#define CLOCKS_CLK_SYS_RESUS_CTRL_ENABLE_OFFSET            8
+#define CLOCKS_CLK_SYS_RESUS_CTRL_ENABLE_MASK              0x100
+
+#define CLOCKS_CLK_SYS_RESUS_CTRL_TIMEOUT_OFFSET           0
+#define CLOCKS_CLK_SYS_RESUS_CTRL_TIMEOUT_MASK             0xff
+
+#define CLOCKS_CLK_SYS_RESUS_STATUS_RESUSSED_OFFSET        0
+#define CLOCKS_CLK_SYS_RESUS_STATUS_RESUSSED_MASK          1
+
+#define CLOCKS_FC0_REF_KHZ_FC0_REF_KHZ_OFFSET              0
+#define CLOCKS_FC0_REF_KHZ_FC0_REF_KHZ_MASK                0xfffff
+
+#define CLOCKS_FC0_MIN_KHZ_FC0_MIN_KHZ_OFFSET              0
+#define CLOCKS_FC0_MIN_KHZ_FC0_MIN_KHZ_MASK                0x1ffffff
+
+#define CLOCKS_FC0_MAX_KHZ_FC0_MAX_KHZ_OFFSET              0
+#define CLOCKS_FC0_MAX_KHZ_FC0_MAX_KHZ_MASK                0x1ffffff
+
+#define CLOCKS_FC0_DELAY_FC0_DELAY_OFFSET                  0
+#define CLOCKS_FC0_DELAY_FC0_DELAY_MASK                    7
+
+#define CLOCKS_FC0_INTERVAL_FC0_INTERVAL_OFFSET            0
+#define CLOCKS_FC0_INTERVAL_FC0_INTERVAL_MASK              0xf
+
+#define CLOCKS_FC0_SRC_FC0_SRC_OFFSET                      0
+#define CLOCKS_FC0_SRC_FC0_SRC_MASK                        0xff
+#define CLOCKS_FC0_SRC_FC0_SRC_NULL                        0
+#define CLOCKS_FC0_SRC_FC0_SRC_pll_sys_clksrc_primary      1
+#define CLOCKS_FC0_SRC_FC0_SRC_pll_usb_clksrc_primary      2
+#define CLOCKS_FC0_SRC_FC0_SRC_rosc_clksrc                 3
+#define CLOCKS_FC0_SRC_FC0_SRC_rosc_clksrc_ph              4
+#define CLOCKS_FC0_SRC_FC0_SRC_xosc_clksrc                 5
+#define CLOCKS_FC0_SRC_FC0_SRC_clksrc_gpin0                6
+#define CLOCKS_FC0_SRC_FC0_SRC_clksrc_gpin1                7
+#define CLOCKS_FC0_SRC_FC0_SRC_clk_ref                     8
+#define CLOCKS_FC0_SRC_FC0_SRC_clk_sys                     9
+#define CLOCKS_FC0_SRC_FC0_SRC_clk_peri                    0xa
+#define CLOCKS_FC0_SRC_FC0_SRC_clk_usb                     0xb
+#define CLOCKS_FC0_SRC_FC0_SRC_clk_adc                     0xc
+#define CLOCKS_FC0_SRC_FC0_SRC_clk_rtc                     0xd
+
+#define CLOCKS_FC0_STATUS_DIED_OFFSET                      28
+#define CLOCKS_FC0_STATUS_DIED_MASK                        0x10000000
+
+#define CLOCKS_FC0_STATUS_FAST_OFFSET                      24
+#define CLOCKS_FC0_STATUS_FAST_MASK                        0x1000000
+
+#define CLOCKS_FC0_STATUS_SLOW_OFFSET                      20
+#define CLOCKS_FC0_STATUS_SLOW_MASK                        0x100000
+
+#define CLOCKS_FC0_STATUS_FAIL_OFFSET                      16
+#define CLOCKS_FC0_STATUS_FAIL_MASK                        0x10000
+
+#define CLOCKS_FC0_STATUS_WAITING_OFFSET                   12
+#define CLOCKS_FC0_STATUS_WAITING_MASK                     0x1000
+
+#define CLOCKS_FC0_STATUS_RUNNING_OFFSET                   8
+#define CLOCKS_FC0_STATUS_RUNNING_MASK                     0x100
+
+#define CLOCKS_FC0_STATUS_DONE_OFFSET                      4
+#define CLOCKS_FC0_STATUS_DONE_MASK                        0x10
+
+#define CLOCKS_FC0_STATUS_PASS_OFFSET                      0
+#define CLOCKS_FC0_STATUS_PASS_MASK                        1
+
+#define CLOCKS_FC0_RESULT_KHZ_OFFSET                       5
+#define CLOCKS_FC0_RESULT_KHZ_MASK                         0x3fffffe0
+
+#define CLOCKS_FC0_RESULT_FRAC_OFFSET                      0
+#define CLOCKS_FC0_RESULT_FRAC_MASK                        0x1f
+
+#define CLOCKS_WAKE_EN0_CLK_SYS_SRAM3_OFFSET               31
+#define CLOCKS_WAKE_EN0_CLK_SYS_SRAM3_MASK                 -2147483648
+
+#define CLOCKS_WAKE_EN0_CLK_SYS_SRAM2_OFFSET               30
+#define CLOCKS_WAKE_EN0_CLK_SYS_SRAM2_MASK                 0x40000000
+
+#define CLOCKS_WAKE_EN0_CLK_SYS_SRAM1_OFFSET               29
+#define CLOCKS_WAKE_EN0_CLK_SYS_SRAM1_MASK                 0x20000000
+
+#define CLOCKS_WAKE_EN0_CLK_SYS_SRAM0_OFFSET               28
+#define CLOCKS_WAKE_EN0_CLK_SYS_SRAM0_MASK                 0x10000000
+
+#define CLOCKS_WAKE_EN0_CLK_SYS_SPI1_OFFSET                27
+#define CLOCKS_WAKE_EN0_CLK_SYS_SPI1_MASK                  0x8000000
+
+#define CLOCKS_WAKE_EN0_CLK_PERI_SPI1_OFFSET               26
+#define CLOCKS_WAKE_EN0_CLK_PERI_SPI1_MASK                 0x4000000
+
+#define CLOCKS_WAKE_EN0_CLK_SYS_SPI0_OFFSET                25
+#define CLOCKS_WAKE_EN0_CLK_SYS_SPI0_MASK                  0x2000000
+
+#define CLOCKS_WAKE_EN0_CLK_PERI_SPI0_OFFSET               24
+#define CLOCKS_WAKE_EN0_CLK_PERI_SPI0_MASK                 0x1000000
+
+#define CLOCKS_WAKE_EN0_CLK_SYS_SIO_OFFSET                 23
+#define CLOCKS_WAKE_EN0_CLK_SYS_SIO_MASK                   0x800000
+
+#define CLOCKS_WAKE_EN0_CLK_SYS_RTC_OFFSET                 22
+#define CLOCKS_WAKE_EN0_CLK_SYS_RTC_MASK                   0x400000
+
+#define CLOCKS_WAKE_EN0_CLK_RTC_RTC_OFFSET                 21
+#define CLOCKS_WAKE_EN0_CLK_RTC_RTC_MASK                   0x200000
+
+#define CLOCKS_WAKE_EN0_CLK_SYS_ROSC_OFFSET                20
+#define CLOCKS_WAKE_EN0_CLK_SYS_ROSC_MASK                  0x100000
+
+#define CLOCKS_WAKE_EN0_CLK_SYS_ROM_OFFSET                 19
+#define CLOCKS_WAKE_EN0_CLK_SYS_ROM_MASK                   0x80000
+
+#define CLOCKS_WAKE_EN0_CLK_SYS_RESETS_OFFSET              18
+#define CLOCKS_WAKE_EN0_CLK_SYS_RESETS_MASK                0x40000
+
+#define CLOCKS_WAKE_EN0_CLK_SYS_PWM_OFFSET                 17
+#define CLOCKS_WAKE_EN0_CLK_SYS_PWM_MASK                   0x20000
+
+#define CLOCKS_WAKE_EN0_CLK_SYS_PSM_OFFSET                 16
+#define CLOCKS_WAKE_EN0_CLK_SYS_PSM_MASK                   0x10000
+
+#define CLOCKS_WAKE_EN0_CLK_SYS_PLL_USB_OFFSET             15
+#define CLOCKS_WAKE_EN0_CLK_SYS_PLL_USB_MASK               0x8000
+
+#define CLOCKS_WAKE_EN0_CLK_SYS_PLL_SYS_OFFSET             14
+#define CLOCKS_WAKE_EN0_CLK_SYS_PLL_SYS_MASK               0x4000
+
+#define CLOCKS_WAKE_EN0_CLK_SYS_PIO1_OFFSET                13
+#define CLOCKS_WAKE_EN0_CLK_SYS_PIO1_MASK                  0x2000
+
+#define CLOCKS_WAKE_EN0_CLK_SYS_PIO0_OFFSET                12
+#define CLOCKS_WAKE_EN0_CLK_SYS_PIO0_MASK                  0x1000
+
+#define CLOCKS_WAKE_EN0_CLK_SYS_PADS_OFFSET                11
+#define CLOCKS_WAKE_EN0_CLK_SYS_PADS_MASK                  0x800
+
+#define CLOCKS_WAKE_EN0_CLK_SYS_VREG_AND_CHIP_RESET_OFFSET   10
+#define CLOCKS_WAKE_EN0_CLK_SYS_VREG_AND_CHIP_RESET_MASK   0x400
+
+#define CLOCKS_WAKE_EN0_CLK_SYS_JTAG_OFFSET                9
+#define CLOCKS_WAKE_EN0_CLK_SYS_JTAG_MASK                  0x200
+
+#define CLOCKS_WAKE_EN0_CLK_SYS_IO_OFFSET                  8
+#define CLOCKS_WAKE_EN0_CLK_SYS_IO_MASK                    0x100
+
+#define CLOCKS_WAKE_EN0_CLK_SYS_I2C1_OFFSET                7
+#define CLOCKS_WAKE_EN0_CLK_SYS_I2C1_MASK                  0x80
+
+#define CLOCKS_WAKE_EN0_CLK_SYS_I2C0_OFFSET                6
+#define CLOCKS_WAKE_EN0_CLK_SYS_I2C0_MASK                  0x40
+
+#define CLOCKS_WAKE_EN0_CLK_SYS_DMA_OFFSET                 5
+#define CLOCKS_WAKE_EN0_CLK_SYS_DMA_MASK                   0x20
+
+#define CLOCKS_WAKE_EN0_CLK_SYS_BUSFABRIC_OFFSET           4
+#define CLOCKS_WAKE_EN0_CLK_SYS_BUSFABRIC_MASK             0x10
+
+#define CLOCKS_WAKE_EN0_CLK_SYS_BUSCTRL_OFFSET             3
+#define CLOCKS_WAKE_EN0_CLK_SYS_BUSCTRL_MASK               8
+
+#define CLOCKS_WAKE_EN0_CLK_SYS_ADC_OFFSET                 2
+#define CLOCKS_WAKE_EN0_CLK_SYS_ADC_MASK                   4
+
+#define CLOCKS_WAKE_EN0_CLK_ADC_ADC_OFFSET                 1
+#define CLOCKS_WAKE_EN0_CLK_ADC_ADC_MASK                   2
+
+#define CLOCKS_WAKE_EN0_CLK_SYS_CLOCKS_OFFSET              0
+#define CLOCKS_WAKE_EN0_CLK_SYS_CLOCKS_MASK                1
+
+#define CLOCKS_WAKE_EN1_CLK_SYS_XOSC_OFFSET                14
+#define CLOCKS_WAKE_EN1_CLK_SYS_XOSC_MASK                  0x4000
+
+#define CLOCKS_WAKE_EN1_CLK_SYS_XIP_OFFSET                 13
+#define CLOCKS_WAKE_EN1_CLK_SYS_XIP_MASK                   0x2000
+
+#define CLOCKS_WAKE_EN1_CLK_SYS_WATCHDOG_OFFSET            12
+#define CLOCKS_WAKE_EN1_CLK_SYS_WATCHDOG_MASK              0x1000
+
+#define CLOCKS_WAKE_EN1_CLK_USB_USBCTRL_OFFSET             11
+#define CLOCKS_WAKE_EN1_CLK_USB_USBCTRL_MASK               0x800
+
+#define CLOCKS_WAKE_EN1_CLK_SYS_USBCTRL_OFFSET             10
+#define CLOCKS_WAKE_EN1_CLK_SYS_USBCTRL_MASK               0x400
+
+#define CLOCKS_WAKE_EN1_CLK_SYS_UART1_OFFSET               9
+#define CLOCKS_WAKE_EN1_CLK_SYS_UART1_MASK                 0x200
+
+#define CLOCKS_WAKE_EN1_CLK_PERI_UART1_OFFSET              8
+#define CLOCKS_WAKE_EN1_CLK_PERI_UART1_MASK                0x100
+
+#define CLOCKS_WAKE_EN1_CLK_SYS_UART0_OFFSET               7
+#define CLOCKS_WAKE_EN1_CLK_SYS_UART0_MASK                 0x80
+
+#define CLOCKS_WAKE_EN1_CLK_PERI_UART0_OFFSET              6
+#define CLOCKS_WAKE_EN1_CLK_PERI_UART0_MASK                0x40
+
+#define CLOCKS_WAKE_EN1_CLK_SYS_TIMER_OFFSET               5
+#define CLOCKS_WAKE_EN1_CLK_SYS_TIMER_MASK                 0x20
+
+#define CLOCKS_WAKE_EN1_CLK_SYS_TBMAN_OFFSET               4
+#define CLOCKS_WAKE_EN1_CLK_SYS_TBMAN_MASK                 0x10
+
+#define CLOCKS_WAKE_EN1_CLK_SYS_SYSINFO_OFFSET             3
+#define CLOCKS_WAKE_EN1_CLK_SYS_SYSINFO_MASK               8
+
+#define CLOCKS_WAKE_EN1_CLK_SYS_SYSCFG_OFFSET              2
+#define CLOCKS_WAKE_EN1_CLK_SYS_SYSCFG_MASK                4
+
+#define CLOCKS_WAKE_EN1_CLK_SYS_SRAM5_OFFSET               1
+#define CLOCKS_WAKE_EN1_CLK_SYS_SRAM5_MASK                 2
+
+#define CLOCKS_WAKE_EN1_CLK_SYS_SRAM4_OFFSET               0
+#define CLOCKS_WAKE_EN1_CLK_SYS_SRAM4_MASK                 1
+
+#define CLOCKS_SLEEP_EN0_CLK_SYS_SRAM3_OFFSET              31
+#define CLOCKS_SLEEP_EN0_CLK_SYS_SRAM3_MASK                -2147483648
+
+#define CLOCKS_SLEEP_EN0_CLK_SYS_SRAM2_OFFSET              30
+#define CLOCKS_SLEEP_EN0_CLK_SYS_SRAM2_MASK                0x40000000
+
+#define CLOCKS_SLEEP_EN0_CLK_SYS_SRAM1_OFFSET              29
+#define CLOCKS_SLEEP_EN0_CLK_SYS_SRAM1_MASK                0x20000000
+
+#define CLOCKS_SLEEP_EN0_CLK_SYS_SRAM0_OFFSET              28
+#define CLOCKS_SLEEP_EN0_CLK_SYS_SRAM0_MASK                0x10000000
+
+#define CLOCKS_SLEEP_EN0_CLK_SYS_SPI1_OFFSET               27
+#define CLOCKS_SLEEP_EN0_CLK_SYS_SPI1_MASK                 0x8000000
+
+#define CLOCKS_SLEEP_EN0_CLK_PERI_SPI1_OFFSET              26
+#define CLOCKS_SLEEP_EN0_CLK_PERI_SPI1_MASK                0x4000000
+
+#define CLOCKS_SLEEP_EN0_CLK_SYS_SPI0_OFFSET               25
+#define CLOCKS_SLEEP_EN0_CLK_SYS_SPI0_MASK                 0x2000000
+
+#define CLOCKS_SLEEP_EN0_CLK_PERI_SPI0_OFFSET              24
+#define CLOCKS_SLEEP_EN0_CLK_PERI_SPI0_MASK                0x1000000
+
+#define CLOCKS_SLEEP_EN0_CLK_SYS_SIO_OFFSET                23
+#define CLOCKS_SLEEP_EN0_CLK_SYS_SIO_MASK                  0x800000
+
+#define CLOCKS_SLEEP_EN0_CLK_SYS_RTC_OFFSET                22
+#define CLOCKS_SLEEP_EN0_CLK_SYS_RTC_MASK                  0x400000
+
+#define CLOCKS_SLEEP_EN0_CLK_RTC_RTC_OFFSET                21
+#define CLOCKS_SLEEP_EN0_CLK_RTC_RTC_MASK                  0x200000
+
+#define CLOCKS_SLEEP_EN0_CLK_SYS_ROSC_OFFSET               20
+#define CLOCKS_SLEEP_EN0_CLK_SYS_ROSC_MASK                 0x100000
+
+#define CLOCKS_SLEEP_EN0_CLK_SYS_ROM_OFFSET                19
+#define CLOCKS_SLEEP_EN0_CLK_SYS_ROM_MASK                  0x80000
+
+#define CLOCKS_SLEEP_EN0_CLK_SYS_RESETS_OFFSET             18
+#define CLOCKS_SLEEP_EN0_CLK_SYS_RESETS_MASK               0x40000
+
+#define CLOCKS_SLEEP_EN0_CLK_SYS_PWM_OFFSET                17
+#define CLOCKS_SLEEP_EN0_CLK_SYS_PWM_MASK                  0x20000
+
+#define CLOCKS_SLEEP_EN0_CLK_SYS_PSM_OFFSET                16
+#define CLOCKS_SLEEP_EN0_CLK_SYS_PSM_MASK                  0x10000
+
+#define CLOCKS_SLEEP_EN0_CLK_SYS_PLL_USB_OFFSET            15
+#define CLOCKS_SLEEP_EN0_CLK_SYS_PLL_USB_MASK              0x8000
+
+#define CLOCKS_SLEEP_EN0_CLK_SYS_PLL_SYS_OFFSET            14
+#define CLOCKS_SLEEP_EN0_CLK_SYS_PLL_SYS_MASK              0x4000
+
+#define CLOCKS_SLEEP_EN0_CLK_SYS_PIO1_OFFSET               13
+#define CLOCKS_SLEEP_EN0_CLK_SYS_PIO1_MASK                 0x2000
+
+#define CLOCKS_SLEEP_EN0_CLK_SYS_PIO0_OFFSET               12
+#define CLOCKS_SLEEP_EN0_CLK_SYS_PIO0_MASK                 0x1000
+
+#define CLOCKS_SLEEP_EN0_CLK_SYS_PADS_OFFSET               11
+#define CLOCKS_SLEEP_EN0_CLK_SYS_PADS_MASK                 0x800
+
+#define CLOCKS_SLEEP_EN0_CLK_SYS_VREG_AND_CHIP_RESET_OFFSET   10
+#define CLOCKS_SLEEP_EN0_CLK_SYS_VREG_AND_CHIP_RESET_MASK  0x400
+
+#define CLOCKS_SLEEP_EN0_CLK_SYS_JTAG_OFFSET               9
+#define CLOCKS_SLEEP_EN0_CLK_SYS_JTAG_MASK                 0x200
+
+#define CLOCKS_SLEEP_EN0_CLK_SYS_IO_OFFSET                 8
+#define CLOCKS_SLEEP_EN0_CLK_SYS_IO_MASK                   0x100
+
+#define CLOCKS_SLEEP_EN0_CLK_SYS_I2C1_OFFSET               7
+#define CLOCKS_SLEEP_EN0_CLK_SYS_I2C1_MASK                 0x80
+
+#define CLOCKS_SLEEP_EN0_CLK_SYS_I2C0_OFFSET               6
+#define CLOCKS_SLEEP_EN0_CLK_SYS_I2C0_MASK                 0x40
+
+#define CLOCKS_SLEEP_EN0_CLK_SYS_DMA_OFFSET                5
+#define CLOCKS_SLEEP_EN0_CLK_SYS_DMA_MASK                  0x20
+
+#define CLOCKS_SLEEP_EN0_CLK_SYS_BUSFABRIC_OFFSET          4
+#define CLOCKS_SLEEP_EN0_CLK_SYS_BUSFABRIC_MASK            0x10
+
+#define CLOCKS_SLEEP_EN0_CLK_SYS_BUSCTRL_OFFSET            3
+#define CLOCKS_SLEEP_EN0_CLK_SYS_BUSCTRL_MASK              8
+
+#define CLOCKS_SLEEP_EN0_CLK_SYS_ADC_OFFSET                2
+#define CLOCKS_SLEEP_EN0_CLK_SYS_ADC_MASK                  4
+
+#define CLOCKS_SLEEP_EN0_CLK_ADC_ADC_OFFSET                1
+#define CLOCKS_SLEEP_EN0_CLK_ADC_ADC_MASK                  2
+
+#define CLOCKS_SLEEP_EN0_CLK_SYS_CLOCKS_OFFSET             0
+#define CLOCKS_SLEEP_EN0_CLK_SYS_CLOCKS_MASK               1
+
+#define CLOCKS_SLEEP_EN1_CLK_SYS_XOSC_OFFSET               14
+#define CLOCKS_SLEEP_EN1_CLK_SYS_XOSC_MASK                 0x4000
+
+#define CLOCKS_SLEEP_EN1_CLK_SYS_XIP_OFFSET                13
+#define CLOCKS_SLEEP_EN1_CLK_SYS_XIP_MASK                  0x2000
+
+#define CLOCKS_SLEEP_EN1_CLK_SYS_WATCHDOG_OFFSET           12
+#define CLOCKS_SLEEP_EN1_CLK_SYS_WATCHDOG_MASK             0x1000
+
+#define CLOCKS_SLEEP_EN1_CLK_USB_USBCTRL_OFFSET            11
+#define CLOCKS_SLEEP_EN1_CLK_USB_USBCTRL_MASK              0x800
+
+#define CLOCKS_SLEEP_EN1_CLK_SYS_USBCTRL_OFFSET            10
+#define CLOCKS_SLEEP_EN1_CLK_SYS_USBCTRL_MASK              0x400
+
+#define CLOCKS_SLEEP_EN1_CLK_SYS_UART1_OFFSET              9
+#define CLOCKS_SLEEP_EN1_CLK_SYS_UART1_MASK                0x200
+
+#define CLOCKS_SLEEP_EN1_CLK_PERI_UART1_OFFSET             8
+#define CLOCKS_SLEEP_EN1_CLK_PERI_UART1_MASK               0x100
+
+#define CLOCKS_SLEEP_EN1_CLK_SYS_UART0_OFFSET              7
+#define CLOCKS_SLEEP_EN1_CLK_SYS_UART0_MASK                0x80
+
+#define CLOCKS_SLEEP_EN1_CLK_PERI_UART0_OFFSET             6
+#define CLOCKS_SLEEP_EN1_CLK_PERI_UART0_MASK               0x40
+
+#define CLOCKS_SLEEP_EN1_CLK_SYS_TIMER_OFFSET              5
+#define CLOCKS_SLEEP_EN1_CLK_SYS_TIMER_MASK                0x20
+
+#define CLOCKS_SLEEP_EN1_CLK_SYS_TBMAN_OFFSET              4
+#define CLOCKS_SLEEP_EN1_CLK_SYS_TBMAN_MASK                0x10
+
+#define CLOCKS_SLEEP_EN1_CLK_SYS_SYSINFO_OFFSET            3
+#define CLOCKS_SLEEP_EN1_CLK_SYS_SYSINFO_MASK              8
+
+#define CLOCKS_SLEEP_EN1_CLK_SYS_SYSCFG_OFFSET             2
+#define CLOCKS_SLEEP_EN1_CLK_SYS_SYSCFG_MASK               4
+
+#define CLOCKS_SLEEP_EN1_CLK_SYS_SRAM5_OFFSET              1
+#define CLOCKS_SLEEP_EN1_CLK_SYS_SRAM5_MASK                2
+
+#define CLOCKS_SLEEP_EN1_CLK_SYS_SRAM4_OFFSET              0
+#define CLOCKS_SLEEP_EN1_CLK_SYS_SRAM4_MASK                1
+
+#define CLOCKS_ENABLED0_CLK_SYS_SRAM3_OFFSET               31
+#define CLOCKS_ENABLED0_CLK_SYS_SRAM3_MASK                 -2147483648
+
+#define CLOCKS_ENABLED0_CLK_SYS_SRAM2_OFFSET               30
+#define CLOCKS_ENABLED0_CLK_SYS_SRAM2_MASK                 0x40000000
+
+#define CLOCKS_ENABLED0_CLK_SYS_SRAM1_OFFSET               29
+#define CLOCKS_ENABLED0_CLK_SYS_SRAM1_MASK                 0x20000000
+
+#define CLOCKS_ENABLED0_CLK_SYS_SRAM0_OFFSET               28
+#define CLOCKS_ENABLED0_CLK_SYS_SRAM0_MASK                 0x10000000
+
+#define CLOCKS_ENABLED0_CLK_SYS_SPI1_OFFSET                27
+#define CLOCKS_ENABLED0_CLK_SYS_SPI1_MASK                  0x8000000
+
+#define CLOCKS_ENABLED0_CLK_PERI_SPI1_OFFSET               26
+#define CLOCKS_ENABLED0_CLK_PERI_SPI1_MASK                 0x4000000
+
+#define CLOCKS_ENABLED0_CLK_SYS_SPI0_OFFSET                25
+#define CLOCKS_ENABLED0_CLK_SYS_SPI0_MASK                  0x2000000
+
+#define CLOCKS_ENABLED0_CLK_PERI_SPI0_OFFSET               24
+#define CLOCKS_ENABLED0_CLK_PERI_SPI0_MASK                 0x1000000
+
+#define CLOCKS_ENABLED0_CLK_SYS_SIO_OFFSET                 23
+#define CLOCKS_ENABLED0_CLK_SYS_SIO_MASK                   0x800000
+
+#define CLOCKS_ENABLED0_CLK_SYS_RTC_OFFSET                 22
+#define CLOCKS_ENABLED0_CLK_SYS_RTC_MASK                   0x400000
+
+#define CLOCKS_ENABLED0_CLK_RTC_RTC_OFFSET                 21
+#define CLOCKS_ENABLED0_CLK_RTC_RTC_MASK                   0x200000
+
+#define CLOCKS_ENABLED0_CLK_SYS_ROSC_OFFSET                20
+#define CLOCKS_ENABLED0_CLK_SYS_ROSC_MASK                  0x100000
+
+#define CLOCKS_ENABLED0_CLK_SYS_ROM_OFFSET                 19
+#define CLOCKS_ENABLED0_CLK_SYS_ROM_MASK                   0x80000
+
+#define CLOCKS_ENABLED0_CLK_SYS_RESETS_OFFSET              18
+#define CLOCKS_ENABLED0_CLK_SYS_RESETS_MASK                0x40000
+
+#define CLOCKS_ENABLED0_CLK_SYS_PWM_OFFSET                 17
+#define CLOCKS_ENABLED0_CLK_SYS_PWM_MASK                   0x20000
+
+#define CLOCKS_ENABLED0_CLK_SYS_PSM_OFFSET                 16
+#define CLOCKS_ENABLED0_CLK_SYS_PSM_MASK                   0x10000
+
+#define CLOCKS_ENABLED0_CLK_SYS_PLL_USB_OFFSET             15
+#define CLOCKS_ENABLED0_CLK_SYS_PLL_USB_MASK               0x8000
+
+#define CLOCKS_ENABLED0_CLK_SYS_PLL_SYS_OFFSET             14
+#define CLOCKS_ENABLED0_CLK_SYS_PLL_SYS_MASK               0x4000
+
+#define CLOCKS_ENABLED0_CLK_SYS_PIO1_OFFSET                13
+#define CLOCKS_ENABLED0_CLK_SYS_PIO1_MASK                  0x2000
+
+#define CLOCKS_ENABLED0_CLK_SYS_PIO0_OFFSET                12
+#define CLOCKS_ENABLED0_CLK_SYS_PIO0_MASK                  0x1000
+
+#define CLOCKS_ENABLED0_CLK_SYS_PADS_OFFSET                11
+#define CLOCKS_ENABLED0_CLK_SYS_PADS_MASK                  0x800
+
+#define CLOCKS_ENABLED0_CLK_SYS_VREG_AND_CHIP_RESET_OFFSET   10
+#define CLOCKS_ENABLED0_CLK_SYS_VREG_AND_CHIP_RESET_MASK   0x400
+
+#define CLOCKS_ENABLED0_CLK_SYS_JTAG_OFFSET                9
+#define CLOCKS_ENABLED0_CLK_SYS_JTAG_MASK                  0x200
+
+#define CLOCKS_ENABLED0_CLK_SYS_IO_OFFSET                  8
+#define CLOCKS_ENABLED0_CLK_SYS_IO_MASK                    0x100
+
+#define CLOCKS_ENABLED0_CLK_SYS_I2C1_OFFSET                7
+#define CLOCKS_ENABLED0_CLK_SYS_I2C1_MASK                  0x80
+
+#define CLOCKS_ENABLED0_CLK_SYS_I2C0_OFFSET                6
+#define CLOCKS_ENABLED0_CLK_SYS_I2C0_MASK                  0x40
+
+#define CLOCKS_ENABLED0_CLK_SYS_DMA_OFFSET                 5
+#define CLOCKS_ENABLED0_CLK_SYS_DMA_MASK                   0x20
+
+#define CLOCKS_ENABLED0_CLK_SYS_BUSFABRIC_OFFSET           4
+#define CLOCKS_ENABLED0_CLK_SYS_BUSFABRIC_MASK             0x10
+
+#define CLOCKS_ENABLED0_CLK_SYS_BUSCTRL_OFFSET             3
+#define CLOCKS_ENABLED0_CLK_SYS_BUSCTRL_MASK               8
+
+#define CLOCKS_ENABLED0_CLK_SYS_ADC_OFFSET                 2
+#define CLOCKS_ENABLED0_CLK_SYS_ADC_MASK                   4
+
+#define CLOCKS_ENABLED0_CLK_ADC_ADC_OFFSET                 1
+#define CLOCKS_ENABLED0_CLK_ADC_ADC_MASK                   2
+
+#define CLOCKS_ENABLED0_CLK_SYS_CLOCKS_OFFSET              0
+#define CLOCKS_ENABLED0_CLK_SYS_CLOCKS_MASK                1
+
+#define CLOCKS_ENABLED1_CLK_SYS_XOSC_OFFSET                14
+#define CLOCKS_ENABLED1_CLK_SYS_XOSC_MASK                  0x4000
+
+#define CLOCKS_ENABLED1_CLK_SYS_XIP_OFFSET                 13
+#define CLOCKS_ENABLED1_CLK_SYS_XIP_MASK                   0x2000
+
+#define CLOCKS_ENABLED1_CLK_SYS_WATCHDOG_OFFSET            12
+#define CLOCKS_ENABLED1_CLK_SYS_WATCHDOG_MASK              0x1000
+
+#define CLOCKS_ENABLED1_CLK_USB_USBCTRL_OFFSET             11
+#define CLOCKS_ENABLED1_CLK_USB_USBCTRL_MASK               0x800
+
+#define CLOCKS_ENABLED1_CLK_SYS_USBCTRL_OFFSET             10
+#define CLOCKS_ENABLED1_CLK_SYS_USBCTRL_MASK               0x400
+
+#define CLOCKS_ENABLED1_CLK_SYS_UART1_OFFSET               9
+#define CLOCKS_ENABLED1_CLK_SYS_UART1_MASK                 0x200
+
+#define CLOCKS_ENABLED1_CLK_PERI_UART1_OFFSET              8
+#define CLOCKS_ENABLED1_CLK_PERI_UART1_MASK                0x100
+
+#define CLOCKS_ENABLED1_CLK_SYS_UART0_OFFSET               7
+#define CLOCKS_ENABLED1_CLK_SYS_UART0_MASK                 0x80
+
+#define CLOCKS_ENABLED1_CLK_PERI_UART0_OFFSET              6
+#define CLOCKS_ENABLED1_CLK_PERI_UART0_MASK                0x40
+
+#define CLOCKS_ENABLED1_CLK_SYS_TIMER_OFFSET               5
+#define CLOCKS_ENABLED1_CLK_SYS_TIMER_MASK                 0x20
+
+#define CLOCKS_ENABLED1_CLK_SYS_TBMAN_OFFSET               4
+#define CLOCKS_ENABLED1_CLK_SYS_TBMAN_MASK                 0x10
+
+#define CLOCKS_ENABLED1_CLK_SYS_SYSINFO_OFFSET             3
+#define CLOCKS_ENABLED1_CLK_SYS_SYSINFO_MASK               8
+
+#define CLOCKS_ENABLED1_CLK_SYS_SYSCFG_OFFSET              2
+#define CLOCKS_ENABLED1_CLK_SYS_SYSCFG_MASK                4
+
+#define CLOCKS_ENABLED1_CLK_SYS_SRAM5_OFFSET               1
+#define CLOCKS_ENABLED1_CLK_SYS_SRAM5_MASK                 2
+
+#define CLOCKS_ENABLED1_CLK_SYS_SRAM4_OFFSET               0
+#define CLOCKS_ENABLED1_CLK_SYS_SRAM4_MASK                 1
+
+#define CLOCKS_INTR_CLK_SYS_RESUS_OFFSET                   0
+#define CLOCKS_INTR_CLK_SYS_RESUS_MASK                     1
+
+#define CLOCKS_INTE_CLK_SYS_RESUS_OFFSET                   0
+#define CLOCKS_INTE_CLK_SYS_RESUS_MASK                     1
+
+#define CLOCKS_INTF_CLK_SYS_RESUS_OFFSET                   0
+#define CLOCKS_INTF_CLK_SYS_RESUS_MASK                     1
+
+#define CLOCKS_INTS_CLK_SYS_RESUS_OFFSET                   0
+#define CLOCKS_INTS_CLK_SYS_RESUS_MASK                     1
+
+
 typedef struct
 {
 

@@ -4,6 +4,163 @@
 
 #include <stdint.h>
 
+
+#define PADS_QSPI_VOLTAGE_SELECT_VOLTAGE_SELECT_OFFSET     0
+#define PADS_QSPI_VOLTAGE_SELECT_VOLTAGE_SELECT_MASK       1
+#define PADS_QSPI_VOLTAGE_SELECT_VOLTAGE_SELECT_3v3        0
+#define PADS_QSPI_VOLTAGE_SELECT_VOLTAGE_SELECT_1v8        1
+
+#define PADS_QSPI_GPIO_QSPI_SCLK_OD_OFFSET                 7
+#define PADS_QSPI_GPIO_QSPI_SCLK_OD_MASK                   0x80
+
+#define PADS_QSPI_GPIO_QSPI_SCLK_IE_OFFSET                 6
+#define PADS_QSPI_GPIO_QSPI_SCLK_IE_MASK                   0x40
+
+#define PADS_QSPI_GPIO_QSPI_SCLK_DRIVE_OFFSET              4
+#define PADS_QSPI_GPIO_QSPI_SCLK_DRIVE_MASK                0x30
+#define PADS_QSPI_GPIO_QSPI_SCLK_DRIVE_2mA                 0
+#define PADS_QSPI_GPIO_QSPI_SCLK_DRIVE_4mA                 1
+#define PADS_QSPI_GPIO_QSPI_SCLK_DRIVE_8mA                 2
+#define PADS_QSPI_GPIO_QSPI_SCLK_DRIVE_12mA                3
+
+#define PADS_QSPI_GPIO_QSPI_SCLK_PUE_OFFSET                3
+#define PADS_QSPI_GPIO_QSPI_SCLK_PUE_MASK                  8
+
+#define PADS_QSPI_GPIO_QSPI_SCLK_PDE_OFFSET                2
+#define PADS_QSPI_GPIO_QSPI_SCLK_PDE_MASK                  4
+
+#define PADS_QSPI_GPIO_QSPI_SCLK_SCHMITT_OFFSET            1
+#define PADS_QSPI_GPIO_QSPI_SCLK_SCHMITT_MASK              2
+
+#define PADS_QSPI_GPIO_QSPI_SCLK_SLEWFAST_OFFSET           0
+#define PADS_QSPI_GPIO_QSPI_SCLK_SLEWFAST_MASK             1
+
+#define PADS_QSPI_GPIO_QSPI_SD0_OD_OFFSET                  7
+#define PADS_QSPI_GPIO_QSPI_SD0_OD_MASK                    0x80
+
+#define PADS_QSPI_GPIO_QSPI_SD0_IE_OFFSET                  6
+#define PADS_QSPI_GPIO_QSPI_SD0_IE_MASK                    0x40
+
+#define PADS_QSPI_GPIO_QSPI_SD0_DRIVE_OFFSET               4
+#define PADS_QSPI_GPIO_QSPI_SD0_DRIVE_MASK                 0x30
+#define PADS_QSPI_GPIO_QSPI_SD0_DRIVE_2mA                  0
+#define PADS_QSPI_GPIO_QSPI_SD0_DRIVE_4mA                  1
+#define PADS_QSPI_GPIO_QSPI_SD0_DRIVE_8mA                  2
+#define PADS_QSPI_GPIO_QSPI_SD0_DRIVE_12mA                 3
+
+#define PADS_QSPI_GPIO_QSPI_SD0_PUE_OFFSET                 3
+#define PADS_QSPI_GPIO_QSPI_SD0_PUE_MASK                   8
+
+#define PADS_QSPI_GPIO_QSPI_SD0_PDE_OFFSET                 2
+#define PADS_QSPI_GPIO_QSPI_SD0_PDE_MASK                   4
+
+#define PADS_QSPI_GPIO_QSPI_SD0_SCHMITT_OFFSET             1
+#define PADS_QSPI_GPIO_QSPI_SD0_SCHMITT_MASK               2
+
+#define PADS_QSPI_GPIO_QSPI_SD0_SLEWFAST_OFFSET            0
+#define PADS_QSPI_GPIO_QSPI_SD0_SLEWFAST_MASK              1
+
+#define PADS_QSPI_GPIO_QSPI_SD1_OD_OFFSET                  7
+#define PADS_QSPI_GPIO_QSPI_SD1_OD_MASK                    0x80
+
+#define PADS_QSPI_GPIO_QSPI_SD1_IE_OFFSET                  6
+#define PADS_QSPI_GPIO_QSPI_SD1_IE_MASK                    0x40
+
+#define PADS_QSPI_GPIO_QSPI_SD1_DRIVE_OFFSET               4
+#define PADS_QSPI_GPIO_QSPI_SD1_DRIVE_MASK                 0x30
+#define PADS_QSPI_GPIO_QSPI_SD1_DRIVE_2mA                  0
+#define PADS_QSPI_GPIO_QSPI_SD1_DRIVE_4mA                  1
+#define PADS_QSPI_GPIO_QSPI_SD1_DRIVE_8mA                  2
+#define PADS_QSPI_GPIO_QSPI_SD1_DRIVE_12mA                 3
+
+#define PADS_QSPI_GPIO_QSPI_SD1_PUE_OFFSET                 3
+#define PADS_QSPI_GPIO_QSPI_SD1_PUE_MASK                   8
+
+#define PADS_QSPI_GPIO_QSPI_SD1_PDE_OFFSET                 2
+#define PADS_QSPI_GPIO_QSPI_SD1_PDE_MASK                   4
+
+#define PADS_QSPI_GPIO_QSPI_SD1_SCHMITT_OFFSET             1
+#define PADS_QSPI_GPIO_QSPI_SD1_SCHMITT_MASK               2
+
+#define PADS_QSPI_GPIO_QSPI_SD1_SLEWFAST_OFFSET            0
+#define PADS_QSPI_GPIO_QSPI_SD1_SLEWFAST_MASK              1
+
+#define PADS_QSPI_GPIO_QSPI_SD2_OD_OFFSET                  7
+#define PADS_QSPI_GPIO_QSPI_SD2_OD_MASK                    0x80
+
+#define PADS_QSPI_GPIO_QSPI_SD2_IE_OFFSET                  6
+#define PADS_QSPI_GPIO_QSPI_SD2_IE_MASK                    0x40
+
+#define PADS_QSPI_GPIO_QSPI_SD2_DRIVE_OFFSET               4
+#define PADS_QSPI_GPIO_QSPI_SD2_DRIVE_MASK                 0x30
+#define PADS_QSPI_GPIO_QSPI_SD2_DRIVE_2mA                  0
+#define PADS_QSPI_GPIO_QSPI_SD2_DRIVE_4mA                  1
+#define PADS_QSPI_GPIO_QSPI_SD2_DRIVE_8mA                  2
+#define PADS_QSPI_GPIO_QSPI_SD2_DRIVE_12mA                 3
+
+#define PADS_QSPI_GPIO_QSPI_SD2_PUE_OFFSET                 3
+#define PADS_QSPI_GPIO_QSPI_SD2_PUE_MASK                   8
+
+#define PADS_QSPI_GPIO_QSPI_SD2_PDE_OFFSET                 2
+#define PADS_QSPI_GPIO_QSPI_SD2_PDE_MASK                   4
+
+#define PADS_QSPI_GPIO_QSPI_SD2_SCHMITT_OFFSET             1
+#define PADS_QSPI_GPIO_QSPI_SD2_SCHMITT_MASK               2
+
+#define PADS_QSPI_GPIO_QSPI_SD2_SLEWFAST_OFFSET            0
+#define PADS_QSPI_GPIO_QSPI_SD2_SLEWFAST_MASK              1
+
+#define PADS_QSPI_GPIO_QSPI_SD3_OD_OFFSET                  7
+#define PADS_QSPI_GPIO_QSPI_SD3_OD_MASK                    0x80
+
+#define PADS_QSPI_GPIO_QSPI_SD3_IE_OFFSET                  6
+#define PADS_QSPI_GPIO_QSPI_SD3_IE_MASK                    0x40
+
+#define PADS_QSPI_GPIO_QSPI_SD3_DRIVE_OFFSET               4
+#define PADS_QSPI_GPIO_QSPI_SD3_DRIVE_MASK                 0x30
+#define PADS_QSPI_GPIO_QSPI_SD3_DRIVE_2mA                  0
+#define PADS_QSPI_GPIO_QSPI_SD3_DRIVE_4mA                  1
+#define PADS_QSPI_GPIO_QSPI_SD3_DRIVE_8mA                  2
+#define PADS_QSPI_GPIO_QSPI_SD3_DRIVE_12mA                 3
+
+#define PADS_QSPI_GPIO_QSPI_SD3_PUE_OFFSET                 3
+#define PADS_QSPI_GPIO_QSPI_SD3_PUE_MASK                   8
+
+#define PADS_QSPI_GPIO_QSPI_SD3_PDE_OFFSET                 2
+#define PADS_QSPI_GPIO_QSPI_SD3_PDE_MASK                   4
+
+#define PADS_QSPI_GPIO_QSPI_SD3_SCHMITT_OFFSET             1
+#define PADS_QSPI_GPIO_QSPI_SD3_SCHMITT_MASK               2
+
+#define PADS_QSPI_GPIO_QSPI_SD3_SLEWFAST_OFFSET            0
+#define PADS_QSPI_GPIO_QSPI_SD3_SLEWFAST_MASK              1
+
+#define PADS_QSPI_GPIO_QSPI_SS_OD_OFFSET                   7
+#define PADS_QSPI_GPIO_QSPI_SS_OD_MASK                     0x80
+
+#define PADS_QSPI_GPIO_QSPI_SS_IE_OFFSET                   6
+#define PADS_QSPI_GPIO_QSPI_SS_IE_MASK                     0x40
+
+#define PADS_QSPI_GPIO_QSPI_SS_DRIVE_OFFSET                4
+#define PADS_QSPI_GPIO_QSPI_SS_DRIVE_MASK                  0x30
+#define PADS_QSPI_GPIO_QSPI_SS_DRIVE_2mA                   0
+#define PADS_QSPI_GPIO_QSPI_SS_DRIVE_4mA                   1
+#define PADS_QSPI_GPIO_QSPI_SS_DRIVE_8mA                   2
+#define PADS_QSPI_GPIO_QSPI_SS_DRIVE_12mA                  3
+
+#define PADS_QSPI_GPIO_QSPI_SS_PUE_OFFSET                  3
+#define PADS_QSPI_GPIO_QSPI_SS_PUE_MASK                    8
+
+#define PADS_QSPI_GPIO_QSPI_SS_PDE_OFFSET                  2
+#define PADS_QSPI_GPIO_QSPI_SS_PDE_MASK                    4
+
+#define PADS_QSPI_GPIO_QSPI_SS_SCHMITT_OFFSET              1
+#define PADS_QSPI_GPIO_QSPI_SS_SCHMITT_MASK                2
+
+#define PADS_QSPI_GPIO_QSPI_SS_SLEWFAST_OFFSET             0
+#define PADS_QSPI_GPIO_QSPI_SS_SLEWFAST_MASK               1
+
+
 typedef struct
 {
 

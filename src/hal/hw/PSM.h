@@ -4,6 +4,212 @@
 
 #include <stdint.h>
 
+
+#define PSM_FRCE_ON_PROC1_OFFSET                           16
+#define PSM_FRCE_ON_PROC1_MASK                             0x10000
+
+#define PSM_FRCE_ON_PROC0_OFFSET                           15
+#define PSM_FRCE_ON_PROC0_MASK                             0x8000
+
+#define PSM_FRCE_ON_SIO_OFFSET                             14
+#define PSM_FRCE_ON_SIO_MASK                               0x4000
+
+#define PSM_FRCE_ON_VREG_AND_CHIP_RESET_OFFSET             13
+#define PSM_FRCE_ON_VREG_AND_CHIP_RESET_MASK               0x2000
+
+#define PSM_FRCE_ON_XIP_OFFSET                             12
+#define PSM_FRCE_ON_XIP_MASK                               0x1000
+
+#define PSM_FRCE_ON_SRAM5_OFFSET                           11
+#define PSM_FRCE_ON_SRAM5_MASK                             0x800
+
+#define PSM_FRCE_ON_SRAM4_OFFSET                           10
+#define PSM_FRCE_ON_SRAM4_MASK                             0x400
+
+#define PSM_FRCE_ON_SRAM3_OFFSET                           9
+#define PSM_FRCE_ON_SRAM3_MASK                             0x200
+
+#define PSM_FRCE_ON_SRAM2_OFFSET                           8
+#define PSM_FRCE_ON_SRAM2_MASK                             0x100
+
+#define PSM_FRCE_ON_SRAM1_OFFSET                           7
+#define PSM_FRCE_ON_SRAM1_MASK                             0x80
+
+#define PSM_FRCE_ON_SRAM0_OFFSET                           6
+#define PSM_FRCE_ON_SRAM0_MASK                             0x40
+
+#define PSM_FRCE_ON_ROM_OFFSET                             5
+#define PSM_FRCE_ON_ROM_MASK                               0x20
+
+#define PSM_FRCE_ON_BUSFABRIC_OFFSET                       4
+#define PSM_FRCE_ON_BUSFABRIC_MASK                         0x10
+
+#define PSM_FRCE_ON_RESETS_OFFSET                          3
+#define PSM_FRCE_ON_RESETS_MASK                            8
+
+#define PSM_FRCE_ON_CLOCKS_OFFSET                          2
+#define PSM_FRCE_ON_CLOCKS_MASK                            4
+
+#define PSM_FRCE_ON_XOSC_OFFSET                            1
+#define PSM_FRCE_ON_XOSC_MASK                              2
+
+#define PSM_FRCE_ON_ROSC_OFFSET                            0
+#define PSM_FRCE_ON_ROSC_MASK                              1
+
+#define PSM_FRCE_OFF_PROC1_OFFSET                          16
+#define PSM_FRCE_OFF_PROC1_MASK                            0x10000
+
+#define PSM_FRCE_OFF_PROC0_OFFSET                          15
+#define PSM_FRCE_OFF_PROC0_MASK                            0x8000
+
+#define PSM_FRCE_OFF_SIO_OFFSET                            14
+#define PSM_FRCE_OFF_SIO_MASK                              0x4000
+
+#define PSM_FRCE_OFF_VREG_AND_CHIP_RESET_OFFSET            13
+#define PSM_FRCE_OFF_VREG_AND_CHIP_RESET_MASK              0x2000
+
+#define PSM_FRCE_OFF_XIP_OFFSET                            12
+#define PSM_FRCE_OFF_XIP_MASK                              0x1000
+
+#define PSM_FRCE_OFF_SRAM5_OFFSET                          11
+#define PSM_FRCE_OFF_SRAM5_MASK                            0x800
+
+#define PSM_FRCE_OFF_SRAM4_OFFSET                          10
+#define PSM_FRCE_OFF_SRAM4_MASK                            0x400
+
+#define PSM_FRCE_OFF_SRAM3_OFFSET                          9
+#define PSM_FRCE_OFF_SRAM3_MASK                            0x200
+
+#define PSM_FRCE_OFF_SRAM2_OFFSET                          8
+#define PSM_FRCE_OFF_SRAM2_MASK                            0x100
+
+#define PSM_FRCE_OFF_SRAM1_OFFSET                          7
+#define PSM_FRCE_OFF_SRAM1_MASK                            0x80
+
+#define PSM_FRCE_OFF_SRAM0_OFFSET                          6
+#define PSM_FRCE_OFF_SRAM0_MASK                            0x40
+
+#define PSM_FRCE_OFF_ROM_OFFSET                            5
+#define PSM_FRCE_OFF_ROM_MASK                              0x20
+
+#define PSM_FRCE_OFF_BUSFABRIC_OFFSET                      4
+#define PSM_FRCE_OFF_BUSFABRIC_MASK                        0x10
+
+#define PSM_FRCE_OFF_RESETS_OFFSET                         3
+#define PSM_FRCE_OFF_RESETS_MASK                           8
+
+#define PSM_FRCE_OFF_CLOCKS_OFFSET                         2
+#define PSM_FRCE_OFF_CLOCKS_MASK                           4
+
+#define PSM_FRCE_OFF_XOSC_OFFSET                           1
+#define PSM_FRCE_OFF_XOSC_MASK                             2
+
+#define PSM_FRCE_OFF_ROSC_OFFSET                           0
+#define PSM_FRCE_OFF_ROSC_MASK                             1
+
+#define PSM_WDSEL_PROC1_OFFSET                             16
+#define PSM_WDSEL_PROC1_MASK                               0x10000
+
+#define PSM_WDSEL_PROC0_OFFSET                             15
+#define PSM_WDSEL_PROC0_MASK                               0x8000
+
+#define PSM_WDSEL_SIO_OFFSET                               14
+#define PSM_WDSEL_SIO_MASK                                 0x4000
+
+#define PSM_WDSEL_VREG_AND_CHIP_RESET_OFFSET               13
+#define PSM_WDSEL_VREG_AND_CHIP_RESET_MASK                 0x2000
+
+#define PSM_WDSEL_XIP_OFFSET                               12
+#define PSM_WDSEL_XIP_MASK                                 0x1000
+
+#define PSM_WDSEL_SRAM5_OFFSET                             11
+#define PSM_WDSEL_SRAM5_MASK                               0x800
+
+#define PSM_WDSEL_SRAM4_OFFSET                             10
+#define PSM_WDSEL_SRAM4_MASK                               0x400
+
+#define PSM_WDSEL_SRAM3_OFFSET                             9
+#define PSM_WDSEL_SRAM3_MASK                               0x200
+
+#define PSM_WDSEL_SRAM2_OFFSET                             8
+#define PSM_WDSEL_SRAM2_MASK                               0x100
+
+#define PSM_WDSEL_SRAM1_OFFSET                             7
+#define PSM_WDSEL_SRAM1_MASK                               0x80
+
+#define PSM_WDSEL_SRAM0_OFFSET                             6
+#define PSM_WDSEL_SRAM0_MASK                               0x40
+
+#define PSM_WDSEL_ROM_OFFSET                               5
+#define PSM_WDSEL_ROM_MASK                                 0x20
+
+#define PSM_WDSEL_BUSFABRIC_OFFSET                         4
+#define PSM_WDSEL_BUSFABRIC_MASK                           0x10
+
+#define PSM_WDSEL_RESETS_OFFSET                            3
+#define PSM_WDSEL_RESETS_MASK                              8
+
+#define PSM_WDSEL_CLOCKS_OFFSET                            2
+#define PSM_WDSEL_CLOCKS_MASK                              4
+
+#define PSM_WDSEL_XOSC_OFFSET                              1
+#define PSM_WDSEL_XOSC_MASK                                2
+
+#define PSM_WDSEL_ROSC_OFFSET                              0
+#define PSM_WDSEL_ROSC_MASK                                1
+
+#define PSM_DONE_PROC1_OFFSET                              16
+#define PSM_DONE_PROC1_MASK                                0x10000
+
+#define PSM_DONE_PROC0_OFFSET                              15
+#define PSM_DONE_PROC0_MASK                                0x8000
+
+#define PSM_DONE_SIO_OFFSET                                14
+#define PSM_DONE_SIO_MASK                                  0x4000
+
+#define PSM_DONE_VREG_AND_CHIP_RESET_OFFSET                13
+#define PSM_DONE_VREG_AND_CHIP_RESET_MASK                  0x2000
+
+#define PSM_DONE_XIP_OFFSET                                12
+#define PSM_DONE_XIP_MASK                                  0x1000
+
+#define PSM_DONE_SRAM5_OFFSET                              11
+#define PSM_DONE_SRAM5_MASK                                0x800
+
+#define PSM_DONE_SRAM4_OFFSET                              10
+#define PSM_DONE_SRAM4_MASK                                0x400
+
+#define PSM_DONE_SRAM3_OFFSET                              9
+#define PSM_DONE_SRAM3_MASK                                0x200
+
+#define PSM_DONE_SRAM2_OFFSET                              8
+#define PSM_DONE_SRAM2_MASK                                0x100
+
+#define PSM_DONE_SRAM1_OFFSET                              7
+#define PSM_DONE_SRAM1_MASK                                0x80
+
+#define PSM_DONE_SRAM0_OFFSET                              6
+#define PSM_DONE_SRAM0_MASK                                0x40
+
+#define PSM_DONE_ROM_OFFSET                                5
+#define PSM_DONE_ROM_MASK                                  0x20
+
+#define PSM_DONE_BUSFABRIC_OFFSET                          4
+#define PSM_DONE_BUSFABRIC_MASK                            0x10
+
+#define PSM_DONE_RESETS_OFFSET                             3
+#define PSM_DONE_RESETS_MASK                               8
+
+#define PSM_DONE_CLOCKS_OFFSET                             2
+#define PSM_DONE_CLOCKS_MASK                               4
+
+#define PSM_DONE_XOSC_OFFSET                               1
+#define PSM_DONE_XOSC_MASK                                 2
+
+#define PSM_DONE_ROSC_OFFSET                               0
+#define PSM_DONE_ROSC_MASK                                 1
+
+
 typedef struct
 {
 

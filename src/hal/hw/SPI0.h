@@ -5,6 +5,134 @@
 
 #include <stdint.h>
 
+
+#define SPI0_SSPCR0_SCR_OFFSET                             8
+#define SPI0_SSPCR0_SCR_MASK                               0xff00
+
+#define SPI0_SSPCR0_SPH_OFFSET                             7
+#define SPI0_SSPCR0_SPH_MASK                               0x80
+
+#define SPI0_SSPCR0_SPO_OFFSET                             6
+#define SPI0_SSPCR0_SPO_MASK                               0x40
+
+#define SPI0_SSPCR0_FRF_OFFSET                             4
+#define SPI0_SSPCR0_FRF_MASK                               0x30
+
+#define SPI0_SSPCR0_DSS_OFFSET                             0
+#define SPI0_SSPCR0_DSS_MASK                               0xf
+
+#define SPI0_SSPCR1_SOD_OFFSET                             3
+#define SPI0_SSPCR1_SOD_MASK                               8
+
+#define SPI0_SSPCR1_MS_OFFSET                              2
+#define SPI0_SSPCR1_MS_MASK                                4
+
+#define SPI0_SSPCR1_SSE_OFFSET                             1
+#define SPI0_SSPCR1_SSE_MASK                               2
+
+#define SPI0_SSPCR1_LBM_OFFSET                             0
+#define SPI0_SSPCR1_LBM_MASK                               1
+
+#define SPI0_SSPDR_DATA_OFFSET                             0
+#define SPI0_SSPDR_DATA_MASK                               0xffff
+
+#define SPI0_SSPSR_BSY_OFFSET                              4
+#define SPI0_SSPSR_BSY_MASK                                0x10
+
+#define SPI0_SSPSR_RFF_OFFSET                              3
+#define SPI0_SSPSR_RFF_MASK                                8
+
+#define SPI0_SSPSR_RNE_OFFSET                              2
+#define SPI0_SSPSR_RNE_MASK                                4
+
+#define SPI0_SSPSR_TNF_OFFSET                              1
+#define SPI0_SSPSR_TNF_MASK                                2
+
+#define SPI0_SSPSR_TFE_OFFSET                              0
+#define SPI0_SSPSR_TFE_MASK                                1
+
+#define SPI0_SSPCPSR_CPSDVSR_OFFSET                        0
+#define SPI0_SSPCPSR_CPSDVSR_MASK                          0xff
+
+#define SPI0_SSPIMSC_TXIM_OFFSET                           3
+#define SPI0_SSPIMSC_TXIM_MASK                             8
+
+#define SPI0_SSPIMSC_RXIM_OFFSET                           2
+#define SPI0_SSPIMSC_RXIM_MASK                             4
+
+#define SPI0_SSPIMSC_RTIM_OFFSET                           1
+#define SPI0_SSPIMSC_RTIM_MASK                             2
+
+#define SPI0_SSPIMSC_RORIM_OFFSET                          0
+#define SPI0_SSPIMSC_RORIM_MASK                            1
+
+#define SPI0_SSPRIS_TXRIS_OFFSET                           3
+#define SPI0_SSPRIS_TXRIS_MASK                             8
+
+#define SPI0_SSPRIS_RXRIS_OFFSET                           2
+#define SPI0_SSPRIS_RXRIS_MASK                             4
+
+#define SPI0_SSPRIS_RTRIS_OFFSET                           1
+#define SPI0_SSPRIS_RTRIS_MASK                             2
+
+#define SPI0_SSPRIS_RORRIS_OFFSET                          0
+#define SPI0_SSPRIS_RORRIS_MASK                            1
+
+#define SPI0_SSPMIS_TXMIS_OFFSET                           3
+#define SPI0_SSPMIS_TXMIS_MASK                             8
+
+#define SPI0_SSPMIS_RXMIS_OFFSET                           2
+#define SPI0_SSPMIS_RXMIS_MASK                             4
+
+#define SPI0_SSPMIS_RTMIS_OFFSET                           1
+#define SPI0_SSPMIS_RTMIS_MASK                             2
+
+#define SPI0_SSPMIS_RORMIS_OFFSET                          0
+#define SPI0_SSPMIS_RORMIS_MASK                            1
+
+#define SPI0_SSPICR_RTIC_OFFSET                            1
+#define SPI0_SSPICR_RTIC_MASK                              2
+
+#define SPI0_SSPICR_RORIC_OFFSET                           0
+#define SPI0_SSPICR_RORIC_MASK                             1
+
+#define SPI0_SSPDMACR_TXDMAE_OFFSET                        1
+#define SPI0_SSPDMACR_TXDMAE_MASK                          2
+
+#define SPI0_SSPDMACR_RXDMAE_OFFSET                        0
+#define SPI0_SSPDMACR_RXDMAE_MASK                          1
+
+#define SPI0_SSPPERIPHID0_PARTNUMBER0_OFFSET               0
+#define SPI0_SSPPERIPHID0_PARTNUMBER0_MASK                 0xff
+
+#define SPI0_SSPPERIPHID1_DESIGNER0_OFFSET                 4
+#define SPI0_SSPPERIPHID1_DESIGNER0_MASK                   0xf0
+
+#define SPI0_SSPPERIPHID1_PARTNUMBER1_OFFSET               0
+#define SPI0_SSPPERIPHID1_PARTNUMBER1_MASK                 0xf
+
+#define SPI0_SSPPERIPHID2_REVISION_OFFSET                  4
+#define SPI0_SSPPERIPHID2_REVISION_MASK                    0xf0
+
+#define SPI0_SSPPERIPHID2_DESIGNER1_OFFSET                 0
+#define SPI0_SSPPERIPHID2_DESIGNER1_MASK                   0xf
+
+#define SPI0_SSPPERIPHID3_CONFIGURATION_OFFSET             0
+#define SPI0_SSPPERIPHID3_CONFIGURATION_MASK               0xff
+
+#define SPI0_SSPPCELLID0_SSPPCELLID0_OFFSET                0
+#define SPI0_SSPPCELLID0_SSPPCELLID0_MASK                  0xff
+
+#define SPI0_SSPPCELLID1_SSPPCELLID1_OFFSET                0
+#define SPI0_SSPPCELLID1_SSPPCELLID1_MASK                  0xff
+
+#define SPI0_SSPPCELLID2_SSPPCELLID2_OFFSET                0
+#define SPI0_SSPPCELLID2_SSPPCELLID2_MASK                  0xff
+
+#define SPI0_SSPPCELLID3_SSPPCELLID3_OFFSET                0
+#define SPI0_SSPPCELLID3_SSPPCELLID3_MASK                  0xff
+
+
 typedef struct
 {
 

@@ -5,6 +5,45 @@
 
 #include <stdint.h>
 
+
+#define XOSC_CTRL_ENABLE_OFFSET                            12
+#define XOSC_CTRL_ENABLE_MASK                              0xfff000
+#define XOSC_CTRL_ENABLE_DISABLE                           0xd1e
+#define XOSC_CTRL_ENABLE_ENABLE                            0xfab
+
+#define XOSC_CTRL_FREQ_RANGE_OFFSET                        0
+#define XOSC_CTRL_FREQ_RANGE_MASK                          0xfff
+#define XOSC_CTRL_FREQ_RANGE_1_15MHZ                       0xaa0
+#define XOSC_CTRL_FREQ_RANGE_RESERVED_1                    0xaa1
+#define XOSC_CTRL_FREQ_RANGE_RESERVED_2                    0xaa2
+#define XOSC_CTRL_FREQ_RANGE_RESERVED_3                    0xaa3
+
+#define XOSC_STATUS_STABLE_OFFSET                          31
+#define XOSC_STATUS_STABLE_MASK                            -2147483648
+
+#define XOSC_STATUS_BADWRITE_OFFSET                        24
+#define XOSC_STATUS_BADWRITE_MASK                          0x1000000
+
+#define XOSC_STATUS_ENABLED_OFFSET                         12
+#define XOSC_STATUS_ENABLED_MASK                           0x1000
+
+#define XOSC_STATUS_FREQ_RANGE_OFFSET                      0
+#define XOSC_STATUS_FREQ_RANGE_MASK                        3
+#define XOSC_STATUS_FREQ_RANGE_1_15MHZ                     0
+#define XOSC_STATUS_FREQ_RANGE_RESERVED_1                  1
+#define XOSC_STATUS_FREQ_RANGE_RESERVED_2                  2
+#define XOSC_STATUS_FREQ_RANGE_RESERVED_3                  3
+
+#define XOSC_STARTUP_X4_OFFSET                             20
+#define XOSC_STARTUP_X4_MASK                               0x100000
+
+#define XOSC_STARTUP_DELAY_OFFSET                          0
+#define XOSC_STARTUP_DELAY_MASK                            0x3fff
+
+#define XOSC_COUNT_COUNT_OFFSET                            0
+#define XOSC_COUNT_COUNT_MASK                              0xff
+
+
 typedef struct
 {
 

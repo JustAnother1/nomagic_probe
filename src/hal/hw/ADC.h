@@ -6,6 +6,92 @@
 
 #include <stdint.h>
 
+
+#define ADC_CS_RROBIN_OFFSET                               16
+#define ADC_CS_RROBIN_MASK                                 0x1f0000
+
+#define ADC_CS_AINSEL_OFFSET                               12
+#define ADC_CS_AINSEL_MASK                                 0x7000
+
+#define ADC_CS_ERR_STICKY_OFFSET                           10
+#define ADC_CS_ERR_STICKY_MASK                             0x400
+
+#define ADC_CS_ERR_OFFSET                                  9
+#define ADC_CS_ERR_MASK                                    0x200
+
+#define ADC_CS_READY_OFFSET                                8
+#define ADC_CS_READY_MASK                                  0x100
+
+#define ADC_CS_START_MANY_OFFSET                           3
+#define ADC_CS_START_MANY_MASK                             8
+
+#define ADC_CS_START_ONCE_OFFSET                           2
+#define ADC_CS_START_ONCE_MASK                             4
+
+#define ADC_CS_TS_EN_OFFSET                                1
+#define ADC_CS_TS_EN_MASK                                  2
+
+#define ADC_CS_EN_OFFSET                                   0
+#define ADC_CS_EN_MASK                                     1
+
+#define ADC_RESULT_RESULT_OFFSET                           0
+#define ADC_RESULT_RESULT_MASK                             0xfff
+
+#define ADC_FCS_THRESH_OFFSET                              24
+#define ADC_FCS_THRESH_MASK                                0xf000000
+
+#define ADC_FCS_LEVEL_OFFSET                               16
+#define ADC_FCS_LEVEL_MASK                                 0xf0000
+
+#define ADC_FCS_OVER_OFFSET                                11
+#define ADC_FCS_OVER_MASK                                  0x800
+
+#define ADC_FCS_UNDER_OFFSET                               10
+#define ADC_FCS_UNDER_MASK                                 0x400
+
+#define ADC_FCS_FULL_OFFSET                                9
+#define ADC_FCS_FULL_MASK                                  0x200
+
+#define ADC_FCS_EMPTY_OFFSET                               8
+#define ADC_FCS_EMPTY_MASK                                 0x100
+
+#define ADC_FCS_DREQ_EN_OFFSET                             3
+#define ADC_FCS_DREQ_EN_MASK                               8
+
+#define ADC_FCS_ERR_OFFSET                                 2
+#define ADC_FCS_ERR_MASK                                   4
+
+#define ADC_FCS_SHIFT_OFFSET                               1
+#define ADC_FCS_SHIFT_MASK                                 2
+
+#define ADC_FCS_EN_OFFSET                                  0
+#define ADC_FCS_EN_MASK                                    1
+
+#define ADC_FIFO_ERR_OFFSET                                15
+#define ADC_FIFO_ERR_MASK                                  0x8000
+
+#define ADC_FIFO_VAL_OFFSET                                0
+#define ADC_FIFO_VAL_MASK                                  0xfff
+
+#define ADC_DIV_INT_OFFSET                                 8
+#define ADC_DIV_INT_MASK                                   0xffff00
+
+#define ADC_DIV_FRAC_OFFSET                                0
+#define ADC_DIV_FRAC_MASK                                  0xff
+
+#define ADC_INTR_FIFO_OFFSET                               0
+#define ADC_INTR_FIFO_MASK                                 1
+
+#define ADC_INTE_FIFO_OFFSET                               0
+#define ADC_INTE_FIFO_MASK                                 1
+
+#define ADC_INTF_FIFO_OFFSET                               0
+#define ADC_INTF_FIFO_MASK                                 1
+
+#define ADC_INTS_FIFO_OFFSET                               0
+#define ADC_INTS_FIFO_MASK                                 1
+
+
 typedef struct
 {
 

@@ -4,6 +4,23 @@
 
 #include <stdint.h>
 
+
+#define SYSINFO_CHIP_ID_REVISION_OFFSET                    28
+#define SYSINFO_CHIP_ID_REVISION_MASK                      -268435456
+
+#define SYSINFO_CHIP_ID_PART_OFFSET                        12
+#define SYSINFO_CHIP_ID_PART_MASK                          0xffff000
+
+#define SYSINFO_CHIP_ID_MANUFACTURER_OFFSET                0
+#define SYSINFO_CHIP_ID_MANUFACTURER_MASK                  0xfff
+
+#define SYSINFO_PLATFORM_ASIC_OFFSET                       1
+#define SYSINFO_PLATFORM_ASIC_MASK                         2
+
+#define SYSINFO_PLATFORM_FPGA_OFFSET                       0
+#define SYSINFO_PLATFORM_FPGA_MASK                         1
+
+
 typedef struct
 {
 

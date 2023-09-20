@@ -5,6 +5,14 @@
 
 #include <stdint.h>
 
+
+#define TBMAN_PLATFORM_FPGA_OFFSET                         1
+#define TBMAN_PLATFORM_FPGA_MASK                           2
+
+#define TBMAN_PLATFORM_ASIC_OFFSET                         0
+#define TBMAN_PLATFORM_ASIC_MASK                           1
+
+
 typedef struct
 {
 

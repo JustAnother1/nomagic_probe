@@ -4,6 +4,86 @@
 
 #include <stdint.h>
 
+
+#define ROSC_CTRL_ENABLE_OFFSET                            12
+#define ROSC_CTRL_ENABLE_MASK                              0xfff000
+#define ROSC_CTRL_ENABLE_DISABLE                           0xd1e
+#define ROSC_CTRL_ENABLE_ENABLE                            0xfab
+
+#define ROSC_CTRL_FREQ_RANGE_OFFSET                        0
+#define ROSC_CTRL_FREQ_RANGE_MASK                          0xfff
+#define ROSC_CTRL_FREQ_RANGE_LOW                           0xfa4
+#define ROSC_CTRL_FREQ_RANGE_MEDIUM                        0xfa5
+#define ROSC_CTRL_FREQ_RANGE_HIGH                          0xfa7
+#define ROSC_CTRL_FREQ_RANGE_TOOHIGH                       0xfa6
+
+#define ROSC_FREQA_PASSWD_OFFSET                           16
+#define ROSC_FREQA_PASSWD_MASK                             -65536
+#define ROSC_FREQA_PASSWD_PASS                             0x9696
+
+#define ROSC_FREQA_DS3_OFFSET                              12
+#define ROSC_FREQA_DS3_MASK                                0x7000
+
+#define ROSC_FREQA_DS2_OFFSET                              8
+#define ROSC_FREQA_DS2_MASK                                0x700
+
+#define ROSC_FREQA_DS1_OFFSET                              4
+#define ROSC_FREQA_DS1_MASK                                0x70
+
+#define ROSC_FREQA_DS0_OFFSET                              0
+#define ROSC_FREQA_DS0_MASK                                7
+
+#define ROSC_FREQB_PASSWD_OFFSET                           16
+#define ROSC_FREQB_PASSWD_MASK                             -65536
+#define ROSC_FREQB_PASSWD_PASS                             0x9696
+
+#define ROSC_FREQB_DS7_OFFSET                              12
+#define ROSC_FREQB_DS7_MASK                                0x7000
+
+#define ROSC_FREQB_DS6_OFFSET                              8
+#define ROSC_FREQB_DS6_MASK                                0x700
+
+#define ROSC_FREQB_DS5_OFFSET                              4
+#define ROSC_FREQB_DS5_MASK                                0x70
+
+#define ROSC_FREQB_DS4_OFFSET                              0
+#define ROSC_FREQB_DS4_MASK                                7
+
+#define ROSC_DIV_DIV_OFFSET                                0
+#define ROSC_DIV_DIV_MASK                                  0xfff
+#define ROSC_DIV_DIV_PASS                                  0xaa0
+
+#define ROSC_PHASE_PASSWD_OFFSET                           4
+#define ROSC_PHASE_PASSWD_MASK                             0xff0
+
+#define ROSC_PHASE_ENABLE_OFFSET                           3
+#define ROSC_PHASE_ENABLE_MASK                             8
+
+#define ROSC_PHASE_FLIP_OFFSET                             2
+#define ROSC_PHASE_FLIP_MASK                               4
+
+#define ROSC_PHASE_SHIFT_OFFSET                            0
+#define ROSC_PHASE_SHIFT_MASK                              3
+
+#define ROSC_STATUS_STABLE_OFFSET                          31
+#define ROSC_STATUS_STABLE_MASK                            -2147483648
+
+#define ROSC_STATUS_BADWRITE_OFFSET                        24
+#define ROSC_STATUS_BADWRITE_MASK                          0x1000000
+
+#define ROSC_STATUS_DIV_RUNNING_OFFSET                     16
+#define ROSC_STATUS_DIV_RUNNING_MASK                       0x10000
+
+#define ROSC_STATUS_ENABLED_OFFSET                         12
+#define ROSC_STATUS_ENABLED_MASK                           0x1000
+
+#define ROSC_RANDOMBIT_RANDOMBIT_OFFSET                    0
+#define ROSC_RANDOMBIT_RANDOMBIT_MASK                      1
+
+#define ROSC_COUNT_COUNT_OFFSET                            0
+#define ROSC_COUNT_COUNT_MASK                              0xff
+
+
 typedef struct
 {
 

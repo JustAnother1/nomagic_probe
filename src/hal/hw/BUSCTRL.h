@@ -5,6 +5,127 @@
 
 #include <stdint.h>
 
+
+#define BUSCTRL_BUS_PRIORITY_DMA_W_OFFSET                  12
+#define BUSCTRL_BUS_PRIORITY_DMA_W_MASK                    0x1000
+
+#define BUSCTRL_BUS_PRIORITY_DMA_R_OFFSET                  8
+#define BUSCTRL_BUS_PRIORITY_DMA_R_MASK                    0x100
+
+#define BUSCTRL_BUS_PRIORITY_PROC1_OFFSET                  4
+#define BUSCTRL_BUS_PRIORITY_PROC1_MASK                    0x10
+
+#define BUSCTRL_BUS_PRIORITY_PROC0_OFFSET                  0
+#define BUSCTRL_BUS_PRIORITY_PROC0_MASK                    1
+
+#define BUSCTRL_BUS_PRIORITY_ACK_BUS_PRIORITY_ACK_OFFSET   0
+#define BUSCTRL_BUS_PRIORITY_ACK_BUS_PRIORITY_ACK_MASK     1
+
+#define BUSCTRL_PERFCTR0_PERFCTR0_OFFSET                   0
+#define BUSCTRL_PERFCTR0_PERFCTR0_MASK                     0xffffff
+
+#define BUSCTRL_PERFSEL0_PERFSEL0_OFFSET                   0
+#define BUSCTRL_PERFSEL0_PERFSEL0_MASK                     0x1f
+#define BUSCTRL_PERFSEL0_PERFSEL0_apb_contested            0
+#define BUSCTRL_PERFSEL0_PERFSEL0_apb                      1
+#define BUSCTRL_PERFSEL0_PERFSEL0_fastperi_contested       2
+#define BUSCTRL_PERFSEL0_PERFSEL0_fastperi                 3
+#define BUSCTRL_PERFSEL0_PERFSEL0_sram5_contested          4
+#define BUSCTRL_PERFSEL0_PERFSEL0_sram5                    5
+#define BUSCTRL_PERFSEL0_PERFSEL0_sram4_contested          6
+#define BUSCTRL_PERFSEL0_PERFSEL0_sram4                    7
+#define BUSCTRL_PERFSEL0_PERFSEL0_sram3_contested          8
+#define BUSCTRL_PERFSEL0_PERFSEL0_sram3                    9
+#define BUSCTRL_PERFSEL0_PERFSEL0_sram2_contested          0xa
+#define BUSCTRL_PERFSEL0_PERFSEL0_sram2                    0xb
+#define BUSCTRL_PERFSEL0_PERFSEL0_sram1_contested          0xc
+#define BUSCTRL_PERFSEL0_PERFSEL0_sram1                    0xd
+#define BUSCTRL_PERFSEL0_PERFSEL0_sram0_contested          0xe
+#define BUSCTRL_PERFSEL0_PERFSEL0_sram0                    0xf
+#define BUSCTRL_PERFSEL0_PERFSEL0_xip_main_contested       0x10
+#define BUSCTRL_PERFSEL0_PERFSEL0_xip_main                 0x11
+#define BUSCTRL_PERFSEL0_PERFSEL0_rom_contested            0x12
+#define BUSCTRL_PERFSEL0_PERFSEL0_rom                      0x13
+
+#define BUSCTRL_PERFCTR1_PERFCTR1_OFFSET                   0
+#define BUSCTRL_PERFCTR1_PERFCTR1_MASK                     0xffffff
+
+#define BUSCTRL_PERFSEL1_PERFSEL1_OFFSET                   0
+#define BUSCTRL_PERFSEL1_PERFSEL1_MASK                     0x1f
+#define BUSCTRL_PERFSEL1_PERFSEL1_apb_contested            0
+#define BUSCTRL_PERFSEL1_PERFSEL1_apb                      1
+#define BUSCTRL_PERFSEL1_PERFSEL1_fastperi_contested       2
+#define BUSCTRL_PERFSEL1_PERFSEL1_fastperi                 3
+#define BUSCTRL_PERFSEL1_PERFSEL1_sram5_contested          4
+#define BUSCTRL_PERFSEL1_PERFSEL1_sram5                    5
+#define BUSCTRL_PERFSEL1_PERFSEL1_sram4_contested          6
+#define BUSCTRL_PERFSEL1_PERFSEL1_sram4                    7
+#define BUSCTRL_PERFSEL1_PERFSEL1_sram3_contested          8
+#define BUSCTRL_PERFSEL1_PERFSEL1_sram3                    9
+#define BUSCTRL_PERFSEL1_PERFSEL1_sram2_contested          0xa
+#define BUSCTRL_PERFSEL1_PERFSEL1_sram2                    0xb
+#define BUSCTRL_PERFSEL1_PERFSEL1_sram1_contested          0xc
+#define BUSCTRL_PERFSEL1_PERFSEL1_sram1                    0xd
+#define BUSCTRL_PERFSEL1_PERFSEL1_sram0_contested          0xe
+#define BUSCTRL_PERFSEL1_PERFSEL1_sram0                    0xf
+#define BUSCTRL_PERFSEL1_PERFSEL1_xip_main_contested       0x10
+#define BUSCTRL_PERFSEL1_PERFSEL1_xip_main                 0x11
+#define BUSCTRL_PERFSEL1_PERFSEL1_rom_contested            0x12
+#define BUSCTRL_PERFSEL1_PERFSEL1_rom                      0x13
+
+#define BUSCTRL_PERFCTR2_PERFCTR2_OFFSET                   0
+#define BUSCTRL_PERFCTR2_PERFCTR2_MASK                     0xffffff
+
+#define BUSCTRL_PERFSEL2_PERFSEL2_OFFSET                   0
+#define BUSCTRL_PERFSEL2_PERFSEL2_MASK                     0x1f
+#define BUSCTRL_PERFSEL2_PERFSEL2_apb_contested            0
+#define BUSCTRL_PERFSEL2_PERFSEL2_apb                      1
+#define BUSCTRL_PERFSEL2_PERFSEL2_fastperi_contested       2
+#define BUSCTRL_PERFSEL2_PERFSEL2_fastperi                 3
+#define BUSCTRL_PERFSEL2_PERFSEL2_sram5_contested          4
+#define BUSCTRL_PERFSEL2_PERFSEL2_sram5                    5
+#define BUSCTRL_PERFSEL2_PERFSEL2_sram4_contested          6
+#define BUSCTRL_PERFSEL2_PERFSEL2_sram4                    7
+#define BUSCTRL_PERFSEL2_PERFSEL2_sram3_contested          8
+#define BUSCTRL_PERFSEL2_PERFSEL2_sram3                    9
+#define BUSCTRL_PERFSEL2_PERFSEL2_sram2_contested          0xa
+#define BUSCTRL_PERFSEL2_PERFSEL2_sram2                    0xb
+#define BUSCTRL_PERFSEL2_PERFSEL2_sram1_contested          0xc
+#define BUSCTRL_PERFSEL2_PERFSEL2_sram1                    0xd
+#define BUSCTRL_PERFSEL2_PERFSEL2_sram0_contested          0xe
+#define BUSCTRL_PERFSEL2_PERFSEL2_sram0                    0xf
+#define BUSCTRL_PERFSEL2_PERFSEL2_xip_main_contested       0x10
+#define BUSCTRL_PERFSEL2_PERFSEL2_xip_main                 0x11
+#define BUSCTRL_PERFSEL2_PERFSEL2_rom_contested            0x12
+#define BUSCTRL_PERFSEL2_PERFSEL2_rom                      0x13
+
+#define BUSCTRL_PERFCTR3_PERFCTR3_OFFSET                   0
+#define BUSCTRL_PERFCTR3_PERFCTR3_MASK                     0xffffff
+
+#define BUSCTRL_PERFSEL3_PERFSEL3_OFFSET                   0
+#define BUSCTRL_PERFSEL3_PERFSEL3_MASK                     0x1f
+#define BUSCTRL_PERFSEL3_PERFSEL3_apb_contested            0
+#define BUSCTRL_PERFSEL3_PERFSEL3_apb                      1
+#define BUSCTRL_PERFSEL3_PERFSEL3_fastperi_contested       2
+#define BUSCTRL_PERFSEL3_PERFSEL3_fastperi                 3
+#define BUSCTRL_PERFSEL3_PERFSEL3_sram5_contested          4
+#define BUSCTRL_PERFSEL3_PERFSEL3_sram5                    5
+#define BUSCTRL_PERFSEL3_PERFSEL3_sram4_contested          6
+#define BUSCTRL_PERFSEL3_PERFSEL3_sram4                    7
+#define BUSCTRL_PERFSEL3_PERFSEL3_sram3_contested          8
+#define BUSCTRL_PERFSEL3_PERFSEL3_sram3                    9
+#define BUSCTRL_PERFSEL3_PERFSEL3_sram2_contested          0xa
+#define BUSCTRL_PERFSEL3_PERFSEL3_sram2                    0xb
+#define BUSCTRL_PERFSEL3_PERFSEL3_sram1_contested          0xc
+#define BUSCTRL_PERFSEL3_PERFSEL3_sram1                    0xd
+#define BUSCTRL_PERFSEL3_PERFSEL3_sram0_contested          0xe
+#define BUSCTRL_PERFSEL3_PERFSEL3_sram0                    0xf
+#define BUSCTRL_PERFSEL3_PERFSEL3_xip_main_contested       0x10
+#define BUSCTRL_PERFSEL3_PERFSEL3_xip_main                 0x11
+#define BUSCTRL_PERFSEL3_PERFSEL3_rom_contested            0x12
+#define BUSCTRL_PERFSEL3_PERFSEL3_rom                      0x13
+
+
 typedef struct
 {
 
