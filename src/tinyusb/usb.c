@@ -110,6 +110,13 @@
 #define USB_SIE_STATUS_BUS_RESET_BITS              0x00080000u
 #define USB_SIE_STATUS_RESUME_BITS                 0x00000800u
 
+#define REG_ALIAS_RW_BITS  (0x0u << 12u)
+#define REG_ALIAS_XOR_BITS (0x1u << 12u)
+#define REG_ALIAS_SET_BITS (0x2u << 12u)
+#define REG_ALIAS_CLR_BITS (0x3u << 12u)
+
+#define USBCTRL_REGS_SET ((USBCTRL_REGS_type *) (0x50110000 | REG_ALIAS_SET_BITS))
+#define USBCTRL_REGS_CLR ((USBCTRL_REGS_type *) (0x50110000 | REG_ALIAS_CLR_BITS))
 
 
 typedef struct {
