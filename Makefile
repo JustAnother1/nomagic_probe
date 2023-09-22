@@ -148,10 +148,12 @@ help:
 	@echo "================="
 	@echo "make clean    delete all generated files"
 	@echo "make all      compile firmware creates elf and uf2 file. (default target)"
+	@echo "make flash    write firmware to flash of RP2040 using openocd and CMSIS-DAP adapter(picoprobe)"
 	@echo "make doc      run doxygen"
 	@echo "make test     run unit tests"
 	@echo "make lcov     create coverage report of unit tests"
 	@echo "make list     create list file"
+	@echo ""
 
 $(BIN_FOLDER)$(PROJECT).elf: $(OBJS)
 	@echo ""
