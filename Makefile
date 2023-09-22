@@ -23,20 +23,20 @@ LKR_SCRIPT = $(SRC_FOLDER)hal/RP2040.ld
 # COMPILER SWITCHES
 # =================
 # These switches enable or disable functionality
-# tinyUSB logging has different levels 0 = no logging,1= some logging, 2 = more logging, 3= all logging
+# tinyUSB logging has different levels 0 = no logging,1 = some logging, 2 = more logging, 3= all logging
 DDEFS += -DCFG_TUSB_DEBUG=1
 # with this the watchdog is only active if the debugger is not connected
 DDEFS += -DDISABLE_WATCHDOG_FOR_DEBUG=1
 # use both cores
 #DDEFS += -DENABLE_CORE_1=1
 # use BOOT ROM (for flash functions,...)
-DDEFS += -DBOOT_ROM_ENABLED=1
+#DDEFS += -DBOOT_ROM_ENABLED=1
 
 CFLAGS  = -c -ggdb3
 
-CFLAGS += -O3
+#CFLAGS += -O3
 # sometimes helps with debugging:
-#CFLAGS += -O0
+CFLAGS += -O0
 #CFLAGS += -save-temps=obj
 
 CFLAGS += -std=c17
@@ -61,6 +61,7 @@ SRC += $(SRC_FOLDER)hal/hw_divider.c
 SRC += $(SRC_FOLDER)hal/watchdog.c
 SRC += $(SRC_FOLDER)hal/boot_rom.c
 SRC += $(SRC_FOLDER)hal/flash.c
+SRC += $(SRC_FOLDER)hal/qspi.c
 # command line interface (debug - UART0)
 SRC += $(SRC_FOLDER)cli/cli.c
 SRC += $(SRC_FOLDER)cli/cli_memory.c
@@ -78,6 +79,7 @@ SRC += $(SRC_FOLDER)lib/strncmp.c
 # file handling
 SRC += $(SRC_FOLDER)file/faked_disk.c
 SRC += $(SRC_FOLDER)file/file_storage.c
+SRC += $(SRC_FOLDER)file/file_system.c
 # USB driver
 SRC += $(SRC_FOLDER)tinyusb/usb.c
 SRC += $(SRC_FOLDER)tinyusb/usb_descriptors.c
@@ -139,6 +141,17 @@ VPATH = $(SOURCE_DIR)
 
 
 # targets
+
+help:
+	@echo ""
+	@echo "available targets"
+	@echo "================="
+	@echo "make clean    delete all generated files"
+	@echo "make all      compile firmware creates elf and uf2 file. (default target)"
+	@echo "make doc      run doxygen"
+	@echo "make test     run unit tests"
+	@echo "make lcov     create coverage report of unit tests"
+	@echo "make list     create list file"
 
 $(BIN_FOLDER)$(PROJECT).elf: $(OBJS)
 	@echo ""
@@ -212,5 +225,5 @@ lcov:
 clean:
 	@rm -rf $(BIN_FOLDER) app.map doc/doxygen/ tests/$(PROJECT)_tests tests/bin/
 
-.PHONY: clean flash all list test
+.PHONY: help clean flash all list test
 
