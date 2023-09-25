@@ -13,15 +13,12 @@
  *
  */
 
-#ifndef HAL_FLASH_H_
-#define HAL_FLASH_H_
+#include "file/file_system.h"
+#include "hal/flash.h"
 
-#include <stdint.h>
+void file_system_init(void)
+{
+    flash_init();
+}
 
-void flash_init(void);
-void flash_write_block(uint32_t start_address, uint8_t* data, uint32_t length);
-void flash_erase_page(uint32_t number);
-void flash_read(uint32_t start_address, uint8_t* data, uint32_t length);
-void flash_report(void);
 
-#endif /* HAL_FLASH_H_ */

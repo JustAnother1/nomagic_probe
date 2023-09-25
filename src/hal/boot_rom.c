@@ -17,8 +17,9 @@
 #include "cfg/cli_cfg.h"
 
 typedef void *(*rom_table_lookup_fn)(uint16_t *table, uint32_t code);
-
+#ifdef BOOT_ROM_ENABLED
 static bool valid = false;
+
 static boot_rom_flash_functions flash_funcs;
 static rom_table_lookup_fn rom_table_lookup;
 
@@ -131,5 +132,5 @@ void boot_rom_report(void)
     debug_line("address of function _flash_flush_cache() :      0x%08lx", (uint32_t)flash_funcs._flash_flush_cache);
     debug_line("address of function _flash_enter_cmd_xip() :    0x%08lx", (uint32_t)flash_funcs._flash_enter_cmd_xip);
 }
-
+#endif // BOOT_ROM_ENABLED
 

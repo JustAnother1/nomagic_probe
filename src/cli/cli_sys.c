@@ -156,7 +156,11 @@ bool cmd_info(uint32_t loop)
         case 2: debug_line("Watchdog:"); break;
         case 3: watchdog_report(); break;
         case 4: debug_line("boot ROM:"); break;
+#ifdef BOOT_ROM_ENABLED
         case 5: boot_rom_report(); break;
+#else
+        case 5: debug_line(" not used"); break;
+#endif
         case 6: debug_line("QSPI:"); break;
         case 7: flash_report(); break;
         case 8: debug_line("Done"); break;

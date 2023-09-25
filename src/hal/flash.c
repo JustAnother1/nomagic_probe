@@ -14,7 +14,13 @@
  */
 
 #include "flash.h"
+#include "cfg/cli_cfg.h"
+#include "cfg/cli_cfg.h"
+#include <string.h>
+#include "time_base.h"
 
+#ifdef BOOT_ROM_ENABLED
+#include "hal/boot_rom.h"
 
 /*
  * XIP Address alias:
@@ -25,6 +31,7 @@
  0x15... Use XIP cache as SRAM bank, mirrored across entire segment
 */
 
+
 /*
 A typical call sequence for erasing a flash sector from user code would be:
 • _connect_internal_flash
@@ -34,124 +41,264 @@ A typical call sequence for erasing a flash sector from user code would be:
 • _flash_range_erase(addr, 1 << 12, 1 << 16, 0xd8)
 • _flash_flush_cache
 */
-/* BOOT ROM Version
-
-#include "hal/boot_rom.h"
 
 static boot_rom_flash_functions* flash_funcs = NULL;
 
 void flash_init(void)
 {
     flash_funcs = boot_rom_get_flash_functions();
+    XIP_SSI->BAUDR = 10; // TODO
     if(NULL != flash_funcs)
     {
-        // flash_funcs->_connect_internal_flash();
-        // flash_funcs->_flash_exit_xip();
+        while(0 != (1& XIP_SSI->SR))
+        {
+            ;
+        }
+        flash_funcs->_connect_internal_flash();
+        flash_funcs->_flash_exit_xip();
     }
+    XIP_SSI->BAUDR = 10; // TODO
 }
+#else
 
-void flash_write_block(uint32_t start_address, uint8_t* data, uint32_t length)
-{
-    if(NULL != flash_funcs)
-    {
-        flash_funcs->flash_range_program(start_address, data, length);
-    }
-}
+#include "qspi.h"
 
-//! erases one page (smalles erase possible) that is 4096 bytes.
-void flash_erase_page(uint32_t number)
-{
-    if(NULL != flash_funcs)
-    {
-        flash_funcs->_flash_range_erase(number*4096, 4096, 0, 0);
-    }
-}
-*/
+#define STATUS_REGISTER_BUSY    1
 
-#include "hal/hw/XIP_CTRL.h"
-#include "hal/hw/XIP_SSI.h"
-#include "hal/hw/RESETS.h"
-#include "cfg/cli_cfg.h"
+static void read_status_register(void);
+static void command_write_enable(void);
+static void read_data(uint32_t start_address, uint8_t* data, uint32_t length);
+static void page_program(uint32_t start_address, uint8_t* data, uint32_t length);
+/// erase (set to 0xff) a sector (4096 Bytes)
+static void sector_erase(uint32_t number);
+
+// QSPI Flash:
+static uint32_t status_register;
+static uint8_t tx_buf[4];
+static uint8_t rx_buf[4];
 
 void flash_init(void)
 {
-
+    qspi_init();
+    // make sure we are not in XIP mode (Continuous Read Mode)
+    // send 16 clocks with /CS enabled and data = 1
+    tx_buf[0] = 0xff;
+    tx_buf[1] = 0xff;
+    qspi_transfere(tx_buf, rx_buf, 2);
+    status_register = STATUS_REGISTER_BUSY;  // worst case assumption it is busy
 }
 
-void XIP_IRQ(void)
+
+static void read_status_register(void)
 {
-
+    status_register = 0;
+    // command Read Status Register = 0x05
+    // normal SPI mode
+    // /CS falling edge - write 0x05 - read 8bit - rising edge on /CS
+    tx_buf[0] = 0x05;
+    tx_buf[1] = 0;
+    rx_buf[0] = 0;
+    rx_buf[1] = 0;
+    rx_buf[2] = 0;
+    rx_buf[3] = 0;
+    qspi_transfere(tx_buf, rx_buf, 2);
+    status_register = rx_buf[1];
 }
+
+
+static void command_write_enable(void)
+{
+    while(0 != (0x01 & status_register)) // Flash might be busy
+    {
+        read_status_register();
+    }
+    // command write enable = 0x06
+    status_register = STATUS_REGISTER_BUSY;
+}
+
+
+static void read_data(uint32_t start_address, uint8_t* data, uint32_t length)
+{
+    if((0 == length) || (NULL == data))
+    {
+        return;
+    }
+    while(0 != (0x01 & status_register)) // Flash might be busy
+    {
+        read_status_register();
+    }
+    // command read data = 0x03
+    // falling edge on /CS - write 0x03 - write 24bits(3 bytes) address - read as many bytes as needed - rising edge of /CS
+
+    // fast read quad output = 0x6b
+    // falling edge on /CS - write 0x6b - write 24bits(3 bytes) address - read and ignore 8 bits - read as many bytes as needed - rising edge of /CS
+    (void)start_address; // TODO
+
+    status_register = STATUS_REGISTER_BUSY;
+}
+
+
+/// write up to 256 Bytes
+static void page_program(uint32_t start_address, uint8_t* data, uint32_t length)
+{
+    if((0 == length) || (NULL == data))
+    {
+        return;
+    }
+    while(0 != (0x01 & status_register)) // Flash might be busy
+    {
+        read_status_register();
+    }
+    command_write_enable();
+    // command page program = 0x02
+    // falling edge on /CS - write 0x02 - write 24bits(3 bytes) address - write up to 256 bytes as needed - rising edge of /CS
+
+    // quad page program = 0x32
+
+    (void)start_address; // TODO
+
+    status_register = STATUS_REGISTER_BUSY;
+}
+
+
+/// erase (set to 0xff) a sector (4096 Bytes)
+static void sector_erase(uint32_t number)
+{
+    uint32_t address = number * 4096;
+    while(0 != (0x01 & status_register)) // Flash might be busy
+    {
+        read_status_register();
+    }
+    command_write_enable();
+    // command sector erase = 0x20
+    // falling edge on /CS - write 0x20 - write 24bits(3 bytes) address - rising edge of /CS
+    tx_buf[0] = 0x20;
+    tx_buf[1] = (address & 0xff);
+    tx_buf[2] = ((address >>8) & 0xff);
+    tx_buf[3] = ((address >>16) & 0xff);
+    rx_buf[0] = 0;
+    rx_buf[1] = 0;
+    rx_buf[2] = 0;
+    rx_buf[3] = 0;
+    qspi_transfere(tx_buf, rx_buf, 4);
+
+    status_register = STATUS_REGISTER_BUSY;
+}
+#endif
+
 
 void flash_write_block(uint32_t start_address, uint8_t* data, uint32_t length)
 {
-    (void)start_address;
-    (void)data;
-    (void)length;
+#ifdef BOOT_ROM_ENABLED
+    if(NULL != flash_funcs)
+    {
+        // data sheet says:
+        // [start_address] must be aligned to a 256-byte boundary, and [length] must be a multiple of 256
+        if((0 == (start_address && 0xff)) && (0 == (length & =0xff)))
+        {
+            while(0 != (1& XIP_SSI->SR))
+            {
+                ;
+            }
+            flash_funcs->flash_range_program(start_address, data, length);
+            flash_funcs->_flash_flush_cache();
+        }
+    }
+#else
+    if(256 < length + (start_address & 0xff))
+    {
+        if(0 != (start_address & 0xff))
+        {
+            uint32_t part_length = 256 - (start_address & 0xff);
+            page_program(start_address, data, part_length);
+            length = length - part_length;
+        }
+        while(0 < length)
+        {
+            uint32_t part_length = 256;
+            if(length < part_length)
+            {
+                part_length = length;
+            }
+            page_program(start_address, data, part_length);
+            length = length - part_length;
+        }
+    }
+    else
+    {
+        page_program(start_address, data, length);
+    }
+#endif
 }
 
-//! erases one page (smalles erase possible) that is 4096 bytes.
+
+//! erases one page (smallest erase possible) that is 4096 bytes.
 void flash_erase_page(uint32_t number)
 {
-    (void)number;
+#ifdef BOOT_ROM_ENABLED
+    if(NULL != flash_funcs)
+    {
+        while(0 != (1& XIP_SSI->SR))
+        {
+            ;
+        }
+        flash_funcs->_flash_range_erase(number*4096, 4096, 0, 0);
+        flash_funcs->_flash_flush_cache();
+    }
+#else
+    sector_erase(number);
+#endif
 }
 
 void flash_read(uint32_t start_address, uint8_t* data, uint32_t length)
 {
-    (void)start_address;
-    (void)data;
-    (void)length;
+#ifdef BOOT_ROM_ENABLED
+    if(NULL == flash_funcs)
+    {
+        flash_funcs = boot_rom_get_flash_functions();
+    }
+    // XIP ON
+    if(NULL != flash_funcs)
+    {
+        while(0 != (1& XIP_SSI->SR))
+        {
+            ;
+        }
+        flash_funcs->_flash_flush_cache();
+        flash_funcs->_flash_enter_cmd_xip();
+    }
+    memcpy(data, (void*)(0x13000000 + (0xffffff & start_address)), length);
+    // XIP off
+    if(NULL != flash_funcs)
+    {
+        while(0 != (1& XIP_SSI->SR))
+        {
+            ;
+        }
+        flash_funcs->_connect_internal_flash();
+        flash_funcs->_flash_exit_xip();
+    }
+#else
+    read_data(start_address, data, length);
+#endif
 }
+
 
 void flash_report(void)
 {
-    // uint32_t i = 0;
-    debug_line("QSPI Flash:");
+#ifdef BOOT_ROM_ENABLED
+    debug_line("using BOOT ROM functions !");
+#else
+    read_status_register();
+    if(0 != (STATUS_REGISTER_BUSY & status_register))
+    {
+        debug_line("Flash state: busy");
+    }
+    else
+    {
+        debug_line("Flash state: idle");
+    }
+    debug_line("status register: 0x%08lx (%ld)", status_register, status_register);
+#endif
 }
 
-/*
-    // init
-    XIP_CTRL->CTRL = 0xa;
-    / *
-    RESETS->RESET = 0x240;
-    while (0x240 != (0x240 & RESETS->RESET_DONE))
-    {
-        ;
-    }
-    * /
-    XIP_SSI->SSIENR = 0; // aus
-    XIP_SSI->CTRLR0 = 0x1403; // Slave selct togle disabled,
-    XIP_SSI->CTRLR1 = 3; // Number of data frames
-    XIP_SSI->BAUDR = 10; // TODO
-
-    XIP_SSI->TXFTLR = 0;// TODO
-    XIP_SSI->RXFTLR = 0;// TODO
-    XIP_SSI->IMR = 0; // TODO
-    XIP_SSI->SER = 1; // slave selected
-    XIP_SSI->DMACR = 0; // do no use DMA
-    XIP_SSI->RX_SAMPLE_DLY = 0; // delay sample due to long lines
-    XIP_SSI->SPI_CTRLR0 = 0; //TODO
-    XIP_SSI->TXD_DRIVE_EDGE = 0; // TODO
-    XIP_SSI->SSIENR = 1; // ein
-
-    XIP_SSI->DR0 = 0x9f;
-    XIP_SSI->DR0 = 0;
-    XIP_SSI->DR0 = 0;
-    XIP_SSI->DR0 = 0;
-    while (0 != (4 & XIP_SSI->SR))
-    {
-        ;
-    }
-    while (0 != (1 & XIP_SSI->SR))
-    {
-        ;
-    }
-    while (0 != (8 & XIP_SSI->SR))
-    {
-        uint32_t data = XIP_SSI->DR0;
-        debug_line("%3ld : 0x%08lx", i, data);
-        i++;
-    }
-    debug_line("End of Data!");
-}
-*/

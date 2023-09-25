@@ -20,8 +20,9 @@
 #include <hal/hw/SIO.h>
 #include <hal/hw/XOSC.h>
 #include "hal/watchdog.h"
+#ifdef BOOT_ROM_ENABLED
 #include "hal/boot_rom.h"
-#include "hal/flash.h"
+#endif
 #include "cli/cli.h"
 #include "time_base.h"
 #include <stdint.h>
@@ -29,6 +30,7 @@
 #include "tinyusb/src/tusb.h"
 #include "led.h"
 #include "gdbserver/gdbserver.h"
+#include "file/file_system.h"
 
 static void init_0(void);
 static void init_1(void);
@@ -38,12 +40,14 @@ static void loop_1(void);
 
 static void init_0(void)
 {
+#ifdef BOOT_ROM_ENABLED
     boot_rom_check_if_valid();
+#endif
     watchdog_enable();
     init_time();
-    flash_init();
     debug_uart_initialize();
     cli_init();
+    file_system_init();
     tusb_init(); // initialize tinyusb stack
     gdbserver_init();
 }

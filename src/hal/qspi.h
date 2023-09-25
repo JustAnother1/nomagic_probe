@@ -13,15 +13,18 @@
  *
  */
 
-#ifndef HAL_FLASH_H_
-#define HAL_FLASH_H_
+#ifndef HAL_QSPI_H_
+#define HAL_QSPI_H_
 
 #include <stdint.h>
+#include <stddef.h>
 
-void flash_init(void);
-void flash_write_block(uint32_t start_address, uint8_t* data, uint32_t length);
-void flash_erase_page(uint32_t number);
-void flash_read(uint32_t start_address, uint8_t* data, uint32_t length);
-void flash_report(void);
+// size is 16 bit -> 0..65535
+// #define QSPI_BAUDRATE_DIVIDOR     4
+#define QSPI_BAUDRATE_DIVIDOR     128
 
-#endif /* HAL_FLASH_H_ */
+void qspi_init(void);
+void qspi_transfere(const uint8_t *tx, uint8_t *rx, size_t count);
+
+
+#endif /* HAL_QSPI_H_ */
