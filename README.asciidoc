@@ -8,6 +8,10 @@ It does not use external libraries. Therefore all code is in this library, no de
 
 No dynamic memory allocation, no malloc!
 
+== Documentation
+
+link:doc/overview.asciidoc[overview]
+
 == Building and Starting
 
 The firmware can be build using make. The generated Files will be placed in the bin folder. For details try
