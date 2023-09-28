@@ -6,7 +6,7 @@
 
 
 #define SYSINFO_CHIP_ID_REVISION_OFFSET                    28
-#define SYSINFO_CHIP_ID_REVISION_MASK                      -268435456
+#define SYSINFO_CHIP_ID_REVISION_MASK                      0xf0000000
 
 #define SYSINFO_CHIP_ID_PART_OFFSET                        12
 #define SYSINFO_CHIP_ID_PART_MASK                          0xffff000

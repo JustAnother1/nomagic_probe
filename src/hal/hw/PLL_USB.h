@@ -6,7 +6,7 @@
 
 
 #define PLL_USB_CS_LOCK_OFFSET                             31
-#define PLL_USB_CS_LOCK_MASK                               -2147483648
+#define PLL_USB_CS_LOCK_MASK                               0x80000000
 
 #define PLL_USB_CS_BYPASS_OFFSET                           8
 #define PLL_USB_CS_BYPASS_MASK                             0x100

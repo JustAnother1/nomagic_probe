@@ -36,7 +36,7 @@
 #define CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_clk_ref              0xa
 
 #define CLOCKS_CLK_GPOUT0_DIV_INT_OFFSET                   8
-#define CLOCKS_CLK_GPOUT0_DIV_INT_MASK                     -256
+#define CLOCKS_CLK_GPOUT0_DIV_INT_MASK                     0xffffff00
 
 #define CLOCKS_CLK_GPOUT0_DIV_FRAC_OFFSET                  0
 #define CLOCKS_CLK_GPOUT0_DIV_FRAC_MASK                    0xff
@@ -71,7 +71,7 @@
 #define CLOCKS_CLK_GPOUT1_CTRL_AUXSRC_clk_ref              0xa
 
 #define CLOCKS_CLK_GPOUT1_DIV_INT_OFFSET                   8
-#define CLOCKS_CLK_GPOUT1_DIV_INT_MASK                     -256
+#define CLOCKS_CLK_GPOUT1_DIV_INT_MASK                     0xffffff00
 
 #define CLOCKS_CLK_GPOUT1_DIV_FRAC_OFFSET                  0
 #define CLOCKS_CLK_GPOUT1_DIV_FRAC_MASK                    0xff
@@ -106,7 +106,7 @@
 #define CLOCKS_CLK_GPOUT2_CTRL_AUXSRC_clk_ref              0xa
 
 #define CLOCKS_CLK_GPOUT2_DIV_INT_OFFSET                   8
-#define CLOCKS_CLK_GPOUT2_DIV_INT_MASK                     -256
+#define CLOCKS_CLK_GPOUT2_DIV_INT_MASK                     0xffffff00
 
 #define CLOCKS_CLK_GPOUT2_DIV_FRAC_OFFSET                  0
 #define CLOCKS_CLK_GPOUT2_DIV_FRAC_MASK                    0xff
@@ -141,7 +141,7 @@
 #define CLOCKS_CLK_GPOUT3_CTRL_AUXSRC_clk_ref              0xa
 
 #define CLOCKS_CLK_GPOUT3_DIV_INT_OFFSET                   8
-#define CLOCKS_CLK_GPOUT3_DIV_INT_MASK                     -256
+#define CLOCKS_CLK_GPOUT3_DIV_INT_MASK                     0xffffff00
 
 #define CLOCKS_CLK_GPOUT3_DIV_FRAC_OFFSET                  0
 #define CLOCKS_CLK_GPOUT3_DIV_FRAC_MASK                    0xff
@@ -176,7 +176,7 @@
 #define CLOCKS_CLK_SYS_CTRL_SRC_clksrc_clk_sys_aux         1
 
 #define CLOCKS_CLK_SYS_DIV_INT_OFFSET                      8
-#define CLOCKS_CLK_SYS_DIV_INT_MASK                        -256
+#define CLOCKS_CLK_SYS_DIV_INT_MASK                        0xffffff00
 
 #define CLOCKS_CLK_SYS_DIV_FRAC_OFFSET                     0
 #define CLOCKS_CLK_SYS_DIV_FRAC_MASK                       0xff
@@ -267,7 +267,7 @@
 #define CLOCKS_CLK_RTC_CTRL_AUXSRC_clksrc_gpin1            5
 
 #define CLOCKS_CLK_RTC_DIV_INT_OFFSET                      8
-#define CLOCKS_CLK_RTC_DIV_INT_MASK                        -256
+#define CLOCKS_CLK_RTC_DIV_INT_MASK                        0xffffff00
 
 #define CLOCKS_CLK_RTC_DIV_FRAC_OFFSET                     0
 #define CLOCKS_CLK_RTC_DIV_FRAC_MASK                       0xff
@@ -350,7 +350,7 @@
 #define CLOCKS_FC0_RESULT_FRAC_MASK                        0x1f
 
 #define CLOCKS_WAKE_EN0_CLK_SYS_SRAM3_OFFSET               31
-#define CLOCKS_WAKE_EN0_CLK_SYS_SRAM3_MASK                 -2147483648
+#define CLOCKS_WAKE_EN0_CLK_SYS_SRAM3_MASK                 0x80000000
 
 #define CLOCKS_WAKE_EN0_CLK_SYS_SRAM2_OFFSET               30
 #define CLOCKS_WAKE_EN0_CLK_SYS_SRAM2_MASK                 0x40000000
@@ -491,7 +491,7 @@
 #define CLOCKS_WAKE_EN1_CLK_SYS_SRAM4_MASK                 1
 
 #define CLOCKS_SLEEP_EN0_CLK_SYS_SRAM3_OFFSET              31
-#define CLOCKS_SLEEP_EN0_CLK_SYS_SRAM3_MASK                -2147483648
+#define CLOCKS_SLEEP_EN0_CLK_SYS_SRAM3_MASK                0x80000000
 
 #define CLOCKS_SLEEP_EN0_CLK_SYS_SRAM2_OFFSET              30
 #define CLOCKS_SLEEP_EN0_CLK_SYS_SRAM2_MASK                0x40000000
@@ -632,7 +632,7 @@
 #define CLOCKS_SLEEP_EN1_CLK_SYS_SRAM4_MASK                1
 
 #define CLOCKS_ENABLED0_CLK_SYS_SRAM3_OFFSET               31
-#define CLOCKS_ENABLED0_CLK_SYS_SRAM3_MASK                 -2147483648
+#define CLOCKS_ENABLED0_CLK_SYS_SRAM3_MASK                 0x80000000
 
 #define CLOCKS_ENABLED0_CLK_SYS_SRAM2_OFFSET               30
 #define CLOCKS_ENABLED0_CLK_SYS_SRAM2_MASK                 0x40000000

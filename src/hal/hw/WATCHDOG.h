@@ -6,7 +6,7 @@
 
 
 #define WATCHDOG_CTRL_TRIGGER_OFFSET                       31
-#define WATCHDOG_CTRL_TRIGGER_MASK                         -2147483648
+#define WATCHDOG_CTRL_TRIGGER_MASK                         0x80000000
 
 #define WATCHDOG_CTRL_ENABLE_OFFSET                        30
 #define WATCHDOG_CTRL_ENABLE_MASK                          0x40000000

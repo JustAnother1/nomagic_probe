@@ -18,7 +18,7 @@
 #define ROSC_CTRL_FREQ_RANGE_TOOHIGH                       0xfa6
 
 #define ROSC_FREQA_PASSWD_OFFSET                           16
-#define ROSC_FREQA_PASSWD_MASK                             -65536
+#define ROSC_FREQA_PASSWD_MASK                             0xffff0000
 #define ROSC_FREQA_PASSWD_PASS                             0x9696
 
 #define ROSC_FREQA_DS3_OFFSET                              12
@@ -34,7 +34,7 @@
 #define ROSC_FREQA_DS0_MASK                                7
 
 #define ROSC_FREQB_PASSWD_OFFSET                           16
-#define ROSC_FREQB_PASSWD_MASK                             -65536
+#define ROSC_FREQB_PASSWD_MASK                             0xffff0000
 #define ROSC_FREQB_PASSWD_PASS                             0x9696
 
 #define ROSC_FREQB_DS7_OFFSET                              12
@@ -66,7 +66,7 @@
 #define ROSC_PHASE_SHIFT_MASK                              3
 
 #define ROSC_STATUS_STABLE_OFFSET                          31
-#define ROSC_STATUS_STABLE_MASK                            -2147483648
+#define ROSC_STATUS_STABLE_MASK                            0x80000000
 
 #define ROSC_STATUS_BADWRITE_OFFSET                        24
 #define ROSC_STATUS_BADWRITE_MASK                          0x1000000

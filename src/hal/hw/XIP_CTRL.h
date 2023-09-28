@@ -29,7 +29,7 @@
 #define XIP_CTRL_STAT_FLUSH_READY_MASK                     1
 
 #define XIP_CTRL_STREAM_ADDR_STREAM_ADDR_OFFSET            2
-#define XIP_CTRL_STREAM_ADDR_STREAM_ADDR_MASK              -4
+#define XIP_CTRL_STREAM_ADDR_STREAM_ADDR_MASK              0xfffffffc
 
 #define XIP_CTRL_STREAM_CTR_STREAM_CTR_OFFSET              0
 #define XIP_CTRL_STREAM_CTR_STREAM_CTR_MASK                0x3fffff

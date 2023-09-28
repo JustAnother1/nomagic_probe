@@ -42,7 +42,7 @@
 #define PIO0_FDEBUG_RXSTALL_MASK                           0xf
 
 #define PIO0_FLEVEL_RX3_OFFSET                             28
-#define PIO0_FLEVEL_RX3_MASK                               -268435456
+#define PIO0_FLEVEL_RX3_MASK                               0xf0000000
 
 #define PIO0_FLEVEL_TX3_OFFSET                             24
 #define PIO0_FLEVEL_TX3_MASK                               0xf000000
@@ -177,13 +177,13 @@
 #define PIO0_INSTR_MEM31_INSTR_MEM31_MASK                  0xffff
 
 #define PIO0_SM0_CLKDIV_INT_OFFSET                         16
-#define PIO0_SM0_CLKDIV_INT_MASK                           -65536
+#define PIO0_SM0_CLKDIV_INT_MASK                           0xffff0000
 
 #define PIO0_SM0_CLKDIV_FRAC_OFFSET                        8
 #define PIO0_SM0_CLKDIV_FRAC_MASK                          0xff00
 
 #define PIO0_SM0_EXECCTRL_EXEC_STALLED_OFFSET              31
-#define PIO0_SM0_EXECCTRL_EXEC_STALLED_MASK                -2147483648
+#define PIO0_SM0_EXECCTRL_EXEC_STALLED_MASK                0x80000000
 
 #define PIO0_SM0_EXECCTRL_SIDE_EN_OFFSET                   30
 #define PIO0_SM0_EXECCTRL_SIDE_EN_MASK                     0x40000000
@@ -218,7 +218,7 @@
 #define PIO0_SM0_EXECCTRL_STATUS_N_MASK                    0xf
 
 #define PIO0_SM0_SHIFTCTRL_FJOIN_RX_OFFSET                 31
-#define PIO0_SM0_SHIFTCTRL_FJOIN_RX_MASK                   -2147483648
+#define PIO0_SM0_SHIFTCTRL_FJOIN_RX_MASK                   0x80000000
 
 #define PIO0_SM0_SHIFTCTRL_FJOIN_TX_OFFSET                 30
 #define PIO0_SM0_SHIFTCTRL_FJOIN_TX_MASK                   0x40000000
@@ -248,7 +248,7 @@
 #define PIO0_SM0_INSTR_SM0_INSTR_MASK                      0xffff
 
 #define PIO0_SM0_PINCTRL_SIDESET_COUNT_OFFSET              29
-#define PIO0_SM0_PINCTRL_SIDESET_COUNT_MASK                -536870912
+#define PIO0_SM0_PINCTRL_SIDESET_COUNT_MASK                0xe0000000
 
 #define PIO0_SM0_PINCTRL_SET_COUNT_OFFSET                  26
 #define PIO0_SM0_PINCTRL_SET_COUNT_MASK                    0x1c000000
@@ -269,13 +269,13 @@
 #define PIO0_SM0_PINCTRL_OUT_BASE_MASK                     0x1f
 
 #define PIO0_SM1_CLKDIV_INT_OFFSET                         16
-#define PIO0_SM1_CLKDIV_INT_MASK                           -65536
+#define PIO0_SM1_CLKDIV_INT_MASK                           0xffff0000
 
 #define PIO0_SM1_CLKDIV_FRAC_OFFSET                        8
 #define PIO0_SM1_CLKDIV_FRAC_MASK                          0xff00
 
 #define PIO0_SM1_EXECCTRL_EXEC_STALLED_OFFSET              31
-#define PIO0_SM1_EXECCTRL_EXEC_STALLED_MASK                -2147483648
+#define PIO0_SM1_EXECCTRL_EXEC_STALLED_MASK                0x80000000
 
 #define PIO0_SM1_EXECCTRL_SIDE_EN_OFFSET                   30
 #define PIO0_SM1_EXECCTRL_SIDE_EN_MASK                     0x40000000
@@ -310,7 +310,7 @@
 #define PIO0_SM1_EXECCTRL_STATUS_N_MASK                    0xf
 
 #define PIO0_SM1_SHIFTCTRL_FJOIN_RX_OFFSET                 31
-#define PIO0_SM1_SHIFTCTRL_FJOIN_RX_MASK                   -2147483648
+#define PIO0_SM1_SHIFTCTRL_FJOIN_RX_MASK                   0x80000000
 
 #define PIO0_SM1_SHIFTCTRL_FJOIN_TX_OFFSET                 30
 #define PIO0_SM1_SHIFTCTRL_FJOIN_TX_MASK                   0x40000000
@@ -340,7 +340,7 @@
 #define PIO0_SM1_INSTR_SM1_INSTR_MASK                      0xffff
 
 #define PIO0_SM1_PINCTRL_SIDESET_COUNT_OFFSET              29
-#define PIO0_SM1_PINCTRL_SIDESET_COUNT_MASK                -536870912
+#define PIO0_SM1_PINCTRL_SIDESET_COUNT_MASK                0xe0000000
 
 #define PIO0_SM1_PINCTRL_SET_COUNT_OFFSET                  26
 #define PIO0_SM1_PINCTRL_SET_COUNT_MASK                    0x1c000000
@@ -361,13 +361,13 @@
 #define PIO0_SM1_PINCTRL_OUT_BASE_MASK                     0x1f
 
 #define PIO0_SM2_CLKDIV_INT_OFFSET                         16
-#define PIO0_SM2_CLKDIV_INT_MASK                           -65536
+#define PIO0_SM2_CLKDIV_INT_MASK                           0xffff0000
 
 #define PIO0_SM2_CLKDIV_FRAC_OFFSET                        8
 #define PIO0_SM2_CLKDIV_FRAC_MASK                          0xff00
 
 #define PIO0_SM2_EXECCTRL_EXEC_STALLED_OFFSET              31
-#define PIO0_SM2_EXECCTRL_EXEC_STALLED_MASK                -2147483648
+#define PIO0_SM2_EXECCTRL_EXEC_STALLED_MASK                0x80000000
 
 #define PIO0_SM2_EXECCTRL_SIDE_EN_OFFSET                   30
 #define PIO0_SM2_EXECCTRL_SIDE_EN_MASK                     0x40000000
@@ -402,7 +402,7 @@
 #define PIO0_SM2_EXECCTRL_STATUS_N_MASK                    0xf
 
 #define PIO0_SM2_SHIFTCTRL_FJOIN_RX_OFFSET                 31
-#define PIO0_SM2_SHIFTCTRL_FJOIN_RX_MASK                   -2147483648
+#define PIO0_SM2_SHIFTCTRL_FJOIN_RX_MASK                   0x80000000
 
 #define PIO0_SM2_SHIFTCTRL_FJOIN_TX_OFFSET                 30
 #define PIO0_SM2_SHIFTCTRL_FJOIN_TX_MASK                   0x40000000
@@ -432,7 +432,7 @@
 #define PIO0_SM2_INSTR_SM2_INSTR_MASK                      0xffff
 
 #define PIO0_SM2_PINCTRL_SIDESET_COUNT_OFFSET              29
-#define PIO0_SM2_PINCTRL_SIDESET_COUNT_MASK                -536870912
+#define PIO0_SM2_PINCTRL_SIDESET_COUNT_MASK                0xe0000000
 
 #define PIO0_SM2_PINCTRL_SET_COUNT_OFFSET                  26
 #define PIO0_SM2_PINCTRL_SET_COUNT_MASK                    0x1c000000
@@ -453,13 +453,13 @@
 #define PIO0_SM2_PINCTRL_OUT_BASE_MASK                     0x1f
 
 #define PIO0_SM3_CLKDIV_INT_OFFSET                         16
-#define PIO0_SM3_CLKDIV_INT_MASK                           -65536
+#define PIO0_SM3_CLKDIV_INT_MASK                           0xffff0000
 
 #define PIO0_SM3_CLKDIV_FRAC_OFFSET                        8
 #define PIO0_SM3_CLKDIV_FRAC_MASK                          0xff00
 
 #define PIO0_SM3_EXECCTRL_EXEC_STALLED_OFFSET              31
-#define PIO0_SM3_EXECCTRL_EXEC_STALLED_MASK                -2147483648
+#define PIO0_SM3_EXECCTRL_EXEC_STALLED_MASK                0x80000000
 
 #define PIO0_SM3_EXECCTRL_SIDE_EN_OFFSET                   30
 #define PIO0_SM3_EXECCTRL_SIDE_EN_MASK                     0x40000000
@@ -494,7 +494,7 @@
 #define PIO0_SM3_EXECCTRL_STATUS_N_MASK                    0xf
 
 #define PIO0_SM3_SHIFTCTRL_FJOIN_RX_OFFSET                 31
-#define PIO0_SM3_SHIFTCTRL_FJOIN_RX_MASK                   -2147483648
+#define PIO0_SM3_SHIFTCTRL_FJOIN_RX_MASK                   0x80000000
 
 #define PIO0_SM3_SHIFTCTRL_FJOIN_TX_OFFSET                 30
 #define PIO0_SM3_SHIFTCTRL_FJOIN_TX_MASK                   0x40000000
@@ -524,7 +524,7 @@
 #define PIO0_SM3_INSTR_SM3_INSTR_MASK                      0xffff
 
 #define PIO0_SM3_PINCTRL_SIDESET_COUNT_OFFSET              29
-#define PIO0_SM3_PINCTRL_SIDESET_COUNT_MASK                -536870912
+#define PIO0_SM3_PINCTRL_SIDESET_COUNT_MASK                0xe0000000
 
 #define PIO0_SM3_PINCTRL_SET_COUNT_OFFSET                  26
 #define PIO0_SM3_PINCTRL_SET_COUNT_MASK                    0x1c000000

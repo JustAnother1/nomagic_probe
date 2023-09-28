@@ -24,7 +24,7 @@
 #define PPB_SYST_CVR_CURRENT_MASK                          0xffffff
 
 #define PPB_SYST_CALIB_NOREF_OFFSET                        31
-#define PPB_SYST_CALIB_NOREF_MASK                          -2147483648
+#define PPB_SYST_CALIB_NOREF_MASK                          0x80000000
 
 #define PPB_SYST_CALIB_SKEW_OFFSET                         30
 #define PPB_SYST_CALIB_SKEW_MASK                           0x40000000
@@ -33,19 +33,19 @@
 #define PPB_SYST_CALIB_TENMS_MASK                          0xffffff
 
 #define PPB_NVIC_ISER_SETENA_OFFSET                        0
-#define PPB_NVIC_ISER_SETENA_MASK                          0x7ffffffe
+#define PPB_NVIC_ISER_SETENA_MASK                          0xffffffff
 
 #define PPB_NVIC_ICER_CLRENA_OFFSET                        0
-#define PPB_NVIC_ICER_CLRENA_MASK                          0x7ffffffe
+#define PPB_NVIC_ICER_CLRENA_MASK                          0xffffffff
 
 #define PPB_NVIC_ISPR_SETPEND_OFFSET                       0
-#define PPB_NVIC_ISPR_SETPEND_MASK                         0x7ffffffe
+#define PPB_NVIC_ISPR_SETPEND_MASK                         0xffffffff
 
 #define PPB_NVIC_ICPR_CLRPEND_OFFSET                       0
-#define PPB_NVIC_ICPR_CLRPEND_MASK                         0x7ffffffe
+#define PPB_NVIC_ICPR_CLRPEND_MASK                         0xffffffff
 
 #define PPB_NVIC_IPR0_IP_3_OFFSET                          30
-#define PPB_NVIC_IPR0_IP_3_MASK                            -1073741824
+#define PPB_NVIC_IPR0_IP_3_MASK                            0xc0000000
 
 #define PPB_NVIC_IPR0_IP_2_OFFSET                          22
 #define PPB_NVIC_IPR0_IP_2_MASK                            0xc00000
@@ -57,7 +57,7 @@
 #define PPB_NVIC_IPR0_IP_0_MASK                            0xc0
 
 #define PPB_NVIC_IPR1_IP_7_OFFSET                          30
-#define PPB_NVIC_IPR1_IP_7_MASK                            -1073741824
+#define PPB_NVIC_IPR1_IP_7_MASK                            0xc0000000
 
 #define PPB_NVIC_IPR1_IP_6_OFFSET                          22
 #define PPB_NVIC_IPR1_IP_6_MASK                            0xc00000
@@ -69,7 +69,7 @@
 #define PPB_NVIC_IPR1_IP_4_MASK                            0xc0
 
 #define PPB_NVIC_IPR2_IP_11_OFFSET                         30
-#define PPB_NVIC_IPR2_IP_11_MASK                           -1073741824
+#define PPB_NVIC_IPR2_IP_11_MASK                           0xc0000000
 
 #define PPB_NVIC_IPR2_IP_10_OFFSET                         22
 #define PPB_NVIC_IPR2_IP_10_MASK                           0xc00000
@@ -81,7 +81,7 @@
 #define PPB_NVIC_IPR2_IP_8_MASK                            0xc0
 
 #define PPB_NVIC_IPR3_IP_15_OFFSET                         30
-#define PPB_NVIC_IPR3_IP_15_MASK                           -1073741824
+#define PPB_NVIC_IPR3_IP_15_MASK                           0xc0000000
 
 #define PPB_NVIC_IPR3_IP_14_OFFSET                         22
 #define PPB_NVIC_IPR3_IP_14_MASK                           0xc00000
@@ -93,7 +93,7 @@
 #define PPB_NVIC_IPR3_IP_12_MASK                           0xc0
 
 #define PPB_NVIC_IPR4_IP_19_OFFSET                         30
-#define PPB_NVIC_IPR4_IP_19_MASK                           -1073741824
+#define PPB_NVIC_IPR4_IP_19_MASK                           0xc0000000
 
 #define PPB_NVIC_IPR4_IP_18_OFFSET                         22
 #define PPB_NVIC_IPR4_IP_18_MASK                           0xc00000
@@ -105,7 +105,7 @@
 #define PPB_NVIC_IPR4_IP_16_MASK                           0xc0
 
 #define PPB_NVIC_IPR5_IP_23_OFFSET                         30
-#define PPB_NVIC_IPR5_IP_23_MASK                           -1073741824
+#define PPB_NVIC_IPR5_IP_23_MASK                           0xc0000000
 
 #define PPB_NVIC_IPR5_IP_22_OFFSET                         22
 #define PPB_NVIC_IPR5_IP_22_MASK                           0xc00000
@@ -117,7 +117,7 @@
 #define PPB_NVIC_IPR5_IP_20_MASK                           0xc0
 
 #define PPB_NVIC_IPR6_IP_27_OFFSET                         30
-#define PPB_NVIC_IPR6_IP_27_MASK                           -1073741824
+#define PPB_NVIC_IPR6_IP_27_MASK                           0xc0000000
 
 #define PPB_NVIC_IPR6_IP_26_OFFSET                         22
 #define PPB_NVIC_IPR6_IP_26_MASK                           0xc00000
@@ -129,7 +129,7 @@
 #define PPB_NVIC_IPR6_IP_24_MASK                           0xc0
 
 #define PPB_NVIC_IPR7_IP_31_OFFSET                         30
-#define PPB_NVIC_IPR7_IP_31_MASK                           -1073741824
+#define PPB_NVIC_IPR7_IP_31_MASK                           0xc0000000
 
 #define PPB_NVIC_IPR7_IP_30_OFFSET                         22
 #define PPB_NVIC_IPR7_IP_30_MASK                           0xc00000
@@ -141,7 +141,7 @@
 #define PPB_NVIC_IPR7_IP_28_MASK                           0xc0
 
 #define PPB_CPUID_IMPLEMENTER_OFFSET                       24
-#define PPB_CPUID_IMPLEMENTER_MASK                         -16777216
+#define PPB_CPUID_IMPLEMENTER_MASK                         0xff000000
 
 #define PPB_CPUID_VARIANT_OFFSET                           20
 #define PPB_CPUID_VARIANT_MASK                             0xf00000
@@ -156,7 +156,7 @@
 #define PPB_CPUID_REVISION_MASK                            0xf
 
 #define PPB_ICSR_NMIPENDSET_OFFSET                         31
-#define PPB_ICSR_NMIPENDSET_MASK                           -2147483648
+#define PPB_ICSR_NMIPENDSET_MASK                           0x80000000
 
 #define PPB_ICSR_PENDSVSET_OFFSET                          28
 #define PPB_ICSR_PENDSVSET_MASK                            0x10000000
@@ -183,10 +183,10 @@
 #define PPB_ICSR_VECTACTIVE_MASK                           0x1ff
 
 #define PPB_VTOR_TBLOFF_OFFSET                             8
-#define PPB_VTOR_TBLOFF_MASK                               -256
+#define PPB_VTOR_TBLOFF_MASK                               0xffffff00
 
 #define PPB_AIRCR_VECTKEY_OFFSET                           16
-#define PPB_AIRCR_VECTKEY_MASK                             -65536
+#define PPB_AIRCR_VECTKEY_MASK                             0xffff0000
 
 #define PPB_AIRCR_ENDIANESS_OFFSET                         15
 #define PPB_AIRCR_ENDIANESS_MASK                           0x8000
@@ -213,10 +213,10 @@
 #define PPB_CCR_UNALIGN_TRP_MASK                           8
 
 #define PPB_SHPR2_PRI_11_OFFSET                            30
-#define PPB_SHPR2_PRI_11_MASK                              -1073741824
+#define PPB_SHPR2_PRI_11_MASK                              0xc0000000
 
 #define PPB_SHPR3_PRI_15_OFFSET                            30
-#define PPB_SHPR3_PRI_15_MASK                              -1073741824
+#define PPB_SHPR3_PRI_15_MASK                              0xc0000000
 
 #define PPB_SHPR3_PRI_14_OFFSET                            22
 #define PPB_SHPR3_PRI_14_MASK                              0xc00000
@@ -246,7 +246,7 @@
 #define PPB_MPU_RNR_REGION_MASK                            0xf
 
 #define PPB_MPU_RBAR_ADDR_OFFSET                           8
-#define PPB_MPU_RBAR_ADDR_MASK                             -256
+#define PPB_MPU_RBAR_ADDR_MASK                             0xffffff00
 
 #define PPB_MPU_RBAR_VALID_OFFSET                          4
 #define PPB_MPU_RBAR_VALID_MASK                            0x10
@@ -255,7 +255,7 @@
 #define PPB_MPU_RBAR_REGION_MASK                           0xf
 
 #define PPB_MPU_RASR_ATTRS_OFFSET                          16
-#define PPB_MPU_RASR_ATTRS_MASK                            -65536
+#define PPB_MPU_RASR_ATTRS_MASK                            0xffff0000
 
 #define PPB_MPU_RASR_SRD_OFFSET                            8
 #define PPB_MPU_RASR_SRD_MASK                              0xff00

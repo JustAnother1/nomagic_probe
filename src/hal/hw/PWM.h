@@ -42,7 +42,7 @@
 #define PWM_CH0_CTR_CH0_CTR_MASK                           0xffff
 
 #define PWM_CH0_CC_B_OFFSET                                16
-#define PWM_CH0_CC_B_MASK                                  -65536
+#define PWM_CH0_CC_B_MASK                                  0xffff0000
 
 #define PWM_CH0_CC_A_OFFSET                                0
 #define PWM_CH0_CC_A_MASK                                  0xffff
@@ -85,7 +85,7 @@
 #define PWM_CH1_CTR_CH1_CTR_MASK                           0xffff
 
 #define PWM_CH1_CC_B_OFFSET                                16
-#define PWM_CH1_CC_B_MASK                                  -65536
+#define PWM_CH1_CC_B_MASK                                  0xffff0000
 
 #define PWM_CH1_CC_A_OFFSET                                0
 #define PWM_CH1_CC_A_MASK                                  0xffff
@@ -128,7 +128,7 @@
 #define PWM_CH2_CTR_CH2_CTR_MASK                           0xffff
 
 #define PWM_CH2_CC_B_OFFSET                                16
-#define PWM_CH2_CC_B_MASK                                  -65536
+#define PWM_CH2_CC_B_MASK                                  0xffff0000
 
 #define PWM_CH2_CC_A_OFFSET                                0
 #define PWM_CH2_CC_A_MASK                                  0xffff
@@ -171,7 +171,7 @@
 #define PWM_CH3_CTR_CH3_CTR_MASK                           0xffff
 
 #define PWM_CH3_CC_B_OFFSET                                16
-#define PWM_CH3_CC_B_MASK                                  -65536
+#define PWM_CH3_CC_B_MASK                                  0xffff0000
 
 #define PWM_CH3_CC_A_OFFSET                                0
 #define PWM_CH3_CC_A_MASK                                  0xffff
@@ -214,7 +214,7 @@
 #define PWM_CH4_CTR_CH4_CTR_MASK                           0xffff
 
 #define PWM_CH4_CC_B_OFFSET                                16
-#define PWM_CH4_CC_B_MASK                                  -65536
+#define PWM_CH4_CC_B_MASK                                  0xffff0000
 
 #define PWM_CH4_CC_A_OFFSET                                0
 #define PWM_CH4_CC_A_MASK                                  0xffff
@@ -257,7 +257,7 @@
 #define PWM_CH5_CTR_CH5_CTR_MASK                           0xffff
 
 #define PWM_CH5_CC_B_OFFSET                                16
-#define PWM_CH5_CC_B_MASK                                  -65536
+#define PWM_CH5_CC_B_MASK                                  0xffff0000
 
 #define PWM_CH5_CC_A_OFFSET                                0
 #define PWM_CH5_CC_A_MASK                                  0xffff
@@ -300,7 +300,7 @@
 #define PWM_CH6_CTR_CH6_CTR_MASK                           0xffff
 
 #define PWM_CH6_CC_B_OFFSET                                16
-#define PWM_CH6_CC_B_MASK                                  -65536
+#define PWM_CH6_CC_B_MASK                                  0xffff0000
 
 #define PWM_CH6_CC_A_OFFSET                                0
 #define PWM_CH6_CC_A_MASK                                  0xffff
@@ -343,7 +343,7 @@
 #define PWM_CH7_CTR_CH7_CTR_MASK                           0xffff
 
 #define PWM_CH7_CC_B_OFFSET                                16
-#define PWM_CH7_CC_B_MASK                                  -65536
+#define PWM_CH7_CC_B_MASK                                  0xffff0000
 
 #define PWM_CH7_CC_A_OFFSET                                0
 #define PWM_CH7_CC_A_MASK                                  0xffff

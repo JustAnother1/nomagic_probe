@@ -559,7 +559,7 @@
 #define I2C1_IC_SDA_HOLD_IC_SDA_TX_HOLD_MASK               0xffff
 
 #define I2C1_IC_TX_ABRT_SOURCE_TX_FLUSH_CNT_OFFSET         23
-#define I2C1_IC_TX_ABRT_SOURCE_TX_FLUSH_CNT_MASK           -8388608
+#define I2C1_IC_TX_ABRT_SOURCE_TX_FLUSH_CNT_MASK           0xff800000
 
 #define I2C1_IC_TX_ABRT_SOURCE_ABRT_USER_ABRT_OFFSET       16
 #define I2C1_IC_TX_ABRT_SOURCE_ABRT_USER_ABRT_MASK         0x10000
@@ -721,10 +721,10 @@
 #define I2C1_IC_COMP_PARAM_1_APB_DATA_WIDTH_MASK           3
 
 #define I2C1_IC_COMP_VERSION_IC_COMP_VERSION_OFFSET        0
-#define I2C1_IC_COMP_VERSION_IC_COMP_VERSION_MASK          0x7ffffffe
+#define I2C1_IC_COMP_VERSION_IC_COMP_VERSION_MASK          0xffffffff
 
 #define I2C1_IC_COMP_TYPE_IC_COMP_TYPE_OFFSET              0
-#define I2C1_IC_COMP_TYPE_IC_COMP_TYPE_MASK                0x7ffffffe
+#define I2C1_IC_COMP_TYPE_IC_COMP_TYPE_MASK                0xffffffff
 
 
 typedef struct

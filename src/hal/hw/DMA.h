@@ -9,7 +9,7 @@
 
 
 #define DMA_CH0_CTRL_TRIG_AHB_ERROR_OFFSET                 31
-#define DMA_CH0_CTRL_TRIG_AHB_ERROR_MASK                   -2147483648
+#define DMA_CH0_CTRL_TRIG_AHB_ERROR_MASK                   0x80000000
 
 #define DMA_CH0_CTRL_TRIG_READ_ERROR_OFFSET                30
 #define DMA_CH0_CTRL_TRIG_READ_ERROR_MASK                  0x40000000
@@ -66,7 +66,7 @@
 #define DMA_CH0_CTRL_TRIG_EN_MASK                          1
 
 #define DMA_CH1_CTRL_TRIG_AHB_ERROR_OFFSET                 31
-#define DMA_CH1_CTRL_TRIG_AHB_ERROR_MASK                   -2147483648
+#define DMA_CH1_CTRL_TRIG_AHB_ERROR_MASK                   0x80000000
 
 #define DMA_CH1_CTRL_TRIG_READ_ERROR_OFFSET                30
 #define DMA_CH1_CTRL_TRIG_READ_ERROR_MASK                  0x40000000
@@ -123,7 +123,7 @@
 #define DMA_CH1_CTRL_TRIG_EN_MASK                          1
 
 #define DMA_CH2_CTRL_TRIG_AHB_ERROR_OFFSET                 31
-#define DMA_CH2_CTRL_TRIG_AHB_ERROR_MASK                   -2147483648
+#define DMA_CH2_CTRL_TRIG_AHB_ERROR_MASK                   0x80000000
 
 #define DMA_CH2_CTRL_TRIG_READ_ERROR_OFFSET                30
 #define DMA_CH2_CTRL_TRIG_READ_ERROR_MASK                  0x40000000
@@ -180,7 +180,7 @@
 #define DMA_CH2_CTRL_TRIG_EN_MASK                          1
 
 #define DMA_CH3_CTRL_TRIG_AHB_ERROR_OFFSET                 31
-#define DMA_CH3_CTRL_TRIG_AHB_ERROR_MASK                   -2147483648
+#define DMA_CH3_CTRL_TRIG_AHB_ERROR_MASK                   0x80000000
 
 #define DMA_CH3_CTRL_TRIG_READ_ERROR_OFFSET                30
 #define DMA_CH3_CTRL_TRIG_READ_ERROR_MASK                  0x40000000
@@ -237,7 +237,7 @@
 #define DMA_CH3_CTRL_TRIG_EN_MASK                          1
 
 #define DMA_CH4_CTRL_TRIG_AHB_ERROR_OFFSET                 31
-#define DMA_CH4_CTRL_TRIG_AHB_ERROR_MASK                   -2147483648
+#define DMA_CH4_CTRL_TRIG_AHB_ERROR_MASK                   0x80000000
 
 #define DMA_CH4_CTRL_TRIG_READ_ERROR_OFFSET                30
 #define DMA_CH4_CTRL_TRIG_READ_ERROR_MASK                  0x40000000
@@ -294,7 +294,7 @@
 #define DMA_CH4_CTRL_TRIG_EN_MASK                          1
 
 #define DMA_CH5_CTRL_TRIG_AHB_ERROR_OFFSET                 31
-#define DMA_CH5_CTRL_TRIG_AHB_ERROR_MASK                   -2147483648
+#define DMA_CH5_CTRL_TRIG_AHB_ERROR_MASK                   0x80000000
 
 #define DMA_CH5_CTRL_TRIG_READ_ERROR_OFFSET                30
 #define DMA_CH5_CTRL_TRIG_READ_ERROR_MASK                  0x40000000
@@ -351,7 +351,7 @@
 #define DMA_CH5_CTRL_TRIG_EN_MASK                          1
 
 #define DMA_CH6_CTRL_TRIG_AHB_ERROR_OFFSET                 31
-#define DMA_CH6_CTRL_TRIG_AHB_ERROR_MASK                   -2147483648
+#define DMA_CH6_CTRL_TRIG_AHB_ERROR_MASK                   0x80000000
 
 #define DMA_CH6_CTRL_TRIG_READ_ERROR_OFFSET                30
 #define DMA_CH6_CTRL_TRIG_READ_ERROR_MASK                  0x40000000
@@ -408,7 +408,7 @@
 #define DMA_CH6_CTRL_TRIG_EN_MASK                          1
 
 #define DMA_CH7_CTRL_TRIG_AHB_ERROR_OFFSET                 31
-#define DMA_CH7_CTRL_TRIG_AHB_ERROR_MASK                   -2147483648
+#define DMA_CH7_CTRL_TRIG_AHB_ERROR_MASK                   0x80000000
 
 #define DMA_CH7_CTRL_TRIG_READ_ERROR_OFFSET                30
 #define DMA_CH7_CTRL_TRIG_READ_ERROR_MASK                  0x40000000
@@ -465,7 +465,7 @@
 #define DMA_CH7_CTRL_TRIG_EN_MASK                          1
 
 #define DMA_CH8_CTRL_TRIG_AHB_ERROR_OFFSET                 31
-#define DMA_CH8_CTRL_TRIG_AHB_ERROR_MASK                   -2147483648
+#define DMA_CH8_CTRL_TRIG_AHB_ERROR_MASK                   0x80000000
 
 #define DMA_CH8_CTRL_TRIG_READ_ERROR_OFFSET                30
 #define DMA_CH8_CTRL_TRIG_READ_ERROR_MASK                  0x40000000
@@ -522,7 +522,7 @@
 #define DMA_CH8_CTRL_TRIG_EN_MASK                          1
 
 #define DMA_CH9_CTRL_TRIG_AHB_ERROR_OFFSET                 31
-#define DMA_CH9_CTRL_TRIG_AHB_ERROR_MASK                   -2147483648
+#define DMA_CH9_CTRL_TRIG_AHB_ERROR_MASK                   0x80000000
 
 #define DMA_CH9_CTRL_TRIG_READ_ERROR_OFFSET                30
 #define DMA_CH9_CTRL_TRIG_READ_ERROR_MASK                  0x40000000
@@ -579,7 +579,7 @@
 #define DMA_CH9_CTRL_TRIG_EN_MASK                          1
 
 #define DMA_CH10_CTRL_TRIG_AHB_ERROR_OFFSET                31
-#define DMA_CH10_CTRL_TRIG_AHB_ERROR_MASK                  -2147483648
+#define DMA_CH10_CTRL_TRIG_AHB_ERROR_MASK                  0x80000000
 
 #define DMA_CH10_CTRL_TRIG_READ_ERROR_OFFSET               30
 #define DMA_CH10_CTRL_TRIG_READ_ERROR_MASK                 0x40000000
@@ -636,7 +636,7 @@
 #define DMA_CH10_CTRL_TRIG_EN_MASK                         1
 
 #define DMA_CH11_CTRL_TRIG_AHB_ERROR_OFFSET                31
-#define DMA_CH11_CTRL_TRIG_AHB_ERROR_MASK                  -2147483648
+#define DMA_CH11_CTRL_TRIG_AHB_ERROR_MASK                  0x80000000
 
 #define DMA_CH11_CTRL_TRIG_READ_ERROR_OFFSET               30
 #define DMA_CH11_CTRL_TRIG_READ_ERROR_MASK                 0x40000000
@@ -714,25 +714,25 @@
 #define DMA_INTS1_INTS1_MASK                               0xffff
 
 #define DMA_TIMER0_X_OFFSET                                16
-#define DMA_TIMER0_X_MASK                                  -65536
+#define DMA_TIMER0_X_MASK                                  0xffff0000
 
 #define DMA_TIMER0_Y_OFFSET                                0
 #define DMA_TIMER0_Y_MASK                                  0xffff
 
 #define DMA_TIMER1_X_OFFSET                                16
-#define DMA_TIMER1_X_MASK                                  -65536
+#define DMA_TIMER1_X_MASK                                  0xffff0000
 
 #define DMA_TIMER1_Y_OFFSET                                0
 #define DMA_TIMER1_Y_MASK                                  0xffff
 
 #define DMA_TIMER2_X_OFFSET                                16
-#define DMA_TIMER2_X_MASK                                  -65536
+#define DMA_TIMER2_X_MASK                                  0xffff0000
 
 #define DMA_TIMER2_Y_OFFSET                                0
 #define DMA_TIMER2_Y_MASK                                  0xffff
 
 #define DMA_TIMER3_X_OFFSET                                16
-#define DMA_TIMER3_X_MASK                                  -65536
+#define DMA_TIMER3_X_MASK                                  0xffff0000
 
 #define DMA_TIMER3_Y_OFFSET                                0
 #define DMA_TIMER3_Y_MASK                                  0xffff

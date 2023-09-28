@@ -19,7 +19,7 @@
 #define XOSC_CTRL_FREQ_RANGE_RESERVED_3                    0xaa3
 
 #define XOSC_STATUS_STABLE_OFFSET                          31
-#define XOSC_STATUS_STABLE_MASK                            -2147483648
+#define XOSC_STATUS_STABLE_MASK                            0x80000000
 
 #define XOSC_STATUS_BADWRITE_OFFSET                        24
 #define XOSC_STATUS_BADWRITE_MASK                          0x1000000

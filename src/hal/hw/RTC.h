@@ -68,7 +68,7 @@
 #define RTC_IRQ_SETUP_0_DAY_MASK                           0x1f
 
 #define RTC_IRQ_SETUP_1_DOTW_ENA_OFFSET                    31
-#define RTC_IRQ_SETUP_1_DOTW_ENA_MASK                      -2147483648
+#define RTC_IRQ_SETUP_1_DOTW_ENA_MASK                      0x80000000
 
 #define RTC_IRQ_SETUP_1_HOUR_ENA_OFFSET                    30
 #define RTC_IRQ_SETUP_1_HOUR_ENA_MASK                      0x40000000

@@ -232,19 +232,19 @@
 #define XIP_SSI_DMARDLR_DMARDL_MASK                        0xff
 
 #define XIP_SSI_IDR_IDCODE_OFFSET                          0
-#define XIP_SSI_IDR_IDCODE_MASK                            0x7ffffffe
+#define XIP_SSI_IDR_IDCODE_MASK                            0xffffffff
 
 #define XIP_SSI_SSI_VERSION_ID_SSI_COMP_VERSION_OFFSET     0
-#define XIP_SSI_SSI_VERSION_ID_SSI_COMP_VERSION_MASK       0x7ffffffe
+#define XIP_SSI_SSI_VERSION_ID_SSI_COMP_VERSION_MASK       0xffffffff
 
 #define XIP_SSI_DR0_DR_OFFSET                              0
-#define XIP_SSI_DR0_DR_MASK                                0x7ffffffe
+#define XIP_SSI_DR0_DR_MASK                                0xffffffff
 
 #define XIP_SSI_RX_SAMPLE_DLY_RSD_OFFSET                   0
 #define XIP_SSI_RX_SAMPLE_DLY_RSD_MASK                     0xff
 
 #define XIP_SSI_SPI_CTRLR0_XIP_CMD_OFFSET                  24
-#define XIP_SSI_SPI_CTRLR0_XIP_CMD_MASK                    -16777216
+#define XIP_SSI_SPI_CTRLR0_XIP_CMD_MASK                    0xff000000
 
 #define XIP_SSI_SPI_CTRLR0_SPI_RXDS_EN_OFFSET              18
 #define XIP_SSI_SPI_CTRLR0_SPI_RXDS_EN_MASK                0x40000
