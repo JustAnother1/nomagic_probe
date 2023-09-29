@@ -164,18 +164,15 @@ def update_from_hex_char( val, offset):
         data[str(0 + offset)] = True       
 
 def parseHex(hexStr):
-    if (hexStr[0] != '0') or (hexStr[1] != 'x'):
-        invalidate_data()
-    else:
-       update_from_hex_char(hexStr[2], 28)
-       update_from_hex_char(hexStr[3], 24)
-       update_from_hex_char(hexStr[4], 20)
-       update_from_hex_char(hexStr[5], 16)
-       update_from_hex_char(hexStr[6], 12)
-       update_from_hex_char(hexStr[7], 8)
-       update_from_hex_char(hexStr[8], 4)
-       update_from_hex_char(hexStr[9], 0)
-       
+    invalidate_data()
+    if (hexStr[0] == '0') and (hexStr[1] == 'x'):
+        if(len(hexStr) <= 10):
+            max = (len(hexStr) -3) * 4
+            i = 2
+            while i < len(hexStr):
+                update_from_hex_char(hexStr[i], max - (i-2) * 4)
+                i = i + 1
+
 
 def update_data():
     update_bit_butons()
