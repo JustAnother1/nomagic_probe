@@ -34,16 +34,19 @@ void watchdog_disable(void)
 
 void watchdog_enable(void)
 {
-    RESETS->RESET &= ~0x200000ul;  // enable TIMER
+    RESETS->RESET &= ~((uint32_t)(1<< RESETS_RESET_TIMER_OFFSET));  // enable TIMER
     TIMER->DBGPAUSE = 0;
-    WATCHDOG->CTRL = 0; // reaload_value| 0x6000000; // disable + stop when debugging
-    WATCHDOG->TICK = 12 + 0x200;  // 12 MHz -> 12 ticks per µs, 0x200 = Enable
+    WATCHDOG->CTRL = 0;
+    WATCHDOG->TICK = 12 + (1<< WATCHDOG_TICK_ENABLE_OFFSET);  // 12 MHz -> 12 ticks per µs, + Enable
     watchdog_feed();
     PSM->WDSEL = 0x1ffff; // reset everything
 #ifdef DISABLE_WATCHDOG_FOR_DEBUG
-    WATCHDOG->CTRL = reaload_value | 0x46000000; // enable + stop when debugging
+    WATCHDOG->CTRL = reaload_value
+                     | (1 << WATCHDOG_CTRL_ENABLE_OFFSET)
+                     | (1 << WATCHDOG_CTRL_PAUSE_DBG0_OFFSET)
+                     | (1 << WATCHDOG_CTRL_PAUSE_DBG1_OFFSET); // enable + stop when debugging
 #else
-    WATCHDOG->CTRL = reaload_value | 0x40000000; // enable
+    WATCHDOG->CTRL = reaload_value | (1<< WATCHDOG_CTRL_ENABLE_OFFSET); // enable
 #endif
 }
 

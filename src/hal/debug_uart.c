@@ -21,9 +21,6 @@
 #include <hal/hw/PSM.h>
 #include "startup.h"
 
-#define RECEIVE_BUFFER_SIZE      100
-#define SEND_BUFFER_SIZE         500
-
 uint8_t recv_buf[RECEIVE_BUFFER_SIZE];
 uint8_t send_buf[SEND_BUFFER_SIZE];
 volatile uint32_t recv_read_pos;
@@ -43,35 +40,41 @@ void debug_uart_initialize(void)
     send_read_pos = 0;
     send_write_pos = 0;
 
-    RESETS->RESET = RESETS->RESET & ~0x20lu; // take IO_BANK0 out of Reset
-    PSM->FRCE_ON = PSM->FRCE_ON | 0x400; // make sure that SIO is powered on
+    RESETS->RESET = RESETS->RESET & ~((uint32_t)(1<< RESETS_RESET_IO_BANK0_OFFSET)); // take IO_BANK0 out of Reset
+    PSM->FRCE_ON = PSM->FRCE_ON | (1<<PSM_FRCE_ON_SIO_OFFSET); // make sure that SIO is powered on
     // take UART0 out of Reset
-    RESETS->RESET = RESETS->RESET & ~(1ul << 18);  // sysCFG
-    while (0 == ((1 << 18) & RESETS->RESET_DONE))
+    RESETS->RESET = RESETS->RESET & ~(1ul << RESETS_RESET_SYSCFG_OFFSET);
+    while (0 == ((1 << RESETS_RESET_SYSCFG_OFFSET) & RESETS->RESET_DONE))
     {
         ;
     }
 
-    RESETS->RESET = RESETS->RESET & ~(1ul << 22);
+    RESETS->RESET = RESETS->RESET & ~(1ul << RESETS_RESET_UART0_OFFSET);
     // wait for UART0 to come out of Reset
-    while (0 == ((1 << 22) & RESETS->RESET_DONE))
+    while (0 == ((1 << RESETS_RESET_UART0_OFFSET) & RESETS->RESET_DONE))
     {
          ;
     }
     // configure GPIO Pins
-    IO_BANK0->GPIO16_CTRL = 0x2; // TX
-    IO_BANK0->GPIO17_CTRL = 0x2; // RX
+    IO_BANK0->GPIO16_CTRL = IO_BANK0_GPIO16_CTRL_FUNCSEL_uart0_tx; // TX
+    IO_BANK0->GPIO17_CTRL = IO_BANK0_GPIO17_CTRL_FUNCSEL_uart0_rx; // RX
 
     // UART0 configuration
     // baud rate:
-    UART0->UARTIBRD = 67;
-    UART0->UARTFBRD = 52;
+    UART0->UARTIBRD = 67; // integer
+    UART0->UARTFBRD = 52; // fraction
     // FIFO enabled + 8,n,1
-    UART0->UARTLCR_H = 0x70;
-    UART0->UARTIFLS = 4;  // FIFO Level trigger IRQ
+    UART0->UARTLCR_H = (1 << UART0_UARTLCR_H_FEN_OFFSET) // FIFO enabled
+                     | (3 << UART0_UARTLCR_H_WLEN_OFFSET);  // Word length = 8 bit
+    // FIFO Level trigger IRQ
+    UART0->UARTIFLS = (0 << UART0_UARTIFLS_RXIFLSEL_OFFSET)  // trigger when RX FIFO is 1/8 full
+                    | (4 << UART0_UARTIFLS_TXIFLSEL_OFFSET); // trigger when TX FIFO is 7/8 full
     UART0->UARTIMSC = 0x7fe; // enable all IRQs (but not Ring Indication)
-    UART0->UARTLCR_H = 0x60;
-    UART0->UARTCR = 0x301; // UART mode + RX+TX enabled
+    UART0->UARTLCR_H = (3 << UART0_UARTLCR_H_WLEN_OFFSET);  // Word length = 8 bit
+    // UART mode + RX+TX enabled
+    UART0->UARTCR = (1 << UART0_UARTCR_RXE_OFFSET)
+            | (1 << UART0_UARTCR_TXE_OFFSET)
+            | (1 << UART0_UARTCR_UARTEN_OFFSET);
 
     is_sending = false;
     NVIC_EnableIRQ(UART0_IRQ_NUMBER, UART0_IRQ_PRIORITY);
@@ -242,52 +245,52 @@ static void receive_a_byte(void)
 void UART0_IRQ(void)
 {
     uint32_t irq = UART0->UARTMIS;
-    if (0 != (irq & 0x400)) // Overrun error
+    if (0 != (irq & (1 << UART0_UARTRIS_OERIS_OFFSET))) // Overrun error
     {
-        UART0->UARTICR = 0x400; // clear Interrupt
+        UART0->UARTICR = (1 << UART0_UARTRIS_OERIS_OFFSET); // clear Interrupt
     }
-    if (0 != (irq & 0x200)) // Break error
+    if (0 != (irq & (1 << UART0_UARTRIS_BERIS_OFFSET))) // Break error
     {
-        UART0->UARTICR = 0x200; // clear Interrupt
+        UART0->UARTICR = (1 << UART0_UARTRIS_BERIS_OFFSET); // clear Interrupt
     }
-    if (0 != (irq & 0x100)) // Parity error
+    if (0 != (irq & (1 << UART0_UARTRIS_PERIS_OFFSET))) // Parity error
     {
-        UART0->UARTICR = 0x100; // clear Interrupt
+        UART0->UARTICR = (1 << UART0_UARTRIS_PERIS_OFFSET); // clear Interrupt
     }
-    if (0 != (irq & 0x80)) // Framing error
+    if (0 != (irq & (1 << UART0_UARTRIS_FERIS_OFFSET))) // Framing error
     {
-        UART0->UARTICR = 0x80; // clear Interrupt
+        UART0->UARTICR = (1 << UART0_UARTRIS_FERIS_OFFSET); // clear Interrupt
     }
-    if (0 != (irq & 0x40)) // Receive timeout
+    if (0 != (irq & (1 << UART0_UARTRIS_RTRIS_OFFSET))) // Receive timeout
     {
-        UART0->UARTICR = 0x40; // clear Interrupt
+        UART0->UARTICR = (1 << UART0_UARTRIS_RTRIS_OFFSET); // clear Interrupt
     }
-    if (0 != (irq & 0x20)) {  // Transmit
+    if (0 != (irq & (1 << UART0_UARTRIS_TXRIS_OFFSET))) {  // Transmit
         // we can send a byte
         is_sending = false;
-    	UART0->UARTICR = 0x20; // clear Interrupt
+    	UART0->UARTICR = (1 << UART0_UARTRIS_TXRIS_OFFSET); // clear Interrupt
     }
-    if (0 != (irq & 0x10)) // Receive
+    if (0 != (irq & (1 << UART0_UARTRIS_RXRIS_OFFSET))) // Receive
     {
         // we received a byte
         receive_a_byte();
-        UART0->UARTICR = 0x10; // clear Interrupt
+        UART0->UARTICR = (1 << UART0_UARTRIS_RXRIS_OFFSET); // clear Interrupt
     }
-    if (0 != (irq & 0x8)) // DSR
+    if (0 != (irq & (1 << UART0_UARTRIS_DSRRMIS_OFFSET))) // DSR
     {
-        UART0->UARTICR = 0x8; // clear Interrupt
+        UART0->UARTICR = (1 << UART0_UARTRIS_DSRRMIS_OFFSET); // clear Interrupt
     }
-    if (0 != (irq & 0x4)) // DCD
+    if (0 != (irq & (1 << UART0_UARTRIS_DCDRMIS_OFFSET))) // DCD
     {
-        UART0->UARTICR = 0x4; // clear Interrupt
+        UART0->UARTICR = (1 << UART0_UARTRIS_DCDRMIS_OFFSET); // clear Interrupt
     }
-    if (0 != (irq & 0x2)) // CTS
+    if (0 != (irq & (1 << UART0_UARTRIS_CTSRMIS_OFFSET))) // CTS
     {
-        UART0->UARTICR = 0x2; // clear Interrupt
+        UART0->UARTICR = (1 << UART0_UARTRIS_CTSRMIS_OFFSET); // clear Interrupt
     }
-    if (0 != (irq & 0x1)) // RI
+    if (0 != (irq & (1 << UART0_UARTRIS_RIRMIS_OFFSET))) // RI
     {
-        UART0->UARTICR = 0x1; // clear Interrupt
+        UART0->UARTICR = (1 << UART0_UARTRIS_RIRMIS_OFFSET); // clear Interrupt
     }
 }
 
