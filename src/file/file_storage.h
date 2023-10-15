@@ -18,9 +18,9 @@
 
 #include <stdint.h>
 
+// this is the API used by the USB mass storage device
+
 #define BLOCK_SIZE        512
-#define NUM_FLASH_BLOCKS  2043
-#define MAX_FIRMWARE_SIZE (1024*1024)
 
 uint32_t file_storage_get_block_count(void);
 uint16_t file_storage_getblock_size(void);

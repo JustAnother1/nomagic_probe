@@ -18,27 +18,11 @@
 #include "file_storage.h"
 #include "faked_disk.h"
 #include "cfg/cli_cfg.h"
-
-
-#define BLOCK_COUNT 2048
-/*
- * XIP Address alias:
- 0x10... XIP access, cacheable, allocating - Normal cache operation
- 0x11... XIP access, cacheable, non-allocating - Check for hit, don’t update cache on miss
- 0x12... XIP access, non-cacheable, allocating - Don’t check for hit, always update cache
- 0x13... XIP access, non-cacheable, non-allocating - Bypass cache completely
- 0x15... Use XIP cache as SRAM bank, mirrored across entire segment
-*/
-
-#define DATA_FLASH_BASE_ADDRESS (0x13000000 + MAX_FIRMWARE_SIZE)
-
-
-static void flash_write(uint32_t block, uint32_t offset, uint8_t* buffer, uint32_t bufsize);
-
+#include "file_system.h"
 
 uint32_t file_storage_get_block_count(void)
 {
-    return BLOCK_COUNT;
+    return file_system_block_count();
 }
 
 uint16_t file_storage_getblock_size(void)
@@ -54,7 +38,7 @@ int32_t  file_storage_read(uint32_t block, uint32_t offset, uint8_t* buffer, uin
         offset = offset - BLOCK_SIZE;
         block++;
     }
-    if(block >= BLOCK_COUNT)
+    if(block >= file_system_block_count())
     {
         return -1;  // read outside of disk
     }
@@ -65,17 +49,14 @@ int32_t  file_storage_read(uint32_t block, uint32_t offset, uint8_t* buffer, uin
     }
     else
     {
-        // read flash data
-        memcpy(buffer,
-               (void*)(DATA_FLASH_BASE_ADDRESS + ((block - NUM_FAKED_BLOCKS) * BLOCK_SIZE) + offset),
-               (size_t)bufsize);
-        return (int32_t)bufsize;
+        // read from file system
+        return file_system_read(block, offset, buffer, bufsize);
     }
 }
 
 int32_t  file_storage_write(uint32_t block, uint32_t offset, uint8_t* buffer, uint32_t bufsize)
 {
-    if(block >= BLOCK_COUNT)
+    if(block >= file_system_block_count())
     {
         return -1;  // write outside of disk
     }
@@ -85,17 +66,7 @@ int32_t  file_storage_write(uint32_t block, uint32_t offset, uint8_t* buffer, ui
     }
     else
     {
-        // write flash sector
-        flash_write(block - NUM_FAKED_BLOCKS, offset, buffer, bufsize);
-        return (int32_t)bufsize;
+        return file_system_write(block, offset, buffer, bufsize);
     }
 }
 
-static void flash_write(uint32_t block, uint32_t offset, uint8_t* buffer, uint32_t bufsize)
-{
-    (void)block;
-    (void)offset;
-    (void)buffer;
-    (void)bufsize;
-    // TODO flash_range_erase() flash_range_program() FLASH_PAGE_SIZE
-}

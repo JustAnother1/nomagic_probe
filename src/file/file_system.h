@@ -16,8 +16,13 @@
 #ifndef FILE_FILE_SYSTEM_H_
 #define FILE_FILE_SYSTEM_H_
 
-void file_system_init(void);
+#include <stdint.h>
 
+void file_system_init(void);
+void file_system_report(void);
+uint32_t file_system_block_count(void);
+int32_t file_system_read(uint32_t block, uint32_t offset, uint8_t* buffer, uint32_t bufsize);
+int32_t file_system_write(uint32_t block, uint32_t offset, uint8_t* buffer, uint32_t bufsize);
 
 
 #endif /* FILE_FILE_SYSTEM_H_ */
