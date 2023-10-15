@@ -29,7 +29,51 @@ Depending on the target you are building for you might need to have additionalto
 == Pinout
 
 === pico
-The pico has 20 pins (1..40) Numbered counter clock wise starting at the USB connector.
+The pico has 40 pins (1..40) Numbered counter clock wise starting at the USB connector.
+
+----
+                  +-----+
+           +-------+ USB +---------+
+   GPIO 0 -+- 1    +-----+     40 -+- Vbus
+   GPIO 1 -+- 2                39 -+- Vsys
+      Gnd -+- 3                38 -+- Gnd
+   GPIO 2 -+- 4                37 -+- 3V3_EN
+   GPIO 3 -+- 5                36 -+- 3V3(Out)
+   GPIO 4 -+- 6                35 -+- ADC-Vref
+   GPIO 5 -+- 7                34 -+- GPIO 28
+      Gnd -+- 8                33 -+- Gnd
+   GPIO 6 -+- 9                32 -+- GPIO 27
+   GPIO 7 -+- 10               31 -+- GPIO 26
+   GPIO 8 -+- 11               30 -+- Run = /Reset
+   GPIO 9 -+- 12               29 -+- GPIO 22
+      Gnd -+- 13               28 -+- Gnd
+  GPIO 10 -+- 14               27 -+- GPIO 21
+  GPIO 11 -+- 15               26 -+- GPIO 20
+  GPIO 12 -+- 16               25 -+- GPIO 19
+  GPIO 13 -+- 17               24 -+- GPIO 18
+      Gnd -+- 18               23 -+- Gnd
+  GPIO 14 -+- 19               22 -+- GPIO 17
+  GPIO 15 -+- 20     Debug     21 -+- GPIO 16
+           +-----------------------+
+                   S  G  S
+                   W  n  W
+                   C  d  D
+                   L     I
+                   K     O
+----
+
+
+Pin 2:  (GPIO 1)  SWDIR (High = from Probe to target; Low= from Target to probe)
+
+Pin 4:  (GPIO 2)  SWCLK
+
+Pin 5:  (GPIO 3)  SWDIO
+
+Pin 6:  (GPIO 4)  Target Uart TX (UART1) connect to target RT
+
+Pin 7:  (GPIO 5)  Target Uart RX (UART1) connect to target TX
+
+Pin 9:  (GPIO 6)  Run  = /Reset
 
 Pin 21: (GPIO 16) Debug Uart TX (UART0)
 
