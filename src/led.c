@@ -19,7 +19,7 @@
 #include <hal/hw/PSM.h>
 #include <hal/hw/RESETS.h>
 #include <hal/hw/SIO.h>
-#include "time_base.h"
+#include <hal/time_base.h>
 
 #define NUM_MAX_STEPS  2
 
@@ -71,7 +71,7 @@ void led_init(void)
     SIO->GPIO_OE_CLR = 1ul << 25;
     SIO->GPIO_OUT_CLR = 1ul << 25;
     PADS_BANK0->GPIO25 = 0x00000030;
-    IO_BANK0->GPIO25_CTRL = 5;
+    IO_BANK0->GPIO25_CTRL = 5;  // 5 == SIO
     SIO->GPIO_OE_SET = 1ul << 25;
 
     led_set_pattern(PATTERN_NORMAL);

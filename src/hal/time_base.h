@@ -12,8 +12,8 @@
  * with this program; if not, see <http://www.gnu.org/licenses/>
  *
  */
-#ifndef TIME_BASE_H_
-#define TIME_BASE_H_
+#ifndef HAL_TIME_BASE_H_
+#define HAL_TIME_BASE_H_
 
 #include <stdint.h>
 #include <hal/hw/TIMER.h>
@@ -28,4 +28,4 @@ static inline uint32_t time_us_32(void)
     return TIMER->TIMERAWL;
 }
 
-#endif /* TIME_BASE_H_ */
+#endif /* HAL_TIME_BASE_H_ */

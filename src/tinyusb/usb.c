@@ -36,6 +36,7 @@
  * THE SOFTWARE.
  *
  */
+#include <hal/time_base.h>
 #include "usb.h"
 #include "hal/hw/CLOCKS.h"
 #include "hal/hw/IO_BANK0.h"
@@ -44,8 +45,6 @@
 #include "hal/hw/USBCTRL_REGS.h"
 #include "hal/hw/USBCTRL_DPRAM.h"
 #include "hal/startup.h"
-#include "time_base.h"
-
 #include "usb_cdc.h"
 
 // tinyusb:
