@@ -157,6 +157,7 @@ bool cmd_flash_memory_write(uint32_t loop)
     uint32_t numBytes = (uint32_t)atoi((const char*)numBytes_str);
     uint32_t address = (uint32_t)atoi((const char*)addr_str);
 
+    address = address & 0xffffff;  // 16 MB max
     // limit length
     if(numBytes > 256)
     {
@@ -176,6 +177,13 @@ bool cmd_flash_memory_write(uint32_t loop)
     flash_write_block(address, data, numBytes);
     diff = TIMER->TIMERAWL - diff;
     debug_line("operation took %lu µs", diff);
+    return true; // we are done
+}
+
+bool cmd_flash_reset(uint32_t loop)
+{
+    (void) loop;
+    flash_reset();
     return true; // we are done
 }
 

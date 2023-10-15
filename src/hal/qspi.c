@@ -23,6 +23,7 @@
 #include "hal/hw/XIP_CTRL.h"
 #include "hal/hw/XIP_SSI.h"
 #include "hal/debug_uart.h"
+#include "hal/time_base.h"
 
 void XIP_IRQ(void) __attribute__ ((interrupt ("IRQ")));
 
@@ -33,18 +34,16 @@ void qspi_init(void)
 {
     volatile uint32_t help = 0;
     (void)help;
-/*
+
     // reset QSPI
     RESETS->RESET = RESETS->RESET | (1 << RESETS_RESET_IO_QSPI_OFFSET) | (1 << RESETS_RESET_PADS_QSPI_OFFSET);
-    PSM->FRCE_OFF =  PSM->FRCE_OFF | (1 << PSM_FRCE_OFF_XIP_OFFSET);
 
     qspi_active = false;
 
     // power on QSPI
-    PSM->FRCE_OFF =  PSM->FRCE_OFF & ~(uint32_t)(1 << PSM_FRCE_OFF_XIP_OFFSET);
     PSM->FRCE_ON =  PSM->FRCE_ON | (1 << PSM_FRCE_ON_XIP_OFFSET);
     RESETS->RESET = RESETS->RESET &~(uint32_t)( (1 << RESETS_RESET_IO_QSPI_OFFSET) | (1 << RESETS_RESET_PADS_QSPI_OFFSET));
-*/
+
     XIP_SSI->SSIENR = 0;  // disabled
 
     PADS_QSPI->VOLTAGE_SELECT = 0;  // 3.3V
@@ -55,18 +54,22 @@ void qspi_init(void)
                               | (1 << PADS_QSPI_GPIO_QSPI_SCLK_SLEWFAST_OFFSET);  // slew rate fast
     PADS_QSPI->GPIO_QSPI_SD0 = (1<< PADS_QSPI_GPIO_QSPI_SD0_IE_OFFSET)  // Input enable
                               | (PADS_QSPI_GPIO_QSPI_SD0_DRIVE_4mA << PADS_QSPI_GPIO_QSPI_SD0_DRIVE_OFFSET)
+                              | (1 << PADS_QSPI_GPIO_QSPI_SD0_PDE_OFFSET)  // Pull down enable
                               | (1 << PADS_QSPI_GPIO_QSPI_SD0_SCHMITT_OFFSET)  // enable schmitt trigger
                               | (1 << PADS_QSPI_GPIO_QSPI_SD0_SLEWFAST_OFFSET);  // slew rate fast
     PADS_QSPI->GPIO_QSPI_SD1 = (1<< PADS_QSPI_GPIO_QSPI_SD1_IE_OFFSET)  // Input enable
                               | (PADS_QSPI_GPIO_QSPI_SD1_DRIVE_4mA << PADS_QSPI_GPIO_QSPI_SD1_DRIVE_OFFSET)
+                              | (1 << PADS_QSPI_GPIO_QSPI_SD1_PDE_OFFSET)  // Pull down enable
                               | (1 << PADS_QSPI_GPIO_QSPI_SD1_SCHMITT_OFFSET)  // enable schmitt trigger
                               | (1 << PADS_QSPI_GPIO_QSPI_SD1_SLEWFAST_OFFSET);  // slew rate fast
     PADS_QSPI->GPIO_QSPI_SD2 =  (1<< PADS_QSPI_GPIO_QSPI_SD2_IE_OFFSET)  // Input enable
                               | (PADS_QSPI_GPIO_QSPI_SD2_DRIVE_4mA << PADS_QSPI_GPIO_QSPI_SD2_DRIVE_OFFSET)
+                              | (1 << PADS_QSPI_GPIO_QSPI_SD2_PDE_OFFSET)  // Pull down enable
                               | (1 << PADS_QSPI_GPIO_QSPI_SD2_SCHMITT_OFFSET)  // enable schmitt trigger
                               | (1 << PADS_QSPI_GPIO_QSPI_SD2_SLEWFAST_OFFSET);  // slew rate fast
     PADS_QSPI->GPIO_QSPI_SD3 =  (1<< PADS_QSPI_GPIO_QSPI_SD3_IE_OFFSET)  // Input enable
                               | (PADS_QSPI_GPIO_QSPI_SD3_DRIVE_4mA << PADS_QSPI_GPIO_QSPI_SD3_DRIVE_OFFSET)
+                              | (1 << PADS_QSPI_GPIO_QSPI_SD3_PDE_OFFSET)  // Pull down enable
                               | (1 << PADS_QSPI_GPIO_QSPI_SD3_SCHMITT_OFFSET)  // enable schmitt trigger
                               | (1 << PADS_QSPI_GPIO_QSPI_SD3_SLEWFAST_OFFSET);  // slew rate fast
     PADS_QSPI->GPIO_QSPI_SS = (1<< PADS_QSPI_GPIO_QSPI_SS_IE_OFFSET)  // Input enable
@@ -164,16 +167,27 @@ void XIP_IRQ(void)
 void qspi_transfere(const uint8_t *tx, uint8_t *rx, size_t count)
 {
     uint32_t i;
+    debug_line("QSPI Transfer: size %u bytes", count);
     XIP_SSI->SSIENR = 0;  // disabled
     XIP_SSI->CTRLR0 = (1 << XIP_SSI_CTRLR0_SSTE_OFFSET)
-                    //  | (7 << XIP_SSI_CTRLR0_DFS_32_OFFSET)  // data frame : n -> n+1 clocks per frame
+                      | (XIP_SSI_CTRLR0_SPI_FRF_STD << XIP_SSI_CTRLR0_SPI_FRF_OFFSET)
+                      | (7 << XIP_SSI_CTRLR0_DFS_32_OFFSET)  // data frame : n -> n+1 clocks per frame
                       | (7 << XIP_SSI_CTRLR0_CFS_OFFSET)  // control frame : n -> n+1 clocks per frame
-                      | (1 << XIP_SSI_CTRLR0_SLV_OE_OFFSET)
-                      | ((count -1) << XIP_SSI_CTRLR0_DFS_OFFSET);
+                    //   | (1 << XIP_SSI_CTRLR0_SLV_OE_OFFSET)
+                      | (XIP_SSI_CTRLR0_TMOD_EEPROM_READ << XIP_SSI_CTRLR0_TMOD_OFFSET)
+                      | (0 << XIP_SSI_CTRLR0_SCPOL_OFFSET) // clock polarity
+                      | (0 << XIP_SSI_CTRLR0_SCPH_OFFSET)  // clock phase      cpol + cph = SPI Mode
+                      | (0 << XIP_SSI_CTRLR0_FRF_OFFSET)   // FRF : frame format
+                      | (7 << XIP_SSI_CTRLR0_DFS_OFFSET);  // data frame size
     XIP_SSI->CTRLR1 = count -1; // Number of Data Frames
     XIP_SSI->SPI_CTRLR0 = ((uint32_t)(tx[0] & 0xff) << XIP_SSI_SPI_CTRLR0_XIP_CMD_OFFSET)
-                          | (1 << XIP_SSI_SPI_CTRLR0_SPI_RXDS_EN_OFFSET)
-                          | (XIP_SSI_SPI_CTRLR0_INST_L_8B << XIP_SSI_SPI_CTRLR0_INST_L_OFFSET);
+                          | (1 << XIP_SSI_SPI_CTRLR0_SPI_RXDS_EN_OFFSET)  // read data strobe enable
+                          | (0 << XIP_SSI_SPI_CTRLR0_INST_DDR_EN_OFFSET)  // instruction double data rate enable
+                          | (0 << XIP_SSI_SPI_CTRLR0_SPI_DDR_EN_OFFSET)   // SPI double data rate enable
+                          | (0 << XIP_SSI_SPI_CTRLR0_WAIT_CYCLES_OFFSET)  // wait cycles between control frame transmit and data frame receive
+                          | (XIP_SSI_SPI_CTRLR0_INST_L_8B << XIP_SSI_SPI_CTRLR0_INST_L_OFFSET)  // INST_L : instruction length (0, 4, 8 or 16 bit)
+                          | (0 << XIP_SSI_SPI_CTRLR0_ADDR_L_OFFSET)  // ADDR_L : address length (0, 4, 8, 12, 16, 20,...56, 60 bit)
+                          | (XIP_SSI_SPI_CTRLR0_TRANS_TYPE_1C1A << XIP_SSI_SPI_CTRLR0_TRANS_TYPE_OFFSET); // Transfer Type (1 bit SPI or as defined in FRF)
     XIP_SSI->SSIENR = 1;  // enabled
     qspi_active = true;
     for(i = 1; i < count; i++)
@@ -184,6 +198,11 @@ void qspi_transfere(const uint8_t *tx, uint8_t *rx, size_t count)
     {
         ;
     }
+    while(0 != (XIP_SSI_SR_BUSY_MASK & XIP_SSI->SR)) // QSPI is sending
+    {
+        ;
+    }
+
     if(NULL != rx)
     {
         for(i = 0; i < count; i++)
@@ -191,4 +210,81 @@ void qspi_transfere(const uint8_t *tx, uint8_t *rx, size_t count)
             rx[i] = (uint8_t)XIP_SSI->DR0;
         }
     }
+}
+
+void qspi_transfere_no_cmd(const uint8_t *tx, uint8_t *rx, size_t count)
+{
+    uint32_t i;
+    debug_line("QSPI Transfer: size %u bytes", count);
+    XIP_SSI->SSIENR = 0;  // disabled
+    XIP_SSI->CTRLR0 = (1 << XIP_SSI_CTRLR0_SSTE_OFFSET)
+                      | (XIP_SSI_CTRLR0_SPI_FRF_STD << XIP_SSI_CTRLR0_SPI_FRF_OFFSET)
+                      | (7 << XIP_SSI_CTRLR0_DFS_32_OFFSET)  // data frame : n -> n+1 clocks per frame
+                      | (7 << XIP_SSI_CTRLR0_CFS_OFFSET)  // control frame : n -> n+1 clocks per frame
+                   //    | (1 << XIP_SSI_CTRLR0_SLV_OE_OFFSET)
+                      | (XIP_SSI_CTRLR0_TMOD_TX_AND_RX << XIP_SSI_CTRLR0_TMOD_OFFSET)
+                      | (0 << XIP_SSI_CTRLR0_SCPOL_OFFSET) // clock polarity
+                      | (0 << XIP_SSI_CTRLR0_SCPH_OFFSET)  // clock phase      cpol + cph = SPI Mode
+                      | (0 << XIP_SSI_CTRLR0_FRF_OFFSET)   // FRF : frame format
+                      | (7 << XIP_SSI_CTRLR0_DFS_OFFSET);  // data frame size
+    XIP_SSI->CTRLR1 = count -1; // Number of Data Frames
+    XIP_SSI->SPI_CTRLR0 = (  0 << XIP_SSI_SPI_CTRLR0_XIP_CMD_OFFSET)
+                          | (1 << XIP_SSI_SPI_CTRLR0_SPI_RXDS_EN_OFFSET)  // read data strobe enable
+                          | (0 << XIP_SSI_SPI_CTRLR0_INST_DDR_EN_OFFSET)  // instruction double data rate enable
+                          | (0 << XIP_SSI_SPI_CTRLR0_SPI_DDR_EN_OFFSET)   // SPI double data rate enable
+                          | (0 << XIP_SSI_SPI_CTRLR0_WAIT_CYCLES_OFFSET)  // wait cycles between control frame transmit and data frame receive
+                          | (XIP_SSI_SPI_CTRLR0_INST_L_8B << XIP_SSI_SPI_CTRLR0_INST_L_OFFSET)  // INST_L : instruction length (0, 4, 8 or 16 bit)
+                          | (0 << XIP_SSI_SPI_CTRLR0_ADDR_L_OFFSET)  // ADDR_L : address length (0, 4, 8, 12, 16, 20,...56, 60 bit)
+                          | (XIP_SSI_SPI_CTRLR0_TRANS_TYPE_1C1A << XIP_SSI_SPI_CTRLR0_TRANS_TYPE_OFFSET); // Transfer Type (1 bit SPI or as defined in FRF)
+    XIP_SSI->SSIENR = 1;  // enabled
+    qspi_active = true;
+    for(i = 0; i < count; i++)
+    {
+        XIP_SSI->DR0 = (uint32_t)tx[i];
+        // XIP_SSI->DR0 = 0x12345678;
+    }
+    while(0 == ((1 << XIP_SSI_SR_TFE_OFFSET) & XIP_SSI->SR)) // QSPI is sending
+    {
+        ;
+    }
+    while(0 != (XIP_SSI_SR_BUSY_MASK & XIP_SSI->SR)) // QSPI is sending
+    {
+        ;
+    }
+
+    if(NULL != rx)
+    {
+        for(i = 0; i < count; i++)
+        {
+            rx[i] = (uint8_t)XIP_SSI->DR0;
+        }
+    }
+    // XIP_SSI->SSIENR = 0;  // disabled
+}
+
+void qspi_reset_flash(void)
+{
+    // RaspberryPI Sequence:
+    // 1. CSn = 1, IO = 4'h0 (via pulldown to avoid contention), x32 clocks
+    // 2. CSn = 0, IO = 4'hf (via pullup to avoid contention), x32 clocks
+    // 3. CSn = 1 (brief deassertion)
+    // 4. CSn = 0, MOSI = 1'b1 driven, x16 clocks
+    //
+    // Part 4 is the sequence suggested in W25X10CL datasheet.
+    // Parts 1 and 2 are to improve compatibility with Micron parts
+    uint8_t buf[4];
+
+    // 2
+    buf[0] = 0xff;
+    buf[1] = 0xff;
+    buf[2] = 0xff;
+    buf[3] = 0xff;
+    qspi_transfere_no_cmd(buf, NULL, 4);
+    // 3
+    delay_us(10);
+    // 4
+    buf[0] = 0xff;
+    buf[1] = 0xff;
+    qspi_transfere_no_cmd(buf, NULL, 2);
+
 }

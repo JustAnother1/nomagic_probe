@@ -30,13 +30,13 @@ DDEFS += -DDISABLE_WATCHDOG_FOR_DEBUG=1
 # use both cores
 #DDEFS += -DENABLE_CORE_1=1
 # use BOOT ROM (for flash functions,...)
-#DDEFS += -DBOOT_ROM_ENABLED=1
+DDEFS += -DBOOT_ROM_ENABLED=1
 
 CFLAGS  = -c -ggdb3
 
-#CFLAGS += -O3
+CFLAGS += -O3
 # sometimes helps with debugging:
-CFLAGS += -O0
+# CFLAGS += -O0
 #CFLAGS += -save-temps=obj
 
 CFLAGS += -std=c17
@@ -50,6 +50,10 @@ LFLAGS  = -ffreestanding -nostdlib -nolibc -nodefaultlibs -nostartfiles -specs=n
 LFLAGS += -Wl,--gc-sections,-Map=$(BIN_FOLDER)$(PROJECT).map -g
 LFLAGS += -fno-common -T$(LKR_SCRIPT)
 
+#swd
+SRC += $(SRC_FOLDER)swd/swd_protocol.c
+SRC += $(SRC_FOLDER)swd/swd_packets.c
+SRC += $(SRC_FOLDER)swd/swd_gpio.c
 #gdb server
 SRC += $(SRC_FOLDER)gdbserver/commands.c
 SRC += $(SRC_FOLDER)gdbserver/gdbserver.c
@@ -62,9 +66,11 @@ SRC += $(SRC_FOLDER)hal/watchdog.c
 SRC += $(SRC_FOLDER)hal/boot_rom.c
 SRC += $(SRC_FOLDER)hal/flash.c
 SRC += $(SRC_FOLDER)hal/qspi.c
+SRC += $(SRC_FOLDER)hal/time_base.c
 # command line interface (debug - UART0)
 SRC += $(SRC_FOLDER)cli/cli.c
 SRC += $(SRC_FOLDER)cli/cli_memory.c
+SRC += $(SRC_FOLDER)cli/cli_swd.c
 SRC += $(SRC_FOLDER)cli/cli_sys.c
 SRC += $(SRC_FOLDER)cli/cli_usb.c
 # functions usually available from standard libraries
@@ -94,8 +100,6 @@ SRC += $(SRC_FOLDER)tinyusb/src/class/cdc/cdc_device.c
 # USB thumb drive (MSC)
 SRC += $(SRC_FOLDER)tinyusb/usb_msc.c
 SRC += $(SRC_FOLDER)tinyusb/src/class/msc/msc_device.c
-# time base
-SRC += $(SRC_FOLDER)time_base.c
 # user feedback
 SRC += $(SRC_FOLDER)led.c
 # main

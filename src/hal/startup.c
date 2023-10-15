@@ -222,6 +222,8 @@ extern uint32_t __ro_data_start;
 extern uint32_t __ro_data_end;
 extern uint32_t __ro_data_in_flash;
 
+uint32_t file_system_start;
+
 _Noreturn void Int_Handler()
 {
     // No Interrupts during 3rd stage boot loader !!!
@@ -421,20 +423,28 @@ _Noreturn void error_state(void)
 
 void startup_report(void)
 {
-    debug_line("3rd stage boot start: 0x%08lx", (uint32_t)&__third_boot_start);
-    debug_line("3rd stage boot end:   0x%08lx", (uint32_t)&__third_boot_end);
-    debug_line(".code start:          0x%08lx", (uint32_t)&__code_start);
-    debug_line(".code end:            0x%08lx", (uint32_t)&__code_end);
-    debug_line(".code start in flash: 0x%08lx", (uint32_t)&__code_in_flash);
-    debug_line(".code end in flash:   0x%08lx", (uint32_t)(&__code_in_flash + (&__code_end - &__code_start)));
-    debug_line(".bss start:           0x%08lx", (uint32_t)&__bss_start);
-    debug_line(".bss end:             0x%08lx", (uint32_t)&__bss_end);
-    debug_line(".data start:          0x%08lx", (uint32_t)&__data_start);
-    debug_line(".data end:            0x%08lx", (uint32_t)&__data_end);
-    debug_line(".data start in flash: 0x%08lx", (uint32_t)&__data_in_flash);
-    debug_line(".data end in flash:   0x%08lx", (uint32_t)(&__data_in_flash + (&__data_end - &__data_start)));
-    debug_line(".rodata start:        0x%08lx", (uint32_t)&__ro_data_start);
-    debug_line(".rodata end:          0x%08lx", (uint32_t)&__ro_data_end);
+    debug_line("3rd stage boot start:   0x%08lx", (uint32_t)&__third_boot_start);
+    debug_line("3rd stage boot end:     0x%08lx", (uint32_t)&__third_boot_end);
+
+    debug_line(".code start:            0x%08lx", (uint32_t)&__code_start);
+    debug_line(".code end:              0x%08lx", (uint32_t)&__code_end);
+    debug_line(".code start in flash:   0x%08lx", (uint32_t)&__code_in_flash);
+    debug_line(".code end in flash:     0x%08lx", (uint32_t)(&__code_in_flash + (&__code_end - &__code_start)));
+
+    debug_line(".bss start:             0x%08lx", (uint32_t)&__bss_start);
+    debug_line(".bss end:               0x%08lx", (uint32_t)&__bss_end);
+
+    debug_line(".data start:            0x%08lx", (uint32_t)&__data_start);
+    debug_line(".data end:              0x%08lx", (uint32_t)&__data_end);
+    debug_line(".data start in flash:   0x%08lx", (uint32_t)&__data_in_flash);
+    debug_line(".data end in flash:     0x%08lx", (uint32_t)(&__data_in_flash + (&__data_end - &__data_start)));
+
+    debug_line(".rodata start:          0x%08lx", (uint32_t)&__ro_data_start);
+    debug_line(".rodata end:            0x%08lx", (uint32_t)&__ro_data_end);
+    debug_line(".rodata start in flash: 0x%08lx", (uint32_t)&__ro_data_in_flash);
+    debug_line(".rodata end in flash:   0x%08lx", (uint32_t)(&__ro_data_in_flash + (&__ro_data_end - &__ro_data_start)));
+
+    debug_line("file system start:      0x%08lx", file_system_start);
 }
 
 #ifdef ENABLE_CORE_1
@@ -622,6 +632,22 @@ _Noreturn void Reset_Handler()
     (void)XIP_SSI->ICR;  // clear all active interrupts
     PPB->VTOR = (uint32_t)&__VECTOR_TABLE_RAM;
     /// !!! AND THIS LINE  !!!
+
+    file_system_start = (uint32_t)&__third_boot_end;
+    if((uint32_t)(&__code_in_flash + (&__code_end - &__code_start)) > file_system_start)
+    {
+        file_system_start = (uint32_t)(&__code_in_flash + (&__code_end - &__code_start));
+    }
+    if((uint32_t)(&__ro_data_in_flash + (&__ro_data_end - &__ro_data_start)) > file_system_start)
+    {
+        file_system_start = (uint32_t)(&__ro_data_in_flash + (&__ro_data_end - &__ro_data_start));
+    }
+    if((uint32_t)(&__data_in_flash + (&__data_end - &__data_start)) > file_system_start)
+    {
+        file_system_start = (uint32_t)(&__data_in_flash + (&__data_end - &__data_start));
+    }
+    file_system_start = (file_system_start + 0x1000) & 0xfffff000; // file system needs to start at a 4k sector.
+
 
 #ifdef ENABLE_CORE_1
     if(0 != SIO->CPUID)

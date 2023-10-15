@@ -13,14 +13,15 @@
  *
  */
 
+#include <hal/time_base.h>
 #include "flash.h"
 #include "cfg/cli_cfg.h"
 #include "cfg/cli_cfg.h"
 #include <string.h>
-#include "time_base.h"
 
 #ifdef BOOT_ROM_ENABLED
 #include "hal/boot_rom.h"
+#include "hal/hw/XIP_SSI.h"
 
 /*
  * XIP Address alias:
@@ -47,7 +48,6 @@ static boot_rom_flash_functions* flash_funcs = NULL;
 void flash_init(void)
 {
     flash_funcs = boot_rom_get_flash_functions();
-    XIP_SSI->BAUDR = 10; // TODO
     if(NULL != flash_funcs)
     {
         while(0 != (1& XIP_SSI->SR))
@@ -57,7 +57,10 @@ void flash_init(void)
         flash_funcs->_connect_internal_flash();
         flash_funcs->_flash_exit_xip();
     }
-    XIP_SSI->BAUDR = 10; // TODO
+    else
+    {
+        debug_line("Flash: get boot rom functions failed !");
+    }
 }
 #else
 
@@ -81,10 +84,7 @@ void flash_init(void)
 {
     qspi_init();
     // make sure we are not in XIP mode (Continuous Read Mode)
-    // send 16 clocks with /CS enabled and data = 1
-    tx_buf[0] = 0xff;
-    tx_buf[1] = 0xff;
-    qspi_transfere(tx_buf, rx_buf, 2);
+    qspi_reset_flash();
     status_register = STATUS_REGISTER_BUSY;  // worst case assumption it is busy
 }
 
@@ -96,12 +96,14 @@ static void read_status_register(void)
     // normal SPI mode
     // /CS falling edge - write 0x05 - read 8bit - rising edge on /CS
     tx_buf[0] = 0x05;
-    tx_buf[1] = 0;
+    tx_buf[1] = 0x23; // TODO for test only
+
     rx_buf[0] = 0;
     rx_buf[1] = 0;
     rx_buf[2] = 0;
     rx_buf[3] = 0;
-    qspi_transfere(tx_buf, rx_buf, 2);
+
+    qspi_transfere_no_cmd(tx_buf, rx_buf, 2);
     status_register = rx_buf[1];
 }
 
@@ -190,11 +192,15 @@ static void sector_erase(uint32_t number)
 void flash_write_block(uint32_t start_address, uint8_t* data, uint32_t length)
 {
 #ifdef BOOT_ROM_ENABLED
+    if(NULL == flash_funcs)
+    {
+        flash_funcs = boot_rom_get_flash_functions();
+    }
     if(NULL != flash_funcs)
     {
         // data sheet says:
         // [start_address] must be aligned to a 256-byte boundary, and [length] must be a multiple of 256
-        if((0 == (start_address && 0xff)) && (0 == (length & =0xff)))
+        if((0 == (start_address & 0xff)) && (0 == (length & 0xff)))
         {
             while(0 != (1& XIP_SSI->SR))
             {
@@ -203,6 +209,22 @@ void flash_write_block(uint32_t start_address, uint8_t* data, uint32_t length)
             flash_funcs->flash_range_program(start_address, data, length);
             flash_funcs->_flash_flush_cache();
         }
+        else
+        {
+            debug_line("Flash: parameters invalid !");
+            if(0 != (start_address && 0xff))
+            {
+                debug_line("Flash: start address(0x%08lx)[0x%08x] must be aligned to 256 !", start_address, (start_address && 0xff));
+            }
+            if(0 != (length & 0xff))
+            {
+                debug_line("Flash: length must be multiple of 256 !");
+            }
+        }
+    }
+    else
+    {
+        debug_line("Flash: get boot rom functions failed !");
     }
 #else
     if(256 < length + (start_address & 0xff))
@@ -236,6 +258,10 @@ void flash_write_block(uint32_t start_address, uint8_t* data, uint32_t length)
 void flash_erase_page(uint32_t number)
 {
 #ifdef BOOT_ROM_ENABLED
+    if(NULL == flash_funcs)
+    {
+        flash_funcs = boot_rom_get_flash_functions();
+    }
     if(NULL != flash_funcs)
     {
         while(0 != (1& XIP_SSI->SR))
@@ -244,6 +270,10 @@ void flash_erase_page(uint32_t number)
         }
         flash_funcs->_flash_range_erase(number*4096, 4096, 0, 0);
         flash_funcs->_flash_flush_cache();
+    }
+    else
+    {
+        debug_line("Flash: get boot rom functions failed !");
     }
 #else
     sector_erase(number);
@@ -267,6 +297,10 @@ void flash_read(uint32_t start_address, uint8_t* data, uint32_t length)
         flash_funcs->_flash_flush_cache();
         flash_funcs->_flash_enter_cmd_xip();
     }
+    else
+    {
+        debug_line("Flash: get boot rom functions failed !");
+    }
     memcpy(data, (void*)(0x13000000 + (0xffffff & start_address)), length);
     // XIP off
     if(NULL != flash_funcs)
@@ -277,6 +311,10 @@ void flash_read(uint32_t start_address, uint8_t* data, uint32_t length)
         }
         flash_funcs->_connect_internal_flash();
         flash_funcs->_flash_exit_xip();
+    }
+    else
+    {
+        debug_line("Flash: get boot rom functions failed !");
     }
 #else
     read_data(start_address, data, length);
@@ -299,6 +337,27 @@ void flash_report(void)
         debug_line("Flash state: idle");
     }
     debug_line("status register: 0x%08lx (%ld)", status_register, status_register);
+#endif
+}
+
+void flash_reset(void)
+{
+#ifdef BOOT_ROM_ENABLED
+    if(NULL != flash_funcs)
+    {
+        while(0 != (1& XIP_SSI->SR))
+        {
+            ;
+        }
+        flash_funcs->_connect_internal_flash();
+        flash_funcs->_flash_exit_xip();
+    }
+    else
+    {
+        debug_line("Flash: get boot rom functions failed !");
+    }
+#else
+    qspi_reset_flash();
 #endif
 }
 

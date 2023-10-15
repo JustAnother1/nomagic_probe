@@ -48,7 +48,7 @@ static void init_0(void)
     init_time();
     debug_uart_initialize();
     cli_init();
-    // TODO file_system_init();
+    file_system_init();
     tusb_init(); // initialize tinyusb stack
     gdbserver_init();
     swd_init();

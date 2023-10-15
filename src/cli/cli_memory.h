@@ -24,5 +24,6 @@ bool cmd_flash_memory_erase(uint32_t loop);
 bool cmd_flash_memory_write(uint32_t loop);
 bool cmd_flash_disable_XIP(uint32_t loop);
 bool cmd_flash_enable_XIP(uint32_t loop);
+bool cmd_flash_reset(uint32_t loop);
 
 #endif /* CLI_CLI_MEMORY_H_ */

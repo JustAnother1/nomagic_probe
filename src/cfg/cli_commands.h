@@ -16,6 +16,7 @@
 #define CLI_CLI_COMMANDS_H_
 
 #include "cli_cfg.h"
+#include "cli/cli_swd.h"
 #include "cli/cli_sys.h"
 #include "cli/cli_usb.h"
 #include "cli/cli_memory.h"
@@ -38,6 +39,8 @@ cmd_typ commands[] = {
         {"xip_off",     "disable XIP on FLash", cmd_flash_disable_XIP},
         {"xip_on",      "enable XIP on FLash", cmd_flash_enable_XIP},
 #endif
+        {"swd_info",    "test the SWD interface", cmd_swd_test},
+        {"flash_reset", "reset the external QSPI flash", cmd_flash_reset},
 };
 
 

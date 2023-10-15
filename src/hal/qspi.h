@@ -19,12 +19,14 @@
 #include <stdint.h>
 #include <stddef.h>
 
-// size is 16 bit -> 0..65535
-// #define QSPI_BAUDRATE_DIVIDOR     4
+// size is 16 bit -> 0..65535 fastest allowed value is 2, 1 is not valid, 0 mean no clock
+// #define QSPI_BAUDRATE_DIVIDOR     2
 #define QSPI_BAUDRATE_DIVIDOR     128
 
 void qspi_init(void);
 void qspi_transfere(const uint8_t *tx, uint8_t *rx, size_t count);
+void qspi_transfere_no_cmd(const uint8_t *tx, uint8_t *rx, size_t count);
+void qspi_reset_flash(void);
 
 
 #endif /* HAL_QSPI_H_ */

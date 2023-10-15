@@ -13,15 +13,16 @@
  *
  */
 #include "cli_sys.h"
-#include "time_base.h"
 #include "cfg/cli_cfg.h"
 #include "hal/startup.h"
 #include "hal/hw_divider.h"
 #include <hal/hw/TIMER.h>
+#include <hal/time_base.h>
 #include "cli.h"
 #include "hal/watchdog.h"
 #include "hal/boot_rom.h"
 #include "hal/flash.h"
+#include "file/file_system.h"
 
 bool cmd_time(uint32_t loop)
 {
@@ -114,6 +115,8 @@ bool cmd_hil_test(uint32_t loop)
     uint32_t a;
     uint32_t b;
     uint32_t c;
+
+    // MOD
     a = 40;
     b = 5;
     c = a%b;
@@ -142,6 +145,12 @@ bool cmd_hil_test(uint32_t loop)
     b = 4;
     c = a%b;
     debug_line("%ld mod %ld = %ld", a, b, c);
+
+    // logic
+    a = 0x44;
+    b = 0xf;
+    c = a&b;
+    debug_line("0x44 & 0xf  = %ld (0x4)", c);
 
     debug_line("\r\nDone!");
     return true;  // we are done
