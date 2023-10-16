@@ -87,11 +87,9 @@ const uint8_t root_directory[] = {
 #endif
 };
 
-
-
 int32_t fake_root_folder(uint32_t block, uint32_t offset, uint8_t* buffer, uint32_t bufsize)
 {
-    // TODO this probably needs to go into Flash memory
+    // TODO this needs to go into Flash memory
     uint32_t some = 0;
     if(0 == block)
     {

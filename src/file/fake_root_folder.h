@@ -17,8 +17,7 @@
 #define FILE_FAKE_ROOT_FOLDER_H_
 
 #include <stdint.h>
+
 int32_t fake_root_folder(uint32_t block, uint32_t offset, uint8_t* buffer, uint32_t bufsize);
-
-
 
 #endif /* FILE_FAKE_ROOT_FOLDER_H_ */

@@ -43,7 +43,6 @@ const uint8_t fat_table[] = {
 #endif
 };
 
-
 int32_t fake_fat(uint32_t block, uint32_t offset, uint8_t* buffer, uint32_t bufsize)
 {
     uint32_t some = 0;

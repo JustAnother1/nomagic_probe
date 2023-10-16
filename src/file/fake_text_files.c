@@ -63,4 +63,3 @@ int32_t fake_autorun_inf_file(uint32_t block, uint32_t offset, uint8_t* buffer, 
     }
     return (int32_t)bufsize;
 }
-

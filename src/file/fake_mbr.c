@@ -78,7 +78,3 @@ int32_t fake_mbr(uint32_t block, uint32_t offset, uint8_t* buffer, uint32_t bufs
     memcpy(&buffer[some], &mbr_partition_table[offset-446], bufsize- some);
     return (int32_t)bufsize;
 }
-
-
-
-

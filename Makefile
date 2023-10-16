@@ -83,7 +83,6 @@ SRC += $(SRC_FOLDER)lib/printf.c
 SRC += $(SRC_FOLDER)lib/strlen.c
 SRC += $(SRC_FOLDER)lib/strncmp.c
 # file handling
-SRC += $(SRC_FOLDER)file/faked_disk.c
 SRC += $(SRC_FOLDER)file/fake_mbr.c
 SRC += $(SRC_FOLDER)file/fake_boot_sector.c
 SRC += $(SRC_FOLDER)file/fake_fat.c
