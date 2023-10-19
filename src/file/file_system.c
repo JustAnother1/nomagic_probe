@@ -208,6 +208,7 @@ int32_t file_system_write(uint32_t offset, uint8_t* buffer, uint32_t bufsize)
         {
             len = bufsize;
         }
+        // TODO somehow handle the situation that there not overwriteable changes in more than one block of this transaction
         res = write_block(sector, block, offset, &buffer[written], len);
         if(0 > res)
         {
@@ -245,11 +246,16 @@ static int32_t write_block(uint32_t sector, uint32_t block, uint32_t offset, uin
         // sector not found in sectorMap
         // -> we never wrote to that sector
         location = find_next_free_sector();
+        if(NO_SECTOR == location)
+        {
+            return -1;  // disk full
+        }
+        else
+        {
+            sector_map[location] = (uint16_t)(sector & 0xffff);
+        }
     }
-    if(NO_SECTOR == location)
-    {
-        return -1;  // disk full
-    }
+
     if(bufsize + offset > FLASH_BLOCK_SIZE)
     {
         bufsize = FLASH_BLOCK_SIZE - offset;
@@ -307,7 +313,20 @@ static int32_t write_block(uint32_t sector, uint32_t block, uint32_t offset, uin
             uint32_t new_sector = find_next_free_sector();
             sector_map[location] = SECTOR_TYPE_UNKNOWN_USED;
             sector_map[new_sector] = (uint16_t)(sector & 0xffff);
+            // write the changed block
             flash_write_block(file_system_start + new_sector * FLASH_SECTOR_SIZE + block * FLASH_BLOCK_SIZE, buf.bytes, FLASH_BLOCK_SIZE);
+            // copy all the unchanged blocks
+            for(i = 0; i < FLASH_BLOCKS_PER_SECTOR; i++)
+            {
+                if(i != block)
+                {
+                    // read block
+                    read_block(location, block);
+                    // write block
+                    flash_write_block(file_system_start + new_sector * FLASH_SECTOR_SIZE + i * FLASH_BLOCK_SIZE, buf.bytes, FLASH_BLOCK_SIZE);
+                }
+                // else that block we already write with the modified content.
+            }
         }
     }
     else
