@@ -181,7 +181,7 @@ int32_t file_system_read(uint32_t offset, uint8_t* buffer, uint32_t bufsize)
                 return (int32_t)(read + bufsize);
             }
         }
-    } while(1 > bufsize);
+    } while(0 < bufsize);
     return (int32_t)read;
 }
 
@@ -223,7 +223,7 @@ int32_t file_system_write(uint32_t offset, uint8_t* buffer, uint32_t bufsize)
             sector++;
             block = 0;
         }
-    }while(1 > bufsize);
+    }while(0 < bufsize);
     return (int32_t)written;
 }
 
@@ -234,6 +234,11 @@ static int32_t write_block(uint32_t sector, uint32_t block, uint32_t offset, uin
     bool changed = false; // data to be written is identical to what is already stored -> no change
     bool overwriteable = true; // data changes can be written to this already written to sector
 
+    if(1 > bufsize)
+    {
+        // another job well done
+        return 0;
+    }
     location = getLocationOfSector(sector);
     if(NO_SECTOR == location)
     {
@@ -335,8 +340,15 @@ static void scan_flash(void)
                 }
                 else
                 {
+                    uint32_t i;
                     debug_line("FS: found sector with unknown data at sector %ld, block %ld", num_sectors, num_blocks);
                     sector_map[num_sectors] = SECTOR_TYPE_UNKNOWN_USED;
+                    for(i = 0; i < 16; i++)
+                    {
+                        debug_msg(" %02x", buf.bytes[i]);
+                    }
+                    debug_msg("\r\n");
+                    // TODO remove debug messages
                 }
             }
             else

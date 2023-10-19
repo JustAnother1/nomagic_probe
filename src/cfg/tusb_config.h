@@ -52,4 +52,6 @@
 #define TUD_OPT_RP2040_USB_DEVICE_UFRAME_FIX       1
 #endif
 
+#define CFG_TUD_TASK_QUEUE_SZ   32
+
 #endif /* SRC_CFG_TUSB_CONFIG_H_ */
