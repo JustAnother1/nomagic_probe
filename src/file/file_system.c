@@ -21,34 +21,38 @@
 #include "hal/watchdog.h"
 
 
-#define FLASH_BLOCK_SIZE         256
-#define FLASH_BLOCKS_PER_SECTOR  16
-#define FLASH_SECTOR_SIZE        4096
-
 // TODO dynamic size
 #define FLASH_MAX_SECTORS         512
 
-#define SECTOR_TYPE_EMPTY         0xffff
-#define SECTOR_TYPE_UNKNOWN_USED  0x0fff
-#define SECTOR_TYPE_SUPER_BLOCK   1
-#define SECTOR_TYPE_UNAVAILABLE   0
-
-#define NO_SECTOR                 0xffffffff
-
-#define FS_BLOCK_SIGNATURE  "nomagic fs version 0.1"
+#define FILE_SYSTEM_END           0x10200000  // TODO detect flash size
 
 extern uint32_t file_system_start;
+
+union buf_type
+{
+    uint8_t bytes[FLASH_BLOCK_SIZE];
+    uint16_t words[FLASH_BLOCK_SIZE/2];
+};
+
+
 static uint32_t sector_offset;
 static uint32_t block_count;
-static uint8_t buf[FLASH_BLOCK_SIZE];
+// static uint8_t buf[FLASH_BLOCK_SIZE];
+static union buf_type buf;
 static uint16_t sector_map[FLASH_MAX_SECTORS];
 static uint32_t super_sector;
+static uint32_t start_search_sector;
 
 static void scan_flash(void);
 static bool block_is_empty(uint8_t* block);
 static void create_file_system(void);
-//static uint32_t find_next_free_sector(uint32_t start_search_sector);
+static uint32_t find_next_free_sector(void);
 static void write_super_sector(uint32_t sector_number);
+static uint32_t getLocationOfSector(uint32_t sector);
+static int32_t write_block(uint32_t location, uint32_t block, uint32_t offset, uint8_t* buffer, uint32_t bufsize);
+static uint32_t erase_all_used_sectors(void);
+static void read_block(uint32_t sector, uint32_t block);
+static void open_file_system(void);
 
 void file_system_init(void)
 {
@@ -56,10 +60,16 @@ void file_system_init(void)
     block_count = (uint32_t)(1024*1024*1) / file_storage_getblock_size(); // TODO 1MB for now
     sector_offset = (0x00ffffff & file_system_start) >>12;
     scan_flash();
+    start_search_sector = 0;
     if(NO_SECTOR == super_sector)
     {
+        erase_all_used_sectors();
         // first boot after Flash erase/ Firmware update -> create file system
         create_file_system();
+    }
+    else
+    {
+        open_file_system();
     }
 }
 
@@ -75,89 +85,266 @@ void file_system_report(void)
 
     for(i = 0; i < FLASH_MAX_SECTORS; i++)
     {
-        debug_line("sector %3ld : type %d", i, sector_map[i]);
+        if((i > 0) && (i %10 == 0))
+        {
+            debug_line("|");
+        }
+        switch(sector_map[i])
+        {
+            default:                       debug_msg("| %4d", sector_map[i]); break;
+            case SECTOR_TYPE_EMPTY:        debug_msg("|empty"); break;
+            case SECTOR_TYPE_UNKNOWN_USED: debug_msg("| used"); break;
+            case SECTOR_TYPE_UNAVAILABLE:  debug_msg("|     "); break;
+        }
     }
+    debug_line("|");
     debug_line("super block in sector %ld", super_sector);
 }
 
-// returns bufsize or a negative number to indicate an error
-int32_t file_system_read(uint32_t block, uint32_t offset, uint8_t* buffer, uint32_t bufsize)
+// returns the number of bytes read or a negative number to indicate an error.
+// reads from the sector 256 bytes ( a block), Block can be 0..15
+int32_t file_system_read_flash_block(uint32_t sector, uint32_t block, uint8_t* buffer)
 {
-    (void)block;
-    (void)offset;
-    (void)buffer;
-    (void)bufsize;
+    uint32_t location;
+    uint32_t start_address;
+
+    if(FLASH_BLOCKS_PER_SECTOR <= block)
+    {
+        return -1; // invalid block number
+    }
+    location = getLocationOfSector(sector);
+    if(NO_SECTOR == location)
+    {
+        // sector not found in sectorMap
+        // -> we never wrote to that sector
+        // -> therefore it is still empty
+        memset(buffer, 0xff, FLASH_BLOCK_SIZE);
+        return FLASH_BLOCK_SIZE;
+    }
+    start_address = file_system_start + (location * FLASH_SECTOR_SIZE) + (block * FLASH_BLOCK_SIZE);
+    flash_read(start_address, buffer, FLASH_BLOCK_SIZE);
+    return FLASH_BLOCK_SIZE;
+}
+
+int32_t file_system_read(uint32_t offset, uint8_t* buffer, uint32_t bufsize)
+{
+    uint32_t location;  // flash sector the data is located in
+    uint32_t block; // block number in sector
+    uint32_t len = 0; // number of bytes used in this read operation
+    uint32_t read = 0; // number of bytes already read in previous read operation
+    uint32_t sector = offset / FLASH_SECTOR_SIZE;
+    offset = offset - sector * FLASH_SECTOR_SIZE;
+    block = offset / FLASH_BLOCK_SIZE;
+    offset = offset - block * FLASH_BLOCK_SIZE;
+
+    if(1 > bufsize)
+    {
+        // another job well done ;-)
+        return 0;
+    }
+    location = getLocationOfSector(sector);
+    if(NO_SECTOR == location)
+    {
+        // sector not found in sectorMap
+        // -> we never wrote to that sector
+        // -> therefore it is still empty
+        memset(buffer, 0xff, bufsize);
+        return (int32_t)bufsize;
+    }
+    do {
+        read_block(location, block);
+        if(bufsize > FLASH_BLOCK_SIZE)
+        {
+            len = FLASH_BLOCK_SIZE - offset;
+        }
+        else
+        {
+            len = bufsize - offset;
+        }
+        memcpy(&buffer[read], &buf.bytes[offset], len);
+        bufsize = bufsize - len;
+        read = read + len;
+        offset = 0;
+        block++;
+        if(FLASH_BLOCKS_PER_SECTOR == block)
+        {
+            // next sector
+            sector++;
+            block = 0;
+            location = getLocationOfSector(sector);
+            if(NO_SECTOR == location)
+            {
+                // sector not found in sectorMap
+                // -> we never wrote to that sector
+                // -> therefore it is still empty
+                memset(&buffer[read], 0xff, bufsize);
+                return (int32_t)(read + bufsize);
+            }
+        }
+    } while(1 > bufsize);
+    return (int32_t)read;
+}
+
+int32_t file_system_write(uint32_t offset, uint8_t* buffer, uint32_t bufsize)
+{
+    int32_t res;
+    uint32_t len;
+    uint32_t written = 0;
+    uint32_t block; // block number in sector
+    uint32_t sector = offset / FLASH_SECTOR_SIZE;
+    offset = offset - sector * FLASH_SECTOR_SIZE;
+    block = offset / FLASH_BLOCK_SIZE;
+    offset = offset - block * FLASH_BLOCK_SIZE;
+
+    if(1 > bufsize)
+    {
+        // another job well done ;-)
+        return 0;
+    }
+
+    do{
+        len = FLASH_BLOCK_SIZE - offset;
+        if(len > bufsize)
+        {
+            len = bufsize;
+        }
+        res = write_block(sector, block, offset, &buffer[written], len);
+        if(0 > res)
+        {
+            return res;
+        }
+        bufsize = bufsize - len;
+        written = written + len;
+        offset = 0;
+        block++;
+        if(FLASH_BLOCKS_PER_SECTOR == block)
+        {
+            // next sector
+            sector++;
+            block = 0;
+        }
+    }while(1 > bufsize);
+    return (int32_t)written;
+}
+
+static int32_t write_block(uint32_t sector, uint32_t block, uint32_t offset, uint8_t* buffer, uint32_t bufsize)
+{
+    uint32_t i;
+    uint32_t location;  // flash sector the data is located in
+    bool changed = false; // data to be written is identical to what is already stored -> no change
+    bool overwriteable = true; // data changes can be written to this already written to sector
+
+    location = getLocationOfSector(sector);
+    if(NO_SECTOR == location)
+    {
+        // sector not found in sectorMap
+        // -> we never wrote to that sector
+        location = find_next_free_sector();
+    }
+    if(NO_SECTOR == location)
+    {
+        return -1;  // disk full
+    }
+    if(bufsize + offset > FLASH_BLOCK_SIZE)
+    {
+        bufsize = FLASH_BLOCK_SIZE - offset;
+    }
+
+    // read the block
+    read_block(location, block);
+
+    // write to the read buffer and
+    // test if it actually changed data
+
     /*
-    #define BLOCK_COUNT 2048
-    #define DATA_FLASH_BASE_ADDRESS (0x13000000 + MAX_FIRMWARE_SIZE)
-    memcpy(buffer,
-           (void*)(DATA_FLASH_BASE_ADDRESS + ((block - NUM_FAKED_BLOCKS) * BLOCK_SIZE) + offset),
-           (size_t)bufsize);
-    */
+    bit in | bit to be | is a   | can be      | needs new
+    flash  | written   | change | overwritten | sector
+    -------+-----------+--------+-------------+-----------
+       0   |    0      |  no    |   yes       |   no
+       0   |    1      |  yes   |   no        |   yes
+       1   |    0      |  yes   |   yes       |   no
+       1   |    1      |  no    |   yes       |   no
+     */
+    for(i = offset; i < bufsize; i++)
+    {
+        if(false == changed)
+        {
+            if(buffer[i] != buf.bytes[i])
+            {
+                changed = true;
+            }
+            else
+            {
+                continue;
+            }
+        }
+        // else <- not an active else as the first byte that is different also needs to be tested
+        if(0 != (buffer[i] & ~buf.bytes[i]))
+        {
+            overwriteable = false;
+            break; // no need to check the rest
+        }
+    }
+
+    // copy data (necessary due to offset)
+    memcpy(buf.bytes, &buffer[offset], bufsize);
+
+    if(true == changed)
+    {
+        if(true == overwriteable)
+        {
+            // over write able -> write data
+            flash_write_block(file_system_start + location * FLASH_SECTOR_SIZE + block * FLASH_BLOCK_SIZE, buf.bytes, FLASH_BLOCK_SIZE);
+        }
+        else
+        {
+            // data changed -> find new sector
+            uint32_t new_sector = find_next_free_sector();
+            sector_map[location] = SECTOR_TYPE_UNKNOWN_USED;
+            sector_map[new_sector] = (uint16_t)(sector & 0xffff);
+            flash_write_block(file_system_start + new_sector * FLASH_SECTOR_SIZE + block * FLASH_BLOCK_SIZE, buf.bytes, FLASH_BLOCK_SIZE);
+        }
+    }
+    else
+    {
+        // no change -> another job well done
+    }
     return (int32_t)bufsize;
 }
-
-// returns bufsize or a negative number to indicate an error
-int32_t file_system_write(uint32_t block, uint32_t offset, uint8_t* buffer, uint32_t bufsize)
-{
-    (void)block;
-    (void)offset;
-    (void)buffer;
-    (void)bufsize;
-    // write flash sector
-    // flash_write(block - NUM_FAKED_BLOCKS, offset, buffer, bufsize);
-    return (int32_t)bufsize;
-}
-
-/*
-
-static void flash_write(uint32_t block, uint32_t offset, uint8_t* buffer, uint32_t bufsize);
-
-static void flash_write(uint32_t block, uint32_t offset, uint8_t* buffer, uint32_t bufsize)
-{
-    (void)block;
-    (void)offset;
-    (void)buffer;
-    (void)bufsize;
-    // TODO flash_range_erase() flash_range_program() FLASH_PAGE_SIZE
-}
-*/
 
 static void scan_flash(void)
 {
     super_sector = NO_SECTOR;  // no super block
     uint32_t num_blocks = 0;
     uint32_t num_sectors = 0;
-    uint32_t cur_address = file_system_start;
     do{
         watchdog_feed();
-        flash_read(cur_address, buf, FLASH_BLOCK_SIZE);
-        if(false == block_is_empty(buf))
+        read_block(num_sectors, num_blocks);
+        if(false == block_is_empty(buf.bytes))
         {
             // there is something here
             if(0 == num_blocks)
             {
                 // first block in this sector
                 // -> might be the FS super block
-                if(0 == strncmp(FS_BLOCK_SIGNATURE, (char *)buf, strlen(FS_BLOCK_SIGNATURE)))
+                if(0 == strncmp(FS_BLOCK_SIGNATURE, (char *)buf.bytes, strlen(FS_BLOCK_SIGNATURE)))
                 {
                     super_sector = num_sectors;
                     sector_map[num_sectors] = SECTOR_TYPE_SUPER_BLOCK;
-                    debug_line("FS: found super block at 0x%08lx", cur_address);
+                    debug_line("FS: found super block at sector %ld, block %ld", num_sectors, num_blocks);
                 }
                 else
                 {
-                    debug_line("FS: found sector with unknown data at 0x%08lx", cur_address);
+                    debug_line("FS: found sector with unknown data at sector %ld, block %ld", num_sectors, num_blocks);
                     sector_map[num_sectors] = SECTOR_TYPE_UNKNOWN_USED;
                 }
             }
             else
             {
-                debug_line("FS: found sector with unknown data at 0x%08lx", cur_address);
+                debug_line("FS: found sector with unknown data at sector %ld, block %ld", num_sectors, num_blocks);
                 sector_map[num_sectors] = SECTOR_TYPE_UNKNOWN_USED;
             }
             // we are done with this sector
-            cur_address = ((FLASH_BLOCKS_PER_SECTOR - num_blocks) * FLASH_BLOCK_SIZE) + cur_address;
             num_blocks = 0;
             num_sectors++;
         }
@@ -172,9 +359,8 @@ static void scan_flash(void)
                 sector_map[num_sectors] = SECTOR_TYPE_EMPTY;
                 num_sectors ++;
             }
-            cur_address = cur_address + FLASH_BLOCK_SIZE;
         }
-    }while(cur_address < 0x10200000); // TODO detect flash size
+    }while((num_sectors * FLASH_SECTOR_SIZE) < (FILE_SYSTEM_END - file_system_start));
     for(;num_sectors < FLASH_MAX_SECTORS; num_sectors ++)
     {
         // debug_line("FS: marking sector %ld as unavailable.", num_sectors);
@@ -195,35 +381,76 @@ static bool block_is_empty(uint8_t* block)
     return true;
 }
 
-// static
-uint32_t find_next_free_sector(uint32_t start_search_sector)
+static uint32_t find_next_free_sector(void)
 {
     uint32_t res = start_search_sector;
     for(;res < FLASH_MAX_SECTORS; res ++)
     {
         if(SECTOR_TYPE_EMPTY == sector_map[res])
         {
+            start_search_sector = res;
             return res;
         }
     }
+    if(0 < start_search_sector)
+    {
+        // wrap around -> there might be a empty sector before the start
+        for(res = 0; res < start_search_sector; res ++)
+        {
+            if(SECTOR_TYPE_EMPTY == sector_map[res])
+            {
+                start_search_sector = res;
+                return res;
+            }
+        }
+    }
+    // we searched everywhere but found nothing
     return NO_SECTOR;
 }
 
 static void write_super_sector(uint32_t sector_number)
 {
+    uint32_t offset = 0;
+    uint32_t map_size = sizeof(sector_map);
+    uint32_t block = 0;
     // keep unused bytes at 0xff
-    memset(buf, 0xff, FLASH_BLOCK_SIZE);
+    memset(buf.bytes, 0xff, FLASH_BLOCK_SIZE);
     // signature
-    memcpy(buf, FS_BLOCK_SIGNATURE, strlen(FS_BLOCK_SIGNATURE));
-    flash_write_block(file_system_start + sector_number * FLASH_SECTOR_SIZE, buf, FLASH_BLOCK_SIZE);
+    memcpy(buf.bytes, FS_BLOCK_SIGNATURE, strlen(FS_BLOCK_SIGNATURE));
+    flash_write_block(file_system_start + sector_number * FLASH_SECTOR_SIZE + block * FLASH_BLOCK_SIZE, buf.bytes, FLASH_BLOCK_SIZE);
     sector_map[sector_number] = SECTOR_TYPE_SUPER_BLOCK;
+    // sectorMap
+    while(offset < map_size)
+    {
+        uint32_t len = map_size;
+        block++;
+        if(FLASH_BLOCKS_PER_SECTOR == block)
+        {
+            // this may not happen !
+            debug_line("FS: sectorMap does not fir the super block ! Check your configuration!");
+            return;
+        }
+        if(len > FLASH_BLOCK_SIZE)
+        {
+            len = FLASH_BLOCK_SIZE;
+        }
+        flash_write_block(file_system_start + sector_number * FLASH_SECTOR_SIZE + block * FLASH_BLOCK_SIZE, (uint8_t *)&sector_map[offset/2], len);
+        offset = offset + len;
+    }
 }
 
 static void create_file_system(void)
 {
-    uint32_t i;
     debug_line("FS: creating new file system !");
-    // erase all used sectors
+    // write super block
+    write_super_sector(super_sector);
+}
+
+// returns the number of erased sectors
+static uint32_t erase_all_used_sectors(void)
+{
+    uint32_t i;
+    uint32_t num_erased = 0;
     super_sector = 0;
     for(i = 0; i < FLASH_MAX_SECTORS; i ++)
     {
@@ -233,8 +460,135 @@ static void create_file_system(void)
             watchdog_feed();
             flash_erase_page(i + sector_offset);
             sector_map[i] = SECTOR_TYPE_EMPTY;
+            num_erased++;
         }
     }
-    // write super block
-    write_super_sector(super_sector);
+    return num_erased;
+}
+
+static uint32_t getLocationOfSector(uint32_t sector)
+{
+    uint32_t i;
+    // scan sectorMap for the sector
+    for(i = 0; i < FLASH_MAX_SECTORS; i++)
+    {
+        if(sector == sector_map[i])
+        {
+            return i;
+        }
+    }
+    return NO_SECTOR;
+}
+
+static void read_block(uint32_t sector, uint32_t block)
+{
+    uint32_t start_address = file_system_start + (sector * FLASH_SECTOR_SIZE) + (block * FLASH_BLOCK_SIZE);
+    flash_read(start_address, buf.bytes, FLASH_BLOCK_SIZE);
+}
+
+static void open_file_system(void)
+{
+    /*
+    * 0x0fff - empty        : this sector has all bytes at the value 0xff
+    * 0x0000 - used         : this sector has some data (not all bytes are 0xff) but the file system does not know why this data is there or the data is not valid anymore.
+    * 0xffff - unavailable  : this sector can not be used. This is used if the sectorMap is bigger than the available sectors in flash memory.
+    * 0x0001 - super block  : this sector contains the super block.
+    * 0x0002 - data         : first data sector. User put some data into the file system and expects to read it back from sector 0.
+    * */
+    /*
+      Scan      |             read sector Map from super block is                     |
+      detected  |    empty    | used        | unavailable | super block | data        |
+    ------------+-------------+-------------+-------------+-------------+-------------+
+    empty       | empty       | empty       | empty       | empty       | empty       |
+    used        | used        | used        | used        | used        | data        |
+    unavailable | unavailable | unavailable | unavailable | unavailable | unavailable |
+    super block | super block | super block | super block | super block | super block |
+    */
+
+    bool changed = false;
+    bool overwriteable = true;
+    // read super block
+    uint32_t sec_idx = 0;
+    uint32_t block = 1;
+    uint32_t num_erased;
+    while(sec_idx < FLASH_MAX_SECTORS)
+    {
+        uint32_t i;
+        read_block(super_sector, block);
+        for(i = 0; i < FLASH_BLOCK_SIZE/2; i++)
+        {
+            uint16_t sec_type = buf.words[i];
+            if(sec_type != sector_map[sec_idx + i])
+            {
+                // scan detected
+                switch(sector_map[sec_idx + i])
+                {
+                default:
+                    // fall through
+                case SECTOR_TYPE_EMPTY:
+                    if((SECTOR_TYPE_SUPER_BLOCK < sec_type) && (sec_type < SECTOR_TYPE_EMPTY))
+                    {
+                        // data
+                        sector_map[sec_idx + i] = sec_type;
+                    }
+                    else
+                    {
+                        changed = true;
+                        overwriteable = false;
+                    }
+                    break;
+
+                case SECTOR_TYPE_UNKNOWN_USED:
+                    if((SECTOR_TYPE_SUPER_BLOCK < sec_type) && (sec_type < SECTOR_TYPE_EMPTY))
+                    {
+                        // data
+                        sector_map[sec_idx + i] = sec_type;
+                        changed = true;
+                    }
+                    else
+                    {
+                        changed = true;
+                    }
+                    break;
+
+                case SECTOR_TYPE_UNAVAILABLE:
+                    // no change
+                    break;
+
+                case SECTOR_TYPE_SUPER_BLOCK:
+                    // no change
+                    break;
+                }
+            }
+            // else OK
+        }
+        sec_idx = sec_idx + FLASH_BLOCK_SIZE/2;
+        block++;
+    }
+
+    num_erased = erase_all_used_sectors();
+    if(0 < num_erased)
+    {
+        changed = true;
+        overwriteable = false;
+    }
+    if(true == changed)
+    {
+        // write super block
+        if(true == overwriteable)
+        {
+            // overwrite
+            write_super_sector(super_sector);
+        }
+        else
+        {
+            // relocate super block to empty sector
+            uint32_t sector = find_next_free_sector();
+            sector_map[super_sector] = SECTOR_TYPE_UNKNOWN_USED;
+            sector_map[sector] = SECTOR_TYPE_SUPER_BLOCK;
+            write_super_sector(sector);
+            super_sector = sector;
+        }
+    }
+
 }

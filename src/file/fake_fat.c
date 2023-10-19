@@ -16,6 +16,7 @@
 #include <string.h>
 #include "fake_favicon.h"
 #include "fake_fat.h"
+#include "file/file_system.h"
 
 // https://de.wikipedia.org/wiki/File_Allocation_Table
 
@@ -43,27 +44,42 @@ const uint8_t fat_table[] = {
 #endif
 };
 
-int32_t fake_fat(uint32_t block, uint32_t offset, uint8_t* buffer, uint32_t bufsize)
+// data gets stored inverted in Flash as an empty FAT entry is all 0.
+// This should make it possible to just overwrite the Flash memory if a new entry is created.
+
+int32_t fake_fat_read(uint32_t offset, uint8_t* buffer, uint32_t bufsize)
 {
+    uint32_t i;
     uint32_t some = 0;
-    // TODO this needs to go into Flash memory
-    if(0 == block)
+    int32_t res = file_system_read((FS_SECTOR_FAT * FLASH_SECTOR_SIZE) + offset, buffer, bufsize);
+    if(res != (int32_t)bufsize)
     {
-        if(offset < sizeof(fat_table))
-        {
-            some = sizeof(fat_table) - offset;
-            if(some > bufsize)
-            {
-                some = bufsize;
-            }
-            memcpy(buffer, &fat_table[offset], some);
-        }
-        memset(&buffer[some], 0, bufsize - some);
+        return -2;
     }
-    else
+    if(offset < sizeof(fat_table))
     {
-        // all zeros
-        memset(buffer, 0, bufsize);
+        // copy in the fixed bit
+        some = sizeof(fat_table) - offset;
+        if(some > bufsize)
+        {
+            some = bufsize;
+        }
+        memcpy(buffer, &fat_table[offset], some);
+    }
+    // invert everything else
+    for(i = some; i < bufsize; i++)
+    {
+        buffer[i] = ~buffer[i];
     }
     return (int32_t)bufsize;
+}
+
+int32_t fake_fat_write(uint32_t offset, uint8_t* buffer, uint32_t bufsize)
+{
+    uint32_t i;
+    for(i = 0; i < bufsize; i++)
+    {
+        buffer[i] = ~buffer[i];
+    }
+    return file_system_write((FS_SECTOR_FAT * FLASH_SECTOR_SIZE) + offset, buffer, bufsize);
 }

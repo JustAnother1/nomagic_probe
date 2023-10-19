@@ -81,7 +81,8 @@ Block | FAT Sector | used for
    48 | 4          | favicon.ico  7/8
    49 | 4          | favicon.ico  8/8
 */
-#define NUM_FAKED_BLOCKS  50
+#define NUM_FAKED_BLOCKS        50
+#define FIRST_FREE_FAT_SECTOR   5
 #endif
 
 #ifdef FAVICON_32
@@ -148,10 +149,9 @@ Block | FAT Sector | used for
    56 | 5          | favicon.ico 15/16
    57 | 5          | favicon.ico 16/16
 */
-#define NUM_FAKED_BLOCKS  58
+#define NUM_FAKED_BLOCKS        58
+#define FIRST_FREE_FAT_SECTOR   6
 #endif
-
-#define NUM_FAKED_BLOCKS  58
 
 static int32_t faked_read(uint32_t block, uint32_t offset, uint8_t* buffer, uint32_t bufsize);
 static int32_t faked_write(uint32_t block, uint32_t offset, uint8_t* buffer, uint32_t bufsize);
@@ -187,7 +187,9 @@ int32_t  file_storage_read(uint32_t block, uint32_t offset, uint8_t* buffer, uin
     else
     {
         // read from file system
-        return file_system_read(block, offset, buffer, bufsize);
+        uint32_t fs_offset = ((block - NUM_FAKED_BLOCKS) * BLOCK_SIZE) + offset;
+        fs_offset = fs_offset + FIRST_FREE_FAT_SECTOR * FLASH_SECTOR_SIZE; // the faked FAT table needs two sectors and the faked root folder uses one sector
+        return file_system_read(fs_offset, buffer, bufsize);
     }
 }
 
@@ -203,7 +205,12 @@ int32_t  file_storage_write(uint32_t block, uint32_t offset, uint8_t* buffer, ui
     }
     else
     {
-        return file_system_write(block, offset, buffer, bufsize);
+        // write to file system
+        int32_t res;
+        uint32_t fs_offset = ((block - NUM_FAKED_BLOCKS) * BLOCK_SIZE) + offset;
+        fs_offset = fs_offset + 5 * FLASH_SECTOR_SIZE; // first free FAT sector
+        res = file_system_write(fs_offset, buffer, bufsize);
+        return res;
     }
 }
 
@@ -233,7 +240,7 @@ static int32_t faked_read(uint32_t block, uint32_t offset, uint8_t* buffer, uint
     if(16 > block)
     {
         // FAT - File Allocation Table
-        return fake_fat(block, offset, buffer, bufsize);
+        return fake_fat_read((block*BLOCK_SIZE) + offset, buffer, bufsize);
     }
     else
     {
@@ -244,7 +251,7 @@ static int32_t faked_read(uint32_t block, uint32_t offset, uint8_t* buffer, uint
     if(8 > block)
     {
         // root folder
-        return fake_root_folder(block, offset, buffer, bufsize);
+        return fake_root_folder_read((block*BLOCK_SIZE) + offset, buffer, bufsize);
     }
     else
     {
@@ -293,17 +300,19 @@ static int32_t faked_write(uint32_t block, uint32_t offset, uint8_t* buffer, uin
     if((block > 1) && (block < 18))
     {
         // FAT Table
-        // TODO user created a new file,..
+        return fake_fat_write(((block -2)*BLOCK_SIZE) + offset, buffer, bufsize);
     }
     else if((block > 17) && (block < 26))
     {
         // root directory
-        // TODO user created a new file or directory in the root directory
+        return fake_root_folder_write(((block-18)*BLOCK_SIZE) + offset, buffer, bufsize);
     }
     else
     {
         // user want to change MBR, boot sector, or faked files
         // yeah no!
+        return (int32_t)bufsize;
     }
-    return (int32_t)bufsize;
+    // write outside of blocks requested
+    return -1;
 }

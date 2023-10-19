@@ -18,6 +18,7 @@
 
 #include <stdint.h>
 
-int32_t fake_fat(uint32_t block, uint32_t offset, uint8_t* buffer, uint32_t bufsize);
+int32_t fake_fat_read(uint32_t offset, uint8_t* buffer, uint32_t bufsize);
+int32_t fake_fat_write(uint32_t offset, uint8_t* buffer, uint32_t bufsize);
 
 #endif /* FILE_FAKE_FAT_H_ */
