@@ -16,6 +16,7 @@
 #include <string.h>
 #include "file/file_storage.h"
 #include "file/file_system.h"
+#include "file/fake_root_folder.h"
 #include "hal/debug_uart.h"
 #include "hal/flash.h"
 #include "hal/watchdog.h"
@@ -203,6 +204,23 @@ int32_t file_system_write(uint32_t offset, uint8_t* buffer, uint32_t bufsize)
     return (int32_t)written;
 }
 
+bool file_system_has_file(char* filename)
+{
+    if(NO_SECTOR == fake_root_folder_get_first_sector_of(filename))
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+}
+
+uint32_t file_system_get_size_of_file(char* filename)
+{
+    return fake_root_folder_get_size_of(filename);
+}
+
 static int32_t write_block(uint32_t sector, uint32_t block, uint32_t offset, uint8_t* buffer, uint32_t bufsize)
 {
     uint32_t i;
@@ -296,7 +314,7 @@ static int32_t write_block(uint32_t sector, uint32_t block, uint32_t offset, uin
                 if(i != block)
                 {
                     // read block
-                    read_block(location, block);
+                    read_block(location, i);
                     // write block
                     flash_write_block(file_system_start + new_sector * FLASH_SECTOR_SIZE + i * FLASH_BLOCK_SIZE, buf.bytes, FLASH_BLOCK_SIZE);
                 }

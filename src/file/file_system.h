@@ -17,6 +17,7 @@
 #define FILE_FILE_SYSTEM_H_
 
 #include <stdint.h>
+#include <stdbool.h>
 
 /*
 
@@ -71,5 +72,10 @@ int32_t file_system_read(uint32_t offset, uint8_t* buffer, uint32_t bufsize);
 // returns the number of bytes read or a negative number to indicate an error
 int32_t file_system_write(uint32_t offset, uint8_t* buffer, uint32_t bufsize);
 
+// returns true if a file with that name exists
+bool file_system_has_file(char* filename);
+
+// returns the file size in bytes of the file with that name
+uint32_t file_system_get_size_of_file(char* filename);
 
 #endif /* FILE_FILE_SYSTEM_H_ */

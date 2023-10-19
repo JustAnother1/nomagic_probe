@@ -21,7 +21,7 @@
 #include "file/file_system.h"
 
 
-/*
+
 typedef struct{
     char name[8];
     char extension[3];
@@ -39,8 +39,11 @@ typedef struct{
 
 _Static_assert(sizeof(fat_entry) == 32, "FAT entry size incorrect ! stuffing?");
 
-fat_entry buf[8];  // 256 Bytes -> Flash Block size
-*/
+#define NUM_ENTRIES_PER_BLOCK  8
+
+
+fat_entry buf[NUM_ENTRIES_PER_BLOCK];  // 256 Bytes -> Flash Block size
+
 
 // Root directory
 const uint8_t root_directory[] = {
@@ -111,6 +114,8 @@ const uint8_t root_directory[] = {
 #endif
 };
 
+static fat_entry* get_entry_of_file(char* filename);
+
 // data gets stored inverted in Flash as an empty FAT entry is all 0.
 // This should make it possible to just overwrite the Flash memory if a new entry is created.
 
@@ -149,4 +154,112 @@ int32_t fake_root_folder_write(uint32_t offset, uint8_t* buffer, uint32_t bufsiz
         buffer[i] = ~buffer[i];
     }
     return file_system_write((FS_SECTOR_ROOT_FOLDER * FLASH_SECTOR_SIZE) + offset, buffer, bufsize);
+}
+
+uint32_t fake_root_folder_get_first_sector_of(char* filename)
+{
+    fat_entry* file = get_entry_of_file(filename);
+    if(NULL == file)
+    {
+        return NO_SECTOR;
+    }
+    else
+    {
+        return file->first_logical_cluster;
+    }
+}
+
+uint32_t fake_root_folder_get_size_of(char* filename)
+{
+    fat_entry* file = get_entry_of_file(filename);
+    if(NULL == file)
+    {
+        return 0;
+    }
+    else
+    {
+        return file->file_size;
+    }
+}
+
+static fat_entry* get_entry_of_file(char* filename)
+{
+    // convert into name + extension
+    char name[8];
+    char ext[3];
+    uint32_t dot_idx = 0;
+    uint32_t i;
+    for(i = 0; i < 8; i++)
+    {
+        if(filename[i] == '.')
+        {
+            dot_idx = i;
+            break;
+        }
+        else if (0 == filename[i])
+        {
+            // file name already ended
+            // -> lets fake a dot
+            i = i -1;
+            dot_idx = i;
+            break;
+        }
+        else
+        {
+            name[i] = filename[i];
+        }
+    }
+    // fill unused chars with space
+    for(; i < 8; i++)
+    {
+        name[i] = 0x20; // space
+    }
+    // skip the dot
+    dot_idx++;
+    // extension
+    for(i = 0; i < 3; i++)
+    {
+        if(0 == filename[dot_idx + i])
+        {
+            break;
+        }
+        else
+        {
+            ext[i] = filename[dot_idx + i];
+        }
+    }
+
+    // read a block
+    uint32_t offset = 0;
+    while(offset < FLASH_SECTOR_SIZE)
+    {
+        int32_t res = fake_root_folder_read(offset, (uint8_t*)buf, sizeof(buf));
+        if(res != sizeof(buf))
+        {
+            return NULL;
+        }
+        // check the entries if they match the filename
+        for(i = 0; i < NUM_ENTRIES_PER_BLOCK; i++)
+        {
+            if(0 == buf[i].name[0])
+            {
+                // reached end of table
+                return NULL;
+            }
+            else if(0 == strncmp(buf[i].name, name, 8))
+            {
+                // name is equal
+                if(0 == strncmp(buf[i].extension, ext, 3))
+                {
+                    // extension is equal
+                    // -> we found the file
+                    return &buf[i];
+                }
+            }
+            // else -> not the file we are looking for
+        }
+        offset = offset + sizeof(buf);
+    }
+    // file not found
+    return NULL;
 }

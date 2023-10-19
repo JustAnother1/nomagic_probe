@@ -41,6 +41,7 @@ cmd_typ commands[] = {
 #endif
         {"swd_info",    "test the SWD interface", cmd_swd_test},
         {"flash_reset", "reset the external QSPI flash", cmd_flash_reset},
+        {"dump_file",   "dumpt the content of the file <filename>", cmd_file_dump},
 };
 
 

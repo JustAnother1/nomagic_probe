@@ -21,4 +21,7 @@
 int32_t fake_root_folder_read(uint32_t offset, uint8_t* buffer, uint32_t bufsize);
 int32_t fake_root_folder_write(uint32_t offset, uint8_t* buffer, uint32_t bufsize);
 
+uint32_t fake_root_folder_get_first_sector_of(char* filename);
+uint32_t fake_root_folder_get_size_of(char* filename);
+
 #endif /* FILE_FAKE_ROOT_FOLDER_H_ */

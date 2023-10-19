@@ -12,6 +12,7 @@
  * with this program; if not, see <http://www.gnu.org/licenses/>
  *
  */
+#include <stdlib.h>
 
 #include "cli_memory.h"
 #include "cli.h"
@@ -19,7 +20,7 @@
 #include "hal/flash.h"
 #include "hal/boot_rom.h"
 #include <hal/hw/TIMER.h>
-#include <stdlib.h>
+#include "file/file_system.h"
 
 
 static uint32_t addr;
@@ -222,3 +223,32 @@ bool cmd_flash_enable_XIP(uint32_t loop)
     return true; // we are done
 }
 #endif
+
+bool cmd_file_dump(uint32_t loop)
+{
+    (void) loop;
+    if(0 == loop)
+    {
+        // first call
+        char* filename = (char*)cli_get_parameter(0);
+        if(false == file_system_has_file(filename))
+        {
+            debug_line("file(%s) not found !", filename);
+            num_loops = 0;
+        }
+        else
+        {
+            num_loops = file_system_get_size_of_file(filename);
+            debug_line("The file %s  has %ld bytes.", filename, num_loops);
+        }
+    }
+    else
+    {
+        num_loops = 0; // TODO implement dump of content
+        if(0 == num_loops)
+        {
+            return true; // we are done
+        }
+    }
+    return false; // we need to do more
+}
