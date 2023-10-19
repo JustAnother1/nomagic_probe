@@ -101,31 +101,6 @@ void file_system_report(void)
     debug_line("super block in sector %ld", super_sector);
 }
 
-// returns the number of bytes read or a negative number to indicate an error.
-// reads from the sector 256 bytes ( a block), Block can be 0..15
-int32_t file_system_read_flash_block(uint32_t sector, uint32_t block, uint8_t* buffer)
-{
-    uint32_t location;
-    uint32_t start_address;
-
-    if(FLASH_BLOCKS_PER_SECTOR <= block)
-    {
-        return -1; // invalid block number
-    }
-    location = getLocationOfSector(sector);
-    if(NO_SECTOR == location)
-    {
-        // sector not found in sectorMap
-        // -> we never wrote to that sector
-        // -> therefore it is still empty
-        memset(buffer, 0xff, FLASH_BLOCK_SIZE);
-        return FLASH_BLOCK_SIZE;
-    }
-    start_address = file_system_start + (location * FLASH_SECTOR_SIZE) + (block * FLASH_BLOCK_SIZE);
-    flash_read(start_address, buffer, FLASH_BLOCK_SIZE);
-    return FLASH_BLOCK_SIZE;
-}
-
 int32_t file_system_read(uint32_t offset, uint8_t* buffer, uint32_t bufsize)
 {
     uint32_t location;  // flash sector the data is located in

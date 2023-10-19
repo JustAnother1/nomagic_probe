@@ -65,10 +65,6 @@ void file_system_init(void);
 void file_system_report(void);
 uint32_t file_system_block_count(void);
 
-// returns the number of bytes read or a negative number to indicate an error.
-// reads from the sector 256 bytes ( a block), Block can be 0..15
-int32_t file_system_read_flash_block(uint32_t sector, uint32_t block, uint8_t* buffer);
-
 // returns the number of bytes read or a negative number to indicate an error
 int32_t file_system_read(uint32_t offset, uint8_t* buffer, uint32_t bufsize);
 
