@@ -1,0 +1,297 @@
+flash_funcs->_connect_internal_flash();
+->connect_internal_flash()
+    // Use hard reset to force IO and pad controls to known state (don't touch
+    // IO_BANK0 as that does not affect XIP signals)
+    reset_unreset_block_wait_noinline(RESETS_RESET_IO_QSPI_BITS | RESETS_RESET_PADS_QSPI_BITS);
+
+    // Then mux XIP block onto internal QSPI flash pads
+    io_rw_32 *iobank1 = (io_rw_32 *) IO_QSPI_BASE;
+	
+    for (int i = 0; i < 6; ++i)
+        iobank1[2 * i + 1] = 0;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// GCC produces some heinous code if we try to loop over the pad controls,
+// so structs it is
+struct sd_padctrl {
+    io_rw_32 sd0;
+    io_rw_32 sd1;
+    io_rw_32 sd2;
+    io_rw_32 sd3;
+};
+
+
+flash_funcs->_flash_exit_xip();
+-> flash_exit_xip
+// Sequence:
+// 1. CSn = 1, IO = 4'h0 (via pulldown to avoid contention), x32 clocks
+// 2. CSn = 0, IO = 4'hf (via pullup to avoid contention), x32 clocks
+// 3. CSn = 1 (brief deassertion)
+// 4. CSn = 0, MOSI = 1'b1 driven, x16 clocks
+//
+// Part 4 is the sequence suggested in W25X10CL datasheet.
+// Parts 1 and 2 are to improve compatibility with Micron parts
+    struct sd_padctrl *qspi_sd_padctrl = (struct sd_padctrl *) (PADS_QSPI_BASE + PADS_QSPI_GPIO_QSPI_SD0_OFFSET);
+    io_rw_32 *qspi_ss_ioctrl = (io_rw_32 *) (IO_QSPI_BASE + IO_QSPI_GPIO_QSPI_SS_CTRL_OFFSET);
+    uint8_t buf[2];
+    buf[0] = 0xff;
+    buf[1] = 0xff;
+
+    flash_init_spi();
+
+    uint32_t padctrl_save = qspi_sd_padctrl->sd0;
+    uint32_t padctrl_tmp = (padctrl_save
+                            & ~(PADS_QSPI_GPIO_QSPI_SD0_OD_BITS | PADS_QSPI_GPIO_QSPI_SD0_PUE_BITS |
+                                PADS_QSPI_GPIO_QSPI_SD0_PDE_BITS)
+                           ) | PADS_QSPI_GPIO_QSPI_SD0_OD_BITS | PADS_QSPI_GPIO_QSPI_SD0_PDE_BITS;
+
+    // First two 32-clock sequences
+    // CSn is held high for the first 32 clocks, then asserted low for next 32
+    flash_cs_force(OUTOVER_HIGH);
+    for (int i = 0; i < 2; ++i) {
+        // This gives 4 16-bit offset store instructions. Anything else seems to
+        // produce a large island of constants
+        qspi_sd_padctrl->sd0 = padctrl_tmp;
+        qspi_sd_padctrl->sd1 = padctrl_tmp;
+        qspi_sd_padctrl->sd2 = padctrl_tmp;
+        qspi_sd_padctrl->sd3 = padctrl_tmp;
+
+        // Brief delay (~6000 cyc) for pulls to take effect
+        uint32_t delay_cnt = 1u << 11;
+        asm volatile (
+        "1: \n\t"
+        "sub %0, %0, #1 \n\t"
+        "bne 1b"
+        : "+r" (delay_cnt)
+        );
+
+        flash_put_get(NULL, NULL, 4, 0);
+
+        padctrl_tmp = (padctrl_tmp
+                       & ~PADS_QSPI_GPIO_QSPI_SD0_PDE_BITS)
+                      | PADS_QSPI_GPIO_QSPI_SD0_PUE_BITS;
+
+        flash_cs_force(OUTOVER_LOW);
+    }
+
+    // Restore IO/pad controls, and send 0xff, 0xff. Put pullup on IO2/IO3 as
+    // these may be used as WPn/HOLDn at this point, and we are now starting
+    // to issue serial commands.
+
+    qspi_sd_padctrl->sd0 = padctrl_save;
+    qspi_sd_padctrl->sd1 = padctrl_save;
+    padctrl_save = (padctrl_save
+        & ~PADS_QSPI_GPIO_QSPI_SD0_PDE_BITS
+    ) | PADS_QSPI_GPIO_QSPI_SD0_PUE_BITS;
+    qspi_sd_padctrl->sd2 = padctrl_save;
+    qspi_sd_padctrl->sd3 = padctrl_save;
+
+    flash_cs_force(OUTOVER_LOW);
+    flash_put_get(buf, NULL, 2, 0);
+
+    *qspi_ss_ioctrl = 0;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+flash_funcs->flash_range_program(start_address, data, length);
+-> flash_range_program
+    assert(!(addr & 0xffu));
+    uint32_t goal = addr + count;
+    while (addr < goal && !flash_was_aborted()) {
+        flash_page_program(addr, data);
+        addr += 256;
+        data += 256;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+flash_funcs->_flash_range_erase(number*4096, 4096, 0, 0);
+->flash_range_erase
+// block_size must be a power of 2.
+// Generally block_size > 4k, and block_cmd is some command which erases a block
+// of this size. This accelerates erase speed.
+// To use sector-erase only, set block_size to some value larger than flash,
+// e.g. 1ul << 31.
+// To override the default 20h erase cmd, set block_size == 4k.
+    uint32_t goal = addr + count;
+    while (addr < goal && !flash_was_aborted()) {
+        if (!(addr & (block_size - 1)) && goal - addr >= block_size) {
+            flash_user_erase(addr, block_cmd);
+            addr += block_size;
+        } else {
+            flash_sector_erase(addr);
+            addr += 1ul << 12;
+        }
+    }
+
+// Use some other command, supplied by user e.g. a block erase or a chip erase.
+// Despite the name, the user is not erased by this function.
+void flash_user_erase(uint32_t addr, uint8_t cmd) {
+    assert(addr < 0x1000000);
+    flash_enable_write();
+    flash_put_cmd_addr(cmd, addr);
+    flash_put_get(NULL, NULL, 0, 4);
+    flash_wait_ready();
+}
+
+// Use a standard 20h 4k erase command:
+void flash_sector_erase(uint32_t addr) {
+    flash_user_erase(addr, FLASHCMD_SECTOR_ERASE);
+}
+
+// Set the WEL bit (needed before any program/erase operation)
+static __noinline void flash_enable_write() {
+    flash_do_cmd(FLASHCMD_WRITE_ENABLE, NULL, NULL, 0);
+}
+
+
+// Put bytes from one buffer, and get bytes into another buffer.
+// These can be the same buffer.
+// If tx is NULL then send zeroes.
+// If rx is NULL then all read data will be dropped.
+//
+// If rx_skip is nonzero, this many bytes will first be consumed from the FIFO,
+// before reading a further count bytes into *rx.
+// E.g. if you have written a command+address just before calling this function.
+void __noinline flash_put_get(const uint8_t *tx, uint8_t *rx, size_t count, size_t rx_skip) {
+    // Make sure there is never more data in flight than the depth of the RX
+    // FIFO. Otherwise, when we are interrupted for long periods, hardware
+    // will overflow the RX FIFO.
+    const uint max_in_flight = 16 - 2; // account for data internal to SSI
+    size_t tx_count = count;
+    size_t rx_count = count;
+    while (tx_count || rx_skip || rx_count) {
+        // NB order of reads, for pessimism rather than optimism
+        uint32_t tx_level = ssi_hw->txflr;
+        uint32_t rx_level = ssi_hw->rxflr;
+        bool did_something = false; // Expect this to be folded into control flow, not register
+        if (tx_count && tx_level + rx_level < max_in_flight) {
+            ssi->dr0 = (uint32_t) (tx ? *tx++ : 0);
+            --tx_count;
+            did_something = true;
+        }
+        if (rx_level) {
+            uint8_t rxbyte = ssi->dr0;
+            did_something = true;
+            if (rx_skip) {
+                --rx_skip;
+            } else {
+                if (rx)
+                    *rx++ = rxbyte;
+                --rx_count;
+            }
+        }
+        // APB load costs 4 cycles, so only do it on idle loops (our budget is 48 cyc/byte)
+        if (!did_something && __builtin_expect(flash_was_aborted(), 0))
+            break;
+    }
+    flash_cs_force(OUTOVER_HIGH);
+}
+
+// Convenience wrapper for above
+// (And it's hard for the debug host to get the tight timing between
+// cmd DR0 write and the remaining data)
+void flash_do_cmd(uint8_t cmd, const uint8_t *tx, uint8_t *rx, size_t count) {
+    flash_cs_force(OUTOVER_LOW);
+    ssi->dr0 = cmd;
+    flash_put_get(tx, rx, count, 1);
+}
+
+// Timing of this one is critical, so do not expose the symbol to debugger etc
+static inline void flash_put_cmd_addr(uint8_t cmd, uint32_t addr) {
+    flash_cs_force(OUTOVER_LOW);
+    addr |= cmd << 24;
+    for (int i = 0; i < 4; ++i) {
+        ssi->dr0 = addr >> 24;
+        addr <<= 8;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+flash_funcs->_flash_flush_cache();
+-> flash_flush_cache
+// This is a hook for steps to be taken in between programming the flash and
+// doing cached XIP reads from the flash. Called by the bootrom before
+// entering flash second stage, and called by the debugger after flash
+// programming.
+    xip_ctrl_hw->flush = 1;
+    // Read blocks until flush completion
+    (void) xip_ctrl_hw->flush;
+    // Enable the cache
+    hw_set_bits(&xip_ctrl_hw->ctrl, XIP_CTRL_EN_BITS);
+    // Flash code may be heavily interrupted (e.g. if we are running USB MSC
+// handlers concurrently with flash programming) so we control the CS pin
+// manually
+    flash_cs_force(OUTOVER_NORMAL);
+
+
+
+
+

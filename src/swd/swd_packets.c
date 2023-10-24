@@ -183,6 +183,7 @@ int packet_read(int APnotDP, int address, uint32_t* data)
 
     ack = in_read_ACK();
     // handle ACK
+    /* ignore ACK for now
     if(ACK_OK != ack)
     {
         // handle "Sticky overrun"
@@ -196,6 +197,7 @@ int packet_read(int APnotDP, int address, uint32_t* data)
         }
         return ack;
     }
+    */
 
     // Data
     for(i = 0; i < 32; i++)
@@ -240,6 +242,7 @@ static void write_bit(int data)
     quarter_clock_delay();
 }
 
+// returns 0 or 1 depending on SWDIO bit level on falling edge
 static int read_bit(void)
 {
     int res = 0;
@@ -359,8 +362,8 @@ static int in_read_ACK(void)
     // ACK 0
     ack = read_bit();
     // ACK 1
-    ack += (read_bit()<1);
+    ack += (read_bit()<<1);
     // ACK 2
-    ack += (read_bit()<2);
+    ack += (read_bit()<<2);
     return ack;
 }

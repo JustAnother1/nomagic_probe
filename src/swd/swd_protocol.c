@@ -39,6 +39,7 @@ static bool isMinimalDebugPort;
 void swd_init(void)
 {
     isMinimalDebugPort = false;
+    swd_packets_init();
 }
 
 
@@ -59,10 +60,12 @@ uint32_t swd_connect(bool multi, uint32_t target)
     if(true == multi)
     {
         // write TARGETSEL register to select the target CPU
-        packet_write(DP, ADDR_TARGETSEL, 0x01002927);  // ignore result -> line is not driven
+        packet_write(DP, ADDR_TARGETSEL, target);  // ignore result -> line is not driven
         delay_us(100000);  // TODO for Debug only !
     }
     // else -> nothing to do
+
+    delay_us(100000);  // TODO for Debug only !
 
     // read id register
     res = packet_read(DP, ADDR_DPIDR,&read_data);

@@ -19,40 +19,40 @@
 #include <hal/hw/RESETS.h>
 
 
-void gpio_init(void)
+void swd_gpio_init(void)
 {
     RESETS->RESET = RESETS->RESET & ~0x00000020lu; // take IO_BANK0 out of Reset
     PSM->FRCE_ON = PSM->FRCE_ON | 0x00000400; // make sure that SIO is powered on
 
+// Pin:  RUN
     // RUN = /RESET (Output, Low)
-    SIO->GPIO_OE_CLR = 1ul << PIN_RUN;
-    SIO->GPIO_OUT_CLR = 1ul << PIN_RUN;
     PADS_BANK0->PADS_GPIO_RUN = (PADS_BANK0_GPIO0_DRIVE_12mA << PADS_BANK0_GPIO0_DRIVE_OFFSET)
                               | (1 << PADS_BANK0_GPIO0_SLEWFAST_OFFSET);
     IO_BANK0->IO_RUN = 5;  // 5 = SIO
-    SIO->GPIO_OE_SET = 1ul << PIN_RUN;  // Set as output
+    SIO->GPIO_OUT_CLR = 1ul << PIN_RUN; // Output Low
+    SIO->GPIO_OE_SET = 1ul << PIN_RUN;  // Set direction to output
 
-    // SWDIO (Output, Low)
-    SIO->GPIO_OE_CLR = 1ul << PIN_SWDIO;
-    SIO->GPIO_OUT_CLR = 1ul << PIN_SWDIO;
+// Pin:  SWDIO
+    // SWDIO (Output, High) Target is supposed to have a 100k pull up. Having SWDIO on high when idle saves a tiny bit of power
     PADS_BANK0->PADS_GPIO_SWDIO = (PADS_BANK0_GPIO0_DRIVE_12mA << PADS_BANK0_GPIO0_DRIVE_OFFSET)
                                 | (1 << PADS_BANK0_GPIO0_SLEWFAST_OFFSET);
     IO_BANK0->IO_SWDIO = 5;  // 5 = SIO
-    SIO->GPIO_OE_SET = 1ul << PIN_SWDIO;  // Set as output
+    SIO->GPIO_OUT_SET = 1 << PIN_SWDIO;  // Output High
+    SIO->GPIO_OE_SET = 1ul << PIN_SWDIO; // Set direction to output
 
+// Pin:  SWCLK
     // SWCLK (Output, Low)
-    SIO->GPIO_OE_CLR = 1ul << PIN_SWCLK;
-    SIO->GPIO_OUT_CLR = 1ul << PIN_SWCLK;
     PADS_BANK0->PADS_GPIO_SWCLK = (PADS_BANK0_GPIO0_DRIVE_12mA << PADS_BANK0_GPIO0_DRIVE_OFFSET)
                                 | (1 << PADS_BANK0_GPIO0_SLEWFAST_OFFSET);
     IO_BANK0->IO_SWCLK = 5;  // 5 = SIO
-    SIO->GPIO_OE_SET = 1ul << PIN_SWCLK;  // Set as output
+    SIO->GPIO_OUT_CLR = 1ul << PIN_SWCLK; // Output Low
+    SIO->GPIO_OE_SET = 1ul << PIN_SWCLK;  // Set direction to output
 
+// Pin:  SWDIR
     // SWDIR (Output, High)
-    SIO->GPIO_OE_CLR = 1ul << PIN_SWDIR;
     PADS_BANK0->PADS_GPIO_SWDIR = (PADS_BANK0_GPIO0_DRIVE_12mA << PADS_BANK0_GPIO0_DRIVE_OFFSET)
                                 | (1 << PADS_BANK0_GPIO0_SLEWFAST_OFFSET);
     IO_BANK0->IO_SWDIR = 5;  // 5 = SIO
-    SIO->GPIO_OE_SET = 1ul << PIN_SWDIR;  // Set as output
-    SIO->GPIO_OUT_SET = 1 << PIN_SWDIR;
+    SIO->GPIO_OUT_SET = 1 << PIN_SWDIR;  // Output High
+    SIO->GPIO_OE_SET = 1ul << PIN_SWDIR; // Set direction to output
 }

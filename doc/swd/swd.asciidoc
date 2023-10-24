@@ -1,0 +1,180 @@
+SWD
+===
+
+== external documentation
+
+link:ihi0031.pdf[ARM Debug Interface v5 (a, 2006-02-08)]
+
+link:ihi0031g_debug_interface_v5_2_architecture_specification.pdf[ARM Debug Interface Architecture Specification ADIv5.0 to ADIv5.2 (g, 2022-02-25)]
+
+link:IHI0074D_debug_interface_v6_0_architecture_specification.pdf[ARM Debug Interface Architecture Specification ADIv6.0 (d, 2022-02-25)]
+
+link:jep106av.pdf[JEP 106]
+
+
+== protocol definition
+
+An operation on the wire consists of two or three phases:
+  * Packet request
+  * Acknowledge response
+  * Data transfer phase
+
+When the target samples SWDIO, sampling is performed on the rising edge of SWCLK. When the target drives
+SWDIO, or stops driving it, signal changes are performed on the rising edge of SWCLK.
+
+Target has a 100k pull up on SWDIO.
+
+
+== SWD protocol versions
+  * 1 : point-to-point
+  * 2 : multi-drop
+
+== packet request
+[cols="1,1"]
+|===
+
+| Bit
+| Description
+
+| Start
+| value 1
+
+| APnDP
+| 0 = DP; 1 = AP
+
+| RnW
+| 0 = write; 1 = read
+
+| A2
+| second bit of Address
+
+| A3
+| third Bit of Address
+
+| Parity
+| parity bit (even parity)
+
+| Stop
+| value 0
+
+| Park
+| value 1
+|===
+
+
+== Acknowledge response
+
+[cols="1,1"]
+|===
+
+| Bit
+| Description
+
+| Trn
+| value undefined - line is floting, weak pull up
+
+| ACK0
+| 0/1
+
+| ACK1
+| 0/1
+
+| ACK2
+| 0/1
+
+|===
+
+
+
+[cols="1,1,1,1"]
+|===
+
+| ACK2
+| ACK1
+| ACK0
+| Description
+
+| 1
+| 0
+| 0
+| OK
+
+| 0
+| 1
+| 0
+| Wait
+
+| 0
+| 0
+| 1
+| Fault
+
+|===
+
+== Data transfer phase
+
+
+=== Idle cycles
+Hochst clocks SWD interface with the line LOW.
+
+=== Bit Order
+LSB first!
+For example, the OK response of 0b001 appears on the wire as 1, followed by 0, followed by 0, as shown in
+
+=== Parity
+Even parity!
+
+==== Packet requests
+The parity check is made over the four bits APnDP, RnW and A[2:3]:
+  * If the number of bits with a value of 0b1 is odd, the parity bit is set to 0b1.
+  * If the number of bits with a value of 0b1 is even, the parity bit is set to 0b0.
+
+==== Data transfers (WDATA and RDATA)
+The parity check is made over the 32 data bits WDATA[0:31] or RDATA[0:31]:
+  * If the number of bits with a value of 0b1 is odd, the parity bit is set to 0b1.
+  * If the number of bits with a value of 0b1 is even, the parity bit is set to 0b0.
+
+== Dictionary
+
+There are some SWD specific words used that only make sense in the SWD contet. These words are defined here.
+
+[cols="1,1"]
+|===
+| Word
+| Meaning
+
+| ADI
+| ARM Debug Interface  Version 5 or 5.1 or 5.2 or 6 ...
+
+| AP or APACC
+| Access Port (connects to device Registsres,..)
+
+| DAP
+| Debug Access Port (implementation of ADI)
+
+| DP or DPACC
+| Debug Port (connects external Debug Hardware to chip)
+
+| RAO
+| Read as One 
+
+| RAZ
+| Read as Zero
+
+| SBO
+| Should be One - Write as 1
+
+| SBZ
+| Should be Zero - Write as 0
+
+| SWD
+| Serial Wire Debug
+
+| TAP
+|Test Access Port
+
+| TRNCNT
+| Transaction counter
+
+|===
+
