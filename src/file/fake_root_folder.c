@@ -22,23 +22,6 @@
 
 
 
-typedef struct{
-    char name[8];
-    char extension[3];
-    uint8_t attributes;
-    uint16_t reserved;
-    uint16_t creation_time;
-    uint16_t creation_date;
-    uint16_t last_access_date;
-    uint16_t ignore;
-    uint16_t last_write_time;
-    uint16_t last_write_date;
-    uint16_t first_logical_cluster; // sector
-    uint32_t file_size;
-} fat_entry;
-
-_Static_assert(sizeof(fat_entry) == 32, "FAT entry size incorrect ! stuffing?");
-
 #define NUM_ENTRIES_PER_BLOCK  8
 
 
@@ -114,8 +97,6 @@ const uint8_t root_directory[] = {
 #endif
 };
 
-static fat_entry* get_entry_of_file(char* filename);
-
 // data gets stored inverted in Flash as an empty FAT entry is all 0.
 // This should make it possible to just overwrite the Flash memory if a new entry is created.
 
@@ -156,33 +137,27 @@ int32_t fake_root_folder_write(uint32_t offset, uint8_t* buffer, uint32_t bufsiz
     return file_system_write((FS_SECTOR_ROOT_FOLDER * FLASH_SECTOR_SIZE) + offset, buffer, bufsize);
 }
 
-uint32_t fake_root_folder_get_first_sector_of(char* filename)
+fat_entry* fake_root_get_entry_of_file_idx(uint32_t idx)
 {
-    fat_entry* file = get_entry_of_file(filename);
-    if(NULL == file)
+    if(idx < FLASH_SECTOR_SIZE/sizeof(buf) * NUM_ENTRIES_PER_BLOCK)
     {
-        return NO_SECTOR;
+        uint32_t block = idx / NUM_ENTRIES_PER_BLOCK;
+        uint32_t offset = block * sizeof(buf);
+        uint32_t block_idx = idx - (block * NUM_ENTRIES_PER_BLOCK);
+        int32_t res = fake_root_folder_read(offset, (uint8_t*)buf, sizeof(buf));
+        if(res != sizeof(buf))
+        {
+            return NULL;
+        }
+        return &(buf[block_idx]);
     }
     else
     {
-        return file->first_logical_cluster;
+        return NULL;
     }
 }
 
-uint32_t fake_root_folder_get_size_of(char* filename)
-{
-    fat_entry* file = get_entry_of_file(filename);
-    if(NULL == file)
-    {
-        return 0;
-    }
-    else
-    {
-        return file->file_size;
-    }
-}
-
-static fat_entry* get_entry_of_file(char* filename)
+fat_entry* fake_root_get_entry_of_file_named(char* filename)
 {
     // convert into name + extension
     char name[8];
@@ -253,7 +228,7 @@ static fat_entry* get_entry_of_file(char* filename)
                 {
                     // extension is equal
                     // -> we found the file
-                    return &buf[i];
+                    return &(buf[i]);
                 }
             }
             // else -> not the file we are looking for

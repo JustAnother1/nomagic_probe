@@ -206,7 +206,8 @@ int32_t file_system_write(uint32_t offset, uint8_t* buffer, uint32_t bufsize)
 
 bool file_system_has_file(char* filename)
 {
-    if(NO_SECTOR == fake_root_folder_get_first_sector_of(filename))
+    fat_entry* entry = fake_root_get_entry_of_file_named(filename);
+    if(NULL == entry)
     {
         return false;
     }
@@ -218,7 +219,15 @@ bool file_system_has_file(char* filename)
 
 uint32_t file_system_get_size_of_file(char* filename)
 {
-    return fake_root_folder_get_size_of(filename);
+    fat_entry* entry = fake_root_get_entry_of_file_named(filename);
+    if(NULL == entry)
+    {
+        return 0;
+    }
+    else
+    {
+        return entry->file_size;
+    }
 }
 
 static int32_t write_block(uint32_t sector, uint32_t block, uint32_t offset, uint8_t* buffer, uint32_t bufsize)

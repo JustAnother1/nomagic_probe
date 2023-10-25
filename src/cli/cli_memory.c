@@ -21,6 +21,7 @@
 #include "hal/boot_rom.h"
 #include <hal/hw/TIMER.h>
 #include "file/file_system.h"
+#include "file/fake_root_folder.h"
 
 
 static uint32_t addr;
@@ -251,4 +252,38 @@ bool cmd_file_dump(uint32_t loop)
         }
     }
     return false; // we need to do more
+}
+
+bool cmd_file_ls(uint32_t loop)
+{
+    if(0 == loop)
+    {
+        num_loops = 0;
+    }
+    fat_entry* entry =fake_root_get_entry_of_file_idx(loop);
+    if(NULL == entry)
+    {
+        debug_line("%ld files.", loop);
+        return true; // we are done
+    }
+    else
+    {
+        if(0 == entry->name[0])
+        {
+            debug_line("%ld files.", num_loops);
+            return true; // we are done
+        }
+        else
+        {
+            if(0 == (entry->attributes & 0x08))
+            {
+                debug_line("%ld : %c%c%c%c%c%c%c%c.%c%c%c", loop,
+                           entry->name[0], entry->name[1], entry->name[2], entry->name[3], entry->name[4], entry->name[5], entry->name[6], entry->name[7],
+                           entry->extension[0], entry->extension[1], entry->extension[2]);
+                num_loops++;
+            }
+            // else this is the Volume label -> skip
+            return false; // we need to do more
+        }
+    }
 }
