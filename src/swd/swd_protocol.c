@@ -65,8 +65,6 @@ uint32_t swd_connect(bool multi, uint32_t target)
     }
     // else -> nothing to do
 
-    delay_us(100000);  // TODO for Debug only !
-
     // read id register
     res = packet_read(DP, ADDR_DPIDR,&read_data);
     delay_us(100000);  // TODO for Debug only !
@@ -110,7 +108,7 @@ uint32_t swd_connect(bool multi, uint32_t target)
             debug_line("SWD: parity error");
             break;
         }
-        read_data = 0;
+        // read_data = 0;
     }
     return read_data;
 }

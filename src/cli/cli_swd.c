@@ -53,11 +53,32 @@ bool cmd_swd_test(uint32_t loop)
     // activate_Reset();
     activate_Run();
 
+    debug_line("STM32");
+    delay_us(100000);
+    id = swd_connect(false, 0);
+    debug_line("ID: 0x%08lx", id);
+    swd_disconnect();
+
+/* RP 2040
     // delay?
+    debug_line("Core 0");
     delay_us(100000);
     id = swd_connect(true, 0x01002927ul);  // try RP2040 Core 0
     debug_line("ID: 0x%08lx", id);
+    swd_disconnect();
 
+    debug_line("Core 1");
+    delay_us(100000);
+    id = swd_connect(true, 0x11002927ul);  // try RP2040 Core 1
+    debug_line("ID: 0x%08lx", id);
+    swd_disconnect();
+
+    debug_line("Rescue-DP");
+    delay_us(100000);
+    id = swd_connect(true, 0xf1002927ul);  // try RP2040 Rescue DP
+    debug_line("ID: 0x%08lx", id);
+    swd_disconnect();
+*/
     // TODO
 
     return true;

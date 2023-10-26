@@ -25,11 +25,11 @@ void swd_gpio_init(void)
     PSM->FRCE_ON = PSM->FRCE_ON | 0x00000400; // make sure that SIO is powered on
 
 // Pin:  RUN
-    // RUN = /RESET (Output, Low)
+    // RUN = /RESET (Output, High)  High = not in Reset
     PADS_BANK0->PADS_GPIO_RUN = (PADS_BANK0_GPIO0_DRIVE_12mA << PADS_BANK0_GPIO0_DRIVE_OFFSET)
                               | (1 << PADS_BANK0_GPIO0_SLEWFAST_OFFSET);
     IO_BANK0->IO_RUN = 5;  // 5 = SIO
-    SIO->GPIO_OUT_CLR = 1ul << PIN_RUN; // Output Low
+    SIO->GPIO_OUT_SET = 1ul << PIN_RUN; // Output High
     SIO->GPIO_OE_SET = 1ul << PIN_RUN;  // Set direction to output
 
 // Pin:  SWDIO
@@ -53,6 +53,6 @@ void swd_gpio_init(void)
     PADS_BANK0->PADS_GPIO_SWDIR = (PADS_BANK0_GPIO0_DRIVE_12mA << PADS_BANK0_GPIO0_DRIVE_OFFSET)
                                 | (1 << PADS_BANK0_GPIO0_SLEWFAST_OFFSET);
     IO_BANK0->IO_SWDIR = 5;  // 5 = SIO
-    SIO->GPIO_OUT_SET = 1 << PIN_SWDIR;  // Output High
+    SIO->GPIO_OUT_SET = 1 << PIN_SWDIR;  // Output High High = Output; Low = Input
     SIO->GPIO_OE_SET = 1ul << PIN_SWDIR; // Set direction to output
 }

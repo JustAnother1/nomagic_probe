@@ -87,7 +87,7 @@ void packet_line_reset(void)
         write_bit(1);
     }
     // at least 2 idle cycles
-    for(i = 0; i < 3; i++)
+    for(i = 0; i < 2; i++)
     {
         write_bit(0);
     }
@@ -98,7 +98,8 @@ void packet_disconnect(void)
     // at least 8 Idly cycles
     int i;
     // 16 bits 0
-    switch_to_output();
+    set_SWDIO_Low();
+    switch_SWDIO_to_Output();
     for(i = 0; i < 50; i++)
     {
         write_bit(0);
@@ -212,13 +213,15 @@ int packet_read(int APnotDP, int address, uint32_t* data)
         // else 0 is already in read_data ;-)
     }
 
+    *data = read_data;
+
     // Parity
     if((num_ones%2) != read_bit())
     {
         // parity error !
-        return ERROR_PARITY;
+        ack = ERROR_PARITY;
     }
-    *data = read_data;
+    switch_SWDIO_to_Output();
     return ack;
 }
 
@@ -286,6 +289,7 @@ static void switch_to_output(void)
     {
         turn_to_output();
     }
+    switch_SWDIO_to_Output();
 }
 
 static void out_send_request(int APnotDP, int read_not_write, int address)

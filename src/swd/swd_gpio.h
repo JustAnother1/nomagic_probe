@@ -15,6 +15,7 @@
 #ifndef SRC_SWD_SWD_GPIO_H_
 #define SRC_SWD_SWD_GPIO_H_
 
+#include <hal/hw/PADS_BANK0.h>
 #include <hal/hw/SIO.h>
 #include <hal/time_base.h>
 
@@ -68,13 +69,16 @@ static inline void set_SWCLK_Low(void)
 static inline void switch_SWDIO_to_Output(void)
 {
     SIO->GPIO_OE_SET = 1ul << PIN_SWDIO;
-    SIO->GPIO_OUT_SET = 1 << PIN_SWDIR;
+    SIO->GPIO_OUT_SET = 1 << PIN_SWDIR; // SWDIR = High
 }
 
 static inline void switch_SWDIO_to_Input(void)
 {
     SIO->GPIO_OE_CLR = 1ul << PIN_SWDIO;
-    SIO->GPIO_OUT_CLR = 1 << PIN_SWDIR;
+    PADS_BANK0->PADS_GPIO_SWDIO = (1 << PADS_BANK0_GPIO0_IE_OFFSET)
+                                | (1 << PADS_BANK0_GPIO0_SCHMITT_OFFSET)
+                                | (1 << PADS_BANK0_GPIO0_SLEWFAST_OFFSET);
+    SIO->GPIO_OUT_CLR = 1 << PIN_SWDIR;  // SWDIR = Low
 }
 
 static inline void set_SWDIO_High(void)
@@ -101,10 +105,7 @@ static inline int read_SWDIO(void)
 
 static inline void quarter_clock_delay(void)
 {
-    delay_us(250);
+    delay_us(2);
 }
-
-
-
 
 #endif /* SRC_SWD_SWD_GPIO_H_ */
