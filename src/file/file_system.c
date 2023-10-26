@@ -255,6 +255,7 @@ static int32_t write_block(uint32_t sector, uint32_t block, uint32_t offset, uin
         else
         {
             sector_map[location] = (uint16_t)(sector & 0xffff);
+            write_super_sector(super_sector);
         }
     }
 
@@ -329,6 +330,7 @@ static int32_t write_block(uint32_t sector, uint32_t block, uint32_t offset, uin
                 }
                 // else that block we already write with the modified content.
             }
+            write_super_sector(super_sector);
         }
     }
     else
@@ -460,7 +462,7 @@ static void write_super_sector(uint32_t sector_number)
         if(FLASH_BLOCKS_PER_SECTOR == block)
         {
             // this may not happen !
-            debug_line("FS: sectorMap does not fir the super block ! Check your configuration!");
+            debug_line("FS: sectorMap does not fit the super block ! Check your configuration!");
             return;
         }
         if(len > FLASH_BLOCK_SIZE)
@@ -487,7 +489,7 @@ static uint32_t erase_all_used_sectors(void)
     super_sector = 0;
     for(i = 0; i < FLASH_MAX_SECTORS; i ++)
     {
-        if((SECTOR_TYPE_EMPTY != sector_map[i]) && (SECTOR_TYPE_UNAVAILABLE != sector_map[i]))
+        if(SECTOR_TYPE_UNKNOWN_USED == sector_map[i])
         {
             debug_line("FS: erasing sector %ld (%ld)", i, i + sector_offset);
             watchdog_feed();
@@ -623,5 +625,4 @@ static void open_file_system(void)
             super_sector = sector;
         }
     }
-
 }
