@@ -1,0 +1,69 @@
+Firmware architecture
+=====================
+:toc:
+
+=== filesystem
+
+To allow a user configuration using configuration files the nomagic probe has a file system that can store these files.
+The file sytem can be accessed using the USB interface (Mass Storage Device Class) and inside the firmware.
+
+
+
+== folders
+The following lists all the folders and gives an overview what they contain.
+
+=== src
+main folder.
+
+=== src/cfg
+header files that configure parts of the nomagic probe firmware.
+
+=== src/cli
+command line interface for debugging the nomagic probe firmware.
+
+=== src/file
+file system.
+
+=== src/gdbserver
+implementation of the gdb server protocol.
+
+=== src/hal
+drivers to use the peripherals of the micro controller
+
+=== src/hal/hw
+definition of the special function registers for all peripherals.
+
+=== src/lib
+implementation of functionality usually provided by a "standard library". printf(), strlen(), atoi(), memcpy(),...
+
+=== src/swd
+implementation of the ARM SWD debug interface.
+
+=== src/tinyusb
+configuration and interface to tinyUSB
+
+=== src/tinyusb/src
+the tinyUSB stack. The folder contains all files from tinyUSB. Only a small fraction of the files are actually used in this firmware. Having them all available helps if the functionality needs to be extended and with tinyUS updates.
+
+=== doc
+contains documenation in various formats for all functionality of the nomagic probe.
+
+=== res
+general ressource files that were used.
+
+=== tests
+unit tests.
+
+=== tools
+software tools than were used.
+
+== files - modules
+each *.c file is a module. The following lists all the modules and gives an overview of what the modules are doing.
+
+
+=== main
+The main function. In dual core mode splitting the tasks onto the core is done here.
+
+
+=== led
+blinks the led in a pattern. This is used to signal different firmware states by using different blink patterns.

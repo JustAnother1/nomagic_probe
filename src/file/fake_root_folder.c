@@ -21,10 +21,10 @@
 #include "file/file_system.h"
 
 
-
 #define NUM_ENTRIES_PER_BLOCK  8
+#define INVALID_OFFSET         0xfffffffful
 
-
+uint32_t buf_offset = INVALID_OFFSET;
 fat_entry buf[NUM_ENTRIES_PER_BLOCK];  // 256 Bytes -> Flash Block size
 
 
@@ -130,6 +130,7 @@ int32_t fake_root_folder_read(uint32_t offset, uint8_t* buffer, uint32_t bufsize
 int32_t fake_root_folder_write(uint32_t offset, uint8_t* buffer, uint32_t bufsize)
 {
     uint32_t i;
+    buf_offset = INVALID_OFFSET;
     for(i = 0; i < bufsize; i++)
     {
         buffer[i] = ~buffer[i];
@@ -144,11 +145,19 @@ fat_entry* fake_root_get_entry_of_file_idx(uint32_t idx)
         uint32_t block = idx / NUM_ENTRIES_PER_BLOCK;
         uint32_t offset = block * sizeof(buf);
         uint32_t block_idx = idx - (block * NUM_ENTRIES_PER_BLOCK);
-        int32_t res = fake_root_folder_read(offset, (uint8_t*)buf, sizeof(buf));
-        if(res != sizeof(buf))
+        if(offset != buf_offset)
         {
-            return NULL;
+            int32_t res = fake_root_folder_read(offset, (uint8_t*)buf, sizeof(buf));
+            if(res != sizeof(buf))
+            {
+                return NULL;
+            }
+            else
+            {
+                buf_offset = offset;
+            }
         }
+        // else exactly that data is already in the buffer
         return &(buf[block_idx]);
     }
     else
@@ -208,11 +217,20 @@ fat_entry* fake_root_get_entry_of_file_named(char* filename)
     uint32_t offset = 0;
     while(offset < FLASH_SECTOR_SIZE)
     {
-        int32_t res = fake_root_folder_read(offset, (uint8_t*)buf, sizeof(buf));
-        if(res != sizeof(buf))
+        if(offset != buf_offset)
         {
-            return NULL;
+            int32_t res = fake_root_folder_read(offset, (uint8_t*)buf, sizeof(buf));
+            if(res != sizeof(buf))
+            {
+                return NULL;
+            }
+            else
+            {
+                buf_offset = offset;
+            }
         }
+        // else exactly that data is already in the buffer
+
         // check the entries if they match the filename
         for(i = 0; i < NUM_ENTRIES_PER_BLOCK; i++)
         {

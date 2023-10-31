@@ -21,6 +21,13 @@
 // #define FAVICON_16    1
 #define FAVICON_32    1
 
-int32_t fake_favicon_ico_file(uint32_t block, uint32_t offset, uint8_t* buffer, uint32_t bufsize);
+#ifdef FAVICON_16
+#define FAVICON_BLOCKS_USED 8
+#endif
+#ifdef FAVICON_32
+#define FAVICON_BLOCKS_USED 16
+#endif
+
+int32_t fake_favicon_ico_file(uint32_t offset, uint8_t* buffer, uint32_t bufsize);
 
 #endif /* FILE_FAKE_FAVICON_H_ */

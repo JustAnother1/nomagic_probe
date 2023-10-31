@@ -89,6 +89,7 @@ SRC += $(SRC_FOLDER)file/fake_fat.c
 SRC += $(SRC_FOLDER)file/fake_root_folder.c
 SRC += $(SRC_FOLDER)file/fake_text_files.c
 SRC += $(SRC_FOLDER)file/fake_favicon.c
+SRC += $(SRC_FOLDER)file/fake_fs.c
 SRC += $(SRC_FOLDER)file/file_storage.c
 SRC += $(SRC_FOLDER)file/file_system.c
 # USB driver

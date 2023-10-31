@@ -39,11 +39,10 @@ const uint8_t boot_sector[62] = {
         0x46, 0x41, 0x54, 0x31, 0x32, 0x20, 0x20, 0x20, // FAT Version 8 chars filled up with space -> "FAT12   "
 };
 
-int32_t fake_boot_sector(uint32_t block, uint32_t offset, uint8_t* buffer, uint32_t bufsize)
+int32_t fake_boot_sector(uint32_t offset, uint8_t* buffer, uint32_t bufsize)
 {
     uint32_t some = 0;
     uint32_t end = offset + (uint32_t)bufsize;
-    (void) block;
 
     if(offset < sizeof(boot_sector))
     {

@@ -27,7 +27,7 @@ For more information visit https://github.com/JustAnother1/nomagic_probe\r\n"
 icon=favicon.ico\r\n"
 
 
-int32_t fake_readme_file(uint32_t block, uint32_t offset, uint8_t* buffer, uint32_t bufsize);
-int32_t fake_autorun_inf_file(uint32_t block, uint32_t offset, uint8_t* buffer, uint32_t bufsize);
+int32_t fake_readme_file(uint32_t offset, uint8_t* buffer, uint32_t bufsize);
+int32_t fake_autorun_inf_file(uint32_t offset, uint8_t* buffer, uint32_t bufsize);
 
 #endif /* FILE_FAKE_TEXT_FILES_H_ */

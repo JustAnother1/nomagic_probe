@@ -1,6 +1,10 @@
 Documentation overview
 ======================
 
+== firmware architecture
+
+link:architecture.asciidoc[firmware architecture]
+
 == GDB Server
 
 https://sourceware.org/gdb/onlinedocs/gdb/Remote-Protocol.html#Remote-Protocol[gdbserver protocol]

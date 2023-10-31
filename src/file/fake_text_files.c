@@ -15,11 +15,12 @@
 
 #include <string.h>
 #include "fake_text_files.h"
+#include "file_storage.h"
 
-int32_t fake_readme_file(uint32_t block, uint32_t offset, uint8_t* buffer, uint32_t bufsize)
+int32_t fake_readme_file(uint32_t offset, uint8_t* buffer, uint32_t bufsize)
 {
     uint32_t some = 0;
-    if(0 == block)
+    if(BLOCK_SIZE > offset)
     {
         if(offset < sizeof(README_CONTENTS))
         {
@@ -40,10 +41,10 @@ int32_t fake_readme_file(uint32_t block, uint32_t offset, uint8_t* buffer, uint3
     return (int32_t)bufsize;
 }
 
-int32_t fake_autorun_inf_file(uint32_t block, uint32_t offset, uint8_t* buffer, uint32_t bufsize)
+int32_t fake_autorun_inf_file(uint32_t offset, uint8_t* buffer, uint32_t bufsize)
 {
     uint32_t some = 0;
-    if(0 == block)
+    if(BLOCK_SIZE > offset)
     {
         if(offset < sizeof(autorun_inf_CONTENTS))
         {

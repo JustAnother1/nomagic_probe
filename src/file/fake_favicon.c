@@ -539,10 +539,11 @@ unsigned char favicon_32_ico[] = {
 #endif
 
 
-int32_t fake_favicon_ico_file(uint32_t block, uint32_t offset, uint8_t* buffer, uint32_t bufsize)
+int32_t fake_favicon_ico_file(uint32_t offset, uint8_t* buffer, uint32_t bufsize)
 {
 #ifdef FAVICON_16
     uint32_t some = 0;
+    uint32_t block = offset / BLOCK_SIZE;
     if(0 == block)
     {
         if(offset < sizeof(favicon_ico_start))
@@ -594,29 +595,25 @@ int32_t fake_favicon_ico_file(uint32_t block, uint32_t offset, uint8_t* buffer, 
     return (int32_t)bufsize;
 #endif
 #ifdef FAVICON_32
-    uint32_t some = 0;
-    if(9 > block)  // data is in blocks 0..8
+    uint32_t bytes_written = 0;
+
+    if(offset < sizeof(favicon_32_ico))
     {
-        uint32_t start = block*BLOCK_SIZE + offset;
-        if(start < sizeof(favicon_32_ico))
+        // we are inside the data
+        bytes_written = sizeof(favicon_32_ico) - offset;
+        if(bytes_written > bufsize)
         {
-            some = sizeof(favicon_32_ico) - start;
-            if(some > bufsize)
-            {
-                some = bufsize;
-            }
-            memcpy(buffer, &favicon_32_ico[start], some);
+            bytes_written = bufsize;
         }
-        if(some < bufsize)
-        {
-            memset(&buffer[some], 0, bufsize - some);
-        }
+        memcpy(buffer, &favicon_32_ico[offset], bytes_written);
     }
-    else
+    if(bytes_written < bufsize)
     {
-        // all zeros
-        memset(buffer, 0, bufsize);
+        // the data did not fill the whole buffer
+        // -> now write the rest
+        memset(&buffer[bytes_written], 0, bufsize - bytes_written);
     }
+
     return (int32_t)bufsize;
 #endif
 }

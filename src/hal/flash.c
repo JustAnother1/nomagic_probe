@@ -202,7 +202,7 @@ void flash_write_block(uint32_t start_address, uint8_t* data, uint32_t length)
         // [start_address] must be aligned to a 256-byte boundary, and [length] must be a multiple of 256
         if((0 == (start_address & 0xff)) && (0 == (length & 0xff)))
         {
-            debug_line("Flash: writing 256 bytes @0x%08lx !", start_address);
+            // debug_line("Flash: writing 256 bytes @0x%08lx !", start_address);
             while(0 != (1& XIP_SSI->SR))
             {
                 ;

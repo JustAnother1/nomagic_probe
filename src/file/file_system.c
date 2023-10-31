@@ -25,7 +25,8 @@
 // TODO dynamic size
 #define FLASH_MAX_SECTORS         512
 
-#define FILE_SYSTEM_END           0x10200000  // TODO detect flash size
+// TODO detect flash size
+#define FILE_SYSTEM_END           0x10200000
 
 extern uint32_t file_system_start;
 
@@ -38,7 +39,6 @@ union buf_type
 
 static uint32_t sector_offset;
 static uint32_t block_count;
-// static uint8_t buf[FLASH_BLOCK_SIZE];
 static union buf_type buf;
 static uint16_t sector_map[FLASH_MAX_SECTORS];
 static uint32_t super_sector;
@@ -52,6 +52,7 @@ static void write_super_sector(uint32_t sector_number);
 static uint32_t getLocationOfSector(uint32_t sector);
 static int32_t write_block(uint32_t location, uint32_t block, uint32_t offset, uint8_t* buffer, uint32_t bufsize);
 static uint32_t erase_all_used_sectors(void);
+static uint32_t erase_all_sectors(void);
 static void read_block(uint32_t sector, uint32_t block);
 static void open_file_system(void);
 
@@ -64,7 +65,7 @@ void file_system_init(void)
     start_search_sector = 0;
     if(NO_SECTOR == super_sector)
     {
-        erase_all_used_sectors();
+        erase_all_sectors();
         // first boot after Flash erase/ Firmware update -> create file system
         create_file_system();
     }
@@ -124,9 +125,11 @@ int32_t file_system_read(uint32_t offset, uint8_t* buffer, uint32_t bufsize)
         // sector not found in sectorMap
         // -> we never wrote to that sector
         // -> therefore it is still empty
+        // debug_line("sector %ld, block %2ld, offset %ld - has never been written to !", sector, block, offset);
         memset(buffer, 0xff, bufsize);
         return (int32_t)bufsize;
     }
+    // debug_line("reading %ld bytes from sector %ld, block %2ld, offset %ld.", bufsize, sector, block, offset);
     do {
         read_block(location, block);
         if(bufsize > FLASH_BLOCK_SIZE)
@@ -204,30 +207,10 @@ int32_t file_system_write(uint32_t offset, uint8_t* buffer, uint32_t bufsize)
     return (int32_t)written;
 }
 
-bool file_system_has_file(char* filename)
+void file_system_format(void)
 {
-    fat_entry* entry = fake_root_get_entry_of_file_named(filename);
-    if(NULL == entry)
-    {
-        return false;
-    }
-    else
-    {
-        return true;
-    }
-}
-
-uint32_t file_system_get_size_of_file(char* filename)
-{
-    fat_entry* entry = fake_root_get_entry_of_file_named(filename);
-    if(NULL == entry)
-    {
-        return 0;
-    }
-    else
-    {
-        return entry->file_size;
-    }
+    erase_all_sectors();
+    create_file_system();
 }
 
 static int32_t write_block(uint32_t sector, uint32_t block, uint32_t offset, uint8_t* buffer, uint32_t bufsize)
@@ -490,6 +473,26 @@ static uint32_t erase_all_used_sectors(void)
     for(i = 0; i < FLASH_MAX_SECTORS; i ++)
     {
         if(SECTOR_TYPE_UNKNOWN_USED == sector_map[i])
+        {
+            debug_line("FS: erasing sector %ld (%ld)", i, i + sector_offset);
+            watchdog_feed();
+            flash_erase_page(i + sector_offset);
+            sector_map[i] = SECTOR_TYPE_EMPTY;
+            num_erased++;
+        }
+    }
+    return num_erased;
+}
+
+static uint32_t erase_all_sectors(void)
+{
+    uint32_t i;
+    uint32_t num_erased = 0;
+    super_sector = 0;
+    for(i = 0; i < FLASH_MAX_SECTORS; i ++)
+    {
+        if(   (SECTOR_TYPE_EMPTY != sector_map[i])
+           && (SECTOR_TYPE_UNAVAILABLE != sector_map[i]))
         {
             debug_line("FS: erasing sector %ld (%ld)", i, i + sector_offset);
             watchdog_feed();

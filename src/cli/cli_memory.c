@@ -20,12 +20,14 @@
 #include "hal/flash.h"
 #include "hal/boot_rom.h"
 #include <hal/hw/TIMER.h>
+#include "file/fake_fs.h"
 #include "file/file_system.h"
 #include "file/fake_root_folder.h"
 
 
 static uint32_t addr;
 static uint32_t num_loops = 0;
+static uint32_t file_size  = 0;
 
 bool cmd_memory_display(uint32_t loop)
 {
@@ -232,26 +234,87 @@ bool cmd_file_dump(uint32_t loop)
     {
         // first call
         char* filename = (char*)cli_get_parameter(0);
-        if(false == file_system_has_file(filename))
+
+        fat_entry* entry = fake_root_get_entry_of_file_named(filename);
+        if(NULL == entry)
         {
             debug_line("file(%s) not found !", filename);
             num_loops = 0;
         }
         else
         {
-            num_loops = file_system_get_size_of_file(filename);
-            debug_line("The file %s  has %ld bytes.", filename, num_loops);
+            debug_line("The file %s  has %ld bytes. Attributes 0x%02x.", filename, entry->file_size, entry->attributes);
+            debug_line("created: date 0x%04x, time 0x%04x", entry->creation_date, entry->creation_time);
+            debug_line("last write: date 0x%04x, time 0x%04x", entry->last_write_date, entry->last_write_time);
+            debug_line("last access date 0x%04x.", entry->last_access_date);
+            debug_line("first cluster 0x%04x.", entry->first_logical_cluster);
+            num_loops = entry->first_logical_cluster;
+            file_size = entry->file_size;
+            addr = 0;
         }
     }
     else
     {
-        num_loops = 0; // TODO implement dump of content
-        if(0 == num_loops)
+        uint32_t i;
+        uint32_t chunk_size = 256;
+        uint8_t buf[256];
+        char ascii_line[17] = {0};
+        // TODO handle files bigger than one sector (4096 Bytes)
+        int32_t res = fake_fs_read_fat_sector(num_loops, addr, buf, 256);
+        if(0 > res)
         {
-            return true; // we are done
+            debug_line("ERROR: failed to read content(%ld)", res);
+            return true;
+        }
+        if(chunk_size + addr > file_size)
+        {
+            // last chunk
+            chunk_size = file_size - addr;
+            num_loops = 0;
+        }
+        for(i = 0; i < chunk_size; i++)
+        {
+            if((i != 0) && (i%16 == 0))
+            {
+                uint32_t j;
+                debug_line(" %s", ascii_line);
+                for(j = 0; j < 16; j++)
+                {
+                    ascii_line[j] = 0;
+                }
+            }
+            debug_msg(" %02x", buf[i]);
+            if((buf[i] > 31) && (buf[i] < 127))
+            {
+                ascii_line[i%16] = (char)buf[i];
+            }
+            else
+            {
+                ascii_line[i%16] = '.';
+            }
+        }
+        addr = addr + chunk_size;
+        // if(0 != chunk_size%16)
+        {
+            // we have a not completely filled hex dump line at the end
+            // -> fill it up
+            while(0 != chunk_size%16)
+            {
+                debug_msg("   ");
+                chunk_size++;
+            }
+            debug_line(" %s", ascii_line);
         }
     }
-    return false; // we need to do more
+
+    if(0 == num_loops)
+    {
+        return true; // we are done
+    }
+    else
+    {
+        return false; // we need to do more
+    }
 }
 
 bool cmd_file_ls(uint32_t loop)
@@ -287,3 +350,11 @@ bool cmd_file_ls(uint32_t loop)
         }
     }
 }
+
+bool cmd_file_format(uint32_t loop)
+{
+    (void) loop;
+    file_system_format();
+    return true; // we are done
+}
+
