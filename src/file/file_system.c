@@ -44,7 +44,7 @@ static uint16_t sector_map[FLASH_MAX_SECTORS];
 static uint32_t super_sector;
 static uint32_t start_search_sector;
 
-static void scan_flash(void);
+static uint32_t scan_flash(void);
 static bool block_is_empty(uint8_t* block);
 static void create_file_system(void);
 static uint32_t find_next_free_sector(void);
@@ -58,15 +58,17 @@ static void open_file_system(void);
 
 void file_system_init(void)
 {
+    uint32_t last_sector;
     flash_init();
     block_count = (uint32_t)(1024*1024*1) / file_storage_getblock_size(); // TODO 1MB for now
     sector_offset = (0x00ffffff & file_system_start) >>12;
-    scan_flash();
+    last_sector = scan_flash();
     start_search_sector = 0;
     if(NO_SECTOR == super_sector)
     {
         erase_all_sectors();
         // first boot after Flash erase/ Firmware update -> create file system
+        super_sector = last_sector;
         create_file_system();
     }
     else
@@ -323,11 +325,12 @@ static int32_t write_block(uint32_t sector, uint32_t block, uint32_t offset, uin
     return (int32_t)bufsize;
 }
 
-static void scan_flash(void)
+static uint32_t scan_flash(void)
 {
-    super_sector = NO_SECTOR;  // no super block
+    uint32_t last_sector = 0;
     uint32_t num_blocks = 0;
     uint32_t num_sectors = 0;
+    super_sector = NO_SECTOR;  // no super block
     do{
         watchdog_feed();
         read_block(num_sectors, num_blocks);
@@ -379,11 +382,13 @@ static void scan_flash(void)
             }
         }
     }while((num_sectors * FLASH_SECTOR_SIZE) < (FILE_SYSTEM_END - file_system_start));
+    last_sector = num_sectors -1;
     for(;num_sectors < FLASH_MAX_SECTORS; num_sectors ++)
     {
         // debug_line("FS: marking sector %ld as unavailable.", num_sectors);
         sector_map[num_sectors] = SECTOR_TYPE_UNAVAILABLE;
     }
+    return last_sector;
 }
 
 static bool block_is_empty(uint8_t* block)
