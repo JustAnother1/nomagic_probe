@@ -27,6 +27,22 @@
 
 // If the  ACK_PROTOCOL_ERROR_0 or ACK_PROTOCOL_ERROR_1 occur twice then a line reset  + read IDCODE is needed.
 
+// DP addresses:
+// A[0] = 0,  A[1] = 0
+#define ADDR_IDCODE    0  // A[3:2] = 0 0
+#define ADDR_DPIDR     0  // A[3:2] = 0 0
+#define ADDR_ABORT     0  // A[3:2] = 0 0
+#define ADDR_CTRL_STAT 4  // A[3:2] = 0 1
+#define ADDR_WCR       4  // A[3:2] = 0 1
+#define ADDR_SELECT    8  // A[3:2] = 1 0
+#define ADDR_RESEND    8  // A[3:2] = 1 0
+#define ADDR_RDBUFF    12 // A[3:2] = 1 1
+#define ADDR_TARGETSEL 12 // A[3:2] = 1 1
+
+#define AP  1
+#define DP  0
+
+
 void swd_packets_init(void);
 // default is false
 void set_sticky_overrun(bool value);

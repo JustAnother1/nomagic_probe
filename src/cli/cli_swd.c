@@ -18,6 +18,7 @@
 
 #include "swd/swd_protocol.h"
 #include "swd/swd_gpio.h"
+#include "swd/swd_packets.h"
 
 // Multi Drop needs to select the end point before any communication.
 // No detection of available end points possible, just testing all values.
@@ -48,39 +49,45 @@
 bool cmd_swd_test(uint32_t loop)
 {
     (void)loop;
-    uint32_t id = 0;
+    uint32_t data = 0;
 
     // activate_Reset();
     activate_Run();
 
-    debug_line("STM32");
-    delay_us(100000);
-    id = swd_connect(false, 0);
-    debug_line("ID: 0x%08lx", id);
+    debug_line("SWDv1");
+    data = swd_connect(false, 0);
+    debug_line("ID: 0x%08lx", data);
+    packet_read(DP, ADDR_CTRL_STAT, &data);
+    debug_line("CTRL/STAT: 0x%08lx", data);
     swd_disconnect();
+
 
 /* RP 2040
     // delay?
     debug_line("Core 0");
     delay_us(100000);
-    id = swd_connect(true, 0x01002927ul);  // try RP2040 Core 0
-    debug_line("ID: 0x%08lx", id);
+    data = swd_connect(true, 0x01002927ul);  // try RP2040 Core 0
+    debug_line("ID: 0x%08lx", data);
+    packet_read(DP, ADDR_CTRL_STAT, &data);
+    debug_line("CTRL/STAT: 0x%08lx", data);
     swd_disconnect();
 
     debug_line("Core 1");
     delay_us(100000);
-    id = swd_connect(true, 0x11002927ul);  // try RP2040 Core 1
-    debug_line("ID: 0x%08lx", id);
+    data = swd_connect(true, 0x11002927ul);  // try RP2040 Core 1
+    debug_line("ID: 0x%08lx", data);
+    packet_read(DP, ADDR_CTRL_STAT, &data);
+    debug_line("CTRL/STAT: 0x%08lx", data);
     swd_disconnect();
 
     debug_line("Rescue-DP");
     delay_us(100000);
-    id = swd_connect(true, 0xf1002927ul);  // try RP2040 Rescue DP
-    debug_line("ID: 0x%08lx", id);
+    data = swd_connect(true, 0xf1002927ul);  // try RP2040 Rescue DP
+    debug_line("ID: 0x%08lx", data);
+    packet_read(DP, ADDR_CTRL_STAT, &data);
+    debug_line("CTRL/STAT: 0x%08lx", data);
     swd_disconnect();
 */
-    // TODO
-
     return true;
 }
 

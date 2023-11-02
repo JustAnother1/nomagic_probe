@@ -18,6 +18,11 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+typedef struct{
+    bool is_connected; // true = communication to target active.
+    bool is_minimal_debug_port; // if true then Transaction counter, Pushed-verify, and Pushed-find operations are not implemented.
+} swd_state;
+
 void swd_init(void);
 uint32_t swd_connect(bool multi, uint32_t target);
 void swd_disconnect(void);

@@ -40,6 +40,8 @@
 #define PADS_GPIO_SWDIR  GPIO1
 #define IO_SWDIR         GPIO1_CTRL
 
+extern int swd_freq_delay;
+
 
 void swd_gpio_init(void);
 
@@ -68,16 +70,27 @@ static inline void set_SWCLK_Low(void)
 // SWDIO
 static inline void switch_SWDIO_to_Output(void)
 {
+    // SWDIO
     SIO->GPIO_OE_SET = 1ul << PIN_SWDIO;
+    PADS_BANK0->PADS_GPIO_SWDIO = (PADS_BANK0_GPIO0_DRIVE_2mA << PADS_BANK0_GPIO0_DRIVE_OFFSET)
+                                | (0 << PADS_BANK0_GPIO0_PUE_OFFSET) // pull up
+                                | (0 << PADS_BANK0_GPIO0_PDE_OFFSET) // pull down
+                                | (1 << PADS_BANK0_GPIO0_SLEWFAST_OFFSET)
+                                ;
+    // SWDIR
     SIO->GPIO_OUT_SET = 1 << PIN_SWDIR; // SWDIR = High
 }
 
 static inline void switch_SWDIO_to_Input(void)
 {
+    //SWDIO
     SIO->GPIO_OE_CLR = 1ul << PIN_SWDIO;
-    PADS_BANK0->PADS_GPIO_SWDIO = (1 << PADS_BANK0_GPIO0_IE_OFFSET)
-                                | (1 << PADS_BANK0_GPIO0_SCHMITT_OFFSET)
-                                | (1 << PADS_BANK0_GPIO0_SLEWFAST_OFFSET);
+    PADS_BANK0->PADS_GPIO_SWDIO = (1 << PADS_BANK0_GPIO0_IE_OFFSET)  // input enabled
+                                | (0 << PADS_BANK0_GPIO0_PUE_OFFSET) // pull up
+                                | (0 << PADS_BANK0_GPIO0_PDE_OFFSET) // pull down
+                                | (1 << PADS_BANK0_GPIO0_SLEWFAST_OFFSET)
+                                ;
+    //SWDIR
     SIO->GPIO_OUT_CLR = 1 << PIN_SWDIR;  // SWDIR = Low
 }
 
@@ -105,7 +118,17 @@ static inline int read_SWDIO(void)
 
 static inline void quarter_clock_delay(void)
 {
-    delay_us(2);
+    //delay_us(swd_freq_delay);
+
+    /*
+    volatile uint32_t cnt = swd_freq_delay;
+    while (cnt > 0) {
+        cnt--;
+    }
+    */
+
+    __asm__ __volatile__ ("nop");
+
 }
 
 #endif /* SRC_SWD_SWD_GPIO_H_ */

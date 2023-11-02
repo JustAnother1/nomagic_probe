@@ -15,17 +15,13 @@
 #include "swd_packets.h"
 #include "swd_gpio.h"
 
-// gpio_init() functions sets GPIOS into Output mode!
-static bool needs_turn_for_output = false;
 // ARM document defines this!
 static bool sticky_overrun = false;
 
 static void out_send_request(int APnotDP, int read_not_write, int address);
-static int in_read_ACK(void);
-static void switch_to_output(void);
-
+static int  in_read_ACK(void);
 static void write_bit(int data);
-static int read_bit(void);
+static int  read_bit(void);
 static void turn_to_output(void);
 static void turn_to_input(void);
 
@@ -67,7 +63,6 @@ bit is done
 
 void swd_packets_init(void)
 {
-    needs_turn_for_output = false;
     sticky_overrun = false;
     swd_gpio_init();
 }
@@ -81,13 +76,13 @@ void packet_line_reset(void)
 {
     int i;
     // at least 50 bits 1
-    switch_to_output();
+    switch_SWDIO_to_Output();
     for(i = 0; i < 64; i++)
     {
         write_bit(1);
     }
     // at least 2 idle cycles
-    for(i = 0; i < 2; i++)
+    for(i = 0; i < 4; i++)
     {
         write_bit(0);
     }
@@ -112,10 +107,10 @@ int packet_write(int APnotDP, int address, uint32_t data)
     int num_ones = 0;
     int ack;
 
-    switch_to_output();
+    switch_SWDIO_to_Output();
 
     out_send_request(APnotDP, 0, address);
-
+    // delay_us(100); // TODO debug only
     turn_to_input();
 
     ack = in_read_ACK();
@@ -139,6 +134,7 @@ int packet_write(int APnotDP, int address, uint32_t data)
     }
 
     turn_to_output();
+    // delay_us(100); // TODO debug only
 
     // Data
     for(i = 0; i < 32; i++)
@@ -148,7 +144,6 @@ int packet_write(int APnotDP, int address, uint32_t data)
         if(0 == ((1<<i) & data))
         {
             write_bit(0);
-
         }
         else
         {
@@ -157,6 +152,7 @@ int packet_write(int APnotDP, int address, uint32_t data)
         }
     }
 
+    // delay_us(100); // TODO debug only
     // Parity
     if(0 == num_ones%2)
     {
@@ -174,11 +170,14 @@ int packet_read(int APnotDP, int address, uint32_t* data)
     int i;
     int num_ones = 0;
     int ack;
+    int parity;
     uint32_t read_data = 0;
 
-    switch_to_output();
+    switch_SWDIO_to_Output();
 
     out_send_request(APnotDP, 1, address);
+
+    // delay_us(100); // TODO debug only
 
     turn_to_input();
 
@@ -200,6 +199,8 @@ int packet_read(int APnotDP, int address, uint32_t* data)
     }
     */
 
+    // delay_us(100); // TODO debug only
+
     // Data
     for(i = 0; i < 32; i++)
     {
@@ -215,11 +216,21 @@ int packet_read(int APnotDP, int address, uint32_t* data)
 
     *data = read_data;
 
-    // Parity
-    if((num_ones%2) != read_bit())
+
+    // delay_us(100); // TODO debug only
+
+    parity = read_bit();
+
+    // delay_us(100); // TODO debug only
+
+    if(ACK_OK == ack)
     {
-        // parity error !
-        ack = ERROR_PARITY;
+        // Parity
+        if((num_ones%2) != parity)
+        {
+            // parity error !
+            ack = ERROR_PARITY;
+        }
     }
     switch_SWDIO_to_Output();
     return ack;
@@ -261,35 +272,26 @@ static int read_bit(void)
 
 static void turn_to_output(void)
 {
-    switch_SWDIO_to_Output();
     quarter_clock_delay();
     set_SWCLK_High();
     quarter_clock_delay();
     quarter_clock_delay();
     set_SWCLK_Low();
     quarter_clock_delay();
-    needs_turn_for_output = false;
+    switch_SWDIO_to_Output();
 }
 
 static void turn_to_input(void)
 {
-    switch_SWDIO_to_Input();
+    // switch_SWDIO_to_Input();
     quarter_clock_delay();
     set_SWCLK_High();
     quarter_clock_delay();
+    // switch_SWDIO_to_Input();
     quarter_clock_delay();
     set_SWCLK_Low();
+    switch_SWDIO_to_Input();
     quarter_clock_delay();
-    needs_turn_for_output = true;
-}
-
-static void switch_to_output(void)
-{
-    if(true == needs_turn_for_output)
-    {
-        turn_to_output();
-    }
-    switch_SWDIO_to_Output();
 }
 
 static void out_send_request(int APnotDP, int read_not_write, int address)

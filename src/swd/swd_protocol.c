@@ -19,64 +19,47 @@
 #include <stdio.h>
 #include "hal/debug_uart.h"
 
-// DP addresses:
-// A[0] = 0,  A[1] = 0
-#define ADDR_IDCODE    0  // A[3:2] = 0 0
-#define ADDR_DPIDR     0  // A[3:2] = 0 0
-#define ADDR_ABORT     0  // A[3:2] = 0 0
-#define ADDR_CTRL_STAT 4  // A[3:2] = 0 1
-#define ADDR_WCR       4  // A[3:2] = 0 1
-#define ADDR_SELECT    8  // A[3:2] = 1 0
-#define ADDR_RESEND    8  // A[3:2] = 1 0
-#define ADDR_RDBUFF    12 // A[3:2] = 1 1
-#define ADDR_TARGETSEL 12 // A[3:2] = 1 1
-
-#define AP  1
-#define DP  0
-
-static bool isMinimalDebugPort;
+static swd_state state;
 
 void swd_init(void)
 {
-    isMinimalDebugPort = false;
+    state.is_connected = false;
+    state.is_minimal_debug_port = false;
     swd_packets_init();
 }
 
 
 uint32_t swd_connect(bool multi, uint32_t target)
 {
-    (void) target;
     uint32_t read_data = 0;
     int res;
 
     packet_line_reset();
     // the first one might not have worked if the device is talked to another debugger before we came along.
-    delay_us(100000);  // TODO for Debug only !
-
     packet_line_reset();
-
-    delay_us(100000);  // TODO for Debug only !
+    // delay_us(100); // TODO debug only
 
     if(true == multi)
     {
         // write TARGETSEL register to select the target CPU
         packet_write(DP, ADDR_TARGETSEL, target);  // ignore result -> line is not driven
-        delay_us(100000);  // TODO for Debug only !
+        // delay_us(100); // TODO debug only
     }
     // else -> nothing to do
 
     // read id register
-    res = packet_read(DP, ADDR_DPIDR,&read_data);
-    delay_us(100000);  // TODO for Debug only !
+    res = packet_read(DP, ADDR_IDCODE, &read_data);
+    // delay_us(100); // TODO debug only
     if(ACK_OK == res)
     {
+        state.is_connected = true;
         if(0 != ((1<<16) & read_data))
         {
-            isMinimalDebugPort = true;
+            state.is_minimal_debug_port = true;
         }
         else
         {
-            isMinimalDebugPort = false;
+            state.is_minimal_debug_port = false;
         }
     }
     else
@@ -89,7 +72,7 @@ uint32_t swd_connect(bool multi, uint32_t target)
             break;
 
         case ACK_OK:
-            debug_line("SWD: OK");
+            debug_line("SWD: OK");  // TODO debug only
             break;
 
         case ACK_WAIT:
@@ -116,6 +99,7 @@ uint32_t swd_connect(bool multi, uint32_t target)
 void swd_disconnect(void)
 {
     packet_disconnect();
+    state.is_connected = false;
 }
 
 
