@@ -172,15 +172,27 @@ $(BIN_FOLDER)$(PROJECT).elf: $(OBJS)
 	$(LD) $(LFLAGS) -o $(BIN_FOLDER)$(PROJECT).elf $(OBJS)
 
 %hex: %elf
+	@echo ""
+	@echo "elf->hex"
+	@echo "========"
 	$(HEX) $< $@
 
 %bin: %elf
+	@echo ""
+	@echo "elf->bin"
+	@echo "========"
 	$(BIN) $< $@
 
 %txt: %elf
+	@echo ""
+	@echo "disassemble"
+	@echo "==========="
 	$(DIS) $< $@ > $@
 
 flash: $(BIN_FOLDER)$(PROJECT).elf
+	@echo ""
+	@echo "flashing"
+	@echo "========"
 	openocd  -f interface/cmsis-dap.cfg -f target/rp2040.cfg -c "program $(BIN_FOLDER)$(PROJECT).elf verify reset exit"
 
 $(BIN_FOLDER)$(PROJECT).uf2: $(BIN_FOLDER)$(PROJECT).elf
@@ -197,20 +209,28 @@ all: $(BIN_FOLDER)$(PROJECT).uf2
 
 	
 $(BIN_FOLDER)%o: %c
+	@echo ""
 	@echo "=== compiling $@"
 	@$(MKDIR_P) $(@D)
-	$(CC) -c $(CFLAGS) $(DDEFS) $(INCDIR) $< -o $@
+	$(CC) -MD -MP -c $(CFLAGS) $(DDEFS) $(INCDIR) $< -o $@
 
 list:
+	@echo ""
+	@echo "listing"
+	@echo "========"
 	@echo " READ -> $(BIN_FOLDER)$(PROJECT).rd"
 	@arm-none-eabi-readelf -Wall $(BIN_FOLDER)$(PROJECT).elf > $(BIN_FOLDER)$(PROJECT).rd
 	@echo " LIST -> $(BIN_FOLDER)$(PROJECT).lst"
 	@$(OBJDUMP) -axdDSstr $(BIN_FOLDER)$(PROJECT).elf > $(BIN_FOLDER)$(PROJECT).lst
 
 doc:
+	@echo ""
+	@echo "doxygen"
+	@echo "========"
 	doxygen
 
 tests/bin/%o: %c
+	@echo ""
 	@echo "=== compiling $@"
 	@$(MKDIR_P) $(@D)
 	$(TST_CC) -c $(TST_CFLAGS) $(TST_DDEFS) $(TST_INCDIR) $< -o $@
@@ -239,3 +259,4 @@ clean:
 
 .PHONY: help clean flash all list test
 
+-include $(OBJS:.o=.d)
