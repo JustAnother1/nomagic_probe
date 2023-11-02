@@ -40,7 +40,7 @@
 #define PADS_GPIO_SWDIR  GPIO1
 #define IO_SWDIR         GPIO1_CTRL
 
-extern int swd_freq_delay;
+extern uint32_t swd_freq_delay;
 
 
 void swd_gpio_init(void);
@@ -118,16 +118,16 @@ static inline int read_SWDIO(void)
 
 static inline void quarter_clock_delay(void)
 {
-    //delay_us(swd_freq_delay);
+    delay_us(swd_freq_delay);
 
-    /*
+/*
     volatile uint32_t cnt = swd_freq_delay;
     while (cnt > 0) {
         cnt--;
     }
-    */
+*/
 
-    __asm__ __volatile__ ("nop");
+    // __asm__ __volatile__ ("nop");
 
 }
 

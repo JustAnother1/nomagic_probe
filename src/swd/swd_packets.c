@@ -18,12 +18,11 @@
 // ARM document defines this!
 static bool sticky_overrun = false;
 
-static void out_send_request(int APnotDP, int read_not_write, int address);
-static int  in_read_ACK(void);
+static int send_packet_request(int APnotDP, int read_not_write, int address);
+static int  read_ACK(void);
 static void write_bit(int data);
 static int  read_bit(void);
 static void turn_to_output(void);
-static void turn_to_input(void);
 
 /*
 Write to Target: (SWDIO must be valid before rising edge)
@@ -90,12 +89,11 @@ void packet_line_reset(void)
 
 void packet_disconnect(void)
 {
-    // at least 8 Idly cycles
+    // at least 8 Idle cycles
     int i;
-    // 16 bits 0
     set_SWDIO_Low();
     switch_SWDIO_to_Output();
-    for(i = 0; i < 50; i++)
+    for(i = 0; i < 16; i++)
     {
         write_bit(0);
     }
@@ -107,13 +105,8 @@ int packet_write(int APnotDP, int address, uint32_t data)
     int num_ones = 0;
     int ack;
 
-    switch_SWDIO_to_Output();
+    ack = send_packet_request(APnotDP, 0, address);
 
-    out_send_request(APnotDP, 0, address);
-    // delay_us(100); // TODO debug only
-    turn_to_input();
-
-    ack = in_read_ACK();
     // handle ACK
     if(ACK_OK != ack)
     {
@@ -173,15 +166,8 @@ int packet_read(int APnotDP, int address, uint32_t* data)
     int parity;
     uint32_t read_data = 0;
 
-    switch_SWDIO_to_Output();
+    ack = send_packet_request(APnotDP, 1, address);
 
-    out_send_request(APnotDP, 1, address);
-
-    // delay_us(100); // TODO debug only
-
-    turn_to_input();
-
-    ack = in_read_ACK();
     // handle ACK
     /* ignore ACK for now
     if(ACK_OK != ack)
@@ -261,10 +247,10 @@ static int read_bit(void)
 {
     int res = 0;
     quarter_clock_delay();
+    res = read_SWDIO();
     set_SWCLK_High();
     quarter_clock_delay();
     quarter_clock_delay();
-    res = read_SWDIO();
     set_SWCLK_Low();
     quarter_clock_delay();
     return res;
@@ -281,22 +267,12 @@ static void turn_to_output(void)
     switch_SWDIO_to_Output();
 }
 
-static void turn_to_input(void)
-{
-    // switch_SWDIO_to_Input();
-    quarter_clock_delay();
-    set_SWCLK_High();
-    quarter_clock_delay();
-    // switch_SWDIO_to_Input();
-    quarter_clock_delay();
-    set_SWCLK_Low();
-    switch_SWDIO_to_Input();
-    quarter_clock_delay();
-}
-
-static void out_send_request(int APnotDP, int read_not_write, int address)
+static int send_packet_request(int APnotDP, int read_not_write, int address)
 {
     int parity = 0;
+
+    switch_SWDIO_to_Output();
+
     // start Bit
     write_bit(1);
 
@@ -359,10 +335,33 @@ static void out_send_request(int APnotDP, int read_not_write, int address)
     write_bit(0);
 
     // Park
-    write_bit(1);
+    //write_bit(1);
+
+    set_SWDIO_High();
+    quarter_clock_delay();
+    set_SWCLK_High();
+    quarter_clock_delay();
+    switch_SWDIO_to_Input();
+    quarter_clock_delay();
+    set_SWCLK_Low();
+    quarter_clock_delay();
+
+    // Trn - turnaround (turn to input - so that target can send)
+
+    // switch_SWDIO_to_Input();
+    quarter_clock_delay();
+    set_SWCLK_High();
+    quarter_clock_delay();
+    // switch_SWDIO_to_Input();
+    quarter_clock_delay();
+    set_SWCLK_Low();
+    // switch_SWDIO_to_Input();
+    quarter_clock_delay();
+
+    return read_ACK();
 }
 
-static int in_read_ACK(void)
+static int read_ACK(void)
 {
     int ack = 0;
     // ACK 0

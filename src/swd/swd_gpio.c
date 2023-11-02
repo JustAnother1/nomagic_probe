@@ -18,7 +18,7 @@
 #include <hal/hw/PSM.h>
 #include <hal/hw/RESETS.h>
 
-int swd_freq_delay;
+uint32_t swd_freq_delay;
 
 void swd_gpio_init(void)
 {
