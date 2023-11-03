@@ -61,6 +61,7 @@ uint32_t swd_connect(bool multi, uint32_t target)
         {
             state.is_minimal_debug_port = false;
         }
+        state.dp_version = (read_data & 0xF000)>>12;  // bit 12 to 15
     }
     else
     {

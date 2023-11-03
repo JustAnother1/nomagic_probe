@@ -17,7 +17,7 @@
 
 volatile uint32_t ms_since_boot;
 
-void delay_us(int usec) {
+void delay_us(uint32_t usec) {
     while (usec != 0) {
         volatile uint32_t cnt = 11;
         while (cnt > 0) {

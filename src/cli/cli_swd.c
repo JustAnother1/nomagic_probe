@@ -57,6 +57,8 @@ bool cmd_swd_test(uint32_t loop)
     debug_line("SWDv1");
     data = swd_connect(false, 0);
     debug_line("ID: 0x%08lx", data);
+
+
     packet_read(DP, ADDR_CTRL_STAT, &data);
     debug_line("CTRL/STAT: 0x%08lx", data);
     swd_disconnect();

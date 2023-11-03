@@ -205,7 +205,15 @@ int packet_read(int APnotDP, int address, uint32_t* data)
 
     // delay_us(100); // TODO debug only
 
-    parity = read_bit();
+    // parity = read_bit();
+    quarter_clock_delay();
+    parity = read_SWDIO();
+    set_SWCLK_High();
+    switch_SWDIO_to_Output();
+    quarter_clock_delay();
+    // quarter_clock_delay();
+    // set_SWCLK_Low();
+    // quarter_clock_delay();
 
     // delay_us(100); // TODO debug only
 
@@ -218,7 +226,7 @@ int packet_read(int APnotDP, int address, uint32_t* data)
             ack = ERROR_PARITY;
         }
     }
-    switch_SWDIO_to_Output();
+    // switch_SWDIO_to_Output();
     return ack;
 }
 

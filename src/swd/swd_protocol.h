@@ -21,6 +21,7 @@
 typedef struct{
     bool is_connected; // true = communication to target active.
     bool is_minimal_debug_port; // if true then Transaction counter, Pushed-verify, and Pushed-find operations are not implemented.
+    uint32_t dp_version; // can be 0 to 3 (ADIv6)
 } swd_state;
 
 void swd_init(void);
