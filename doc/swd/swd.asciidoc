@@ -11,6 +11,16 @@ link:IHI0074D_debug_interface_v6_0_architecture_specification.pdf[ARM Debug Inte
 
 link:jep106av.pdf[JEP 106]
 
+== ADI
+
+  * most recent is ADIv6
+  * ARM recommends ADIv4 for Armv6 architecture (Cortex-M0, Cortex-M0+)
+  * ADIv6 introduces new DPv3 and APv2
+
+The Debug system consists of the physical connection (SWD) that logically ends at the Debug Prt (DP) in the target. The DP then can talk to the Access Port (AP).
+There are different kinds of AP. The MEM-AP can access the memory of the target.
+
+
 == SWD protocol versions
   * 1 : point-to-point
   * 2 : multi-drop
@@ -54,8 +64,6 @@ When the target samples SWDIO, sampling is performed on the rising edge of SWCLK
 SWDIO, or stops driving it, signal changes are performed on the rising edge of SWCLK.
 
 Target has a 100k pull up on SWDIO.
-
-
 
 
 === packet request
@@ -149,6 +157,251 @@ Target has a 100k pull up on SWDIO.
 === Data transfer phase
 
 
+=== DP access
+
+==== Versions
+
+[cols="1,1"]
+|===
+| Version
+| description
+
+| DPv0
+| ADIv5 JTAG only
+
+| DPv1
+| ADIv5 JTAG + SW
+
+| DPv2
+| ADIV5.1 SWv2
+
+| DPv3
+| ADIv6
+
+|===
+
+==== Registers
+
+[cols="1,1,1,1,1,1,1,1,1"]
+|===
+| Name
+| DPv0
+| DPv1
+| DPv2
+| DPv3
+| access
+| address
+| DPBANKSEL
+| notes
+
+
+| ABORT
+| yes
+| yes
+| yes
+| yes
+| WO
+| 0
+| x
+| optional and implementation defined 
+
+| BASEPTR0
+| no
+| no
+| no
+| yes
+| RO
+| 0
+| 2
+| address aligned to 4KB boundary (bits[11:0] = 0)
+
+| BASEPTR1
+| no
+| no
+| no
+| yes
+| RO
+| 0
+| 3
+| 
+
+| CTRL/STAT
+| yes
+| yes
+| yes
+| yes
+| RW
+| 4
+| 0
+| 
+
+| DLCR
+| no
+| yes
+| yes
+| yes
+| RW
+| 4
+| 1
+| 
+
+| DLPIDR
+| no
+| no
+| yes
+| yes
+| RO
+| 4
+| 3
+| 
+
+| DPIDR
+| no
+| yes
+| yes
+| yes
+| RO
+| 0
+| 0
+| 
+
+| DPIDR1
+| no
+| no
+| no
+| yes
+| RO
+| 0
+| 1
+| 
+
+| EVENTSTAT
+| ???
+| ???
+| ???
+| yes
+| RO
+| 4
+| 4
+| 
+
+| RDBUFF
+| yes
+| yes
+| yes
+| yes
+| RO
+| 0xc
+| x
+| 
+
+| RESEND
+| no
+| yes
+| yes
+| yes
+| RO
+| 8
+| x
+| 
+
+| SELECT
+| yes
+| yes
+| yes
+| yes
+| WO
+| 8
+| not applicable
+| 
+
+| SELECT1
+| no
+| no
+| no
+| yes
+| WO
+| 4
+| 5
+| 
+
+| TARGETID
+| no
+| no
+| yes
+| yes
+| RO
+| 4
+| 2
+| 
+
+| TARGETSEL
+| no
+| no
+| yes
+| yes
+| WO
+| 0xc
+| x
+| 
+
+|===
+
+
+The SELECT.DPBANKSEL field determines which register is accessed at addresses 0x0 and 0x4.
+
+A0 and A1 = 0 !
+
+==== MinDP
+
+The minimal DP is a bit different:
+MINDP implementations must omit the following DP features:
+  * Pushed-verify operation.
+  * Pushed-compare operation.
+  * The transaction counter.
+
+MINDP implementations must observe the following conventions:
+  * The DPIDR.MIN field is RAO.
+  * The following fields of the CTRL/STAT register are RES0:
+  
+    — TRNCNT.
+    
+    — MASKLANE.
+    
+    — STICKYCMP.
+    
+    — TRNMODE.
+    
+    See also CTRL/STAT.
+    
+  * The ABORT.STKCMPCLR field is SBZ(Should be Zero). Writing 0b1 to this bit is UNPREDICTABLE.
+
+
+=== AP access
+
+==== Versions
+
+[cols="1,1"]
+|===
+| Version
+| description
+
+| APv2
+| ADIv6
+
+|===
+
+
+Address is taken from A2, A3 (from packet request) and SELECT and SELECT1 registers in DP.
+A0 and A1= 0 !
+
+== opening a connection
+
+  - 2x line reset
+  - read id
+  - power on
+
+
 == Dictionary
 
 There are some SWD specific words used that only make sense in the SWD contet. These words are defined here.
@@ -164,11 +417,29 @@ There are some SWD specific words used that only make sense in the SWD contet. T
 | AP or APACC
 | Access Port (connects to device Registsres,..)
 
+| CSW
+| Control and Status Word
+
 | DAP
 | Debug Access Port (implementation of ADI)
 
 | DP or DPACC
 | Debug Port (connects external Debug Hardware to chip)
+
+| DRW
+| Data Read/Write
+
+| IDR
+| Identification Register
+
+| JTAG
+| IEEE 1149.1 JTAG - IEEE Standard Test Access Port and Boundary Scan Architecture
+
+| JTAG-AP
+| JTAG Access Port
+
+| MEM-AP
+| Memory-mapped Access Port
 
 | RAO
 | Read as One 
@@ -187,6 +458,9 @@ There are some SWD specific words used that only make sense in the SWD contet. T
 
 | TAP
 |Test Access Port
+
+| TAR
+| Transfer Address Register
 
 | TRNCNT
 | Transaction counter

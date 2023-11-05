@@ -8,11 +8,19 @@ It does not use external libraries. Therefore all code is in this library, no de
 
 No dynamic memory allocation, no malloc!
 
-== Documentation
+:toc:
+
+== features
+
+ - USB CDCD(serial port) gdb server
+ - USB MSCD(thumb drive) for configuration files.
+ - support for SWD according to ARM ADIv5.0, ARM ADIv5.1, ARM ADIv5.2, ARM ADIv6.0.
+
+== documentation
 
 link:doc/overview.asciidoc[overview]
 
-== Building and Starting
+== building and starting
 
 The firmware can be build using make. The generated Files will be placed in the bin folder. For details try
 
@@ -26,7 +34,7 @@ Depending on the target you are building for you might need to have additionalto
 - for automatic generated documentation you need http://www.stack.nl/~dimitri/doxygen/[Doxygen]
 - for unit testing you need https://cpputest.github.io/[CppUTest]
 
-== Pinout
+== pinout
 
 === pico
 The pico has 40 pins (1..40) Numbered counter clock wise starting at the USB connector.
@@ -81,7 +89,7 @@ Pin 22: (GPIO 17) Debug Uart RX (UART0)
 
 
 
-== License
+== license
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License version 2
