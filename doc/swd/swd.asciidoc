@@ -21,10 +21,6 @@ The Debug system consists of the physical connection (SWD) that logically ends a
 There are different kinds of AP. The MEM-AP can access the memory of the target.
 
 
-== SWD protocol versions
-  * 1 : point-to-point
-  * 2 : multi-drop
-
 == protocol definition
 
 === line interface
@@ -64,6 +60,13 @@ When the target samples SWDIO, sampling is performed on the rising edge of SWCLK
 SWDIO, or stops driving it, signal changes are performed on the rising edge of SWCLK.
 
 Target has a 100k pull up on SWDIO.
+
+To ensure that the transfer can be clocked through the SW-DP, after the data transfer phase the host must do one of
+the following:
+  * Immediately start a new SWD operation with the start bit of a new packet request.
+  * Continue to drive the SWD interface with idle cycles until the host starts a new SWD operation.
+  * If the host is driving the SWD clock, continue to clock the SWD interface with at least eight idle cycles. After
+completing this sequence, the host can stop the clock.
 
 
 === packet request
@@ -159,6 +162,11 @@ Target has a 100k pull up on SWDIO.
 
 === DP access
 
+Only one Debug Port. Direct interface to Debugger. Debug Port allows Access to Access Ports
+  - JTAG debug port (JTAG-DP). (IEEE 1149.1 (since DPv0)
+  - Serial Wire Debug Port (SW-DP). (since DPv1, since DPv2 also SWDv2)
+  - Serial Wire JTAG debug port (SWJ-DP). (Combination of JTAG and SWD on the same pins. Debuger decides which to use)
+
 ==== Versions
 
 [cols="1,1"]
@@ -243,7 +251,7 @@ Target has a 100k pull up on SWDIO.
 | RW
 | 4
 | 1
-| 
+| WCR in DPv0
 
 | DLPIDR
 | no
@@ -263,7 +271,7 @@ Target has a 100k pull up on SWDIO.
 | RO
 | 0
 | 0
-| 
+| IDCODE on DPv0
 
 | DPIDR1
 | no
@@ -276,9 +284,9 @@ Target has a 100k pull up on SWDIO.
 | 
 
 | EVENTSTAT
-| ???
-| ???
-| ???
+| no
+| no
+| yes
 | yes
 | RO
 | 4
@@ -347,10 +355,391 @@ Target has a 100k pull up on SWDIO.
 
 |===
 
-
 The SELECT.DPBANKSEL field determines which register is accessed at addresses 0x0 and 0x4.
 
 A0 and A1 = 0 !
+
+===== ABORT
+
+[cols="1,1,1,1"]
+|===
+| Bit 
+| Name 
+| Access 
+| description
+
+| 5..31 
+| Reserved 
+| write as 0 
+|
+
+| 4 
+| ORUNERRCLR 
+| WO 
+| writing 1 clears the CTRL/STAT.STICKYORUN (overrun error) bit (since DPv1)
+
+| 3 
+| WDERRCLR 
+| WO 
+| writing 1 clears the CTRL/STAT.WDATAERR (write data error) bit (since DPv1)
+
+| 2 
+| STKERRCLR 
+| WO 
+| writing 1 clears the CTRL/STAT.STICKYERR (stiky error) bit (since DPv1)
+
+| 1 
+| STKCMPCLR 
+| WO 
+| writing 1 clears the CTRL/STAT.STICKYCMP (stiky compare) )bit (since DPv1)
+
+| 0 
+| DAPABORT 
+| WO 
+| write 1 to create a DAP abort (in DPv0 this bit was called SBO) do this only after several WAIT responses
+
+|===
+
+===== CTRL/STAT
+
+[cols="1,1,1,1"]
+|===
+| Bit 
+| Name 
+| Access 
+| description 
+
+| 31 
+| CSYSPWRUPACK 
+| RO 
+| System powerup acknowledge
+
+| 30 
+| CSYSPWRUPREQ 
+| RW 
+| System powerup request.
+
+| 29 
+| CDBGPWRUPACK 
+| RO 
+| Debug powerup acknowledge.
+
+| 28 
+| CDBGPWRUPREQ 
+| RW 
+| Debug powerup request.
+
+| 27 
+| CDBGRSTACK 
+| RO 
+| Debug reset acknowledge.
+
+| 26 
+| CDBGRSTREQ 
+| imp.def. 
+| Debug reset request.
+
+| 24-25 
+| RES0 
+|  
+| Reserved
+
+| 12-23 
+| TRNCNT 
+| RW 
+| Transaction counter.
+
+| 11 
+| MASKLANE 
+| RW 
+| Include byte lane 3 in comparisons. (bit 24-31)
+
+| 10 
+| MASKLANE 
+| RW 
+| Include byte lane 2 in comparisons. (bit 16-23)
+
+| 9 
+| MASKLANE 
+| RW 
+| Include byte lane 1 in comparisons. (bit 8-15) 
+
+| 8 
+| MASKLANE 
+| RW 
+| Include byte lane 0 in comparisons. (bit 0-7)
+
+| 7 
+| WDATAERR 
+| RO* 
+| set to 0b1 if : A parity or framing error on the data phase of a write. or A write that has been accepted by the DP is then discarded without being submitted to the AP.
+
+| 6 
+| READOK 
+| RO* 
+| If the response to the previous AP read or RDBUFF read was OK, the bit is set to 0b1 . If the response was not OK, it is cleared to 0b0.
+
+| 5 
+| STICKYWERR 
+| RO* 
+| This bit is set to 0b1 if an error is returned by an AP transaction.
+
+| 4 
+| STICKYCMP 
+| RO* 
+| This bit is set to 0b1 when a mismatch occurs during a pushed-compare peration or a match occurs during a pushed-verify operation.
+
+| 2-3 
+| TRNMODE 
+| RW 
+| TRNMODE can have one of the following values:(0b00 Normal operation) (0b01 Pushed-verify mode.) (0b10 Pushed-compare mode.) (0b11 Reserved.)
+
+| 1 
+| STICKYORUN 
+| RO* 
+| If overrun detection is enabled, this bit is set to 0b1 when an overrun occurs.
+
+| 0 
+| ORUNDETECT 
+| RW 
+| 0 = overrun detection disabled; 1 = overrun detection enabled
+
+|===
+
+
+===== DLCR (Data Link Control)
+
+[cols="1,1,1,1"]
+|===
+| Bit 
+| Name 
+| Access 
+| description
+
+| 8-9 
+| TURNROUND 
+| RW 
+| defines the turnaround tristate period. (00 = 1 periode; 01 = 2 periodes; 10 = 3 periodes, 11 = 4 periodes)
+
+|===
+
+===== DLPIDR (Data Link Protocol Identification register)
+
+[cols="1,1,1,1"]
+|===
+| Bit 
+| Name 
+| Access 
+| description 
+
+| 28-31 
+| TINSTANCE 
+| RO 
+| imp.def. Instance number. Defines an instance number for this device. This value must be unique for all devices with identical TARGETID.TPARTNO and TARGETID.TDESIGNER fields that are connected together in a multi-drop system.
+
+| 4-27 
+| Reserved 
+| RO 
+| Reserved
+
+| 0-3 
+| PROTVSN 
+| RO 
+| 0x1 = SWDv2
+
+|===
+
+===== DPIDR (Debug Port Identification register)
+
+[cols="1,1,1,1"]
+|===
+| Bit 
+| Name 
+| Access 
+| description 
+
+| 28-31 
+| REVISION 
+| RO 
+| Revision code
+
+| 20-27 
+| PARTNO 
+| RO 
+| Part Number for the Debug Port.
+
+| 17-19 
+| Res0 
+| RO 
+| Reserved
+
+| 16 
+| MIN 
+| RO 
+| 1 = Minimal Debug Port (MINDP) -> Transaction counter, pushed-verify and pushed-find not implemented! 
+
+| 12-15 
+| VESRION 
+| RO 
+| 0 = Reserved; 1 = DPv1; 2 = DPv2
+
+| 8-11 
+| DESIGNER 
+| RO 
+| indicates the designer of the DP and not the implementer, JEP106, number of times 0x7f appears at start of JEP-106 code ARM Limited is 0x4
+
+| 1-7 
+| DESIGNER 
+| RO 
+| indicates the designer of the DP and not the implementer, JEP106, last 7 bits of JEP106 code ARM Limited is 0x3B
+
+| 0 
+| RAO 
+| RO 
+| = 1 
+
+|===
+
+
+ARM Limited JEP106 Code is : 0x7F 0x7F 0x7F 0x7F 0x3B
+
+===== EVENTSTAT (Event Status register)
+
+[cols="1,1,1,1"]
+|===
+| Bit 
+| Name 
+| Access 
+| description 
+
+| 1-31 
+| Res0 
+| RO 
+| Reserved
+
+| 0 
+| EA 
+| RO 
+| 0 = An event requires attention; 1 = no Event pending
+
+|===
+
+===== RDBUFF (Read Buffer register)
+
+presents data that was captured during the previous AP
+read, enabling repeatedly returning the value without generating a new AP access.
+
+After reading the DP Read Buffer, its contents are no longer valid. The result of a second
+read of the DP Read Buffer is UNKNOWN .
+
+===== RESEND (Read Resend register)
+
+Data for previous AP read.
+
+Performing a read to RESEND does not capture new data from the AP, but returns the value that
+was returned by the last AP read or DP RDBUFF read.
+RESEND enables the debugger to recover read data from a corrupted SW-DP transfer without
+having to re-issue the original read request, or generate a new access to the connected debug
+memory system.
+RESEND can be accessed multiple times, and always returns the same value until a new access is
+made to an AP register or the DP RDBUFF register.
+
+
+===== SELECT (AP Select register)
+
+[cols="1,1,1,1"]
+|===
+| Bit 
+| Name 
+| Access 
+| description
+
+| 24-31 
+| APSEL 
+| WO 
+| Selects the AP with the ID number APSEL.
+
+| 8-23 
+| RES0 
+| WO 
+| Reserved
+
+| 4-7 
+| APBANKSEL 
+| WO 
+| Selects the active four-word register bank on the current AP.
+
+| 0-3 
+| DPBANKSEL 
+| WO 
+| Debug Port address bank select.
+
+|===
+
+
+===== TARGETID (Target Identification register)
+
+[cols="1,1,1,1"]
+|===
+| Bit 
+| Name 
+| Access 
+| description
+
+| 28-31 
+| TREVISION 
+| RO 
+| Target Revision
+
+| 12-27 
+| TPARTNO 
+| RO 
+| The value is assigned by the designer of the part.
+
+| 1-11 
+| TDESIGNER 
+| RO 
+| his field indicates the designer of the part, If the designer of the part is ARM, then the value of this field is 0x23B.
+
+| 0 
+| RAO 
+| RO 
+| = 0 
+
+|===
+
+
+===== TARGETSEL (Target Selection register)
+
+[cols="1,1,1,1"]
+|===
+| Bit 
+| Name 
+| Access 
+| description
+
+| 28-31 
+| TINSTANCE 
+| WO 
+| The instance number for this device.
+
+| 12-27 
+| TPARTNO 
+| WO 
+| The value that is assigned by the designer of the part.
+
+| 1-11 
+| TDESIGNER 
+| WO 
+| The 11-bit code that is formed from the JEDEC JEP106 continuation code and identity code.
+
+| 0 
+| SBO 
+| WO 
+| write as 1
+
+|===
+
 
 ==== MinDP
 
@@ -386,14 +775,292 @@ MINDP implementations must observe the following conventions:
 | Version
 | description
 
+| APv1
+| ADIv5 or earlier
+
 | APv2
 | ADIv6
 
 |===
 
 
+More than one Access Port possible. Each access port has separate resources that it makes available.
+  - Memory Access Port(MEM-AP)
+  - JTAG Access Port (JTAG-AP)
+
 Address is taken from A2, A3 (from packet request) and SELECT and SELECT1 registers in DP.
 A0 and A1= 0 !
+
+An APv2 AP is a Class 0x9 CoreSight component with a register map of 4KB.
+
+All Access Ports must have a IDR Register:
+
+====  IDR (Identification Register, Offset: 0xFC, RO) ====
+
+[cols="1,1,1,1"]
+|===
+| Bit 
+| Name 
+| Access 
+| description 
+
+| 28-31 
+| REVISION 
+| RO 
+| increases by 1 on each revision
+
+| 17-27 
+| DESIGNER 
+| RO 
+| Code that identifies the designer of the AP.
+
+| 13-16 
+| CLASS 
+| RO 
+| 0x0 = no defined class 0x8 Memory Access Port
+
+| 8-12 
+| RES0 
+| RO 
+| Reserved must be 0 !
+
+| 4-7 
+| VARIANT 
+| RO 
+| Together with the TYPE field, this field identifies the AP implementation.
+
+| 0-3 
+| TYPE 
+| RO 
+| Indicates the type of bus, or other connection, that connects to the AP.
+
+|===
+
+ARM Access Ports:
+
+[cols="1,1,1"]
+|===
+| Type 
+| CLASS 
+| BUS
+
+| 0 
+| 0x0 
+| JTAG 
+
+| 1 
+| 0x8 
+| AMBA AHB3 bus
+
+| 2 
+| 0x8 
+| AMBA APB2 or APB3 bus
+
+| 4 
+| 0x8 
+| AMBA AXI3 or AXI4 bus, with optional ACE-Lite support
+
+| 5 
+| 0x8 
+| AMBA AHB5 bus
+
+| 6 
+| 0x8 
+| AMBA APB4 bus
+
+|===
+
+==== Memory Access Port
+
+===== CSW (Control/Status Word register, Offset: 0x0, RW)
+
+holds control and status information for the MEM-AP.
+
+[cols="1,1,1,1"]
+|===
+| Bit 
+| Name 
+| Access 
+| description
+
+| 31 
+| DbgSwEnable 
+| RW 
+| Debug software access enable. (optional:RAZ)(0 = Debug software access is disabled) (1 = Debug software access is enabled)
+
+| 28-30 
+| PROT 
+| RW 
+| This field is optional and impl. def. If not implemented, it is RES0
+
+| 24-27 
+| CACHE 
+| RW 
+| This field is optional and impl. def. If not implemented, it is RES0
+
+| 23 
+| SPIDEN 
+| RW 
+| Secure Privileged Debug Enabled. (0 = Secure access is disabled) (1 = Secure access is enabled)
+
+| 16-22 
+| RES0 
+| RW 
+| Reserved
+
+| 12-15 
+| Type 
+| RW 
+| This field is optional. If not implemented, it is RES0.
+
+| 8-11 
+| Mode 
+| RW 
+| Mode of operation ( 0 = Basic Mode) (1 = Barrier support enabled)
+
+| 7 
+| TrInProg 
+| RW 
+| Transfer in progress (0 = idle) (1 = a trasfere is in progess)
+
+| 6 
+| DeviceEn 
+| RW 
+| Device enabled. (0 = MEM-AP not enabled) (1 = MEM-AP enabled an can be used)
+
+| 4-5 
+| AddrInc 
+| RW 
+| Address auto-increment and packing mode.
+
+| 3 
+| RES0 
+| RW 
+| Reserved
+
+| 0-2 
+| SIZE 
+| RW 
+| Data Size (0 = 8bit) (1 = 16Bit) (2 = 32Bit) (3 = 64Bit) (4 = 128Bit) (5 = 256Bit)
+
+|===
+
+===== TAR (Transfer Address Register, Offset: 0x04 ( Large Address Extension : also 0x08), RW)
+
+The TA R holds the address for the next access to the memory system, or set of debug resources, which are connected to the MEM-AP. The MEM-AP can be configured so that the TA R is incremented automatically after each memory access. Reading or writing to the TA R does not cause a memory access.
+
+
+
+===== DRW (Data Read/Write register, Offset: 0x0C, RW)
+
+The DRW is used for memory accesses:
+  - Writing to the DRW initiates a write to the address specified by the TA R.
+  - Reading from the DRW initiates a read from the address that is specified by the TA R. When the read access completes, the value is returned from the DRW.
+
+
+
+===== BD0 - BD3 (Banked Data Registers, Offset: 0x10-0x1C, RW)
+
+The Banked Data Registers, BD0-BD3, provide direct read or write access to a block of four words of memory, starting at the address that is specified in the TA R:
+  - Accessing BD0 accesses (TA R[31:4] << 4) in memory.
+  - Accessing BD1 accesses ((TA R[31:4] << 4) + 0x4) in memory.
+  - Accessing BD2 accesses ((TA R[31:4] << 4) + 0x8) in memory.
+  - Accessing BD3 accesses ((TA R[31:4] << 4) + 0xC) in memory.
+
+The value in TA R[3:0] is ignored in constructing the access address:
+  - The values of bits[3:2] of the access address depend solely on which of the four banked data registers is being accessed.
+  - Bits[1:0] of the access are always zero.
+
+[cols="1,1,1,1"]
+|===
+| Bit 
+| Name 
+| Access 
+| description
+
+| 0-31 
+| banked data 
+| RW 
+| Data values for the current transfer.
+
+|===
+
+===== CFG (Configuration register, Offset: 0xF4, RO)
+
+The CFG register hold information about the configuration of the MEM-AP. 
+
+[cols="1,1,1,1"]
+|===
+| Bit 
+| Name 
+| Access 
+| description
+
+| 3-31 
+| RES0 
+| RO 
+| Reserved
+
+| 2 
+| LD 
+| RO 
+| Large Data (0 = max size = 32bit) (1 = larger than 32 bit is supported)
+
+| 1 
+| LA 
+| RO 
+| Long Address (0 = addresses max length = 32bit) (1 = Addresses can be 64bit long)
+
+| 0 
+| BE 
+| RO 
+| Big Endian Obsolete! RAZ
+
+|===
+
+===== BASE (Debug Base Address register, Offset: 0xF8( Large Memory Extension : also 0xF0), RO)
+
+The BASE register is a pointer into the connected memory system. It points to one of:
+  - The start of a set of debug registers for the single connected debug component.
+  - The start of a ROM Table that describes the connected debug components.
+
+[cols="1,1,1,1"]
+|===
+| Bit 
+| Name 
+| Access 
+| description
+
+| 12-31 
+| BASEADDR[31:12] 
+| RO 
+| most significant bits of the base address
+
+| 2-11 
+| RES0 
+| RO 
+| Reserved
+
+| 1 
+| Format 
+| RO 
+| RAO
+
+| 0 
+| P 
+| RO 
+| 0 = No debug Entry; 1 = debug Entry for this MEM-AP
+
+|===
+
+
+===== MBT (Memory Barrier Transfer register, Offset : 0x20, impl. def)
+
+
+
+==== JTAG Access Port
+
+
 
 == opening a connection
 
@@ -429,8 +1096,14 @@ There are some SWD specific words used that only make sense in the SWD contet. T
 | DRW
 | Data Read/Write
 
+| DTR
+| Data Transfer Register
+
 | IDR
 | Identification Register
+
+| ITR
+| Instruction Transfer Register
 
 | JTAG
 | IEEE 1149.1 JTAG - IEEE Standard Test Access Port and Boundary Scan Architecture
@@ -440,6 +1113,9 @@ There are some SWD specific words used that only make sense in the SWD contet. T
 
 | MEM-AP
 | Memory-mapped Access Port
+
+| PE
+| Processing Element (CPU)
 
 | RAO
 | Read as One 
@@ -466,293 +1142,3 @@ There are some SWD specific words used that only make sense in the SWD contet. T
 | Transaction counter
 
 |===
-
-
-== wiki import
-
-----
-
-====== SWD - Serial Wire Debug ======
-
-Von ARM definiert.
-
-https://developer.arm.com/documentation/ihi0031/a/Overview-of-the-ARM-Debug-Interface-and-its-components
-
-ARM Debug Interface Specification: 
-
-ADIv5 {{ :ihi0031.pdf |}}
-
-ADIv5.2 {{ :ihi0031g_debug_interface_v5_2_architecture_specification.pdf |}}
-
-{{ :jep106av.pdf |}}
-
-
-ARM Debug Interface (ADI) Version 5 - ADIv5
-
-since ADV5.1 : SWDv2 (Multidrop,..)
-
-Bit/Byte order is Least significant Bit first!
-
-===== Debug Port (DP) =====
-
-Only one Debug Port. Direct interface to Debugger. Debug Port allows Access to Access Ports
-  - JTAG debug port (JTAG-DP). (IEEE 1149.1 (since DPv0)
-  - Serial Wire Debug Port (SW-DP). (since DPv1, since DPv2 also SWDv2)
-  - Serial Wire JTAG debug port (SWJ-DP). (Combination of JTAG and SWD on the same pins. Debuger decides which to use)
-
-=== Minimal Debug Port (MINDP) ===
-
-MINDP implementations must omit the following DP features:
-  - Pushed-verify operation.
-  - Pushed-compare operation.
-  - The transaction counter.
-
-MINDP implementations must observe the following conventions:
-  - The DPIDR.MIN field is RAO.
-  - The following fields of the CTRL/STAT register are RES 0:
-    - TRNCNT.
-    - MASKLANE.
-    - STICKYCMP.
-    - TRNMODE. (See also CTRL/STAT.)
-  - The ABORT.STKCMPCLR field is SBZ. Writing 0b1 to this bit is UNPREDICTABLE .
-
-==== Registers ====
-
-^ Register  ^ Address ^ SELECT.DPBANKSEL ^ Access ^ Comment ^
-| ABORT     | 0x0 |     | WO | |
-| DPIDR     | 0x0 |     | RO | since DPv1 (IDCODE on DPv0)|
-| CTRL/STAT | 0x4 | 0x0 | RW | |
-| DLCR      | 0x4 | 0x1 | RW | since DPv1 (WCR in DPv0)|
-| TARGETID  | 0x4 | 0x2 | RO | since DPv2 |
-| DLPIDR    | 0x4 | 0x3 | RO | since DPv2 |
-| EVENTSTAT | 0x4 | 0x4 | RO | since DPv2 |
-| SELECT    | 0x8 |     | WO | |
-| RESEND    | 0x8 |     | RO | data link defined since DPv1 |
-| RDBUFF    | 0xC |     | RO | |
-| TARGETSEL | 0xC |     | WO | data link defined since DPv2 |
-
-All Registers are 32 bit wide. Lowest bit is 0 (LSB) highest bit is 31(MSB).
-
-=== ABORT ===
-
-^ Bit ^ Name ^ Access ^ description ^
-| 0 | DAPABORT | WO | write 1 to create a DAP abort (in DPv0 this bit was called SBO) do this only after several WAIT responses |
-| 1 | STKCMPCLR | WO | writing 1 clears the CTRL/STAT.STICKYCMP (stiky compare) )bit (since DPv1) |
-| 2 | STKERRCLR | WO | writing 1 clears the CTRL/STAT.STICKYERR (stiky error) bit (since DPv1) |
-| 3 | WDERRCLR | WO | writing 1 clears the CTRL/STAT.WDATAERR (write data error) bit (since DPv1) |
-| 4 | ORUNERRCLR | WO | writing 1 clears the CTRL/STAT.STICKYORUN (overrun error) bit (since DPv1) |
-| 5..31 | Reserved | write as 0 |
-
-=== CTRL/STAT ===
-
-^ Bit ^ Name ^ Access ^ description ^
-| 0 | ORUNDETECT | RW | 0 = overrun detection disabled; 1 = overrun detection enabled |
-| 1 | STICKYORUN | RO* | If overrun detection is enabled, this bit is set to 0b1 when an overrun occurs. |
-| 2-3 | TRNMODE | RW |TRNMODE can have one of the following values:(0b00 Normal operation) (0b01 Pushed-verify mode.) (0b10 Pushed-compare mode.) (0b11 Reserved.) |
-| 4 | STICKYCMP | RO* |This bit is set to 0b1 when a mismatch occurs during a pushed-compare peration or a match occurs during a pushed-verify operation. |
-| 5 | STICKYWERR | RO* |This bit is set to 0b1 if an error is returned by an AP transaction. |
-| 6 | READOK | RO* | If the response to the previous AP read or RDBUFF read was OK, the bit is set to 0b1 . If the response was not OK, it is cleared to 0b0 . |
-| 7 | WDATAERR |RO* | set to 0b1 if : A parity or framing error on the data phase of a write. or A write that has been accepted by the DP is then discarded without being submitted to the AP. |
-| 8 | MASKLANE | RW | Include byte lane 0 in comparisons. (bit 0-7) |
-| 9 | MASKLANE | RW | Include byte lane 1 in comparisons. (bit 8-15) |
-| 10 | MASKLANE | RW | Include byte lane 2 in comparisons. (bit 16-23) |
-| 11 | MASKLANE | RW | Include byte lane 3 in comparisons. (bit 24-31) |
-| 12-23 | TRNCNT | RW | Transaction counter. |
-| 24-25 | RES0 |  | Reserved |
-| 26 | CDBGRSTREQ | imp.def. | Debug reset request.
-| 27 | CDBGRSTACK | RO | Debug reset acknowledge. |
-| 28 | CDBGPWRUPREQ | RW | Debug powerup request. |
-| 29 | CDBGPWRUPACK | RO | Debug powerup acknowledge. |
-| 30 | CSYSPWRUPREQ | RW | System powerup request. |
-| 31 | CSYSPWRUPACK | RO | System powerup acknowledge |
-
-=== DLCR (Data Link Control) ===
-
-^ Bit ^ Name ^ Access ^ description ^
-| 8-9 | TURNROUND | RW | defines the turnaround tristate period. (00 = 1 periode; 01 = 2 periodes; 10 = 3 periodes | 11 = 4 periodes) |
-
-=== DLPIDR (Data Link Protocol Identification register) ===
-
-^ Bit ^ Name ^ Access ^ description ^
-| 0-3 | PROTVSN | RO | 0x1 = SWDv2 |
-| 4-27 | Reserved | RO | Reserved |
-| 28-31 | TINSTANCE | RO | imp.def. Instance number. Defines an instance number for this device. This value must be unique for all devices with identical TARGETID.TPARTNO and TARGETID.TDESIGNER fields that are connected together in a multi-drop system. |
-
-=== DPIDR (Debug Port Identification register) ===
-
-^ Bit ^ Name ^ Access ^ description ^
-| 0 | RAO | RO | = 1 |
-| 1-7 | DESIGNER | RO | indicates the designer of the DP and not the implementer, JEP106, last 7 bits of JEP106 code ARM Limited is 0x3B |
-| 8-11 | DESIGNER | RO | indicates the designer of the DP and not the implementer, JEP106, number of times 0x7f appears at start of JEP-106 code ARM Limited is 0x4 |
-| 12-15 | VESRION | RO | 0 = Reserved; 1 = DPv1; 2 = DPv2 |
-| 16 | MIN | RO | 1 = Minimal Debug Port (MINDP) -> Transaction counter, pushed-verify and pushed-find not implemented! |
-| 17-19 | Res0 | RO | Reserved |
-| 20-27 | PARTNO | RO | Part Number for the Debug Port. |
-| 28-31 | REVISION | RO | Revision code |
-
-ARM Limited JEP106 Code is : 0x7F 0x7F 0x7F 0x7F 0x3B
-
-=== EVENTSTAT (Event Status register) ===
-
-^ Bit ^ Name ^ Access ^ description ^
-| 0 | EA | RO | 0 = An event requires attention; 1 = no Event pending |
-| 1-31 | Res0 | RO | Reserved |
-
-=== RDBUFF (Read Buffer register) ===
-
-presents data that was captured during the previous AP
-read, enabling repeatedly returning the value without generating a new AP access.
-
-After reading the DP Read Buffer, its contents are no longer valid. The result of a second
-read of the DP Read Buffer is UNKNOWN .
-
-=== RESEND (Read Resend register) ===
-
-Data for previous AP read.
-
-Performing a read to RESEND does not capture new data from the AP, but returns the value that
-was returned by the last AP read or DP RDBUFF read.
-RESEND enables the debugger to recover read data from a corrupted SW-DP transfer without
-having to re-issue the original read request, or generate a new access to the connected debug
-memory system.
-RESEND can be accessed multiple times, and always returns the same value until a new access is
-made to an AP register or the DP RDBUFF register.
-
-
-=== SELECT (AP Select register) ===
-
-^ Bit ^ Name ^ Access ^ description ^
-| 0-3 | DPBANKSEL | WO | Debug Port address bank select. |
-| 4-7 | APBANKSEL | WO | Selects the active four-word register bank on the current AP. |
-| 8-23 | RES0 | WO | Reserved |
-| 24-31 | APSEL | WO | Selects the AP with the ID number APSEL. |
-
-
-=== TARGETID (Target Identification register) ===
-
-^ Bit ^ Name ^ Access ^ description ^
-| 0 | RAO | RO | = 0 |
-| 1-11 | TDESIGNER | RO | his field indicates the designer of the part, If the designer of the part is ARM, then the value of this field is 0x23B . |
-| 12-27 | TPARTNO | RO | The value is assigned by the designer of the part. |
-| 28-31 | TREVISION | RO | Target Revision |
-
-
-=== TARGETSEL (Target Selection register) ===
-
-^ Bit ^ Name ^ Access ^ description ^
-| 0 | SBO | WO | write as 1 |
-| 1-11 | TDESIGNER | WO |The 11-bit code that is formed from the JEDEC JEP106 continuation code and identity code. |
-| 12-27 | TPARTNO | WO |The value that is assigned by the designer of the part. |
-| 28-31 | TINSTANCE | WO |The instance number for this device. |
-
-
-
-
-
-
-===== Access Port (AP) =====
-
-More than one Access Port possible. Each access port has separate resources that it makes available.
-  - Memory Access Port(MEM-AP)
-  - JTAG Access Port (JTAG-AP)
-
-All Access Ports must have a IDR Register:
-
-
-====  IDR (Identification Register, Offset: 0xFC, RO) ====
-
-^ Bit ^ Name ^ Access ^ description ^
-| 0-3 | TYPE | RO | Indicates the type of bus, or other connection, that connects to the AP. |
-| 4-7 | VARIANT | RO | Together with the TYPE field, this field identifies the AP implementation. |
-| 8-12 | RES0 | RO | Reserved must be 0 ! |
-| 13-16 | CLASS | RO | 0x0 = no defined class 0x8 Memory Access Port |
-| 17-27 | DESIGNER | RO |Code that identifies the designer of the AP. |
-| 28-31 | REVISION | RO | increases by 1 on each revision |
-
-ARM Access Ports:
-^ Type ^ CLASS ^ BUS ^
-| 0 | 0x0 | JTAG |
-| 1 | 0x8 | AMBA AHB3 bus |
-| 2 | 0x8 | AMBA APB2 or APB3 bus |
-| 4 | 0x8 | AMBA AXI3 or AXI4 bus, with optional ACE-Lite support |
-| 5 | 0x8 | AMBA AHB5 bus |
-| 6 | 0x8 | AMBA APB4 bus |
-
-
-==== MEM-AP ==== 
-
-=== CSW (Control/Status Word register, Offset: 0x0, RW) ===
-
-holds control and status information for the MEM-AP.
-
-^ Bit ^ Name ^ Access ^ description ^
-| 0-2 | SIZE | RW | Data Size (0 = 8bit) (1 = 16Bit) (2 = 32Bit) (3 = 64Bit) (4 = 128Bit) (5 = 256Bit) |
-| 3 | RES0 | RW | Reserved |
-| 4-5 | AddrInc | RW | Address auto-increment and packing mode. |
-| 6 | DeviceEn | RW | Device enabled. (0 = MEM-AP not enabled) (1 = MEM-AP enabled an can be used) |
-| 7 | TrInProg | RW | Transfer in progress (0 = idle) (1 = a trasfere is in progess) |
-| 8-11 | Mode | RW | Mode of operation ( 0 = Basic Mode) (1 = Barrier support enabled) |
-| 12-15 | Type | RW | This field is optional. If not implemented, it is RES0. |
-| 16-22 | RES0 | RW | Reserved |
-| 23 | SPIDEN | RW |Secure Privileged Debug Enabled. (0 = Secure access is disabled) (1 = Secure access is enabled) |
-| 24-27 | CACHE | RW | This field is optional and impl. def. If not implemented, it is RES0 |
-| 28-30 | PROT | RW | This field is optional and impl. def. If not implemented, it is RES0 |
-| 31 | DbgSwEnable | RW | Debug software access enable. (optional:RAZ)(0 = Debug software access is disabled) (1 = Debug software access is enabled) |
-
-
-=== TAR (Transfer Address Register, Offset: 0x04 ( Large Address Extension : also 0x08), RW) ===
-
-The TA R holds the address for the next access to the memory system, or set of debug resources, which are connected to the MEM-AP. The MEM-AP can be configured so that the TA R is incremented automatically after each memory access. Reading or writing to the TA R does not cause a memory access.
-
-^ Bit ^ Name ^ Access ^ description ^
-
-
-=== DRW (Data Read/Write register, Offset: 0x0C, RW) ===
-
-The DRW is used for memory accesses:
-  - Writing to the DRW initiates a write to the address specified by the TA R.
-  - Reading from the DRW initiates a read from the address that is specified by the TA R. When the read access completes, the value is returned from the DRW.
-
-^ Bit ^ Name ^ Access ^ description ^
-
-=== BD0 - BD3 (Banked Data Registers, Offset: 0x10-0x1C, RW) ===
-
-The Banked Data Registers, BD0-BD3, provide direct read or write access to a block of four words of memory, starting at the address that is specified in the TA R:
-  - Accessing BD0 accesses (TA R[31:4] << 4) in memory.
-  - Accessing BD1 accesses ((TA R[31:4] << 4) + 0x4) in memory.
-  - Accessing BD2 accesses ((TA R[31:4] << 4) + 0x8) in memory.
-  - Accessing BD3 accesses ((TA R[31:4] << 4) + 0xC) in memory.
-
-The value in TA R[3:0] is ignored in constructing the access address:
-  - The values of bits[3:2] of the access address depend solely on which of the four banked data registers is being accessed.
-  - Bits[1:0] of the access are always zero.
-
-^ Bit ^ Name ^ Access ^ description ^
-| 0-31 | banked data | RW | Data values for the current transfer. |
-
-=== CFG (Configuration register, Offset: 0xF4, RO) ===
-
-The CFG register hold information about the configuration of the MEM-AP. 
-
-^ Bit ^ Name ^ Access ^ description ^
-| 0 | BE | RO | Big Endian Obsolete! RAZ |
-| 1 | LA | RO | Long Address (0 = addresses max length = 32bit) (1 = Addresses can be 64bit long) |
-| 2 | LD | RO | Large Data (0 = max size = 32bit) (1 = larger than 32 bit is supported) |
-| 3-31 | RES0 | RO | Reserved |
-
-=== BASE (Debug Base Address register, Offset: 0xF8( Large Memory Extension : also 0xF0), RO) ===
-
-The BASE register is a pointer into the connected memory system. It points to one of:
-  - The start of a set of debug registers for the single connected debug component.
-  - The start of a ROM Table that describes the connected debug components.
-
-^ Bit ^ Name ^ Access ^ description ^
-| 0 | P | RO | 0 = No debug Entry; 1 = debug Entry for this MEM-AP |
-| 1 | Format | RO | RAO |
-| 2-11 | RES0 | RO | Reserved |
-| 12-31 | BASEADDR[31:12] | RO | most significant bits of the base address |
-
-=== MBT (Memory Barrier Transfer register, Offset : 0x20, impl. def) ===
-
-----
-

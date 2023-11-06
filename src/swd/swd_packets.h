@@ -28,16 +28,23 @@
 // If the  ACK_PROTOCOL_ERROR_0 or ACK_PROTOCOL_ERROR_1 occur twice then a line reset  + read IDCODE is needed.
 
 // DP addresses:
-// A[0] = 0,  A[1] = 0
-#define ADDR_IDCODE    0  // A[3:2] = 0 0
-#define ADDR_DPIDR     0  // A[3:2] = 0 0
-#define ADDR_ABORT     0  // A[3:2] = 0 0
-#define ADDR_CTRL_STAT 4  // A[3:2] = 0 1
-#define ADDR_WCR       4  // A[3:2] = 0 1
-#define ADDR_SELECT    8  // A[3:2] = 1 0
-#define ADDR_RESEND    8  // A[3:2] = 1 0
-#define ADDR_RDBUFF    12 // A[3:2] = 1 1
-#define ADDR_TARGETSEL 12 // A[3:2] = 1 1
+// A0 = 0,  A1 = 0
+#define ADDR_DPIDR     0  // A3 = 0, A2 = 0
+#define ADDR_DPIDR1    0  // A3 = 0, A2 = 0
+#define ADDR_BASEPTR0  0  // A3 = 0, A2 = 0
+#define ADDR_BASEPTR1  0  // A3 = 0, A2 = 0
+#define ADDR_ABORT     0  // A3 = 0, A2 = 0
+#define ADDR_CTRL_STAT 4  // A3 = 0, A2 = 1
+#define ADDR_DLCR      4  // A3 = 0, A2 = 1
+#define ADDR_DLPIDR    4  // A3 = 0, A2 = 1
+#define ADDR_EVENTSTAT 4  // A3 = 0, A2 = 1
+#define ADDR_SELECT1   4  // A3 = 0, A2 = 1
+#define ADDR_TARGETID  4  // A3 = 0, A2 = 1
+#define ADDR_SELECT    8  // A3 = 1, A2 = 0
+#define ADDR_RESEND    8  // A3 = 1, A2 = 0
+#define ADDR_RDBUFF    12 // A3 = 1, A2 = 1
+#define ADDR_TARGETSEL 12 // A3 = 1, A2 = 1
+
 
 #define AP  1
 #define DP  0

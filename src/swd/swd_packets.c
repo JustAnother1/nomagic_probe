@@ -23,6 +23,12 @@ static int  read_ACK(void);
 static void write_bit(int data);
 static int  read_bit(void);
 static void turn_to_output(void);
+static void jtag_to_swd_sequence(void);
+/* not used
+static void jtag_to_dormant_state_sequence(void);
+static void leave_dormant_state_to_swd_sequence(void);
+static void swd_to_dormant_state_sequence(void);
+*/
 
 /*
 Write to Target: (SWDIO must be valid before rising edge)
@@ -76,6 +82,15 @@ void packet_line_reset(void)
     int i;
     // at least 50 bits 1
     switch_SWDIO_to_Output();
+    for(i = 0; i < 64; i++)
+    {
+        write_bit(1);
+    }
+    // the first one might not have worked if the device is talked to another debugger before we came along.
+    // if this is a JTAG + SWD interface then we switch to SWD using this 16 bit sequence
+    jtag_to_swd_sequence();
+
+    // and another at least 50 bits 1
     for(i = 0; i < 64; i++)
     {
         write_bit(1);
@@ -205,16 +220,18 @@ int packet_read(int APnotDP, int address, uint32_t* data)
 
     // delay_us(100); // TODO debug only
 
-    // parity = read_bit();
+    parity = read_bit();
+    /*
     quarter_clock_delay();
     parity = read_SWDIO();
     set_SWCLK_High();
     switch_SWDIO_to_Output();
     quarter_clock_delay();
-    // quarter_clock_delay();
-    // set_SWCLK_Low();
-    // quarter_clock_delay();
-
+    quarter_clock_delay();
+    set_SWCLK_Low();
+    quarter_clock_delay();
+     */
+    turn_to_output();
     // delay_us(100); // TODO debug only
 
     if(ACK_OK == ack)
@@ -380,3 +397,310 @@ static int read_ACK(void)
     ack += (read_bit()<<2);
     return ack;
 }
+
+static void jtag_to_swd_sequence(void)
+{
+    // if this is a JTAG + SWD interface then we switch to SWD using this 16 bit sequence
+    write_bit(0);
+    write_bit(1);
+    write_bit(1);
+    write_bit(1);
+
+    write_bit(1);
+    write_bit(0);
+    write_bit(0);
+    write_bit(1);
+
+    write_bit(1);
+    write_bit(1);
+    write_bit(1);
+    write_bit(0);
+
+    write_bit(0);
+    write_bit(1);
+    write_bit(1);
+    write_bit(1);
+}
+/* not used
+static void swd_to_dormant_state_sequence(void)
+{
+    int i;
+    // at least 50 bits 1
+    switch_SWDIO_to_Output();
+    for(i = 0; i < 64; i++)
+    {
+        write_bit(1);
+    }
+
+    // 16 bit sequence
+    write_bit(0);
+    write_bit(0);
+    write_bit(1);
+    write_bit(1);
+
+    write_bit(1);
+    write_bit(1);
+    write_bit(0);
+    write_bit(1);
+
+    write_bit(1);
+    write_bit(1);
+    write_bit(0);
+    write_bit(0);
+
+    write_bit(0);
+    write_bit(1);
+    write_bit(1);
+    write_bit(1);
+}
+
+static void leave_dormant_state_to_swd_sequence(void)
+{
+    int i;
+    // at least 8x1
+    for(i = 0; i < 9; i++)
+    {
+        write_bit(1);
+    }
+
+    // 128 bit selection alert
+    // 1
+    write_bit(0);
+    write_bit(1);
+    write_bit(0);
+    write_bit(0);
+    //2
+    write_bit(1);
+    write_bit(0);
+    write_bit(0);
+    write_bit(1);
+    // 3
+    write_bit(1);
+    write_bit(1);
+    write_bit(0);
+    write_bit(0);
+    // 4
+    write_bit(1);
+    write_bit(1);
+    write_bit(1);
+    write_bit(1);
+    // 5
+    write_bit(1);
+    write_bit(0);
+    write_bit(0);
+    write_bit(1);
+    // 6
+    write_bit(0);
+    write_bit(0);
+    write_bit(0);
+    write_bit(0);
+    // 7
+    write_bit(0);
+    write_bit(1);
+    write_bit(0);
+    write_bit(0);
+    // 8
+    write_bit(0);
+    write_bit(1);
+    write_bit(1);
+    write_bit(0);
+    // 9
+    write_bit(1);
+    write_bit(0);
+    write_bit(1);
+    write_bit(0);
+    // 10
+    write_bit(1);
+    write_bit(0);
+    write_bit(0);
+    write_bit(1);
+    // 11
+    write_bit(1);
+    write_bit(0);
+    write_bit(1);
+    write_bit(1);
+    // 12
+    write_bit(0);
+    write_bit(1);
+    write_bit(0);
+    write_bit(0);
+    // 13
+    write_bit(1);
+    write_bit(0);
+    write_bit(1);
+    write_bit(0);
+    // 14
+    write_bit(0);
+    write_bit(0);
+    write_bit(0);
+    write_bit(1);
+    // 15
+    write_bit(0);
+    write_bit(1);
+    write_bit(1);
+    write_bit(0);
+    // 16
+    write_bit(0);
+    write_bit(0);
+    write_bit(0);
+    write_bit(1);
+    // 17
+    write_bit(1);
+    write_bit(0);
+    write_bit(0);
+    write_bit(1);
+    // 18
+    write_bit(0);
+    write_bit(1);
+    write_bit(1);
+    write_bit(1);
+    // 19
+    write_bit(1);
+    write_bit(1);
+    write_bit(1);
+    write_bit(1);
+    // 20
+    write_bit(0);
+    write_bit(1);
+    write_bit(0);
+    write_bit(1);
+    // 21
+    write_bit(1);
+    write_bit(0);
+    write_bit(1);
+    write_bit(1);
+    // 22
+    write_bit(1);
+    write_bit(0);
+    write_bit(1);
+    write_bit(1);
+    // 23
+    write_bit(1);
+    write_bit(1);
+    write_bit(0);
+    write_bit(0);
+    // 24
+    write_bit(0);
+    write_bit(1);
+    write_bit(1);
+    write_bit(1);
+    // 25
+    write_bit(0);
+    write_bit(1);
+    write_bit(0);
+    write_bit(0);
+    // 26
+    write_bit(0);
+    write_bit(1);
+    write_bit(0);
+    write_bit(1);
+    // 27
+    write_bit(0);
+    write_bit(1);
+    write_bit(1);
+    write_bit(1);
+    // 28
+    write_bit(0);
+    write_bit(0);
+    write_bit(0);
+    write_bit(0);
+    // 29
+    write_bit(0);
+    write_bit(0);
+    write_bit(1);
+    write_bit(1);
+    // 30
+    write_bit(1);
+    write_bit(1);
+    write_bit(0);
+    write_bit(1);
+    // 31
+    write_bit(1);
+    write_bit(0);
+    write_bit(0);
+    write_bit(1);
+    // 32
+    write_bit(1);
+    write_bit(0);
+    write_bit(0);
+    write_bit(0);
+
+
+    // 4x0
+    write_bit(0);
+    write_bit(0);
+    write_bit(0);
+    write_bit(0);
+
+    // activation code (MSB first 0b0101 1000)
+    write_bit(0);
+    write_bit(0);
+    write_bit(0);
+    write_bit(1);
+
+    write_bit(1);
+    write_bit(0);
+    write_bit(1);
+    write_bit(0);
+
+    // place target in known state
+    // at least 50 bits 1
+    switch_SWDIO_to_Output();
+    for(i = 0; i < 64; i++)
+    {
+        write_bit(1);
+    }
+    // TODO target select might be needed now
+}
+
+static void jtag_to_dormant_state_sequence(void)
+{
+    // at least 5x1
+    write_bit(1);
+    write_bit(1);
+    write_bit(1);
+    write_bit(1);
+    write_bit(1);
+    write_bit(1);
+
+    // 31 bit code
+    write_bit(0);
+    write_bit(1);
+    write_bit(0);
+
+    write_bit(1);
+    write_bit(1);
+    write_bit(1);
+    write_bit(0);
+
+    write_bit(1);
+    write_bit(1);
+    write_bit(1);
+    write_bit(0);
+
+    write_bit(1);
+    write_bit(1);
+    write_bit(1);
+    write_bit(0);
+
+    write_bit(1);
+    write_bit(1);
+    write_bit(1);
+    write_bit(0);
+
+    write_bit(1);
+    write_bit(1);
+    write_bit(1);
+    write_bit(0);
+
+    write_bit(1);
+    write_bit(1);
+    write_bit(1);
+    write_bit(0);
+
+    write_bit(0);
+    write_bit(1);
+    write_bit(1);
+    write_bit(0);
+}
+*/
