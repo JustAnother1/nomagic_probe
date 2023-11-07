@@ -58,6 +58,7 @@
 #define SECTION_USB                                 8
 #define SECTION_CLI                              0x10
 #define SECTION_GDBSERVER                        0x20
+#define SECTION_SWD                              0x40
 
 void watchdog_disable(void);
 void watchdog_enable(void);

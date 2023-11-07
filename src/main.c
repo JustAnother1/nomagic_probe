@@ -33,17 +33,24 @@
 #include "file/file_system.h"
 #include "swd/swd_protocol.h"
 
+#define TASK_LOOP_0           0x1ul
+#define TASK_LOOP_1           0x2ul
+#define ALL_SUPERVISED_TASKS  (TASK_LOOP_0 | TASK_LOOP_1)
+
+
 static void init_0(void);
 static void init_1(void);
 static void loop_0(void);
 static void loop_1(void);
 
+static uint32_t tasks = 0;
 
 static void init_0(void)
 {
 #ifdef BOOT_ROM_ENABLED
     boot_rom_check_if_valid();
 #endif
+    tasks = ALL_SUPERVISED_TASKS;
     watchdog_enable();
     init_time();
     debug_uart_initialize();
@@ -62,7 +69,12 @@ static void init_1(void)
 static void loop_0(void)
 {
     watchdog_enter_section(SECTION_WATCHDOG);
-    watchdog_feed();
+    tasks = tasks &~TASK_LOOP_0;
+    if(0 == tasks)
+    {
+        watchdog_feed();
+        tasks = ALL_SUPERVISED_TASKS;
+    }
     watchdog_leave_section(SECTION_WATCHDOG);
 
     watchdog_enter_section(SECTION_CLI);
@@ -80,9 +92,14 @@ static void loop_0(void)
 
 static void loop_1(void)
 {
+    tasks = tasks &~TASK_LOOP_1;
     watchdog_enter_section(SECTION_LED);
     led_tick();
     watchdog_leave_section(SECTION_LED);
+
+    watchdog_enter_section(SECTION_SWD);
+    swd_tick();
+    watchdog_leave_section(SECTION_SWD);
 }
 
 #ifdef ENABLE_CORE_1

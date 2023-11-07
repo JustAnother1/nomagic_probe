@@ -19,6 +19,7 @@
 #include <stdbool.h>
 
 void swd_init(void);
+void swd_tick(void);
 uint32_t swd_connect(bool multi, uint32_t target);
 void swd_disconnect(void);
 

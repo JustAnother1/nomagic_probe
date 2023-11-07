@@ -25,6 +25,7 @@ typedef struct{
     bool is_minimal_debug_port; // if true then Transaction counter, Pushed-verify, and Pushed-find operations are not implemented.
     uint32_t dp_version; // can be 0 to 3 (ADIv6)
     uint32_t reg_DPIDR;
+    uint32_t reg_SELECT;
 } swd_state;
 
 static swd_state state;
@@ -35,6 +36,11 @@ void swd_init(void)
     state.is_connected = false;
     state.is_minimal_debug_port = false;
     swd_packets_init();
+}
+
+void swd_tick(void)
+{
+    // TODO
 }
 
 
