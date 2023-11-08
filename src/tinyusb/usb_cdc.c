@@ -40,36 +40,39 @@
 #include <stdint.h>
 #include "tinyusb/src/class/cdc/cdc_device.h"
 
+#define INTERFACE   0
+
 static uint8_t nextChar = 0;
 
 void usb_cdc_send_string(char* str)
 {
     while(0 != *str)
     {
-        tud_cdc_n_write_char(0, *str);
+        tud_cdc_n_write_char(INTERFACE, *str);
+        str++;
     }
-    tud_cdc_n_write_flush(0);
+    tud_cdc_n_write_flush(INTERFACE);
 }
 
 uint32_t usb_cdc_send_bytes(uint8_t *data, uint32_t length)
 {
     for(uint32_t i = 0; i < length; i++)
     {
-        tud_cdc_n_write_char(0, data[i]);
+        tud_cdc_n_write_char(INTERFACE, data[i]);
     }
-    tud_cdc_n_write_flush(0);
+    tud_cdc_n_write_flush(INTERFACE);
     return length;
 }
 
 uint32_t usb_cdc_get_num_received_bytes(void)
 {
-    return tud_cdc_n_available(0);
+    return tud_cdc_n_available(INTERFACE);
 }
 
 uint8_t  usb_cdc_get_next_received_byte(void)
 {
     nextChar = 0;
-    tud_cdc_n_read(0, &nextChar, 1);
+    tud_cdc_n_read(INTERFACE, &nextChar, 1);
     return nextChar;
 }
 
