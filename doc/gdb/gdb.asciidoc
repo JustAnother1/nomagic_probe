@@ -1,0 +1,63 @@
+= GDB Server
+
+== Packets
+
+all packets: "$packet-data#checksum"
+
+notification packets: "% data # checksum" ( Example : %Stop:...)
+
+empty response is "$#00"
+
+== commands
+
+=== minimal required
+At a minimum, a stub is required to support the ‘?’ command to tell GDB the reason for halting, 
+‘g’ and ‘G’ commands for register access, and the ‘m’ and ‘M’ commands for memory access. 
+
+Stubs that only control single-threaded targets can implement run control with the ‘c’ (continue) command, 
+and if the target architecture supports hardware-assisted single-stepping, the ‘s’ (step) command. 
+
+Stubs that support multi-threading targets should support the ‘vCont’ command. 
+
+All other commands are optional. 
+
+=== Thread id
+
+[cols="1,1"]
+|===
+| id
+| Meaning
+
+| -1
+| all threads
+
+| 0
+| any thread
+
+| 1
+| first thread
+
+| p1.-1
+| all threads in process 1
+
+|===
+
+== Links
+
+https://sourceware.org/gdb/onlinedocs/gdb/Remote-Protocol.html#Remote-Protocol[gdbserver protocol]
+
+https://black-magic.org/[Black Magic Firmware]
+
+== Dictionary
+
+There are some GDB specific words used that only make sense in the GDB contet. These words are defined here.
+
+[cols="1,1"]
+|===
+| Word
+| Meaning
+
+| stub
+| the JTAG/SWD probe
+
+|===

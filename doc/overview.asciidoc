@@ -7,9 +7,7 @@ link:architecture.asciidoc[firmware architecture]
 
 == GDB Server
 
-https://sourceware.org/gdb/onlinedocs/gdb/Remote-Protocol.html#Remote-Protocol[gdbserver protocol]
-
-https://black-magic.org/[Black Magic Firmware]
+link:gdb/gdb.asciidoc[GDB Server]
 
 
 == Raspberry Pi Pico
