@@ -44,7 +44,10 @@
 // Designer = Raspberry Pi Trading Ltd.
 // JEP 106 = 9x 0x7f then 0x13
 
-
+bool cmd_swd_info(uint32_t loop)
+{
+    return swd_info(loop);
+}
 
 bool cmd_swd_test(uint32_t loop)
 {
@@ -52,16 +55,57 @@ bool cmd_swd_test(uint32_t loop)
     uint32_t data = 0;
 
     // activate_Reset();
-    activate_Run();
+    // activate_Run();
 
     debug_line("SWDv1");
     data = swd_connect(false, 0);
     debug_line("ID: 0x%08lx", data);
 
+    data = 0;
     packet_read(DP, ADDR_CTRL_STAT, &data);
     debug_line("CTRL/STAT: 0x%08lx", data);
 
-    swd_disconnect();
+    data = 0;
+    packet_write(DP, ADDR_SELECT, 2);
+    packet_read(DP, ADDR_BASEPTR0, &data);
+    debug_line("Base Ptr 0: 0x%08lx", data);
+
+    data = 0;
+    packet_write(DP, ADDR_SELECT, 3);
+    packet_read(DP, ADDR_BASEPTR1, &data);
+    debug_line("Base Ptr 1: 0x%08lx", data);
+
+    // AP 0 IDR
+    data = 0;
+    packet_write(DP, ADDR_SELECT, 0xf0);
+    packet_read(AP, 12, &data);
+    debug_line("AP: 0x%08lx", data);
+
+    data = 0;
+    packet_write(DP, ADDR_SELECT, 0xf0);
+    packet_read(AP, 12, &data);
+    debug_line("AP: 0x%08lx", data);
+
+    data = 0;
+    packet_read(DP, ADDR_CTRL_STAT, &data);
+    debug_line("CTRL/STAT: 0x%08lx", data);
+
+    // AP 1 IDR
+    data = 0;
+    packet_write(DP, ADDR_SELECT, 0x10000f0);
+    packet_read(AP, 12, &data);
+    debug_line("AP: 0x%08lx", data);
+
+    data = 0;
+    packet_write(DP, ADDR_SELECT, 0x10000f0);
+    packet_read(AP, 12, &data);
+    debug_line("AP: 0x%08lx", data);
+
+    data = 0;
+    packet_read(DP, ADDR_CTRL_STAT, &data);
+    debug_line("CTRL/STAT: 0x%08lx", data);
+
+    // swd_disconnect();
 
 
 /* RP 2040
@@ -92,6 +136,4 @@ bool cmd_swd_test(uint32_t loop)
 */
     return true;
 }
-
-
 

@@ -39,7 +39,8 @@ cmd_typ commands[] = {
         {"xip_off",     "disable XIP on FLash", cmd_flash_disable_XIP},
         {"xip_on",      "enable XIP on FLash", cmd_flash_enable_XIP},
 #endif
-        {"swd_info",    "test the SWD interface", cmd_swd_test},
+        {"swd_test",    "test the SWD interface", cmd_swd_test},
+        {"swd_info",    "current state of the SWD interface", cmd_swd_info},
         {"flash_reset", "reset the external QSPI flash", cmd_flash_reset},
         {"dump_file",   "dump the content of the file <filename>", cmd_file_dump},
         {"ls",          "list all files in the file system", cmd_file_ls},

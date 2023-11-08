@@ -40,8 +40,54 @@ void swd_init(void)
 
 void swd_tick(void)
 {
+    if(false == state.is_connected)
+    {
+        // do we want to connect?
+    }
+    else
+    {
+        // we are connected.
+        // do we need to send packets?
+        // or go to idle
+    }
     // TODO
 }
+
+bool swd_info(uint32_t which)
+{
+    bool done = false;
+    switch(which)
+    {
+    case 0: if(true == state.is_connected)
+            {
+                debug_line("swd: connected");
+            }
+            else
+            {
+                debug_line("swd: not connected");
+                done = true;
+            }
+            break;
+
+    case 1: if(true == state.is_minimal_debug_port)
+            {
+                debug_line("minimal debug port");
+            }
+            else
+            {
+                debug_line("normal debug port");
+            }
+            break;
+
+    case 2: debug_line("debug port version %ld", state.dp_version); break;
+    case 3: debug_line("DPIDR  0x%08lx", state.reg_DPIDR); break;
+    case 4: debug_line("SELECT 0x%08lx", state.reg_SELECT); break;
+
+    default: done = true;
+    }
+    return done;
+}
+
 
 
 uint32_t swd_connect(bool multi, uint32_t target)
