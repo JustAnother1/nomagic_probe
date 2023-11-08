@@ -79,6 +79,7 @@ void debug_uart_initialize(void)
     is_sending = false;
     NVIC_EnableIRQ(UART0_IRQ_NUMBER, UART0_IRQ_PRIORITY);
     init_printf(NULL, debug_putc);
+    printf("\r\n\r\n\r\n\r\n\r\n");
 }
 
 void debug_uart_tick(void)

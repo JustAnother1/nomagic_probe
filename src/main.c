@@ -54,11 +54,11 @@ static void init_0(void)
     watchdog_enable();
     init_time();
     debug_uart_initialize();
-    cli_init();
     file_system_init();
     tusb_init(); // initialize tinyusb stack
     gdbserver_init();
     swd_init();
+    cli_init(); // should be last
 }
 
 static void init_1(void)
