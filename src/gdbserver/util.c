@@ -47,7 +47,7 @@ uint32_t hex_to_int(char* hex, uint32_t num_digits)
         case 'F': digit_val = 15; break;
         default:
             digit_val = 0;
-            DEBUG_LOG("invalid hex char %d / 0x%02x !", *hex, *hex);
+            debug_line("gdbs: invalid hex char %d / 0x%02x !", *hex, *hex);
             break;
         }
          res = res + digit_val;
