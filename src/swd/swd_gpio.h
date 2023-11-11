@@ -104,7 +104,7 @@ static inline void set_SWDIO_Low(void)
     SIO->GPIO_OUT_CLR = 1 << PIN_SWDIO;
 }
 
-static inline int read_SWDIO(void)
+static inline uint32_t read_SWDIO(void)
 {
     if(0 == (SIO->GPIO_IN & (1 << PIN_SWDIO)))
     {

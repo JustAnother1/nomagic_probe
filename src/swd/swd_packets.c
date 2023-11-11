@@ -18,10 +18,10 @@
 // ARM document defines this!
 static bool sticky_overrun = false;
 
-static int send_packet_request(int APnotDP, int read_not_write, int address);
-static int  read_ACK(void);
-static void write_bit(int data);
-static int  read_bit(void);
+static uint32_t send_packet_request(uint32_t APnotDP, uint32_t read_not_write, uint32_t address);
+static uint32_t  read_ACK(void);
+static void write_bit(uint32_t data);
+static uint32_t  read_bit(void);
 static void turn_to_output(void);
 static void jtag_to_swd_sequence(void);
 /* not used
@@ -72,14 +72,14 @@ void swd_packets_init(void)
     swd_gpio_init();
 }
 
-void set_sticky_overrun(bool value)
+void swd_packet_set_sticky_overrun(bool value)
 {
     sticky_overrun = value;
 }
 
-void packet_line_reset(void)
+void swd_packet_line_reset(void)
 {
-    int i;
+    uint32_t i;
     // at least 50 bits 1
     switch_SWDIO_to_Output();
     for(i = 0; i < 64; i++)
@@ -102,10 +102,10 @@ void packet_line_reset(void)
     }
 }
 
-void packet_disconnect(void)
+void swd_packet_disconnect(void)
 {
     // at least 8 Idle cycles
-    int i;
+    uint32_t i;
     set_SWDIO_Low();
     switch_SWDIO_to_Output();
     for(i = 0; i < 16; i++)
@@ -114,21 +114,22 @@ void packet_disconnect(void)
     }
 }
 
-int packet_write(int APnotDP, int address, uint32_t data)
+uint32_t swd_packet_write(uint32_t APnotDP, uint32_t address, uint32_t data)
 {
-    int i;
-    int num_ones = 0;
-    int ack;
+    uint32_t i;
+    uint32_t num_ones = 0;
+    uint32_t ack;
 
     ack = send_packet_request(APnotDP, 0, address);
 
     // handle ACK
     if(ACK_OK != ack)
     {
-        if((0 == APnotDP) && (0xc == address))
+        if((0 == APnotDP) && (ADDR_TARGETSEL == address))
         {
             // this is a TARGETSEL access and the device is not active.
             // -> line is not driven -> ignore ACK -> OK
+            ack = ACK_OK;
         }
         else
         {
@@ -142,7 +143,6 @@ int packet_write(int APnotDP, int address, uint32_t data)
     }
 
     turn_to_output();
-    // delay_us(100); // TODO debug only
 
     // Data
     for(i = 0; i < 32; i++)
@@ -160,7 +160,6 @@ int packet_write(int APnotDP, int address, uint32_t data)
         }
     }
 
-    // delay_us(100); // TODO debug only
     // Parity
     if(0 == num_ones%2)
     {
@@ -173,18 +172,17 @@ int packet_write(int APnotDP, int address, uint32_t data)
     return ack;
 }
 
-int packet_read(int APnotDP, int address, uint32_t* data)
+uint32_t swd_packet_read(uint32_t APnotDP, uint32_t address, uint32_t* data)
 {
-    int i;
-    int num_ones = 0;
-    int ack;
-    int parity;
+    uint32_t i;
+    uint32_t num_ones = 0;
+    uint32_t ack;
+    uint32_t parity;
     uint32_t read_data = 0;
 
     ack = send_packet_request(APnotDP, 1, address);
 
     // handle ACK
-    /* ignore ACK for now
     if(ACK_OK != ack)
     {
         // handle "Sticky overrun"
@@ -198,15 +196,12 @@ int packet_read(int APnotDP, int address, uint32_t* data)
         }
         return ack;
     }
-    */
-
-    // delay_us(100); // TODO debug only
 
     // Data
     for(i = 0; i < 32; i++)
     {
         // read 32 bits of data start with least significant bit first
-        int bit = read_bit();
+        uint32_t bit = read_bit();
         if(1 == bit)
         {
             read_data = read_data | (1<<i);
@@ -217,22 +212,9 @@ int packet_read(int APnotDP, int address, uint32_t* data)
 
     *data = read_data;
 
-
-    // delay_us(100); // TODO debug only
-
     parity = read_bit();
-    /*
-    quarter_clock_delay();
-    parity = read_SWDIO();
-    set_SWCLK_High();
-    switch_SWDIO_to_Output();
-    quarter_clock_delay();
-    quarter_clock_delay();
-    set_SWCLK_Low();
-    quarter_clock_delay();
-     */
+
     turn_to_output();
-    // delay_us(100); // TODO debug only
 
     if(ACK_OK == ack)
     {
@@ -243,13 +225,17 @@ int packet_read(int APnotDP, int address, uint32_t* data)
             ack = ERROR_PARITY;
         }
     }
-    // switch_SWDIO_to_Output();
     return ack;
+}
+
+void swd_packet_set_swdio_idle(void)
+{
+    set_SWDIO_High();
 }
 
 // static functions
 
-static void write_bit(int data)
+static void write_bit(uint32_t data)
 {
     if(0 == data)
     {
@@ -268,9 +254,9 @@ static void write_bit(int data)
 }
 
 // returns 0 or 1 depending on SWDIO bit level on falling edge
-static int read_bit(void)
+static uint32_t read_bit(void)
 {
-    int res = 0;
+    uint32_t res = 0;
     quarter_clock_delay();
     res = read_SWDIO();
     set_SWCLK_High();
@@ -292,9 +278,9 @@ static void turn_to_output(void)
     switch_SWDIO_to_Output();
 }
 
-static int send_packet_request(int APnotDP, int read_not_write, int address)
+static uint32_t send_packet_request(uint32_t APnotDP, uint32_t read_not_write, uint32_t address)
 {
-    int parity = 0;
+    uint32_t parity = 0;
 
     switch_SWDIO_to_Output();
 
@@ -360,8 +346,6 @@ static int send_packet_request(int APnotDP, int read_not_write, int address)
     write_bit(0);
 
     // Park
-    //write_bit(1);
-
     set_SWDIO_High();
     quarter_clock_delay();
     set_SWCLK_High();
@@ -371,24 +355,20 @@ static int send_packet_request(int APnotDP, int read_not_write, int address)
     set_SWCLK_Low();
     quarter_clock_delay();
 
-    // Trn - turnaround (turn to input - so that target can send)
-
-    // switch_SWDIO_to_Input();
+    // Trn - turn around (turn to input - so that target can send)
     quarter_clock_delay();
     set_SWCLK_High();
     quarter_clock_delay();
-    // switch_SWDIO_to_Input();
     quarter_clock_delay();
     set_SWCLK_Low();
-    // switch_SWDIO_to_Input();
     quarter_clock_delay();
 
     return read_ACK();
 }
 
-static int read_ACK(void)
+static uint32_t read_ACK(void)
 {
-    int ack = 0;
+    uint32_t ack = 0;
     // ACK 0
     ack = read_bit();
     // ACK 1
@@ -424,7 +404,7 @@ static void jtag_to_swd_sequence(void)
 /* not used
 static void swd_to_dormant_state_sequence(void)
 {
-    int i;
+    uint32_t i;
     // at least 50 bits 1
     switch_SWDIO_to_Output();
     for(i = 0; i < 64; i++)
@@ -456,7 +436,7 @@ static void swd_to_dormant_state_sequence(void)
 
 static void leave_dormant_state_to_swd_sequence(void)
 {
-    int i;
+    uint32_t i;
     // at least 8x1
     for(i = 0; i < 9; i++)
     {

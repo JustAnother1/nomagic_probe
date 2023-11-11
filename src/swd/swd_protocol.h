@@ -18,10 +18,13 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#define RES_OK  0
+
 void swd_init(void);
 void swd_tick(void);
+bool swd_is_connected(void);
 bool swd_info(uint32_t which);
-uint32_t swd_connect(bool multi, uint32_t target);
+int32_t swd_connect(bool multi, uint32_t target);
 void swd_disconnect(void);
 
 #endif /* SRC_SWD_SWD_PROTOCOL_H_ */

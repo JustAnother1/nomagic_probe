@@ -866,7 +866,15 @@ ARM Access Ports:
 
 | 6 
 | 0x8 
-| AMBA APB4 bus
+| AMBA APB4 and APB5 bus
+
+| 7
+| 0x8
+| AMBA AX15 bus
+
+| 8
+| 0x8
+| AMBA AHB5 with enhanced HPROT
 
 |===
 

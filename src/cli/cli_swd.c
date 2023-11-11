@@ -58,54 +58,19 @@ bool cmd_swd_test(uint32_t loop)
     // activate_Run();
 
     debug_line("SWDv1");
-    data = swd_connect(false, 0);
-    debug_line("ID: 0x%08lx", data);
+    if(false == swd_is_connected())
+    {
+        int32_t res = swd_connect(false, 0);
+        if(RES_OK != res)
+        {
+            debug_line("ERROR: SWD: failed to connect (%ld)!", res);
+            return true;
+        }
+    }
 
     data = 0;
-    packet_read(DP, ADDR_CTRL_STAT, &data);
+    swd_packet_read(DP, ADDR_CTRL_STAT, &data);
     debug_line("CTRL/STAT: 0x%08lx", data);
-
-    data = 0;
-    packet_write(DP, ADDR_SELECT, 2);
-    packet_read(DP, ADDR_BASEPTR0, &data);
-    debug_line("Base Ptr 0: 0x%08lx", data);
-
-    data = 0;
-    packet_write(DP, ADDR_SELECT, 3);
-    packet_read(DP, ADDR_BASEPTR1, &data);
-    debug_line("Base Ptr 1: 0x%08lx", data);
-
-    // AP 0 IDR
-    data = 0;
-    packet_write(DP, ADDR_SELECT, 0xf0);
-    packet_read(AP, 12, &data);
-    debug_line("AP: 0x%08lx", data);
-
-    data = 0;
-    packet_write(DP, ADDR_SELECT, 0xf0);
-    packet_read(AP, 12, &data);
-    debug_line("AP: 0x%08lx", data);
-
-    data = 0;
-    packet_read(DP, ADDR_CTRL_STAT, &data);
-    debug_line("CTRL/STAT: 0x%08lx", data);
-
-    // AP 1 IDR
-    data = 0;
-    packet_write(DP, ADDR_SELECT, 0x10000f0);
-    packet_read(AP, 12, &data);
-    debug_line("AP: 0x%08lx", data);
-
-    data = 0;
-    packet_write(DP, ADDR_SELECT, 0x10000f0);
-    packet_read(AP, 12, &data);
-    debug_line("AP: 0x%08lx", data);
-
-    data = 0;
-    packet_read(DP, ADDR_CTRL_STAT, &data);
-    debug_line("CTRL/STAT: 0x%08lx", data);
-
-    // swd_disconnect();
 
 
 /* RP 2040
@@ -114,7 +79,7 @@ bool cmd_swd_test(uint32_t loop)
     delay_us(100000);
     data = swd_connect(true, 0x01002927ul);  // try RP2040 Core 0
     debug_line("ID: 0x%08lx", data);
-    packet_read(DP, ADDR_CTRL_STAT, &data);
+    swd_packet_read(DP, ADDR_CTRL_STAT, &data);
     debug_line("CTRL/STAT: 0x%08lx", data);
     swd_disconnect();
 
@@ -122,7 +87,7 @@ bool cmd_swd_test(uint32_t loop)
     delay_us(100000);
     data = swd_connect(true, 0x11002927ul);  // try RP2040 Core 1
     debug_line("ID: 0x%08lx", data);
-    packet_read(DP, ADDR_CTRL_STAT, &data);
+    swd_packet_read(DP, ADDR_CTRL_STAT, &data);
     debug_line("CTRL/STAT: 0x%08lx", data);
     swd_disconnect();
 
@@ -130,7 +95,7 @@ bool cmd_swd_test(uint32_t loop)
     delay_us(100000);
     data = swd_connect(true, 0xf1002927ul);  // try RP2040 Rescue DP
     debug_line("ID: 0x%08lx", data);
-    packet_read(DP, ADDR_CTRL_STAT, &data);
+    swd_packet_read(DP, ADDR_CTRL_STAT, &data);
     debug_line("CTRL/STAT: 0x%08lx", data);
     swd_disconnect();
 */

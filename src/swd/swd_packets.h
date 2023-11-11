@@ -18,6 +18,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+// ACK
 #define ACK_PROTOCOL_ERROR_0   0 // on wire: line not driven -> read as low
 #define ACK_OK                 1 // on wire: 1 0 0
 #define ACK_WAIT               2 // on wire: 0 1 0
@@ -26,6 +27,9 @@
 #define ERROR_PARITY           8
 
 // If the  ACK_PROTOCOL_ERROR_0 or ACK_PROTOCOL_ERROR_1 occur twice then a line reset  + read IDCODE is needed.
+
+#define AP  1
+#define DP  0
 
 // DP addresses:
 // A0 = 0,  A1 = 0
@@ -45,19 +49,20 @@
 #define ADDR_RDBUFF    12 // A3 = 1, A2 = 1
 #define ADDR_TARGETSEL 12 // A3 = 1, A2 = 1
 
-
-#define AP  1
-#define DP  0
+// AP Addresses:
+#define AP_BANK_IDR      0xf  // 0xdf
+#define AP_REGISTER_IDR  0xc
 
 
 void swd_packets_init(void);
 // default is false
-void set_sticky_overrun(bool value);
-void packet_line_reset(void);
-void packet_disconnect(void);
+void swd_packet_set_sticky_overrun(bool value);
+void swd_packet_line_reset(void);
+void swd_packet_disconnect(void);
 // AP = 1; DP = 0
-int packet_write(int APnotDP, int address, uint32_t data);
+uint32_t swd_packet_write(uint32_t APnotDP, uint32_t address, uint32_t data);
 // AP = 1; DP = 0
-int packet_read(int APnotDP, int address, uint32_t* data);
+uint32_t swd_packet_read(uint32_t APnotDP, uint32_t address, uint32_t* data);
+void swd_packet_set_swdio_idle(void);
 
 #endif /* SRC_PACKETS_H_ */
