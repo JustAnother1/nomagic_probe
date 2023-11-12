@@ -25,8 +25,12 @@
 // after switching on the debug part of the chip, ask at most this many times if it now powered on (CTRL/STAT)
 #define MAX_WAIT_POWER_ON     10
 
+#define AP_VERSION_APv1       1
+#define AP_VERSION_APv2       2 // new in ADIv6.0
+
 typedef struct{
     uint32_t ap_sel;
+    uint32_t version;
 
 } mem_ap_typ;
 
@@ -287,6 +291,19 @@ static int32_t check_AP(uint32_t APsel, uint32_t idr)
     {
         // Memory Access Port (MEM-AP)
         state.mem_ap.ap_sel = APsel;
+        state.mem_ap.version = AP_VERSION_APv1;
+        debug_line("AP: IDR: Revision: %ld", (idr & (0xful<<28))>>28 );
+        debug_line("AP: IDR: Jep 106 : %ld x 0x7f + 0x%02lx", (idr & (0xf << 24))>>24, (idr & (0x7f<<17))>>17 );
+        debug_line("AP: IDR: class :   %ld", class );
+        debug_line("AP: IDR: variant:  %ld", (idr & (0xf<<4))>>4 );
+        debug_line("AP: IDR: type:     %ld", (idr & 0xf) );
+        // TODO
+    }
+    else if(9 == class)
+    {
+        // Memory Access Port (MEM-AP)
+        state.mem_ap.ap_sel = APsel;
+        state.mem_ap.version = AP_VERSION_APv2;
         debug_line("AP: IDR: Revision: %ld", (idr & (0xful<<28))>>28 );
         debug_line("AP: IDR: Jep 106 : %ld x 0x7f + 0x%02lx", (idr & (0xf << 24))>>24, (idr & (0x7f<<17))>>17 );
         debug_line("AP: IDR: class :   %ld", class );
