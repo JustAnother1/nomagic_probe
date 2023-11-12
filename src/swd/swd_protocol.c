@@ -51,6 +51,7 @@ static int32_t find_all_AP(void);
 static int32_t check_AP(uint32_t APsel, uint32_t idr);
 static int32_t send_write_packet(uint32_t APnotDP, uint32_t address, uint32_t data);
 static int32_t send_read_packet(uint32_t APnotDP, uint32_t address, uint32_t* data);
+static int32_t read_ap_register(uint32_t ap_sel, uint32_t ap_bank_reg, uint32_t ap_register, uint32_t* data);
 
 void swd_init(void)
 {
@@ -225,45 +226,59 @@ void swd_disconnect(void)
 
 // static functions
 
+static int32_t read_ap_register(uint32_t ap_sel, uint32_t ap_bank_reg, uint32_t ap_register, uint32_t* data)
+{
+    uint32_t ctrl_stat;
+    uint32_t req_select = (ap_bank_reg << 4) | (ap_sel <<24);
+    if(req_select != state.reg_SELECT)
+    {
+        if(RES_OK != send_write_packet(DP, ADDR_SELECT, req_select))
+        {
+            debug_line("SWD:AP(%ld): failed to write SELECT", ap_sel);
+            return -1;
+        }
+        state.reg_SELECT = req_select;
+    }
+
+    if(RES_OK != send_read_packet(AP, ap_register, data))
+    {
+        debug_line("SWD:AP(%ld): failed to read AP-register", ap_sel);
+        return -2;
+    }
+
+    if(RES_OK != send_read_packet(DP, ADDR_CTRL_STAT, &ctrl_stat))
+    {
+        debug_line("SWD:AP(%ld): failed to read CTRL/STAT", ap_sel);
+        return -3;
+    }
+    if(0 == (ctrl_stat & 0x40))
+    {
+        debug_line("CTRL/STAT 0x%08lx", ctrl_stat);
+        debug_line("SWD:AP(%ld): AP read failed", ap_sel);
+        return -4;
+    }
+
+    if(RES_OK != send_read_packet(DP, ADDR_RDBUFF, data))
+    {
+        debug_line("SWD:AP(%ld): failed to read DP-RDBUFF", ap_sel);
+        return -5;
+    }
+
+    return RES_OK;
+}
+
 static int32_t find_all_AP(void)
 {
     uint32_t i;
     uint32_t idr;
-    uint32_t ctrl_stat;
     for(i = 0; i < 256; i++)
     {
         debug_line("testing AP %ld", i);
         // IDR
-        state.reg_SELECT = (AP_BANK_IDR << 4) | (i <<24);
-        // debug_line("SWD: SELECT: 0x%08lx", state.reg_SELECT);
-        if(RES_OK != send_write_packet(DP, ADDR_SELECT, state.reg_SELECT))
+        if(RES_OK != read_ap_register(i, AP_BANK_IDR, AP_REGISTER_IDR, &idr))
         {
-            debug_line("SWD:AP(%ld): failed to write SELECT", i);
+            debug_line("SWD:AP(%ld): failed to read ap register", i);
             return -1;
-        }
-
-        if(RES_OK != send_read_packet(AP, AP_REGISTER_IDR, &idr))
-        {
-            debug_line("SWD:AP(%ld): failed to read AP-IDR", i);
-            return -2;
-        }
-
-        if(RES_OK != send_read_packet(DP, ADDR_CTRL_STAT, &ctrl_stat))
-        {
-            debug_line("SWD:AP(%ld): failed to read CTRL/STAT", i);
-            return -3;
-        }
-        if(0 == (ctrl_stat & 0x40))
-        {
-            debug_line("CTRL/STAT 0x%08lx", ctrl_stat);
-            debug_line("SWD:AP(%ld): AP read failed", i);
-            return -4;
-        }
-
-        if(RES_OK != send_read_packet(DP, ADDR_RDBUFF, &idr))
-        {
-            debug_line("SWD:AP(%ld): failed to read DP-RDBUFF", i);
-            return -5;
         }
 
         if(0 != idr)
@@ -289,21 +304,51 @@ static int32_t check_AP(uint32_t APsel, uint32_t idr)
     uint32_t class = (idr & (0xf << 13))>> 13;
     if(8 == class)
     {
+        uint32_t reg_data;
         // Memory Access Port (MEM-AP)
         state.mem_ap.ap_sel = APsel;
         state.mem_ap.version = AP_VERSION_APv1;
+        debug_line("APv1:");
         debug_line("AP: IDR: Revision: %ld", (idr & (0xful<<28))>>28 );
         debug_line("AP: IDR: Jep 106 : %ld x 0x7f + 0x%02lx", (idr & (0xf << 24))>>24, (idr & (0x7f<<17))>>17 );
         debug_line("AP: IDR: class :   %ld", class );
         debug_line("AP: IDR: variant:  %ld", (idr & (0xf<<4))>>4 );
         debug_line("AP: IDR: type:     %ld", (idr & 0xf) );
         // TODO
+        if(RES_OK != read_ap_register(APsel, AP_BANK_BASE, AP_REGISTER_BASE, &reg_data))
+        {
+            debug_line("SWD:AP(%ld): failed to read ap register", APsel);
+            return -1;
+        }
+        debug_line("AP: BASE : 0x%08lx", reg_data);
+
+        if(RES_OK != read_ap_register(APsel, AP_BANK_CFG, AP_REGISTER_CFG, &reg_data))
+        {
+            debug_line("SWD:AP(%ld): failed to read ap register", APsel);
+            return -1;
+        }
+        debug_line("AP: CFG  : 0x%08lx", reg_data);
+
+        if(RES_OK != read_ap_register(APsel, AP_BANK_CFG1, AP_REGISTER_CFG1, &reg_data))
+        {
+            debug_line("SWD:AP(%ld): failed to read ap register", APsel);
+            return -1;
+        }
+        debug_line("AP: CFG1 : 0x%08lx", reg_data);
+
+        if(RES_OK != read_ap_register(APsel, AP_BANK_CSW, AP_REGISTER_CSW, &reg_data))
+        {
+            debug_line("SWD:AP(%ld): failed to read ap register", APsel);
+            return -1;
+        }
+        debug_line("AP: CSW  : 0x%08lx", reg_data);
     }
     else if(9 == class)
     {
         // Memory Access Port (MEM-AP)
         state.mem_ap.ap_sel = APsel;
         state.mem_ap.version = AP_VERSION_APv2;
+        debug_line("APv2:");
         debug_line("AP: IDR: Revision: %ld", (idr & (0xful<<28))>>28 );
         debug_line("AP: IDR: Jep 106 : %ld x 0x7f + 0x%02lx", (idr & (0xf << 24))>>24, (idr & (0x7f<<17))>>17 );
         debug_line("AP: IDR: class :   %ld", class );

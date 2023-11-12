@@ -50,9 +50,45 @@
 #define ADDR_TARGETSEL 12 // A3 = 1, A2 = 1
 
 // AP Addresses:
+// CSW
+#define AP_BANK_CSW      0x0
+#define AP_REGISTER_CSW  0x0
+// TAR
+#define AP_BANK_TAR      0x0
+#define AP_REGISTER_TAR  0x4
+// DRW
+#define AP_BANK_DRW      0x0
+#define AP_REGISTER_DRW  0xc
+// BD0
+#define AP_BANK_BD0      0x1
+#define AP_REGISTER_BD0  0x0
+// BD1
+#define AP_BANK_BD1      0x1
+#define AP_REGISTER_BD1  0x4
+// BD2
+#define AP_BANK_BD2      0x1
+#define AP_REGISTER_BD2  0x8
+// BD3
+#define AP_BANK_BD3      0x1
+#define AP_REGISTER_BD3  0xc
+// MBT
+#define AP_BANK_MBT      0x2
+#define AP_REGISTER_MBT  0x0
+// T0RT
+#define AP_BANK_T0RT     0x3
+#define AP_REGISTER_T0RT 0x0
+// CFG1
+#define AP_BANK_CFG1     0xe
+#define AP_REGISTER_CFG1 0x0
+// CFG
+#define AP_BANK_CFG      0xf
+#define AP_REGISTER_CFG  0x4
+// BASE
+#define AP_BANK_BASE     0xf
+#define AP_REGISTER_BASE 0x8
+// IDR
 #define AP_BANK_IDR      0xf  // 0xdf
 #define AP_REGISTER_IDR  0xc
-
 
 void swd_packets_init(void);
 // default is false
