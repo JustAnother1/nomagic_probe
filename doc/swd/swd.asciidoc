@@ -1,5 +1,6 @@
-SWD
-===
+= SWD
+:toc:
+:toclevels: 4 
 
 == external documentation
 
@@ -11,7 +12,7 @@ link:IHI0074D_debug_interface_v6_0_architecture_specification.pdf[ARM Debug Inte
 
 link:jep106av.pdf[JEP 106]
 
-== ADI
+== ARM Debug Interface (ADI)
 
   * most recent is ADIv6
   * ARM recommends ADIv4 for Armv6 architecture (Cortex-M0, Cortex-M0+)
@@ -159,15 +160,26 @@ completing this sequence, the host can stop the clock.
 
 === Data transfer phase
 
+read = 32 bit data + 1 bit parity + turn
 
-=== DP access
+write = turn + 32 bit data + 1 bit parity
+
+
+== opening a connection
+
+  - 2x line reset
+  - read id
+  - power on
+
+
+== DP access
 
 Only one Debug Port. Direct interface to Debugger. Debug Port allows Access to Access Ports
   - JTAG debug port (JTAG-DP). (IEEE 1149.1 (since DPv0)
   - Serial Wire Debug Port (SW-DP). (since DPv1, since DPv2 also SWDv2)
   - Serial Wire JTAG debug port (SWJ-DP). (Combination of JTAG and SWD on the same pins. Debuger decides which to use)
 
-==== Versions
+=== Versions
 
 [cols="1,1"]
 |===
@@ -175,20 +187,20 @@ Only one Debug Port. Direct interface to Debugger. Debug Port allows Access to A
 | description
 
 | DPv0
-| ADIv5 JTAG only
+| ADIv5 JTAG only, APv1
 
 | DPv1
-| ADIv5 JTAG + SW
+| ADIv5 JTAG + SWDv1, APv1
 
 | DPv2
-| ADIV5.1 SWv2
+| ADIV5.1 SWDv2 (now with Multidrop), APv1
 
 | DPv3
-| ADIv6
+| ADIv6, APv2
 
 |===
 
-==== Registers
+=== Registers
 
 [cols="1,1,1,1,1,1,1,1,1"]
 |===
@@ -359,7 +371,7 @@ The SELECT.DPBANKSEL field determines which register is accessed at addresses 0x
 
 A0 and A1 = 0 !
 
-===== ABORT
+==== ABORT
 
 [cols="1,1,1,1"]
 |===
@@ -400,7 +412,7 @@ A0 and A1 = 0 !
 
 |===
 
-===== CTRL/STAT
+==== CTRL/STAT
 
 [cols="1,1,1,1"]
 |===
@@ -507,7 +519,7 @@ A0 and A1 = 0 !
 |===
 
 
-===== DLCR (Data Link Control)
+==== DLCR (Data Link Control)
 
 [cols="1,1,1,1"]
 |===
@@ -523,7 +535,7 @@ A0 and A1 = 0 !
 
 |===
 
-===== DLPIDR (Data Link Protocol Identification register)
+==== DLPIDR (Data Link Protocol Identification register)
 
 [cols="1,1,1,1"]
 |===
@@ -549,7 +561,7 @@ A0 and A1 = 0 !
 
 |===
 
-===== DPIDR (Debug Port Identification register)
+==== DPIDR (Debug Port Identification register)
 
 [cols="1,1,1,1"]
 |===
@@ -603,7 +615,7 @@ A0 and A1 = 0 !
 
 ARM Limited JEP106 Code is : 0x7F 0x7F 0x7F 0x7F 0x3B
 
-===== EVENTSTAT (Event Status register)
+==== EVENTSTAT (Event Status register)
 
 [cols="1,1,1,1"]
 |===
@@ -624,7 +636,7 @@ ARM Limited JEP106 Code is : 0x7F 0x7F 0x7F 0x7F 0x3B
 
 |===
 
-===== RDBUFF (Read Buffer register)
+==== RDBUFF (Read Buffer register)
 
 presents data that was captured during the previous AP
 read, enabling repeatedly returning the value without generating a new AP access.
@@ -632,7 +644,7 @@ read, enabling repeatedly returning the value without generating a new AP access
 After reading the DP Read Buffer, its contents are no longer valid. The result of a second
 read of the DP Read Buffer is UNKNOWN .
 
-===== RESEND (Read Resend register)
+==== RESEND (Read Resend register)
 
 Data for previous AP read.
 
@@ -645,7 +657,7 @@ RESEND can be accessed multiple times, and always returns the same value until a
 made to an AP register or the DP RDBUFF register.
 
 
-===== SELECT (AP Select register)
+==== SELECT (AP Select register)
 
 [cols="1,1,1,1"]
 |===
@@ -677,7 +689,7 @@ made to an AP register or the DP RDBUFF register.
 |===
 
 
-===== TARGETID (Target Identification register)
+==== TARGETID (Target Identification register)
 
 [cols="1,1,1,1"]
 |===
@@ -709,7 +721,7 @@ made to an AP register or the DP RDBUFF register.
 |===
 
 
-===== TARGETSEL (Target Selection register)
+==== TARGETSEL (Target Selection register)
 
 [cols="1,1,1,1"]
 |===
@@ -741,7 +753,7 @@ made to an AP register or the DP RDBUFF register.
 |===
 
 
-==== MinDP
+=== MinDP
 
 The minimal DP is a bit different:
 MINDP implementations must omit the following DP features:
@@ -766,9 +778,9 @@ MINDP implementations must observe the following conventions:
   * The ABORT.STKCMPCLR field is SBZ(Should be Zero). Writing 0b1 to this bit is UNPREDICTABLE.
 
 
-=== AP access
+== AP access
 
-==== Versions
+=== Versions
 
 [cols="1,1"]
 |===
@@ -776,7 +788,7 @@ MINDP implementations must observe the following conventions:
 | description
 
 | APv1
-| ADIv5 or earlier
+| ADIv5.2 or earlier
 
 | APv2
 | ADIv6
@@ -788,14 +800,118 @@ More than one Access Port possible. Each access port has separate resources that
   - Memory Access Port(MEM-AP)
   - JTAG Access Port (JTAG-AP)
 
-Address is taken from A2, A3 (from packet request) and SELECT and SELECT1 registers in DP.
-A0 and A1= 0 !
+To address Register in AP:
+  - The SELECT.APSEL bits define whch AP gets addressed
+  - The SELECT.APBANKSEL difines which bank (bank = 4 Registers) is accessed.
+  - Which of the 4 Registers in the Bank is addresse is defined by the  A2, A3 bits from packet request.
+  - A0 and A1= 0 !
+  - If it is a read or a write to the AP Register is defined by the packet Request RnW bit.
+
+
+An APv1 AP is a Class 0x8.
 
 An APv2 AP is a Class 0x9 CoreSight component with a register map of 4KB.
 
-All Access Ports must have a IDR Register:
+All Access Ports must have a IDR Register!
 
-====  IDR (Identification Register, Offset: 0xFC, RO) ====
+=== Registers
+
+[cols="1,1,1,1"]
+|===
+| Offset
+| Type
+| Name
+| Description
+
+| 0x00
+| RW
+| CSW
+| 
+
+| 0x04 - 0x08
+| RW
+| TAR
+| 0x04 are least significant bits, if Large Physical Address Extension is supported the 0x08 presents the most significant bits.
+
+| 0x0c
+| RW
+| DRW
+| 
+
+| 0x10
+| RW
+| BD0
+| 
+
+| 0x14
+| RW
+| BD1
+| 
+
+| 0x18
+| RW
+| BD2
+| 
+
+| 0x1c
+| RW
+| BD3
+| 
+
+| 0x20
+| implementation defined
+| MBT
+| 
+
+| 0x24 - 0x2c
+| na
+| Res0
+| reserved for future use
+
+| 0x30
+| RW
+| TOTR
+|
+
+| 0x34 - 0xdc
+| na
+| Res0
+| reserved for future use
+
+| 0xe0
+| RO
+| CFG1
+|
+
+| 0xe4 - 0xec
+| na
+| Res0
+| reserved for future use
+
+| 0xf0
+| RO
+| BASE
+| only valid with Large Physical Address Extention then most significant bits otherwise Res0
+
+| 0xf4
+| RO
+| CFG
+|
+
+| 0xf8
+| RO
+| BASE
+| least significant bits
+
+| 0xfc
+| RO
+| IDR
+|
+
+|===
+
+
+====  IDR (Identification Register, Offset: 0xFC, RO)
 
 [cols="1,1,1,1"]
 |===
@@ -878,9 +994,9 @@ ARM Access Ports:
 
 |===
 
-==== Memory Access Port
+=== Memory Access Port
 
-===== CSW (Control/Status Word register, Offset: 0x0, RW)
+==== CSW (Control/Status Word register, Offset: 0x0, RW)
 
 holds control and status information for the MEM-AP.
 
@@ -899,7 +1015,7 @@ holds control and status information for the MEM-AP.
 | 28-30 
 | PROT 
 | RW 
-| This field is optional and impl. def. If not implemented, it is RES0
+| bus access protection control This field is optional and impl. def. If not implemented, it is RES0
 
 | 24-27 
 | CACHE 
@@ -916,10 +1032,15 @@ holds control and status information for the MEM-AP.
 | RW 
 | Reserved
 
-| 12-15 
+| 15
+| MTE
+| RW 
+| 0 = memory tagging access disabled, 1 = memory tagging access enabled
+
+| 12-14 
 | Type 
 | RW 
-| This field is optional. If not implemented, it is RES0.
+| bus access protection control, This field is optional. If not implemented, it is RES0.
 
 | 8-11 
 | Mode 
@@ -933,13 +1054,13 @@ holds control and status information for the MEM-AP.
 
 | 6 
 | DeviceEn 
-| RW 
+| RO 
 | Device enabled. (0 = MEM-AP not enabled) (1 = MEM-AP enabled an can be used)
 
 | 4-5 
 | AddrInc 
 | RW 
-| Address auto-increment and packing mode.
+| Address auto-increment and packing mode. 0 = auto increment disabled, 1 = address increment single, 2 = addres increment packed
 
 | 3 
 | RES0 
@@ -953,31 +1074,27 @@ holds control and status information for the MEM-AP.
 
 |===
 
-===== TAR (Transfer Address Register, Offset: 0x04 ( Large Address Extension : also 0x08), RW)
+==== TAR (Transfer Address Register, Offset: 0x04 ( Large Address Extension : also 0x08), RW)
 
-The TA R holds the address for the next access to the memory system, or set of debug resources, which are connected to the MEM-AP. The MEM-AP can be configured so that the TA R is incremented automatically after each memory access. Reading or writing to the TA R does not cause a memory access.
+The TAR holds the address for the next access to the memory system, or set of debug resources, which are connected to the MEM-AP. The MEM-AP can be configured so that the TAR is incremented automatically after each memory access. Reading or writing to the TAR does not cause a memory access.
 
-
-
-===== DRW (Data Read/Write register, Offset: 0x0C, RW)
+==== DRW (Data Read/Write register, Offset: 0x0C, RW)
 
 The DRW is used for memory accesses:
-  - Writing to the DRW initiates a write to the address specified by the TA R.
-  - Reading from the DRW initiates a read from the address that is specified by the TA R. When the read access completes, the value is returned from the DRW.
+- Writing to the DRW initiates a write to the address specified by the TAR.
+- Reading from the DRW initiates a read from the address that is specified by the TAR. When the read access completes, the value is returned from the DRW.
 
-
-
-===== BD0 - BD3 (Banked Data Registers, Offset: 0x10-0x1C, RW)
+==== BD0 - BD3 (Banked Data Registers, Offset: 0x10-0x1C, RW)
 
 The Banked Data Registers, BD0-BD3, provide direct read or write access to a block of four words of memory, starting at the address that is specified in the TA R:
-  - Accessing BD0 accesses (TA R[31:4] << 4) in memory.
-  - Accessing BD1 accesses ((TA R[31:4] << 4) + 0x4) in memory.
-  - Accessing BD2 accesses ((TA R[31:4] << 4) + 0x8) in memory.
-  - Accessing BD3 accesses ((TA R[31:4] << 4) + 0xC) in memory.
+- Accessing BD0 accesses (TA R[31:4] << 4) in memory.
+- Accessing BD1 accesses ((TA R[31:4] << 4) + 0x4) in memory.
+- Accessing BD2 accesses ((TA R[31:4] << 4) + 0x8) in memory.
+- Accessing BD3 accesses ((TA R[31:4] << 4) + 0xC) in memory.
 
 The value in TA R[3:0] is ignored in constructing the access address:
-  - The values of bits[3:2] of the access address depend solely on which of the four banked data registers is being accessed.
-  - Bits[1:0] of the access are always zero.
+- The values of bits[3:2] of the access address depend solely on which of the four banked data registers is being accessed.
+- Bits[1:0] of the access are always zero.
 
 [cols="1,1,1,1"]
 |===
@@ -993,7 +1110,7 @@ The value in TA R[3:0] is ignored in constructing the access address:
 
 |===
 
-===== CFG (Configuration register, Offset: 0xF4, RO)
+==== CFG (Configuration register, Offset: 0xF4, RO)
 
 The CFG register hold information about the configuration of the MEM-AP. 
 
@@ -1026,11 +1143,38 @@ The CFG register hold information about the configuration of the MEM-AP.
 
 |===
 
-===== BASE (Debug Base Address register, Offset: 0xF8( Large Memory Extension : also 0xF0), RO)
+==== CFG1 (Configuration register 1, Offset: 0xE0, RO)
+
+[cols="1,1,1,1"]
+|===
+| Bit 
+| Name 
+| Access 
+| description
+
+| 9-31 
+| RES0 
+| RO 
+| Reserved
+
+| 4-8 
+| TAG0RAN
+| RO 
+| 4 = memory tagging granule is 16 bytes, else Res0
+
+| 0-3 
+| TAG0SIZE
+| RO 
+| 0 = memory tagging, T0RT and CSW.MTE not implemented, 4 = tag size is 4 bit, memory tagging,T0TR and CSW.MTE implemented
+
+
+|===
+
+==== BASE (Debug Base Address register, Offset: 0xF8( Large Memory Extension : also 0xF0), RO)
 
 The BASE register is a pointer into the connected memory system. It points to one of:
-  - The start of a set of debug registers for the single connected debug component.
-  - The start of a ROM Table that describes the connected debug components.
+- The start of a set of debug registers for the single connected debug component.
+- The start of a ROM Table that describes the connected debug components.
 
 [cols="1,1,1,1"]
 |===
@@ -1052,30 +1196,91 @@ The BASE register is a pointer into the connected memory system. It points to on
 | 1 
 | Format 
 | RO 
-| RAO
+| 1= new format, 0 = legacy format
 
 | 0 
 | P 
 | RO 
-| 0 = No debug Entry; 1 = debug Entry for this MEM-AP
+| 0 = No debug Entry; 1 = debug Entry for this MEM-AP (legacy format = 0)
 
 |===
 
+Base at 0xf0:
 
-===== MBT (Memory Barrier Transfer register, Offset : 0x20, impl. def)
+[cols="1,1,1,1"]
+|===
+| Bit 
+| Name 
+| Access 
+| description
 
+| 0-31 
+| BASEADDR[63:32] 
+| RO 
+| most significant bits of the base address (32bit = Res0)
 
+|===
 
-==== JTAG Access Port
+==== MBT (Memory Barrier Transfer register, Offset : 0x20, impl. def)
 
+MBT generates a barrier operation on the bus.
 
+==== T0TR (Tag 0 Transfer register, Offset : 0x30, RW)
 
-== opening a connection
+stores tag values for transfers.
 
-  - 2x line reset
-  - read id
-  - power on
+[cols="1,1,1,1"]
+|===
+| Bit 
+| Name 
+| Access 
+| description
 
+| 28-31
+| T7
+| RW
+| allocation tag value.
+
+| 24-27
+| T6
+| RW
+| allocation tag value.
+
+| 20-23
+| T5
+| RW
+| allocation tag value.
+
+| 16-19
+| T4
+| RW
+| allocation tag value.
+
+| 12-15
+| T3
+| RW
+| allocation tag value.
+
+| 8-11
+| T2
+| RW
+| allocation tag value.
+
+| 4-7
+| T1
+| RW
+| allocation tag value.
+
+| 0-3
+| T0
+| RW
+| allocation tag value.
+
+|===
+
+=== JTAG Access Port
+
+not used
 
 == Dictionary
 
