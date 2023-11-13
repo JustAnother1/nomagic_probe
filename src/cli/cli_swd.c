@@ -12,9 +12,10 @@
  * with this program; if not, see <http://www.gnu.org/licenses/>
  *
  */
-
+#include <stdlib.h>
 #include <hal/time_base.h>
 #include "cli_swd.h"
+#include "cli.h"
 
 #include "swd/swd_protocol.h"
 #include "swd/swd_gpio.h"
@@ -52,15 +53,30 @@ bool cmd_swd_info(uint32_t loop)
 bool cmd_swd_test(uint32_t loop)
 {
     (void)loop;
+    uint8_t* parameter;
     uint32_t data = 0;
 
     // activate_Reset();
     // activate_Run();
 
-    debug_line("SWDv1");
-    if(false == swd_is_connected())
+    parameter = cli_get_parameter(0);
+    if(NULL == parameter)
     {
-        int32_t res = swd_connect(false, 0);
+        int32_t res;
+        debug_line("SWDv1");
+        res = swd_connect(false, 0);
+        if(RES_OK != res)
+        {
+            debug_line("ERROR: SWD: failed to connect (%ld)!", res);
+            return true;
+        }
+    }
+    else
+    {
+        int32_t res;
+        uint32_t id = (uint32_t)atoi((const char*)parameter);
+        debug_line("SWDv2 (0x%08lx)", id);
+        res = swd_connect(true, id);
         if(RES_OK != res)
         {
             debug_line("ERROR: SWD: failed to connect (%ld)!", res);

@@ -24,11 +24,6 @@ static void write_bit(uint32_t data);
 static uint32_t  read_bit(void);
 static void turn_to_output(void);
 static void jtag_to_swd_sequence(void);
-/* not used
-static void jtag_to_dormant_state_sequence(void);
-static void leave_dormant_state_to_swd_sequence(void);
-static void swd_to_dormant_state_sequence(void);
-*/
 
 /*
 Write to Target: (SWDIO must be valid before rising edge)
@@ -380,6 +375,7 @@ static uint32_t read_ACK(void)
 
 static void jtag_to_swd_sequence(void)
 {
+    switch_SWDIO_to_Output();
     // if this is a JTAG + SWD interface then we switch to SWD using this 16 bit sequence
     write_bit(0);
     write_bit(1);
@@ -401,8 +397,8 @@ static void jtag_to_swd_sequence(void)
     write_bit(1);
     write_bit(1);
 }
-/* not used
-static void swd_to_dormant_state_sequence(void)
+
+void swd_to_dormant_state_sequence(void)
 {
     uint32_t i;
     // at least 50 bits 1
@@ -434,9 +430,10 @@ static void swd_to_dormant_state_sequence(void)
     write_bit(1);
 }
 
-static void leave_dormant_state_to_swd_sequence(void)
+void leave_dormant_state_to_swd_sequence(void)
 {
     uint32_t i;
+    switch_SWDIO_to_Output();
     // at least 8x1
     for(i = 0; i < 9; i++)
     {
@@ -444,162 +441,162 @@ static void leave_dormant_state_to_swd_sequence(void)
     }
 
     // 128 bit selection alert
-    // 1
+    // 1      4
     write_bit(0);
     write_bit(1);
     write_bit(0);
     write_bit(0);
-    //2
+    // 2      9
     write_bit(1);
     write_bit(0);
     write_bit(0);
     write_bit(1);
-    // 3
+    // 3      c
     write_bit(1);
     write_bit(1);
     write_bit(0);
     write_bit(0);
-    // 4
+    // 4      f
     write_bit(1);
     write_bit(1);
     write_bit(1);
     write_bit(1);
-    // 5
-    write_bit(1);
-    write_bit(0);
-    write_bit(0);
-    write_bit(1);
-    // 6
-    write_bit(0);
-    write_bit(0);
-    write_bit(0);
-    write_bit(0);
-    // 7
-    write_bit(0);
-    write_bit(1);
-    write_bit(0);
-    write_bit(0);
-    // 8
-    write_bit(0);
-    write_bit(1);
-    write_bit(1);
-    write_bit(0);
-    // 9
-    write_bit(1);
-    write_bit(0);
-    write_bit(1);
-    write_bit(0);
-    // 10
+    // 5      9
     write_bit(1);
     write_bit(0);
     write_bit(0);
     write_bit(1);
-    // 11
-    write_bit(1);
-    write_bit(0);
-    write_bit(1);
-    write_bit(1);
-    // 12
-    write_bit(0);
-    write_bit(1);
-    write_bit(0);
-    write_bit(0);
-    // 13
-    write_bit(1);
-    write_bit(0);
-    write_bit(1);
-    write_bit(0);
-    // 14
-    write_bit(0);
-    write_bit(0);
-    write_bit(0);
-    write_bit(1);
-    // 15
-    write_bit(0);
-    write_bit(1);
-    write_bit(1);
-    write_bit(0);
-    // 16
-    write_bit(0);
-    write_bit(0);
-    write_bit(0);
-    write_bit(1);
-    // 17
-    write_bit(1);
-    write_bit(0);
-    write_bit(0);
-    write_bit(1);
-    // 18
-    write_bit(0);
-    write_bit(1);
-    write_bit(1);
-    write_bit(1);
-    // 19
-    write_bit(1);
-    write_bit(1);
-    write_bit(1);
-    write_bit(1);
-    // 20
-    write_bit(0);
-    write_bit(1);
-    write_bit(0);
-    write_bit(1);
-    // 21
-    write_bit(1);
-    write_bit(0);
-    write_bit(1);
-    write_bit(1);
-    // 22
-    write_bit(1);
-    write_bit(0);
-    write_bit(1);
-    write_bit(1);
-    // 23
-    write_bit(1);
-    write_bit(1);
-    write_bit(0);
-    write_bit(0);
-    // 24
-    write_bit(0);
-    write_bit(1);
-    write_bit(1);
-    write_bit(1);
-    // 25
-    write_bit(0);
-    write_bit(1);
-    write_bit(0);
-    write_bit(0);
-    // 26
-    write_bit(0);
-    write_bit(1);
-    write_bit(0);
-    write_bit(1);
-    // 27
-    write_bit(0);
-    write_bit(1);
-    write_bit(1);
-    write_bit(1);
-    // 28
+    // 6      0
     write_bit(0);
     write_bit(0);
     write_bit(0);
     write_bit(0);
-    // 29
+    // 7      4
+    write_bit(0);
+    write_bit(1);
+    write_bit(0);
+    write_bit(0);
+    // 8      6
+    write_bit(0);
+    write_bit(1);
+    write_bit(1);
+    write_bit(0);
+    // 9      a
+    write_bit(1);
+    write_bit(0);
+    write_bit(1);
+    write_bit(0);
+    // 10     9
+    write_bit(1);
+    write_bit(0);
+    write_bit(0);
+    write_bit(1);
+    // 11     b
+    write_bit(1);
+    write_bit(0);
+    write_bit(1);
+    write_bit(1);
+    // 12     4
+    write_bit(0);
+    write_bit(1);
+    write_bit(0);
+    write_bit(0);
+    // 13     a
+    write_bit(1);
+    write_bit(0);
+    write_bit(1);
+    write_bit(0);
+    // 14     1
+    write_bit(0);
+    write_bit(0);
+    write_bit(0);
+    write_bit(1);
+    // 15     6
+    write_bit(0);
+    write_bit(1);
+    write_bit(1);
+    write_bit(0);
+    // 16     1
+    write_bit(0);
+    write_bit(0);
+    write_bit(0);
+    write_bit(1);
+    // 17     9
+    write_bit(1);
+    write_bit(0);
+    write_bit(0);
+    write_bit(1);
+    // 18     7
+    write_bit(0);
+    write_bit(1);
+    write_bit(1);
+    write_bit(1);
+    // 19     f
+    write_bit(1);
+    write_bit(1);
+    write_bit(1);
+    write_bit(1);
+    // 20     5
+    write_bit(0);
+    write_bit(1);
+    write_bit(0);
+    write_bit(1);
+    // 21     b
+    write_bit(1);
+    write_bit(0);
+    write_bit(1);
+    write_bit(1);
+    // 22     b
+    write_bit(1);
+    write_bit(0);
+    write_bit(1);
+    write_bit(1);
+    // 23     c
+    write_bit(1);
+    write_bit(1);
+    write_bit(0);
+    write_bit(0);
+    // 24     7
+    write_bit(0);
+    write_bit(1);
+    write_bit(1);
+    write_bit(1);
+    // 25     4
+    write_bit(0);
+    write_bit(1);
+    write_bit(0);
+    write_bit(0);
+    // 26     5
+    write_bit(0);
+    write_bit(1);
+    write_bit(0);
+    write_bit(1);
+    // 27     7
+    write_bit(0);
+    write_bit(1);
+    write_bit(1);
+    write_bit(1);
+    // 28     0
+    write_bit(0);
+    write_bit(0);
+    write_bit(0);
+    write_bit(0);
+    // 29     3
     write_bit(0);
     write_bit(0);
     write_bit(1);
     write_bit(1);
-    // 30
+    // 30     D
     write_bit(1);
     write_bit(1);
     write_bit(0);
     write_bit(1);
-    // 31
+    // 31     9
     write_bit(1);
     write_bit(0);
     write_bit(0);
     write_bit(1);
-    // 32
+    // 32     8
     write_bit(1);
     write_bit(0);
     write_bit(0);
@@ -614,26 +611,24 @@ static void leave_dormant_state_to_swd_sequence(void)
 
     // activation code (MSB first 0b0101 1000)
     write_bit(0);
-    write_bit(0);
+    write_bit(1);
     write_bit(0);
     write_bit(1);
 
     write_bit(1);
     write_bit(0);
-    write_bit(1);
+    write_bit(0);
     write_bit(0);
 
     // place target in known state
     // at least 50 bits 1
-    switch_SWDIO_to_Output();
     for(i = 0; i < 64; i++)
     {
         write_bit(1);
     }
-    // TODO target select might be needed now
 }
 
-static void jtag_to_dormant_state_sequence(void)
+void jtag_to_dormant_state_sequence(void)
 {
     // at least 5x1
     write_bit(1);
@@ -683,4 +678,4 @@ static void jtag_to_dormant_state_sequence(void)
     write_bit(1);
     write_bit(0);
 }
-*/
+

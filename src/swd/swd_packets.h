@@ -100,5 +100,8 @@ uint32_t swd_packet_write(uint32_t APnotDP, uint32_t address, uint32_t data);
 // AP = 1; DP = 0
 uint32_t swd_packet_read(uint32_t APnotDP, uint32_t address, uint32_t* data);
 void swd_packet_set_swdio_idle(void);
+void jtag_to_dormant_state_sequence(void);
+void leave_dormant_state_to_swd_sequence(void);
+void swd_to_dormant_state_sequence(void);
 
 #endif /* SRC_PACKETS_H_ */

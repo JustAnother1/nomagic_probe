@@ -131,6 +131,14 @@ int32_t swd_connect(bool multi, uint32_t target)
     int32_t res;
     uint32_t i;
 
+    if(true == multi)
+    {
+        // go through dormant state
+        swd_disconnect();
+        jtag_to_dormant_state_sequence();
+        leave_dormant_state_to_swd_sequence();
+    }
+
     swd_packet_line_reset();
 
     if(true == multi)
