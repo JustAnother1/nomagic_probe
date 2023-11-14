@@ -1297,6 +1297,9 @@ There are some SWD specific words used that only make sense in the SWD contet. T
 | AP or APACC
 | Access Port (connects to device Registsres,..)
 
+| BPU
+| Breakpoint Unit
+
 | CSW
 | Control and Status Word
 
@@ -1311,6 +1314,9 @@ There are some SWD specific words used that only make sense in the SWD contet. T
 
 | DTR
 | Data Transfer Register
+
+| DWT
+| Data Watchpoint Unit
 
 | IDR
 | Identification Register
@@ -1335,6 +1341,9 @@ There are some SWD specific words used that only make sense in the SWD contet. T
 
 | RAZ
 | Read as Zero
+
+| SCS
+| System Control Space
 
 | SBO
 | Should be One - Write as 1

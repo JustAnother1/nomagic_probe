@@ -31,7 +31,10 @@
 typedef struct{
     uint32_t ap_sel;
     uint32_t version;
-
+    bool long_address_support;
+    bool large_data_support;
+    uint32_t reg_BASE;
+    uint32_t reg_CSW;
 } mem_ap_typ;
 
 typedef struct{
@@ -49,9 +52,11 @@ static swd_state_typ state;
 
 static int32_t find_all_AP(void);
 static int32_t check_AP(uint32_t APsel, uint32_t idr);
+static int32_t check_memory(void);
 static int32_t send_write_packet(uint32_t APnotDP, uint32_t address, uint32_t data);
 static int32_t send_read_packet(uint32_t APnotDP, uint32_t address, uint32_t* data);
 static int32_t read_ap_register(uint32_t ap_sel, uint32_t ap_bank_reg, uint32_t ap_register, uint32_t* data);
+static int32_t write_ap_register(uint32_t ap_sel, uint32_t ap_bank_reg, uint32_t ap_register, uint32_t data);
 
 void swd_init(void)
 {
@@ -97,28 +102,53 @@ bool swd_info(uint32_t which)
     {
     case 0: if(true == state.is_connected)
             {
-                debug_line("swd: connected");
+                debug_line("swd:                  connected");
             }
             else
             {
                 debug_line("swd: not connected");
-                done = true;
+                done = true;  // do not print other data as it can not be valid
             }
             break;
 
     case 1: if(true == state.is_minimal_debug_port)
             {
-                debug_line("minimal debug port");
+                debug_line("debug port:           minimal");
             }
             else
             {
-                debug_line("normal debug port");
+                debug_line("debug port:           normal");
             }
             break;
 
-    case 2: debug_line("debug port version %ld", state.dp_version); break;
-    case 3: debug_line("DPIDR  0x%08lx", state.reg_DPIDR); break;
-    case 4: debug_line("SELECT 0x%08lx", state.reg_SELECT); break;
+    case 2: debug_line("debug port version    %ld", state.dp_version); break;
+    case 3: debug_line("DPIDR                 0x%08lx", state.reg_DPIDR); break;
+    case 4: debug_line("SELECT                0x%08lx", state.reg_SELECT); break;
+    case 5: debug_line("CTRL/STAT             0x%08lx", state.reg_CTRL_STAT); break;
+    case 6: debug_line("APSEL                 %ld", state.mem_ap.ap_sel); break;
+    case 7: debug_line("AP version            %ld", state.mem_ap.version); break;
+    case 8: debug_line("BASE                  0x%08lx", state.mem_ap.reg_BASE); break;
+    case 9: debug_line("CSW                   0x%08lx", state.mem_ap.reg_CSW); break;
+
+    case 10: if(true == state.mem_ap.large_data_support)
+            {
+                debug_line("large data support:   enabled");
+            }
+            else
+            {
+                debug_line("large data support:   not enabled");
+            }
+            break;
+
+    case 11: if(true == state.mem_ap.long_address_support)
+            {
+                debug_line("long address support: enabled");
+            }
+            else
+            {
+                debug_line("long address support: not enabled");
+            }
+            break;
 
     default: done = true;
     }
@@ -275,6 +305,41 @@ static int32_t read_ap_register(uint32_t ap_sel, uint32_t ap_bank_reg, uint32_t 
     return RES_OK;
 }
 
+static int32_t write_ap_register(uint32_t ap_sel, uint32_t ap_bank_reg, uint32_t ap_register, uint32_t data)
+{
+    uint32_t ctrl_stat;
+    uint32_t req_select = (ap_bank_reg << 4) | (ap_sel <<24);
+    if(req_select != state.reg_SELECT)
+    {
+        if(RES_OK != send_write_packet(DP, ADDR_SELECT, req_select))
+        {
+            debug_line("SWD:AP(%ld): failed to write SELECT", ap_sel);
+            return -1;
+        }
+        state.reg_SELECT = req_select;
+    }
+
+    if(RES_OK != send_write_packet(AP, ap_register, data))
+    {
+        debug_line("SWD:AP(%ld): failed to read AP-register", ap_sel);
+        return -2;
+    }
+
+    if(RES_OK != send_read_packet(DP, ADDR_CTRL_STAT, &ctrl_stat))
+    {
+        debug_line("SWD:AP(%ld): failed to read CTRL/STAT", ap_sel);
+        return -3;
+    }
+    if(0 == (ctrl_stat & 0x40))
+    {
+        debug_line("CTRL/STAT 0x%08lx", ctrl_stat);
+        debug_line("SWD:AP(%ld): AP read failed", ap_sel);
+        return -4;
+    }
+
+    return RES_OK;
+}
+
 static int32_t find_all_AP(void)
 {
     uint32_t i;
@@ -300,6 +365,7 @@ static int32_t find_all_AP(void)
         else
         {
             // reached end of APs
+            debug_line("AP %ld: IDR 0x%08lx", i, idr);
             break;
         }
     }
@@ -322,13 +388,14 @@ static int32_t check_AP(uint32_t APsel, uint32_t idr)
         debug_line("AP: IDR: class :   %ld", class );
         debug_line("AP: IDR: variant:  %ld", (idr & (0xf<<4))>>4 );
         debug_line("AP: IDR: type:     %ld", (idr & 0xf) );
-        // TODO
+
         if(RES_OK != read_ap_register(APsel, AP_BANK_BASE, AP_REGISTER_BASE, &reg_data))
         {
             debug_line("SWD:AP(%ld): failed to read ap register", APsel);
             return -1;
         }
         debug_line("AP: BASE : 0x%08lx", reg_data);
+        state.mem_ap.reg_BASE = reg_data;
 
         if(RES_OK != read_ap_register(APsel, AP_BANK_CFG, AP_REGISTER_CFG, &reg_data))
         {
@@ -336,6 +403,22 @@ static int32_t check_AP(uint32_t APsel, uint32_t idr)
             return -1;
         }
         debug_line("AP: CFG  : 0x%08lx", reg_data);
+        if(0 == (reg_data & 0x02))
+        {
+            state.mem_ap.long_address_support = false;
+        }
+        else
+        {
+            state.mem_ap.long_address_support = true;
+        }
+        if(0 == (reg_data & 0x04))
+        {
+            state.mem_ap.large_data_support = false;
+        }
+        else
+        {
+            state.mem_ap.large_data_support = true;
+        }
 
         if(RES_OK != read_ap_register(APsel, AP_BANK_CFG1, AP_REGISTER_CFG1, &reg_data))
         {
@@ -350,6 +433,8 @@ static int32_t check_AP(uint32_t APsel, uint32_t idr)
             return -1;
         }
         debug_line("AP: CSW  : 0x%08lx", reg_data);
+        state.mem_ap.reg_CSW = reg_data;
+        return check_memory();
     }
     else if(9 == class)
     {
@@ -368,6 +453,23 @@ static int32_t check_AP(uint32_t APsel, uint32_t idr)
     {
         debug_line("AP unknown class %ld !", class);
     }
+    return RES_OK;
+}
+
+static int32_t check_memory(void)
+{
+    uint32_t reg_data;
+    if(RES_OK != write_ap_register(state.mem_ap.ap_sel, AP_BANK_TAR, AP_REGISTER_TAR, state.mem_ap.reg_BASE))
+    {
+        debug_line("SWD:AP(%ld): failed to write ap register", state.mem_ap.ap_sel);
+        return -1;
+    }
+    if(RES_OK != read_ap_register(state.mem_ap.ap_sel, AP_BANK_DRW, AP_REGISTER_DRW, &reg_data))
+    {
+        debug_line("SWD:AP(%ld): failed to read ap register", state.mem_ap.ap_sel);
+        return -1;
+    }
+    debug_line("AP: @BASE  : 0x%08lx", reg_data);
     return RES_OK;
 }
 

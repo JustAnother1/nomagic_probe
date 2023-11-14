@@ -54,7 +54,6 @@ bool cmd_swd_test(uint32_t loop)
 {
     (void)loop;
     uint8_t* parameter;
-    uint32_t data = 0;
 
     // activate_Reset();
     // activate_Run();
@@ -84,37 +83,6 @@ bool cmd_swd_test(uint32_t loop)
         }
     }
 
-    data = 0;
-    swd_packet_read(DP, ADDR_CTRL_STAT, &data);
-    debug_line("CTRL/STAT: 0x%08lx", data);
-
-
-/* RP 2040
-    // delay?
-    debug_line("Core 0");
-    delay_us(100000);
-    data = swd_connect(true, 0x01002927ul);  // try RP2040 Core 0
-    debug_line("ID: 0x%08lx", data);
-    swd_packet_read(DP, ADDR_CTRL_STAT, &data);
-    debug_line("CTRL/STAT: 0x%08lx", data);
-    swd_disconnect();
-
-    debug_line("Core 1");
-    delay_us(100000);
-    data = swd_connect(true, 0x11002927ul);  // try RP2040 Core 1
-    debug_line("ID: 0x%08lx", data);
-    swd_packet_read(DP, ADDR_CTRL_STAT, &data);
-    debug_line("CTRL/STAT: 0x%08lx", data);
-    swd_disconnect();
-
-    debug_line("Rescue-DP");
-    delay_us(100000);
-    data = swd_connect(true, 0xf1002927ul);  // try RP2040 Rescue DP
-    debug_line("ID: 0x%08lx", data);
-    swd_packet_read(DP, ADDR_CTRL_STAT, &data);
-    debug_line("CTRL/STAT: 0x%08lx", data);
-    swd_disconnect();
-*/
     return true;
 }
 
