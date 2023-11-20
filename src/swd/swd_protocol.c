@@ -29,7 +29,7 @@
 #define AP_VERSION_APv2       2 // new in ADIv6.0
 
 typedef struct{
-    uint32_t ap_sel;
+    int32_t ap_sel;
     uint32_t version;
     bool long_address_support;
     bool large_data_support;
@@ -58,6 +58,7 @@ static int32_t send_read_packet(uint32_t APnotDP, uint32_t address, uint32_t* da
 static int32_t read_ap_register(uint32_t ap_sel, uint32_t ap_bank_reg, uint32_t ap_register, uint32_t* data);
 static int32_t write_ap_register(uint32_t ap_sel, uint32_t ap_bank_reg, uint32_t ap_register, uint32_t data);
 
+
 void swd_init(void)
 {
     memset(&state, 0, sizeof(state));
@@ -65,6 +66,7 @@ void swd_init(void)
     state.is_minimal_debug_port = false;
     swd_packets_init();
     state.last_activity_time_us = time_us_32();
+    state.mem_ap.ap_sel = -1;
 }
 
 bool swd_is_connected(void)
@@ -262,6 +264,36 @@ void swd_disconnect(void)
     state.last_activity_time_us = time_us_32();
 }
 
+int32_t swd_get_Memory_APsel(void)
+{
+    return state.mem_ap.ap_sel;
+}
+
+int32_t read_ap(int32_t ap_sel, uint32_t addr, uint32_t* data)
+{
+    uint32_t apsel;
+    if(0 > ap_sel)
+    {
+        debug_line("SWD: %ld is not a valid AP address ! ", ap_sel);
+        return -1;
+    }
+    else
+    {
+        apsel = (uint32_t)ap_sel;
+    }
+    if(RES_OK != write_ap_register(apsel, AP_BANK_TAR, AP_REGISTER_TAR, addr))
+    {
+        debug_line("SWD:AP(%ld): failed to write ap register", state.mem_ap.ap_sel);
+        return -2;
+    }
+    if(RES_OK != read_ap_register(apsel, AP_BANK_DRW, AP_REGISTER_DRW, data))
+    {
+        debug_line("SWD:AP(%ld): failed to read ap register", state.mem_ap.ap_sel);
+        return -3;
+    }
+    return 0;
+}
+
 // static functions
 
 static int32_t read_ap_register(uint32_t ap_sel, uint32_t ap_bank_reg, uint32_t ap_register, uint32_t* data)
@@ -380,7 +412,7 @@ static int32_t check_AP(uint32_t APsel, uint32_t idr)
     {
         uint32_t reg_data;
         // Memory Access Port (MEM-AP)
-        state.mem_ap.ap_sel = APsel;
+        state.mem_ap.ap_sel = (int32_t)APsel;
         state.mem_ap.version = AP_VERSION_APv1;
         debug_line("APv1:");
         debug_line("AP: IDR: Revision: %ld", (idr & (0xful<<28))>>28 );
@@ -439,7 +471,7 @@ static int32_t check_AP(uint32_t APsel, uint32_t idr)
     else if(9 == class)
     {
         // Memory Access Port (MEM-AP)
-        state.mem_ap.ap_sel = APsel;
+        state.mem_ap.ap_sel = (int32_t)APsel;
         state.mem_ap.version = AP_VERSION_APv2;
         debug_line("APv2:");
         debug_line("AP: IDR: Revision: %ld", (idr & (0xful<<28))>>28 );
@@ -459,17 +491,41 @@ static int32_t check_AP(uint32_t APsel, uint32_t idr)
 static int32_t check_memory(void)
 {
     uint32_t reg_data;
-    if(RES_OK != write_ap_register(state.mem_ap.ap_sel, AP_BANK_TAR, AP_REGISTER_TAR, state.mem_ap.reg_BASE))
+    uint32_t apsel;
+    if(0 > state.mem_ap.ap_sel)
+    {
+        debug_line("SWD: %ld is not a valid AP address ! ", state.mem_ap.ap_sel);
+        return -1;
+    }
+    else
+    {
+        apsel = (uint32_t)state.mem_ap.ap_sel;
+    }
+    if(RES_OK != write_ap_register(apsel, AP_BANK_TAR, AP_REGISTER_TAR, state.mem_ap.reg_BASE))
     {
         debug_line("SWD:AP(%ld): failed to write ap register", state.mem_ap.ap_sel);
         return -1;
     }
-    if(RES_OK != read_ap_register(state.mem_ap.ap_sel, AP_BANK_DRW, AP_REGISTER_DRW, &reg_data))
+    if(RES_OK != read_ap_register(apsel, AP_BANK_DRW, AP_REGISTER_DRW, &reg_data))
     {
         debug_line("SWD:AP(%ld): failed to read ap register", state.mem_ap.ap_sel);
         return -1;
     }
     debug_line("AP: @BASE  : 0x%08lx", reg_data);
+
+    if(RES_OK != write_ap_register(apsel, AP_BANK_TAR, AP_REGISTER_TAR, 0xE000ED00))
+    {
+        debug_line("SWD:AP(%ld): failed to write ap register", state.mem_ap.ap_sel);
+        return -1;
+    }
+    if(RES_OK != read_ap_register(apsel, AP_BANK_DRW, AP_REGISTER_DRW, &reg_data))
+    {
+        debug_line("SWD:AP(%ld): failed to read ap register", state.mem_ap.ap_sel);
+        return -1;
+    }
+
+    debug_line("CPU-ID : 0x%08lx\r\n", reg_data);
+
     return RES_OK;
 }
 

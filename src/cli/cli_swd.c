@@ -86,3 +86,35 @@ bool cmd_swd_test(uint32_t loop)
     return true;
 }
 
+bool cmd_swd_ap_read(uint32_t loop)
+{
+    (void)loop;
+    uint8_t* parameter;
+
+    parameter = cli_get_parameter(0);
+    if(NULL == parameter)
+    {
+        debug_line("ERROR: no address given !");
+        return true;
+    }
+    else
+    {
+        int32_t res;
+        uint32_t data = 0;
+        uint32_t addr = (uint32_t)atoi((const char*)parameter);
+        int32_t apsel = swd_get_Memory_APsel();
+        if(0 > apsel)
+        {
+            debug_line("ERROR: no Memory Access Port found on target !");
+            return true;
+        }
+        res = read_ap(apsel, addr, &data);
+        if(0 > res)
+        {
+            debug_line("ERROR: reading failed @ 0x%08lx!", addr);
+            return true;
+        }
+        debug_line("Reading 0x%08lx as 0x%08lx", addr, data);
+        return true;
+    }
+}
