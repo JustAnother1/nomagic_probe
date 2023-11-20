@@ -545,6 +545,7 @@ static int32_t send_write_packet(uint32_t APnotDP, uint32_t address, uint32_t da
 
         case ACK_WAIT:
             debug_line("SWD: Wait");
+            // TODO retry
             break;
 
         case ACK_FAULT:
@@ -584,7 +585,7 @@ static int32_t send_read_packet(uint32_t APnotDP, uint32_t address, uint32_t* da
 
         case ACK_WAIT:
             debug_line("SWD: Wait");
-            // TODO retry ?
+            // TODO retry
             break;
 
         case ACK_FAULT:
