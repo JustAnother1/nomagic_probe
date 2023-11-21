@@ -43,9 +43,11 @@ cmd_typ commands[] = {
         {"swd_info",    "current state of the SWD interface", cmd_swd_info},
         {"swd_read",    "read a memory address", cmd_swd_ap_read},
         {"flash_reset", "reset the external QSPI flash", cmd_flash_reset},
+#ifdef FEAT_USB_MSC
         {"dump_file",   "dump the content of the file <filename>", cmd_file_dump},
         {"ls",          "list all files in the file system", cmd_file_ls},
         {"fs_format",   "format the file system.", cmd_file_format},
+#endif
 };
 
 

@@ -54,7 +54,9 @@ static void init_0(void)
     watchdog_enable();
     init_time();
     debug_uart_initialize();
+#ifdef FEAT_USB_MSC
     file_system_init();
+#endif
     tusb_init(); // initialize tinyusb stack
     gdbserver_init();
     swd_init();

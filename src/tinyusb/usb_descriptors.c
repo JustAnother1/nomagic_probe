@@ -116,12 +116,13 @@ static const uint8_t usbd_desc_cfg[USBD_DESC_LEN] = {
                        USBD_CDC_0_EP_OUT,         // bulk end point out number
                        USBD_CDC_0_EP_IN,          // bulk end point in number
                        USBD_CDC_IN_OUT_MAX_SIZE), // bulk end point size
-
+#ifdef FEAT_USB_MSC
     TUD_MSC_DESCRIPTOR(ITF_NUM_MSC,   // interface number
                        USBD_STR_MSC,  // string index
                        EPNUM_MSC_OUT, // bulk end point out number
                        EPNUM_MSC_IN,  // bulk end point in number
                        64),           // end point size (bytes)
+#endif
 };
 
 static const char *const usbd_desc_str[] = {
@@ -130,7 +131,9 @@ static const char *const usbd_desc_str[] = {
     [USBD_STR_PRODUCT] = "nomagic probe",
     [USBD_STR_SERIAL]  = "000000000001",
     [USBD_STR_CDC]     = "nomagic cdc",
+#ifdef FEAT_USB_MSC
     [USBD_STR_MSC]     = "nomagic msc",
+#endif
 };
 
 //! Invoked when received GET STRING DESCRIPTOR request

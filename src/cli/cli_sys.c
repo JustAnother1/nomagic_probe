@@ -173,7 +173,11 @@ bool cmd_info(uint32_t loop)
         case 6: debug_line("QSPI:"); break;
         case 7: flash_report(); break;
         case 8: debug_line("file system:"); break;
+#ifdef FEAT_USB_MSC
         case 9: file_system_report(); break;
+#else
+        case 9: debug_line("target = fixed single"); break;
+#endif
         case 10: debug_line("Done"); break;
         case 11: return true;  // we are done
     }

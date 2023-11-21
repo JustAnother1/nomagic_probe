@@ -27,7 +27,9 @@
 
 static uint32_t addr;
 static uint32_t num_loops = 0;
+#ifdef FEAT_USB_MSC
 static uint32_t file_size  = 0;
+#endif
 
 bool cmd_memory_display(uint32_t loop)
 {
@@ -227,6 +229,8 @@ bool cmd_flash_enable_XIP(uint32_t loop)
 }
 #endif
 
+#ifdef FEAT_USB_MSC
+
 bool cmd_file_dump(uint32_t loop)
 {
     (void) loop;
@@ -358,3 +362,4 @@ bool cmd_file_format(uint32_t loop)
     return true; // we are done
 }
 
+#endif // FEAT_USB_MSC

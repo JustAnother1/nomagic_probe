@@ -55,6 +55,7 @@ static uint32_t erase_all_used_sectors(void);
 static uint32_t erase_all_sectors(void);
 static void read_block(uint32_t sector, uint32_t block);
 static void open_file_system(void);
+static void mark_as_used(uint32_t sector);
 
 void file_system_init(void)
 {
@@ -315,6 +316,9 @@ static int32_t write_block(uint32_t sector, uint32_t block, uint32_t offset, uin
                 }
                 // else that block we already write with the modified content.
             }
+            // mark previously used block as overwritten
+            mark_as_used(location);
+
             write_super_sector(super_sector);
         }
     }
@@ -529,6 +533,12 @@ static void read_block(uint32_t sector, uint32_t block)
     flash_read(start_address, buf.bytes, FLASH_BLOCK_SIZE);
 }
 
+static void mark_as_used(uint32_t sector)
+{
+    uint8_t empty[FLASH_BLOCK_SIZE] = {0};
+    flash_write_block(file_system_start + sector * FLASH_SECTOR_SIZE + 0 * FLASH_BLOCK_SIZE, empty, FLASH_BLOCK_SIZE);
+}
+
 static void open_file_system(void)
 {
     /*
@@ -630,6 +640,7 @@ static void open_file_system(void)
             sector_map[super_sector] = SECTOR_TYPE_UNKNOWN_USED;
             sector_map[sector] = SECTOR_TYPE_SUPER_BLOCK;
             write_super_sector(sector);
+            mark_as_used(super_sector);
             super_sector = sector;
         }
     }

@@ -18,6 +18,16 @@ SRC_FOLDER = src/
 
 SOURCE_DIR = $(dir $(lastword $(MAKEFILE_LIST)))
 
+#ifeq ($(TARGET),$(filter $(TARGET),RP2040))
+ifeq ($(TARGET),RP2040)
+	# nomagic probe will debug only the RP2040
+	DDEFS += -DTARGET_RP2040
+else
+	# can be configured for each supported target
+	DDEFS += -DFEAT_USB_MSC
+endif
+
+
 LKR_SCRIPT = $(SRC_FOLDER)hal/RP2040.ld
 
 # COMPILER SWITCHES
@@ -82,16 +92,21 @@ SRC += $(SRC_FOLDER)lib/memset.c
 SRC += $(SRC_FOLDER)lib/printf.c
 SRC += $(SRC_FOLDER)lib/strlen.c
 SRC += $(SRC_FOLDER)lib/strncmp.c
-# file handling
-SRC += $(SRC_FOLDER)file/fake_mbr.c
-SRC += $(SRC_FOLDER)file/fake_boot_sector.c
-SRC += $(SRC_FOLDER)file/fake_fat.c
-SRC += $(SRC_FOLDER)file/fake_root_folder.c
-SRC += $(SRC_FOLDER)file/fake_text_files.c
-SRC += $(SRC_FOLDER)file/fake_favicon.c
-SRC += $(SRC_FOLDER)file/fake_fs.c
-SRC += $(SRC_FOLDER)file/file_storage.c
-SRC += $(SRC_FOLDER)file/file_system.c
+ifeq ($(TARGET), CONFIG)
+    # file handling
+    SRC += $(SRC_FOLDER)file/fake_mbr.c
+    SRC += $(SRC_FOLDER)file/fake_boot_sector.c
+    SRC += $(SRC_FOLDER)file/fake_fat.c
+    SRC += $(SRC_FOLDER)file/fake_root_folder.c
+    SRC += $(SRC_FOLDER)file/fake_text_files.c
+    SRC += $(SRC_FOLDER)file/fake_favicon.c
+    SRC += $(SRC_FOLDER)file/fake_fs.c
+    SRC += $(SRC_FOLDER)file/file_storage.c
+    SRC += $(SRC_FOLDER)file/file_system.c
+    # USB thumb drive (MSC)
+    SRC += $(SRC_FOLDER)tinyusb/usb_msc.c
+    SRC += $(SRC_FOLDER)tinyusb/src/class/msc/msc_device.c
+endif
 # USB driver
 SRC += $(SRC_FOLDER)tinyusb/usb.c
 SRC += $(SRC_FOLDER)tinyusb/usb_descriptors.c
@@ -103,9 +118,6 @@ SRC += $(SRC_FOLDER)tinyusb/src/common/tusb_fifo.c
 # USB serial interface (CDC)
 SRC += $(SRC_FOLDER)tinyusb/usb_cdc.c
 SRC += $(SRC_FOLDER)tinyusb/src/class/cdc/cdc_device.c
-# USB thumb drive (MSC)
-SRC += $(SRC_FOLDER)tinyusb/usb_msc.c
-SRC += $(SRC_FOLDER)tinyusb/src/class/msc/msc_device.c
 # user feedback
 SRC += $(SRC_FOLDER)led.c
 # main
@@ -156,13 +168,14 @@ help:
 	@echo ""
 	@echo "available targets"
 	@echo "================="
-	@echo "make clean    delete all generated files"
-	@echo "make all      compile firmware creates elf and uf2 file. (default target)"
-	@echo "make flash    write firmware to flash of RP2040 using openocd and CMSIS-DAP adapter(picoprobe)"
-	@echo "make doc      run doxygen"
-	@echo "make test     run unit tests"
-	@echo "make lcov     create coverage report of unit tests"
-	@echo "make list     create list file"
+	@echo "make clean              delete all generated files"
+	@echo "make all                compile firmware creates elf and uf2 file. (target configuration needed)"
+	@echo "make all TARGET=RP2040  compile firmware creates elf and uf2 file. (only support this target)"
+	@echo "make flash              write firmware to flash of RP2040 using openocd and CMSIS-DAP adapter(picoprobe)"
+	@echo "make doc                run doxygen"
+	@echo "make test               run unit tests"
+	@echo "make lcov               create coverage report of unit tests"
+	@echo "make list               create list file"
 	@echo ""
 
 $(BIN_FOLDER)$(PROJECT).elf: $(OBJS)
