@@ -91,24 +91,6 @@ SRC += $(SRC_FOLDER)lib/memset.c
 SRC += $(SRC_FOLDER)lib/printf.c
 SRC += $(SRC_FOLDER)lib/strlen.c
 SRC += $(SRC_FOLDER)lib/strncmp.c
-ifeq ($(TARGET), EXTERN)
-    # file handling
-    SRC += $(SRC_FOLDER)file/fake_mbr.c
-    SRC += $(SRC_FOLDER)file/fake_boot_sector.c
-    SRC += $(SRC_FOLDER)file/fake_fat.c
-    SRC += $(SRC_FOLDER)file/fake_root_folder.c
-    SRC += $(SRC_FOLDER)file/fake_text_files.c
-    SRC += $(SRC_FOLDER)file/fake_favicon.c
-    SRC += $(SRC_FOLDER)file/fake_fs.c
-    SRC += $(SRC_FOLDER)file/file_storage.c
-    SRC += $(SRC_FOLDER)file/file_system.c
-    # USB thumb drive (MSC)
-    SRC += $(SRC_FOLDER)tinyusb/usb_msc.c
-    SRC += $(SRC_FOLDER)tinyusb/src/class/msc/msc_device.c
-else
-#    SRC += $(SRC_FOLDER)target/target_info.c
-    SRC += $(SRC_FOLDER)target/target_actions.c
-endif
 # USB driver
 SRC += $(SRC_FOLDER)tinyusb/usb.c
 SRC += $(SRC_FOLDER)tinyusb/usb_descriptors.c
@@ -162,6 +144,27 @@ TST_OBJS += tests/bin/tests/allTests.o
 # make config
 VPATH = $(SOURCE_DIR)
 .DEFAULT_GOAL = all
+
+ifeq ($(TARGET), EXTERN)
+    # file handling
+    SRC += $(SRC_FOLDER)file/fake_mbr.c
+    SRC += $(SRC_FOLDER)file/fake_boot_sector.c
+    SRC += $(SRC_FOLDER)file/fake_fat.c
+    SRC += $(SRC_FOLDER)file/fake_root_folder.c
+    SRC += $(SRC_FOLDER)file/fake_text_files.c
+    SRC += $(SRC_FOLDER)file/fake_favicon.c
+    SRC += $(SRC_FOLDER)file/fake_fs.c
+    SRC += $(SRC_FOLDER)file/file_storage.c
+    SRC += $(SRC_FOLDER)file/file_system.c
+    # USB thumb drive (MSC)
+    SRC += $(SRC_FOLDER)tinyusb/usb_msc.c
+    SRC += $(SRC_FOLDER)tinyusb/src/class/msc/msc_device.c
+    # target loader
+    SRC += $(SRC_FOLDER)file/target_loader.c
+else
+	include $(SRC_FOLDER)target/target.mk
+endif
+
 
 
 # targets

@@ -13,7 +13,7 @@
  *
  */
 
-#include "target_actions.h"
+#include "target_api/target_actions.h"
 #include <stdbool.h>
 #include "hal/debug_uart.h"
 #include "swd/swd_protocol.h"

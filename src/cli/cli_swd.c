@@ -20,7 +20,7 @@
 #include "swd/swd_protocol.h"
 #include "swd/swd_gpio.h"
 #include "swd/swd_packets.h"
-#include "target/target_actions.h"
+#include "target_api/target_actions.h"
 
 
 bool cmd_swd_info(uint32_t loop)
