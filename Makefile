@@ -18,13 +18,12 @@ SRC_FOLDER = src/
 
 SOURCE_DIR = $(dir $(lastword $(MAKEFILE_LIST)))
 
-#ifeq ($(TARGET),$(filter $(TARGET),RP2040))
-ifeq ($(TARGET),RP2040)
-	# nomagic probe will debug only the RP2040
-	DDEFS += -DTARGET_RP2040
-else
+ifeq ($(TARGET),EXTERN)
 	# can be configured for each supported target
 	DDEFS += -DFEAT_USB_MSC
+else
+	# nomagic probe will debug only the RP2040
+	DDEFS += -DTARGET_RP2040
 endif
 
 
@@ -92,7 +91,7 @@ SRC += $(SRC_FOLDER)lib/memset.c
 SRC += $(SRC_FOLDER)lib/printf.c
 SRC += $(SRC_FOLDER)lib/strlen.c
 SRC += $(SRC_FOLDER)lib/strncmp.c
-ifeq ($(TARGET), CONFIG)
+ifeq ($(TARGET), EXTERN)
     # file handling
     SRC += $(SRC_FOLDER)file/fake_mbr.c
     SRC += $(SRC_FOLDER)file/fake_boot_sector.c
@@ -106,6 +105,9 @@ ifeq ($(TARGET), CONFIG)
     # USB thumb drive (MSC)
     SRC += $(SRC_FOLDER)tinyusb/usb_msc.c
     SRC += $(SRC_FOLDER)tinyusb/src/class/msc/msc_device.c
+else
+#    SRC += $(SRC_FOLDER)target/target_info.c
+    SRC += $(SRC_FOLDER)target/target_actions.c
 endif
 # USB driver
 SRC += $(SRC_FOLDER)tinyusb/usb.c
@@ -169,8 +171,8 @@ help:
 	@echo "available targets"
 	@echo "================="
 	@echo "make clean              delete all generated files"
-	@echo "make all                compile firmware creates elf and uf2 file. (target configuration needed)"
-	@echo "make all TARGET=RP2040  compile firmware creates elf and uf2 file. (only support this target)"
+	@echo "make all TARGET=EXTERN  compile firmware creates elf and uf2 file. (target configuration needed)"
+	@echo "make all                compile firmware creates elf and uf2 file. (only support this target)"
 	@echo "make flash              write firmware to flash of RP2040 using openocd and CMSIS-DAP adapter(picoprobe)"
 	@echo "make doc                run doxygen"
 	@echo "make test               run unit tests"
