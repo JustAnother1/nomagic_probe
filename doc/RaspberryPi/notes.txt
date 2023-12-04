@@ -21,3 +21,23 @@ W25Q16JVUXIQ
 NOR Flash
 
 
+SWDv2 (0x01002927)
+testing AP 0
+AP 0: 0x04770031
+APv1:
+AP: IDR: Revision: 0
+AP: IDR: Jep 106 : 4 x 0x7f + 0x3b
+AP: IDR: class :   8
+AP: IDR: variant:  3
+AP: IDR: type:     1
+AP: BASE : 0xe00ff003
+AP: CFG  : 0x00000000
+AP: CFG1 : 0x00000000
+AP: CSW  : 0x03000040
+AP: @BASE  : 0x00000000
+CPU-ID : 0x00000000
+
+testing AP 1
+AP 1: IDR 0x00000000
+
+
