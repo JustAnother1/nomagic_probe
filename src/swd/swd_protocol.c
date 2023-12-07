@@ -421,6 +421,23 @@ static int32_t check_AP(uint32_t APsel, uint32_t idr)
         debug_line("AP: IDR: variant:  %ld", (idr & (0xf<<4))>>4 );
         debug_line("AP: IDR: type:     %ld", (idr & 0xf) );
 
+        if(RES_OK != read_ap_register(APsel, AP_BANK_CSW, AP_REGISTER_CSW, &reg_data))
+        {
+            debug_line("SWD:AP(%ld): failed to read ap register", APsel);
+            return -1;
+        }
+        debug_line("AP: CSW  : 0x%08lx", reg_data);
+        state.mem_ap.reg_CSW = reg_data;
+
+        // change CSW !!!
+        reg_data = reg_data & ~0x3ful; // no auto address increment
+        reg_data = reg_data | 0x80000002; // DbgSwEnable + data size = 32bit
+        if(RES_OK != write_ap_register(APsel, AP_BANK_CSW, AP_REGISTER_CSW, reg_data))
+        {
+            debug_line("SWD:AP(%ld): failed to write ap register", APsel);
+            return -1;
+        }
+
         if(RES_OK != read_ap_register(APsel, AP_BANK_BASE, AP_REGISTER_BASE, &reg_data))
         {
             debug_line("SWD:AP(%ld): failed to read ap register", APsel);
@@ -459,13 +476,6 @@ static int32_t check_AP(uint32_t APsel, uint32_t idr)
         }
         debug_line("AP: CFG1 : 0x%08lx", reg_data);
 
-        if(RES_OK != read_ap_register(APsel, AP_BANK_CSW, AP_REGISTER_CSW, &reg_data))
-        {
-            debug_line("SWD:AP(%ld): failed to read ap register", APsel);
-            return -1;
-        }
-        debug_line("AP: CSW  : 0x%08lx", reg_data);
-        state.mem_ap.reg_CSW = reg_data;
         return check_memory();
     }
     else if(9 == class)
@@ -492,6 +502,7 @@ static int32_t check_memory(void)
 {
     uint32_t reg_data;
     uint32_t apsel;
+    uint32_t i;
     if(0 > state.mem_ap.ap_sel)
     {
         debug_line("SWD: %ld is not a valid AP address ! ", state.mem_ap.ap_sel);
@@ -501,18 +512,23 @@ static int32_t check_memory(void)
     {
         apsel = (uint32_t)state.mem_ap.ap_sel;
     }
-    if(RES_OK != write_ap_register(apsel, AP_BANK_TAR, AP_REGISTER_TAR, state.mem_ap.reg_BASE))
+    // read CIDR0-3
+    for(i = 0; i < 4; i++)
     {
-        debug_line("SWD:AP(%ld): failed to write ap register", state.mem_ap.ap_sel);
-        return -1;
-    }
-    if(RES_OK != read_ap_register(apsel, AP_BANK_DRW, AP_REGISTER_DRW, &reg_data))
-    {
-        debug_line("SWD:AP(%ld): failed to read ap register", state.mem_ap.ap_sel);
-        return -1;
-    }
-    debug_line("AP: @BASE  : 0x%08lx", reg_data);
+        if(RES_OK != write_ap_register(apsel, AP_BANK_TAR, AP_REGISTER_TAR, (state.mem_ap.reg_BASE & 0xfffff000) + 0xff0 + i*4))
+        {
+            debug_line("SWD:AP(%ld): failed to write ap register", state.mem_ap.ap_sel);
+            return -1;
+        }
+        if(RES_OK != read_ap_register(apsel, AP_BANK_DRW, AP_REGISTER_DRW, &reg_data))
+        {
+            debug_line("SWD:AP(%ld): failed to read ap register", state.mem_ap.ap_sel);
+            return -1;
+        }
 
+        debug_line("AP: CIDR%ld  : 0x%08lx", i, reg_data);
+    }
+    /*
     if(RES_OK != write_ap_register(apsel, AP_BANK_TAR, AP_REGISTER_TAR, 0xE000ED00))
     {
         debug_line("SWD:AP(%ld): failed to write ap register", state.mem_ap.ap_sel);
@@ -525,7 +541,7 @@ static int32_t check_memory(void)
     }
 
     debug_line("CPU-ID : 0x%08lx\r\n", reg_data);
-
+*/
     return RES_OK;
 }
 
@@ -576,7 +592,7 @@ static int32_t send_read_packet(uint32_t APnotDP, uint32_t address, uint32_t* da
     }
     else
     {
-        debug_line("SWD: failed to read (%ld/%ld)", APnotDP, address);
+        debug_line("SWD: failed to read (AP/DP:%ld, addr:%ld)", APnotDP, address);
         switch(ack)
         {
         case ACK_PROTOCOL_ERROR_0:

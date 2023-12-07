@@ -802,7 +802,7 @@ More than one Access Port possible. Each access port has separate resources that
 
 To address Register in AP:
   - The SELECT.APSEL bits define whch AP gets addressed
-  - The SELECT.APBANKSEL difines which bank (bank = 4 Registers) is accessed.
+  - The SELECT.APBANKSEL difines which bank (bank = 4 Registers) is accessed. = A[7:4]
   - Which of the 4 Registers in the Bank is addresse is defined by the  A2, A3 bits from packet request.
   - A0 and A1= 0 !
   - If it is a read or a write to the AP Register is defined by the packet Request RnW bit.
@@ -826,9 +826,9 @@ All Access Ports must have a IDR Register!
 | 0x00
 | RW
 | CSW
-| 
+| holds control and status information for the MEM-AP.
 
-| 0x04 - 0x08
+| 0x04 (- 0x08)
 | RW
 | TAR
 | 0x04 are least significant bits, if Large Physical Address Extension is supported the 0x08 presents the most significant bits.
@@ -890,7 +890,7 @@ All Access Ports must have a IDR Register!
 
 | 0xf0
 | RO
-| BASE
+| BASE1
 | only valid with Large Physical Address Extention then most significant bits otherwise Res0
 
 | 0xf4
@@ -900,13 +900,13 @@ All Access Ports must have a IDR Register!
 
 | 0xf8
 | RO
-| BASE
+| BASE0
 | least significant bits
 
 | 0xfc
 | RO
 | IDR
-|
+| must be implemented in all AP !
 
 |===
 
@@ -923,7 +923,7 @@ All Access Ports must have a IDR Register!
 | 28-31 
 | REVISION 
 | RO 
-| increases by 1 on each revision
+| starts at 0, increases by 1 on each revision
 
 | 17-27 
 | DESIGNER 
@@ -933,7 +933,7 @@ All Access Ports must have a IDR Register!
 | 13-16 
 | CLASS 
 | RO 
-| 0x0 = no defined class 0x8 Memory Access Port
+| 0x0 = no defined class, 0x1 COM Access Port, 0x8 Memory Access Port
 
 | 8-12 
 | RES0 
@@ -962,35 +962,35 @@ ARM Access Ports:
 
 | 0 
 | 0x0 
-| JTAG 
+| JTAG / COM-AP
 
 | 1 
 | 0x8 
-| AMBA AHB3 bus
+| MEM-AP: AMBA AHB3 bus
 
 | 2 
 | 0x8 
-| AMBA APB2 or APB3 bus
+| MEM-AP: AMBA APB2 or APB3 bus
 
 | 4 
 | 0x8 
-| AMBA AXI3 or AXI4 bus, with optional ACE-Lite support
+| MEM-AP: AMBA AXI3 or AXI4 bus, with optional ACE-Lite support
 
 | 5 
 | 0x8 
-| AMBA AHB5 bus
+| MEM-AP: AMBA AHB5 bus
 
 | 6 
 | 0x8 
-| AMBA APB4 and APB5 bus
+| MEM-AP: AMBA APB4 and APB5 bus
 
 | 7
 | 0x8
-| AMBA AX15 bus
+| MEM-AP: AMBA AX15 bus
 
 | 8
 | 0x8
-| AMBA AHB5 with enhanced HPROT
+| MEM-AP: AMBA AHB5 with enhanced HPROT
 
 |===
 
@@ -1055,7 +1055,7 @@ holds control and status information for the MEM-AP.
 | 6 
 | DeviceEn 
 | RO 
-| Device enabled. (0 = MEM-AP not enabled) (1 = MEM-AP enabled an can be used)
+| Device enabled. (0 = MEM-AP not enabled) (1 = MEM-AP enabled and can be used)
 
 | 4-5 
 | AddrInc 
@@ -1316,7 +1316,7 @@ There are some SWD specific words used that only make sense in the SWD contet. T
 | Data Transfer Register
 
 | DWT
-| Data Watchpoint Unit
+| Data Watchpoint and Trace unit
 
 | IDR
 | Identification Register
