@@ -227,6 +227,7 @@ int32_t swd_connect(bool multi, uint32_t target)
     }
 
     // wait for debug part of chip to be powered on
+    res = -6;  // timeout - power on
     for(i = 0; i < MAX_WAIT_POWER_ON; i++)
     {
         res = send_read_packet(DP, ADDR_CTRL_STAT, &read_data);
@@ -236,6 +237,7 @@ int32_t swd_connect(bool multi, uint32_t target)
             if(0xf0000000 == (0xf0000000 & read_data))
             {
                 // chip debug part is now powered on
+                res = RES_OK;
                 break;
             }
             // else - not powered on yet -> try again
@@ -248,12 +250,16 @@ int32_t swd_connect(bool multi, uint32_t target)
         }
     }
 
+    return res;
+}
+
+int32_t swd_scan(void)
+{
     if(RES_OK != find_all_AP())
     {
         swd_disconnect();
-        return -6;
+        return -1;
     }
-
     return RES_OK;
 }
 

@@ -18,6 +18,7 @@
 #include "cfg/cli_cfg.h"
 
 bool cmd_swd_test(uint32_t loop);
+bool cmd_swd_connect(uint32_t loop);
 bool cmd_swd_info(uint32_t loop);
 bool cmd_swd_ap_read(uint32_t loop);
 

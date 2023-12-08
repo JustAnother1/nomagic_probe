@@ -36,9 +36,32 @@ bool cmd_swd_test(uint32_t loop)
     res = target_connect();
     if(RES_OK != res)
     {
+        res = swd_connect(false, 0);
+        if(RES_OK != res)
+        {
+            debug_line("ERROR: SWD: failed to connect (%ld)!", res);
+            return true;
+        }
+    }
+    res = swd_scan();
+    if(RES_OK != res)
+    {
+        debug_line("ERROR: SWD: failed to scan (%ld)!", res);
+        return true;
+    }
+    return true;
+}
+
+bool cmd_swd_connect(uint32_t loop)
+{
+    (void)loop;
+    int32_t res;
+
+    res = target_connect();
+    if(RES_OK != res)
+    {
         debug_line("ERROR: SWD: failed to connect (%ld)!", res);
     }
-
     return true;
 }
 

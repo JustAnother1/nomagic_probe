@@ -25,6 +25,7 @@ void swd_tick(void);
 bool swd_is_connected(void);
 bool swd_info(uint32_t which);
 int32_t swd_connect(bool multi, uint32_t target);
+int32_t swd_scan(void);
 void swd_disconnect(void);
 int32_t swd_get_Memory_APsel(void);
 int32_t read_ap(int32_t ap_sel, uint32_t addr, uint32_t* data);
