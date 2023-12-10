@@ -8,7 +8,7 @@
 #include "tinyusb/usb_cdc.h"
 
 #define MAX_LINE_LENGTH    500
-#define MAX_REPLY_LENGTH   100
+#define MAX_REPLY_LENGTH   1000
 
 #define GDBSERVER_SEND_STRING            usb_cdc_send_string
 #define GDBSERVER_SEND_BYTES             usb_cdc_send_bytes

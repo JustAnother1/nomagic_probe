@@ -14,6 +14,7 @@
  */
 
 #include "target_api/target_actions.h"
+#include "target_api/target_info.h"
 #include <stdbool.h>
 #include "hal/debug_uart.h"
 #include "swd/swd_protocol.h"
@@ -40,10 +41,17 @@
 // JEP 106 = 9x 0x7f then 0x13
 
 
-#define SWD_ID 0x01002927
+#define SWD_ID_CORE_0    0x01002927
+#define SWD_ID_CORE_1    0x11002927
+#define SWD_ID_RESCUE_DP 0xf1002927
+
+void target_init(void)
+{
+    target_info_init();
+}
 
 int32_t target_connect(void)
 {
-    debug_line("SWDv2 (0x%08x)", SWD_ID);
-    return swd_connect(true, SWD_ID);
+    debug_line("SWDv2 (0x%08x)", SWD_ID_CORE_0);
+    return swd_connect(true, SWD_ID_CORE_0);
 }

@@ -148,11 +148,11 @@ void reply_packet_prepare(void)
 
 void reply_packet_add(char* data)
 {
-    uint32_t i;
-    uint32_t length = strlen(data);
-    for(i = 0; i < length; i++)
+    uint32_t length = 0;
+    while(0 != *data)
     {
-        reply_buffer[reply_length+i] = (uint8_t)data[i];
+        reply_buffer[reply_length + length] = (uint8_t)(*data);
+        length++;
     }
     reply_length = reply_length + length;
 }

@@ -12,7 +12,15 @@
  * with this program; if not, see <http://www.gnu.org/licenses/>
  *
  */
-#include "target_info.h"
 
+#include "target_api/target_info.h"
 
+#include <stdbool.h>
+
+static bool attached;
+
+void target_info_init(void)
+{
+    attached = false;
+}
 

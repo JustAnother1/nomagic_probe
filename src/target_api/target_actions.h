@@ -17,6 +17,7 @@
 
 #include <stdint.h>
 
+void target_init(void);
 int32_t target_connect(void);
 
 

@@ -15,7 +15,7 @@
 #ifndef TARGET_TARGET_INFO_H_
 #define TARGET_TARGET_INFO_H_
 
-
+void target_info_init(void);
 
 
 

@@ -32,6 +32,7 @@
 #include "gdbserver/gdbserver.h"
 #include "file/file_system.h"
 #include "swd/swd_protocol.h"
+#include "target_api/target_actions.h"
 
 #define TASK_LOOP_0           0x1ul
 #define TASK_LOOP_1           0x2ul
@@ -58,6 +59,7 @@ static void init_0(void)
     file_system_init();
 #endif
     tusb_init(); // initialize tinyusb stack
+    target_init();
     gdbserver_init();
     swd_init();
     cli_init(); // should be last

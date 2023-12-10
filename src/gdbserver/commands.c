@@ -54,8 +54,6 @@ void commands_execute(char* received, uint32_t length, char* checksum)
     // else OK
     send_ack_packet();  // ack the received packet
 
-    debug_line("\r\nparsing command '%s' !", received);
-
     switch(*received)
     {
         case '!': // enable extended mode
