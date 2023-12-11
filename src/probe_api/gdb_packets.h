@@ -12,14 +12,16 @@
  * with this program; if not, see <http://www.gnu.org/licenses/>
  *
  */
-#ifndef TARGET_TARGET_ACTIONS_H_
-#define TARGET_TARGET_ACTIONS_H_
+#ifndef PROBE_API_GDB_PACKETS_H_
+#define PROBE_API_GDB_PACKETS_H_
 
-#include <stdint.h>
 
-void target_init(void);
-int32_t target_connect(void);
+void reply_packet_prepare(void);
+void reply_packet_add(char* data);
+void reply_packet_send(void);
+void send_error_packet(void);
+void send_ack_packet(void);
+void send_unknown_command_reply(void);
 
-void target_reply_g(void);
 
-#endif /* TARGET_TARGET_ACTIONS_H_ */
+#endif /* PROBE_API_GDB_PACKETS_H_ */

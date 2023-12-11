@@ -18,6 +18,7 @@
 #include <stdbool.h>
 #include "hal/debug_uart.h"
 #include "swd/swd_protocol.h"
+#include "probe_api/gdb_packets.h"
 
 // RP2040:
 // Core 0: 0x01002927
@@ -54,4 +55,15 @@ int32_t target_connect(void)
 {
     debug_line("SWDv2 (0x%08x)", SWD_ID_CORE_0);
     return swd_connect(true, SWD_ID_CORE_0);
+}
+
+void target_reply_g(void)
+{
+
+    uint32_t i;
+    for(i = 0; i < 17; i++)
+    {
+        // reply_packet_add("xxxxxxxx");  // register is not available
+        reply_packet_add("00000000");  // register is 0
+    }
 }

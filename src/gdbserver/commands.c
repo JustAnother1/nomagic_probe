@@ -1,9 +1,24 @@
+/*
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License version 2
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, see <http://www.gnu.org/licenses/>
+ *
+ */
 #include "commands.h"
 #include <stdint.h>
 #include <stdbool.h>
-#include "gdbserver.h"
 #include "util.h"
 #include "cfg/gdbserver_cfg.h"
+#include "target_api/target_actions.h"
+#include "probe_api/gdb_packets.h"
 
 typedef struct {
     bool extended_mode;
@@ -77,11 +92,16 @@ void commands_execute(char* received, uint32_t length, char* checksum)
             reply_packet_send();
             break;
 
+        case 'g':  // read  or write general Registers
+            reply_packet_prepare();
+            target_reply_g();
+            reply_packet_send();
+            break;
+
         case 'c':  // continue
         case 'C':  // continue
         case 'D':  // Detach from client
         case 'G':  // read  or write general Registers
-        case 'g':  // read  or write general Registers
         case 'H':  // report the current tread
             // Hc ?
         case 'k':  // kill the target
