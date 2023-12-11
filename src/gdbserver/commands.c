@@ -242,11 +242,19 @@ static void handle_general_query(char* received, uint32_t length)
         // TODO add supported features
         reply_packet_send();
     }
-    else if(0 == strncmp(received, "qC", 10))
+    else if(0 == strncmp(received, "qC", 2))
     {
         // report the current tread
-        // TODO
-        send_unknown_command_reply();
+        reply_packet_prepare();
+        reply_packet_add("0");
+        reply_packet_send();
+    }
+    else if(0 == strncmp(received, "qL", 2))
+    {
+        // report the current tread
+        reply_packet_prepare();
+        reply_packet_add("qM001");
+        reply_packet_send();
     }
     else if(0 == strncmp(received, "qOffsets", 10))
     {
@@ -264,14 +272,16 @@ static void handle_general_query(char* received, uint32_t length)
     else if(0 == strncmp(received, "qfThreadInfo", 10))
     {
         // report the current tread
-        // TODO
-        send_unknown_command_reply();
+        reply_packet_prepare();
+        reply_packet_add("l"); // l = end of list
+        reply_packet_send();
     }
     else if(0 == strncmp(received, "qsThreadInfo", 10))
     {
         // report the current tread
-        // TODO
-        send_unknown_command_reply();
+        reply_packet_prepare();
+        reply_packet_add("l"); // l = end of list
+        reply_packet_send();
     }
     else if(0 == strncmp(received, "qGetTLSAddr", 10))
     {
@@ -284,6 +294,12 @@ static void handle_general_query(char* received, uint32_t length)
         // report the current tread
         // TODO
         send_unknown_command_reply();
+    }
+    else if(0 == strncmp(received, "qAttached", 10))
+    {
+        reply_packet_prepare();
+        reply_packet_add("1"); // 1 = attached to an existing process, 0 = created a new process, E = error
+        reply_packet_send();
     }
     else
     {

@@ -35,10 +35,6 @@ void gdbserver_tick(void)
     uint32_t num_bytes_received;
 
     num_bytes_received = GDBSERVER_NUM_RECEIVED_BYTES();
-    if(0 < num_bytes_received)
-    {
-        debug_line("received: %ld Bytes", num_bytes_received);
-    }
 
     while(0 < num_bytes_received)
     {
@@ -132,10 +128,6 @@ void gdbserver_tick(void)
             }
         }
         num_bytes_received = GDBSERVER_NUM_RECEIVED_BYTES();
-        if(0 < num_bytes_received)
-        {
-            debug_line("received: %ld Bytes", num_bytes_received);
-        }
     }
     // else no new bytes -> nothing to do
 }
@@ -153,6 +145,7 @@ void reply_packet_add(char* data)
     {
         reply_buffer[reply_length + length] = (uint8_t)(*data);
         length++;
+        data++;
     }
     reply_length = reply_length + length;
 }
