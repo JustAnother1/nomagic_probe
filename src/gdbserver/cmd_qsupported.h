@@ -12,17 +12,13 @@
  * with this program; if not, see <http://www.gnu.org/licenses/>
  *
  */
-#ifndef PROBE_API_GDB_PACKETS_H_
-#define PROBE_API_GDB_PACKETS_H_
+#ifndef GDBSERVER_CMD_QSUPPORTED_H_
+#define GDBSERVER_CMD_QSUPPORTED_H_
+
+#include <stdint.h>
+
+void handle_cmd_qSupported(char* parameter, uint32_t length);
 
 
-void reply_packet_prepare(void);
-void reply_packet_add(char* data);
-void reply_packet_add_hex(uint32_t data, uint32_t digits);
-void reply_packet_send(void);
-void send_error_packet(void);
-void send_ack_packet(void);
-void send_unknown_command_reply(void);
 
-
-#endif /* PROBE_API_GDB_PACKETS_H_ */
+#endif /* GDBSERVER_CMD_QSUPPORTED_H_ */

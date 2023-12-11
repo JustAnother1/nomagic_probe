@@ -19,6 +19,8 @@
 #include "cfg/gdbserver_cfg.h"
 #include "target_api/target_actions.h"
 #include "probe_api/gdb_packets.h"
+// commands:
+#include "cmd_qsupported.h"
 
 typedef struct {
     bool extended_mode;
@@ -28,6 +30,7 @@ typedef struct {
 static config_typ cfg;
 
 static bool checksumOK(char* received, uint32_t length, char* checksum);
+static uint32_t cmd_length(char* received, uint32_t length);
 static void handle_general_query(char* received, uint32_t length);
 static void handle_general_set(char* received, uint32_t length);
 static void handle_vee(char* received, uint32_t length);
@@ -59,10 +62,10 @@ void commands_init(void)
 
 void commands_execute(char* received, uint32_t length, char* checksum)
 {
-    debug_line("\r\ngdbserver received: %s", received);
+    debug_line("gdbs received: %s", received);
     if(false == checksumOK(received, length, checksum))
     {
-        debug_line("\r\nchecksum is wrong($%s#%s)!", received, checksum);
+        debug_line("checksum is wrong($%s#%s)!", received, checksum);
         send_error_packet();
         return;
     }
@@ -186,43 +189,89 @@ static bool checksumOK(char* received, uint32_t length, char* checksum)
     }
 }
 
+static uint32_t cmd_length(char* received, uint32_t length)
+{
+    uint32_t i;
+    for(i = 0; i < length; i++)
+    {
+        if(0 == *received)
+        {
+            // should not happen;
+            return i;
+        }
+        if(':' == *received)
+        {
+            // end of command
+            return i;
+        }
+        if('#' == *received)
+        {
+            // end of command
+            return i;
+        }
+        received++;
+    }
+    return length;
+}
+
 static void handle_vee(char* received, uint32_t length)
 {
-    (void)length; // TODO
-    if(0 == strncmp(received, "v", 10))
+    uint32_t cmd_len = cmd_length(received, length);
+    bool found_cmd = false;
+    if(1 == cmd_len)
     {
-        // Report the features supported by the server.
-        // TODO parse parameters
-        reply_packet_prepare();
-        // TODO add supported features
-        reply_packet_add("hwbreak+");
-        reply_packet_send();
+        if('v' == *received)
+        {
+            found_cmd = true;
+            // Report the features supported by the server.
+            // TODO parse parameters
+            reply_packet_prepare();
+            // TODO add supported features
+            reply_packet_add("hwbreak+");
+            reply_packet_send();
+        }
     }
-    else if(0 == strncmp(received, "vCont", 10))
+    else if(4 == cmd_len)
     {
-        // specify step or continue actions specific to one or more threads
-        // TODO
-        send_unknown_command_reply();
+        if(0 == strncmp(received, "vRun", 4))
+        {
+            found_cmd = true;
+            // run program
+            // TODO
+            send_unknown_command_reply();
+        }
     }
-    else if(0 == strncmp(received, "vCont?", 10))
+    else if(5 == cmd_len)
     {
-        // report the supported vCont actions
-        // TODO
-        send_unknown_command_reply();
+        if(0 == strncmp(received, "vCont", 5))
+        {
+            found_cmd = true;
+            // specify step or continue actions specific to one or more threads
+            // TODO
+            send_unknown_command_reply();
+        }
     }
-    else if(0 == strncmp(received, "vAttach", 10))
+    else if(6 == cmd_len)
     {
-        // Attach to (new) process
-        // TODO
-        send_unknown_command_reply();
+        if(0 == strncmp(received, "vCont?", 6))
+        {
+            // report the supported vCont actions
+            // TODO
+            send_unknown_command_reply();
+        }
     }
-    else if(0 == strncmp(received, "vRun", 10))
+    else if(7 == cmd_len)
     {
-        // run program
-        // TODO
-        send_unknown_command_reply();
+        if(0 == strncmp(received, "vAttach", 7))
+        {
+            found_cmd = true;
+            // Attach to (new) process
+            // TODO
+            send_unknown_command_reply();
+        }
     }
-    else
+
+    if(false == found_cmd)
     {
         send_unknown_command_reply();
     }
@@ -230,20 +279,31 @@ static void handle_vee(char* received, uint32_t length)
 
 static void handle_tee(char* received, uint32_t length)
 {
-    (void)length; // TODO
-    if(0 == strncmp(received, "target async", 10))
+    uint32_t cmd_len = cmd_length(received, length);
+    bool found_cmd = false;
+
+    if(12 == cmd_len)
     {
-        // debug with other core running
-        // TODO
-        send_unknown_command_reply();
+        if(0 == strncmp(received, "target async", 12))
+        {
+            found_cmd = true;
+            // debug with other core running
+            // TODO
+            send_unknown_command_reply();
+        }
     }
-    else if(0 == strncmp(received, "target extended-async", 10))
+    else if(21 == cmd_len)
     {
-        // debug with other core running
-        // TODO
-        send_unknown_command_reply();
+        if(0 == strncmp(received, "target extended-async", 21))
+        {
+            found_cmd = true;
+            // debug with other core running
+            // TODO
+            send_unknown_command_reply();
+        }
     }
-    else
+
+    if(false == found_cmd)
     {
         send_unknown_command_reply();
     }
@@ -251,77 +311,108 @@ static void handle_tee(char* received, uint32_t length)
 
 static void handle_general_query(char* received, uint32_t length)
 {
-    (void)length; // TODO
-    if(0 == strncmp(received, "qSupported", 10))
+    uint32_t cmd_len = cmd_length(received, length);
+    bool found_cmd = false;
+
+    if(2 == cmd_len)
     {
-        // Report the features supported by the server.
-        // TODO parse parameters
-        reply_packet_prepare();
-        reply_packet_add("hwbreak+");
-        reply_packet_add("PacketSize=1f0");
-        // TODO add supported features
-        reply_packet_send();
+        if(0 == strncmp(received, "qC", 2))
+        {
+            found_cmd = true;
+            // report the current tread
+            reply_packet_prepare();
+            reply_packet_add("0");
+            reply_packet_send();
+        }
+        else if(0 == strncmp(received, "qL", 2))
+        {
+            found_cmd = true;
+            // report the current tread
+            reply_packet_prepare();
+            reply_packet_add("qM001");
+            reply_packet_send();
+        }
     }
-    else if(0 == strncmp(received, "qC", 2))
+    else if(7 == cmd_len)
     {
-        // report the current tread
-        reply_packet_prepare();
-        reply_packet_add("0");
-        reply_packet_send();
+        if(0 == strncmp(received, "qSymbol", 7))
+        {
+            found_cmd = true;
+            // request any symbol data
+            // TODO
+            send_unknown_command_reply();
+        }
     }
-    else if(0 == strncmp(received, "qL", 2))
+    else if(8 == cmd_len)
     {
-        // report the current tread
-        reply_packet_prepare();
-        reply_packet_add("qM001");
-        reply_packet_send();
+        if(0 == strncmp(received, "qOffsets", 8))
+        {
+            found_cmd = true;
+            // report the offsets to use when relocating downloaded code
+            reply_packet_prepare();
+            reply_packet_add("Text=0;Data=0;Bss=0;");
+            reply_packet_send();
+        }
     }
-    else if(0 == strncmp(received, "qOffsets", 10))
+    else if(9 == cmd_len)
     {
-        // report the offsets to use when relocating downloaded code
-        reply_packet_prepare();
-        reply_packet_add("Text=0;Data=0;Bss=0;");
-        reply_packet_send();
+        if(0 == strncmp(received, "qAttached", 9))
+        {
+            found_cmd = true;
+            reply_packet_prepare();
+            reply_packet_add("1"); // 1 = attached to an existing process, 0 = created a new process, E = error
+            reply_packet_send();
+        }
     }
-    else if(0 == strncmp(received, "qSymbol", 10))
+    else if(10 == cmd_len)
     {
-        // request any symbol data
-        // TODO
-        send_unknown_command_reply();
+        if(0 == strncmp(received, "qSupported", 10))
+        {
+            found_cmd = true;
+            handle_cmd_qSupported(received +10, length - 10);
+        }
     }
-    else if(0 == strncmp(received, "qfThreadInfo", 10))
+    else if(11 == cmd_len)
     {
-        // report the current tread
-        reply_packet_prepare();
-        reply_packet_add("l"); // l = end of list
-        reply_packet_send();
+        if(0 == strncmp(received, "qGetTLSAddr", 11))
+        {
+            found_cmd = true;
+            // report the current tread
+            // TODO
+            send_unknown_command_reply();
+        }
     }
-    else if(0 == strncmp(received, "qsThreadInfo", 10))
+    else if(12 == cmd_len)
     {
-        // report the current tread
-        reply_packet_prepare();
-        reply_packet_add("l"); // l = end of list
-        reply_packet_send();
+        if(0 == strncmp(received, "qfThreadInfo", 12))
+        {
+            found_cmd = true;
+            // report the current tread
+            reply_packet_prepare();
+            reply_packet_add("l"); // l = end of list
+            reply_packet_send();
+        }
+        else if(0 == strncmp(received, "qsThreadInfo", 12))
+        {
+            found_cmd = true;
+            // report the current tread
+            reply_packet_prepare();
+            reply_packet_add("l"); // l = end of list
+            reply_packet_send();
+        }
     }
-    else if(0 == strncmp(received, "qGetTLSAddr", 10))
+    else if(16 == cmd_len)
     {
-        // report the current tread
-        // TODO
-        send_unknown_command_reply();
+        if(0 == strncmp(received, "qThreadExtraInfo", 16))
+        {
+            found_cmd = true;
+            // report the current tread
+            // TODO
+            send_unknown_command_reply();
+        }
     }
-    else if(0 == strncmp(received, "qThreadExtraInfo", 10))
-    {
-        // report the current tread
-        // TODO
-        send_unknown_command_reply();
-    }
-    else if(0 == strncmp(received, "qAttached", 10))
-    {
-        reply_packet_prepare();
-        reply_packet_add("1"); // 1 = attached to an existing process, 0 = created a new process, E = error
-        reply_packet_send();
-    }
-    else
+
+    if(false == found_cmd)
     {
         send_unknown_command_reply();
     }

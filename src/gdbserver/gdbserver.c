@@ -22,7 +22,7 @@
 #include "commands.h"
 #include "util.h"
 
-static uint8_t line_buffer[MAX_LINE_LENGTH];
+static uint8_t line_buffer[MAX_COMMAND_LENGTH];
 static uint32_t line_pos;
 static uint32_t reply_length;
 static uint8_t reply_buffer[MAX_REPLY_LENGTH];
@@ -111,7 +111,7 @@ void gdbserver_tick(void)
                 case IN_PACKET:
                     if('#' != data)
                     {
-                        if(line_pos < (MAX_LINE_LENGTH-1))
+                        if(line_pos < (MAX_COMMAND_LENGTH - 1))
                         {
                             line_buffer[line_pos] = data;
                             line_pos++;
@@ -156,13 +156,50 @@ void reply_packet_prepare(void)
 void reply_packet_add(char* data)
 {
     uint32_t length = 0;
-    while(0 != *data)
+    while((0 != *data) && (reply_length + length < MAX_REPLY_LENGTH))
     {
         reply_buffer[reply_length + length] = (uint8_t)(*data);
         length++;
         data++;
     }
     reply_length = reply_length + length;
+}
+
+void reply_packet_add_hex(uint32_t data, uint32_t digits)
+{
+    uint32_t i;
+    uint32_t report;  // report this many digits
+    bool shorten = false; // do not send leading zeros if this is true
+
+    char buf[8];
+    if((1 > digits) || (8 < digits))
+    {
+        // invalid digits value or shorten mode request
+        digits = 8;
+        shorten = true;
+    }
+    int_to_hex(buf, data, digits);  // returns value in lsb sequence
+    report = digits;
+    if(true == shorten)
+    {
+        // count the number of leading digits
+        for(i = 0; i < digits; i++)
+        {
+            if('0' == buf[digits -1 -i])
+            {
+                report--;
+            }
+            else
+            {
+                break;
+            }
+        }
+    }
+    for(i = 0; i < report; i++)
+    {
+        reply_buffer[reply_length + i] = (uint8_t)(buf[report -i]);
+    }
+    reply_length = reply_length + report;
 }
 
 void reply_packet_send(void)
@@ -172,11 +209,16 @@ void reply_packet_send(void)
 
     sum = calculateChecksum((char*)&reply_buffer[1], reply_length -1);  // checksum does not include the '$'
     int_to_hex(reply_checksum, sum, 2);
+    if(reply_length + 4 > MAX_REPLY_LENGTH)
+    {
+        // should never happen -> if it happens increase the MAX_REPLY_LENGTH
+        reply_length = MAX_REPLY_LENGTH - 4;
+    }
     reply_buffer[reply_length] = '#';
     reply_buffer[reply_length + 1] = (uint8_t)reply_checksum[1]; // high nibble
     reply_buffer[reply_length + 2] = (uint8_t)reply_checksum[0]; // low nibble
     reply_buffer[reply_length + 3]  = 0;
-    debug_line("gdbs: sending: %s", reply_buffer);
+    debug_line("gdbs sending: %s", reply_buffer);
     GDBSERVER_SEND_BYTES(reply_buffer, reply_length + 3);
 }
 
