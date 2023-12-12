@@ -178,4 +178,28 @@ int32_t  file_storage_write(uint32_t block, uint32_t offset, uint8_t* buffer, ui
     return -1;
 }
 
+void target_info_init(void)
+{
+    // nothing to do here
+}
 
+void target_init(void)
+{
+    // nothing to do here
+}
+int32_t target_connect(void)
+{
+    // 0 would be OK, everything negative is an error
+    return -1;
+}
+
+void target_reply_g(void)
+{
+    // nothing to do here
+}
+
+void debug_line(const char *fmt, ...)
+{
+    (void) fmt;
+    // nothing to do here
+}

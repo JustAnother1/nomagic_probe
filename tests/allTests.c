@@ -6,6 +6,8 @@
 #include "cli_tests.h"
 #include "usb_msc_tests.h"
 #include "printf_tests.h"
+#include "gdbserver_util_tests.h"
+#include "gdbserver_gdbserver_tests.h"
 
 
 // Creating a test suite is pretty simple.  First, you'll need an
@@ -64,6 +66,11 @@ static MunitTest cli_tests[] = {
   { (char*) "/printf/printf/digits", test_printf_printf_digits,  printf_setup,  NULL, MUNIT_TEST_OPTION_NONE, NULL },
 
   { (char*) "/usb_msc/unit_ready",   test_usb_msc_unit_ready_cb, usb_msc_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
+
+  { (char*) "/gdbserver/util/hex_to_int",   test_gdbserver_util_hex_to_int, gdbserver_util_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  { (char*) "/gdbserver/util/int_to_hex",   test_gdbserver_util_int_to_hex, gdbserver_util_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
+
+  { (char*) "/gdbserver/gdbserver/reply_packet_add_hex",   test_gdbserver_gdbserver_reply_packet_add_hex, gdbserver_gdbserver_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
 
   // To tell the test runner when the array is over, just add a NULL
   // entry at the end. */

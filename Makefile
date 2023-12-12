@@ -108,41 +108,6 @@ SRC += $(SRC_FOLDER)led.c
 # main
 SRC += $(SRC_FOLDER)main.c
 
-
-
-OBJS = $(addprefix $(BIN_FOLDER),$(SRC:.c=.o))
-
-INCDIRS +=$(SRC_FOLDER)
-INCDIRS +=$(SRC_FOLDER)cfg/
-INCDIRS +=$(SRC_FOLDER)lib/
-INCDIRS +=$(SRC_FOLDER)tinyusb/src/
-INCDIR = $(patsubst %,-I%, $(INCDIRS))
-
-# test configuration
-
-TST_LFLAGS = -lgcov --coverage
-TST_CFLAGS =  -Wall -Wextra -g3 -fprofile-arcs -ftest-coverage -Wno-int-to-pointer-cast
-TST_DDEFS = -DUNIT_TEST=1
-TST_INCDIRS = tests/
-TST_INCDIRS += tests/cfg/
-TST_INCDIRS += src/
-TST_INCDIRS += src/tinyusb/src/
-TST_INCDIRS += /usr/include/
-TST_INCDIR = $(patsubst %,-I%, $(TST_INCDIRS))
-TST_OBJS += tests/bin/src/cli/cli.o
-TST_OBJS += tests/bin/src/lib/printf.o
-TST_OBJS += tests/bin/src/tinyusb/usb_msc.o
-TST_OBJS += tests/bin/tests/cli_tests.o
-TST_OBJS += tests/bin/tests/mocks.o
-TST_OBJS += tests/bin/tests/printf_tests.o
-TST_OBJS += tests/bin/tests/usb_msc_tests.o
-TST_OBJS += tests/bin/tests/munit.o
-TST_OBJS += tests/bin/tests/allTests.o
-
-# make config
-VPATH = $(SOURCE_DIR)
-.DEFAULT_GOAL = all
-
 ifeq ($(TARGET), EXTERN)
     # file handling
     SRC += $(SRC_FOLDER)file/fake_mbr.c
@@ -163,6 +128,48 @@ else
 	include $(SRC_FOLDER)target/target.mk
 endif
 
+
+
+OBJS = $(addprefix $(BIN_FOLDER),$(SRC:.c=.o))
+
+INCDIRS +=$(SRC_FOLDER)
+INCDIRS +=$(SRC_FOLDER)cfg/
+INCDIRS +=$(SRC_FOLDER)lib/
+INCDIRS +=$(SRC_FOLDER)tinyusb/src/
+INCDIR = $(patsubst %,-I%, $(INCDIRS))
+
+# test configuration
+
+TST_LFLAGS = -lgcov --coverage
+TST_CFLAGS =  -Wall -Wextra -g3 -fprofile-arcs -ftest-coverage -Wno-int-to-pointer-cast -Wno-implicit-function-declaration
+TST_DDEFS = -DUNIT_TEST=1
+TST_INCDIRS = tests/
+TST_INCDIRS += tests/cfg/
+TST_INCDIRS += src/tinyusb/src/
+TST_INCDIRS += /usr/include/
+TST_INCDIRS += src/
+TST_INCDIR = $(patsubst %,-I%, $(TST_INCDIRS))
+
+TST_OBJS += tests/bin/src/cli/cli.o
+TST_OBJS += tests/bin/src/lib/printf.o
+TST_OBJS += tests/bin/src/tinyusb/usb_msc.o
+TST_OBJS += tests/bin/src/gdbserver/cmd_qsupported.o
+TST_OBJS += tests/bin/src/gdbserver/commands.o
+TST_OBJS += tests/bin/src/gdbserver/gdbserver.o
+TST_OBJS += tests/bin/src/gdbserver/util.o
+TST_OBJS += tests/bin/tests/cli_tests.o
+TST_OBJS += tests/bin/tests/mocks.o
+TST_OBJS += tests/bin/tests/printf_tests.o
+TST_OBJS += tests/bin/tests/usb_msc_tests.o
+TST_OBJS += tests/bin/tests/gdbserver_util_tests.o
+TST_OBJS += tests/bin/tests/gdbserver_gdbserver_tests.o
+TST_OBJS += tests/bin/tests/munit.o
+TST_OBJS += tests/bin/tests/allTests.o
+
+
+# make config
+VPATH = $(SOURCE_DIR)
+.DEFAULT_GOAL = all
 
 
 # targets

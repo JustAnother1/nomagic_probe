@@ -60,12 +60,11 @@ uint32_t hex_to_int(char* hex, uint32_t num_digits)
         case 'f':
         case 'F': digit_val = 15; break;
         default:
-            digit_val = 0;
             debug_line("gdbs: invalid hex char %d / 0x%02x !", *hex, *hex);
-            break;
+            return 0;
         }
-         res = res + digit_val;
-         hex++;
+        res = res + digit_val;
+        hex++;
     }
     return res;
 }
