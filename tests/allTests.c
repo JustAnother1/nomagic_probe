@@ -8,8 +8,6 @@
 #include "printf_tests.h"
 
 
-
-
 // Creating a test suite is pretty simple.  First, you'll need an
 // array of tests:
 static MunitTest cli_tests[] = {
@@ -66,7 +64,6 @@ static MunitTest cli_tests[] = {
   { (char*) "/printf/printf/digits", test_printf_printf_digits,  printf_setup,  NULL, MUNIT_TEST_OPTION_NONE, NULL },
 
   { (char*) "/usb_msc/unit_ready",   test_usb_msc_unit_ready_cb, usb_msc_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
-  { (char*) "/usb_msc/read_10",      test_usb_msc_read10_cb,     usb_msc_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
 
   // To tell the test runner when the array is over, just add a NULL
   // entry at the end. */

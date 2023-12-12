@@ -129,18 +129,15 @@ TST_INCDIRS += src/
 TST_INCDIRS += src/tinyusb/src/
 TST_INCDIRS += /usr/include/
 TST_INCDIR = $(patsubst %,-I%, $(TST_INCDIRS))
-TST_OBJS  = tests/bin/tests/cli_tests.o
-TST_OBJS += tests/bin/tests/mocks.o
-TST_OBJS += tests/bin/tests/printf_tests.o
 TST_OBJS += tests/bin/src/cli/cli.o
 TST_OBJS += tests/bin/src/lib/printf.o
-TST_OBJS += tests/bin/tests/usb_msc_tests.o
 TST_OBJS += tests/bin/src/tinyusb/usb_msc.o
-TST_OBJS += tests/bin/src/file/file_storage.o
-TST_OBJS += tests/bin/src/file/faked_disk.o
+TST_OBJS += tests/bin/tests/cli_tests.o
+TST_OBJS += tests/bin/tests/mocks.o
+TST_OBJS += tests/bin/tests/printf_tests.o
+TST_OBJS += tests/bin/tests/usb_msc_tests.o
 TST_OBJS += tests/bin/tests/munit.o
 TST_OBJS += tests/bin/tests/allTests.o
-
 
 # make config
 VPATH = $(SOURCE_DIR)
@@ -176,7 +173,7 @@ help:
 	@echo "================="
 	@echo "make clean              delete all generated files"
 	@echo "make all TARGET=EXTERN  compile firmware creates elf and uf2 file. (target configuration needed)"
-	@echo "make all                compile firmware creates elf and uf2 file. (only support this target)"
+	@echo "make all                compile firmware creates elf and uf2 file. (only support RP2040 target)"
 	@echo "make flash              write firmware to flash of RP2040 using openocd and CMSIS-DAP adapter(picoprobe)"
 	@echo "make doc                run doxygen"
 	@echo "make test               run unit tests"
@@ -233,7 +230,7 @@ $(BIN_FOLDER)%o: %c
 	@$(MKDIR_P) $(@D)
 	$(CC) -MD -MP -c $(CFLAGS) $(DDEFS) $(INCDIR) $< -o $@
 
-list:
+list: $(BIN_FOLDER)$(PROJECT).elf
 	@echo ""
 	@echo "listing"
 	@echo "========"
@@ -256,8 +253,8 @@ tests/bin/%o: %c
 
 $(PROJECT)_tests: $(TST_OBJS)
 	@echo ""
-	@echo "linking"
-	@echo "======="
+	@echo "linking tests"
+	@echo "============="
 	$(TST_LD) $(TST_LFLAGS) -o tests/bin/$(PROJECT)_tests $(TST_OBJS)
 
 
@@ -276,6 +273,6 @@ lcov:
 clean:
 	@rm -rf $(BIN_FOLDER) app.map doc/doxygen/ tests/$(PROJECT)_tests tests/bin/
 
-.PHONY: help clean flash all list test
+.PHONY: help clean flash all list test doc
 
 -include $(OBJS:.o=.d)

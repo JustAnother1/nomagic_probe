@@ -9,6 +9,8 @@ uint32_t send_read_pos;
 uint32_t send_write_pos;
 bool echo_enabled;
 
+uint32_t file_system_start = 50000;
+
 void mock_tick(void)
 {
     // nothing to do
@@ -142,4 +144,38 @@ void watchdog_report(void)
 {
     // nothing to do here
 }
+
+void watchdog_feed(void)
+{
+    // nothing to do here
+}
+
+uint32_t file_storage_get_block_count(void)
+{
+    return 12;
+}
+uint16_t file_storage_getblock_size(void)
+{
+    return 512;
+}
+
+int32_t  file_storage_read(uint32_t block, uint32_t offset, uint8_t* buffer, uint32_t bufsize)
+{
+    (void)block;
+    (void)offset;
+    (void)buffer;
+    (void)bufsize;
+
+    return -1;
+}
+int32_t  file_storage_write(uint32_t block, uint32_t offset, uint8_t* buffer, uint32_t bufsize)
+{
+    (void)block;
+    (void)offset;
+    (void)buffer;
+    (void)bufsize;
+
+    return -1;
+}
+
 

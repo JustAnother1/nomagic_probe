@@ -16,7 +16,7 @@
 #include <string.h>
 #include "file_storage.h"
 #include "file_system.h"
-#include"fake_fs.h"
+#include "fake_fs.h"
 
 uint32_t file_storage_get_block_count(void)
 {
