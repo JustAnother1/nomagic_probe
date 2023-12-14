@@ -59,6 +59,7 @@ MunitResult test_gdbserver_util_int_to_hex(const MunitParameter params[], void* 
 
     uint32_t intval = 51966; // 0xcafe = 51966
     int_to_hex(string_val, intval, 4);
+    munit_assert_char(string_val[4], ==, 'y');
     munit_assert_char(string_val[3], ==, 'c');
     munit_assert_char(string_val[2], ==, 'a');
     munit_assert_char(string_val[1], ==, 'f');
@@ -69,10 +70,34 @@ MunitResult test_gdbserver_util_int_to_hex(const MunitParameter params[], void* 
         string_val[i] = 'y';
     }
     int_to_hex(string_val, intval, 2);
+    munit_assert_char(string_val[4], ==, 'y');
     munit_assert_char(string_val[3], ==, 'y');
     munit_assert_char(string_val[2], ==, 'y');
     munit_assert_char(string_val[1], ==, 'f');
     munit_assert_char(string_val[0], ==, 'e');
+
+    for(i = 0; i < 10; i++)
+    {
+        string_val[i] = 'y';
+    }
+    int_to_hex(string_val, 500, 0);
+    munit_assert_char(string_val[4], ==, 'y');
+    munit_assert_char(string_val[3], ==, 'y');
+    munit_assert_char(string_val[2], ==, 'y');
+    munit_assert_char(string_val[1], ==, 'y');
+    munit_assert_char(string_val[0], ==, 'y');
+
+    for(i = 0; i < 10; i++)
+    {
+        string_val[i] = 'y';
+    }
+    int_to_hex(string_val, 500, 4);
+    munit_assert_char(string_val[4], ==, 'y');
+    munit_assert_char(string_val[3], ==, '0');
+    munit_assert_char(string_val[2], ==, '1');
+    munit_assert_char(string_val[1], ==, 'f');
+    munit_assert_char(string_val[0], ==, '4');
+
 
     return MUNIT_OK;
 }

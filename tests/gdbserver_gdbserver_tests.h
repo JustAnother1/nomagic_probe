@@ -20,6 +20,9 @@
 #include <stdbool.h>
 
 void* gdbserver_gdbserver_setup(const MunitParameter params[], void* user_data);
-MunitResult test_gdbserver_gdbserver_reply_packet_add_hex(const MunitParameter params[], void* user_data);
+
+MunitResult test_gdbserver_empty_packet(const MunitParameter params[], void* user_data);
+MunitResult test_gdbserver_hex(const MunitParameter params[], void* user_data);
+MunitResult test_gdbserver_hex_sqish(const MunitParameter params[], void* user_data);
 
 #endif /* TESTS_GDBSERVER_GDBSERVER_TESTS_H_ */

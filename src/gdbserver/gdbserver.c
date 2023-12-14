@@ -197,7 +197,7 @@ void reply_packet_add_hex(uint32_t data, uint32_t digits)
     }
     for(i = 0; i < report; i++)
     {
-        reply_buffer[reply_length + i] = (uint8_t)(buf[report -i]);
+        reply_buffer[reply_length + i] = (uint8_t)(buf[(report - 1) -i]);
     }
     reply_length = reply_length + report;
 }
