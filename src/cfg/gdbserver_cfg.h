@@ -7,8 +7,8 @@
 #include "hal/debug_uart.h"
 #include "tinyusb/usb_cdc.h"
 
-#define MAX_COMMAND_LENGTH    500
-#define MAX_REPLY_LENGTH      1000
+#define MAX_COMMAND_LENGTH    1025
+#define MAX_REPLY_LENGTH      2000
 
 #define GDBSERVER_SEND_STRING            usb_cdc_send_string
 #define GDBSERVER_SEND_BYTES             usb_cdc_send_bytes

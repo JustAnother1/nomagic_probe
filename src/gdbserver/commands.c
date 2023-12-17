@@ -21,9 +21,11 @@
 #include "probe_api/gdb_packets.h"
 // commands:
 #include "cmd_qsupported.h"
+#include "cmd_qxfer.h"
 
 typedef struct {
     bool extended_mode;
+    bool noAckMode;
 } config_typ;
 
 
@@ -39,6 +41,7 @@ static void handle_tee(char* received, uint32_t length);
 void commands_init(void)
 {
     cfg.extended_mode = false;
+    cfg.noAckMode = false;
 }
 
 
@@ -70,7 +73,10 @@ void commands_execute(char* received, uint32_t length, char* checksum)
         return;
     }
     // else OK
-    send_ack_packet();  // ack the received packet
+    if(false == cfg.noAckMode)
+    {
+        send_ack_packet();  // ack the received packet
+    }
 
     switch(*received)
     {
@@ -333,6 +339,15 @@ static void handle_general_query(char* received, uint32_t length)
             reply_packet_send();
         }
     }
+    else if(5 == cmd_len)
+    {
+        if(0 == strncmp(received, "qXfer", 5))
+        {
+            found_cmd = true;
+            // qXfer:features:read:target.xml:0,3fb
+            handle_cmd_qXfer(received +5, length - 5);
+        }
+    }
     else if(7 == cmd_len)
     {
         if(0 == strncmp(received, "qSymbol", 7))
@@ -350,7 +365,8 @@ static void handle_general_query(char* received, uint32_t length)
             found_cmd = true;
             // report the offsets to use when relocating downloaded code
             reply_packet_prepare();
-            reply_packet_add("Text=0;Data=0;Bss=0;");
+            reply_packet_add("Text=000;Data=000"); // Bss value will be ignored and Data value will be used
+            // warning: Target reported unsupported offsets: Text=0;Data=0;Bss=0;
             reply_packet_send();
         }
     }
@@ -369,6 +385,8 @@ static void handle_general_query(char* received, uint32_t length)
         if(0 == strncmp(received, "qSupported", 10))
         {
             found_cmd = true;
+            commands_init(); // might be a new connection -> reset everything to default
+            // report the supported features of the probe.
             handle_cmd_qSupported(received +10, length - 10);
         }
     }
@@ -420,9 +438,25 @@ static void handle_general_query(char* received, uint32_t length)
 
 static void handle_general_set(char* received, uint32_t length)
 {
-    // TODO
-    (void) received;
-    (void) length;
-    send_unknown_command_reply();
+    uint32_t cmd_len = cmd_length(received, length);
+    bool found_cmd = false;
+
+    if(15 == cmd_len)
+    {
+        if(0 == strncmp(received, "QStartNoAckMode", 15))
+        {
+            found_cmd = true;
+            // QStartNoAckMode
+            cfg.noAckMode = true;
+            reply_packet_prepare();
+            reply_packet_add("OK");
+            reply_packet_send();
+        }
+    }
+
+    if(false == found_cmd)
+    {
+        send_unknown_command_reply();
+    }
 }
 

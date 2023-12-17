@@ -13,29 +13,20 @@
  *
  */
 
-#include "cmd_qsupported.h"
+#include "cmd_qxfer.h"
 #include "hal/debug_uart.h"
 #include "probe_api/gdb_packets.h"
-#include "cfg/gdbserver_cfg.h"
 
-// openocd:
-// --------
-// -multiprocess+;swbreak+;hwbreak+;qRelocInsn+;fork-events+;vfork-events+;exec-events+;vContSupported+;QThreadEvents+;no-resumed+
-// picoprobe:
-// ----------
-// PacketSize=4000;qXfer:memory-map:read+;qXfer:features:read+;qXfer:threads:read+;QStartNoAckMode+;vContSupported+
-// black magic probe:
-// ------------------
-// gdb_putpacket_f("PacketSize=%X;qXfer:memory-map:read+;qXfer:features:read+;"
-// "vContSupported+" GDB_QSUPPORTED_NOACKMODE,
-// GDB_MAX_PACKET_SIZE);
-// #define GDB_QSUPPORTED_NOACKMODE ";QStartNoAckMode+"
-// GDB_MAX_PACKET_SIZE = 1024
 
-void handle_cmd_qSupported(char* parameter, uint32_t length)
+void handle_cmd_qXfer(char* parameter, uint32_t length)
 {
     (void) length; // TODO
-    // Report the features supported by the server.
+    // ‘qXfer:object:read:annex:offset,length’
+    // qXfer:features:read:target.xml:0,3fb
+    // -> object : features
+    //    annex : target.xml
+    //    offset : 0
+    //    length = 0x3fb
     if(':' == *parameter)
     {
         uint32_t i;
@@ -58,14 +49,15 @@ void handle_cmd_qSupported(char* parameter, uint32_t length)
             }
         }
         debug_line("last parameter: %s !", curParameter);
+        reply_packet_prepare();
+        reply_packet_add(";vContSupported+");
+        reply_packet_send();
     }
-    reply_packet_prepare();
-    reply_packet_add("PacketSize=");
-    reply_packet_add_hex(MAX_COMMAND_LENGTH -1, 0); // GDB does not send a 0 at the end, so we need to have space for an additional 0
-    reply_packet_add(";qXfer:memory-map:read+");
-    reply_packet_add(";qXfer:features:read+");
-    // reply_packet_add(";hwbreak+");
-    reply_packet_add(";QStartNoAckMode+");
-    reply_packet_add(";vContSupported+");
-    reply_packet_send();
+    else
+    {
+        // invalid
+        reply_packet_prepare();
+        reply_packet_add("E00");
+        reply_packet_send();
+    }
 }

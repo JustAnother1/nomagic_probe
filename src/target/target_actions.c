@@ -65,5 +65,6 @@ void target_reply_g(void)
     {
         // reply_packet_add("xxxxxxxx");  // register is not available
         reply_packet_add("00000000");  // register is 0
+        // -> Remote 'g' packet reply is of odd length
     }
 }

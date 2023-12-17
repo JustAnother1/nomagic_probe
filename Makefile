@@ -65,6 +65,7 @@ SRC += $(SRC_FOLDER)swd/swd_packets.c
 SRC += $(SRC_FOLDER)swd/swd_gpio.c
 #gdb server
 SRC += $(SRC_FOLDER)gdbserver/cmd_qsupported.c
+SRC += $(SRC_FOLDER)gdbserver/cmd_qxfer.c
 SRC += $(SRC_FOLDER)gdbserver/commands.c
 SRC += $(SRC_FOLDER)gdbserver/gdbserver.c
 SRC += $(SRC_FOLDER)gdbserver/util.c

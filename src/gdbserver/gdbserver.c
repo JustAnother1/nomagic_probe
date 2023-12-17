@@ -208,11 +208,13 @@ void reply_packet_send(void)
     char reply_checksum[2];
 
     sum = calculateChecksum((char*)&reply_buffer[1], reply_length -1);  // checksum does not include the '$'
+    sum = sum & 0xff;
     int_to_hex(reply_checksum, sum, 2);
     if(reply_length + 4 > MAX_REPLY_LENGTH)
     {
         // should never happen -> if it happens increase the MAX_REPLY_LENGTH
         reply_length = MAX_REPLY_LENGTH - 4;
+        debug_line("ERROR: reply too long !");
     }
     reply_buffer[reply_length] = '#';
     reply_buffer[reply_length + 1] = (uint8_t)reply_checksum[1]; // high nibble
@@ -237,5 +239,3 @@ void send_unknown_command_reply(void)
     reply_packet_prepare();
     reply_packet_send();
 }
-
-

@@ -2,11 +2,43 @@ Firmware architecture
 =====================
 :toc:
 
+This document should help the reader to get a better understanding of the nomagic_probe fimrware. It shall explain the reasoning behind the design descisions and give an overview about the major parts that together make up the nomagic_probe firmware.
+
+== guiding principles
+
+The guiding strategies explain the strategy of the firmware. It is also these guedlines that differentiatiate nomagic_probe from alternative solutions.
+
+=== no magic black box
+
+No solution can be perfect in all circumstances. The consequence of these simple truth is to either specialize on a very narrow field of application, or to accept the presence of issues. If one accept the presence of issues then one should also make it easy for the user to identify the issues, work aourond them or fix them. This way the firmware can still be of use and might even become better over time with increaed use.
+
+If a firmware relies on magic black boxes, that contain functionality and that are expected to just work, can be very efficient. But it also makes it impossible to fix issues caused by or that arrise from these black boxes.
+
+The nomagic_probe firmware tries to be as pefect as it can be. It also tries to be easy to understand for users that want to look "under the hood". And it avoids using magic black boxes as hard as it can.
+
+=== focused on one target only
+
+Soem people think that adding more and more features on a firmware just make it better and better. But every new feature comes with some hidden cost. Over time the complexity of the firmware rises and rises with each new feature until it becomes unmanageable.
+
+To be able to include as many useful functions as possible nomagic_probe firmware will focus on supporting only one taget at a time. If the user wants to use nomagic_probe firmware with a different target chip then a change in configuration will be necesary.
+
+=== easy configuration management
+
+When bringing new members into a project or when going back to a project finished long ago there is a learning curve and setup cost to get the environment set up. The nomagic_probe firmware tries to decrease the burden in this sitiuation.
+
+The recommendation is to add the frimware (*.elf or *.uf2 file) a well as any necessary target configuration files to the project source code repository. This way the setup for debugging is a two step procedure. First flashing the nomagic_probe firmware and then applying the configuration.
+
+
+== applied methods
+the following sections describe the methods used to achive the targets. 
+
 === filesystem
 
 To allow a user configuration using configuration files the nomagic probe has a file system that can store these files.
 The file sytem can be accessed using the USB interface (Mass Storage Device Class) and inside the firmware.
 
+
+== structure
 
 
 == folders
@@ -57,9 +89,8 @@ unit tests.
 === tools
 software tools than were used.
 
-== files - modules
-each *.c file is a module. The following lists all the modules and gives an overview of what the modules are doing.
 
+== files
 
 === main
 The main function. In dual core mode splitting the tasks onto the core is done here.
