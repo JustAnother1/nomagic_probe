@@ -34,7 +34,9 @@
 
 void handle_cmd_qSupported(char* parameter, uint32_t length)
 {
-    (void) length; // TODO
+    (void) length;
+    (void) parameter;
+    /* only necessary if we would report a feature only in reply to a feature reported by gdb.
     // Report the features supported by the server.
     if(':' == *parameter)
     {
@@ -59,12 +61,13 @@ void handle_cmd_qSupported(char* parameter, uint32_t length)
         }
         debug_line("last parameter: %s !", curParameter);
     }
+    */
     reply_packet_prepare();
     reply_packet_add("PacketSize=");
     reply_packet_add_hex(MAX_COMMAND_LENGTH -1, 0); // GDB does not send a 0 at the end, so we need to have space for an additional 0
     reply_packet_add(";qXfer:memory-map:read+");
     reply_packet_add(";qXfer:features:read+");
-    // reply_packet_add(";hwbreak+");
+    reply_packet_add(";hwbreak+");
     reply_packet_add(";QStartNoAckMode+");
     reply_packet_add(";vContSupported+");
     reply_packet_send();

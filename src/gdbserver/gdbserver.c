@@ -166,6 +166,12 @@ void reply_packet_add(char* data)
     reply_length = reply_length + length;
 }
 
+void reply_packet_add_max(char* data, uint32_t length)
+{
+    memcpy(&reply_buffer[reply_length], data, length);
+    reply_length = reply_length + length;
+}
+
 void reply_packet_add_hex(uint32_t data, uint32_t digits)
 {
     uint32_t i;

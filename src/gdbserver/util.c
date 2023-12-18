@@ -32,6 +32,10 @@ uint32_t hex_to_int(char* hex, uint32_t num_digits)
     uint32_t res = 0;
     uint32_t i;
     uint32_t digit_val = 0;
+    if(0 == num_digits)
+    {
+        num_digits = strlen(hex);
+    }
     for(i = 0; i < num_digits; i++)
     {
         res = res*16;

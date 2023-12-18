@@ -15,8 +15,10 @@
 #ifndef TARGET_TARGET_INFO_H_
 #define TARGET_TARGET_INFO_H_
 
-void target_info_init(void);
+#include <stdint.h>
 
+void target_info_init(void);
+void target_send_file(char* filename, uint32_t offset, uint32_t len);
 
 
 #endif /* TARGET_TARGET_INFO_H_ */

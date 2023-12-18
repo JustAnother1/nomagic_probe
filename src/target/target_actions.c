@@ -60,10 +60,12 @@ int32_t target_connect(void)
 void target_reply_g(void)
 {
     uint32_t i;
+    reply_packet_prepare();
     for(i = 0; i < 17; i++)
     {
         // reply_packet_add("xxxxxxxx");  // register is not available
         reply_packet_add("00000000");  // register is 0
         // -> Remote 'g' packet reply is of odd length
     }
+    reply_packet_send();
 }

@@ -102,14 +102,22 @@ void commands_execute(char* received, uint32_t length, char* checksum)
             break;
 
         case 'g':  // read  or write general Registers
-            reply_packet_prepare();
             target_reply_g();
-            reply_packet_send();
             break;
 
         case 'c':  // continue
         case 'C':  // continue
+            // TODO
+            send_unknown_command_reply();
+            break;
+
         case 'D':  // Detach from client
+            commands_init(); // end of the connection -> reset everything to default
+            reply_packet_prepare();
+            reply_packet_add("OK");
+            reply_packet_send();
+            break;
+
         case 'G':  // read  or write general Registers
         case 'H':  // report the current tread
             // Hc ?
@@ -365,7 +373,7 @@ static void handle_general_query(char* received, uint32_t length)
             found_cmd = true;
             // report the offsets to use when relocating downloaded code
             reply_packet_prepare();
-            reply_packet_add("Text=0;Data=0;"); // Bss value will be ignored and Data value will be used
+            // reply_packet_add("Text=0;Data=0;"); // Bss value will be ignored and Data value will be used
             // warning: Target reported unsupported offsets: Text=0;Data=0;Bss=0;
             reply_packet_send();
         }
