@@ -23,8 +23,30 @@
 #include "swd/swd_protocol.h"
 
 // TODO load from configuration
+
+void target_init(void)
+{
+
+}
+
+void target_reply_g(void)
+{
+
+}
+
 int32_t target_connect(void)
 {
     return swd_connect(false, 0);
 }
 
+void target_info_init(void)
+{
+
+}
+
+void target_send_file(char* filename, uint32_t offset, uint32_t len)
+{
+    (void) filename;
+    (void) offset;
+    (void) len;
+}

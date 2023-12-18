@@ -122,8 +122,20 @@ void commands_execute(char* received, uint32_t length, char* checksum)
         case 'H':  // report the current tread
             // Hc ?
         case 'k':  // kill the target
-        case 'M':  // read  or write main memory
-        case 'm':  // read  or write main memory
+        case 'M':  // write main memory
+            // TODO
+            send_unknown_command_reply();
+            break;
+
+        case 'm':  // read main memory : m addr,length
+            /*
+        {
+            char buf[8];
+            uint32_t val = swd_read_address()
+            int_to_hex(buf, val, 8);
+        }
+            break;
+*/
         case 'P':  // read  or write specific Register
         case 'p':  // read  or write specific Register
             // TODO
