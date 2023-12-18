@@ -126,7 +126,7 @@ ifeq ($(TARGET), EXTERN)
     # target loader
     SRC += $(SRC_FOLDER)file/target_loader.c
 else
-	include $(SRC_FOLDER)target/target.mk
+	include target/target.mk
 endif
 
 
@@ -189,11 +189,11 @@ help:
 	@echo "make list               create list file"
 	@echo ""
 
-$(BIN_FOLDER)$(PROJECT).elf: $(OBJS)
+$(BIN_FOLDER)$(PROJECT).elf: $(OBJS) $(LIBS)
 	@echo ""
 	@echo "linking"
 	@echo "======="
-	$(LD) $(LFLAGS) -o $(BIN_FOLDER)$(PROJECT).elf $(OBJS)
+	$(LD) $(LFLAGS) -o $(BIN_FOLDER)$(PROJECT).elf $(OBJS) $(LINK_LIBS)
 
 %hex: %elf
 	@echo ""
@@ -255,7 +255,7 @@ doc:
 
 tests/bin/%o: %c
 	@echo ""
-	@echo "=== compiling $@"
+	@echo "=== compiling (tests) $@"
 	@$(MKDIR_P) $(@D)
 	$(TST_CC) -c $(TST_CFLAGS) $(TST_DDEFS) $(TST_INCDIR) $< -o $@
 
@@ -279,7 +279,7 @@ lcov:
 
 
 clean:
-	@rm -rf $(BIN_FOLDER) app.map doc/doxygen/ tests/$(PROJECT)_tests tests/bin/
+	@rm -rf $(BIN_FOLDER) app.map doc/doxygen/ tests/$(PROJECT)_tests tests/bin/ $(CLEAN_RM)
 
 .PHONY: help clean flash all list test doc
 

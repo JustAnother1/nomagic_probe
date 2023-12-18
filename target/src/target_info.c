@@ -13,12 +13,12 @@
  *
  */
 
-#include "target_api/target_info.h"
+#include "target_info.h"
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
-#include "probe_api/gdb_packets.h"
-#include "hal/debug_uart.h"
+#include "gdb_packets.h"
+#include "debug_log.h"
 
 #define TARGET_XML_CONTENT  \
 "<?xml version=\"1.0\"?>\r\n" \

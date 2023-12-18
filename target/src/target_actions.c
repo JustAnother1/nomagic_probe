@@ -13,12 +13,12 @@
  *
  */
 
-#include "target_api/target_actions.h"
-#include "target_api/target_info.h"
+#include "target_actions.h"
+#include "target_info.h"
 #include <stdbool.h>
-#include "hal/debug_uart.h"
-#include "swd/swd_protocol.h"
-#include "probe_api/gdb_packets.h"
+#include "debug_log.h"
+#include "swd.h"
+#include "gdb_packets.h"
 
 // RP2040:
 // Core 0: 0x01002927
