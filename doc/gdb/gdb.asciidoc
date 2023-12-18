@@ -44,6 +44,14 @@ All other commands are optional.
 
 == Links
 
+https://www.embecosm.com/appnotes/ean4/embecosm-howto-rsp-server-ean4-issue-2.html
+
+https://ftp.gnu.org/old-gnu/Manuals/gdb/html_node/gdb_129.html
+
+https://www.zeuthen.desy.de/dv/documentation/unixguide/infohtml/gdb/General-Query-Packets.html
+
+https://ftp.gnu.org/old-gnu/Manuals/gdb/html_chapter/gdb_15.html
+
 https://sourceware.org/gdb/onlinedocs/gdb/Remote-Protocol.html#Remote-Protocol[gdbserver protocol]
 
 https://black-magic.org/[Black Magic Firmware]

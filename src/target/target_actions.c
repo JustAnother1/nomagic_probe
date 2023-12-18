@@ -59,7 +59,6 @@ int32_t target_connect(void)
 
 void target_reply_g(void)
 {
-
     uint32_t i;
     for(i = 0; i < 17; i++)
     {

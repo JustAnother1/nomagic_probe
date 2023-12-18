@@ -39,6 +39,8 @@
 #include "usb_cdc.h"
 #include <stdint.h>
 #include "tinyusb/src/class/cdc/cdc_device.h"
+#include "hal/debug_uart.h"
+#include "tinyusb/usb.h"
 
 #define INTERFACE   0
 
@@ -46,6 +48,8 @@ static uint8_t nextChar = 0;
 
 void usb_cdc_send_string(char* str)
 {
+    // tud_cdc_n_write_str(INTERFACE, str);
+
     while(0 != *str)
     {
         tud_cdc_n_write_char(INTERFACE, *str);
@@ -56,10 +60,15 @@ void usb_cdc_send_string(char* str)
 
 uint32_t usb_cdc_send_bytes(uint8_t *data, uint32_t length)
 {
-    for(uint32_t i = 0; i < length; i++)
+    // the buffer is 64 bytes long, so most of the time a single call will be enough, therefore we have this first case separate and not part of the loop.
+    uint32_t bytesSend = tud_cdc_n_write(INTERFACE, data, length);
+    while(length > bytesSend)
     {
-        tud_cdc_n_write_char(INTERFACE, data[i]);
+        tud_cdc_n_write_flush(INTERFACE);
+        usb_tick();  // let the USB stack work
+        bytesSend = bytesSend + tud_cdc_n_write(INTERFACE, &data[bytesSend], length - bytesSend);
     }
+    // we have to flush every time, otherwise especially short replies get stuck in the queue for far too long.
     tud_cdc_n_write_flush(INTERFACE);
     return length;
 }

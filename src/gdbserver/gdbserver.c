@@ -77,7 +77,8 @@ void gdbserver_tick(void)
                     else if('+' == data)
                     {
                         // ACK from Host
-                        // the last message was successfully received by the host -> nothing to do here
+                        // the last message was successfully received by the host -> forget what we send last time
+                        reply_length = 0;
                     }
                     else if('-' == data)
                     {
