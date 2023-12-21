@@ -31,7 +31,7 @@
 #include "led.h"
 #include "gdbserver/gdbserver.h"
 #include "file/file_system.h"
-#include "swd/swd_protocol.h"
+#include "swd/swd_engine.h"
 #include "target_api/target_actions.h"
 
 #define TASK_LOOP_0           0x1ul

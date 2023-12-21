@@ -17,17 +17,14 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "swd_engine.h"
+#include "probe_api/result.h"
 
-#define RES_OK  0
-
-void swd_init(void);
-void swd_tick(void);
-bool swd_is_connected(void);
-bool swd_info(uint32_t which);
-int32_t swd_connect(bool multi, uint32_t target);
-int32_t swd_scan(void);
+void swd_protocol_init(void);
+void swd_protocol_tick(void);
+Result connect_handler(int32_t phase, command_typ* cmd);
+Result scan_handler(int32_t phase, command_typ* cmd);
+Result read_handler(int32_t phase, command_typ* cmd);
 void swd_disconnect(void);
-int32_t swd_get_Memory_APsel(void);
-int32_t read_ap(int32_t ap_sel, uint32_t addr, uint32_t* data);
 
 #endif /* SRC_SWD_SWD_PROTOCOL_H_ */

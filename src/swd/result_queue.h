@@ -12,46 +12,17 @@
  * with this program; if not, see <http://www.gnu.org/licenses/>
  *
  */
+#ifndef SWD_RESULT_QUEUE_H_
+#define SWD_RESULT_QUEUE_H_
 
-
-#include <stdbool.h>
 #include <stdint.h>
-#include <stddef.h>
+#include "probe_api/result.h"
 
-#include "target_api/target_actions.h"
+#define MAX_QUEUE_ENTRIES   10
 
-#include "probe_api/swd.h"
+void result_queue_init(void);
+Result result_queue_get_next_transaction_id(uint32_t* data);
+Result result_queue_add_result_of(uint32_t transaction, uint32_t data);
+Result result_queue_get_result(uint32_t transaction, uint32_t* data);
 
-// TODO load from configuration
-
-void target_init(void)
-{
-
-}
-
-void target_reply_g(void)
-{
-
-}
-
-int32_t target_connect(void)
-{
-    return swd_connect(false, 0);
-}
-
-bool target_is_connected(void)
-{
-    return false;
-}
-
-void target_info_init(void)
-{
-
-}
-
-void target_send_file(char* filename, uint32_t offset, uint32_t len)
-{
-    (void) filename;
-    (void) offset;
-    (void) len;
-}
+#endif /* SWD_RESULT_QUEUE_H_ */

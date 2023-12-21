@@ -15,10 +15,14 @@
 #ifndef TARGET_TARGET_ACTIONS_H_
 #define TARGET_TARGET_ACTIONS_H_
 
+#include <stdbool.h>
 #include <stdint.h>
 
 void target_init(void);
 int32_t target_connect(void);
+bool target_is_connected(void);
+int32_t target_request_read(uint32_t address);
+int32_t target_read_result(uint32_t transaction, uint32_t* data);
 
 void target_reply_g(void);
 

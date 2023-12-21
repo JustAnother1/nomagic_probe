@@ -13,45 +13,28 @@
  *
  */
 
+#ifndef SWD_SWD_ENGINE_H_
+#define SWD_SWD_ENGINE_H_
 
 #include <stdbool.h>
 #include <stdint.h>
-#include <stddef.h>
 
-#include "target_api/target_actions.h"
+typedef enum {
+    CONNECT = 0,
+    SCAN,
+    READ,
+    // new orders go here
+    NUM_ORDERS,  // <- do not use other than array size !
+}order_typ;
 
-#include "probe_api/swd.h"
+typedef struct{
+    order_typ order;
+    bool flag;
+    uint32_t i_val;
+    uint32_t transaction_id;
+} command_typ;
 
-// TODO load from configuration
+void swd_init(void);
+void swd_tick(void);
 
-void target_init(void)
-{
-
-}
-
-void target_reply_g(void)
-{
-
-}
-
-int32_t target_connect(void)
-{
-    return swd_connect(false, 0);
-}
-
-bool target_is_connected(void)
-{
-    return false;
-}
-
-void target_info_init(void)
-{
-
-}
-
-void target_send_file(char* filename, uint32_t offset, uint32_t len)
-{
-    (void) filename;
-    (void) offset;
-    (void) len;
-}
+#endif /* SWD_SWD_ENGINE_H_ */

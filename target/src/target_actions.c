@@ -54,7 +54,30 @@ void target_init(void)
 int32_t target_connect(void)
 {
     debug_line("SWDv2 (0x%08x)", SWD_ID_CORE_0);
+    swd_protocol_set_AP_sel(0);
     return swd_connect(true, SWD_ID_CORE_0);
+}
+
+bool target_is_connected(void)
+{
+    switch(swd_get_state())
+    {
+    case NOT_CONNECTED:
+    case BUSY_CONNECTING: return false;
+
+    case CONNECTED: return true;
+    }
+    return false;
+}
+
+int32_t target_request_read(uint32_t address)
+{
+    return swd_read_ap(address);
+}
+
+int32_t target_read_result(uint32_t transaction, uint32_t* data)
+{
+    return swd_get_result(transaction, data);
 }
 
 void target_reply_g(void)

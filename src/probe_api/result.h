@@ -13,45 +13,19 @@
  *
  */
 
+#ifndef PROBE_API_RESULT_H_
+#define PROBE_API_RESULT_H_
 
-#include <stdbool.h>
-#include <stdint.h>
-#include <stddef.h>
 
-#include "target_api/target_actions.h"
 
-#include "probe_api/swd.h"
+#define RESULT_OK                 0
+// Errors:
+#define ERR_QUEUE_FULL_TRY_AGAIN -1
+#define ERR_WRONG_STATE          -2
+#define ERR_NOT_CONNECTED        -3
 
-// TODO load from configuration
 
-void target_init(void)
-{
+typedef int32_t Result;
 
-}
 
-void target_reply_g(void)
-{
-
-}
-
-int32_t target_connect(void)
-{
-    return swd_connect(false, 0);
-}
-
-bool target_is_connected(void)
-{
-    return false;
-}
-
-void target_info_init(void)
-{
-
-}
-
-void target_send_file(char* filename, uint32_t offset, uint32_t len)
-{
-    (void) filename;
-    (void) offset;
-    (void) len;
-}
+#endif /* PROBE_API_RESULT_H_ */

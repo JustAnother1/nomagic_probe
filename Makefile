@@ -18,12 +18,15 @@ SRC_FOLDER = src/
 
 SOURCE_DIR = $(dir $(lastword $(MAKEFILE_LIST)))
 
+#configuration
+HAS_MSC = yes
+HAS_DEBUG_UART = yes
+
 ifeq ($(TARGET),EXTERN)
 	# can be configured for each supported target
-	DDEFS += -DFEAT_USB_MSC
+	HAS_MSC = yes
 else
 	# nomagic probe will debug only the RP2040
-	DDEFS += -DTARGET_RP2040
 endif
 
 
@@ -34,19 +37,29 @@ LKR_SCRIPT = $(SRC_FOLDER)hal/RP2040.ld
 # These switches enable or disable functionality
 # tinyUSB logging has different levels 0 = no logging,1 = some logging, 2 = more logging, 3= all logging
 DDEFS += -DCFG_TUSB_DEBUG=1
-# with this the watchdog is only active if the debugger is not connected
+# with this (=1)the watchdog is only active if the debugger is not connected
 DDEFS += -DDISABLE_WATCHDOG_FOR_DEBUG=1
 # use both cores
 #DDEFS += -DENABLE_CORE_1=1
 # use BOOT ROM (for flash functions,...)
 DDEFS += -DBOOT_ROM_ENABLED=1
+# enable USB MAss Storage (Thumb Drive)
+ifeq ($(HAS_MSC), yes)
+	DDEFS += -DFEAT_USB_MSC
+endif
+
+ifeq ($(HAS_DEBUG_UART), yes)
+	DDEFS += -DFEAT_DEBUG_UART
+endif
+
+
 
 CFLAGS  = -c -ggdb3
 
 CFLAGS += -O3
 # sometimes helps with debugging:
 # CFLAGS += -O0
-#CFLAGS += -save-temps=obj
+# CFLAGS += -save-temps=obj
 
 CFLAGS += -std=c17
 CFLAGS += -mcpu=cortex-m0plus -mthumb
@@ -59,11 +72,18 @@ LFLAGS  = -ffreestanding -nostdlib -nolibc -nodefaultlibs -nostartfiles -specs=n
 LFLAGS += -Wl,--gc-sections,-Map=$(BIN_FOLDER)$(PROJECT).map -g
 LFLAGS += -fno-common -T$(LKR_SCRIPT)
 
-#swd
-SRC += $(SRC_FOLDER)swd/swd_protocol.c
-SRC += $(SRC_FOLDER)swd/swd_packets.c
-SRC += $(SRC_FOLDER)swd/swd_gpio.c
-#gdb server
+
+# file handling
+SRC += $(SRC_FOLDER)file/fake_mbr.c
+SRC += $(SRC_FOLDER)file/fake_boot_sector.c
+SRC += $(SRC_FOLDER)file/fake_fat.c
+SRC += $(SRC_FOLDER)file/fake_root_folder.c
+SRC += $(SRC_FOLDER)file/fake_text_files.c
+SRC += $(SRC_FOLDER)file/fake_favicon.c
+SRC += $(SRC_FOLDER)file/fake_fs.c
+SRC += $(SRC_FOLDER)file/file_storage.c
+SRC += $(SRC_FOLDER)file/file_system.c
+# gdb server
 SRC += $(SRC_FOLDER)gdbserver/cmd_qsupported.c
 SRC += $(SRC_FOLDER)gdbserver/cmd_qxfer.c
 SRC += $(SRC_FOLDER)gdbserver/commands.c
@@ -93,6 +113,12 @@ SRC += $(SRC_FOLDER)lib/memset.c
 SRC += $(SRC_FOLDER)lib/printf.c
 SRC += $(SRC_FOLDER)lib/strlen.c
 SRC += $(SRC_FOLDER)lib/strncmp.c
+# SWD
+SRC += $(SRC_FOLDER)swd/result_queue.c
+SRC += $(SRC_FOLDER)swd/swd_engine.c
+SRC += $(SRC_FOLDER)swd/swd_protocol.c
+SRC += $(SRC_FOLDER)swd/swd_packets.c
+SRC += $(SRC_FOLDER)swd/swd_gpio.c
 # USB driver
 SRC += $(SRC_FOLDER)tinyusb/usb.c
 SRC += $(SRC_FOLDER)tinyusb/usb_descriptors.c
@@ -104,25 +130,15 @@ SRC += $(SRC_FOLDER)tinyusb/src/common/tusb_fifo.c
 # USB serial interface (CDC)
 SRC += $(SRC_FOLDER)tinyusb/usb_cdc.c
 SRC += $(SRC_FOLDER)tinyusb/src/class/cdc/cdc_device.c
+# USB thumb drive (MSC)
+SRC += $(SRC_FOLDER)tinyusb/usb_msc.c
+SRC += $(SRC_FOLDER)tinyusb/src/class/msc/msc_device.c
 # user feedback
 SRC += $(SRC_FOLDER)led.c
 # main
 SRC += $(SRC_FOLDER)main.c
 
 ifeq ($(TARGET), EXTERN)
-    # file handling
-    SRC += $(SRC_FOLDER)file/fake_mbr.c
-    SRC += $(SRC_FOLDER)file/fake_boot_sector.c
-    SRC += $(SRC_FOLDER)file/fake_fat.c
-    SRC += $(SRC_FOLDER)file/fake_root_folder.c
-    SRC += $(SRC_FOLDER)file/fake_text_files.c
-    SRC += $(SRC_FOLDER)file/fake_favicon.c
-    SRC += $(SRC_FOLDER)file/fake_fs.c
-    SRC += $(SRC_FOLDER)file/file_storage.c
-    SRC += $(SRC_FOLDER)file/file_system.c
-    # USB thumb drive (MSC)
-    SRC += $(SRC_FOLDER)tinyusb/usb_msc.c
-    SRC += $(SRC_FOLDER)tinyusb/src/class/msc/msc_device.c
     # target loader
     SRC += $(SRC_FOLDER)file/target_loader.c
 else
