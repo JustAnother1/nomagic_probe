@@ -295,7 +295,7 @@ lcov:
 
 
 clean:
-	@rm -rf $(BIN_FOLDER) app.map doc/doxygen/ tests/$(PROJECT)_tests tests/bin/ $(CLEAN_RM)
+	@rm -rf $(BIN_FOLDER)/* tests/$(PROJECT)_tests tests/bin/ $(CLEAN_RM)
 
 .PHONY: help clean flash all list test doc
 

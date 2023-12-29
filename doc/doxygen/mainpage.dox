@@ -1,51 +1,40 @@
-nomagic probe
-=============
-
-The nomic probe is a firmware for the https://www.raspberrypi.com/products/raspberry-pi-pico/[RaspberryPi Pico board] that provides a gdbserver interface for debugging other boards.
-That is the functionality of the https://github.com/raspberrypi/picoprobe[picoprobe] and https://openocd.org/[OpenOCD] combined. It is also similar to the https://black-magic.org/[Black Magic Firmware].
+/** \mainpage nomagic probe
+The nomic probe is a firmware for the <a href="https://www.raspberrypi.com/products/raspberry-pi-pico/">RaspberryPi Pico board</a> that provides a gdbserver interface for debugging other boards. That is the functionality of the <a href="https://github.com/raspberrypi/picoprobe" >picoprobe</a> and <a href="https://openocd.org/" >OpenOCD</a> combined. It is also similar to the <a href="https://black-magic.org/" >Black Magic Firmware</a>.
 
 It does not use external libraries. Therefore all code is in this library, no dependencies!
 
 No dynamic memory allocation, no malloc!
 
-:toc:
+<h2>features</h2>
+<ul>
+<li>USB CDCD(serial port) gdb server</li>
+<li>USB MSCD(thumb drive) for configuration files.</li>
+<li>support for SWD according to ARM ADIv5.0, ARM ADIv5.1, ARM ADIv5.2, ARM ADIv6.0.</li>
+</ul>
 
-== features
-
- - USB CDCD(serial port) gdb server
- - USB MSCD(thumb drive) for configuration files.
- - support for SWD according to ARM ADIv5.0, ARM ADIv5.1, ARM ADIv5.2, ARM ADIv6.0.
-
-== documentation
-
-link:doc/overview.asciidoc[overview]
-
-Additional documentation can be created
-
-+make doc+
-
-the created documentation is then located in the bin/doxygen/ folder.
-
-== building and starting
+<h2>building and starting</h2>
 
 The firmware can be build using make. The generated Files will be placed in the bin folder. For details try
+<pre>
+  <code>
+make help
+  </code>
+</pre>
 
-+make help+
+for this to work you (obviously) need to have make installed. Depending on the target you are building for you might need to have additionaltools installed:
+<ul>
+<li>to compile you need <a href="https://launchpad.net/gcc-arm-embedded" >arm-none-eabi-gcc</a>.</li>
+<li>You can debug using arm-none-eabi-gdb and <a href="https://openocd.org/" >OpenOCD</a></li>
+<li>to create an *.uf2 file you need <a href="https://github.com/JustAnother1/elf2uf2/releases" >elf2uf2</a></li>
+<li>for automatic generated documentation you need <a href="http://www.stack.nl/~dimitri/doxygen/" >Doxygen</a></li>
+<li>for unit testing you need gcc/cc for your platform</li>
+</ul>
 
-for this to work you (obviously) need to have make installed.
-Depending on the target you are building for you might need to have additionaltools installed:
+<h2>pinout</h2>
 
-- To build for ARM Cortex-M Targets you need https://launchpad.net/gcc-arm-embedded[GCC ARM Embedded]
-- to flash and program you need https://openocd.org/[OpenOCD]
-- to create an *.uf2 file you need https://github.com/JustAnother1/elf2uf2/releases[elf2uf2]
-- for automatic generated documentation you need http://www.stack.nl/~dimitri/doxygen/[Doxygen]
-
-== pinout
-
-=== pico
 The pico has 40 pins (1..40) Numbered counter clock wise starting at the USB connector.
-
-----
+<pre>
+  <code>
                   +-----+
            +-------+ USB +---------+
    GPIO 0 -+- 1    +-----+     40 -+- Vbus
@@ -74,29 +63,28 @@ The pico has 40 pins (1..40) Numbered counter clock wise starting at the USB con
                    C  d  D
                    L     I
                    K     O
-----
+Pin 2: (GPIO 1) SWDIR (High = from Probe to target; Low= from Target to probe)
 
+Pin 4: (GPIO 2) SWCLK
 
-Pin 2:  (GPIO 1)  SWDIR (High = from Probe to target; Low= from Target to probe)
+Pin 5: (GPIO 3) SWDIO
 
-Pin 4:  (GPIO 2)  SWCLK
+Pin 6: (GPIO 4) Target Uart TX (UART1) connect to target RT
 
-Pin 5:  (GPIO 3)  SWDIO
+Pin 7: (GPIO 5) Target Uart RX (UART1) connect to target TX
 
-Pin 6:  (GPIO 4)  Target Uart TX (UART1) connect to target RT
-
-Pin 7:  (GPIO 5)  Target Uart RX (UART1) connect to target TX
-
-Pin 9:  (GPIO 6)  Run  = /Reset
+Pin 9: (GPIO 6) Run = /Reset
 
 Pin 21: (GPIO 16) Debug Uart TX (UART0)
 
 Pin 22: (GPIO 17) Debug Uart RX (UART0)
+  </code>
+</pre>
 
+<h2>license</h2>
 
-
-== license
-
+<pre>
+  <code>
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License version 2
 as published by the Free Software Foundation.
@@ -108,3 +96,6 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along
 with this program; if not, see <http://www.gnu.org/licenses/>
+  </code>
+</pre>
+*/
