@@ -1,10 +1,10 @@
 # linker flags for nomagic_probe:
-# -L = path where to finf libtarget.a
+# -L = path where to find libtarget.a
 # -l =name of lib
-LINK_LIBS += -L target -ltarget
+LINK_LIBS += -L target/bin -ltarget
 # needed so that make knows that it needs the library
-LIBS = target/libtarget.a
-CLEAN_RM = target/libtarget.a target/bin/
+LIBS = target/bin/libtarget.a
+CLEAN_RM = target/bin/
 
 AR = arm-none-eabi-ar
 LIB_FOLDER = target/
@@ -44,9 +44,9 @@ $(LIB_BIN_FOLDER)%o: %c
 	@$(MKDIR_P) $(@D)
 	$(CC) -MD -MP -c $(LIB_CFLAGS) $(LIB_DDEFS) $(LIB_INCDIR) $< -o $@
 
-$(LIB_FOLDER)libtarget.a: $(LIB_OBJS)
+$(LIB_BIN_FOLDER)libtarget.a: $(LIB_OBJS)
 	@echo ""
 	@echo "create library"
 	@echo "=============="
-	$(AR) -rcs $(LIB_FOLDER)libtarget.a $(LIB_OBJS)
+	$(AR) -rcs $(LIB_BIN_FOLDER)libtarget.a $(LIB_OBJS)
 
