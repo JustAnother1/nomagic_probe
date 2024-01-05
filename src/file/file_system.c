@@ -213,6 +213,7 @@ int32_t file_system_write(uint32_t offset, uint8_t* buffer, uint32_t bufsize)
 void file_system_format(void)
 {
     erase_all_sectors();
+    super_sector = 0;
     create_file_system();
 }
 
@@ -334,6 +335,7 @@ static uint32_t scan_flash(void)
     uint32_t last_sector = 0;
     uint32_t num_blocks = 0;
     uint32_t num_sectors = 0;
+    uint32_t num_super_sectors = 0;
     super_sector = NO_SECTOR;  // no super block
     do{
         watchdog_feed();
@@ -348,20 +350,38 @@ static uint32_t scan_flash(void)
                 if(0 == strncmp(FS_BLOCK_SIGNATURE, (char *)buf.bytes, strlen(FS_BLOCK_SIGNATURE)))
                 {
                     super_sector = num_sectors;
+                    num_super_sectors ++;
                     sector_map[num_sectors] = SECTOR_TYPE_SUPER_BLOCK;
                     debug_line("FS: found super block at sector %ld, block %ld", num_sectors, num_blocks);
                 }
                 else
                 {
                     uint32_t i;
-                    debug_line("FS: found sector with unknown data at sector %ld, block %ld", num_sectors, num_blocks);
-                    sector_map[num_sectors] = SECTOR_TYPE_UNKNOWN_USED;
-                    for(i = 0; i < 16; i++)
+                    bool allTero = true;
+                    for(i = 0; i < FLASH_BLOCK_SIZE; i++)
                     {
-                        debug_msg(" %02x", buf.bytes[i]);
+                        if(0 != buf.bytes[i])
+                        {
+                            allTero = false;
+                            break;
+                        }
                     }
-                    debug_msg("\r\n");
-                    // TODO remove debug messages
+                    if(false == allTero)
+                    {
+                        debug_line("FS: found sector with unknown data at sector %ld, block %ld", num_sectors, num_blocks);
+                        sector_map[num_sectors] = SECTOR_TYPE_UNKNOWN_USED;
+                        for(i = 0; i < 16; i++)
+                        {
+                            debug_msg(" %02x", buf.bytes[i]);
+                        }
+                        debug_msg("\r\n");
+                    }
+                    else
+                    {
+                        // sector is marked as used
+                        sector_map[num_sectors] = SECTOR_TYPE_UNKNOWN_USED;
+                    }
+
                 }
             }
             else
@@ -392,6 +412,12 @@ static uint32_t scan_flash(void)
         // debug_line("FS: marking sector %ld as unavailable.", num_sectors);
         sector_map[num_sectors] = SECTOR_TYPE_UNAVAILABLE;
     }
+    if(1 != num_super_sectors)
+    {
+        // no super sector or more than one
+        // -> there is something wrong!
+        super_sector = NO_SECTOR;  // no super block
+    }
     return last_sector;
 }
 
@@ -411,6 +437,7 @@ static bool block_is_empty(uint8_t* block)
 static uint32_t find_next_free_sector(void)
 {
     uint32_t res = start_search_sector;
+    erase_all_used_sectors();  // make sure that we can use all the sectors
     for(;res < FLASH_MAX_SECTORS; res ++)
     {
         if(SECTOR_TYPE_EMPTY == sector_map[res])
@@ -478,7 +505,6 @@ static uint32_t erase_all_used_sectors(void)
 {
     uint32_t i;
     uint32_t num_erased = 0;
-    super_sector = 0;
     for(i = 0; i < FLASH_MAX_SECTORS; i ++)
     {
         if(SECTOR_TYPE_UNKNOWN_USED == sector_map[i])
@@ -497,7 +523,6 @@ static uint32_t erase_all_sectors(void)
 {
     uint32_t i;
     uint32_t num_erased = 0;
-    super_sector = 0;
     for(i = 0; i < FLASH_MAX_SECTORS; i ++)
     {
         if(   (SECTOR_TYPE_EMPTY != sector_map[i])
@@ -640,6 +665,7 @@ static void open_file_system(void)
             sector_map[super_sector] = SECTOR_TYPE_UNKNOWN_USED;
             sector_map[sector] = SECTOR_TYPE_SUPER_BLOCK;
             write_super_sector(sector);
+            // overwrite old super sector
             mark_as_used(super_sector);
             super_sector = sector;
         }
