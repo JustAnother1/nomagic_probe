@@ -36,11 +36,13 @@ static const order_handler order_look_up[NUM_ORDERS] = {
         read_handler,
 };
 
+#ifdef FEAT_DEBUG_UART
 static const char* order_names[NUM_ORDERS] = {
         "connect",
         "scan",
         "read",
 };
+#endif
 
 static int32_t order_state;
 static order_handler cur_order;

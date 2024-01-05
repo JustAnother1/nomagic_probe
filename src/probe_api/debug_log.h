@@ -17,8 +17,12 @@
 
 #include <stdio.h>
 
+#ifdef FEAT_DEBUG_UART
 #define debug_msg(...)  printf(__VA_ARGS__)
 #define debug_line(...) printf(__VA_ARGS__); printf("\r\n")
-
+#else
+#define debug_msg(...)
+#define debug_line(...)
+#endif
 
 #endif /* PROBE_API_DEBUG_LOG_H_ */

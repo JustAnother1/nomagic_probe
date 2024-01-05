@@ -54,7 +54,9 @@ static void init_0(void)
     tasks = ALL_SUPERVISED_TASKS;
     watchdog_enable();
     init_time();
+#ifdef FEAT_DEBUG_UART
     debug_uart_initialize();
+#endif
 #ifdef FEAT_USB_MSC
     file_system_init();
 #endif
@@ -62,7 +64,9 @@ static void init_0(void)
     target_init();
     gdbserver_init();
     swd_init();
+#ifdef FEAT_DEBUG_UART
     cli_init(); // should be last
+#endif
 }
 
 static void init_1(void)
@@ -81,9 +85,11 @@ static void loop_0(void)
     }
     watchdog_leave_section(SECTION_WATCHDOG);
 
+#ifdef FEAT_DEBUG_UART
     watchdog_enter_section(SECTION_CLI);
     cli_tick();
     watchdog_leave_section(SECTION_CLI);
+#endif
 
     watchdog_enter_section(SECTION_USB);
     usb_tick();

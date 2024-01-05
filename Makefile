@@ -90,7 +90,9 @@ SRC += $(SRC_FOLDER)gdbserver/commands.c
 SRC += $(SRC_FOLDER)gdbserver/gdbserver.c
 SRC += $(SRC_FOLDER)gdbserver/util.c
 # Hardware abstraction layer
+ifeq ($(HAS_DEBUG_UART), yes)
 SRC += $(SRC_FOLDER)hal/debug_uart.c
+endif
 SRC += $(SRC_FOLDER)hal/startup.c
 SRC += $(SRC_FOLDER)hal/hw_divider.c
 SRC += $(SRC_FOLDER)hal/watchdog.c
@@ -99,11 +101,13 @@ SRC += $(SRC_FOLDER)hal/flash.c
 SRC += $(SRC_FOLDER)hal/qspi.c
 SRC += $(SRC_FOLDER)hal/time_base.c
 # command line interface (debug - UART0)
+ifeq ($(HAS_DEBUG_UART), yes)
 SRC += $(SRC_FOLDER)cli/cli.c
 SRC += $(SRC_FOLDER)cli/cli_memory.c
 SRC += $(SRC_FOLDER)cli/cli_swd.c
 SRC += $(SRC_FOLDER)cli/cli_sys.c
 SRC += $(SRC_FOLDER)cli/cli_usb.c
+endif
 # functions usually available from standard libraries
 SRC += $(SRC_FOLDER)lib/ctype.c
 SRC += $(SRC_FOLDER)lib/atoi.c
