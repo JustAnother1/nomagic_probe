@@ -19,18 +19,11 @@
 #include <stdbool.h>
 #include "result.h"
 
-typedef enum {
-    NOT_CONNECTED,
-    BUSY_CONNECTING,
-    CONNECTED,
-} swd_engine_state_typ;
-
-
 bool swd_info(uint32_t which);
 void swd_protocol_set_AP_sel(uint32_t val);
-swd_engine_state_typ swd_get_state(void);
 // SWD actions:
 Result swd_connect(bool multi, uint32_t target);
+bool swd_is_connected(void);
 Result swd_scan(void);
 Result swd_read_ap(uint32_t addr);
 Result swd_get_result(uint32_t transaction, uint32_t* data);

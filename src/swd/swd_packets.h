@@ -17,6 +17,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "probe_api/result.h"
 
 // ACK
 #define ACK_PROTOCOL_ERROR_0   0 // on wire: line not driven -> read as low
@@ -90,18 +91,22 @@
 #define AP_BANK_IDR      0xf  // 0xdf
 #define AP_REGISTER_IDR  0xc
 
+#define PACKET_QUEUE_SIZE   20
+
 void swd_packets_init(void);
 // default is false
-void swd_packet_set_sticky_overrun(bool value);
-void swd_packet_line_reset(void);
-void swd_packet_disconnect(void);
+void swd_packets_set_sticky_overrun(bool value);
+void swd_packets_set_swdio_idle(void);
+void swd_packets_tick(void);
+Result swd_packet_line_reset(void);
+Result swd_packet_disconnect(void);
 // AP = 1; DP = 0
-uint32_t swd_packet_write(uint32_t APnotDP, uint32_t address, uint32_t data);
+Result swd_packet_write(uint32_t APnotDP, uint32_t address, uint32_t data);
 // AP = 1; DP = 0
-uint32_t swd_packet_read(uint32_t APnotDP, uint32_t address, uint32_t* data);
-void swd_packet_set_swdio_idle(void);
-void jtag_to_dormant_state_sequence(void);
-void leave_dormant_state_to_swd_sequence(void);
-void swd_to_dormant_state_sequence(void);
+Result swd_packet_read(uint32_t APnotDP, uint32_t address);
+Result swd_packet_get_result(uint32_t transaction, uint32_t* data);
+Result jtag_to_dormant_state_sequence(void);
+Result leave_dormant_state_to_swd_sequence(void);
+Result swd_to_dormant_state_sequence(void);
 
 #endif /* SRC_PACKETS_H_ */

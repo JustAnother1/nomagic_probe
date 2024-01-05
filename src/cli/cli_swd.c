@@ -132,7 +132,7 @@ bool cmd_swd_ap_read(uint32_t loop)
             res = target_request_read(addr);
             if(0 > res)
             {
-                debug_line("ERROR: SWD: failed to read data (%ld)!", res);
+                debug_line("ERROR: SWD: failed to request read data (%ld)!", res);
                 return true;
             }
             else
@@ -150,9 +150,14 @@ bool cmd_swd_ap_read(uint32_t loop)
         uint32_t data = 0;
 
         res = target_read_result((uint32_t)progress, &data);
-        if(0 > res)
+        if(ERR_NOT_YET_AVAILABLE == res)
         {
-            debug_line("ERROR: SWD: failed to request read data (%ld)!", res);
+            // not yet complete
+            return false;
+        }
+        else if(0 > res)
+        {
+            debug_line("ERROR: SWD: failed to read requested data (%ld) trId:%ld !", res, progress);
             return true;
         }
         else if (0 == res)

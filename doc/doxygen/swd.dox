@@ -1,0 +1,23 @@
+/** \page Serial Wire Debug (SWD)
+
+<h2>Non blocking</h2>
+
+This implementation is non blocking. All calls try to return as fast as possible. The functions (GPIO control is an exception) will not wait for a action to finish.
+The benefit of this is taht other equally non blocking modules can do other things on the same CPU in the same time.
+The non blocking is achieved by using queues and polling.
+The user has to call the tick functions to enable this module to work. The APIs also will often not give a direct result and the user ha to repeatedly ask for the result until it is available.
+
+
+<h2>Layers</h2>
+
+The implementation is split in several layers.
+
+The swd_engine layer implements the SWD API used by the target. 
+
+The swd_protocol layer implements the logic needed to realise functionality needed by the engine using packets.
+
+The swd_packets layer are the packets of the SWD protocoll as specified by ARM.
+
+The swd_gpio layer makes the SWDIO and SWCLK lines wiggle.
+
+*/

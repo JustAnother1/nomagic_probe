@@ -12,6 +12,7 @@
  * with this program; if not, see <http://www.gnu.org/licenses/>
  *
  */
+
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
@@ -21,6 +22,7 @@
 #include "hal/debug_uart.h"
 #include "result_queue.h"
 
+
 // timeout until the WDIO line will be put into low power mode (High)
 #define SWDIO_IDLE_TIMEOUT_US    12000
 // after switching on the debug part of the chip, ask at most this many times if it now powered on (CTRL/STAT)
@@ -28,6 +30,7 @@
 
 #define AP_VERSION_APv1       1
 #define AP_VERSION_APv2       2 // new in ADIv6.0
+
 
 typedef struct{
     uint32_t ap_sel;
@@ -49,25 +52,32 @@ typedef struct{
     mem_ap_typ mem_ap;
 } swd_state_typ;
 
-static swd_state_typ state;
 
-static int32_t find_all_AP(void);
-static int32_t check_AP(uint32_t APsel, uint32_t idr);
-static int32_t check_memory(void);
-static int32_t send_write_packet(uint32_t APnotDP, uint32_t address, uint32_t data);
-static int32_t send_read_packet(uint32_t APnotDP, uint32_t address, uint32_t* data);
-static int32_t read_ap_register( uint32_t ap_bank_reg, uint32_t ap_register, uint32_t* data);
-static int32_t write_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint32_t data);
+static swd_state_typ state;
+static uint32_t read_data;
+static uint32_t transaction_id;
+static uint32_t cycle_counter;
+static uint32_t first_ap;
+static uint32_t ctrl_stat;
+static uint32_t reg_data;  // TODO sort these out
+
+static Result check_AP(uint32_t idr, int32_t phase);
+static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint32_t* data, int32_t phase);
+static Result write_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint32_t data, int32_t phase);
 
 
 void swd_protocol_init(void)
 {
     memset(&state, 0, sizeof(state));
+    read_data = 0;
+    transaction_id = 0;
+    cycle_counter = 0;
+    ctrl_stat = 0;
     state.is_connected = false;
     state.is_minimal_debug_port = false;
-    swd_packets_init();
     state.last_activity_time_us = time_us_32();
     state.mem_ap.ap_sel = 0xffffffff;
+    swd_packets_init();
 }
 
 void swd_protocol_set_AP_sel(uint32_t val)
@@ -77,6 +87,7 @@ void swd_protocol_set_AP_sel(uint32_t val)
 
 void swd_protocol_tick(void)
 {
+    swd_packets_tick();
     // to reduce current consumption of target put the SWDIO in idle (High) (Reason: Target must have a pull up on SWDIO)
     uint32_t now = time_us_32();
     if(state.last_activity_time_us + SWDIO_IDLE_TIMEOUT_US < state.last_activity_time_us)
@@ -84,7 +95,7 @@ void swd_protocol_tick(void)
         // wrap around
         if((now > state.last_activity_time_us + SWDIO_IDLE_TIMEOUT_US) && (now < state.last_activity_time_us))
         {
-            swd_packet_set_swdio_idle();
+            swd_packets_set_swdio_idle();
         }
         // else wait for timeout
     }
@@ -92,7 +103,7 @@ void swd_protocol_tick(void)
     {
         if(now > state.last_activity_time_us + SWDIO_IDLE_TIMEOUT_US)
         {
-            swd_packet_set_swdio_idle();
+            swd_packets_set_swdio_idle();
         }
         // else wait for timeout
     }
@@ -160,341 +171,827 @@ bool swd_info(uint32_t which)
 
 Result connect_handler(int32_t phase, command_typ* cmd)
 {
-    (void) phase; // TODO
-    uint32_t read_data = 0;
-    int32_t res;
-    uint32_t i;
+    Result phase_result;
     bool multi = cmd->flag;
     uint32_t target = cmd->i_val;
 
-    if(true == multi)
+    if(0 == phase)
     {
-        // go through dormant state
-        swd_disconnect();
-        jtag_to_dormant_state_sequence();
-        leave_dormant_state_to_swd_sequence();
+        // can not return 0 as active phase as 0 == Result_OK
+        // -> nothing to initialize here
+        phase = 1;
     }
 
-    swd_packet_line_reset();
-
-    if(true == multi)
+// Phase 1 (multi(SWDv2) only - disconnect)
+    if(1 == phase)
     {
-        // write TARGETSEL register to select the target CPU
-        if(0 != send_write_packet(DP, ADDR_TARGETSEL, target))
+        if(true == multi)
         {
-            debug_line("SWD: TARGETSLECT failed!");
-            return -1;
-        }
-        // else -OK
-    }
-    // else -> nothing to do
-
-    // read id register
-    res = send_read_packet(DP, ADDR_DPIDR, &read_data);
-    if(0 == res)
-    {
-        state.reg_DPIDR = read_data;
-        state.is_connected = true;
-        if(0 != ((1<<16) & read_data))
-        {
-            state.is_minimal_debug_port = true;
+            // go through dormant state: 1. disconnect, 2. ...
+            phase_result = swd_packet_disconnect();
+            if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
+            {
+                return phase; // -> try again
+            }
+            else if(RESULT_OK == phase_result)
+            {
+                state.is_connected = false;
+                state.last_activity_time_us = time_us_32();
+                phase = 2;
+            }
+            else
+            {
+                // some other error
+                return phase_result;
+            }
         }
         else
         {
-            state.is_minimal_debug_port = false;
+            // phase is 0 -> go to next phase
+            phase = 4;
         }
-        state.dp_version = (read_data & 0xF000)>>12;  // bit 12 to 15
-    }
-    else
-    {
-        debug_line("SWD: failed to read DPIDR");
-        swd_disconnect();
-        return -2;
     }
 
-    res = send_write_packet(DP, ADDR_ABORT, 0x1f); // clear all errors
-    if(0 != res)
+// Phase 2 (multi(SWDv2) only) JTAG->Dormant
+    if(2 == phase)
     {
-        debug_line("SWD: failed to write Abort");
-        swd_disconnect();
-        return -3;
-    }
-
-    // Issue a debug power request (CTRL/STAT)
-    // TODO maybe have an configuration option to only power up the debug part ad not the system. Might be relevant for low power systems that are sleeping.
-    res = send_write_packet(DP, ADDR_CTRL_STAT, 0x50000000);
-    if(0 != res)
-    {
-        debug_line("SWD: failed to write CTRL/STAT");
-        swd_disconnect();
-        return -4;
-    }
-
-    // wait for debug part of chip to be powered on
-    res = -6;  // timeout - power on
-    for(i = 0; i < MAX_WAIT_POWER_ON; i++)
-    {
-        res = send_read_packet(DP, ADDR_CTRL_STAT, &read_data);
-        if(0 == res)
+        phase_result = jtag_to_dormant_state_sequence();
+        if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
         {
+            return phase; // -> try again
+        }
+        else if(RESULT_OK == phase_result)
+        {
+            phase = 3;
+        }
+        else
+        {
+            // some other error
+            return phase_result;
+        }
+    }
+
+// Phase 3 (multi(SWDv2) only) Dormant -> SWD
+    if(3 == phase)
+    {
+        phase_result = leave_dormant_state_to_swd_sequence();
+        if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
+        {
+            return phase; // -> try again
+        }
+        else if(RESULT_OK == phase_result)
+        {
+            phase = 4;
+        }
+        else
+        {
+            // some other error
+            return phase_result;
+        }
+    }
+
+// Phase 4 line reset
+    if(4 == phase)
+    {
+        phase_result = swd_packet_line_reset();
+        if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
+        {
+            return phase; // -> try again
+        }
+        else if(RESULT_OK == phase_result)
+        {
+            phase = 5;
+        }
+        else
+        {
+            // some other error
+            return phase_result;
+        }
+    }
+
+// Phase 5 (multi(SWDv2) only) send TargetSelect Packet
+    if(5 == phase)
+    {
+        if(true == multi)
+        {
+            phase_result = swd_packet_write(DP, ADDR_TARGETSEL, target);
+            if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
+            {
+                return phase; // -> try again
+            }
+            else if(RESULT_OK == phase_result)
+            {
+                phase = 6;
+            }
+            else
+            {
+                // some other error
+                return phase_result;
+            }
+        }
+        else
+        {
+            // skip to next phase
+            phase = 6;
+        }
+    }
+
+// Phase 6 read ID Register
+    if(6 == phase)
+    {
+        phase_result = swd_packet_read(DP, ADDR_DPIDR);
+        if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
+        {
+            return phase; // -> try again
+        }
+        else if(0 < phase_result)
+        {
+            transaction_id = (uint32_t)phase_result;
+            phase = 7;
+        }
+        else
+        {
+            // some other error
+            return phase_result;
+        }
+    }
+
+// Phase 7 parse data from ID Register
+    if(7 == phase)
+    {
+        phase_result = result_queue_get_result(PACKET_QUEUE, transaction_id, &read_data);
+        if(ERR_NOT_YET_AVAILABLE == phase_result)
+        {
+            return phase; // -> try again
+        }
+        else if(RESULT_OK == phase_result)
+        {
+            state.reg_DPIDR = read_data;
+            state.is_connected = true;
+            if(0 != ((1<<16) & read_data))
+            {
+                state.is_minimal_debug_port = true;
+            }
+            else
+            {
+                state.is_minimal_debug_port = false;
+            }
+            state.dp_version = (read_data & 0xF000)>>12;  // bit 12 to 15
+            phase = 8;
+        }
+        else
+        {
+            // some other error
+            return phase_result;
+        }
+    }
+
+// Phase 8 clear all previous errors
+    if(8 == phase)
+    {
+        phase_result = swd_packet_write(DP, ADDR_ABORT, 0x1f);
+        if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
+        {
+            return phase; // -> try again
+        }
+        else if(RESULT_OK == phase_result)
+        {
+            phase = 9;
+        }
+        else
+        {
+            // some other error
+            return phase_result;
+        }
+    }
+
+// Phase 9 Issue a debug power request (CTRL/STAT)
+    // TODO maybe have an configuration option to only power up the debug part ad not the system. Might be relevant for low power systems that are sleeping.
+    if(9 == phase)
+    {
+        phase_result = swd_packet_write(DP, ADDR_CTRL_STAT, 0x50000000);
+        if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
+        {
+            return phase; // -> try again
+        }
+        else if(RESULT_OK == phase_result)
+        {
+            phase = 10;
+            cycle_counter = 0;
+        }
+        else
+        {
+            // some other error
+            return phase_result;
+        }
+    }
+
+// Phase 9 + 10 : wait for debug part of chip to be powered on
+
+// Phase 10 read CTRL/STAT Register
+    if(10 == phase)
+    {
+        phase_result = swd_packet_read(DP, ADDR_CTRL_STAT);
+        if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
+        {
+            return phase; // -> try again
+        }
+        else if(0 < phase_result)
+        {
+            transaction_id = (uint32_t)phase_result;
+            phase = 11;
+        }
+        else
+        {
+            // some other error
+            return phase_result;
+        }
+    }
+
+// Phase 11 parse data from CTRL/STAT Register
+    if(11 == phase)
+    {
+        phase_result = result_queue_get_result(PACKET_QUEUE, transaction_id, &read_data);
+        if(ERR_NOT_YET_AVAILABLE == phase_result)
+        {
+            return phase; // -> try again
+        }
+        else if(RESULT_OK == phase_result)
+        {
+            cycle_counter++;
             state.reg_CTRL_STAT = read_data;
             if(0xf0000000 == (0xf0000000 & read_data))
             {
                 // chip debug part is now powered on
-                res = 0;
-                break;
+                phase = 12;
             }
-            // else - not powered on yet -> try again
+            else
+            {
+                // not powered on yet -> try again
+                if(cycle_counter < MAX_WAIT_POWER_ON)
+                {
+                    phase = 10;
+                }
+                else
+                {
+                    return ERR_TIMEOUT;
+                }
+            }
         }
         else
         {
-            debug_line("SWD: failed to read CTRL/STAT");
-            swd_disconnect();
-            return -5;
+            // some other error
+            return phase_result;
         }
     }
 
-    return res;
+// Phase 12 - we are done
+    if(12 == phase)
+    {
+        // done!
+        return RESULT_OK;
+    }
+
+    return phase;
 }
 
 Result scan_handler(int32_t phase, command_typ* cmd)
 {
-    (void)phase; // TODO
-    (void)cmd;
-    if(0 != find_all_AP())
+    (void) cmd;
+
+    if(0 == phase)
     {
-        swd_disconnect();
-        return -1;
+        cycle_counter = 0;
+        first_ap = 0xffffffff;
+        phase = 1;
     }
-    return 0;
-}
 
-void swd_disconnect(void)
-{
-    swd_packet_disconnect();
-    state.is_connected = false;
-    state.last_activity_time_us = time_us_32();
-}
-
-Result read_handler(int32_t phase, command_typ* cmd)
-// int32_t read_ap(int32_t ap_sel, uint32_t addr, uint32_t* data)
-{
-    (void) phase;
-    uint32_t addr = cmd->i_val;
-    uint32_t data;
-    if(0 != write_ap_register(AP_BANK_TAR, AP_REGISTER_TAR, addr))
+    if(1 == phase)
     {
-        debug_line("SWD:AP(%ld): failed to write ap register", state.mem_ap.ap_sel);
-        return -2;
+        debug_line("testing AP %ld", cycle_counter);
+        state.mem_ap.ap_sel = cycle_counter;
+        phase = 2;
     }
-    if(0 != read_ap_register(AP_BANK_DRW, AP_REGISTER_DRW, &data))
-    {
-        debug_line("SWD:AP(%ld): failed to read ap register", state.mem_ap.ap_sel);
-        return -3;
-    }
-    return result_queue_add_result_of(cmd->transaction_id, data);
-}
 
-// static functions
+// Phase 2 read IDR Register
 
-static int32_t read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint32_t* data)
-{
-    uint32_t ctrl_stat;
-    uint32_t ap_sel = state.mem_ap.ap_sel;
-    uint32_t req_select = (ap_bank_reg << 4) | (ap_sel <<24);
-    if(req_select != state.reg_SELECT)
+    if((phase > 1) && (phase < 100))
     {
-        if(0 != send_write_packet(DP, ADDR_SELECT, req_select))
+        phase = phase - 2;
+        Result res = read_ap_register(AP_BANK_IDR, AP_REGISTER_IDR, &read_data, phase);
+        if(RESULT_OK == res)
         {
-            debug_line("SWD:AP(%ld): failed to write SELECT", ap_sel);
-            return -1;
+            phase = 100;
         }
-        state.reg_SELECT = req_select;
-    }
-
-    if(0 != send_read_packet(AP, ap_register, data))
-    {
-        debug_line("SWD:AP(%ld): failed to read AP-register", ap_sel);
-        return -2;
-    }
-
-    if(0 != send_read_packet(DP, ADDR_CTRL_STAT, &ctrl_stat))
-    {
-        debug_line("SWD:AP(%ld): failed to read CTRL/STAT", ap_sel);
-        return -3;
-    }
-    if(0 == (ctrl_stat & 0x40))
-    {
-        debug_line("CTRL/STAT 0x%08lx", ctrl_stat);
-        debug_line("SWD:AP(%ld): AP read failed", ap_sel);
-        return -4;
-    }
-
-    if(0 != send_read_packet(DP, ADDR_RDBUFF, data))
-    {
-        debug_line("SWD:AP(%ld): failed to read DP-RDBUFF", ap_sel);
-        return -5;
-    }
-
-    return 0;
-}
-
-static int32_t write_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint32_t data)
-{
-    uint32_t ctrl_stat;
-    uint32_t ap_sel = state.mem_ap.ap_sel;
-    uint32_t req_select = (ap_bank_reg << 4) | (ap_sel <<24);
-    if(req_select != state.reg_SELECT)
-    {
-        if(0 != send_write_packet(DP, ADDR_SELECT, req_select))
+        else
         {
-            debug_line("SWD:AP(%ld): failed to write SELECT", ap_sel);
-            return -1;
-        }
-        state.reg_SELECT = req_select;
-    }
-
-    if(0 != send_write_packet(AP, ap_register, data))
-    {
-        debug_line("SWD:AP(%ld): failed to read AP-register", ap_sel);
-        return -2;
-    }
-
-    if(0 != send_read_packet(DP, ADDR_CTRL_STAT, &ctrl_stat))
-    {
-        debug_line("SWD:AP(%ld): failed to read CTRL/STAT", ap_sel);
-        return -3;
-    }
-    if(0 == (ctrl_stat & 0x40))
-    {
-        debug_line("CTRL/STAT 0x%08lx", ctrl_stat);
-        debug_line("SWD:AP(%ld): AP read failed", ap_sel);
-        return -4;
-    }
-
-    return 0;
-}
-
-static int32_t find_all_AP(void)
-{
-    uint32_t i;
-    uint32_t idr;
-    uint32_t first_ap = 0xffffffff;
-    for(i = 0; i < 256; i++)
-    {
-        debug_line("testing AP %ld", i);
-        state.mem_ap.ap_sel = i;
-        // IDR
-        if(0 != read_ap_register(AP_BANK_IDR, AP_REGISTER_IDR, &idr))
-        {
-            debug_line("SWD:AP(%ld): failed to read ap register", i);
-            return -1;
-        }
-
-        if(0 != idr)
-        {
-            debug_line("AP %ld: 0x%08lx", i, idr);
-            if(0 != check_AP(i, idr))
+            if(0 > res)
             {
-                return -6;
+                return res;
             }
             else
             {
-                if(i < first_ap)
+                return res + 2;
+            }
+        }
+    }
+
+    if(99 < phase)
+    {
+        if(0 != read_data)
+        {
+            Result tres;
+            if(100 == phase)
+            {
+                debug_line("AP %ld: 0x%08lx", cycle_counter, read_data);
+            }
+
+            tres = check_AP(read_data, (phase-100));
+            if(0 != tres)
+            {
+                if(0 < tres)
                 {
-                    first_ap = i;
+                    // phase
+                    return tres + 100;
+                }
+                else
+                {
+                    // ERROR
+                    return tres;
+                }
+            }
+            else
+            {
+                // done with this AP
+                cycle_counter++;
+                if(256 > cycle_counter)
+                {
+                    phase = 1;
+                    state.mem_ap.ap_sel = cycle_counter;
+                }
+                else
+                {
+                    // scan complete
+                    debug_line("Done!");
+                    return RESULT_OK;
                 }
             }
         }
         else
         {
             // reached end of APs
-            debug_line("AP %ld: IDR 0x%08lx", i, idr);
-            break;
+            debug_line("AP %ld: IDR 0x%08lx", cycle_counter, read_data);
+            state.mem_ap.ap_sel = cycle_counter - 1;  // use the last good AP
+            debug_line("Done!");
+           return RESULT_OK;
         }
     }
-    state.mem_ap.ap_sel = first_ap;
-    return 0;
+
+    return (Result)phase;
+}
+
+Result read_handler(int32_t phase, command_typ* cmd)
+{
+    if(100 > phase)
+    {
+        Result res = write_ap_register(AP_BANK_TAR, AP_REGISTER_TAR, cmd->i_val, phase);
+        if(RESULT_OK == res)
+        {
+            return 100;
+        }
+        else
+        {
+            return res;
+        }
+    }
+    else
+    {
+        phase = phase -100;
+        Result res = read_ap_register(AP_BANK_DRW, AP_REGISTER_DRW, &read_data, phase);
+        if(RESULT_OK == res)
+        {
+            return result_queue_add_result_of(COMMAND_QUEUE, cmd->transaction_id, read_data);
+        }
+        else
+        {
+            if(0 > res)
+            {
+                return res;
+            }
+            else
+            {
+                return res + 100;
+            }
+        }
+    }
 }
 
 
-static int32_t check_AP(uint32_t APsel, uint32_t idr)
+// static functions
+
+static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint32_t* data, int32_t phase)
+{
+    Result phase_result;
+
+    if(0 == phase)
+    {
+        // can not return 0 as active phase as 0 == Result_OK
+        // -> nothing to initialize here
+        phase = 1;
+    }
+
+    if(1 == phase)
+    {
+        uint32_t req_select = (ap_bank_reg << 4) | (state.mem_ap.ap_sel <<24);
+        if(req_select != state.reg_SELECT)
+        {
+            phase_result = swd_packet_write(DP, ADDR_SELECT, req_select);
+            if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
+            {
+                return (Result)phase; // -> try again
+            }
+            else if(RESULT_OK == phase_result)
+            {
+                state.reg_SELECT = req_select;
+                phase = 2;
+            }
+            else
+            {
+                // some other error
+                return phase_result;
+            }
+        }
+        else
+        {
+            phase = 2;
+        }
+    }
+
+// Phase 2 read AP Register
+    if(2 == phase)
+    {
+        phase_result = swd_packet_read(AP, ap_register);
+        if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
+        {
+            return (Result)phase; // -> try again
+        }
+        else if(0 < phase_result)
+        {
+            transaction_id = (uint32_t)phase_result;
+            phase = 3;
+        }
+        else
+        {
+            // some other error
+            return phase_result;
+        }
+    }
+
+// Phase 3 receive data from AP register read
+    if(3 == phase)
+    {
+        phase_result = result_queue_get_result(PACKET_QUEUE, transaction_id, data);
+        if(ERR_NOT_YET_AVAILABLE == phase_result)
+        {
+            return (Result)phase; // -> try again
+        }
+        else if(RESULT_OK == phase_result)
+        {
+            phase = 4;
+        }
+        else
+        {
+            // some other error
+            return phase_result;
+        }
+    }
+
+// Phase 4 read CTRL/STAT Register
+    if(4 == phase)
+    {
+        phase_result = swd_packet_read(DP, ADDR_CTRL_STAT);
+        if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
+        {
+            return (Result)phase; // -> try again
+        }
+        else if(0 < phase_result)
+        {
+            transaction_id = (uint32_t)phase_result;
+            phase = 5;
+        }
+        else
+        {
+            // some other error
+            return phase_result;
+        }
+    }
+
+// Phase 5 parse data from CTRL/STAT Register
+    if(5 == phase)
+    {
+        phase_result = result_queue_get_result(PACKET_QUEUE, transaction_id, &ctrl_stat);
+        if(ERR_NOT_YET_AVAILABLE == phase_result)
+        {
+            return (Result)phase; // -> try again
+        }
+        else if(RESULT_OK == phase_result)
+        {
+            if(0 == (ctrl_stat & 0x40))
+            {
+                debug_line("CTRL/STAT 0x%08lx", ctrl_stat);
+                debug_line("SWD:AP(%ld): AP read failed", state.mem_ap.ap_sel);
+                return ERR_TARGET_ERROR;
+            }
+            phase = 6;
+        }
+        else
+        {
+            // some other error
+            return phase_result;
+        }
+    }
+
+
+// Phase 6 read RDBUFF Register
+    if(6 == phase)
+    {
+        phase_result = swd_packet_read(DP, ADDR_RDBUFF);
+        if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
+        {
+            return (Result)phase; // -> try again
+        }
+        else if(0 < phase_result)
+        {
+            transaction_id = (uint32_t)phase_result;
+            phase = 7;
+        }
+        else
+        {
+            // some other error
+            return phase_result;
+        }
+    }
+
+// Phase 7 parse data from RDBUFF Register
+    if(7== phase)
+    {
+        phase_result = result_queue_get_result(PACKET_QUEUE, transaction_id, data);
+        if(ERR_NOT_YET_AVAILABLE == phase_result)
+        {
+            return (Result)phase; // -> try again
+        }
+        else if(RESULT_OK == phase_result)
+        {
+            phase = 8;
+        }
+        else
+        {
+            // some other error
+            debug_line("swd:read_result failed err:%ld, trID:%ld ", phase_result, transaction_id);
+            return phase_result;
+        }
+    }
+
+// Phase 8 - we are done
+    if(8 == phase)
+    {
+        // done!
+        return RESULT_OK;
+    }
+
+    return (Result)phase;
+}
+
+static Result write_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint32_t data, int32_t phase)
+{
+    Result phase_result;
+
+    if(0 == phase)
+    {
+        // can not return 0 as active phase as 0 == Result_OK
+        // -< nothing to init here
+        phase = 1;
+    }
+
+    if(1 == phase)
+    {
+        uint32_t req_select = (ap_bank_reg << 4) | (state.mem_ap.ap_sel <<24);
+        if(req_select != state.reg_SELECT)
+        {
+            phase_result = swd_packet_write(DP, ADDR_SELECT, req_select);
+            if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
+            {
+                return (Result)phase; // -> try again
+            }
+            else if(RESULT_OK == phase_result)
+            {
+                state.reg_SELECT = req_select;
+                phase = 2;
+            }
+            else
+            {
+                // some other error
+                return phase_result;
+            }
+        }
+        else
+        {
+            phase = 2;
+        }
+    }
+
+// Phase 2 write to AP register
+    if(2 == phase)
+    {
+        phase_result = swd_packet_write(AP, ap_register, data);
+        if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
+        {
+            return (Result)phase; // -> try again
+        }
+        else if(RESULT_OK == phase_result)
+        {
+            phase = 3;
+        }
+        else
+        {
+            // some other error
+            return phase_result;
+        }
+    }
+
+// Phase 3 - we are done
+    if(3 == phase)
+    {
+        // done!
+        return RESULT_OK;
+    }
+
+    return (Result)phase;
+}
+
+
+static Result check_AP(uint32_t idr, int32_t phase)
 {
     uint32_t class = (idr & (0xf << 13))>> 13;
+    state.mem_ap.ap_sel = cycle_counter;
     if(8 == class)
     {
-        uint32_t reg_data;
         // Memory Access Port (MEM-AP)
-        state.mem_ap.ap_sel = APsel;
-        state.mem_ap.version = AP_VERSION_APv1;
-        debug_line("APv1:");
-        debug_line("AP: IDR: Revision: %ld", (idr & (0xful<<28))>>28 );
-        debug_line("AP: IDR: Jep 106 : %ld x 0x7f + 0x%02lx", (idr & (0xf << 24))>>24, (idr & (0x7f<<17))>>17 );
-        debug_line("AP: IDR: class :   %ld", class );
-        debug_line("AP: IDR: variant:  %ld", (idr & (0xf<<4))>>4 );
-        debug_line("AP: IDR: type:     %ld", (idr & 0xf) );
-
-        if(0 != read_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, &reg_data))
+        if(0 == phase)
         {
-            debug_line("SWD:AP(%ld): failed to read ap register", APsel);
-            return -1;
-        }
-        debug_line("AP: CSW  : 0x%08lx", reg_data);
-        state.mem_ap.reg_CSW = reg_data;
-
-        // change CSW !!!
-        reg_data = reg_data & ~0x3ful; // no auto address increment
-        reg_data = reg_data | 0x80000002; // DbgSwEnable + data size = 32bit
-        if(0 != write_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, reg_data))
-        {
-            debug_line("SWD:AP(%ld): failed to write ap register", APsel);
-            return -1;
+            state.mem_ap.version = AP_VERSION_APv1;
+            debug_line("APv1:");
+            debug_line("AP: IDR: Revision: %ld", (idr & (0xful<<28))>>28 );
+            debug_line("AP: IDR: Jep 106 : %ld x 0x7f + 0x%02lx", (idr & (0xf << 24))>>24, (idr & (0x7f<<17))>>17 );
+            debug_line("AP: IDR: class :   %ld", class );
+            debug_line("AP: IDR: variant:  %ld", (idr & (0xf<<4))>>4 );
+            debug_line("AP: IDR: type:     %ld", (idr & 0xf) );
+            phase = 1;
+            return (Result)phase;
         }
 
-        if(0 != read_ap_register(AP_BANK_BASE, AP_REGISTER_BASE, &reg_data))
+        if(phase < 100)
         {
-            debug_line("SWD:AP(%ld): failed to read ap register", APsel);
-            return -1;
-        }
-        debug_line("AP: BASE : 0x%08lx", reg_data);
-        state.mem_ap.reg_BASE = reg_data;
+            phase = phase -1;
+            Result res = read_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, &reg_data, phase);
+            if(RESULT_OK == res)
+            {
+                debug_line("AP: CSW  : 0x%08lx", reg_data);
+                state.mem_ap.reg_CSW = reg_data;
 
-        if(0 != read_ap_register(AP_BANK_CFG, AP_REGISTER_CFG, &reg_data))
-        {
-            debug_line("SWD:AP(%ld): failed to read ap register", APsel);
-            return -1;
-        }
-        debug_line("AP: CFG  : 0x%08lx", reg_data);
-        if(0 == (reg_data & 0x02))
-        {
-            state.mem_ap.long_address_support = false;
-        }
-        else
-        {
-            state.mem_ap.long_address_support = true;
-        }
-        if(0 == (reg_data & 0x04))
-        {
-            state.mem_ap.large_data_support = false;
-        }
-        else
-        {
-            state.mem_ap.large_data_support = true;
+                // change CSW !!!
+                reg_data = reg_data & ~0x3ful; // no auto address increment
+                reg_data = reg_data | 0x80000002; // DbgSwEnable + data size = 32bit
+                phase = 100;
+                return (Result)phase;
+            }
+            else
+            {
+                if(0 > res)
+                {
+                    return res;
+                }
+                else
+                {
+                    return res + 1;
+                }
+            }
         }
 
-        if(0 != read_ap_register(AP_BANK_CFG1, AP_REGISTER_CFG1, &reg_data))
+        if(phase < 200)
         {
-            debug_line("SWD:AP(%ld): failed to read ap register", APsel);
-            return -1;
+            phase = phase -100;
+            Result res = write_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, reg_data, phase);
+            if(RESULT_OK == res)
+            {
+                return 200;
+            }
+            else
+            {
+                if(0 > res)
+                {
+                    return res;
+                }
+                else
+                {
+                    return res + 100;
+                }
+            }
         }
-        debug_line("AP: CFG1 : 0x%08lx", reg_data);
 
-        return check_memory();
+        if(phase < 300)
+        {
+            phase = phase -200;
+            Result res = read_ap_register(AP_BANK_BASE, AP_REGISTER_BASE, &reg_data, phase);
+            if(RESULT_OK == res)
+            {
+                debug_line("AP: BASE : 0x%08lx", reg_data);
+                state.mem_ap.reg_BASE = reg_data;
+                phase = 300;
+            }
+            else
+            {
+                if(0 > res)
+                {
+                    return res;
+                }
+                else
+                {
+                    return res + 200;
+                }
+            }
+        }
+
+        if(phase < 400)
+        {
+            phase = phase -300;
+            Result res = read_ap_register(AP_BANK_CFG, AP_REGISTER_CFG, &reg_data, phase);
+            if(RESULT_OK == res)
+            {
+                debug_line("AP: CFG  : 0x%08lx", reg_data);
+                if(0 == (reg_data & 0x02))
+                {
+                    state.mem_ap.long_address_support = false;
+                }
+                else
+                {
+                    state.mem_ap.long_address_support = true;
+                }
+                if(0 == (reg_data & 0x04))
+                {
+                    state.mem_ap.large_data_support = false;
+                }
+                else
+                {
+                    state.mem_ap.large_data_support = true;
+                }
+                phase = 400;
+            }
+            else
+            {
+                if(0 > res)
+                {
+                    return res;
+                }
+                else
+                {
+                    return res + 300;
+                }
+            }
+        }
+
+        if(phase < 500)
+        {
+            phase = phase -400;
+            Result res = read_ap_register(AP_BANK_CFG1, AP_REGISTER_CFG1, &reg_data, phase);
+            if(RESULT_OK == res)
+            {
+                debug_line("AP: CFG1 : 0x%08lx", reg_data);
+
+                if(cycle_counter < first_ap)
+                {
+                    first_ap = cycle_counter;
+                }
+                phase = 500;
+                return RESULT_OK; // done with this AP
+            }
+            else
+            {
+                if(0 > res)
+                {
+                    return res;
+                }
+                else
+                {
+                    return res + 400;
+                }
+            }
+        }
+        return (Result)phase;  // should not happen
     }
     else if(9 == class)
     {
         // Memory Access Port (MEM-AP)
-        state.mem_ap.ap_sel = APsel;
         state.mem_ap.version = AP_VERSION_APv2;
         debug_line("APv2:");
         debug_line("AP: IDR: Revision: %ld", (idr & (0xful<<28))>>28 );
@@ -503,129 +1000,18 @@ static int32_t check_AP(uint32_t APsel, uint32_t idr)
         debug_line("AP: IDR: variant:  %ld", (idr & (0xf<<4))>>4 );
         debug_line("AP: IDR: type:     %ld", (idr & 0xf) );
         // TODO
+
+        if(cycle_counter < first_ap)
+        {
+            first_ap = cycle_counter;
+        }
+
+        return RESULT_OK; // done with this AP
     }
     else
     {
         debug_line("AP unknown class %ld !", class);
-    }
-    return 0;
-}
-
-static int32_t check_memory(void)
-{
-    uint32_t reg_data;
-    uint32_t i;
-    if(0xff < state.mem_ap.ap_sel)
-    {
-        debug_line("SWD: %ld is not a valid AP address ! ", state.mem_ap.ap_sel);
-        return -1;
-    }
-    // read CIDR0-3
-    for(i = 0; i < 4; i++)
-    {
-        if(0 != write_ap_register(AP_BANK_TAR, AP_REGISTER_TAR, (state.mem_ap.reg_BASE & 0xfffff000) + 0xff0 + i*4))
-        {
-            debug_line("SWD:AP(%ld): failed to write ap register", state.mem_ap.ap_sel);
-            return -1;
-        }
-        if(0 != read_ap_register(AP_BANK_DRW, AP_REGISTER_DRW, &reg_data))
-        {
-            debug_line("SWD:AP(%ld): failed to read ap register", state.mem_ap.ap_sel);
-            return -1;
-        }
-
-        debug_line("AP: CIDR%ld  : 0x%08lx", i, reg_data);
-    }
-    /*
-    if(0 != write_ap_register(AP_BANK_TAR, AP_REGISTER_TAR, 0xE000ED00))
-    {
-        debug_line("SWD:AP(%ld): failed to write ap register", state.mem_ap.ap_sel);
-        return -1;
-    }
-    if(0 != read_ap_register( AP_BANK_DRW, AP_REGISTER_DRW, &reg_data))
-    {
-        debug_line("SWD:AP(%ld): failed to read ap register", state.mem_ap.ap_sel);
-        return -1;
-    }
-
-    debug_line("CPU-ID : 0x%08lx\r\n", reg_data);
-*/
-    return 0;
-}
-
-static int32_t send_write_packet(uint32_t APnotDP, uint32_t address, uint32_t data)
-{
-    uint32_t ack;
-    ack = swd_packet_write(APnotDP, address, data);
-    state.last_activity_time_us = time_us_32();
-    if(ACK_OK != ack)
-    {
-        debug_line("SWD: failed to write (%ld/%ld/0x%08lx)", APnotDP, address, data);
-        switch(ack)
-        {
-        case ACK_PROTOCOL_ERROR_0:
-            debug_line("SWD: Line stays low (no target?)");
-            break;
-
-        case ACK_WAIT:
-            debug_line("SWD: Wait");
-            // TODO retry
-            break;
-
-        case ACK_FAULT:
-            debug_line("SWD: Fault");
-            break;
-
-        case ACK_PROTOCOL_ERROR_1:
-            debug_line("SWD: Line stays high (no target?)");
-            break;
-
-        case ERROR_PARITY:
-            debug_line("SWD: parity error");
-            break;
-        }
-        swd_disconnect();
-        return -1;
-    }
-    return 0;
-}
-
-static int32_t send_read_packet(uint32_t APnotDP, uint32_t address, uint32_t* data)
-{
-    uint32_t ack = swd_packet_read(APnotDP, address, data);
-    state.last_activity_time_us = time_us_32();
-    if(ACK_OK == ack)
-    {
-        return 0;
-    }
-    else
-    {
-        debug_line("SWD: failed to read (AP/DP:%ld, addr:%ld)", APnotDP, address);
-        switch(ack)
-        {
-        case ACK_PROTOCOL_ERROR_0:
-            debug_line("SWD: Line stays low (no target?)");
-            break;
-
-        case ACK_WAIT:
-            debug_line("SWD: Wait");
-            // TODO retry
-            break;
-
-        case ACK_FAULT:
-            debug_line("SWD: Fault");
-            break;
-
-        case ACK_PROTOCOL_ERROR_1:
-            debug_line("SWD: Line stays high (no target?)");
-            break;
-
-        case ERROR_PARITY:
-            debug_line("SWD: parity error");
-            break;
-        }
-        swd_disconnect();
-        return -1;
+        return RESULT_OK; // done with this AP
     }
 }
 

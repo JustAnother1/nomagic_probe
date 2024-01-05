@@ -16,27 +16,17 @@
 #include "swd_engine.h"
 #include "probe_api/swd.h"
 #include "probe_api/result.h"
+#include "probe_api/debug_log.h"
 #include "swd_protocol.h"
 #include <stddef.h>
 #include "result_queue.h"
+#include "swd_packets.h"
 
 #define CMD_QUEUE_LENGTH  3
-
-// parameter value is:
-// 0 == calling for the first time
-// negative value (-1, -2,..    = currently not used
-// positive value (1, 2, 3,...) = returned value of last call
-// return value is:
-// 0                            = OK      -> order was executed successfully
-// negative value (-1, -2,..    = ERROR   -> something went wrong, order failed
-// positive value (1, 2, 3,...) = WORKING -> more steps necessary, call order_handler again
-typedef Result (*order_handler)(int32_t phase, command_typ* cmd);
-
 
 static void handle_order(void);
 
 
-static swd_engine_state_typ state;
 static volatile uint32_t cmdq_read;
 static volatile uint32_t cmdq_write;
 static command_typ cmd_queue[CMD_QUEUE_LENGTH];
@@ -45,9 +35,17 @@ static const order_handler order_look_up[NUM_ORDERS] = {
         scan_handler,
         read_handler,
 };
+
+static const char* order_names[NUM_ORDERS] = {
+        "connect",
+        "scan",
+        "read",
+};
+
 static int32_t order_state;
 static order_handler cur_order;
 static int32_t last_error;
+static uint32_t timeout_counter;
 
 void swd_init(void)
 {
@@ -56,7 +54,6 @@ void swd_init(void)
     order_state = 0;
     cur_order = NULL;
     last_error = 0;
-    state = NOT_CONNECTED;
     swd_protocol_init();
     result_queue_init();
 }
@@ -67,127 +64,100 @@ void swd_tick(void)
     handle_order();
 
     // handle things that need to be done regularly / independent of any commands
-    switch(state)
-    {
-        case NOT_CONNECTED: break;
-        case BUSY_CONNECTING : break;
-        case CONNECTED : swd_protocol_tick(); break;
-    }
-}
-
-swd_engine_state_typ swd_get_state(void)
-{
-    return state;
+    swd_packets_tick();
+    swd_protocol_tick();
 }
 
 Result swd_connect(bool multi, uint32_t target)
 {
-    if(NOT_CONNECTED == state)
+    // TODO protect against concurrent access (cmdq_write)
+    uint32_t next_idx = cmdq_write + 1;
+    if(CMD_QUEUE_LENGTH == next_idx)
     {
-        // TODO protect against concurrent access (cmdq_write)
-        uint32_t next_idx = cmdq_write + 1;
-        if(CMD_QUEUE_LENGTH == next_idx)
-        {
-            next_idx = 0;
-        }
-        if(cmdq_read != next_idx)
-        {
-            cmd_queue[cmdq_write].order = CONNECT;
-            cmd_queue[cmdq_write].flag = multi;
-            cmd_queue[cmdq_write].i_val = target;
-            state = BUSY_CONNECTING;
-            return 0;
-        }
-        else
-        {
-            return ERR_QUEUE_FULL_TRY_AGAIN;
-        }
+        next_idx = 0;
+    }
+    if(cmdq_read != next_idx)
+    {
+        cmd_queue[cmdq_write].order = CMD_CONNECT;
+        cmd_queue[cmdq_write].flag = multi;
+        cmd_queue[cmdq_write].i_val = target;
+        cmdq_write = next_idx;
+        return 0;
     }
     else
     {
-        // already connected
-        return ERR_WRONG_STATE;
+        return ERR_QUEUE_FULL_TRY_AGAIN;
     }
 }
 
 Result swd_scan(void)
 {
-    if(CONNECTED == state)
+    // TODO protect against concurrent access (cmdq_write)
+    uint32_t next_idx = cmdq_write + 1;
+    if(CMD_QUEUE_LENGTH == next_idx)
     {
-        // TODO protect against concurrent access (cmdq_write)
-        uint32_t next_idx = cmdq_write + 1;
-        if(CMD_QUEUE_LENGTH == next_idx)
-        {
-            next_idx = 0;
-        }
-        if(cmdq_read != next_idx)
-        {
-            cmd_queue[cmdq_write].order = SCAN;
-            return 0;
-        }
-        else
-        {
-            return ERR_QUEUE_FULL_TRY_AGAIN;
-        }
+        next_idx = 0;
+    }
+    if(cmdq_read != next_idx)
+    {
+        cmd_queue[cmdq_write].order = CMD_SCAN;
+        cmdq_write = next_idx;
+        return 0;
     }
     else
     {
-        // not connected
-        return ERR_NOT_CONNECTED;
+        return ERR_QUEUE_FULL_TRY_AGAIN;
     }
 }
 
 Result swd_read_ap(uint32_t addr)
 {
-    if(CONNECTED == state)
+    // TODO protect against concurrent access (cmdq_write)
+    uint32_t next_idx = cmdq_write + 1;
+    if(CMD_QUEUE_LENGTH == next_idx)
     {
-        // TODO protect against concurrent access (cmdq_write)
-        uint32_t next_idx = cmdq_write + 1;
-        if(CMD_QUEUE_LENGTH == next_idx)
+        next_idx = 0;
+    }
+    if(cmdq_read != next_idx)
+    {
+        uint32_t tid;
+        Result res = result_queue_get_next_transaction_id(COMMAND_QUEUE, &tid);
+        if(RESULT_OK == res)
         {
-            next_idx = 0;
-        }
-        if(cmdq_read != next_idx)
-        {
-            uint32_t tid;
-            Result res = result_queue_get_next_transaction_id(&tid);
-            if(0 == res)
-            {
-                cmd_queue[cmdq_write].order = READ;
-                cmd_queue[cmdq_write].i_val = addr;
-                cmd_queue[cmdq_write].transaction_id = tid;
-                return 0;
-            }
-            else
-            {
-                return res;
-            }
+            cmd_queue[cmdq_write].order = CMD_READ;
+            cmd_queue[cmdq_write].i_val = addr;
+            cmd_queue[cmdq_write].transaction_id = tid;
+            cmdq_write = next_idx;
+            return (Result)tid;
         }
         else
         {
-            return ERR_QUEUE_FULL_TRY_AGAIN;
+            return res;
         }
     }
     else
     {
-        return ERR_NOT_CONNECTED;
+        return ERR_QUEUE_FULL_TRY_AGAIN;
     }
 }
 
 Result swd_get_result(uint32_t transaction, uint32_t* data)
 {
-    return result_queue_get_result(transaction, data);
+    return result_queue_get_result(COMMAND_QUEUE, transaction, data);
 }
 
 static void handle_order(void)
 {
+    Result last_phase;
     if(0 == order_state)
     {
         // no order in processing -> try to process next order
         if(cmdq_read != cmdq_write)
         {
             // new command available
+            // debug_line("swd: start order");
             cur_order = order_look_up[cmd_queue[cmdq_read].order];
+            timeout_counter = 0;
         }
         else
         {
@@ -197,25 +167,58 @@ static void handle_order(void)
     }
     // else we already have an order
     // call handler
+    last_phase = order_state;
     order_state = (*cur_order)(order_state, &cmd_queue[cmdq_read]);
     if(1 > order_state)
     {
         // order is finished
-        if(0 > order_state)
+        if(RESULT_OK > order_state)
         {
             // error
             last_error = order_state;
+            debug_line("swd: error %ld on order %s", order_state, order_names[cmd_queue[cmdq_read].order]);
         }
-        // else 0 == OK = finished successfully
-        if(CONNECT == cmd_queue[cmdq_read].order)
+        else
         {
-            state = CONNECTED;
+            // finished successfully
+            if(CMD_CONNECT == cmd_queue[cmdq_read].order)
+            {
+                debug_line("swd: connected");
+            }
         }
+        // debug_line("swd: order %s done (%ld)", order_names[cmd_queue[cmdq_read].order], last_phase);
+        order_state = 0;
         cmdq_read++;
         if(CMD_QUEUE_LENGTH == cmdq_read)
         {
             cmdq_read = 0;
         }
+        timeout_counter = 0;
     }
-    // else order not done
+    else
+    {
+        // order not done
+        if(order_state == last_phase)
+        {
+            timeout_counter++;
+        }
+        else
+        {
+            timeout_counter = 0;
+        }
+        if(100 < timeout_counter)
+        {
+            debug_line("ERROR: SWD: timeout in order processing !");
+            debug_line("swd: order %s (%ld)", order_names[cmd_queue[cmdq_read].order], last_phase);
+            timeout_counter = 0;
+            // TODO can we do something better than to just skip this command?
+            // do not try anymore
+            order_state = 0;
+            cmdq_read++;
+            if(CMD_QUEUE_LENGTH == cmdq_read)
+            {
+                cmdq_read = 0;
+            }
+        }
+    }
 }

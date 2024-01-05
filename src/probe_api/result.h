@@ -17,12 +17,16 @@
 #define PROBE_API_RESULT_H_
 
 
-
-#define RESULT_OK                 0
+#define RESULT_OK                   0
 // Errors:
-#define ERR_QUEUE_FULL_TRY_AGAIN -1
-#define ERR_WRONG_STATE          -2
-#define ERR_NOT_CONNECTED        -3
+#define ERR_QUEUE_FULL_TRY_AGAIN   -1
+#define ERR_WRONG_STATE            -2
+#define ERR_NOT_CONNECTED          -3
+#define ERR_NOT_YET_AVAILABLE      -4
+#define ERR_INVALID_TRANSACTION_ID -5
+#define ERR_TIMEOUT                -6
+#define ERR_TARGET_ERROR           -7
+#define ERR_INVALID_QUEUE          -8
 
 
 typedef int32_t Result;

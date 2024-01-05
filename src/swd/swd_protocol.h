@@ -25,6 +25,5 @@ void swd_protocol_tick(void);
 Result connect_handler(int32_t phase, command_typ* cmd);
 Result scan_handler(int32_t phase, command_typ* cmd);
 Result read_handler(int32_t phase, command_typ* cmd);
-void swd_disconnect(void);
 
 #endif /* SRC_SWD_SWD_PROTOCOL_H_ */

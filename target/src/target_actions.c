@@ -16,6 +16,7 @@
 #include "target_actions.h"
 #include "target_info.h"
 #include <stdbool.h>
+#include "result.h"
 #include "debug_log.h"
 #include "swd.h"
 #include "gdb_packets.h"
@@ -60,17 +61,10 @@ int32_t target_connect(void)
 
 bool target_is_connected(void)
 {
-    switch(swd_get_state())
-    {
-    case NOT_CONNECTED:
-    case BUSY_CONNECTING: return false;
-
-    case CONNECTED: return true;
-    }
-    return false;
+    return swd_is_connected();
 }
 
-int32_t target_request_read(uint32_t address)
+Result target_request_read(uint32_t address)
 {
     return swd_read_ap(address);
 }

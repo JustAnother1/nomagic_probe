@@ -18,9 +18,8 @@ link:jep106av.pdf[JEP 106]
   * ARM recommends ADIv4 for Armv6 architecture (Cortex-M0, Cortex-M0+)
   * ADIv6 introduces new DPv3 and APv2
 
-The Debug system consists of the physical connection (SWD) that logically ends at the Debug Prt (DP) in the target. The DP then can talk to the Access Port (AP).
+The Debug system consists of the physical connection (SWD) that logically ends at the Debug Port (DP) in the target. The DP then can talk to the Access Port (AP).
 There are different kinds of AP. The MEM-AP can access the memory of the target.
-
 
 == protocol definition
 

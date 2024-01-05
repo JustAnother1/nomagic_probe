@@ -18,11 +18,12 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include "probe_api/result.h"
 
 typedef enum {
-    CONNECT = 0,
-    SCAN,
-    READ,
+    CMD_CONNECT = 0,
+    CMD_SCAN,
+    CMD_READ,
     // new orders go here
     NUM_ORDERS,  // <- do not use other than array size !
 }order_typ;
@@ -33,6 +34,17 @@ typedef struct{
     uint32_t i_val;
     uint32_t transaction_id;
 } command_typ;
+
+// parameter phase value is:
+// 0 == calling for the first time
+// negative value (-1, -2,..    = currently not used
+// positive value (1, 2, 3,...) = returned value of last call
+// return value is:
+// 0                            = OK      -> order was executed successfully
+// negative value (-1, -2,..    = ERROR   -> something went wrong, order failed
+// positive value (1, 2, 3,...) = WORKING -> more steps necessary, call order_handler again
+typedef Result (*order_handler)(int32_t phase, command_typ* cmd);
+
 
 void swd_init(void);
 void swd_tick(void);
