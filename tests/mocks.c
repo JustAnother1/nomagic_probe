@@ -178,11 +178,6 @@ int32_t  file_storage_write(uint32_t block, uint32_t offset, uint8_t* buffer, ui
     return -1;
 }
 
-void target_info_init(void)
-{
-    // nothing to do here
-}
-
 void target_init(void)
 {
     // nothing to do here

@@ -13,12 +13,8 @@
  *
  */
 
-#include "target_info.h"
-#include <stdbool.h>
-#include <stdint.h>
-#include <string.h>
-#include "gdb_packets.h"
-#include "debug_log.h"
+#ifndef ARM_CORTEX_M_H_
+#define ARM_CORTEX_M_H_
 
 #define TARGET_XML_CONTENT  \
 "<?xml version=\"1.0\"?>\r\n" \
@@ -60,78 +56,6 @@
 "<threads>\r\n" \
 "</threads>\r\n"
 
+void cotex_m_add_general_registers(void);
 
-#define MEMORY_MAP_CONTENT  \
-"<memory-map>\r\n" \
-"<memory type=\"rom\" start=\"0x00000000\" length=\"0x00004000\"/>\r\n" \
-"<memory type=\"flash\" start=\"0x10000000\" length=\"0x4000000\">\r\n" \
-"<property name=\"blocksize\">0x1000</property>\r\n" \
-"</memory>\r\n" \
-"<memory type=\"ram\" start=\"0x20000000\" length=\"0x20042000\"/>\r\n" \
-"</memory-map>\r\n"
-
-
-static void send_part(char* part, uint32_t size, uint32_t offset, uint32_t length);
-
-
-static bool attached;
-
-
-void target_info_init(void)
-{
-    attached = false;
-}
-
-void target_send_file(char* filename, uint32_t offset, uint32_t len)
-{
-    if(0 == strncmp(filename, "target.xml", 10))
-    {
-        send_part(TARGET_XML_CONTENT, sizeof(TARGET_XML_CONTENT), offset, len);
-        return;
-    }
-    else if(0 == strncmp(filename, "threads", 7))
-    {
-        send_part(THREADS_CONTENT, sizeof(THREADS_CONTENT), offset, len);
-        return;
-    }
-    else if(0 == strncmp(filename, "memory-map", 10))
-    {
-        send_part(MEMORY_MAP_CONTENT, sizeof(MEMORY_MAP_CONTENT), offset, len);
-        return;
-    }
-
-    debug_line("xfer:file invalid");
-    // if we reach this, then the request was invalid
-    reply_packet_prepare();
-    reply_packet_add("E00");
-    reply_packet_send();
-}
-
-static void send_part(char* part, uint32_t size, uint32_t offset, uint32_t length)
-{
-    reply_packet_prepare();
-    if(offset + length < size)
-    {
-        reply_packet_add("m");
-    }
-    else
-    {
-        reply_packet_add("l");
-    }
-    if(offset > size)
-    {
-        // offset invalid
-        reply_packet_prepare();
-        reply_packet_add("E 01");
-        reply_packet_send();
-        return;
-    }
-    if(offset + length > size)
-    {
-        length = size - offset;
-    }
-    reply_packet_add_max(&part[offset], length);
-    reply_packet_send();
-}
-
-
+#endif /* ARM_CORTEX_M_H_ */

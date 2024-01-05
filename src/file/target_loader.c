@@ -44,11 +44,6 @@ bool target_is_connected(void)
     return false;
 }
 
-void target_info_init(void)
-{
-
-}
-
 void target_send_file(char* filename, uint32_t offset, uint32_t len)
 {
     (void) filename;

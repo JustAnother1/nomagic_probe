@@ -12,12 +12,34 @@
  * with this program; if not, see <http://www.gnu.org/licenses/>
  *
  */
-#ifndef TARGET_TARGET_INFO_H_
-#define TARGET_TARGET_INFO_H_
 
 #include <stdint.h>
+#include "gdb_packets.h"
 
-void target_send_file(char* filename, uint32_t offset, uint32_t len);
+void send_part(char* part, uint32_t size, uint32_t offset, uint32_t length)
+{
+    reply_packet_prepare();
+    if(offset + length < size)
+    {
+        reply_packet_add("m");
+    }
+    else
+    {
+        reply_packet_add("l");
+    }
+    if(offset > size)
+    {
+        // offset invalid
+        reply_packet_prepare();
+        reply_packet_add("E 01");
+        reply_packet_send();
+        return;
+    }
+    if(offset + length > size)
+    {
+        length = size - offset;
+    }
+    reply_packet_add_max(&part[offset], length);
+    reply_packet_send();
+}
 
-
-#endif /* TARGET_TARGET_INFO_H_ */

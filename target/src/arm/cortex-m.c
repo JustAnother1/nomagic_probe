@@ -12,12 +12,17 @@
  * with this program; if not, see <http://www.gnu.org/licenses/>
  *
  */
-#ifndef TARGET_TARGET_INFO_H_
-#define TARGET_TARGET_INFO_H_
 
 #include <stdint.h>
+#include "gdb_packets.h"
 
-void target_send_file(char* filename, uint32_t offset, uint32_t len);
-
-
-#endif /* TARGET_TARGET_INFO_H_ */
+void cotex_m_add_general_registers(void)
+{
+    uint32_t i;
+    for(i = 0; i < 17; i++)
+    {
+        // reply_packet_add("xxxxxxxx");  // register is not available
+        reply_packet_add("00000000");  // register is 0
+        // -> Remote 'g' packet reply is of odd length
+    }
+}

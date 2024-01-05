@@ -32,8 +32,9 @@ LIB_INCDIRS +=$(SRC_FOLDER)target_api/
 LIB_INCDIRS +=$(SRC_FOLDER)probe_api/
 LIB_INCDIR = $(patsubst %,-I%, $(LIB_INCDIRS))
 
-LIB_SRC += $(LIB_SRC_FOLDER)target_info.c
-LIB_SRC += $(LIB_SRC_FOLDER)target_actions.c
+LIB_SRC += $(LIB_SRC_FOLDER)common.c
+LIB_SRC += $(LIB_SRC_FOLDER)arm/cortex-m.c
+LIB_SRC += $(LIB_SRC_FOLDER)raspberrypi/rp2040.c
 
 LIB_OBJS = $(addprefix $(LIB_BIN_FOLDER),$(LIB_SRC:.c=.o))
 

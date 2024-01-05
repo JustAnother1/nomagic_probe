@@ -13,13 +13,17 @@
  *
  */
 
+#include <stdbool.h>
+#include <string.h>
+#include "target_info.h"
+#include "arm/cortex-m.h"
 #include "target_actions.h"
 #include "target_info.h"
-#include <stdbool.h>
 #include "result.h"
 #include "debug_log.h"
 #include "swd.h"
 #include "gdb_packets.h"
+#include "common.h"
 
 // RP2040:
 // Core 0: 0x01002927
@@ -47,9 +51,20 @@
 #define SWD_ID_CORE_1    0x11002927
 #define SWD_ID_RESCUE_DP 0xf1002927
 
+#define MEMORY_MAP_CONTENT  \
+"<memory-map>\r\n" \
+"<memory type=\"rom\" start=\"0x00000000\" length=\"0x00004000\"/>\r\n" \
+"<memory type=\"flash\" start=\"0x10000000\" length=\"0x4000000\">\r\n" \
+"<property name=\"blocksize\">0x1000</property>\r\n" \
+"</memory>\r\n" \
+"<memory type=\"ram\" start=\"0x20000000\" length=\"0x20042000\"/>\r\n" \
+"</memory-map>\r\n"
+
+static bool attached;
+
 void target_init(void)
 {
-    target_info_init();
+    attached = false;
 }
 
 int32_t target_connect(void)
@@ -76,13 +91,32 @@ int32_t target_read_result(uint32_t transaction, uint32_t* data)
 
 void target_reply_g(void)
 {
-    uint32_t i;
     reply_packet_prepare();
-    for(i = 0; i < 17; i++)
+    cotex_m_add_general_registers();
+    reply_packet_send();
+}
+
+void target_send_file(char* filename, uint32_t offset, uint32_t len)
+{
+    if(0 == strncmp(filename, "target.xml", 10))
     {
-        // reply_packet_add("xxxxxxxx");  // register is not available
-        reply_packet_add("00000000");  // register is 0
-        // -> Remote 'g' packet reply is of odd length
+        send_part(TARGET_XML_CONTENT, sizeof(TARGET_XML_CONTENT), offset, len);
+        return;
     }
+    else if(0 == strncmp(filename, "threads", 7))
+    {
+        send_part(THREADS_CONTENT, sizeof(THREADS_CONTENT), offset, len);
+        return;
+    }
+    else if(0 == strncmp(filename, "memory-map", 10))
+    {
+        send_part(MEMORY_MAP_CONTENT, sizeof(MEMORY_MAP_CONTENT), offset, len);
+        return;
+    }
+
+    debug_line("xfer:file invalid");
+    // if we reach this, then the request was invalid
+    reply_packet_prepare();
+    reply_packet_add("E00");
     reply_packet_send();
 }

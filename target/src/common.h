@@ -12,12 +12,13 @@
  * with this program; if not, see <http://www.gnu.org/licenses/>
  *
  */
-#ifndef TARGET_TARGET_INFO_H_
-#define TARGET_TARGET_INFO_H_
 
-#include <stdint.h>
+#ifndef COMMON_H_
+#define COMMON_H_
 
-void target_send_file(char* filename, uint32_t offset, uint32_t len);
+void send_part(char* part, uint32_t size, uint32_t offset, uint32_t length);
 
 
-#endif /* TARGET_TARGET_INFO_H_ */
+
+
+#endif /* COMMON_H_ */
