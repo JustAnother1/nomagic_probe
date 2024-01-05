@@ -198,3 +198,15 @@ void debug_line(const char *fmt, ...)
     (void) fmt;
     // nothing to do here
 }
+
+void target_send_file(char* filename, uint32_t offset, uint32_t len)
+{
+    (void) filename;
+    (void) offset;
+    (void) len;
+    /*
+    reply_packet_prepare();
+    reply_packet_add("E00");
+    reply_packet_send();
+    */
+}

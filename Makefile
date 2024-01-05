@@ -175,6 +175,7 @@ TST_OBJS += tests/bin/src/cli/cli.o
 TST_OBJS += tests/bin/src/lib/printf.o
 TST_OBJS += tests/bin/src/tinyusb/usb_msc.o
 TST_OBJS += tests/bin/src/gdbserver/cmd_qsupported.o
+TST_OBJS += tests/bin/src/gdbserver/cmd_qxfer.o
 TST_OBJS += tests/bin/src/gdbserver/commands.o
 TST_OBJS += tests/bin/src/gdbserver/gdbserver.o
 TST_OBJS += tests/bin/src/gdbserver/util.o
