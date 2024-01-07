@@ -42,7 +42,7 @@ bool cmd_swd_test(uint32_t loop)
         {
             // connect
             Result res;
-            res = target_connect();
+            res = target_connect(0);  // TODO
             if (1 > res)
             {
                 if(0 == res)
@@ -95,7 +95,7 @@ bool cmd_swd_connect(uint32_t loop)
     (void)loop;
     Result res;
 
-    res = target_connect();
+    res = target_connect(0); // TODO
     if(0 == res)
     {
         return true;

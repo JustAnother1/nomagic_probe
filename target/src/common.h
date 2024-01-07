@@ -19,6 +19,4 @@
 void send_part(char* part, uint32_t size, uint32_t offset, uint32_t length);
 
 
-
-
 #endif /* COMMON_H_ */

@@ -38,7 +38,7 @@ void result_queue_init(void)
     }
 }
 
-Result result_queue_get_next_transaction_id(uint32_t queue_id, uint32_t* data)
+Result result_queue_get_next_transaction_id(result_queue_typ queue_id, uint32_t* data)
 {
     if(queue_id < NUM_QUEUE)
     {
@@ -64,7 +64,7 @@ Result result_queue_get_next_transaction_id(uint32_t queue_id, uint32_t* data)
     }
 }
 
-Result result_queue_add_result_of(uint32_t queue_id, uint32_t transaction, uint32_t data)
+Result result_queue_add_result_of(result_queue_typ queue_id, uint32_t transaction, uint32_t data)
 {
     if((transaction > MAX_QUEUE_ENTRIES) || (0 == transaction))
     {
@@ -85,11 +85,11 @@ Result result_queue_add_result_of(uint32_t queue_id, uint32_t transaction, uint3
     }
 }
 
-Result result_queue_get_result(uint32_t queue_id, Result transaction, uint32_t* data)
+Result result_queue_get_result(result_queue_typ queue_id, Result transaction, uint32_t* data)
 {
     if((transaction > MAX_QUEUE_ENTRIES) || (1 > transaction))
     {
-        debug_line("ERROR: swd(%ld): invalid transaction id %ld", queue_id, transaction);
+        debug_line("ERROR: swd(%d): invalid transaction id %ld", queue_id, transaction);
         return ERR_INVALID_TRANSACTION_ID;
     }
     transaction = transaction -1;
@@ -113,7 +113,7 @@ Result result_queue_get_result(uint32_t queue_id, Result transaction, uint32_t* 
     }
 }
 
-void result_queue_free_result(uint32_t queue_id, uint32_t transaction)
+void result_queue_free_result(result_queue_typ queue_id, uint32_t transaction)
 {
     if((transaction > MAX_QUEUE_ENTRIES) || (0 == transaction))
     {

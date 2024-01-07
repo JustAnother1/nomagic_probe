@@ -15,14 +15,30 @@
 
 #include <stdint.h>
 #include "gdb_packets.h"
+#include "hex.h"
+#include "result.h"
+#include "swd.h"
+
+// Result swd_read_ap(uint32_t addr);
+// Result swd_get_result(uint32_t transaction, uint32_t* data);
 
 void cotex_m_add_general_registers(void)
 {
     uint32_t i;
+    uint32_t val;
+    Result transId;
+    Result receive;
+    char buf[9];
+    buf[8] = 0;
+
     for(i = 0; i < 17; i++)
     {
-        // reply_packet_add("xxxxxxxx");  // register is not available
-        reply_packet_add("00000000");  // register is 0
-        // -> Remote 'g' packet reply is of odd length
+        transId = 5; // TODO
+        receive = swd_get_result(transId, &val);
+        if(RESULT_OK == receive)
+        {
+            int_to_hex(buf, val, 8);
+            reply_packet_add(buf);
+        }
     }
 }

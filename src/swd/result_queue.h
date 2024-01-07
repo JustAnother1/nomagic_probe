@@ -18,9 +18,13 @@
 #include <stdint.h>
 #include "probe_api/result.h"
 
-#define COMMAND_QUEUE       0
-#define PACKET_QUEUE        1
-#define NUM_QUEUE           2
+typedef enum {
+    COMMAND_QUEUE = 0,
+    PACKET_QUEUE,
+    // new queues go here
+    NUM_QUEUE,  // <- do not use other than array size !
+}result_queue_typ;
+
 
 #define MAX_QUEUE_ENTRIES   10
 
@@ -30,11 +34,33 @@ void result_queue_init(void);
  *
  * @param queue_id command or Packet queue
  * @param data [OUT] transaction id will be in range 1..MAX_QUEUE_ENTRIES
- * @return Result (RESULT_OK, ERR_QUEUE_FULL_TRY_AGAIN)
+ * @return Result ERR_QUEUE_FULL_TRY_AGAIN or RESULT_OK
  */
-Result result_queue_get_next_transaction_id(uint32_t queue_id, uint32_t* data);
-Result result_queue_add_result_of(uint32_t queue_id, uint32_t transaction, uint32_t data);
-Result result_queue_get_result(uint32_t queue_id, Result transaction, uint32_t* data);
-void result_queue_free_result(uint32_t queue_id, uint32_t transaction);
+Result result_queue_get_next_transaction_id(result_queue_typ queue_id, uint32_t* data);
+
+/** set the result value of a transaction.
+ *
+ * @param queue_id command or Packet queue
+ * @param transaction transaction id of the result (range 1..MAX_QUEUE_ENTRIES)
+ * @param data value of result.
+ * @return Result ERR_INVALID_TRANSACTION_ID, ERR_WRONG_STATE or RESULT_OK
+ */
+Result result_queue_add_result_of(result_queue_typ queue_id, uint32_t transaction, uint32_t data);
+
+/** get the result value of a transaction.
+ *
+ * @param queue_id command or Packet queue
+ * @param transaction id of the transaction. (range 1..MAX_QUEUE_ENTRIES)
+ * @param data [OUT] result value of the transaction.
+ * @return Result  ERR_INVALID_TRANSACTION_ID, ERR_WRONG_STATE, ERR_NOT_YET_AVAILABLE or RESULT_OK
+ */
+Result result_queue_get_result(result_queue_typ queue_id, Result transaction, uint32_t* data);
+
+/** remove one transaction from queue.
+ *
+ * @param queue_id command or Packet queue
+ * @param transaction transaction id that will be removed. (range 1..MAX_QUEUE_ENTRIES)
+ */
+void result_queue_free_result(result_queue_typ queue_id, uint32_t transaction);
 
 #endif /* SWD_RESULT_QUEUE_H_ */

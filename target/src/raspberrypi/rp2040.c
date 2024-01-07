@@ -72,8 +72,9 @@ void target_tick(void)
 
 }
 
-Result target_connect(void)
+Result target_connect(uint32_t phase)
 {
+    (void)phase; // TODO
     debug_line("SWDv2 (0x%08x)", SWD_ID_CORE_0);
     swd_protocol_set_AP_sel(0);
     return swd_connect(true, SWD_ID_CORE_0);
@@ -99,6 +100,7 @@ Result target_reply_g(void)
     reply_packet_prepare();
     cotex_m_add_general_registers();
     reply_packet_send();
+    return ERR_TARGET_ERROR;
 }
 
 void target_send_file(char* filename, uint32_t offset, uint32_t len)

@@ -42,4 +42,3 @@ void send_part(char* part, uint32_t size, uint32_t offset, uint32_t length)
     reply_packet_add_max(&part[offset], length);
     reply_packet_send();
 }
-
