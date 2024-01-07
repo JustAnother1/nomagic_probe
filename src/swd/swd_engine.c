@@ -143,7 +143,7 @@ Result swd_read_ap(uint32_t addr)
     }
 }
 
-Result swd_get_result(uint32_t transaction, uint32_t* data)
+Result swd_get_result(Result transaction, uint32_t* data)
 {
     return result_queue_get_result(COMMAND_QUEUE, transaction, data);
 }

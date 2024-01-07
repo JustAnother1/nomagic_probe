@@ -104,7 +104,7 @@ Result swd_packet_disconnect(void);
 Result swd_packet_write(uint32_t APnotDP, uint32_t address, uint32_t data);
 // AP = 1; DP = 0
 Result swd_packet_read(uint32_t APnotDP, uint32_t address);
-Result swd_packet_get_result(uint32_t transaction, uint32_t* data);
+Result swd_packet_get_result(Result transaction, uint32_t* data);
 Result jtag_to_dormant_state_sequence(void);
 Result leave_dormant_state_to_swd_sequence(void);
 Result swd_to_dormant_state_sequence(void);

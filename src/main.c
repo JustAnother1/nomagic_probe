@@ -60,7 +60,7 @@ static void init_0(void)
 #ifdef FEAT_USB_MSC
     file_system_init();
 #endif
-    tusb_init(); // initialize tinyusb stack
+    tusb_init(); // initialize TinyUSB stack
     target_init();
     gdbserver_init();
     swd_init();
@@ -106,6 +106,10 @@ static void loop_1(void)
     watchdog_enter_section(SECTION_LED);
     led_tick();
     watchdog_leave_section(SECTION_LED);
+
+    watchdog_enter_section(SECTION_TARGET);
+    target_tick();
+    watchdog_leave_section(SECTION_TARGET);
 
     watchdog_enter_section(SECTION_SWD);
     swd_tick();

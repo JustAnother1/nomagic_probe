@@ -55,7 +55,7 @@ typedef struct{
 
 static swd_state_typ state;
 static uint32_t read_data;
-static uint32_t transaction_id;
+static Result transaction_id;
 static uint32_t cycle_counter;
 static uint32_t first_ap;
 static uint32_t ctrl_stat;
@@ -306,7 +306,7 @@ Result connect_handler(int32_t phase, command_typ* cmd)
         }
         else if(0 < phase_result)
         {
-            transaction_id = (uint32_t)phase_result;
+            transaction_id = phase_result;
             phase = 7;
         }
         else
@@ -398,7 +398,7 @@ Result connect_handler(int32_t phase, command_typ* cmd)
         }
         else if(0 < phase_result)
         {
-            transaction_id = (uint32_t)phase_result;
+            transaction_id = phase_result;
             phase = 11;
         }
         else
@@ -637,7 +637,7 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
         }
         else if(0 < phase_result)
         {
-            transaction_id = (uint32_t)phase_result;
+            transaction_id = phase_result;
             phase = 3;
         }
         else
@@ -676,7 +676,7 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
         }
         else if(0 < phase_result)
         {
-            transaction_id = (uint32_t)phase_result;
+            transaction_id = phase_result;
             phase = 5;
         }
         else
@@ -722,7 +722,7 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
         }
         else if(0 < phase_result)
         {
-            transaction_id = (uint32_t)phase_result;
+            transaction_id = phase_result;
             phase = 7;
         }
         else

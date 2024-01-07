@@ -12,15 +12,14 @@
  * with this program; if not, see <http://www.gnu.org/licenses/>
  *
  */
-#ifndef UTIL_H_
-#define UTIL_H_
-
-#include <stdint.h>
-#include <stdbool.h>
 
 
-uint32_t calculateChecksum(char *data, uint32_t length);
+#ifndef PROBE_API_HEX_H_
+#define PROBE_API_HEX_H_
 
 
+uint32_t hex_to_int(char* hex, uint32_t num_digits);
+void int_to_hex(char* hex, uint32_t value, uint32_t num_digits);
 
-#endif /* UTIL_H_ */
+
+#endif /* PROBE_API_HEX_H_ */

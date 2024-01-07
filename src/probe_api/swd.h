@@ -26,6 +26,6 @@ Result swd_connect(bool multi, uint32_t target);
 bool swd_is_connected(void);
 Result swd_scan(void);
 Result swd_read_ap(uint32_t addr);
-Result swd_get_result(uint32_t transaction, uint32_t* data);
+Result swd_get_result(Result transaction, uint32_t* data);
 
 #endif /* PROBE_API_SWD_H_ */

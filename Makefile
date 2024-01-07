@@ -22,13 +22,6 @@ SOURCE_DIR = $(dir $(lastword $(MAKEFILE_LIST)))
 HAS_MSC = yes
 HAS_DEBUG_UART = yes
 
-ifeq ($(TARGET),EXTERN)
-	# can be configured for each supported target
-	HAS_MSC = yes
-else
-	# nomagic probe will debug only the RP2040
-endif
-
 
 LKR_SCRIPT = $(SRC_FOLDER)hal/RP2040.ld
 

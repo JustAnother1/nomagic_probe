@@ -38,7 +38,7 @@
  */
 
 #include "usb_descriptors.h"
-// tinyusb:
+// TinyUSB:
 #include "tinyusb/src/tusb.h"
 #include "tinyusb/src/device/usbd.h"
 #include "tinyusb/src/common/tusb_types.h"

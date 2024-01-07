@@ -19,7 +19,7 @@
 #include <stddef.h>
 
 #include "target_api/target_actions.h"
-
+#include "probe_api/result.h"
 #include "probe_api/swd.h"
 
 // TODO load from configuration
@@ -29,9 +29,27 @@ void target_init(void)
 
 }
 
+void target_tick(void)
+{
+
+}
+
 void target_reply_g(void)
 {
 
+}
+
+Result target_request_read(uint32_t address)
+{
+    (void) address;
+    return ERR_WRONG_STATE;
+}
+
+int32_t target_read_result(uint32_t transaction, uint32_t* data)
+{
+    (void)transaction;
+    (void)data;
+    return ERR_WRONG_STATE;
 }
 
 int32_t target_connect(void)

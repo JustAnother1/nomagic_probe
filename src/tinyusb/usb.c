@@ -47,7 +47,7 @@
 #include "hal/startup.h"
 #include "usb_cdc.h"
 
-// tinyusb:
+// TinyUSB:
 #include "tusb.h"
 #include "common/tusb_types.h"
 #include "device/dcd.h"
@@ -776,12 +776,12 @@ bool hw_endpoint_xfer_continue(hw_endpoint_t *ep)
     _hw_endpoint_xfer_sync(ep);
 
     // Now we have synced our state with the hardware. Is there more data to transfer?
-    // If we are done then notify tinyusb
+    // If we are done then notify TinyUSB
     if (ep->remaining_len == 0)
     {
         TU_LOG(3, "Completed transfer of %d bytes on ep %d %s\r\n",
         ep->xferred_len, tu_edpt_number(ep->ep_addr), ep_dir_string[tu_edpt_dir(ep->ep_addr)]);
-        // Notify caller we are done so it can notify the tinyusb stack
+        // Notify caller we are done so it can notify the TinyUSB stack
         return true;
     }
     else

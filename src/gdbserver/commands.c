@@ -19,6 +19,7 @@
 #include "cfg/gdbserver_cfg.h"
 #include "target_api/target_actions.h"
 #include "probe_api/gdb_packets.h"
+#include "probe_api/hex.h"
 // commands:
 #include "cmd_qsupported.h"
 #include "cmd_qxfer.h"

@@ -206,7 +206,7 @@ Result swd_packet_disconnect(void)
     }
 }
 
-Result swd_packet_get_result(uint32_t transaction, uint32_t* data)
+Result swd_packet_get_result(Result transaction, uint32_t* data)
 {
     return result_queue_get_result(PACKET_QUEUE, transaction, data);
 }

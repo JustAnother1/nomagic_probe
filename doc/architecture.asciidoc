@@ -72,10 +72,10 @@ implementation of functionality usually provided by a "standard library". printf
 implementation of the ARM SWD debug interface.
 
 === src/tinyusb
-configuration and interface to tinyUSB
+configuration and interface to TinyUSB
 
 === src/tinyusb/src
-the tinyUSB stack. The folder contains all files from tinyUSB. Only a small fraction of the files are actually used in this firmware. Having them all available helps if the functionality needs to be extended and with tinyUS updates.
+the TinyUSB stack. The folder contains all files from TinyUSB. Only a small fraction of the files are actually used in this firmware. Having them all available helps if the functionality needs to be extended and with tinyUS updates.
 
 === doc
 contains documenation in various formats for all functionality of the nomagic probe.

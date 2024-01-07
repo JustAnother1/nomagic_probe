@@ -19,7 +19,7 @@
 #define CFG_TUSB_OS               OPT_OS_NONE
 
 /* USB DMA on some MCUs can only access a specific SRAM region with restriction on alignment.
- * Tinyusb use follows macros to declare transferring memory so that they can be put
+ * TinyUSB use following macros to declare transferring memory so that they can be put
  * into those specific section.
  * e.g
  * - CFG_TUSB_MEM SECTION : __attribute__ (( section(".usb_ram") ))

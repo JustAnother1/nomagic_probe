@@ -85,9 +85,9 @@ Result result_queue_add_result_of(uint32_t queue_id, uint32_t transaction, uint3
     }
 }
 
-Result result_queue_get_result(uint32_t queue_id, uint32_t transaction, uint32_t* data)
+Result result_queue_get_result(uint32_t queue_id, Result transaction, uint32_t* data)
 {
-    if((transaction > MAX_QUEUE_ENTRIES) || (0 == transaction))
+    if((transaction > MAX_QUEUE_ENTRIES) || (1 > transaction))
     {
         debug_line("ERROR: swd(%ld): invalid transaction id %ld", queue_id, transaction);
         return ERR_INVALID_TRANSACTION_ID;

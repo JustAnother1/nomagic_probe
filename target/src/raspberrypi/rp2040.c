@@ -67,7 +67,12 @@ void target_init(void)
     attached = false;
 }
 
-int32_t target_connect(void)
+void target_tick(void)
+{
+
+}
+
+Result target_connect(void)
 {
     debug_line("SWDv2 (0x%08x)", SWD_ID_CORE_0);
     swd_protocol_set_AP_sel(0);
@@ -84,12 +89,12 @@ Result target_request_read(uint32_t address)
     return swd_read_ap(address);
 }
 
-int32_t target_read_result(uint32_t transaction, uint32_t* data)
+Result target_read_result(Result transaction, uint32_t* data)
 {
     return swd_get_result(transaction, data);
 }
 
-void target_reply_g(void)
+Result target_reply_g(void)
 {
     reply_packet_prepare();
     cotex_m_add_general_registers();

@@ -20,6 +20,7 @@ LIB_CFLAGS += -O3
 
 LIB_CFLAGS += -std=c17
 LIB_CFLAGS += -fPIC
+#LIB_CFLAGS += -fpic
 LIB_CFLAGS += -mcpu=cortex-m0plus -mthumb
 LIB_CFLAGS += -ffreestanding -funsigned-char -fno-short-enums
 LIB_CFLAGS += -Wall -Wextra -pedantic -Wshadow -Wdouble-promotion -Wconversion 

@@ -13,6 +13,7 @@
  *
  */
 #include "util.h"
+#include "probe_api/hex.h"
 #include "cfg/gdbserver_cfg.h"
 
 uint32_t calculateChecksum(char* data, uint32_t length)

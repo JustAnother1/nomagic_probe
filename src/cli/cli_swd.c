@@ -21,7 +21,7 @@
 #include "target_api/target_actions.h"
 
 static uint32_t step;
-static int32_t progress;
+static Result progress;
 
 
 bool cmd_swd_info(uint32_t loop)
@@ -41,7 +41,7 @@ bool cmd_swd_test(uint32_t loop)
         if(0 == step)
         {
             // connect
-            int32_t res;
+            Result res;
             res = target_connect();
             if (1 > res)
             {
@@ -63,7 +63,7 @@ bool cmd_swd_test(uint32_t loop)
         else if(1 == step)
         {
             // scan
-            int32_t res;
+            Result res;
             res = swd_scan();
             if (1 > res)
             {
@@ -93,7 +93,7 @@ bool cmd_swd_test(uint32_t loop)
 bool cmd_swd_connect(uint32_t loop)
 {
     (void)loop;
-    int32_t res;
+    Result res;
 
     res = target_connect();
     if(0 == res)
@@ -146,10 +146,10 @@ bool cmd_swd_ap_read(uint32_t loop)
     }
     else
     {
-        int32_t res;
+        Result res;
         uint32_t data = 0;
 
-        res = target_read_result((uint32_t)progress, &data);
+        res = target_read_result(progress, &data);
         if(ERR_NOT_YET_AVAILABLE == res)
         {
             // not yet complete

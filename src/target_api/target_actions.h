@@ -17,13 +17,15 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include "../probe_api/result.h"
 
 void target_init(void);
-int32_t target_connect(void);
+void target_tick(void);
+Result target_connect(uint32_t phase);
 bool target_is_connected(void);
-int32_t target_request_read(uint32_t address);
-int32_t target_read_result(uint32_t transaction, uint32_t* data);
+Result target_request_read(uint32_t address);
+Result target_read_result(Result transaction, uint32_t* data);
 
-void target_reply_g(void);
+Result target_reply_g(void);
 
 #endif /* TARGET_TARGET_ACTIONS_H_ */

@@ -34,7 +34,7 @@ void result_queue_init(void);
  */
 Result result_queue_get_next_transaction_id(uint32_t queue_id, uint32_t* data);
 Result result_queue_add_result_of(uint32_t queue_id, uint32_t transaction, uint32_t data);
-Result result_queue_get_result(uint32_t queue_id, uint32_t transaction, uint32_t* data);
+Result result_queue_get_result(uint32_t queue_id, Result transaction, uint32_t* data);
 void result_queue_free_result(uint32_t queue_id, uint32_t transaction);
 
 #endif /* SWD_RESULT_QUEUE_H_ */
