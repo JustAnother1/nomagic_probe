@@ -22,7 +22,8 @@ LIB_CFLAGS += -std=c17
 LIB_CFLAGS += -fPIC
 #LIB_CFLAGS += -fpic
 LIB_CFLAGS += -mcpu=cortex-m0plus -mthumb
-LIB_CFLAGS += -ffreestanding -funsigned-char -fno-short-enums
+LIB_CFLAGS += -ffreestanding -funsigned-char 
+#-fno-short-enums
 LIB_CFLAGS += -Wall -Wextra -pedantic -Wshadow -Wdouble-promotion -Wconversion 
 LIB_CFLAGS += -ffunction-sections -fdata-sections -Wpadded
 
@@ -52,3 +53,9 @@ $(LIB_BIN_FOLDER)libtarget.a: $(LIB_OBJS)
 	@echo "=============="
 	$(AR) -rcs $(LIB_BIN_FOLDER)libtarget.a $(LIB_OBJS)
 
+target: $(LIB_OBJS)
+	@echo ""
+	@echo "create shared object"
+	@echo "===================="
+	#$(CC) -shared -mcpu=cortex-m0plus -mthumb -Wl,-export-dynamic -o $(LIB_BIN_FOLDER)libtarget.so $(LIB_OBJS)  ## warning: thumb-1 mode PLT generation not currently supported
+	$(CC) -shared -mcpu=cortex-m4 -mthumb -Wl,-export-dynamic -o $(LIB_BIN_FOLDER)libtarget.so $(LIB_OBJS)

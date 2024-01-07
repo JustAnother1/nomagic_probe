@@ -56,7 +56,8 @@ CFLAGS += -O3
 
 CFLAGS += -std=c17
 CFLAGS += -mcpu=cortex-m0plus -mthumb
-CFLAGS += -ffreestanding -funsigned-char -fno-short-enums
+CFLAGS += -ffreestanding -funsigned-char
+# -fno-short-enums
 CFLAGS += -Wall -Wextra -pedantic -Wshadow -Wdouble-promotion -Wconversion 
 # -Wpadded : tinyUSB creates warnings with this enabled. :-( 
 CFLAGS += -ffunction-sections -fdata-sections
