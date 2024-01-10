@@ -13,32 +13,24 @@
  *
  */
 
+#ifndef DEVICE_SPECIFIC_H_
+#define DEVICE_SPECIFIC_H_
+
+#include <stdbool.h>
 #include <stdint.h>
-#include "gdb_packets.h"
-#include "hex.h"
 #include "result.h"
-#include "swd.h"
 
-// Result swd_read_ap(uint32_t addr);
-// Result swd_get_result(uint32_t transaction, uint32_t* data);
+typedef enum {
+    GDB_CMD_G = 0,
+    // new actions go here
+    NUM_ACTIONS,  // <- do not use other than array size !
+}action_typ;
 
-Result cotex_m_add_general_registers(Result phase)
-{
-    uint32_t i;
-    uint32_t val;
-    Result transId;
-    Result receive;
-    char buf[9];
-    buf[8] = 0;
+typedef struct{
+    action_typ action;
+} action_data_typ;
 
-    for(i = 0; i < 17; i++)
-    {
-        transId = 5; // TODO
-        receive = swd_get_result(transId, &val);
-        if(RESULT_OK == receive)
-        {
-            int_to_hex(buf, val, 8);
-            reply_packet_add(buf);
-        }
-    }
-}
+Result handle_target_reply_g(Result phase, action_data_typ* action);
+
+
+#endif /* DEVICE_SPECIFIC_H_ */

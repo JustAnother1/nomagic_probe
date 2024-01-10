@@ -16,7 +16,11 @@
 #ifndef COMMON_H_
 #define COMMON_H_
 
-void send_part(char* part, uint32_t size, uint32_t offset, uint32_t length);
+#include <stdbool.h>
+#include <stdint.h>
 
+void target_common_init(void);
+void send_part(char* part, uint32_t size, uint32_t offset, uint32_t length);
+void target_common_tick(void);
 
 #endif /* COMMON_H_ */

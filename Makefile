@@ -31,7 +31,7 @@ LKR_SCRIPT = $(SRC_FOLDER)hal/RP2040.ld
 # tinyUSB logging has different levels 0 = no logging,1 = some logging, 2 = more logging, 3= all logging
 DDEFS += -DCFG_TUSB_DEBUG=1
 # with this (=1)the watchdog is only active if the debugger is not connected
-DDEFS += -DDISABLE_WATCHDOG_FOR_DEBUG=1
+DDEFS += -DDISABLE_WATCHDOG_FOR_DEBUG=0
 # use both cores
 #DDEFS += -DENABLE_CORE_1=1
 # use BOOT ROM (for flash functions,...)

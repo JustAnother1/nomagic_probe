@@ -22,7 +22,7 @@
 #include "result_queue.h"
 #include "swd_packets.h"
 
-#define CMD_QUEUE_LENGTH  3
+#define CMD_QUEUE_LENGTH  5
 
 static void handle_order(void);
 
@@ -44,9 +44,9 @@ static const char* order_names[NUM_ORDERS] = {
 };
 #endif
 
-static int32_t order_state;
+static Result order_state;
 static order_handler cur_order;
-static int32_t last_error;
+static Result last_error;
 static uint32_t timeout_counter;
 
 void swd_init(void)

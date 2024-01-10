@@ -26,6 +26,6 @@ bool target_is_connected(void);
 Result target_request_read(uint32_t address);
 Result target_read_result(Result transaction, uint32_t* data);
 
-Result target_reply_g(void);
+void target_reply_g(void);
 
 #endif /* TARGET_TARGET_ACTIONS_H_ */

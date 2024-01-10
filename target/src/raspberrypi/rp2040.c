@@ -24,6 +24,8 @@
 #include "swd.h"
 #include "gdb_packets.h"
 #include "common.h"
+#include "device_specific.h"
+#include "arm/cortex-m.h"
 
 // RP2040:
 // Core 0: 0x01002927
@@ -64,12 +66,13 @@ static bool attached;
 
 void target_init(void)
 {
+    target_common_init();
     attached = false;
 }
 
 void target_tick(void)
 {
-
+    target_common_tick();
 }
 
 Result target_connect(uint32_t phase)
@@ -80,27 +83,20 @@ Result target_connect(uint32_t phase)
     return swd_connect(true, SWD_ID_CORE_0);
 }
 
-bool target_is_connected(void)
+Result handle_target_reply_g(Result phase, action_data_typ* action)
 {
-    return swd_is_connected();
-}
-
-Result target_request_read(uint32_t address)
-{
-    return swd_read_ap(address);
-}
-
-Result target_read_result(Result transaction, uint32_t* data)
-{
-    return swd_get_result(transaction, data);
-}
-
-Result target_reply_g(void)
-{
-    reply_packet_prepare();
-    cotex_m_add_general_registers();
-    reply_packet_send();
-    return ERR_TARGET_ERROR;
+    Result res;
+    (void) action;
+    if(0 == phase)
+    {
+        reply_packet_prepare();
+    }
+    res = cotex_m_add_general_registers(phase);
+    if(RESULT_OK == res)
+    {
+        reply_packet_send();
+    }
+    return res;
 }
 
 void target_send_file(char* filename, uint32_t offset, uint32_t len)

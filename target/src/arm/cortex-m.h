@@ -16,6 +16,8 @@
 #ifndef ARM_CORTEX_M_H_
 #define ARM_CORTEX_M_H_
 
+#include "result.h"
+
 #define TARGET_XML_CONTENT  \
 "<?xml version=\"1.0\"?>\r\n" \
 "<!DOCTYPE target SYSTEM \"gdb-target.dtd\">\r\n" \
@@ -56,6 +58,6 @@
 "<threads>\r\n" \
 "</threads>\r\n"
 
-void cotex_m_add_general_registers(void);
+Result cotex_m_add_general_registers(Result phase);
 
 #endif /* ARM_CORTEX_M_H_ */
