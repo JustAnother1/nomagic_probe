@@ -81,6 +81,11 @@ Result target_connect(uint32_t phase)
     debug_line("SWDv2 (0x%08x)", SWD_ID_CORE_0);
     swd_protocol_set_AP_sel(0);
     return swd_connect(true, SWD_ID_CORE_0);
+    // TODO halt target DHCSR.C_HALT = 1 + check that DHCSR.S_HALT is 1
+    // TODO read ROM Table from address pointed to by BASE Register (Architecture P 318)
+    // TODO check number of Break Points
+    // TODO check number of Watch points
+    // TODO DEMCR.DWTENA bit to 1 to enable Watch points
 }
 
 Result handle_target_reply_g(Result phase, action_data_typ* action)
