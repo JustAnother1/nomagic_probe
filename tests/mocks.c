@@ -182,7 +182,7 @@ void target_init(void)
 {
     // nothing to do here
 }
-int32_t target_connect(void)
+Result target_connect(bool first_call)
 {
     // 0 would be OK, everything negative is an error
     return -1;

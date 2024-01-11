@@ -45,15 +45,16 @@ Result target_request_read(uint32_t address)
     return ERR_WRONG_STATE;
 }
 
-Result target_read_result(uint32_t transaction, uint32_t* data)
+Result target_read_result(Result transaction, uint32_t* data)
 {
     (void)transaction;
     (void)data;
     return ERR_WRONG_STATE;
 }
 
-Result target_connect(void)
+Result target_connect(bool first_call)
 {
+    (void) first_call;
     return swd_connect(false, 0);
 }
 

@@ -38,17 +38,25 @@ bool cmd_swd_test(uint32_t loop)
     }
     else
     {
-        if(0 == step)
+        if((0 == step) || (1 == step))
         {
             // connect
             Result res;
-            res = target_connect(0);  // TODO
+            if(0 == step)
+            {
+                res = target_connect(true);
+                step = 1;
+            }
+            else
+            {
+                res = target_connect(false);
+            }
             if (1 > res)
             {
                 if(0 == res)
                 {
                     // ok
-                    step = 1;
+                    step = 2;
                 }
                 else
                 {
@@ -60,7 +68,7 @@ bool cmd_swd_test(uint32_t loop)
             // else busy -> call again
             return false;
         }
-        else if(1 == step)
+        else if(2 == step)
         {
             // scan
             Result res;
@@ -95,7 +103,14 @@ bool cmd_swd_connect(uint32_t loop)
     (void)loop;
     Result res;
 
-    res = target_connect(0); // TODO
+    if(0 == loop)
+    {
+        res = target_connect(true);
+    }
+    else
+    {
+        res = target_connect(false);
+    }
     if(0 == res)
     {
         return true;

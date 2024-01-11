@@ -75,11 +75,13 @@ void target_tick(void)
     target_common_tick();
 }
 
-Result target_connect(uint32_t phase)
+Result target_connect(bool first_call)
 {
-    (void)phase; // TODO
-    debug_line("SWDv2 (0x%08x)", SWD_ID_CORE_0);
-    swd_protocol_set_AP_sel(0);
+    if(true == first_call)
+    {
+        debug_line("SWDv2 (0x%08x)", SWD_ID_CORE_0);
+        swd_protocol_set_AP_sel(0);
+    }
     return swd_connect(true, SWD_ID_CORE_0);
     // TODO halt target DHCSR.C_HALT = 1 + check that DHCSR.S_HALT is 1
     // TODO read ROM Table from address pointed to by BASE Register (Architecture P 318)
