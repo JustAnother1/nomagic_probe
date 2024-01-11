@@ -1,4 +1,5 @@
 #include "mocks.h"
+#include "../src/probe_api/result.h"
 
 
 uint8_t recv_buf[RECEIVE_BUFFER_SIZE];
@@ -184,6 +185,7 @@ void target_init(void)
 }
 Result target_connect(bool first_call)
 {
+    (void) first_call;
     // 0 would be OK, everything negative is an error
     return -1;
 }
