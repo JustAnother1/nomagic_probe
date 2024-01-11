@@ -61,9 +61,9 @@ static uint32_t first_ap;
 static uint32_t ctrl_stat;
 static uint32_t reg_data;  // TODO sort these out
 
-static Result check_AP(uint32_t idr, int32_t phase);
-static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint32_t* data, int32_t phase);
-static Result write_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint32_t data, int32_t phase);
+static Result check_AP(uint32_t idr, bool first_call);
+static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint32_t* data, bool first_call);
+static Result write_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint32_t data, bool first_call);
 
 
 void swd_protocol_init(void)
@@ -169,16 +169,15 @@ bool swd_info(uint32_t which)
     return done;
 }
 
-Result connect_handler(int32_t phase, command_typ* cmd)
+Result connect_handler(command_typ* cmd, bool first_call)
 {
+    static Result phase = 0;
     Result phase_result;
     bool multi = cmd->flag;
     uint32_t target = cmd->i_val;
 
-    if(0 == phase)
+    if(true == first_call)
     {
-        // can not return 0 as active phase as 0 == Result_OK
-        // -> nothing to initialize here
         phase = 1;
     }
 
@@ -191,7 +190,7 @@ Result connect_handler(int32_t phase, command_typ* cmd)
             phase_result = swd_packet_disconnect();
             if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
             {
-                return phase; // -> try again
+                return ERR_NOT_COMPLETED; // -> try again
             }
             else if(RESULT_OK == phase_result)
             {
@@ -207,7 +206,7 @@ Result connect_handler(int32_t phase, command_typ* cmd)
         }
         else
         {
-            // phase is 0 -> go to next phase
+            // skip the multi only steps
             phase = 4;
         }
     }
@@ -218,7 +217,7 @@ Result connect_handler(int32_t phase, command_typ* cmd)
         phase_result = jtag_to_dormant_state_sequence();
         if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
         {
-            return phase; // -> try again
+            return ERR_NOT_COMPLETED; // -> try again
         }
         else if(RESULT_OK == phase_result)
         {
@@ -237,7 +236,7 @@ Result connect_handler(int32_t phase, command_typ* cmd)
         phase_result = leave_dormant_state_to_swd_sequence();
         if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
         {
-            return phase; // -> try again
+            return ERR_NOT_COMPLETED; // -> try again
         }
         else if(RESULT_OK == phase_result)
         {
@@ -256,7 +255,7 @@ Result connect_handler(int32_t phase, command_typ* cmd)
         phase_result = swd_packet_line_reset();
         if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
         {
-            return phase; // -> try again
+            return ERR_NOT_COMPLETED; // -> try again
         }
         else if(RESULT_OK == phase_result)
         {
@@ -277,7 +276,7 @@ Result connect_handler(int32_t phase, command_typ* cmd)
             phase_result = swd_packet_write(DP, ADDR_TARGETSEL, target);
             if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
             {
-                return phase; // -> try again
+                return ERR_NOT_COMPLETED; // -> try again
             }
             else if(RESULT_OK == phase_result)
             {
@@ -302,7 +301,7 @@ Result connect_handler(int32_t phase, command_typ* cmd)
         phase_result = swd_packet_read(DP, ADDR_DPIDR);
         if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
         {
-            return phase; // -> try again
+            return ERR_NOT_COMPLETED; // -> try again
         }
         else if(0 < phase_result)
         {
@@ -322,7 +321,7 @@ Result connect_handler(int32_t phase, command_typ* cmd)
         phase_result = result_queue_get_result(PACKET_QUEUE, transaction_id, &read_data);
         if(ERR_NOT_YET_AVAILABLE == phase_result)
         {
-            return phase; // -> try again
+            return ERR_NOT_COMPLETED; // -> try again
         }
         else if(RESULT_OK == phase_result)
         {
@@ -352,7 +351,7 @@ Result connect_handler(int32_t phase, command_typ* cmd)
         phase_result = swd_packet_write(DP, ADDR_ABORT, 0x1f);
         if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
         {
-            return phase; // -> try again
+            return ERR_NOT_COMPLETED; // -> try again
         }
         else if(RESULT_OK == phase_result)
         {
@@ -372,7 +371,7 @@ Result connect_handler(int32_t phase, command_typ* cmd)
         phase_result = swd_packet_write(DP, ADDR_CTRL_STAT, 0x50000000);
         if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
         {
-            return phase; // -> try again
+            return ERR_NOT_COMPLETED; // -> try again
         }
         else if(RESULT_OK == phase_result)
         {
@@ -394,7 +393,7 @@ Result connect_handler(int32_t phase, command_typ* cmd)
         phase_result = swd_packet_read(DP, ADDR_CTRL_STAT);
         if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
         {
-            return phase; // -> try again
+            return ERR_NOT_COMPLETED; // -> try again
         }
         else if(0 < phase_result)
         {
@@ -414,7 +413,7 @@ Result connect_handler(int32_t phase, command_typ* cmd)
         phase_result = result_queue_get_result(PACKET_QUEUE, transaction_id, &read_data);
         if(ERR_NOT_YET_AVAILABLE == phase_result)
         {
-            return phase; // -> try again
+            return ERR_NOT_COMPLETED; // -> try again
         }
         else if(RESULT_OK == phase_result)
         {
@@ -452,14 +451,14 @@ Result connect_handler(int32_t phase, command_typ* cmd)
         return RESULT_OK;
     }
 
-    return phase;
+    return ERR_WRONG_STATE;
 }
 
-Result scan_handler(int32_t phase, command_typ* cmd)
+Result scan_handler(command_typ* cmd, bool first_call)
 {
+    static Result phase = 0;
     (void) cmd;
-
-    if(0 == phase)
+    if(true == first_call)
     {
         cycle_counter = 0;
         first_ap = 0xffffffff;
@@ -473,54 +472,46 @@ Result scan_handler(int32_t phase, command_typ* cmd)
         phase = 2;
     }
 
-// Phase 2 read IDR Register
+// Phase 2-5 read IDR Register
 
-    if((phase > 1) && (phase < 100))
+    if((2 == phase ) || (3 == phase))
     {
-        phase = phase - 2;
-        Result res = read_ap_register(AP_BANK_IDR, AP_REGISTER_IDR, &read_data, phase);
-        if(RESULT_OK == res)
+        Result res;
+        if(2 == phase)
         {
-            phase = 100;
+            res = read_ap_register(AP_BANK_IDR, AP_REGISTER_IDR, &read_data, true);
+            phase = 3;
         }
         else
         {
-            if(0 > res)
-            {
-                return res;
-            }
-            else
-            {
-                return res + 2;
-            }
+            res = read_ap_register(AP_BANK_IDR, AP_REGISTER_IDR, &read_data, false);
+        }
+        if(RESULT_OK == res)
+        {
+            phase = 4;
+        }
+        else
+        {
+            return res;
         }
     }
 
-    if(99 < phase)
+    if((4 == phase ) || (5 == phase))
     {
         if(0 != read_data)
         {
             Result tres;
-            if(100 == phase)
+            if(4 == phase)
             {
                 debug_line("AP %ld: 0x%08lx", cycle_counter, read_data);
-            }
-
-            tres = check_AP(read_data, (phase-100));
-            if(0 != tres)
-            {
-                if(0 < tres)
-                {
-                    // phase
-                    return tres + 100;
-                }
-                else
-                {
-                    // ERROR
-                    return tres;
-                }
+                tres = check_AP(read_data, true);
+                phase = 5;
             }
             else
+            {
+                tres = check_AP(read_data, false);
+            }
+            if(RESULT_OK == tres)
             {
                 // done with this AP
                 cycle_counter++;
@@ -536,6 +527,10 @@ Result scan_handler(int32_t phase, command_typ* cmd)
                     return RESULT_OK;
                 }
             }
+            else
+            {
+                return tres;
+            }
         }
         else
         {
@@ -550,53 +545,70 @@ Result scan_handler(int32_t phase, command_typ* cmd)
     return (Result)phase;
 }
 
-Result read_handler(int32_t phase, command_typ* cmd)
+Result read_handler(command_typ* cmd, bool first_call)
 {
-    if(100 > phase)
+    static Result phase = 0;
+    if(true == first_call)
     {
-        Result res = write_ap_register(AP_BANK_TAR, AP_REGISTER_TAR, cmd->i_val, phase);
+        phase = 1;
+    }
+
+    if((1 == phase) || (2 == phase))
+    {
+        Result res;
+        if(1 == phase)
+        {
+            res = write_ap_register(AP_BANK_TAR, AP_REGISTER_TAR, cmd->i_val, true);
+            phase = 2;
+        }
+        else
+        {
+            res = write_ap_register(AP_BANK_TAR, AP_REGISTER_TAR, cmd->i_val, false);
+        }
         if(RESULT_OK == res)
         {
-            return 100;
+            phase = 3;
         }
         else
         {
             return res;
         }
     }
-    else
+
+    if((3 == phase) || (4 == phase))
     {
-        phase = phase -100;
-        Result res = read_ap_register(AP_BANK_DRW, AP_REGISTER_DRW, &read_data, phase);
+        Result res;
+        if(3 == phase)
+        {
+            res = read_ap_register(AP_BANK_DRW, AP_REGISTER_DRW, &read_data, true);
+            phase = 4;
+        }
+        else
+        {
+            res = read_ap_register(AP_BANK_DRW, AP_REGISTER_DRW, &read_data, false);
+        }
         if(RESULT_OK == res)
         {
             return result_queue_add_result_of(COMMAND_QUEUE, cmd->transaction_id, read_data);
         }
         else
         {
-            if(0 > res)
-            {
-                return res;
-            }
-            else
-            {
-                return res + 100;
-            }
+            return res;
         }
     }
+    return ERR_WRONG_STATE;
 }
 
 
 // static functions
 
-static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint32_t* data, int32_t phase)
+static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint32_t* data, bool first_call)
 {
+    static Result phase = 0;
     Result phase_result;
 
-    if(0 == phase)
+    if(true == first_call)
     {
-        // can not return 0 as active phase as 0 == Result_OK
-        // -> nothing to initialize here
         phase = 1;
     }
 
@@ -608,7 +620,7 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
             phase_result = swd_packet_write(DP, ADDR_SELECT, req_select);
             if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
             {
-                return (Result)phase; // -> try again
+                return ERR_NOT_COMPLETED; // -> try again
             }
             else if(RESULT_OK == phase_result)
             {
@@ -633,7 +645,7 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
         phase_result = swd_packet_read(AP, ap_register);
         if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
         {
-            return (Result)phase; // -> try again
+            return ERR_NOT_COMPLETED; // -> try again
         }
         else if(0 < phase_result)
         {
@@ -653,7 +665,7 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
         phase_result = result_queue_get_result(PACKET_QUEUE, transaction_id, data);
         if(ERR_NOT_YET_AVAILABLE == phase_result)
         {
-            return (Result)phase; // -> try again
+            return ERR_NOT_COMPLETED; // -> try again
         }
         else if(RESULT_OK == phase_result)
         {
@@ -672,7 +684,7 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
         phase_result = swd_packet_read(DP, ADDR_CTRL_STAT);
         if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
         {
-            return (Result)phase; // -> try again
+            return ERR_NOT_COMPLETED; // -> try again
         }
         else if(0 < phase_result)
         {
@@ -692,7 +704,7 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
         phase_result = result_queue_get_result(PACKET_QUEUE, transaction_id, &ctrl_stat);
         if(ERR_NOT_YET_AVAILABLE == phase_result)
         {
-            return (Result)phase; // -> try again
+            return ERR_NOT_COMPLETED; // -> try again
         }
         else if(RESULT_OK == phase_result)
         {
@@ -718,7 +730,7 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
         phase_result = swd_packet_read(DP, ADDR_RDBUFF);
         if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
         {
-            return (Result)phase; // -> try again
+            return ERR_NOT_COMPLETED; // -> try again
         }
         else if(0 < phase_result)
         {
@@ -738,7 +750,7 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
         phase_result = result_queue_get_result(PACKET_QUEUE, transaction_id, data);
         if(ERR_NOT_YET_AVAILABLE == phase_result)
         {
-            return (Result)phase; // -> try again
+            return ERR_NOT_COMPLETED; // -> try again
         }
         else if(RESULT_OK == phase_result)
         {
@@ -759,17 +771,16 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
         return RESULT_OK;
     }
 
-    return (Result)phase;
+    return ERR_WRONG_STATE;
 }
 
-static Result write_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint32_t data, int32_t phase)
+static Result write_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint32_t data, bool first_call)
 {
+    static Result phase = 0;
     Result phase_result;
 
-    if(0 == phase)
+    if(true == first_call)
     {
-        // can not return 0 as active phase as 0 == Result_OK
-        // -< nothing to init here
         phase = 1;
     }
 
@@ -781,7 +792,7 @@ static Result write_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint
             phase_result = swd_packet_write(DP, ADDR_SELECT, req_select);
             if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
             {
-                return (Result)phase; // -> try again
+                return ERR_NOT_COMPLETED; // -> try again
             }
             else if(RESULT_OK == phase_result)
             {
@@ -806,7 +817,7 @@ static Result write_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint
         phase_result = swd_packet_write(AP, ap_register, data);
         if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
         {
-            return (Result)phase; // -> try again
+            return ERR_NOT_COMPLETED; // -> try again
         }
         else if(RESULT_OK == phase_result)
         {
@@ -826,18 +837,19 @@ static Result write_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint
         return RESULT_OK;
     }
 
-    return (Result)phase;
+    return ERR_WRONG_STATE;
 }
 
 
-static Result check_AP(uint32_t idr, int32_t phase)
+static Result check_AP(uint32_t idr, bool first_call)
 {
+    static Result phase = 0;
     uint32_t class = (idr & (0xf << 13))>> 13;
     state.mem_ap.ap_sel = cycle_counter;
     if(8 == class)
     {
         // Memory Access Port (MEM-AP)
-        if(0 == phase)
+        if(true == first_call)
         {
             state.mem_ap.version = AP_VERSION_APv1;
             debug_line("APv1:");
@@ -847,13 +859,21 @@ static Result check_AP(uint32_t idr, int32_t phase)
             debug_line("AP: IDR: variant:  %ld", (idr & (0xf<<4))>>4 );
             debug_line("AP: IDR: type:     %ld", (idr & 0xf) );
             phase = 1;
-            return (Result)phase;
+            return ERR_NOT_COMPLETED;
         }
 
-        if(phase < 100)
+        if((1 == phase) || (2 == phase))
         {
-            phase = phase -1;
-            Result res = read_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, &reg_data, phase);
+            Result res;
+            if(1 == phase)
+            {
+                res = read_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, &reg_data, true);
+                phase = 2;
+            }
+            else
+            {
+                res = read_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, &reg_data, false);
+            }
             if(RESULT_OK == res)
             {
                 debug_line("AP: CSW  : 0x%08lx", reg_data);
@@ -862,70 +882,103 @@ static Result check_AP(uint32_t idr, int32_t phase)
                 // change CSW !!!
                 reg_data = reg_data & ~0x3ful; // no auto address increment
                 reg_data = reg_data | 0x80000002; // DbgSwEnable + data size = 32bit
-                phase = 100;
-                return (Result)phase;
+                phase = 3;
+                return ERR_NOT_COMPLETED;
             }
             else
             {
-                if(0 > res)
-                {
-                    return res;
-                }
-                else
-                {
-                    return res + 1;
-                }
+                return res;
             }
         }
 
-        if(phase < 200)
+        if((3 == phase) || (4 == phase))
         {
-            phase = phase -100;
-            Result res = write_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, reg_data, phase);
+            Result res;
+            if(3 == phase)
+            {
+                res = read_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, &reg_data, true);
+                phase = 4;
+            }
+            else
+            {
+                res = read_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, &reg_data, false);
+            }
             if(RESULT_OK == res)
             {
-                return 200;
+                debug_line("AP: CSW  : 0x%08lx", reg_data);
+                state.mem_ap.reg_CSW = reg_data;
+
+                // change CSW !!!
+                reg_data = reg_data & ~0x3ful; // no auto address increment
+                reg_data = reg_data | 0x80000002; // DbgSwEnable + data size = 32bit
+                phase = 5;
+                return ERR_NOT_COMPLETED;
             }
             else
             {
-                if(0 > res)
-                {
-                    return res;
-                }
-                else
-                {
-                    return res + 100;
-                }
+                return res;
             }
         }
 
-        if(phase < 300)
+        if((5 == phase) || (6 == phase))
         {
-            phase = phase -200;
-            Result res = read_ap_register(AP_BANK_BASE, AP_REGISTER_BASE, &reg_data, phase);
+            Result res;
+            if(5 == phase)
+            {
+                res = write_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, reg_data, true);
+                phase = 6;
+            }
+            else
+            {
+                res = write_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, reg_data, false);
+            }
+            if(RESULT_OK == res)
+            {
+                phase = 7;
+                return ERR_NOT_COMPLETED;
+            }
+            else
+            {
+                return res;
+            }
+        }
+
+        if((7 == phase) || (8 == phase))
+        {
+            Result res;
+            if(7 == phase)
+            {
+                res = read_ap_register(AP_BANK_BASE, AP_REGISTER_BASE, &reg_data, true);
+                phase = 8;
+            }
+            else
+            {
+                res = read_ap_register(AP_BANK_BASE, AP_REGISTER_BASE, &reg_data, false);
+            }
             if(RESULT_OK == res)
             {
                 debug_line("AP: BASE : 0x%08lx", reg_data);
                 state.mem_ap.reg_BASE = reg_data;
-                phase = 300;
+                phase = 9;
             }
             else
             {
-                if(0 > res)
-                {
-                    return res;
-                }
-                else
-                {
-                    return res + 200;
-                }
+                return res;
             }
         }
 
-        if(phase < 400)
+        if((9 == phase) || (10 == phase))
         {
-            phase = phase -300;
-            Result res = read_ap_register(AP_BANK_CFG, AP_REGISTER_CFG, &reg_data, phase);
+            Result res;
+            if(9 == phase)
+            {
+                res = read_ap_register(AP_BANK_CFG, AP_REGISTER_CFG, &reg_data, true);
+                phase = 10;
+            }
+            else
+            {
+                res = read_ap_register(AP_BANK_CFG, AP_REGISTER_CFG, &reg_data, false);
+            }
             if(RESULT_OK == res)
             {
                 debug_line("AP: CFG  : 0x%08lx", reg_data);
@@ -945,25 +998,26 @@ static Result check_AP(uint32_t idr, int32_t phase)
                 {
                     state.mem_ap.large_data_support = true;
                 }
-                phase = 400;
+                phase = 11;
             }
             else
             {
-                if(0 > res)
-                {
-                    return res;
-                }
-                else
-                {
-                    return res + 300;
-                }
+                return res;
             }
         }
 
-        if(phase < 500)
+        if((11 == phase) || (12 == phase))
         {
-            phase = phase -400;
-            Result res = read_ap_register(AP_BANK_CFG1, AP_REGISTER_CFG1, &reg_data, phase);
+            Result res;
+            if(11 == phase)
+            {
+                res = read_ap_register(AP_BANK_CFG1, AP_REGISTER_CFG1, &reg_data, true);
+                phase = 12;
+            }
+            else
+            {
+                res = read_ap_register(AP_BANK_CFG1, AP_REGISTER_CFG1, &reg_data, false);
+            }
             if(RESULT_OK == res)
             {
                 debug_line("AP: CFG1 : 0x%08lx", reg_data);
@@ -972,22 +1026,16 @@ static Result check_AP(uint32_t idr, int32_t phase)
                 {
                     first_ap = cycle_counter;
                 }
-                phase = 500;
                 return RESULT_OK; // done with this AP
             }
             else
             {
-                if(0 > res)
-                {
-                    return res;
-                }
-                else
-                {
-                    return res + 400;
-                }
+                return res;
             }
         }
-        return (Result)phase;  // should not happen
+
+        // phase has invalid value
+        return (Result)ERR_WRONG_STATE;
     }
     else if(9 == class)
     {

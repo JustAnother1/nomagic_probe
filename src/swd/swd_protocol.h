@@ -25,26 +25,26 @@ void swd_protocol_tick(void);
 
 /** connects to the debug port in the target over SWD.
  *
- * @param phase which step of the process to execute this time.
+ * @param first_call if true then start from the beginning, else continue unfinished task.
  * @param cmd contains the parameters for the connection
- * @return RESULT_OK if finished successfully, phase that needs to be executed next, or an error code.
+ * @return RESULT_OK if finished successfully else ERR_NOT_COMPLETED, or an error code.
  */
-Result connect_handler(int32_t phase, command_typ* cmd);
+Result connect_handler(command_typ* cmd, bool first_call);
 
 /** scans the target debug hardware.
  *
- * @param phase which step of the process to execute this time.
+ * @param first_call if true then start from the beginning, else continue unfinished task.
  * @param cmd contains the parameters for the connection
- * @return RESULT_OK if finished successfully, phase that needs to be executed next, or an error code.
+ * @return RESULT_OK if finished successfully else ERR_NOT_COMPLETED, or an error code.
  */
-Result scan_handler(int32_t phase, command_typ* cmd);
+Result scan_handler(command_typ* cmd, bool first_call);
 
 /** reads a value from the memory space of the target.
  *
- * @param phase which step of the process to execute this time.
+ * @param first_call if true then start from the beginning, else continue unfinished task.
  * @param cmd contains the parameters for the connection
- * @return RESULT_OK if finished successfully, phase that needs to be executed next, or an error code.
+ * @return RESULT_OK if finished successfully else ERR_NOT_COMPLETED, or an error code.
  */
-Result read_handler(int32_t phase, command_typ* cmd);
+Result read_handler(command_typ* cmd, bool first_call);
 
 #endif /* SRC_SWD_SWD_PROTOCOL_H_ */

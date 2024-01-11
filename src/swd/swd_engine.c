@@ -44,18 +44,14 @@ static const char* order_names[NUM_ORDERS] = {
 };
 #endif
 
-static Result order_state;
 static order_handler cur_order;
-static Result last_error;
 static uint32_t timeout_counter;
 
 void swd_init(void)
 {
     cmdq_read = 0;
     cmdq_write = 0;
-    order_state = 0;
     cur_order = NULL;
-    last_error = 0;
     swd_protocol_init();
     result_queue_init();
 }
@@ -150,8 +146,10 @@ Result swd_get_result(Result transaction, uint32_t* data)
 
 static void handle_order(void)
 {
-    Result last_phase;
-    if(0 == order_state)
+    Result order_state;
+    bool first;
+
+    if(NULL == cur_order)
     {
         // no order in processing -> try to process next order
         if(cmdq_read != cmdq_write)
@@ -160,6 +158,7 @@ static void handle_order(void)
             // debug_line("swd: start order");
             cur_order = order_look_up[cmd_queue[cmdq_read].order];
             timeout_counter = 0;
+            first = true;
         }
         else
         {
@@ -167,17 +166,19 @@ static void handle_order(void)
             return;
         }
     }
-    // else we already have an order
+    else
+    {
+        // we already have an order
+        first = false;
+    }
     // call handler
-    last_phase = order_state;
-    order_state = (*cur_order)(order_state, &cmd_queue[cmdq_read]);
-    if(1 > order_state)
+    order_state = (*cur_order)(&cmd_queue[cmdq_read], first);
+    if(ERR_NOT_COMPLETED != order_state)
     {
         // order is finished
         if(RESULT_OK > order_state)
         {
             // error
-            last_error = order_state;
             debug_line("swd: error %ld on order %s", order_state, order_names[cmd_queue[cmdq_read].order]);
         }
         else
@@ -189,7 +190,7 @@ static void handle_order(void)
             }
         }
         // debug_line("swd: order %s done (%ld)", order_names[cmd_queue[cmdq_read].order], last_phase);
-        order_state = 0;
+        cur_order = NULL;
         cmdq_read++;
         if(CMD_QUEUE_LENGTH == cmdq_read)
         {
@@ -200,22 +201,15 @@ static void handle_order(void)
     else
     {
         // order not done
-        if(order_state == last_phase)
-        {
-            timeout_counter++;
-        }
-        else
-        {
-            timeout_counter = 0;
-        }
+        timeout_counter++;
+
         if(100 < timeout_counter)
         {
-            debug_line("ERROR: SWD: timeout in order processing !");
-            debug_line("swd: order %s (%ld)", order_names[cmd_queue[cmdq_read].order], last_phase);
+            debug_line("ERROR: SWD: timeout in running %s order !", order_names[cmd_queue[cmdq_read].order]);
             timeout_counter = 0;
             // TODO can we do something better than to just skip this command?
             // do not try anymore
-            order_state = 0;
+            cur_order = NULL;
             cmdq_read++;
             if(CMD_QUEUE_LENGTH == cmdq_read)
             {

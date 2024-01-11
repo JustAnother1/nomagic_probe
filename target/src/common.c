@@ -32,11 +32,10 @@
 // 0                            = OK      -> order was executed successfully
 // negative value (-1, -2,..    = ERROR   -> something went wrong, order failed
 // positive value (1, 2, 3,...) = WORKING -> more steps necessary, call order_handler again
-typedef Result (*action_handler)(Result phase, action_data_typ* action);
+typedef Result (*action_handler)(action_data_typ* action, bool first_call);
 
 static volatile uint32_t action_read;
 static volatile uint32_t action_write;
-static Result action_state;
 static action_handler cur_action;
 static action_data_typ action_queue[ACTION_QUEUE_LENGTH];
 static const action_handler action_look_up[NUM_ACTIONS] = {
@@ -56,7 +55,6 @@ void target_common_init(void)
     action_read = 0;
     action_write = 0;
     cur_action = NULL;
-    action_state = 0;
 }
 
 void send_part(char* part, uint32_t size, uint32_t offset, uint32_t length)
@@ -131,13 +129,16 @@ void target_reply_g(void)
 
 static void handle_actions(void)
 {
-    if(0 == action_state)
+    Result res;
+    bool first;
+    if(NULL == cur_action)
     {
         // no action in processing -> try to process next action
         if(action_read != action_write)
         {
             // new action available
             cur_action = action_look_up[action_queue[action_read].action];
+            first = true;
         }
         else
         {
@@ -145,22 +146,27 @@ static void handle_actions(void)
             return;
         }
     }
+    else
+    {
+        first = false;
+    }
     // else we already have an action
     // call handler
-    action_state = (*cur_action)(action_state, &action_queue[action_read]);
-    if(1 > action_state)
+    res = (*cur_action)(&action_queue[action_read], first);
+    if(ERR_NOT_COMPLETED != res)
     {
         // action is finished
-        if(RESULT_OK > action_state)
+        if(RESULT_OK > res)
         {
             // error
             debug_line("target: error %ld on action %s", action_state, action_names[action_queue[action_read].action]);
         }
-        action_state = 0;
+        cur_action = NULL;
         action_read++;
         if(ACTION_QUEUE_LENGTH == action_read)
         {
             action_read = 0;
         }
     }
+    // else - not completed -> try again -> no timeout
 }

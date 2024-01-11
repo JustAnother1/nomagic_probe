@@ -43,7 +43,7 @@ typedef struct{
 // 0                            = OK      -> order was executed successfully
 // negative value (-1, -2,..    = ERROR   -> something went wrong, order failed
 // positive value (1, 2, 3,...) = WORKING -> more steps necessary, call order_handler again
-typedef Result (*order_handler)(int32_t phase, command_typ* cmd);
+typedef Result (*order_handler)(command_typ* cmd, bool first_call);
 
 
 void swd_init(void);

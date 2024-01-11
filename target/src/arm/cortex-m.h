@@ -58,6 +58,6 @@
 "<threads>\r\n" \
 "</threads>\r\n"
 
-Result cotex_m_add_general_registers(Result phase);
+Result cotex_m_add_general_registers(bool first_call);
 
 #endif /* ARM_CORTEX_M_H_ */

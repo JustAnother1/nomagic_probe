@@ -56,25 +56,62 @@
 // Result swd_read_ap(uint32_t addr);
 // Result swd_get_result(uint32_t transaction, uint32_t* data);
 
-Result cotex_m_add_general_registers(Result phase)
+Result cotex_m_add_general_registers(bool first_call)
 {
-    uint32_t i;
-    uint32_t val;
-    Result transId;
-    Result receive;
-    char buf[9];
-    buf[8] = 0;
+    static uint32_t i;
+    static Result transId;
 
-    for(i = 0; i < 17; i++)
+    if(true == first_call)
+    {
+        i = 0;
+        transId = -1;
+    }
+    else
+    {
+        // nothing to do
+    }
+
+    if(RESULT_OK > transId)
     {
         // write i to DCRSR
+        transId = swd_read_ap(DCRSR);
+        if(RESULT_OK > transId)
+        {
+            // that did not work -> try again next time or error
+            return transId;
+        }
+    }
 
-        transId = 5; // TODO
+    // if(RESULT_OK < transId) <- always true
+    {
+        // we received a transfer id and now need to read the data
+        uint32_t val;
+        Result receive;
         receive = swd_get_result(transId, &val);
         if(RESULT_OK == receive)
         {
+            // we got some data
+            char buf[9];
+            buf[8] = 0;
+            transId = -1;
             int_to_hex(buf, val, 8);
             reply_packet_add(buf);
+            i++;
+            if(17 == i)
+            {
+                // finished
+                return RESULT_OK;
+            }
+            else
+            {
+                // continue with next register
+                return ERR_NOT_COMPLETED;
+            }
+        }
+        else
+        {
+            // try again or error
+            return receive;
         }
     }
 }

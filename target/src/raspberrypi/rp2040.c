@@ -88,15 +88,19 @@ Result target_connect(uint32_t phase)
     // TODO DEMCR.DWTENA bit to 1 to enable Watch points
 }
 
-Result handle_target_reply_g(Result phase, action_data_typ* action)
+Result handle_target_reply_g(action_data_typ* action, bool first_call)
 {
     Result res;
     (void) action;
-    if(0 == phase)
+    if(true == first_call)
     {
         reply_packet_prepare();
+        res = cotex_m_add_general_registers(true);
     }
-    res = cotex_m_add_general_registers(phase);
+    else
+    {
+        res = cotex_m_add_general_registers(false);
+    }
     if(RESULT_OK == res)
     {
         reply_packet_send();

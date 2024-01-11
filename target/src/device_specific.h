@@ -30,7 +30,7 @@ typedef struct{
     action_typ action;
 } action_data_typ;
 
-Result handle_target_reply_g(Result phase, action_data_typ* action);
+Result handle_target_reply_g(action_data_typ* action, bool first_call);
 
 
 #endif /* DEVICE_SPECIFIC_H_ */
