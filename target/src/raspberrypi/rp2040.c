@@ -113,7 +113,7 @@ Result target_connect(bool first_call)
             }
             else
             {
-                debug_line("target: SWD connect failed ! (%d)", data);
+                debug_line("target: SWD connect failed ! (%ld)", data);
                 return ERR_TARGET_ERROR;
             }
         }
@@ -171,6 +171,7 @@ Result target_connect(bool first_call)
         return RESULT_OK;
     }
 
+    debug_line("target connect: invalid phase!");
     return ERR_WRONG_STATE;
 }
 

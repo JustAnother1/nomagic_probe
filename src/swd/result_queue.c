@@ -81,6 +81,7 @@ Result result_queue_add_result_of(result_queue_typ queue_id, uint32_t transactio
     }
     else
     {
+        debug_line("transaction is not busy!");
         return ERR_WRONG_STATE;
     }
 }
@@ -109,6 +110,7 @@ Result result_queue_get_result(result_queue_typ queue_id, Result transaction, ui
     }
     else
     {
+        debug_line("transaction is not busy(active)!");
         return ERR_WRONG_STATE;
     }
 }

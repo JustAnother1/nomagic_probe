@@ -43,7 +43,7 @@ static const action_handler action_look_up[NUM_ACTIONS] = {
 };
 
 #ifdef FEAT_DEBUG_UART
-static const char* action_names[NUM_ORDERS] = {
+static const char* action_names[NUM_ACTIONS] = {
         "read general register",
 };
 #endif
@@ -159,7 +159,7 @@ static void handle_actions(void)
         if(RESULT_OK > res)
         {
             // error
-            debug_line("target: error %ld on action %s", action_state, action_names[action_queue[action_read].action]);
+            debug_line("target: error %ld on action %s", res, action_names[action_queue[action_read].action]);
         }
         cur_action = NULL;
         action_read++;

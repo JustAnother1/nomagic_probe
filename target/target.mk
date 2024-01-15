@@ -28,6 +28,9 @@ LIB_CFLAGS += -Wall -Wextra -pedantic -Wshadow -Wdouble-promotion -Wconversion
 LIB_CFLAGS += -ffunction-sections -fdata-sections -Wpadded
 
 LIB_DDEFS = -DTARGET_NAME=RP2040 
+ifeq ($(HAS_DEBUG_UART), yes)
+	LIB_DDEFS += -DFEAT_DEBUG_UART
+endif
 
 LIB_INCDIRS +=$(LIB_FOLDER)src/
 LIB_INCDIRS +=$(SRC_FOLDER)target_api/

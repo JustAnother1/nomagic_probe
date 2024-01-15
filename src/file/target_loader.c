@@ -42,6 +42,7 @@ void target_reply_g(void)
 Result target_request_read(uint32_t address)
 {
     (void) address;
+    debug_line("loader: not available!");
     return ERR_WRONG_STATE;
 }
 
@@ -49,12 +50,14 @@ Result target_read_result(Result transaction, uint32_t* data)
 {
     (void)transaction;
     (void)data;
+    debug_line("loader: not available!");
     return ERR_WRONG_STATE;
 }
 
 Result target_connect(bool first_call)
 {
     (void) first_call;
+    debug_line("loader: not available!");
     return ERR_WRONG_STATE;
 }
 

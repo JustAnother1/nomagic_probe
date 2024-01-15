@@ -18,6 +18,7 @@
 #include "hex.h"
 #include "result.h"
 #include "swd.h"
+#include "debug_log.h"
 
 
 /** System Handler Control and State Register
@@ -176,6 +177,8 @@ Result cortex_m_init(bool first_call)
     {
         return RESULT_OK;
     }
+
+    debug_line("cortex m init: invalid phase!");
     return ERR_WRONG_STATE;
 }
 
@@ -240,12 +243,17 @@ Result cortex_m_halt_cpu(bool first_call)
             {
                 // not yet halted -> read again
                 phase = 2;
+                return ERR_NOT_COMPLETED;
             }
             else
             {
                 // halted !
                 phase = 4;
             }
+        }
+        else
+        {
+            return res;
         }
     }
 
@@ -254,6 +262,7 @@ Result cortex_m_halt_cpu(bool first_call)
         return RESULT_OK;
     }
 
+    debug_line("halt cpu: invalid phase (%ld)!", phase);
     return ERR_WRONG_STATE;
 }
 
@@ -308,6 +317,7 @@ Result cortex_m_add_general_registers(bool first_call)
         }
     }
 
+    debug_line("add general registers: invalid phase!");
     return ERR_WRONG_STATE;
 }
 
@@ -421,5 +431,6 @@ static Result read_specialRegisters(bool first_call, uint32_t regsel, uint32_t* 
         return RESULT_OK;
     }
 
+    debug_line("read special registers: invalid phase!");
     return ERR_WRONG_STATE;
 }

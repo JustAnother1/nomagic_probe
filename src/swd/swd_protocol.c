@@ -451,6 +451,7 @@ Result connect_handler(command_typ* cmd, bool first_call)
         return RESULT_OK;
     }
 
+    debug_line("connect handler: invalid phase!");
     return ERR_WRONG_STATE;
 }
 
@@ -590,6 +591,8 @@ Result write_handler(command_typ* cmd, bool first_call)
         }
         return res;
     }
+
+    debug_line("write handler: invalid phase!");
     return ERR_WRONG_STATE;
 }
 
@@ -644,6 +647,8 @@ Result read_handler(command_typ* cmd, bool first_call)
             return res;
         }
     }
+
+    debug_line("read handler: invalid phase!");
     return ERR_WRONG_STATE;
 }
 
@@ -811,6 +816,7 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
         return RESULT_OK;
     }
 
+    debug_line("read ap register: invalid phase!");
     return ERR_WRONG_STATE;
 }
 
@@ -877,6 +883,7 @@ static Result write_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint
         return RESULT_OK;
     }
 
+    debug_line("write ap register: invalid phase!");
     return ERR_WRONG_STATE;
 }
 
@@ -1111,6 +1118,7 @@ static Result check_AP(uint32_t idr, bool first_call)
         }
 
         // phase has invalid value
+        debug_line("check ap: invalid phase!");
         return (Result)ERR_WRONG_STATE;
     }
     else if(9 == class)
