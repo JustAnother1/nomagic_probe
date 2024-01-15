@@ -22,12 +22,11 @@
 #define ERR_QUEUE_FULL_TRY_AGAIN   -1
 #define ERR_WRONG_STATE            -2
 #define ERR_NOT_CONNECTED          -3
-#define ERR_NOT_YET_AVAILABLE      -4
+#define ERR_NOT_COMPLETED          -4
 #define ERR_INVALID_TRANSACTION_ID -5
 #define ERR_TIMEOUT                -6
 #define ERR_TARGET_ERROR           -7
 #define ERR_INVALID_QUEUE          -8
-#define ERR_NOT_COMPLETED          -9
 
 
 typedef int32_t Result;

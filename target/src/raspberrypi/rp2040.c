@@ -77,17 +77,101 @@ void target_tick(void)
 
 Result target_connect(bool first_call)
 {
+    static Result phase = 0;
+    static Result transaction_id;
+    Result res;
     if(true == first_call)
     {
         debug_line("SWDv2 (0x%08x)", SWD_ID_CORE_0);
         swd_protocol_set_AP_sel(0);
+        phase = 1;
     }
-    return swd_connect(true, SWD_ID_CORE_0);
-    // TODO halt target DHCSR.C_HALT = 1 + check that DHCSR.S_HALT is 1
-    // TODO read ROM Table from address pointed to by BASE Register (Architecture P 318)
-    // TODO check number of Break Points
-    // TODO check number of Watch points
-    // TODO DEMCR.DWTENA bit to 1 to enable Watch points
+
+    if(1 == phase)
+    {
+        res = swd_connect(true, SWD_ID_CORE_0);
+        if(RESULT_OK < res)
+        {
+            transaction_id = res;
+            phase = 2;
+        }
+        else
+        {
+            return res;
+        }
+    }
+
+    if(2 == phase)
+    {
+        uint32_t data;
+        res = swd_get_result(transaction_id, &data);
+        if(RESULT_OK == res)
+        {
+            if(RESULT_OK == data)
+            {
+                phase = 3;
+            }
+            else
+            {
+                debug_line("target: SWD connect failed ! (%d)", data);
+                return ERR_TARGET_ERROR;
+            }
+        }
+        else
+        {
+            return res;
+        }
+    }
+
+    if((3 == phase) || (4 == phase))
+    {
+        if(3 == phase)
+        {
+            res = cortex_m_init(true);
+            phase = 4;
+        }
+        else
+        {
+            res = cortex_m_init(false);
+        }
+        if(RESULT_OK == res)
+        {
+            phase = 5;
+        }
+        else
+        {
+            return res;
+        }
+    }
+
+    if((5 == phase) || (6 == phase))
+    {
+        if(5 == phase)
+        {
+            res = cortex_m_halt_cpu(true);
+            phase = 6;
+        }
+        else
+        {
+            res = cortex_m_halt_cpu(false);
+        }
+        if(RESULT_OK == res)
+        {
+            phase = 7;
+        }
+        else
+        {
+            return res;
+        }
+    }
+
+    if(7 == phase)
+    {
+        // all done
+        return RESULT_OK;
+    }
+
+    return ERR_WRONG_STATE;
 }
 
 Result handle_target_reply_g(action_data_typ* action, bool first_call)
@@ -97,11 +181,11 @@ Result handle_target_reply_g(action_data_typ* action, bool first_call)
     if(true == first_call)
     {
         reply_packet_prepare();
-        res = cotex_m_add_general_registers(true);
+        res = cortex_m_add_general_registers(true);
     }
     else
     {
-        res = cotex_m_add_general_registers(false);
+        res = cortex_m_add_general_registers(false);
     }
     if(RESULT_OK == res)
     {

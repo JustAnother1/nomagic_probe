@@ -1,0 +1,4 @@
+https://www3.physnet.uni-hamburg.de/physnet/Tru64-Unix/HTML/APS31DTE/DOCU_002.HTM
+
+https://tldp.org/HOWTO/Program-Library-HOWTO/dl-libraries.html
+

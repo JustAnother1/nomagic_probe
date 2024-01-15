@@ -55,7 +55,7 @@ Result target_read_result(Result transaction, uint32_t* data)
 Result target_connect(bool first_call)
 {
     (void) first_call;
-    return swd_connect(false, 0);
+    return ERR_WRONG_STATE;
 }
 
 bool target_is_connected(void)

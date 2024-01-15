@@ -104,7 +104,7 @@ Result result_queue_get_result(result_queue_typ queue_id, Result transaction, ui
         }
         else
         {
-            return ERR_NOT_YET_AVAILABLE;
+            return ERR_NOT_COMPLETED;
         }
     }
     else

@@ -80,6 +80,11 @@ void swd_protocol_init(void)
     swd_packets_init();
 }
 
+bool swd_is_connected(void)
+{
+    return state.is_connected;
+}
+
 void swd_protocol_set_AP_sel(uint32_t val)
 {
     state.mem_ap.ap_sel = val;
@@ -109,6 +114,7 @@ void swd_protocol_tick(void)
     }
 }
 
+#ifdef FEAT_DEBUG_UART
 bool swd_info(uint32_t which)
 {
     bool done = false;
@@ -168,6 +174,7 @@ bool swd_info(uint32_t which)
     }
     return done;
 }
+#endif
 
 Result connect_handler(command_typ* cmd, bool first_call)
 {
@@ -319,11 +326,7 @@ Result connect_handler(command_typ* cmd, bool first_call)
     if(7 == phase)
     {
         phase_result = result_queue_get_result(PACKET_QUEUE, transaction_id, &read_data);
-        if(ERR_NOT_YET_AVAILABLE == phase_result)
-        {
-            return ERR_NOT_COMPLETED; // -> try again
-        }
-        else if(RESULT_OK == phase_result)
+        if(RESULT_OK == phase_result)
         {
             state.reg_DPIDR = read_data;
             state.is_connected = true;
@@ -411,11 +414,7 @@ Result connect_handler(command_typ* cmd, bool first_call)
     if(11 == phase)
     {
         phase_result = result_queue_get_result(PACKET_QUEUE, transaction_id, &read_data);
-        if(ERR_NOT_YET_AVAILABLE == phase_result)
-        {
-            return ERR_NOT_COMPLETED; // -> try again
-        }
-        else if(RESULT_OK == phase_result)
+        if(RESULT_OK == phase_result)
         {
             cycle_counter++;
             state.reg_CTRL_STAT = read_data;
@@ -448,6 +447,7 @@ Result connect_handler(command_typ* cmd, bool first_call)
     if(12 == phase)
     {
         // done!
+        result_queue_add_result_of(COMMAND_QUEUE, cmd->transaction_id, RESULT_OK);
         return RESULT_OK;
     }
 
@@ -545,6 +545,54 @@ Result scan_handler(command_typ* cmd, bool first_call)
     return (Result)phase;
 }
 
+
+Result write_handler(command_typ* cmd, bool first_call)
+{
+    static Result phase = 0;
+    if(true == first_call)
+    {
+        phase = 1;
+    }
+
+    if((1 == phase) || (2 == phase))
+    {
+        Result res;
+        if(1 == phase)
+        {
+            res = write_ap_register(AP_BANK_TAR, AP_REGISTER_TAR, cmd->address, true);
+            phase = 2;
+        }
+        else
+        {
+            res = write_ap_register(AP_BANK_TAR, AP_REGISTER_TAR, cmd->address, false);
+        }
+        if(RESULT_OK == res)
+        {
+            phase = 3;
+        }
+        else
+        {
+            return res;
+        }
+    }
+
+    if((3 == phase) || (4 == phase))
+    {
+        Result res;
+        if(3 == phase)
+        {
+            res = write_ap_register(AP_BANK_DRW, AP_REGISTER_DRW, cmd->i_val, true);
+            phase = 4;
+        }
+        else
+        {
+            res = write_ap_register(AP_BANK_DRW, AP_REGISTER_DRW, cmd->i_val, false);
+        }
+        return res;
+    }
+    return ERR_WRONG_STATE;
+}
+
 Result read_handler(command_typ* cmd, bool first_call)
 {
     static Result phase = 0;
@@ -558,12 +606,12 @@ Result read_handler(command_typ* cmd, bool first_call)
         Result res;
         if(1 == phase)
         {
-            res = write_ap_register(AP_BANK_TAR, AP_REGISTER_TAR, cmd->i_val, true);
+            res = write_ap_register(AP_BANK_TAR, AP_REGISTER_TAR, cmd->address, true);
             phase = 2;
         }
         else
         {
-            res = write_ap_register(AP_BANK_TAR, AP_REGISTER_TAR, cmd->i_val, false);
+            res = write_ap_register(AP_BANK_TAR, AP_REGISTER_TAR, cmd->address, false);
         }
         if(RESULT_OK == res)
         {
@@ -663,11 +711,7 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
     if(3 == phase)
     {
         phase_result = result_queue_get_result(PACKET_QUEUE, transaction_id, data);
-        if(ERR_NOT_YET_AVAILABLE == phase_result)
-        {
-            return ERR_NOT_COMPLETED; // -> try again
-        }
-        else if(RESULT_OK == phase_result)
+        if(RESULT_OK == phase_result)
         {
             phase = 4;
         }
@@ -702,11 +746,7 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
     if(5 == phase)
     {
         phase_result = result_queue_get_result(PACKET_QUEUE, transaction_id, &ctrl_stat);
-        if(ERR_NOT_YET_AVAILABLE == phase_result)
-        {
-            return ERR_NOT_COMPLETED; // -> try again
-        }
-        else if(RESULT_OK == phase_result)
+        if(RESULT_OK == phase_result)
         {
             if(0 == (ctrl_stat & 0x40))
             {
@@ -748,7 +788,7 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
     if(7== phase)
     {
         phase_result = result_queue_get_result(PACKET_QUEUE, transaction_id, data);
-        if(ERR_NOT_YET_AVAILABLE == phase_result)
+        if(ERR_NOT_COMPLETED == phase_result)
         {
             return ERR_NOT_COMPLETED; // -> try again
         }
@@ -1021,17 +1061,53 @@ static Result check_AP(uint32_t idr, bool first_call)
             if(RESULT_OK == res)
             {
                 debug_line("AP: CFG1 : 0x%08lx", reg_data);
-
-                if(cycle_counter < first_ap)
-                {
-                    first_ap = cycle_counter;
-                }
-                return RESULT_OK; // done with this AP
+                phase = 13;
             }
             else
             {
                 return res;
             }
+        }
+
+        if(13 == phase)
+        {
+            // TODO read ROM Table
+            // ROM Table:
+            // ==========
+            // each 32bit Entry is defined as:
+            // bit 31-12: Address Offset _signed_ base address offset relative to the ROM table base address
+            // bit 11-2: reserved
+            // bit 1: Format: 0= 8 bit format(not used); 1= 32bit format.
+            // bit 0: Entry present: 0= ignore this entry; 1= valid entry
+            // entry 0x00000000 marks end of table!
+
+            // actual table: (rp2040 @ 0xe00ff003) = BASE & 0xfffffffc; // lowest two bits are 0.
+            // offset, name,   value,                    description
+            // ------  ----    -----                     -----------
+            // 0,      SCS,    0xfff0f003,               points to the SCS @ 0xe000e000.
+            // 4,      ROMDWT, 0xfff02002 or 0xfff02003, points to DWT @ 0xe0001000 bit0 is 1 if DWT is fitted.
+            // 8,      ROMBPU, 0xfff03002 or 0xfff03003, points to the BPU @ 0xe0002000 bit 0 is set if BPU is fitted.
+            // 0xc,    End,    0x00000000,               End of table marker.
+
+            /*
+             * i = 0
+             * do{
+             *  read memory @ Base & 0xfffffffc + 4*i
+             *  i = 0 -> SCS
+             *  i = 1 -> ROMDWT
+             *  i = 2 -> ROMBPU
+             * } while(i < 1024 and read != 0)
+             */
+            // TODO read ROM Table from address pointed to by BASE Register (Architecture P 318)
+            // TODO check number of Break Points
+            // TODO check number of Watch points
+
+
+            if(cycle_counter < first_ap)
+            {
+                first_ap = cycle_counter;
+            }
+            return RESULT_OK; // done with this AP
         }
 
         // phase has invalid value

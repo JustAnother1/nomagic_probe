@@ -34,6 +34,7 @@ static const order_handler order_look_up[NUM_ORDERS] = {
         connect_handler,
         scan_handler,
         read_handler,
+        write_handler,
 };
 
 #ifdef FEAT_DEBUG_UART
@@ -41,6 +42,7 @@ static const char* order_names[NUM_ORDERS] = {
         "connect",
         "scan",
         "read",
+        "write",
 };
 #endif
 
@@ -58,12 +60,13 @@ void swd_init(void)
 
 void swd_tick(void)
 {
+    swd_packets_tick();
     // handle commands
     handle_order();
 
     // handle things that need to be done regularly / independent of any commands
-    swd_packets_tick();
     swd_protocol_tick();
+    swd_packets_tick();
 }
 
 Result swd_connect(bool multi, uint32_t target)
@@ -76,11 +79,21 @@ Result swd_connect(bool multi, uint32_t target)
     }
     if(cmdq_read != next_idx)
     {
-        cmd_queue[cmdq_write].order = CMD_CONNECT;
-        cmd_queue[cmdq_write].flag = multi;
-        cmd_queue[cmdq_write].i_val = target;
-        cmdq_write = next_idx;
-        return 0;
+        uint32_t tid;
+        Result res = result_queue_get_next_transaction_id(COMMAND_QUEUE, &tid);
+        if(RESULT_OK == res)
+        {
+            cmd_queue[cmdq_write].order = CMD_CONNECT;
+            cmd_queue[cmdq_write].flag = multi;
+            cmd_queue[cmdq_write].i_val = target;
+            cmd_queue[cmdq_write].transaction_id = tid;
+            cmdq_write = next_idx;
+            return (Result)tid;
+        }
+        else
+        {
+            return res;
+        }
     }
     else
     {
@@ -100,7 +113,29 @@ Result swd_scan(void)
     {
         cmd_queue[cmdq_write].order = CMD_SCAN;
         cmdq_write = next_idx;
-        return 0;
+        return RESULT_OK;
+    }
+    else
+    {
+        return ERR_QUEUE_FULL_TRY_AGAIN;
+    }
+}
+
+Result swd_write_ap(uint32_t addr, uint32_t data)
+{
+    // TODO protect against concurrent access (cmdq_write)
+    uint32_t next_idx = cmdq_write + 1;
+    if(CMD_QUEUE_LENGTH == next_idx)
+    {
+        next_idx = 0;
+    }
+    if(cmdq_read != next_idx)
+    {
+        cmd_queue[cmdq_write].order = CMD_WRITE;
+        cmd_queue[cmdq_write].address = addr;
+        cmd_queue[cmdq_write].i_val = data;
+        cmdq_write = next_idx;
+        return RESULT_OK;
     }
     else
     {
@@ -123,7 +158,7 @@ Result swd_read_ap(uint32_t addr)
         if(RESULT_OK == res)
         {
             cmd_queue[cmdq_write].order = CMD_READ;
-            cmd_queue[cmdq_write].i_val = addr;
+            cmd_queue[cmdq_write].address = addr;
             cmd_queue[cmdq_write].transaction_id = tid;
             cmdq_write = next_idx;
             return (Result)tid;
@@ -180,6 +215,10 @@ static void handle_order(void)
         {
             // error
             debug_line("swd: error %ld on order %s", order_state, order_names[cmd_queue[cmdq_read].order]);
+            if(CMD_CONNECT == cmd_queue[cmdq_read].order)
+            {
+                result_queue_add_result_of(COMMAND_QUEUE, cmd_queue[cmdq_read].transaction_id, (uint32_t)ERR_TARGET_ERROR);
+            }
         }
         else
         {
@@ -208,6 +247,10 @@ static void handle_order(void)
             debug_line("ERROR: SWD: timeout in running %s order !", order_names[cmd_queue[cmdq_read].order]);
             timeout_counter = 0;
             // TODO can we do something better than to just skip this command?
+            if(CMD_CONNECT == cmd_queue[cmdq_read].order)
+            {
+                result_queue_add_result_of(COMMAND_QUEUE, cmd_queue[cmdq_read].transaction_id, (uint32_t)ERR_TIMEOUT);
+            }
             // do not try anymore
             cur_order = NULL;
             cmdq_read++;

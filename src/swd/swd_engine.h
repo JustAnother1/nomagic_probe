@@ -24,6 +24,7 @@ typedef enum {
     CMD_CONNECT = 0,
     CMD_SCAN,
     CMD_READ,
+    CMD_WRITE,
     // new orders go here
     NUM_ORDERS,  // <- do not use other than array size !
 }order_typ;
@@ -31,6 +32,7 @@ typedef enum {
 typedef struct{
     order_typ order;
     bool flag;
+    uint32_t address;
     uint32_t i_val;
     uint32_t transaction_id;
 } command_typ;

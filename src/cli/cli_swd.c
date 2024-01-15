@@ -51,22 +51,23 @@ bool cmd_swd_test(uint32_t loop)
             {
                 res = target_connect(false);
             }
-            if (1 > res)
+            if(RESULT_OK == res)
             {
-                if(0 == res)
-                {
-                    // ok
-                    step = 2;
-                }
-                else
-                {
-                    // error
-                    debug_line("ERROR: SWD: failed to connect (%ld)!", res);
-                    return true;
-                }
+                // ok
+                step = 2;
+                return false;
             }
-            // else busy -> call again
-            return false;
+            else if(ERR_NOT_COMPLETED == res)
+            {
+                // call again
+                return false;
+            }
+            else
+            {
+                // error
+                debug_line("ERROR: SWD: failed to connect (%ld)!", res);
+                return true;
+            }
         }
         else if(2 == step)
         {
@@ -75,7 +76,7 @@ bool cmd_swd_test(uint32_t loop)
             res = swd_scan();
             if (1 > res)
             {
-                if(0 == res)
+                if(RESULT_OK == res)
                 {
                     // ok -> done
                     return true;
@@ -111,19 +112,19 @@ bool cmd_swd_connect(uint32_t loop)
     {
         res = target_connect(false);
     }
-    if(0 == res)
+    if(RESULT_OK == res)
     {
         return true;
     }
-    else if(0 > res)
-    {
-        debug_line("ERROR: SWD: failed to connect (%ld)!", res);
-        return true;
-    }
-    else
+    else if(ERR_NOT_COMPLETED == res)
     {
         // not yet complete
         return false;
+    }
+    else
+    {
+        debug_line("ERROR: SWD: failed to connect (%ld)!", res);
+        return true;
     }
 }
 
@@ -165,7 +166,7 @@ bool cmd_swd_ap_read(uint32_t loop)
         uint32_t data = 0;
 
         res = target_read_result(progress, &data);
-        if(ERR_NOT_YET_AVAILABLE == res)
+        if(ERR_NOT_COMPLETED == res)
         {
             // not yet complete
             return false;

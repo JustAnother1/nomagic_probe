@@ -52,7 +52,7 @@ Result result_queue_add_result_of(result_queue_typ queue_id, uint32_t transactio
  * @param queue_id command or Packet queue
  * @param transaction id of the transaction. (range 1..MAX_QUEUE_ENTRIES)
  * @param data [OUT] result value of the transaction.
- * @return ERR_INVALID_TRANSACTION_ID, ERR_WRONG_STATE, ERR_NOT_YET_AVAILABLE or RESULT_OK
+ * @return ERR_INVALID_TRANSACTION_ID, ERR_WRONG_STATE, ERR_NOT_COMPLETED or RESULT_OK
  */
 Result result_queue_get_result(result_queue_typ queue_id, Result transaction, uint32_t* data);
 

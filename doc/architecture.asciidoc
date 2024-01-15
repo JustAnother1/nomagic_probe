@@ -40,6 +40,46 @@ The file sytem can be accessed using the USB interface (Mass Storage Device Clas
 
 == structure
 
+This chapter describes the structure of the component that make up the firmware, as well as their interactions.
+
+These are the modules that make up the firmware:
+- swd
+- target
+- gdbserver
+- file system
+
+The swd module provides the functionality of the SWD Interface (defined in probe_api/swd.h) to the target module.
+
+The target module executes the functionality requested by the gdbserver module.
+
+The gdbserver module implements the GDB-Server protocoll and uses the target module to aquire the requested information and to execute the commanded actions.
+
+The file system provides the mass storage interface.
+
+=== SWD
+
+The SWD module implements the ARM specified two wire debug protocol. It does this in a layered approach.
+
+==== bit layer
+The first and lowest layer is the bit layer. It is implemented in swd_gpio.c and deals with the SWDIO and SWCLK signals. It handles the single bits on the wires. So high, Low Input Output,..
+
+==== packet layer
+The second layer is the packet layer it sits on top of the bit layer. It is implemented in swd_packets.c  and handles packets. It knows how SWD packets lok like and sends the requested packets over the line. It does this asynchronous to the API function being called in the tick function. It uses a queue. The API call enters the request for a packet to be send into the queue. In the tick call the queu is checked and if it contains a request then one packet will be send. This process makes it necessary to collect the result of a read packet from a result queue.
+
+==== protocol layer
+On top of the packet layer is the protocol layer. It is implemented in swd_protocol.c and swd_engine.c. It provides an API(defined in probe_api/swd.h) for other modules (mainly the target module) to use. It also put the requested actions into a queue and executes them once the tick function gets called. 
+
+=== Target
+
+The target module implements the interface to exactly one chip.
+
+=== GDB Server
+
+The gdbserver module implements the remote protocoll as specified for GDB.
+
+=== file system
+
+The file system module provides the USB Mass Storage device as well as the real and faked files inside it.
 
 == folders
 The following lists all the folders and gives an overview what they contain.

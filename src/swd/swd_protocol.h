@@ -47,4 +47,12 @@ Result scan_handler(command_typ* cmd, bool first_call);
  */
 Result read_handler(command_typ* cmd, bool first_call);
 
+/** writes a value to the memory space of the target.
+ *
+ * @param first_call if true then start from the beginning, else continue unfinished task.
+ * @param cmd contains the parameters for the connection
+ * @return RESULT_OK if finished successfully else ERR_NOT_COMPLETED, or an error code.
+ */
+Result write_handler(command_typ* cmd, bool first_call);
+
 #endif /* SRC_SWD_SWD_PROTOCOL_H_ */
