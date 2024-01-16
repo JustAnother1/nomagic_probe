@@ -136,6 +136,7 @@ Result target_connect(bool first_call)
         }
         if(RESULT_OK == res)
         {
+            debug_line("target: initialized cortex-m");
             phase = 5;
         }
         else
@@ -157,6 +158,7 @@ Result target_connect(bool first_call)
         }
         if(RESULT_OK == res)
         {
+            debug_line("target: halted CPU");
             phase = 7;
         }
         else

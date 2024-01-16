@@ -39,6 +39,7 @@ typedef struct{
     bool large_data_support;
     uint32_t reg_BASE;
     uint32_t reg_CSW;
+    uint32_t reg_TAR;
 } mem_ap_typ;
 
 typedef struct{
@@ -75,8 +76,18 @@ void swd_protocol_init(void)
     ctrl_stat = 0;
     state.is_connected = false;
     state.is_minimal_debug_port = false;
+    state.dp_version = 0;
+    state.reg_DPIDR = 0;
+    state.reg_SELECT = 0;
+    state.reg_CTRL_STAT = 0;
     state.last_activity_time_us = time_us_32();
     state.mem_ap.ap_sel = 0xffffffff;
+    state.mem_ap.version = 0;
+    state.mem_ap.long_address_support = false;
+    state.mem_ap.large_data_support = false;
+    state.mem_ap.reg_BASE = 0;
+    state.mem_ap.reg_CSW = 0;
+    state.mem_ap.reg_TAR = 0;
     swd_packets_init();
 }
 
@@ -557,23 +568,32 @@ Result write_handler(command_typ* cmd, bool first_call)
 
     if((1 == phase) || (2 == phase))
     {
-        Result res;
-        if(1 == phase)
+        if(cmd->address == state.mem_ap.reg_TAR)
         {
-            res = write_ap_register(AP_BANK_TAR, AP_REGISTER_TAR, cmd->address, true);
-            phase = 2;
-        }
-        else
-        {
-            res = write_ap_register(AP_BANK_TAR, AP_REGISTER_TAR, cmd->address, false);
-        }
-        if(RESULT_OK == res)
-        {
+            // we can skip this step
             phase = 3;
         }
         else
         {
-            return res;
+            Result res;
+            if(1 == phase)
+            {
+                res = write_ap_register(AP_BANK_TAR, AP_REGISTER_TAR, cmd->address, true);
+                phase = 2;
+            }
+            else
+            {
+                res = write_ap_register(AP_BANK_TAR, AP_REGISTER_TAR, cmd->address, false);
+            }
+            if(RESULT_OK == res)
+            {
+                state.mem_ap.reg_TAR = cmd->address;
+                phase = 3;
+            }
+            else
+            {
+                return res;
+            }
         }
     }
 
@@ -606,23 +626,32 @@ Result read_handler(command_typ* cmd, bool first_call)
 
     if((1 == phase) || (2 == phase))
     {
-        Result res;
-        if(1 == phase)
+        if(cmd->address == state.mem_ap.reg_TAR)
         {
-            res = write_ap_register(AP_BANK_TAR, AP_REGISTER_TAR, cmd->address, true);
-            phase = 2;
-        }
-        else
-        {
-            res = write_ap_register(AP_BANK_TAR, AP_REGISTER_TAR, cmd->address, false);
-        }
-        if(RESULT_OK == res)
-        {
+            // we can skip this step
             phase = 3;
         }
         else
         {
-            return res;
+            Result res;
+            if(1 == phase)
+            {
+                res = write_ap_register(AP_BANK_TAR, AP_REGISTER_TAR, cmd->address, true);
+                phase = 2;
+            }
+            else
+            {
+                res = write_ap_register(AP_BANK_TAR, AP_REGISTER_TAR, cmd->address, false);
+            }
+            if(RESULT_OK == res)
+            {
+                state.mem_ap.reg_TAR = cmd->address;
+                phase = 3;
+            }
+            else
+            {
+                return res;
+            }
         }
     }
 

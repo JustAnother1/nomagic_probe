@@ -104,6 +104,11 @@ bool cmd_swd_connect(uint32_t loop)
     (void)loop;
     Result res;
 
+    if(10000 < loop)
+    {
+        debug_line("ERROR: SWD: failed to connect (timeout)!");
+        return true;
+    }
     if(0 == loop)
     {
         res = target_connect(true);

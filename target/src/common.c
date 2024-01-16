@@ -50,11 +50,14 @@ static const char* action_names[NUM_ACTIONS] = {
 
 static void handle_actions(void);
 
+static uint32_t timeout_counter;
+
 void target_common_init(void)
 {
     action_read = 0;
     action_write = 0;
     cur_action = NULL;
+    timeout_counter = 0;
 }
 
 void send_part(char* part, uint32_t size, uint32_t offset, uint32_t length)
@@ -139,6 +142,7 @@ static void handle_actions(void)
             // new action available
             cur_action = action_look_up[action_queue[action_read].action];
             first = true;
+            timeout_counter = 0;
         }
         else
         {
@@ -168,5 +172,23 @@ static void handle_actions(void)
             action_read = 0;
         }
     }
-    // else - not completed -> try again -> no timeout
+    else
+    {
+        // order not done
+        timeout_counter++;
+
+        if(100 < timeout_counter)
+        {
+            debug_line("ERROR: SWD: timeout in running %s order !", action_names[action_queue[action_read].action]);
+            timeout_counter = 0;
+            // TODO can we do something better than to just skip this command?
+            // do not try anymore
+            cur_action = NULL;
+            action_read++;
+            if(ACTION_QUEUE_LENGTH == action_read)
+            {
+                action_read = 0;
+            }
+        }
+    }
 }
