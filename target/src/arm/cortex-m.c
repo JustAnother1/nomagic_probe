@@ -188,10 +188,12 @@ Result cortex_m_halt_cpu(bool first_call)
     // halt target DHCSR.C_HALT = 1 + check that DHCSR.S_HALT is 1
     static Result phase = 0;
     static Result transaction_id = 0;
+    static uint32_t retries = 0;
     Result res;
     if(true == first_call)
     {
         phase = 1;
+        retries = 0;
     }
 
     // write the halt command
@@ -241,9 +243,17 @@ Result cortex_m_halt_cpu(bool first_call)
         {
             if(0 == (data & (1<<17)))
             {
-                // not yet halted -> read again
-                phase = 2;
-                return ERR_NOT_COMPLETED;
+                if(100 > retries)
+                {
+                    return ERR_TIMEOUT;
+                }
+                else
+                {
+                    // not yet halted -> read again
+                    phase = 2;
+                    retries++;
+                    return ERR_NOT_COMPLETED;
+                }
             }
             else
             {
