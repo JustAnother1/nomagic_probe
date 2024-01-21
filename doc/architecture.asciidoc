@@ -4,6 +4,7 @@ Firmware architecture
 
 This document should help the reader to get a better understanding of the nomagic_probe fimrware. It shall explain the reasoning behind the design descisions and give an overview about the major parts that together make up the nomagic_probe firmware.
 
+
 == guiding principles
 
 The guiding strategies explain the strategy of the firmware. It is also these guedlines that differentiatiate nomagic_probe from alternative solutions.
@@ -32,10 +33,38 @@ The recommendation is to add the frimware (*.elf or *.uf2 file) a well as any ne
 == applied methods
 the following sections describe the methods used to achive the targets. 
 
+=== run from RAM
+
+The complete firmware code is copied to RAM and only after that the firmware starts executing. Thsi is done to prevent loading code from QSPI and the QSPI cache to influence the timing of the firmware. This also frees up the QSPI interface for data storage.
+
 === filesystem
 
 To allow a user configuration using configuration files the nomagic probe has a file system that can store these files.
 The file sytem can be accessed using the USB interface (Mass Storage Device Class) and inside the firmware.
+
+
+== boot
+
+The RP2040 has no internal non volatile memory (flash). That makes booting it a bit more complex. Is has to happen in several stages that execute one after the other.
+
+=== first stage: ROM in RP2040
+
+On power on the RP2040 starts executing code from addres 0. That is the boot loader from the read only memeory (ROM). The bootloader uses a standard method of reading from the QSPI flash to read the first 256 bytes. It then checks if the last 4 bytes are a valid checksum (CRC32) over those bytes. If so then it starts executing these bytes, the so called second stage boot loader. If the CRC check fails then the RP2040 boots as USB mass storage device and allows to flash a firmware by storing an *.uf2 file on it.
+
+As the boot loader is a ROM embedded in the chip there is no way to change this part of the boot up behaviour.
+
+=== second stage: first 256 bytes of QSPI flash
+
+Nothing much can be accomplished in 252 bytes of code. The intention is that this code configures the RP2040 to the specific QSPI flash that is connected. This then allows for higher speeds. It then calles into the firmware.
+
+=== third stage: hal/startup.c:Reset_Handler()
+
+The third stage boot loader is the Reset_Handler() function. This third stage is not necessary. And instead of it the firmware could start executing. Top improve the timing the complete firmware should be excuted from RAM. Therefore the firmware code needs to be copied to RAM. Some basic initialization and the copying of the code is done in the Reset_Handler() function. Once done the main function is called.
+
+=== firmware: main.c:main()
+
+The main function calles the necessary initialization functions of all used modules and then starts executing the *_tick() functions.
+The firmware i now running.
 
 
 == structure
@@ -80,6 +109,7 @@ The gdbserver module implements the remote protocoll as specified for GDB.
 === file system
 
 The file system module provides the USB Mass Storage device as well as the real and faked files inside it.
+
 
 == folders
 The following lists all the folders and gives an overview what they contain.
@@ -134,7 +164,6 @@ software tools than were used.
 
 === main
 The main function. In dual core mode splitting the tasks onto the core is done here.
-
 
 === led
 blinks the led in a pattern. This is used to signal different firmware states by using different blink patterns.
