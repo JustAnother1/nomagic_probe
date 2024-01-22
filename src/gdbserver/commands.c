@@ -96,20 +96,13 @@ void commands_execute(char* received, uint32_t length, char* checksum)
             break;
 
         case '?':  // Report why the target halted
-            // TODO report correct reason
-            reply_packet_prepare();
-            reply_packet_add("S05");
-            reply_packet_send();
-            break;
-
-        case 'g':  // read  or write general Registers
-            target_reply_g();
+            target_reply_questionmark();
             break;
 
         case 'c':  // continue
         case 'C':  // continue
             // TODO
-            send_unknown_command_reply();
+            target_reply_continue(received, length);
             break;
 
         case 'D':  // Detach from client
@@ -119,24 +112,29 @@ void commands_execute(char* received, uint32_t length, char* checksum)
             reply_packet_send();
             break;
 
-        case 'G':  // read  or write general Registers
+        case 'g':  // read general Registers
+            target_reply_g();
+            break;
+
+        case 'G':  // write general Registers
+            target_reply_write_g(received, length);
+            break;
+
         case 'H':  // report the current tread
             // Hc ?
         case 'k':  // kill the target
-        case 'M':  // write main memory
             // TODO
             send_unknown_command_reply();
             break;
 
-        case 'm':  // read main memory : m addr,length
-            /*
-        {
-            char buf[8];
-            uint32_t val = swd_read_address()
-            int_to_hex(buf, val, 8);
-        }
+        case 'M':  // write main memory : M addr,length:XX...
+            target_reply_write_memory(received, length);
             break;
-*/
+
+        case 'm':  // read main memory : m addr,length
+            target_reply_read_memory(received, length);
+            break;
+
         case 'P':  // read  or write specific Register
         case 'p':  // read  or write specific Register
             // TODO
@@ -168,8 +166,7 @@ void commands_execute(char* received, uint32_t length, char* checksum)
         case 'R':  // Restart the program being run
         case 's':  // step
         case 'S':  // step
-            // TODO
-            send_unknown_command_reply();
+            target_reply_step(received, length);
             break;
 
         case 'T':  // report if a particular Thread is alive
@@ -186,7 +183,7 @@ void commands_execute(char* received, uint32_t length, char* checksum)
             break;
 
         case 'X':  // load binary data
-        case 'Z':  // clear or set breakpoints or watchpoints
+        case 'Z':  // clear or set breakpoints or watch points
             // TODO
             send_unknown_command_reply();
             break;

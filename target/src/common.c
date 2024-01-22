@@ -34,12 +34,28 @@
 // positive value (1, 2, 3,...) = WORKING -> more steps necessary, call order_handler again
 typedef Result (*action_handler)(action_data_typ* action, bool first_call);
 
+
+static void handle_actions(void);
+static Result handle_target_reply_questionmark(action_data_typ* action, bool first_call);
+static Result handle_target_reply_write_g(action_data_typ* action, bool first_call);
+static Result handle_target_reply_continue(action_data_typ* action, bool first_call);
+static Result handle_target_reply_read_memory(action_data_typ* action, bool first_call);
+static Result handle_target_reply_write_memory(action_data_typ* action, bool first_call);
+static Result handle_target_reply_step(action_data_typ* action, bool first_call);
+
+
 static volatile uint32_t action_read;
 static volatile uint32_t action_write;
 static action_handler cur_action;
 static action_data_typ action_queue[ACTION_QUEUE_LENGTH];
 static const action_handler action_look_up[NUM_ACTIONS] = {
         handle_target_reply_g,
+        handle_target_reply_questionmark,
+        handle_target_reply_write_g,
+        handle_target_reply_continue,
+        handle_target_reply_read_memory,
+        handle_target_reply_write_memory,
+        handle_target_reply_step,
 };
 
 #ifdef FEAT_DEBUG_UART
@@ -47,8 +63,6 @@ static const char* action_names[NUM_ACTIONS] = {
         "read general register",
 };
 #endif
-
-static void handle_actions(void);
 
 static uint32_t timeout_counter;
 
@@ -128,6 +142,216 @@ void target_reply_g(void)
             ;  // TODO
         }
     }
+}
+
+void target_reply_questionmark(void)
+{
+    // TODO protect against concurrent access (action_write)
+    uint32_t next_idx = action_write + 1;
+    if(ACTION_QUEUE_LENGTH == next_idx)
+    {
+        next_idx = 0;
+    }
+    if(action_read != next_idx)
+    {
+        action_queue[action_write].action = GDB_CMD_QUESTIONMARK;
+        action_write = next_idx;
+    }
+    else
+    {
+        // can not happen, as gdb can only do one command after the other,...
+        for(;;)
+        {
+            ;  // TODO
+        }
+    }
+}
+
+void target_reply_write_g(char* received, uint32_t length)
+{
+    (void) received; // TODO
+    (void) length; // TODO
+    // TODO protect against concurrent access (action_write)
+    uint32_t next_idx = action_write + 1;
+    if(ACTION_QUEUE_LENGTH == next_idx)
+    {
+        next_idx = 0;
+    }
+    if(action_read != next_idx)
+    {
+        action_queue[action_write].action = GDB_CMD_WRITE_G;
+        action_write = next_idx;
+    }
+    else
+    {
+        // can not happen, as gdb can only do one command after the other,...
+        for(;;)
+        {
+            ;  // TODO
+        }
+    }
+}
+
+void target_reply_continue(char* received, uint32_t length)
+{
+    (void) received; // TODO
+    (void) length; // TODO
+    // TODO protect against concurrent access (action_write)
+    uint32_t next_idx = action_write + 1;
+    if(ACTION_QUEUE_LENGTH == next_idx)
+    {
+        next_idx = 0;
+    }
+    if(action_read != next_idx)
+    {
+        action_queue[action_write].action = GDB_CMD_CONTINUE;
+        action_write = next_idx;
+    }
+    else
+    {
+        // can not happen, as gdb can only do one command after the other,...
+        for(;;)
+        {
+            ;  // TODO
+        }
+    }
+}
+
+void target_reply_read_memory(char* received, uint32_t length)
+{
+    (void) received; // TODO
+    (void) length; // TODO
+    // TODO protect against concurrent access (action_write)
+    uint32_t next_idx = action_write + 1;
+    if(ACTION_QUEUE_LENGTH == next_idx)
+    {
+        next_idx = 0;
+    }
+    if(action_read != next_idx)
+    {
+        action_queue[action_write].action = GDB_CMD_READ_MEMORY;
+        action_write = next_idx;
+    }
+    else
+    {
+        // can not happen, as gdb can only do one command after the other,...
+        for(;;)
+        {
+            ;  // TODO
+        }
+    }
+}
+
+void target_reply_write_memory(char* received, uint32_t length)
+{
+    (void) received; // TODO
+    (void) length; // TODO
+    // TODO protect against concurrent access (action_write)
+    uint32_t next_idx = action_write + 1;
+    if(ACTION_QUEUE_LENGTH == next_idx)
+    {
+        next_idx = 0;
+    }
+    if(action_read != next_idx)
+    {
+        action_queue[action_write].action = GDB_CMD_WRITE_MEMORY;
+        action_write = next_idx;
+    }
+    else
+    {
+        // can not happen, as gdb can only do one command after the other,...
+        for(;;)
+        {
+            ;  // TODO
+        }
+    }
+}
+
+void target_reply_step(char* received, uint32_t length)
+{
+    (void) received; // TODO
+    (void) length; // TODO
+    // TODO protect against concurrent access (action_write)
+    uint32_t next_idx = action_write + 1;
+    if(ACTION_QUEUE_LENGTH == next_idx)
+    {
+        next_idx = 0;
+    }
+    if(action_read != next_idx)
+    {
+        action_queue[action_write].action = GDB_CMD_STEP;
+        action_write = next_idx;
+    }
+    else
+    {
+        // can not happen, as gdb can only do one command after the other,...
+        for(;;)
+        {
+            ;  // TODO
+        }
+    }
+}
+
+static Result handle_target_reply_questionmark(action_data_typ* action, bool first_call)
+{
+    (void) action;
+    (void) first_call;
+    // TODO report correct reason
+    reply_packet_prepare();
+    reply_packet_add("S05");
+    reply_packet_send();
+    return RESULT_OK;
+}
+
+static Result handle_target_reply_write_g(action_data_typ* action, bool first_call)
+{
+    (void) action; // TODO
+    (void) first_call; // TODO
+    // TODO
+    reply_packet_prepare();
+    reply_packet_add("OK");
+    reply_packet_send();
+    return RESULT_OK;
+}
+
+static Result handle_target_reply_continue(action_data_typ* action, bool first_call)
+{
+    (void) action; // TODO
+    (void) first_call; // TODO
+    // TODO
+    reply_packet_prepare();
+    reply_packet_send();
+    return RESULT_OK;
+}
+
+static Result handle_target_reply_read_memory(action_data_typ* action, bool first_call)
+{
+    (void) action; // TODO
+    (void) first_call; // TODO
+    // TODO
+    reply_packet_prepare();
+    reply_packet_send();
+    return RESULT_OK;
+}
+
+static Result handle_target_reply_write_memory(action_data_typ* action, bool first_call)
+{
+    (void) action; // TODO
+    (void) first_call; // TODO
+    // TODO
+    reply_packet_prepare();
+    reply_packet_send();
+    return RESULT_OK;
+}
+
+static Result handle_target_reply_step(action_data_typ* action, bool first_call)
+{
+    (void) action; // TODO
+    (void) first_call; // TODO
+    // TODO
+    reply_packet_prepare();
+    reply_packet_send();
+    return RESULT_OK;
 }
 
 static void handle_actions(void)

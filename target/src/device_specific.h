@@ -22,6 +22,12 @@
 
 typedef enum {
     GDB_CMD_G = 0,
+    GDB_CMD_QUESTIONMARK,
+    GDB_CMD_WRITE_G,
+    GDB_CMD_CONTINUE,
+    GDB_CMD_READ_MEMORY,
+    GDB_CMD_WRITE_MEMORY,
+    GDB_CMD_STEP,
     // new actions go here
     NUM_ACTIONS,  // <- do not use other than array size !
 }action_typ;

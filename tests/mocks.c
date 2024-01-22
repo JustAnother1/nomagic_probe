@@ -195,6 +195,41 @@ void target_reply_g(void)
     // nothing to do here
 }
 
+void target_reply_questionmark(void)
+{
+
+}
+
+void target_reply_write_g(char* received, uint32_t length)
+{
+    (void) received; // TODO
+    (void) length; // TODO
+}
+
+void target_reply_continue(char* received, uint32_t length)
+{
+    (void) received; // TODO
+    (void) length; // TODO
+}
+
+void target_reply_read_memory(char* received, uint32_t length)
+{
+    (void) received; // TODO
+    (void) length; // TODO
+}
+
+void target_reply_write_memory(char* received, uint32_t length)
+{
+    (void) received; // TODO
+    (void) length; // TODO
+}
+
+void target_reply_step(char* received, uint32_t length)
+{
+    (void) received; // TODO
+    (void) length; // TODO
+}
+
 void debug_line(const char *fmt, ...)
 {
     (void) fmt;

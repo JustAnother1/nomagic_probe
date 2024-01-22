@@ -27,5 +27,11 @@ Result target_request_read(uint32_t address);
 Result target_read_result(Result transaction, uint32_t* data);
 
 void target_reply_g(void);
+void target_reply_questionmark(void);
+void target_reply_write_g(char* received, uint32_t length);
+void target_reply_continue(char* received, uint32_t length);
+void target_reply_read_memory(char* received, uint32_t length);
+void target_reply_write_memory(char* received, uint32_t length);
+void target_reply_step(char* received, uint32_t length);
 
 #endif /* TARGET_TARGET_ACTIONS_H_ */

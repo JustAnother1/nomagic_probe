@@ -21,6 +21,7 @@
 #include "target_api/target_actions.h"
 #include "probe_api/result.h"
 #include "probe_api/swd.h"
+#include "probe_api/debug_log.h"
 
 // TODO load from configuration
 
@@ -37,6 +38,41 @@ void target_tick(void)
 void target_reply_g(void)
 {
 
+}
+
+void target_reply_questionmark(void)
+{
+
+}
+
+void target_reply_write_g(char* received, uint32_t length)
+{
+    (void) received; // TODO
+    (void) length; // TODO
+}
+
+void target_reply_continue(char* received, uint32_t length)
+{
+    (void) received; // TODO
+    (void) length; // TODO
+}
+
+void target_reply_read_memory(char* received, uint32_t length)
+{
+    (void) received; // TODO
+    (void) length; // TODO
+}
+
+void target_reply_write_memory(char* received, uint32_t length)
+{
+    (void) received; // TODO
+    (void) length; // TODO
+}
+
+void target_reply_step(char* received, uint32_t length)
+{
+    (void) received; // TODO
+    (void) length; // TODO
 }
 
 Result target_request_read(uint32_t address)
