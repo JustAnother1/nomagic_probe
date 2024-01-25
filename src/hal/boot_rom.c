@@ -23,9 +23,6 @@ static bool valid = false;
 static boot_rom_flash_functions flash_funcs;
 static rom_table_lookup_fn rom_table_lookup;
 
-// Convert a 16 bit pointer stored at the given rom address into a 32 bit pointer
-#define rom_hword_as_ptr(rom_address) (void *)(uintptr_t)(*(uint16_t *)(uintptr_t)(rom_address))
-
 /*!
  * \brief Lookup a bootrom function by code. This method is forcibly inlined into the caller for FLASH/RAM sensitive code usage
  * \ingroup pico_bootrom
@@ -34,9 +31,9 @@ static rom_table_lookup_fn rom_table_lookup;
  */
 static void* rom_func_lookup(uint32_t code)
 {
-    /*
-    return rom_table_lookup((uint16_t *)0x14, code); */
-    return rom_table_lookup(rom_hword_as_ptr(0x14), code);
+#pragma GCC diagnostic ignored "-Warray-bounds="
+    return rom_table_lookup((void *)(uintptr_t)(*(uint16_t *)(uintptr_t)(0x14)), code);
+#pragma GCC diagnostic pop
 }
 
 //! convert two letter code into uint32_t value used by ROM function for lookup.
@@ -80,7 +77,9 @@ void boot_rom_check_if_valid(void)
     // RP2040 data sheet:
     // Assuming the three bytes starting at address 0x00000010 are ('M', 'u', 0x01)
     // then the three halfwords starting at offset 0x00000014 are valid.
+#pragma GCC diagnostic ignored "-Warray-bounds="
     uint32_t val = *(uint32_t*)0x10;
+#pragma GCC diagnostic pop
     uint32_t magic  = val & 0xff;
     if( 'M' != magic)
     {
@@ -106,14 +105,18 @@ void boot_rom_check_if_valid(void)
     // rom_table_lookup = (rom_table_lookup_fn) *(uint16_t *)(0x18);
     */
 #pragma GCC diagnostic ignored "-Wpedantic"
-    rom_table_lookup = rom_hword_as_ptr(0x18);
+#pragma GCC diagnostic ignored "-Warray-bounds="
+    rom_table_lookup = (void *)(uintptr_t)(*(uint16_t *)(uintptr_t)(0x18));
+#pragma GCC diagnostic pop
 #pragma GCC diagnostic pop
     valid = true;
 }
 
 void boot_rom_report(void)
 {
+#pragma GCC diagnostic ignored "-Warray-bounds="
     uint32_t val = *(uint32_t*)0x10;
+#pragma GCC diagnostic pop
     val = (val >> 24) & 0xff;
     debug_line("boot ROM version : %lu", val);
     if(true == valid)
