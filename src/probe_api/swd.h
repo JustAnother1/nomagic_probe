@@ -41,9 +41,10 @@ void swd_protocol_set_AP_sel(uint32_t val);
  *
  * @param multi false = SWDv1; true = SWDv2 (multi drop system)
  * @param target value to be used on TARGETSEL command to DP.
+ * @param AP_sel the address of the Access Port to use.
  * @return ERR_QUEUE_FULL_TRY_AGAIN or a transaction id.
  */
-Result swd_connect(bool multi, uint32_t target);
+Result swd_connect(bool multi, uint32_t target, uint32_t AP_sel);
 
 /** is the connection to the target chip established?
  *
@@ -66,7 +67,7 @@ Result swd_scan(void);
  */
 Result swd_read_ap(uint32_t addr);
 
-/** write somthing into the target chip memory.
+/** write something into the target chip memory.
  *
  * @param addr address in target chip memory area.
  * @param data the data to write

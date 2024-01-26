@@ -54,6 +54,7 @@ bool cmd_swd_test(uint32_t loop)
             if(RESULT_OK == res)
             {
                 // ok
+                debug_line("SWD: connected!");
                 step = 2;
                 return false;
             }
@@ -74,22 +75,22 @@ bool cmd_swd_test(uint32_t loop)
             // scan
             Result res;
             res = swd_scan();
-            if (1 > res)
+            if(RESULT_OK == res)
             {
-                if(RESULT_OK == res)
-                {
-                    // ok -> done
-                    return true;
-                }
-                else
-                {
-                    // error
-                    debug_line("ERROR: SWD: failed to scan (%ld)!", res);
-                    return true;
-                }
+                // ok -> done
+                return true;
             }
-            // else busy -> call again
-            return false;
+            else if (ERR_QUEUE_FULL_TRY_AGAIN == res)
+            {
+                // else busy -> call again
+                return false;
+            }
+            else
+            {
+                // error
+                debug_line("ERROR: SWD: failed to scan (%ld)!", res);
+                return true;
+            }
         }
         else
         {

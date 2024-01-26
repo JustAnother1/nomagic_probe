@@ -31,6 +31,9 @@
 #define AP_VERSION_APv1       1
 #define AP_VERSION_APv2       2 // new in ADIv6.0
 
+// not sure why the Prot field is b0100010
+#define CSW_VAL 0xA2000012
+
 
 typedef struct{
     uint32_t ap_sel;
@@ -196,6 +199,7 @@ Result connect_handler(command_typ* cmd, bool first_call)
 
     if(true == first_call)
     {
+        state.mem_ap.ap_sel = cmd->i_val_2;
         phase = 1;
     }
 
@@ -443,6 +447,7 @@ Result connect_handler(command_typ* cmd, bool first_call)
                 }
                 else
                 {
+                    debug_line("TIMEOUT: when powering on the debug peripheral!");
                     return ERR_TIMEOUT;
                 }
             }
@@ -454,15 +459,73 @@ Result connect_handler(command_typ* cmd, bool first_call)
         }
     }
 
-// Phase 12 - we are done
-    if(12 == phase)
+    // write CSW
+    if((12 == phase) || (13 == phase))
+    {
+        if(12 == phase)
+        {
+            phase_result = write_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, CSW_VAL, true);
+            phase = 13;
+        }
+        else
+        {
+            phase_result = write_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, CSW_VAL, false);
+        }
+        if(RESULT_OK == phase_result)
+        {
+            state.mem_ap.reg_CSW = CSW_VAL;
+            phase = 14;
+        }
+        else
+        {
+            return phase_result;
+        }
+    }
+
+    // read CSW
+    if((14 == phase) || (15 == phase))
+    {
+        if(14 == phase)
+        {
+            phase_result = read_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, &read_data, true);
+            phase = 15;
+        }
+        else
+        {
+            phase_result = read_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, &read_data, false);
+        }
+        if(RESULT_OK == phase_result)
+        {
+            phase = 16;
+            /*
+            // test if AP is now enabled
+            if(0 != (read_data & 0x40))
+            {
+                phase = 16;
+            }
+            else
+            {
+                // try again
+                phase = 12;
+                return ERR_NOT_COMPLETED;
+            }
+            */
+        }
+        else
+        {
+            return phase_result;
+        }
+    }
+
+// Phase 16 - we are done
+    if(16 == phase)
     {
         // done!
         result_queue_add_result_of(COMMAND_QUEUE, cmd->transaction_id, RESULT_OK);
         return RESULT_OK;
     }
 
-    debug_line("connect handler: invalid phase!");
+    debug_line("connect handler: invalid phase(%ld)!", phase);
     return ERR_WRONG_STATE;
 }
 
@@ -531,6 +594,7 @@ Result scan_handler(command_typ* cmd, bool first_call)
                 {
                     phase = 1;
                     state.mem_ap.ap_sel = cycle_counter;
+                    return ERR_NOT_COMPLETED;
                 }
                 else
                 {
@@ -972,21 +1036,15 @@ static Result check_AP(uint32_t idr, bool first_call)
             Result res;
             if(3 == phase)
             {
-                res = read_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, &reg_data, true);
+                res = write_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, reg_data, true);
                 phase = 4;
             }
             else
             {
-                res = read_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, &reg_data, false);
+                res = write_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, reg_data, false);
             }
             if(RESULT_OK == res)
             {
-                debug_line("AP: CSW  : 0x%08lx", reg_data);
-                state.mem_ap.reg_CSW = reg_data;
-
-                // change CSW !!!
-                reg_data = reg_data & ~0x3ful; // no auto address increment
-                reg_data = reg_data | 0x80000002; // DbgSwEnable + data size = 32bit
                 phase = 5;
                 return ERR_NOT_COMPLETED;
             }
@@ -1001,17 +1059,18 @@ static Result check_AP(uint32_t idr, bool first_call)
             Result res;
             if(5 == phase)
             {
-                res = write_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, reg_data, true);
+                res = read_ap_register(AP_BANK_BASE, AP_REGISTER_BASE, &reg_data, true);
                 phase = 6;
             }
             else
             {
-                res = write_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, reg_data, false);
+                res = read_ap_register(AP_BANK_BASE, AP_REGISTER_BASE, &reg_data, false);
             }
             if(RESULT_OK == res)
             {
+                debug_line("AP: BASE : 0x%08lx", reg_data);
+                state.mem_ap.reg_BASE = reg_data;
                 phase = 7;
-                return ERR_NOT_COMPLETED;
             }
             else
             {
@@ -1024,32 +1083,8 @@ static Result check_AP(uint32_t idr, bool first_call)
             Result res;
             if(7 == phase)
             {
-                res = read_ap_register(AP_BANK_BASE, AP_REGISTER_BASE, &reg_data, true);
-                phase = 8;
-            }
-            else
-            {
-                res = read_ap_register(AP_BANK_BASE, AP_REGISTER_BASE, &reg_data, false);
-            }
-            if(RESULT_OK == res)
-            {
-                debug_line("AP: BASE : 0x%08lx", reg_data);
-                state.mem_ap.reg_BASE = reg_data;
-                phase = 9;
-            }
-            else
-            {
-                return res;
-            }
-        }
-
-        if((9 == phase) || (10 == phase))
-        {
-            Result res;
-            if(9 == phase)
-            {
                 res = read_ap_register(AP_BANK_CFG, AP_REGISTER_CFG, &reg_data, true);
-                phase = 10;
+                phase = 8;
             }
             else
             {
@@ -1074,7 +1109,7 @@ static Result check_AP(uint32_t idr, bool first_call)
                 {
                     state.mem_ap.large_data_support = true;
                 }
-                phase = 11;
+                phase = 9;
             }
             else
             {
@@ -1082,13 +1117,13 @@ static Result check_AP(uint32_t idr, bool first_call)
             }
         }
 
-        if((11 == phase) || (12 == phase))
+        if((9 == phase) || (10 == phase))
         {
             Result res;
-            if(11 == phase)
+            if(9 == phase)
             {
                 res = read_ap_register(AP_BANK_CFG1, AP_REGISTER_CFG1, &reg_data, true);
-                phase = 12;
+                phase = 10;
             }
             else
             {
@@ -1097,7 +1132,7 @@ static Result check_AP(uint32_t idr, bool first_call)
             if(RESULT_OK == res)
             {
                 debug_line("AP: CFG1 : 0x%08lx", reg_data);
-                phase = 13;
+                phase = 11;
             }
             else
             {
@@ -1105,7 +1140,7 @@ static Result check_AP(uint32_t idr, bool first_call)
             }
         }
 
-        if(13 == phase)
+        if(11 == phase)
         {
             // TODO read ROM Table
             // ROM Table:

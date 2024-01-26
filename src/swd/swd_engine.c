@@ -69,7 +69,7 @@ void swd_tick(void)
     swd_packets_tick();
 }
 
-Result swd_connect(bool multi, uint32_t target)
+Result swd_connect(bool multi, uint32_t target, uint32_t AP_sel)
 {
     // TODO protect against concurrent access (cmdq_write)
     uint32_t next_idx = cmdq_write + 1;
@@ -86,6 +86,7 @@ Result swd_connect(bool multi, uint32_t target)
             cmd_queue[cmdq_write].order = CMD_CONNECT;
             cmd_queue[cmdq_write].flag = multi;
             cmd_queue[cmdq_write].i_val = target;
+            cmd_queue[cmdq_write].i_val_2 = AP_sel;
             cmd_queue[cmdq_write].transaction_id = tid;
             cmdq_write = next_idx;
             return (Result)tid;
@@ -220,13 +221,17 @@ static void handle_order(void)
                 result_queue_add_result_of(COMMAND_QUEUE, cmd_queue[cmdq_read].transaction_id, (uint32_t)ERR_TARGET_ERROR);
             }
         }
-        else
+        else if(RESULT_OK == order_state)
         {
             // finished successfully
             if(CMD_CONNECT == cmd_queue[cmdq_read].order)
             {
                 debug_line("swd: connected");
             }
+        }
+        else
+        {
+            debug_line("swd: error %ld on order %s", order_state, order_names[cmd_queue[cmdq_read].order]);
         }
         // debug_line("swd: order %s done (%ld)", order_names[cmd_queue[cmdq_read].order], last_phase);
         cur_order = NULL;

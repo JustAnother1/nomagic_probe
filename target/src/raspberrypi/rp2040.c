@@ -53,6 +53,8 @@
 #define SWD_ID_CORE_1    0x11002927
 #define SWD_ID_RESCUE_DP 0xf1002927
 
+#define SWD_AP_SEL       0
+
 #define MEMORY_MAP_CONTENT  \
 "<memory-map>\r\n" \
 "<memory type=\"rom\" start=\"0x00000000\" length=\"0x00004000\"/>\r\n" \
@@ -89,7 +91,7 @@ Result target_connect(bool first_call)
 
     if(1 == phase)
     {
-        res = swd_connect(true, SWD_ID_CORE_0);
+        res = swd_connect(true, SWD_ID_CORE_0, SWD_AP_SEL);
         if(RESULT_OK < res)
         {
             transaction_id = res;
@@ -137,14 +139,15 @@ Result target_connect(bool first_call)
         if(RESULT_OK == res)
         {
             debug_line("target: initialized cortex-m");
-            phase = 5;
+            //phase = 5;
+            phase = 7;
         }
         else
         {
             return res;
         }
     }
-
+/*
     if((5 == phase) || (6 == phase))
     {
         if(5 == phase)
@@ -166,7 +169,7 @@ Result target_connect(bool first_call)
             return res;
         }
     }
-
+*/
     if(7 == phase)
     {
         // all done
