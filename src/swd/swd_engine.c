@@ -37,7 +37,7 @@ static const order_handler order_look_up[NUM_ORDERS] = {
         write_handler,
 };
 
-#ifdef FEAT_DEBUG_UART
+#if (defined FEAT_DEBUG_UART) || (defined FEAT_DEBUG_CDC)
 static const char* order_names[NUM_ORDERS] = {
         "connect",
         "scan",

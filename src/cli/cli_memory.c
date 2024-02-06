@@ -23,6 +23,7 @@
 #include "file/fake_fs.h"
 #include "file/file_system.h"
 #include "file/fake_root_folder.h"
+#include "probe_api/debug_log.h"
 
 
 static uint32_t addr;

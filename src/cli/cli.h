@@ -22,5 +22,6 @@ void cli_init(void);
 void cli_tick(void);
 uint8_t* cli_get_parameter(uint32_t parameter_index);
 bool cmd_help(uint32_t loop);
+void cli_welcome(void);
 
 #endif /* CLI_CLI_H_ */

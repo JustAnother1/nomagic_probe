@@ -46,6 +46,7 @@
 #include "hal/hw/USBCTRL_DPRAM.h"
 #include "hal/startup.h"
 #include "usb_cdc.h"
+#include "cli/cli.h"
 
 // TinyUSB:
 #include "tusb.h"
@@ -234,7 +235,9 @@ static hw_endpoint_t hw_endpoints[USB_NUM_ENDPOINTS][2];
 
 //! Init these in dcd_init
 static uint8_t *next_buffer_ptr;
-
+#ifdef FEAT_DEBUG_CDC
+static bool cdc_connected = false;
+#endif
 
 #if TUD_OPT_RP2040_USB_DEVICE_UFRAME_FIX
   static bool e15_is_bulkin_ep(hw_endpoint_t *ep);
@@ -304,12 +307,29 @@ static void usb_init(void)
     // activate full speed device mode
     USBCTRL_REGS->SIE_CTRL = 0x20010000;
 
+#ifdef FEAT_DEBUG_CDC
+    cdc_connected = false;
+#endif
+
     NVIC_EnableIRQ(USBCTRL_IRQ_NUMBER, USBCTRL_IRQ_PRIORITY);
 }
 
 //! USB "Task"
 void usb_tick(void)
 {
+#ifdef FEAT_DEBUG_CDC
+    bool cdc_state = tud_cdc_connected();
+    if(cdc_connected != cdc_state)
+    {
+        cdc_connected = cdc_state;
+        if(true == cdc_state)
+        {
+            // the cdc connection just opened
+            cli_welcome();
+        }
+        // else the cdc connection just closed
+    }
+#endif
     tud_task(); // device task
 }
 

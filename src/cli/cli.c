@@ -18,6 +18,7 @@
 #include <stdint.h>
 #include <string.h>
 #include "hal/watchdog.h"
+#include "probe_api/debug_log.h"
 
 #define NUM_COMMANDS  (sizeof(commands)/sizeof(cmd_typ))
 
@@ -53,6 +54,11 @@ void cli_init(void)
     found_end = false;
     still_executing = false;
     cur_func = NULL;
+    cli_welcome();
+}
+
+void cli_welcome(void)
+{
     debug_msg(WELCOME);
     watchdog_report();
     debug_msg(PROMPT);
@@ -61,7 +67,7 @@ void cli_init(void)
 void cli_tick(void)
 {
     uint32_t num_bytes_received;
-    SERIAL_TICK();
+    SERIAL_TICK
     // if a command is still executing then do that
     if(true == still_executing)
     {

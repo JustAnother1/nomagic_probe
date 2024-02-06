@@ -24,9 +24,6 @@
 #define RECEIVE_BUFFER_SIZE      100
 #define SEND_BUFFER_SIZE         500
 
-#define debug_msg(...)  printf(__VA_ARGS__)
-#define debug_line(...) printf(__VA_ARGS__); printf("\r\n")
-
 // initialize:
 void debug_uart_initialize(void);
 void debug_uart_tick(void);
@@ -34,6 +31,7 @@ void debug_uart_tick(void);
 // send data:
 uint32_t debug_uart_send_bytes(uint8_t *data, uint32_t length);
 void debug_uart_send_String(char* str);
+void debug_putc(void* p, char c);
 
 // get received data:
 uint32_t debug_uart_get_num_received_bytes(void);

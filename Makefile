@@ -1,6 +1,13 @@
+# Makefile for the nomagic probe firmware
+# =======================================
+#
+# You can do a "make help" to see all the supported targets.
+# The target chip specif stuff is handeled in the included target.mk file.
+
 PROJECT = nomagic_probe
 
 # tools
+# =====
 CP = arm-none-eabi-objcopy
 CC = arm-none-eabi-gcc
 LD = arm-none-eabi-gcc
@@ -13,17 +20,51 @@ OBJDUMP = arm-none-eabi-objdump
 TST_CC = gcc
 TST_LD = cc
 
+# configuration
+# =============
+# 
+# Some firmware features can be anabled and disabled as needed for the different scenarios.
+# they are listed here:
+# - HAS_MSC = yes
+#       USB Mass Storage Device Class enabled. This enables the thumb drive feature.
+#
+# - HAS_CLI = yes
+#       Command line interface(CLI provides commands to directly controll the fimrware and to inspect he firmwares internal state.
+#       Must be used in combination with either "HAS_DEBUG_UART = yes" or "HAS_DEBUG_CDC = yes" !
+#
+# - HAS_DEBUG_UART = yes
+#       Command Line Interface (CLI) on UART pins.
+#
+# - HAS_DEBUG_CDC = yes
+#       Command Line Interface(CLI) on the USB Communication Class Device (USB-Serial).
+#
+# - HAS_GDB_SERVER = yes
+#       gdb-server interface.
+
 BIN_FOLDER = bin/
 SRC_FOLDER = src/
 
-SOURCE_DIR = $(dir $(lastword $(MAKEFILE_LIST)))
+# remove ?  SOURCE_DIR = $(dir $(lastword $(MAKEFILE_LIST)))
 
-#configuration
-HAS_MSC = yes
-HAS_DEBUG_UART = yes
+ifeq ($(TARGET), DETECT)
+	HAS_MSC = yes
+	HAS_DEBUG_UART = no
+	HAS_GDB_SERVER = no
+	HAS_DEBUG_CDC = yes
+	HAS_CLI = yes
+else
+	HAS_MSC = yes
+	HAS_DEBUG_UART = yes
+	HAS_CLI = yes
+	HAS_GDB_SERVER = yes
+	HAS_DEBUG_CDC = no
+endif
 
 
-LKR_SCRIPT = $(SRC_FOLDER)hal/RP2040.ld
+# ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! !
+# ! ! ! ! ALL CONFIGURATION SETTINGS ARE ABOVE THIS LINE  ! ! ! !
+# ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! !
+
 
 # COMPILER SWITCHES
 # =================
@@ -36,19 +77,26 @@ DDEFS += -DDISABLE_WATCHDOG_FOR_DEBUG=0
 #DDEFS += -DENABLE_CORE_1=1
 # use BOOT ROM (for flash functions,...)
 DDEFS += -DBOOT_ROM_ENABLED=1
-# enable USB MAss Storage (Thumb Drive)
+
+# enable USB Mass Storage (Thumb Drive)
 ifeq ($(HAS_MSC), yes)
 	DDEFS += -DFEAT_USB_MSC
 endif
-
+# enable the command line interfae for testing
 ifeq ($(HAS_DEBUG_UART), yes)
 	DDEFS += -DFEAT_DEBUG_UART
 endif
 
+ifeq ($(HAS_DEBUG_CDC), yes)
+	DDEFS += -DFEAT_DEBUG_CDC
+endif
+# enable the gdb-server
+ifeq ($(HAS_GDB_SERVER), yes)
+	DDEFS += -DFEAT_GDB_SERVER
+endif
 
 
 CFLAGS  = -c -ggdb3
-
 CFLAGS += -O3
 # sometimes helps with debugging:
 # CFLAGS += -O0
@@ -62,12 +110,18 @@ CFLAGS += -Wall -Wextra -pedantic -Wshadow -Wdouble-promotion -Wconversion
 # -Wpadded : tinyUSB creates warnings with this enabled. :-( 
 CFLAGS += -ffunction-sections -fdata-sections
 
+LKR_SCRIPT = $(SRC_FOLDER)hal/RP2040.ld
+
 LFLAGS  = -ffreestanding -nostdlib -nolibc -nodefaultlibs -nostartfiles -specs=nosys.specs
 LFLAGS += -Wl,--gc-sections,-Map=$(BIN_FOLDER)$(PROJECT).map -g
 LFLAGS += -fno-common -T$(LKR_SCRIPT)
 
 
+# Files to compile
+# ================
+
 # file handling
+ifeq ($(HAS_MSC), yes)
 SRC += $(SRC_FOLDER)file/fake_mbr.c
 SRC += $(SRC_FOLDER)file/fake_boot_sector.c
 SRC += $(SRC_FOLDER)file/fake_fat.c
@@ -77,12 +131,17 @@ SRC += $(SRC_FOLDER)file/fake_favicon.c
 SRC += $(SRC_FOLDER)file/fake_fs.c
 SRC += $(SRC_FOLDER)file/file_storage.c
 SRC += $(SRC_FOLDER)file/file_system.c
+endif
+
 # gdb server
+ifeq ($(HAS_GDB_SERVER), yes)
 SRC += $(SRC_FOLDER)gdbserver/cmd_qsupported.c
 SRC += $(SRC_FOLDER)gdbserver/cmd_qxfer.c
 SRC += $(SRC_FOLDER)gdbserver/commands.c
 SRC += $(SRC_FOLDER)gdbserver/gdbserver.c
 SRC += $(SRC_FOLDER)gdbserver/util.c
+endif
+
 # Hardware abstraction layer
 ifeq ($(HAS_DEBUG_UART), yes)
 SRC += $(SRC_FOLDER)hal/debug_uart.c
@@ -94,14 +153,16 @@ SRC += $(SRC_FOLDER)hal/boot_rom.c
 SRC += $(SRC_FOLDER)hal/flash.c
 SRC += $(SRC_FOLDER)hal/qspi.c
 SRC += $(SRC_FOLDER)hal/time_base.c
-# command line interface (debug - UART0)
-ifeq ($(HAS_DEBUG_UART), yes)
+
+# command line interface (debug - UART0 / USB-CDC)
+ifeq ($(HAS_CLI), yes)
 SRC += $(SRC_FOLDER)cli/cli.c
 SRC += $(SRC_FOLDER)cli/cli_memory.c
 SRC += $(SRC_FOLDER)cli/cli_swd.c
 SRC += $(SRC_FOLDER)cli/cli_sys.c
 SRC += $(SRC_FOLDER)cli/cli_usb.c
 endif
+
 # functions usually available from standard libraries
 SRC += $(SRC_FOLDER)lib/ctype.c
 SRC += $(SRC_FOLDER)lib/atoi.c
@@ -111,31 +172,41 @@ SRC += $(SRC_FOLDER)lib/memset.c
 SRC += $(SRC_FOLDER)lib/printf.c
 SRC += $(SRC_FOLDER)lib/strlen.c
 SRC += $(SRC_FOLDER)lib/strncmp.c
+
 # SWD
 SRC += $(SRC_FOLDER)swd/result_queue.c
 SRC += $(SRC_FOLDER)swd/swd_engine.c
 SRC += $(SRC_FOLDER)swd/swd_protocol.c
 SRC += $(SRC_FOLDER)swd/swd_packets.c
 SRC += $(SRC_FOLDER)swd/swd_gpio.c
+
 # USB driver
 SRC += $(SRC_FOLDER)tinyusb/usb.c
 SRC += $(SRC_FOLDER)tinyusb/usb_descriptors.c
+
 # USB stack (tinyusb
 SRC += $(SRC_FOLDER)tinyusb/src/tusb.c
 SRC += $(SRC_FOLDER)tinyusb/src/device/usbd.c
 SRC += $(SRC_FOLDER)tinyusb/src/device/usbd_control.c
 SRC += $(SRC_FOLDER)tinyusb/src/common/tusb_fifo.c
+
 # USB serial interface (CDC)
 SRC += $(SRC_FOLDER)tinyusb/usb_cdc.c
 SRC += $(SRC_FOLDER)tinyusb/src/class/cdc/cdc_device.c
+
 # USB thumb drive (MSC)
+ifeq ($(HAS_MSC), yes)
 SRC += $(SRC_FOLDER)tinyusb/usb_msc.c
 SRC += $(SRC_FOLDER)tinyusb/src/class/msc/msc_device.c
+endif
+
 # user feedback
 SRC += $(SRC_FOLDER)led.c
+
 # main
 SRC += $(SRC_FOLDER)main.c
 
+# files specific to the chip that will be debugged:
 ifeq ($(TARGET), EXTERN)
     # target loader
     SRC += $(SRC_FOLDER)file/target_loader.c
@@ -153,7 +224,8 @@ INCDIRS +=$(SRC_FOLDER)lib/
 INCDIRS +=$(SRC_FOLDER)tinyusb/src/
 INCDIR = $(patsubst %,-I%, $(INCDIRS))
 
-# test configuration
+# unit test configuration
+# =======================
 
 TST_LFLAGS = -lgcov --coverage
 TST_CFLAGS =  -Wall -Wextra -g3 -fprofile-arcs -ftest-coverage -Wno-int-to-pointer-cast -Wno-implicit-function-declaration
@@ -164,6 +236,9 @@ TST_INCDIRS += src/tinyusb/src/
 TST_INCDIRS += /usr/include/
 TST_INCDIRS += src/
 TST_INCDIR = $(patsubst %,-I%, $(TST_INCDIRS))
+
+# Files to compile for unit tests
+# ===============================
 
 TST_OBJS += tests/bin/src/cli/cli.o
 TST_OBJS += tests/bin/src/lib/printf.o
@@ -184,17 +259,19 @@ TST_OBJS += tests/bin/tests/allTests.o
 
 
 # make config
-VPATH = $(SOURCE_DIR)
+# remove ?  VPATH = $(SOURCE_DIR)
 .DEFAULT_GOAL = all
 
 
 # targets
+# =======
 
 help:
 	@echo ""
 	@echo "available targets"
 	@echo "================="
 	@echo "make clean              delete all generated files"
+	@echo "make all TARGET=DETECT  compile firmware creates elf and uf2 file. (no target support, no gdb-server, detect serial interface)"
 	@echo "make all TARGET=EXTERN  compile firmware creates elf and uf2 file. (target configuration needed)"
 	@echo "make all                compile firmware creates elf and uf2 file. (only support RP2040 target)"
 	@echo "make flash              write firmware to flash of RP2040 using openocd and CMSIS-DAP adapter(picoprobe)"
@@ -289,7 +366,6 @@ test: $(PROJECT)_tests
 
 lcov: 
 	lcov --base-directory tests/ --directory tests/ -c -o tests/bin/lcov.info --exclude "*tests/*"
-	#--exclude "*cpputest/*"
 	genhtml -o test_coverage -t "coverage" --num-spaces 4 tests/bin/lcov.info -o tests/bin/test_coverage/
 
 

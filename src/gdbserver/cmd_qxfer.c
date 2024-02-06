@@ -21,6 +21,7 @@
 #include "probe_api/hex.h"
 #include "target_api/target_info.h"
 #include "util.h"
+#include "probe_api/debug_log.h"
 
 #define OBJECT_PART      0
 #define READ_PART        1

@@ -17,7 +17,7 @@
 
 #include <stdio.h>
 
-#ifdef FEAT_DEBUG_UART
+#if (defined FEAT_DEBUG_UART) || (defined FEAT_DEBUG_CDC)
 #define debug_msg(...)  printf(__VA_ARGS__)
 #define debug_line(...) printf(__VA_ARGS__); printf("\r\n")
 #else

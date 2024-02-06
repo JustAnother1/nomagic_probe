@@ -31,7 +31,6 @@ volatile bool is_sending;
 
 static void send_a_byte(void);
 static void receive_a_byte(void);
-static void debug_putc(void* p, char c);
 
 void debug_uart_initialize(void)
 {
@@ -78,8 +77,6 @@ void debug_uart_initialize(void)
 
     is_sending = false;
     NVIC_EnableIRQ(UART0_IRQ_NUMBER, UART0_IRQ_PRIORITY);
-    init_printf(NULL, debug_putc);
-    printf("\r\n\r\n\r\n\r\n\r\n");
 }
 
 void debug_uart_tick(void)
@@ -190,7 +187,7 @@ bool debug_uart_get_received_bytes(uint8_t *buf, uint32_t length)
     return true;
 }
 
-static void debug_putc(void* p, char c)
+void debug_putc(void* p, char c)
 {
     (void) p; // not used
     debug_uart_send_bytes((uint8_t *)&c, 1);

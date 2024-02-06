@@ -58,7 +58,7 @@ static const action_handler action_look_up[NUM_ACTIONS] = {
         handle_target_reply_step,
 };
 
-#ifdef FEAT_DEBUG_UART
+#if (defined FEAT_DEBUG_UART) || (defined FEAT_DEBUG_CDC)
 static const char* action_names[NUM_ACTIONS] = {
         "read general register",
 };

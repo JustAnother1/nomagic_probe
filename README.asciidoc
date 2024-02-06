@@ -16,6 +16,19 @@ No dynamic memory allocation, no malloc!
  - USB MSCD(thumb drive) for configuration files.
  - support for SWD according to ARM ADIv5.0, ARM ADIv5.1, ARM ADIv5.2, ARM ADIv6.0.
 
+== targets
+the firmware can be build for different targets. How this can be done is explained in "make help".
+
+=== DETECT
+command line interface on USB serial port. This allows analysis of unsupported chips.
+
+=== EXTERN
+define target by configuration files in thumb drive (still to come)
+
+=== default (RP2040)
+SWD connection to a RaspberryPi RP2040
+
+
 == documentation
 
 link:doc/overview.asciidoc[overview]

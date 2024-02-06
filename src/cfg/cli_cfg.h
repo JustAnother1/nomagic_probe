@@ -17,8 +17,13 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-
+#ifdef FEAT_DEBUG_UART
 #include "../hal/debug_uart.h"
+#endif
+#ifdef FEAT_DEBUG_CDC
+#include "tinyusb/usb_cdc.h"
+#endif
+
 
 typedef bool (*cmd_func_typ)(uint32_t loop);
 
@@ -28,18 +33,28 @@ typedef struct {
     cmd_func_typ func;
 }cmd_typ;
 
+#ifdef FEAT_DEBUG_UART
 #define SERIAL_SEND_BYTES             debug_uart_send_bytes
 #define SERIAL_NUM_RECEIVED_BYTES     debug_uart_get_num_received_bytes
-#define SERIAL_GET_RECEIVED_BYTES     debug_uart_get_received_bytes
 #define SERIAL_GET_NEXT_RECEIVED_BYTE debug_uart_get_next_received_byte
-#define SERIAL_TICK                   debug_uart_tick
+#define SERIAL_TICK                   debug_uart_tick();
+#endif
+
+#ifdef FEAT_DEBUG_CDC
+#define SERIAL_SEND_BYTES             usb_cdc_send_bytes
+#define SERIAL_NUM_RECEIVED_BYTES     usb_cdc_get_num_received_bytes
+#define SERIAL_GET_NEXT_RECEIVED_BYTE usb_cdc_get_next_received_byte
+#define SERIAL_TICK
+// CDC is driven from the USB task, therefore no tick necessary.
+#endif
+
 
 #define MAX_LINE_LENGTH   100
 #define MAX_PARAMETERS    10
 #define ECHO_ENABLED      true
 
 #define PROMPT "\r\n$ "
-#define WELCOME "nomagic probe command line interface\r\n"
+#define WELCOME "\r\n\r\n\r\n\r\n\r\nnomagic probe command line interface\r\n"
 #define ERROR_LINE_TOO_LONG "\r\n The command is too long! please try again!\r\n"
 
 

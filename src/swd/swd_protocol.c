@@ -19,8 +19,8 @@
 #include <hal/time_base.h>
 #include "swd_protocol.h"
 #include "swd_packets.h"
-#include "hal/debug_uart.h"
 #include "result_queue.h"
+#include "probe_api/debug_log.h"
 
 
 // timeout until the WDIO line will be put into low power mode (High)
@@ -128,7 +128,7 @@ void swd_protocol_tick(void)
     }
 }
 
-#ifdef FEAT_DEBUG_UART
+#if (defined FEAT_DEBUG_UART) || (defined FEAT_DEBUG_CDC)
 bool swd_info(uint32_t which)
 {
     bool done = false;

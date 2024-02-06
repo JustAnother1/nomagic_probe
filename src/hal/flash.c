@@ -18,6 +18,7 @@
 #include "cfg/cli_cfg.h"
 #include "cfg/cli_cfg.h"
 #include <string.h>
+#include "probe_api/debug_log.h"
 
 #ifdef BOOT_ROM_ENABLED
 #include "hal/boot_rom.h"

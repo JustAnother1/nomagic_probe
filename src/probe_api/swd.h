@@ -19,7 +19,7 @@
 #include <stdbool.h>
 #include "result.h"
 
-#ifdef FEAT_DEBUG_UART
+#if (defined FEAT_DEBUG_UART) || (defined FEAT_DEBUG_CDC)
 /** prints all available information on the debug UART.
  *
  * @param which the information to report. (counting up until this returns true)

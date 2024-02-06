@@ -26,6 +26,7 @@
 #include <stdnoreturn.h>
 #include "hal/debug_uart.h"
 #include "hal/watchdog.h"
+#include "probe_api/debug_log.h"
 
 typedef void (*VECTOR_FUNCTION_Type)(void);
 

@@ -24,6 +24,7 @@
 #include "hal/hw/XIP_SSI.h"
 #include "hal/debug_uart.h"
 #include "hal/time_base.h"
+#include "probe_api/debug_log.h"
 
 void XIP_IRQ(void) __attribute__ ((interrupt ("IRQ")));
 

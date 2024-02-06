@@ -33,6 +33,9 @@
 #include "file/file_system.h"
 #include "swd/swd_engine.h"
 #include "target_api/target_actions.h"
+#ifdef FEAT_DEBUG_CDC
+#include "tinyusb/usb_cdc.h"
+#endif
 
 #define TASK_LOOP_0           0x1ul
 #define TASK_LOOP_1           0x2ul
@@ -51,20 +54,34 @@ static void init_0(void)
 #ifdef BOOT_ROM_ENABLED
     boot_rom_check_if_valid();
 #endif
+
     tasks = ALL_SUPERVISED_TASKS;
     watchdog_enable();
     init_time();
+
 #ifdef FEAT_DEBUG_UART
     debug_uart_initialize();
+    init_printf(NULL, debug_putc);
 #endif
+#ifdef FEAT_DEBUG_CDC
+    init_printf(NULL, usb_cdc_putc);
+#endif
+
+    tusb_init(); // initialize TinyUSB stack (requires logging to be set up)
+
 #ifdef FEAT_USB_MSC
     file_system_init();
 #endif
-    tusb_init(); // initialize TinyUSB stack
+
     target_init();
+
+#ifdef FEAT_GDB_SERVER
     gdbserver_init();
+#endif
+
     swd_init();
-#ifdef FEAT_DEBUG_UART
+
+#if (defined FEAT_DEBUG_UART) || (defined FEAT_DEBUG_CDC)
     cli_init(); // should be last
 #endif
 }
@@ -85,7 +102,7 @@ static void loop_0(void)
     }
     watchdog_leave_section(SECTION_WATCHDOG);
 
-#ifdef FEAT_DEBUG_UART
+#if (defined FEAT_DEBUG_UART) || (defined FEAT_DEBUG_CDC)
     watchdog_enter_section(SECTION_CLI);
     cli_tick();
     watchdog_leave_section(SECTION_CLI);
@@ -95,9 +112,11 @@ static void loop_0(void)
     usb_tick();
     watchdog_leave_section(SECTION_USB);
 
+#ifdef FEAT_GDB_SERVER
     watchdog_enter_section(SECTION_GDBSERVER);
     gdbserver_tick();
     watchdog_leave_section(SECTION_GDBSERVER);
+#endif
 }
 
 static void loop_1(void)

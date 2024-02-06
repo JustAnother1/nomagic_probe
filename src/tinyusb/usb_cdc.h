@@ -45,5 +45,6 @@ void usb_cdc_send_string(char* str);
 uint32_t usb_cdc_send_bytes(uint8_t *data, uint32_t length);
 uint32_t usb_cdc_get_num_received_bytes(void);
 uint8_t  usb_cdc_get_next_received_byte(void);
+void usb_cdc_putc(void* p, char c);
 
 #endif /* TINYUSB_USB_CDC_H_ */

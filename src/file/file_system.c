@@ -20,6 +20,7 @@
 #include "hal/debug_uart.h"
 #include "hal/flash.h"
 #include "hal/watchdog.h"
+#include "probe_api/debug_log.h"
 
 
 // TODO dynamic size

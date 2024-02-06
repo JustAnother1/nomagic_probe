@@ -18,6 +18,7 @@
 #include "cli.h"
 
 #include "probe_api/swd.h"
+#include "probe_api/debug_log.h"
 #include "target_api/target_actions.h"
 
 static uint32_t step;

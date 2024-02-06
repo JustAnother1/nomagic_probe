@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "hal/debug_uart.h"
 #include "tinyusb/usb_cdc.h"
 
 #define MAX_COMMAND_LENGTH    1025

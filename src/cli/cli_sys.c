@@ -23,6 +23,7 @@
 #include "hal/boot_rom.h"
 #include "hal/flash.h"
 #include "file/file_system.h"
+#include "probe_api/debug_log.h"
 
 bool cmd_time(uint32_t loop)
 {

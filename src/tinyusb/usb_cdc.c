@@ -46,14 +46,40 @@
 
 static uint8_t nextChar = 0;
 
+void usb_cdc_putc(void* p, char c)
+{
+    uint32_t res;
+    (void) p; // not used
+    for(;;)
+    {
+        res = tud_cdc_n_write_char(INTERFACE, c);
+        if(1 == res)
+        {
+            tud_cdc_n_write_flush(INTERFACE);
+            return;
+        }
+        else
+        {
+            usb_tick();  // let the USB stack work
+        }
+    }
+}
+
 void usb_cdc_send_string(char* str)
 {
     // tud_cdc_n_write_str(INTERFACE, str);
-
+    uint32_t res = 0;
     while(0 != *str)
     {
-        tud_cdc_n_write_char(INTERFACE, *str);
-        str++;
+        res = tud_cdc_n_write_char(INTERFACE, *str);
+        if(0 == res)
+        {
+            usb_tick();  // let the USB stack work
+        }
+        else
+        {
+            str++;
+        }
     }
     tud_cdc_n_write_flush(INTERFACE);
 }

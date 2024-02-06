@@ -17,6 +17,7 @@
 #include "cfg/cli_cfg.h"
 #include "tinyusb/src/device/usbd.h"
 #include "tinyusb/src/class/cdc/cdc_device.h"
+#include "probe_api/debug_log.h"
 
 static void print_bool(bool val)
 {

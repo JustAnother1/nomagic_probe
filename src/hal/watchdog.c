@@ -21,6 +21,7 @@
 #include <hal/hw/TIMER.h>
 #include <hal/hw/SIO.h>
 #include "cfg/cli_cfg.h"
+#include "probe_api/debug_log.h"
 
 
 static uint32_t reaload_value = 10000000; // 100ms = 100000 * 2 = 200000;
