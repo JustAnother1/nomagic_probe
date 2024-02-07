@@ -44,6 +44,12 @@ TST_LD = cc
 BIN_FOLDER = bin/
 SRC_FOLDER = src/
 
+# default target is the RaspberryPi RP2040
+ifndef TARGET
+	TARGET = RP2040
+endif
+
+
 # remove ?  SOURCE_DIR = $(dir $(lastword $(MAKEFILE_LIST)))
 
 ifeq ($(TARGET), DETECT)
@@ -52,12 +58,14 @@ ifeq ($(TARGET), DETECT)
 	HAS_GDB_SERVER = no
 	HAS_DEBUG_CDC = yes
 	HAS_CLI = yes
+	HAS_DETECT = yes
 else
 	HAS_MSC = yes
 	HAS_DEBUG_UART = yes
 	HAS_CLI = yes
 	HAS_GDB_SERVER = yes
 	HAS_DEBUG_CDC = no
+	HAS_DETECT = no
 endif
 
 
@@ -78,6 +86,8 @@ DDEFS += -DDISABLE_WATCHDOG_FOR_DEBUG=0
 # use BOOT ROM (for flash functions,...)
 DDEFS += -DBOOT_ROM_ENABLED=1
 
+DDEFS += -DTARGET=$(TARGET)
+
 # enable USB Mass Storage (Thumb Drive)
 ifeq ($(HAS_MSC), yes)
 	DDEFS += -DFEAT_USB_MSC
@@ -93,6 +103,11 @@ endif
 # enable the gdb-server
 ifeq ($(HAS_GDB_SERVER), yes)
 	DDEFS += -DFEAT_GDB_SERVER
+endif
+
+# enable the gdb-server
+ifeq ($(HAS_DETECT), yes)
+	DDEFS += -DFEAT_DETECT
 endif
 
 
@@ -230,6 +245,7 @@ INCDIR = $(patsubst %,-I%, $(INCDIRS))
 TST_LFLAGS = -lgcov --coverage
 TST_CFLAGS =  -Wall -Wextra -g3 -fprofile-arcs -ftest-coverage -Wno-int-to-pointer-cast -Wno-implicit-function-declaration
 TST_DDEFS = -DUNIT_TEST=1
+TST_DDEFS += -DFEAT_DEBUG_UART
 TST_INCDIRS = tests/
 TST_INCDIRS += tests/cfg/
 TST_INCDIRS += src/tinyusb/src/

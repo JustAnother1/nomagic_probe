@@ -20,7 +20,7 @@ uint8_t mock_get_next_received_byte(void);
 #define SERIAL_SEND_STRING            mock_send_String
 #define SERIAL_NUM_RECEIVED_BYTES     mock_get_num_received_bytes
 #define SERIAL_GET_NEXT_RECEIVED_BYTE mock_get_next_received_byte
-#define SERIAL_TICK                   mock_tick
+#define SERIAL_TICK                   mock_tick();
 
 #define MAX_LINE_LENGTH   100
 #define MAX_PARAMETERS    10
@@ -37,8 +37,5 @@ typedef struct {
     char help[100];
     cmd_func_typ func;
 }cmd_typ;
-
-#define debug_msg(...)  my_printf(__VA_ARGS__)
-#define debug_line(...) my_printf(__VA_ARGS__); printf("\r\n")
 
 #endif /* CLI_CLI_CFG_H_ */

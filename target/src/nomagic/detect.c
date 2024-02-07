@@ -62,6 +62,7 @@
 "</memory-map>\r\n"
 
 static bool attached;
+static uint32_t step;
 
 void target_init(void)
 {
@@ -185,3 +186,73 @@ Result target_connect(bool first_call)
     return ERR_WRONG_STATE;
 }
 
+bool cmd_swd_test(uint32_t loop)
+{
+    if(0 == loop)
+    {
+        step = 0;
+        return false;
+    }
+    else
+    {
+        if((0 == step) || (1 == step))
+        {
+            // connect
+            Result res;
+            if(0 == step)
+            {
+                res = target_connect(true);
+                step = 1;
+            }
+            else
+            {
+                res = target_connect(false);
+            }
+            if(RESULT_OK == res)
+            {
+                // ok
+                debug_line("SWD: connected!");
+                step = 2;
+                return false;
+            }
+            else if(ERR_NOT_COMPLETED == res)
+            {
+                // call again
+                return false;
+            }
+            else
+            {
+                // error
+                debug_line("ERROR: SWD: failed to connect (%ld)!", res);
+                return true;
+            }
+        }
+        else if(2 == step)
+        {
+            // scan
+            Result res;
+            res = swd_scan();
+            if(RESULT_OK == res)
+            {
+                // ok -> done
+                return true;
+            }
+            else if (ERR_QUEUE_FULL_TRY_AGAIN == res)
+            {
+                // else busy -> call again
+                return false;
+            }
+            else
+            {
+                // error
+                debug_line("ERROR: SWD: failed to scan (%ld)!", res);
+                return true;
+            }
+        }
+        else
+        {
+            // should not happen
+            return true;
+        }
+    }
+}

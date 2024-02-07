@@ -21,6 +21,11 @@
 #include "cli/cli_usb.h"
 #include "cli/cli_memory.h"
 
+#ifdef FEAT_DETECT
+bool cmd_swd_test(uint32_t loop);
+#endif
+
+
 cmd_typ commands[] = {
         //         11             1         2         3         4         5         6
         //12345678901    123456789012345678901234567890123456789012345678901234567890
@@ -39,7 +44,9 @@ cmd_typ commands[] = {
         {"xip_off",     "disable XIP on FLash", cmd_flash_disable_XIP},
         {"xip_on",      "enable XIP on FLash", cmd_flash_enable_XIP},
 #endif
+#ifdef FEAT_DETECT
         {"swd_test",    "test the SWD interface", cmd_swd_test},
+#endif
         {"swd_open",    "open a connection on the SWD interface", cmd_swd_connect},
         {"swd_info",    "current state of the SWD interface", cmd_swd_info},
         {"swd_read",    "read a memory address", cmd_swd_ap_read},
