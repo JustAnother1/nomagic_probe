@@ -101,11 +101,6 @@ void send_part(char* part, uint32_t size, uint32_t offset, uint32_t length)
     reply_packet_send();
 }
 
-bool target_is_connected(void)
-{
-    return swd_is_connected();
-}
-
 Result target_request_read(uint32_t address)
 {
     return swd_read_ap(address);

@@ -97,11 +97,6 @@ Result target_connect(bool first_call)
     return ERR_WRONG_STATE;
 }
 
-bool target_is_connected(void)
-{
-    return false;
-}
-
 void target_send_file(char* filename, uint32_t offset, uint32_t len)
 {
     (void) filename;

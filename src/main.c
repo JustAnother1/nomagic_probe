@@ -79,8 +79,6 @@ static void init_0(void)
     gdbserver_init();
 #endif
 
-    swd_init();
-
 #if (defined FEAT_DEBUG_UART) || (defined FEAT_DEBUG_CDC)
     cli_init(); // should be last
 #endif
@@ -129,10 +127,6 @@ static void loop_1(void)
     watchdog_enter_section(SECTION_TARGET);
     target_tick();
     watchdog_leave_section(SECTION_TARGET);
-
-    watchdog_enter_section(SECTION_SWD);
-    swd_tick();
-    watchdog_leave_section(SECTION_SWD);
 }
 
 #ifdef ENABLE_CORE_1

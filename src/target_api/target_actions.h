@@ -22,7 +22,6 @@
 void target_init(void);
 void target_tick(void);
 Result target_connect(bool first_call);
-bool target_is_connected(void);
 Result target_request_read(uint32_t address);
 Result target_read_result(Result transaction, uint32_t* data);
 

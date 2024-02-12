@@ -13,9 +13,9 @@ LIB_SRC_FOLDER = target/src/
 
 LIB_CFLAGS  = -c -ggdb3
 
-LIB_CFLAGS += -O3
+# LIB_CFLAGS += -O3
 # sometimes helps with debugging:
-# LIB_CFLAGS += -O0
+LIB_CFLAGS += -O0
 # LIB_CFLAGS += -save-temps=obj
 
 LIB_CFLAGS += -std=c17
@@ -24,7 +24,7 @@ LIB_CFLAGS += -fPIC
 LIB_CFLAGS += -mcpu=cortex-m0plus -mthumb
 LIB_CFLAGS += -ffreestanding -funsigned-char 
 #-fno-short-enums
-LIB_CFLAGS += -Wall -Wextra -pedantic -Wshadow -Wdouble-promotion -Wconversion 
+LIB_CFLAGS += -Wall -Wextra -pedantic -Wshadow -Wdouble-promotion -Wconversion -fno-builtin -fno-builtin-function
 LIB_CFLAGS += -ffunction-sections -fdata-sections -Wpadded
 
 ifeq ($(HAS_DEBUG_UART), yes)
@@ -45,6 +45,8 @@ LIB_INCDIR = $(patsubst %,-I%, $(LIB_INCDIRS))
 ifeq ($(TARGET), DETECT)
 LIB_SRC += $(LIB_SRC_FOLDER)arm/cortex-m.c
 LIB_SRC += $(LIB_SRC_FOLDER)nomagic/detect.c
+LIB_SRC += $(LIB_SRC_FOLDER)nomagic/steps.c
+LIB_SRC += $(LIB_SRC_FOLDER)nomagic/walk.c
 else
 LIB_SRC += $(LIB_SRC_FOLDER)common.c
 LIB_SRC += $(LIB_SRC_FOLDER)arm/cortex-m.c

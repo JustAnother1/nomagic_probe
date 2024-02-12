@@ -32,7 +32,6 @@ static volatile uint32_t cmdq_write;
 static command_typ cmd_queue[CMD_QUEUE_LENGTH];
 static const order_handler order_look_up[NUM_ORDERS] = {
         connect_handler,
-        scan_handler,
         read_handler,
         write_handler,
 };
@@ -40,7 +39,6 @@ static const order_handler order_look_up[NUM_ORDERS] = {
 #if (defined FEAT_DEBUG_UART) || (defined FEAT_DEBUG_CDC)
 static const char* order_names[NUM_ORDERS] = {
         "connect",
-        "scan",
         "read",
         "write",
 };
@@ -95,26 +93,6 @@ Result swd_connect(bool multi, uint32_t target, uint32_t AP_sel)
         {
             return res;
         }
-    }
-    else
-    {
-        return ERR_QUEUE_FULL_TRY_AGAIN;
-    }
-}
-
-Result swd_scan(void)
-{
-    // TODO protect against concurrent access (cmdq_write)
-    uint32_t next_idx = cmdq_write + 1;
-    if(CMD_QUEUE_LENGTH == next_idx)
-    {
-        next_idx = 0;
-    }
-    if(cmdq_read != next_idx)
-    {
-        cmd_queue[cmdq_write].order = CMD_SCAN;
-        cmdq_write = next_idx;
-        return RESULT_OK;
     }
     else
     {

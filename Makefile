@@ -127,7 +127,7 @@ CFLAGS += -ffunction-sections -fdata-sections
 
 LKR_SCRIPT = $(SRC_FOLDER)hal/RP2040.ld
 
-LFLAGS  = -ffreestanding -nostdlib -nolibc -nodefaultlibs -nostartfiles -specs=nosys.specs
+LFLAGS  = -ffreestanding -nostdlib -nolibc -nodefaultlibs -nostartfiles -specs=nosys.specs -fno-builtin -fno-builtin-function
 LFLAGS += -Wl,--gc-sections,-Map=$(BIN_FOLDER)$(PROJECT).map -g
 LFLAGS += -fno-common -T$(LKR_SCRIPT)
 

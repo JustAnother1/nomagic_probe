@@ -61,11 +61,8 @@ static swd_state_typ state;
 static uint32_t read_data;
 static Result transaction_id;
 static uint32_t cycle_counter;
-static uint32_t first_ap;
 static uint32_t ctrl_stat;
-static uint32_t reg_data;  // TODO sort these out
 
-static Result check_AP(uint32_t idr, bool first_call);
 static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint32_t* data, bool first_call);
 static Result write_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint32_t data, bool first_call);
 
@@ -94,16 +91,6 @@ void swd_protocol_init(void)
     swd_packets_init();
 }
 
-bool swd_is_connected(void)
-{
-    return state.is_connected;
-}
-
-void swd_protocol_set_AP_sel(uint32_t val)
-{
-    state.mem_ap.ap_sel = val;
-}
-
 void swd_protocol_tick(void)
 {
     swd_packets_tick();
@@ -126,6 +113,11 @@ void swd_protocol_tick(void)
         }
         // else wait for timeout
     }
+}
+
+void swd_protocol_set_AP_sel(uint32_t val)
+{
+    state.mem_ap.ap_sel = val;
 }
 
 #if (defined FEAT_DEBUG_UART) || (defined FEAT_DEBUG_CDC)
@@ -529,99 +521,6 @@ Result connect_handler(command_typ* cmd, bool first_call)
     return ERR_WRONG_STATE;
 }
 
-Result scan_handler(command_typ* cmd, bool first_call)
-{
-    static Result phase = 0;
-    (void) cmd;
-    if(true == first_call)
-    {
-        cycle_counter = 0;
-        first_ap = 0xffffffff;
-        phase = 1;
-    }
-
-    if(1 == phase)
-    {
-        debug_line("testing AP %ld", cycle_counter);
-        state.mem_ap.ap_sel = cycle_counter;
-        phase = 2;
-    }
-
-// Phase 2-5 read IDR Register
-
-    if((2 == phase ) || (3 == phase))
-    {
-        Result res;
-        if(2 == phase)
-        {
-            res = read_ap_register(AP_BANK_IDR, AP_REGISTER_IDR, &read_data, true);
-            phase = 3;
-        }
-        else
-        {
-            res = read_ap_register(AP_BANK_IDR, AP_REGISTER_IDR, &read_data, false);
-        }
-        if(RESULT_OK == res)
-        {
-            phase = 4;
-        }
-        else
-        {
-            return res;
-        }
-    }
-
-    if((4 == phase ) || (5 == phase))
-    {
-        if(0 != read_data)
-        {
-            Result tres;
-            if(4 == phase)
-            {
-                debug_line("AP %ld: 0x%08lx", cycle_counter, read_data);
-                tres = check_AP(read_data, true);
-                phase = 5;
-            }
-            else
-            {
-                tres = check_AP(read_data, false);
-            }
-            if(RESULT_OK == tres)
-            {
-                // done with this AP
-                cycle_counter++;
-                if(256 > cycle_counter)
-                {
-                    phase = 1;
-                    state.mem_ap.ap_sel = cycle_counter;
-                    return ERR_NOT_COMPLETED;
-                }
-                else
-                {
-                    // scan complete
-                    debug_line("Done!");
-                    return RESULT_OK;
-                }
-            }
-            else
-            {
-                return tres;
-            }
-        }
-        else
-        {
-            // reached end of APs
-            debug_line("AP %ld: IDR 0x%08lx", cycle_counter, read_data);
-            state.mem_ap.ap_sel = cycle_counter - 1;  // use the last good AP
-            debug_line("Done!");
-           return RESULT_OK;
-        }
-    }
-
-    return (Result)phase;
-}
-
-
 Result write_handler(command_typ* cmd, bool first_call)
 {
     static Result phase = 0;
@@ -979,235 +878,3 @@ static Result write_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint
     debug_line("write ap register: invalid phase!");
     return ERR_WRONG_STATE;
 }
-
-
-static Result check_AP(uint32_t idr, bool first_call)
-{
-    static Result phase = 0;
-    uint32_t class = (idr & (0xf << 13))>> 13;
-    state.mem_ap.ap_sel = cycle_counter;
-    if(8 == class)
-    {
-        // Memory Access Port (MEM-AP)
-        if(true == first_call)
-        {
-            state.mem_ap.version = AP_VERSION_APv1;
-            debug_line("APv1:");
-            debug_line("AP: IDR: Revision: %ld", (idr & (0xful<<28))>>28 );
-            debug_line("AP: IDR: Jep 106 : %ld x 0x7f + 0x%02lx", (idr & (0xf << 24))>>24, (idr & (0x7f<<17))>>17 );
-            debug_line("AP: IDR: class :   %ld", class );
-            debug_line("AP: IDR: variant:  %ld", (idr & (0xf<<4))>>4 );
-            debug_line("AP: IDR: type:     %ld", (idr & 0xf) );
-            phase = 1;
-            return ERR_NOT_COMPLETED;
-        }
-
-        if((1 == phase) || (2 == phase))
-        {
-            Result res;
-            if(1 == phase)
-            {
-                res = read_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, &reg_data, true);
-                phase = 2;
-            }
-            else
-            {
-                res = read_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, &reg_data, false);
-            }
-            if(RESULT_OK == res)
-            {
-                debug_line("AP: CSW  : 0x%08lx", reg_data);
-                state.mem_ap.reg_CSW = reg_data;
-
-                // change CSW !!!
-                reg_data = reg_data & ~0x3ful; // no auto address increment
-                reg_data = reg_data | 0x80000002; // DbgSwEnable + data size = 32bit
-                phase = 3;
-                return ERR_NOT_COMPLETED;
-            }
-            else
-            {
-                return res;
-            }
-        }
-
-        if((3 == phase) || (4 == phase))
-        {
-            Result res;
-            if(3 == phase)
-            {
-                res = write_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, reg_data, true);
-                phase = 4;
-            }
-            else
-            {
-                res = write_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, reg_data, false);
-            }
-            if(RESULT_OK == res)
-            {
-                phase = 5;
-                return ERR_NOT_COMPLETED;
-            }
-            else
-            {
-                return res;
-            }
-        }
-
-        if((5 == phase) || (6 == phase))
-        {
-            Result res;
-            if(5 == phase)
-            {
-                res = read_ap_register(AP_BANK_BASE, AP_REGISTER_BASE, &reg_data, true);
-                phase = 6;
-            }
-            else
-            {
-                res = read_ap_register(AP_BANK_BASE, AP_REGISTER_BASE, &reg_data, false);
-            }
-            if(RESULT_OK == res)
-            {
-                debug_line("AP: BASE : 0x%08lx", reg_data);
-                state.mem_ap.reg_BASE = reg_data;
-                phase = 7;
-            }
-            else
-            {
-                return res;
-            }
-        }
-
-        if((7 == phase) || (8 == phase))
-        {
-            Result res;
-            if(7 == phase)
-            {
-                res = read_ap_register(AP_BANK_CFG, AP_REGISTER_CFG, &reg_data, true);
-                phase = 8;
-            }
-            else
-            {
-                res = read_ap_register(AP_BANK_CFG, AP_REGISTER_CFG, &reg_data, false);
-            }
-            if(RESULT_OK == res)
-            {
-                debug_line("AP: CFG  : 0x%08lx", reg_data);
-                if(0 == (reg_data & 0x02))
-                {
-                    state.mem_ap.long_address_support = false;
-                }
-                else
-                {
-                    state.mem_ap.long_address_support = true;
-                }
-                if(0 == (reg_data & 0x04))
-                {
-                    state.mem_ap.large_data_support = false;
-                }
-                else
-                {
-                    state.mem_ap.large_data_support = true;
-                }
-                phase = 9;
-            }
-            else
-            {
-                return res;
-            }
-        }
-
-        if((9 == phase) || (10 == phase))
-        {
-            Result res;
-            if(9 == phase)
-            {
-                res = read_ap_register(AP_BANK_CFG1, AP_REGISTER_CFG1, &reg_data, true);
-                phase = 10;
-            }
-            else
-            {
-                res = read_ap_register(AP_BANK_CFG1, AP_REGISTER_CFG1, &reg_data, false);
-            }
-            if(RESULT_OK == res)
-            {
-                debug_line("AP: CFG1 : 0x%08lx", reg_data);
-                phase = 11;
-            }
-            else
-            {
-                return res;
-            }
-        }
-
-        if(11 == phase)
-        {
-            // TODO read ROM Table
-            // ROM Table:
-            // ==========
-            // each 32bit Entry is defined as:
-            // bit 31-12: Address Offset _signed_ base address offset relative to the ROM table base address
-            // bit 11-2: reserved
-            // bit 1: Format: 0= 8 bit format(not used); 1= 32bit format.
-            // bit 0: Entry present: 0= ignore this entry; 1= valid entry
-            // entry 0x00000000 marks end of table!
-
-            // actual table: (rp2040 @ 0xe00ff003) = BASE & 0xfffffffc; // lowest two bits are 0.
-            // offset, name,   value,                    description
-            // ------  ----    -----                     -----------
-            // 0,      SCS,    0xfff0f003,               points to the SCS @ 0xe000e000.
-            // 4,      ROMDWT, 0xfff02002 or 0xfff02003, points to DWT @ 0xe0001000 bit0 is 1 if DWT is fitted.
-            // 8,      ROMBPU, 0xfff03002 or 0xfff03003, points to the BPU @ 0xe0002000 bit 0 is set if BPU is fitted.
-            // 0xc,    End,    0x00000000,               End of table marker.
-
-            /*
-             * i = 0
-             * do{
-             *  read memory @ Base & 0xfffffffc + 4*i
-             *  i = 0 -> SCS
-             *  i = 1 -> ROMDWT
-             *  i = 2 -> ROMBPU
-             * } while(i < 1024 and read != 0)
-             */
-            // TODO read ROM Table from address pointed to by BASE Register (Architecture P 318)
-            // TODO check number of Break Points
-            // TODO check number of Watch points
-
-
-            if(cycle_counter < first_ap)
-            {
-                first_ap = cycle_counter;
-            }
-            return RESULT_OK; // done with this AP
-        }
-
-        // phase has invalid value
-        debug_line("check ap: invalid phase!");
-        return (Result)ERR_WRONG_STATE;
-    }
-    else if(9 == class)
-    {
-        // Memory Access Port (MEM-AP)
-        state.mem_ap.version = AP_VERSION_APv2;
-        debug_line("APv2:");
-        debug_line("AP: IDR: Revision: %ld", (idr & (0xful<<28))>>28 );
-        debug_line("AP: IDR: Jep 106 : %ld x 0x7f + 0x%02lx", (idr & (0xf << 24))>>24, (idr & (0x7f<<17))>>17 );
-        debug_line("AP: IDR: class :   %ld", class );
-        debug_line("AP: IDR: variant:  %ld", (idr & (0xf<<4))>>4 );
-        debug_line("AP: IDR: type:     %ld", (idr & 0xf) );
-        // TODO
-
-        if(cycle_counter < first_ap)
-        {
-            first_ap = cycle_counter;
-        }
-
-        return RESULT_OK; // done with this AP
-    }
-    else
-    {
-        debug_line("AP unknown class %ld !", class);
-        return RESULT_OK; // done with this AP
-    }
-}
-

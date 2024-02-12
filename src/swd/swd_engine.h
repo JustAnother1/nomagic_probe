@@ -22,7 +22,6 @@
 
 typedef enum {
     CMD_CONNECT = 0,
-    CMD_SCAN,
     CMD_READ,
     CMD_WRITE,
     // new orders go here
@@ -47,9 +46,5 @@ typedef struct{
 // negative value (-1, -2,..    = ERROR   -> something went wrong, order failed
 // positive value (1, 2, 3,...) = WORKING -> more steps necessary, call order_handler again
 typedef Result (*order_handler)(command_typ* cmd, bool first_call);
-
-
-void swd_init(void);
-void swd_tick(void);
 
 #endif /* SWD_SWD_ENGINE_H_ */

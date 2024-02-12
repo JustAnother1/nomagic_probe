@@ -31,14 +31,6 @@ void swd_protocol_tick(void);
  */
 Result connect_handler(command_typ* cmd, bool first_call);
 
-/** scans the target debug hardware.
- *
- * @param first_call if true then start from the beginning, else continue unfinished task.
- * @param cmd contains the parameters for the connection
- * @return RESULT_OK if finished successfully else ERR_NOT_COMPLETED, or an error code.
- */
-Result scan_handler(command_typ* cmd, bool first_call);
-
 /** reads a value from the memory space of the target.
  *
  * @param first_call if true then start from the beginning, else continue unfinished task.

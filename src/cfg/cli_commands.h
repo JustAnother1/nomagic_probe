@@ -45,11 +45,12 @@ cmd_typ commands[] = {
         {"xip_on",      "enable XIP on FLash", cmd_flash_enable_XIP},
 #endif
 #ifdef FEAT_DETECT
-        {"swd_test",    "test the SWD interface", cmd_swd_test},
-#endif
+        {"swd_test",    "explore the SWD interface", cmd_swd_test},
+#else
         {"swd_open",    "open a connection on the SWD interface", cmd_swd_connect},
         {"swd_info",    "current state of the SWD interface", cmd_swd_info},
         {"swd_read",    "read a memory address", cmd_swd_ap_read},
+#endif
         {"flash_reset", "reset the external QSPI flash", cmd_flash_reset},
 #ifdef FEAT_USB_MSC
         {"dump_file",   "dump the content of the file <filename>", cmd_file_dump},

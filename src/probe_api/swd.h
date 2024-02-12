@@ -28,6 +28,9 @@
 bool swd_info(uint32_t which);
 #endif
 
+void swd_init(void);
+void swd_tick(void);
+
 // configuration
 /** set the value of APSEL.
  * There could be more than one (Memory) Access Port. Therefore the address of the AP to use needs to be set.
@@ -45,20 +48,6 @@ void swd_protocol_set_AP_sel(uint32_t val);
  * @return ERR_QUEUE_FULL_TRY_AGAIN or a transaction id.
  */
 Result swd_connect(bool multi, uint32_t target, uint32_t AP_sel);
-
-/** is the connection to the target chip established?
- *
- * @return true = connection to target chip is open; false = no SWD communication happening.
- */
-bool swd_is_connected(void);
-
-/** scan the SWD Interface of the target chip.
- * This tries to read all available information about the chip.
- * This can be helpful when trying t get a new chip supported.
- *
- * @return ERR_QUEUE_FULL_TRY_AGAIN or RESULT_OK
- */
-Result swd_scan(void);
 
 /** read a certain memory position from the target chip memory.
  *

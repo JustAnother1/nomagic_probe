@@ -68,12 +68,14 @@ static bool attached;
 
 void target_init(void)
 {
+    swd_init();
     target_common_init();
     attached = false;
 }
 
 void target_tick(void)
 {
+    swd_tick();
     target_common_tick();
 }
 
@@ -85,7 +87,6 @@ Result target_connect(bool first_call)
     if(true == first_call)
     {
         debug_line("SWDv2 (0x%08x)", SWD_ID_CORE_0);
-        swd_protocol_set_AP_sel(0);
         phase = 1;
     }
 
