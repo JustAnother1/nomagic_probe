@@ -76,13 +76,24 @@ static connect_param_typ connect_parameter[] = {
 #define NUM_CONNECT_LOCATIONS (sizeof(connect_parameter)/sizeof(connect_param_typ))
 
 
-walk_data_typ cur_walk;
+static walk_data_typ cur_walk;
 
 
 void target_init(void)
 {
+    cur_walk.is_done = true;
     swd_init();
     walk_init();
+}
+
+bool cmd_target_info(uint32_t loop)
+{
+    (void)loop;
+    debug_line("Target Status");
+    debug_line("=============");
+    debug_line(" target: no target");
+
+    return true; // true == Done; false = call me again
 }
 
 void target_tick(void)

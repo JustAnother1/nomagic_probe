@@ -73,6 +73,15 @@ void target_init(void)
     attached = false;
 }
 
+bool cmd_target_info(uint32_t loop)
+{
+    (void)loop;
+    debug_line("Target Status");
+    debug_line("=============");
+    debug_line(" target: RP2040");
+    return true; // true == Done; false = call me again
+}
+
 void target_tick(void)
 {
     swd_tick();

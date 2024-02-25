@@ -21,6 +21,7 @@
 
 void target_init(void);
 void target_tick(void);
+bool cmd_target_info(uint32_t loop);
 Result target_connect(bool first_call);
 Result target_request_read(uint32_t address);
 Result target_read_result(Result transaction, uint32_t* data);

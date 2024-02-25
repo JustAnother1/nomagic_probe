@@ -20,6 +20,7 @@
 #include "cli/cli_sys.h"
 #include "cli/cli_usb.h"
 #include "cli/cli_memory.h"
+#include "target_api/target_actions.h"
 
 #ifdef FEAT_DETECT
 bool cmd_swd_test(uint32_t loop);
@@ -33,6 +34,7 @@ cmd_typ commands[] = {
         {"time",        "time since power on", cmd_time},
         {"param_dump",  "prints the parameters as hex", cmd_parameter_raw},
         {"usb_info",    "display USB status information", cmd_usb_info},
+        {"target_info", "display target specific status information", cmd_target_info},
         {"md",          "display memory", cmd_memory_dump},
         {"mdr",         "display memory as registers", cmd_memory_display},
         {"hil",         "hardware in the loop tests", cmd_hil_test},

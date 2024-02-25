@@ -103,3 +103,12 @@ void target_send_file(char* filename, uint32_t offset, uint32_t len)
     (void) offset;
     (void) len;
 }
+
+bool cmd_target_info(uint32_t loop)
+{
+    (void)loop;
+    debug_line("Target Status");
+    debug_line("=============");
+    debug_line(" target: not configured !");
+    return true; // true == Done; false = call me again
+}
