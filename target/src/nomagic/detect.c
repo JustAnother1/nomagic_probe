@@ -141,6 +141,7 @@ bool cmd_swd_test(uint32_t loop)
             {
                 if(NUM_CONNECT_LOCATIONS > location)
                 {
+                    debug_line("trying to connect on location %ld/%d ....", location + 1, NUM_CONNECT_LOCATIONS);
                     cur_walk.type = WALK_CONNECT;
                     cur_walk.par_b_0 = connect_parameter[location].multi;
                     cur_walk.par_i_0 = connect_parameter[location].target_id;

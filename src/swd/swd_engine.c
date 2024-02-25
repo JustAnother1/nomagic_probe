@@ -21,8 +21,10 @@
 #include <stddef.h>
 #include "result_queue.h"
 #include "swd_packets.h"
+#include "hal/time_base.h"
 
 #define CMD_QUEUE_LENGTH  5
+#define MAX_SAFE_COUNT    0xfffffff0  // comparing against < 0xffffffff is always true -> we want to avoid 0xffffffff as end time of timeout
 
 static void handle_order(void);
 
@@ -45,7 +47,8 @@ static const char* order_names[NUM_ORDERS] = {
 #endif
 
 static order_handler cur_order;
-static uint32_t timeout_counter;
+static uint32_t timeout_time;
+static bool wait_for_wrap_around;
 
 void swd_init(void)
 {
@@ -169,9 +172,26 @@ static void handle_order(void)
         if(cmdq_read != cmdq_write)
         {
             // new command available
+            uint32_t start_time = time_get_ms();
             // debug_line("swd: start order");
             cur_order = order_look_up[cmd_queue[cmdq_read].order];
-            timeout_counter = 0;
+
+            timeout_time = start_time + 100;
+            if(timeout_time > MAX_SAFE_COUNT)
+            {
+                // an end time of 0xffffffff would not work as all values are always < 0xffffffff
+                timeout_time = 2;
+                wait_for_wrap_around = true;
+            }
+            else if(timeout_time < start_time)
+            {
+                // wrap around
+                wait_for_wrap_around = true;
+            }
+            else
+            {
+                wait_for_wrap_around = false;
+            }
             first = true;
         }
         else
@@ -218,29 +238,40 @@ static void handle_order(void)
         {
             cmdq_read = 0;
         }
-        timeout_counter = 0;
     }
     else
     {
         // order not done
-        timeout_counter++;
-
-        if(1000 < timeout_counter)
+        uint32_t cur_time = time_get_ms();
+        if(true == wait_for_wrap_around)
         {
-            debug_line("ERROR: SWD: timeout in running %s order !", order_names[cmd_queue[cmdq_read].order]);
-            timeout_counter = 0;
-            // TODO can we do something better than to just skip this command?
-            if(CMD_CONNECT == cmd_queue[cmdq_read].order)
+            if(10 > cur_time)
             {
-                result_queue_add_result_of(COMMAND_QUEUE, cmd_queue[cmdq_read].transaction_id, (uint32_t)ERR_TIMEOUT);
+                // wrap around happened
+                wait_for_wrap_around = false;
             }
-            // do not try anymore
-            cur_order = NULL;
-            cmdq_read++;
-            if(CMD_QUEUE_LENGTH == cmdq_read)
+            // else continue waiting
+        }
+        else
+        {
+            if(cur_time > timeout_time)
             {
-                cmdq_read = 0;
+                // Timeout !!!
+                debug_line("ERROR: SWD: timeout in running %s order !", order_names[cmd_queue[cmdq_read].order]);
+                // TODO can we do something better than to just skip this command?
+                if(CMD_CONNECT == cmd_queue[cmdq_read].order)
+                {
+                    result_queue_add_result_of(COMMAND_QUEUE, cmd_queue[cmdq_read].transaction_id, (uint32_t)ERR_TIMEOUT);
+                }
+                // do not try anymore
+                cur_order = NULL;
+                cmdq_read++;
+                if(CMD_QUEUE_LENGTH == cmdq_read)
+                {
+                    cmdq_read = 0;
+                }
             }
+            // else not a timeout, yet.
         }
     }
 }
