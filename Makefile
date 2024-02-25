@@ -55,16 +55,16 @@ endif
 ifeq ($(TARGET), DETECT)
 	HAS_MSC = yes
 	HAS_DEBUG_UART = no
-	HAS_GDB_SERVER = no
 	HAS_DEBUG_CDC = yes
 	HAS_CLI = yes
+	HAS_GDB_SERVER = no
 	HAS_DETECT = yes
 else
 	HAS_MSC = yes
 	HAS_DEBUG_UART = yes
+	HAS_DEBUG_CDC = no
 	HAS_CLI = yes
 	HAS_GDB_SERVER = yes
-	HAS_DEBUG_CDC = no
 	HAS_DETECT = no
 endif
 

@@ -50,19 +50,23 @@ void usb_cdc_putc(void* p, char c)
 {
     uint32_t res;
     (void) p; // not used
-    for(;;)
+    if(true == tud_cdc_connected())
     {
-        res = tud_cdc_n_write_char(INTERFACE, c);
-        if(1 == res)
+        for(;;)
         {
-            tud_cdc_n_write_flush(INTERFACE);
-            return;
-        }
-        else
-        {
-            usb_tick();  // let the USB stack work
+            res = tud_cdc_n_write_char(INTERFACE, c);
+            if(1 == res)
+            {
+                tud_cdc_n_write_flush(INTERFACE);
+                return;
+            }
+            else
+            {
+                usb_tick();  // let the USB stack work
+            }
         }
     }
+    // else ignore this character - nobody is listening anyway,..
 }
 
 void usb_cdc_send_string(char* str)
