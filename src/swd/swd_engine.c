@@ -225,7 +225,7 @@ static void handle_order(void)
         // order not done
         timeout_counter++;
 
-        if(100 < timeout_counter)
+        if(1000 < timeout_counter)
         {
             debug_line("ERROR: SWD: timeout in running %s order !", order_names[cmd_queue[cmdq_read].order]);
             timeout_counter = 0;

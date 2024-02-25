@@ -91,7 +91,19 @@ bool cmd_target_info(uint32_t loop)
     (void)loop;
     debug_line("Target Status");
     debug_line("=============");
-    debug_line(" target: no target");
+    debug_line("target: no target");
+    // walk state
+    if(true == cur_walk.is_done)
+    {
+        debug_line("SWD state: idle");
+    }
+    else
+    {
+        debug_line("SWD state: active");
+        debug_line("type: %d", cur_walk.type);
+        debug_line("phase: %ld", cur_walk.phase);
+
+    }
 
     return true; // true == Done; false = call me again
 }

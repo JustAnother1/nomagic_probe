@@ -27,6 +27,7 @@
 #define ERR_TIMEOUT                -6
 #define ERR_TARGET_ERROR           -7
 #define ERR_INVALID_QUEUE          -8
+#define ERR_WRONG_VALUE            -9
 
 
 typedef int32_t Result;

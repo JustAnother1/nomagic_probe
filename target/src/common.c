@@ -398,7 +398,7 @@ static void handle_actions(void)
 
         if(100 < timeout_counter)
         {
-            debug_line("ERROR: SWD: timeout in running %s order !", action_names[action_queue[action_read].action]);
+            debug_line("ERROR: target: SWD: timeout in running %s order !", action_names[action_queue[action_read].action]);
             timeout_counter = 0;
             // TODO can we do something better than to just skip this command?
             // do not try anymore

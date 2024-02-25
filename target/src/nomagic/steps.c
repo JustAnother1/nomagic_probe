@@ -60,13 +60,13 @@ static void handle_connect(step_data_typ* cur_step)
         {
             if(RESULT_OK == data)
             {
-                cur_step->result = res;
+                cur_step->result = RESULT_OK;
                 cur_step->is_done = true;
             }
             else
             {
                 debug_line("target: SWD connect failed ! (%ld)", data);
-                cur_step->result = res;
+                cur_step->result = ERR_WRONG_VALUE;
                 cur_step->is_done = true;
             }
         }
