@@ -54,24 +54,24 @@ typedef struct{
 } connect_param_typ;
 
 static connect_param_typ connect_parameter[] = {
-        // SWDv1/SWDv2 | targetID | APSel | padding = , {0, 0,0}
-        {false, 0, 0, {0, 0,0}}, // SWD v1
-        {true, 0x01002927, 0, {0, 0,0}}, // RP2040 core 0
-        {true, 0x11002927, 0, {0, 0,0}}, // RP2040 core 1
-        {true, 0x21002927, 0, {0, 0,0}}, // RP2040 altered id
-        {true, 0x31002927, 0, {0, 0,0}}, // RP2040 altered id
-        {true, 0x41002927, 0, {0, 0,0}}, // RP2040 altered id
-        {true, 0x51002927, 0, {0, 0,0}}, // RP2040 altered id
-        {true, 0x61002927, 0, {0, 0,0}}, // RP2040 altered id
-        {true, 0x71002927, 0, {0, 0,0}}, // RP2040 altered id
-        {true, 0x81002927, 0, {0, 0,0}}, // RP2040 altered id
-        {true, 0x91002927, 0, {0, 0,0}}, // RP2040 altered id
-        {true, 0xa1002927, 0, {0, 0,0}}, // RP2040 altered id
-        {true, 0xb1002927, 0, {0, 0,0}}, // RP2040 altered id
-        {true, 0xc1002927, 0, {0, 0,0}}, // RP2040 altered id
-        {true, 0xd1002927, 0, {0, 0,0}}, // RP2040 altered id
-        {true, 0xe1002927, 0, {0, 0,0}}, // RP2040 altered id
-        {true, 0xf1002927, 0, {0, 0,0}}, // RP2040 rescue data port
+        // targetID | APSel | SWDv2 ? | padding = , {0, 0,0}
+        {         0,      0,    false,  {0, 0,0}}, // SWD v1
+        {0x01002927,      0,     true,  {0, 0,0}}, // RP2040 core 0
+        {0x11002927,      0,     true,  {0, 0,0}}, // RP2040 core 1
+        {0x21002927,      0,     true,  {0, 0,0}}, // RP2040 altered id
+        {0x31002927,      0,     true,  {0, 0,0}}, // RP2040 altered id
+        {0x41002927,      0,     true,  {0, 0,0}}, // RP2040 altered id
+        {0x51002927,      0,     true,  {0, 0,0}}, // RP2040 altered id
+        {0x61002927,      0,     true,  {0, 0,0}}, // RP2040 altered id
+        {0x71002927,      0,     true,  {0, 0,0}}, // RP2040 altered id
+        {0x81002927,      0,     true,  {0, 0,0}}, // RP2040 altered id
+        {0x91002927,      0,     true,  {0, 0,0}}, // RP2040 altered id
+        {0xa1002927,      0,     true,  {0, 0,0}}, // RP2040 altered id
+        {0xb1002927,      0,     true,  {0, 0,0}}, // RP2040 altered id
+        {0xc1002927,      0,     true,  {0, 0,0}}, // RP2040 altered id
+        {0xd1002927,      0,     true,  {0, 0,0}}, // RP2040 altered id
+        {0xe1002927,      0,     true,  {0, 0,0}}, // RP2040 altered id
+        {0xf1002927,      0,     true,  {0, 0,0}}, // RP2040 rescue data port
 };
 #define NUM_CONNECT_LOCATIONS (sizeof(connect_parameter)/sizeof(connect_param_typ))
 
