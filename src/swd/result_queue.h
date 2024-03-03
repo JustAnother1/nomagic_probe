@@ -63,4 +63,8 @@ Result result_queue_get_result(result_queue_typ queue_id, Result transaction, ui
  */
 void result_queue_free_result(result_queue_typ queue_id, uint32_t transaction);
 
+#if (defined FEAT_DEBUG_UART) || (defined FEAT_DEBUG_CDC)
+void result_queue_print_status(result_queue_typ queue_id);
+#endif
+
 #endif /* SWD_RESULT_QUEUE_H_ */

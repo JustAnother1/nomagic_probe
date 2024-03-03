@@ -25,6 +25,7 @@
 #include "hal/flash.h"
 #include "file/file_system.h"
 #include "probe_api/debug_log.h"
+#include "probe_api/swd.h"
 
 bool cmd_time(uint32_t loop)
 {
@@ -168,6 +169,7 @@ bool cmd_info_overview(uint32_t loop)
         case 3: debug_line("3: boot ROM"); break;
         case 4: debug_line("4: QSPI"); break;
         case 5: debug_line("5: file system"); break;
+        case 6: debug_line("6: SWD"); break;
         default: debug_line("Done"); return true;  // we are done
     }
     return false;
@@ -199,6 +201,7 @@ bool cmd_info(uint32_t loop)
 #else
         case 5: debug_line("no file system! target = fixed single"); return true;
 #endif
+        case 6: return swd_info(loop);
         default: return true;
     }
     return false;

@@ -25,11 +25,6 @@ static uint32_t step;
 static Result progress;
 
 
-bool cmd_swd_info(uint32_t loop)
-{
-    return swd_info(loop);
-}
-
 bool cmd_swd_connect(uint32_t loop)
 {
     (void)loop;

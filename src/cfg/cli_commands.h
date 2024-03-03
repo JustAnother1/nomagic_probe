@@ -50,7 +50,6 @@ cmd_typ commands[] = {
         {"swd_test",    "explore the SWD interface", cmd_swd_test},
 #else  // TODO enable commands also in detect mode.
         {"swd_open",    "open a connection on the SWD interface", cmd_swd_connect},
-        {"swd_info",    "current state of the SWD interface", cmd_swd_info},
         {"swd_read",    "read a memory address", cmd_swd_ap_read},
 #endif
         {"flash_reset", "reset the external QSPI flash", cmd_flash_reset},

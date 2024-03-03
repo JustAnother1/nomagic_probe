@@ -38,6 +38,20 @@ void result_queue_init(void)
     }
 }
 
+#if (defined FEAT_DEBUG_UART) || (defined FEAT_DEBUG_CDC)
+void result_queue_print_status(result_queue_typ queue_id)
+{
+    uint32_t i;
+    debug_line("next_index : %ld", next_index[queue_id]);
+    debug_line("index: busy filled result");
+    for(i = 0; i < MAX_QUEUE_ENTRIES; i++)
+    {
+        debug_line("%5ld: %5d %7d 0x%08lX",
+                   i, busy[queue_id][i], filled[queue_id][i], results[queue_id][i]);
+    }
+}
+#endif
+
 Result result_queue_get_next_transaction_id(result_queue_typ queue_id, uint32_t* data)
 {
     if(queue_id < NUM_QUEUE)
