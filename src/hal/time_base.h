@@ -16,7 +16,7 @@
 #define HAL_TIME_BASE_H_
 
 #include <stdint.h>
-#include <hal/hw/TIMER.h>
+#include "hal/hw/TIMER.h"
 
 void delay_us(uint32_t usec);
 

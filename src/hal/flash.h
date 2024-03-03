@@ -16,6 +16,7 @@
 #ifndef HAL_FLASH_H_
 #define HAL_FLASH_H_
 
+#include <stdbool.h>
 #include <stdint.h>
 
 // using the boot ROM read/write need to be 256 Bytes in size
@@ -36,7 +37,7 @@ void flash_init(void);
 void flash_write_block(uint32_t start_address, uint8_t* data, uint32_t length);
 void flash_erase_page(uint32_t number);
 void flash_read(uint32_t start_address, uint8_t* data, uint32_t length);
-void flash_report(void);
+bool flash_report(uint32_t loop);
 void flash_reset(void);
 
 #endif /* HAL_FLASH_H_ */

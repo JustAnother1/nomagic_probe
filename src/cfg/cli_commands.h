@@ -48,7 +48,7 @@ cmd_typ commands[] = {
 #endif
 #ifdef FEAT_DETECT
         {"swd_test",    "explore the SWD interface", cmd_swd_test},
-#else
+#else  // TODO enable commands also in detect mode.
         {"swd_open",    "open a connection on the SWD interface", cmd_swd_connect},
         {"swd_info",    "current state of the SWD interface", cmd_swd_info},
         {"swd_read",    "read a memory address", cmd_swd_ap_read},

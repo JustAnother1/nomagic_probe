@@ -12,12 +12,13 @@
  * with this program; if not, see <http://www.gnu.org/licenses/>
  *
  */
+#include <stdlib.h>
 #include "cli_sys.h"
 #include "cfg/cli_cfg.h"
 #include "hal/startup.h"
 #include "hal/hw_divider.h"
-#include <hal/hw/TIMER.h>
-#include <hal/time_base.h>
+#include "hal/hw/TIMER.h"
+#include "hal/time_base.h"
 #include "cli.h"
 #include "hal/watchdog.h"
 #include "hal/boot_rom.h"
@@ -157,30 +158,48 @@ bool cmd_hil_test(uint32_t loop)
     return true;  // we are done
 }
 
-bool cmd_info(uint32_t loop)
+bool cmd_info_overview(uint32_t loop)
 {
     switch(loop)
     {
-        case 0: debug_line("Startup:"); break;
-        case 1: startup_report(); break;
-        case 2: debug_line("Watchdog:"); break;
-        case 3: watchdog_report(); break;
-        case 4: debug_line("boot ROM:"); break;
+        case 0: debug_line("choose the information to show:"); break;
+        case 1: debug_line("1: Startup"); break;
+        case 2: debug_line("2: Watchdog"); break;
+        case 3: debug_line("3: boot ROM"); break;
+        case 4: debug_line("4: QSPI"); break;
+        case 5: debug_line("5: file system"); break;
+        default: debug_line("Done"); return true;  // we are done
+    }
+    return false;
+}
+
+bool cmd_info(uint32_t loop)
+{
+    static uint32_t which_info;
+    if(0 == loop)
+    {
+        // first call
+        uint8_t* type_str = cli_get_parameter(0);
+        which_info = (uint32_t)atoi((const char*)type_str);
+    }
+
+    switch(which_info)
+    {
+        case 0: return cmd_info_overview(loop);
+        case 1: return startup_report(loop);
+        case 2: return watchdog_report(loop);
 #ifdef BOOT_ROM_ENABLED
-        case 5: boot_rom_report(); break;
+        case 3: return boot_rom_report(loop);
 #else
-        case 5: debug_line(" not used"); break;
+        case 3: debug_line("Boot ROM not used !"); return true;
 #endif
-        case 6: debug_line("QSPI:"); break;
-        case 7: flash_report(); break;
-        case 8: debug_line("file system:"); break;
+        case 4: return flash_report(loop);
 #ifdef FEAT_USB_MSC
-        case 9: file_system_report(); break;
+        case 5: return file_system_report(loop);
 #else
-        case 9: debug_line("target = fixed single"); break;
+        case 5: debug_line("no file system! target = fixed single"); return true;
 #endif
-        case 10: debug_line("Done"); break;
-        case 11: return true;  // we are done
+        default: return true;
     }
     return false;
 }

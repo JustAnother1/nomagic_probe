@@ -60,8 +60,13 @@ void cli_init(void)
 
 void cli_welcome(void)
 {
+    uint32_t loop = 0;
+    bool res = false;
     debug_msg(WELCOME);
-    watchdog_report();
+    do{
+        res = watchdog_report(loop);
+        loop++;
+    } while (false == res);
     debug_msg(PROMPT);
 }
 

@@ -15,9 +15,9 @@
 #ifndef SRC_SWD_SWD_GPIO_H_
 #define SRC_SWD_SWD_GPIO_H_
 
-#include <hal/hw/PADS_BANK0.h>
-#include <hal/hw/SIO.h>
-#include <hal/time_base.h>
+#include "hal/hw/PADS_BANK0.h"
+#include "hal/hw/SIO.h"
+#include "hal/time_base.h"
 
 // GPIO:
 // Run = /Reset

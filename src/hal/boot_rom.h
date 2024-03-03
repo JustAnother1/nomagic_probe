@@ -15,6 +15,8 @@
 #ifndef HAL_BOOT_ROM_H_
 #define HAL_BOOT_ROM_H_
 #ifdef BOOT_ROM_ENABLED
+
+#include <stdbool.h>
 #include <stdint.h>
 #include <stddef.h>
 
@@ -77,7 +79,7 @@ typedef struct {
 } boot_rom_flash_functions;
 
 void boot_rom_check_if_valid(void);
-void boot_rom_report(void);
+bool boot_rom_report(uint32_t loop);
 boot_rom_flash_functions* boot_rom_get_flash_functions(void);
 #endif /* BOOT_ROM_ENABLED */
 #endif /* HAL_BOOT_ROM_H_ */

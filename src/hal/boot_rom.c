@@ -113,28 +113,41 @@ void boot_rom_check_if_valid(void)
     valid = true;
 }
 
-void boot_rom_report(void)
+bool boot_rom_report(uint32_t loop)
 {
+    switch(loop)
+    {
+    case 0:
+    {
 #pragma GCC diagnostic ignored "-Warray-bounds="
-    uint32_t val = *(uint32_t*)0x10;
+        uint32_t val = *(uint32_t*)0x10;
 #pragma GCC diagnostic pop
-    val = (val >> 24) & 0xff;
-    debug_line("boot ROM version : %lu", val);
-    if(true == valid)
-    {
-        debug_line("boot ROM is valid : true");
+        val = (val >> 24) & 0xff;
+        debug_line("boot ROM version : %lu", val);
     }
-    else
-    {
-        debug_line("boot ROM is valid : false");
+        break;
+
+    case 1:
+        if(true == valid)
+        {
+            debug_line("boot ROM is valid : true");
+        }
+        else
+        {
+            debug_line("boot ROM is valid : false");
+        }
+        break;
+
+    case 2: debug_line("address of function lookup function :           0x%08lx", (uint32_t)rom_table_lookup); break;
+    case 3: debug_line("address of function _connect_internal_flash() : 0x%08lx", (uint32_t)flash_funcs._connect_internal_flash); break;
+    case 4: debug_line("address of function _flash_exit_xip() :         0x%08lx", (uint32_t)flash_funcs._flash_exit_xip); break;
+    case 5: debug_line("address of function _flash_range_erase() :      0x%08lx", (uint32_t)flash_funcs._flash_range_erase); break;
+    case 6: debug_line("address of function flash_range_program() :     0x%08lx", (uint32_t)flash_funcs.flash_range_program); break;
+    case 7: debug_line("address of function _flash_flush_cache() :      0x%08lx", (uint32_t)flash_funcs._flash_flush_cache); break;
+    case 8: debug_line("address of function _flash_enter_cmd_xip() :    0x%08lx", (uint32_t)flash_funcs._flash_enter_cmd_xip); break;
+    default: return true;
     }
-    debug_line("address of function lookup function :           0x%08lx", (uint32_t)rom_table_lookup);
-    debug_line("address of function _connect_internal_flash() : 0x%08lx", (uint32_t)flash_funcs._connect_internal_flash);
-    debug_line("address of function _flash_exit_xip() :         0x%08lx", (uint32_t)flash_funcs._flash_exit_xip);
-    debug_line("address of function _flash_range_erase() :      0x%08lx", (uint32_t)flash_funcs._flash_range_erase);
-    debug_line("address of function flash_range_program() :     0x%08lx", (uint32_t)flash_funcs.flash_range_program);
-    debug_line("address of function _flash_flush_cache() :      0x%08lx", (uint32_t)flash_funcs._flash_flush_cache);
-    debug_line("address of function _flash_enter_cmd_xip() :    0x%08lx", (uint32_t)flash_funcs._flash_enter_cmd_xip);
+    return false;
 }
 #endif // BOOT_ROM_ENABLED
 

@@ -12,19 +12,19 @@
  * with this program; if not, see <http://www.gnu.org/licenses/>
  *
  */
-#include <hal/debug_uart.h>
-#include <hal/hw/IO_BANK0.h>
-#include <hal/hw/PADS_BANK0.h>
-#include <hal/hw/PSM.h>
-#include <hal/hw/RESETS.h>
-#include <hal/hw/SIO.h>
-#include <hal/hw/XOSC.h>
+#include "hal/debug_uart.h"
+#include "hal/hw/IO_BANK0.h"
+#include "hal/hw/PADS_BANK0.h"
+#include "hal/hw/PSM.h"
+#include "hal/hw/RESETS.h"
+#include "hal/hw/SIO.h"
+#include "hal/hw/XOSC.h"
 #include "hal/watchdog.h"
 #ifdef BOOT_ROM_ENABLED
 #include "hal/boot_rom.h"
 #endif
 #include "cli/cli.h"
-#include <hal/time_base.h>
+#include "hal/time_base.h"
 #include <stdint.h>
 #include "tinyusb/usb.h"
 #include "tinyusb/src/tusb.h"

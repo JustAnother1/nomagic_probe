@@ -141,9 +141,10 @@ bool tud_msc_set_sense(uint8_t lun, uint8_t sense_key, uint8_t add_sense_code, u
   return true;
 }
 
-void watchdog_report(void)
+bool watchdog_report(uint32_t loop)
 {
     // nothing to do here
+    return true;
 }
 
 void watchdog_feed(void)

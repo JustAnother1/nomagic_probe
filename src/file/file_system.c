@@ -84,13 +84,15 @@ uint32_t file_system_block_count(void)
     return block_count;
 }
 
-void file_system_report(void)
+bool file_system_report(uint32_t loop)
 {
-    uint32_t i;
-    debug_line("file system starts at address 0x%08lx (sector %ld)", file_system_start, sector_offset);
-
-    for(i = 0; i < FLASH_MAX_SECTORS; i++)
+    if(0 == loop)
     {
+        debug_line("file system starts at address 0x%08lx (sector %ld)", file_system_start, sector_offset);
+    }
+    else if(loop < (FLASH_MAX_SECTORS + 1))
+    {
+        uint32_t i = loop -1;
         if((i > 0) && (i %10 == 0))
         {
             debug_line("|");
@@ -103,8 +105,13 @@ void file_system_report(void)
             case SECTOR_TYPE_UNAVAILABLE:  debug_msg("|     "); break;
         }
     }
-    debug_line("|");
-    debug_line("super block in sector %ld", super_sector);
+    else
+    {
+        debug_line("|");
+        debug_line("super block in sector %ld", super_sector);
+        return true;
+    }
+    return false;
 }
 
 int32_t file_system_read(uint32_t offset, uint8_t* buffer, uint32_t bufsize)

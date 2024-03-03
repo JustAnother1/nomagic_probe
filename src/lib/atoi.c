@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include <stddef.h>
 
 int atoi (const char * string)
 {
@@ -6,6 +7,10 @@ int atoi (const char * string)
     int base = 10;
     int res = 0;
     int digits = 0;
+    if(NULL == string)
+    {
+        return 0;
+    }
 
     while((0 != *string) && (((base == 16) && (digits < 9)) || ((base == 10) && (digits < 11))))
     {

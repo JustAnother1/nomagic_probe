@@ -16,7 +16,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
-#include <hal/time_base.h>
+#include "hal/time_base.h"
 #include "swd_protocol.h"
 #include "swd_packets.h"
 #include "result_queue.h"

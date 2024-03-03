@@ -13,10 +13,10 @@
  *
  */
 #include "swd_gpio.h"
-#include <hal/hw/IO_BANK0.h>
-#include <hal/hw/PADS_BANK0.h>
-#include <hal/hw/PSM.h>
-#include <hal/hw/RESETS.h>
+#include "hal/hw/IO_BANK0.h"
+#include "hal/hw/PADS_BANK0.h"
+#include "hal/hw/PSM.h"
+#include "hal/hw/RESETS.h"
 
 uint32_t swd_freq_delay;
 

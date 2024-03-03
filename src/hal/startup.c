@@ -422,30 +422,35 @@ _Noreturn void error_state(void)
     }
 }
 
-void startup_report(void)
+bool startup_report(uint32_t loop)
 {
-    debug_line("3rd stage boot start:   0x%08lx", (uint32_t)&__third_boot_start);
-    debug_line("3rd stage boot end:     0x%08lx", (uint32_t)&__third_boot_end);
+    switch(loop)
+    {
+    case 0: debug_line("3rd stage boot start:   0x%08lx", (uint32_t)&__third_boot_start); break;
+    case 1: debug_line("3rd stage boot end:     0x%08lx", (uint32_t)&__third_boot_end); break;
 
-    debug_line(".code start:            0x%08lx", (uint32_t)&__code_start);
-    debug_line(".code end:              0x%08lx", (uint32_t)&__code_end);
-    debug_line(".code start in flash:   0x%08lx", (uint32_t)&__code_in_flash);
-    debug_line(".code end in flash:     0x%08lx", (uint32_t)(&__code_in_flash + (&__code_end - &__code_start)));
+    case 2: debug_line(".code start:            0x%08lx", (uint32_t)&__code_start); break;
+    case 3: debug_line(".code end:              0x%08lx", (uint32_t)&__code_end); break;
+    case 4: debug_line(".code start in flash:   0x%08lx", (uint32_t)&__code_in_flash); break;
+    case 5: debug_line(".code end in flash:     0x%08lx", (uint32_t)(&__code_in_flash + (&__code_end - &__code_start))); break;
 
-    debug_line(".bss start:             0x%08lx", (uint32_t)&__bss_start);
-    debug_line(".bss end:               0x%08lx", (uint32_t)&__bss_end);
+    case 6: debug_line(".bss start:             0x%08lx", (uint32_t)&__bss_start); break;
+    case 7: debug_line(".bss end:               0x%08lx", (uint32_t)&__bss_end); break;
 
-    debug_line(".data start:            0x%08lx", (uint32_t)&__data_start);
-    debug_line(".data end:              0x%08lx", (uint32_t)&__data_end);
-    debug_line(".data start in flash:   0x%08lx", (uint32_t)&__data_in_flash);
-    debug_line(".data end in flash:     0x%08lx", (uint32_t)(&__data_in_flash + (&__data_end - &__data_start)));
+    case 8: debug_line(".data start:            0x%08lx", (uint32_t)&__data_start); break;
+    case 9: debug_line(".data end:              0x%08lx", (uint32_t)&__data_end); break;
+    case 10: debug_line(".data start in flash:   0x%08lx", (uint32_t)&__data_in_flash); break;
+    case 11: debug_line(".data end in flash:     0x%08lx", (uint32_t)(&__data_in_flash + (&__data_end - &__data_start))); break;
 
-    debug_line(".rodata start:          0x%08lx", (uint32_t)&__ro_data_start);
-    debug_line(".rodata end:            0x%08lx", (uint32_t)&__ro_data_end);
-    debug_line(".rodata start in flash: 0x%08lx", (uint32_t)&__ro_data_in_flash);
-    debug_line(".rodata end in flash:   0x%08lx", (uint32_t)(&__ro_data_in_flash + (&__ro_data_end - &__ro_data_start)));
+    case 12: debug_line(".rodata start:          0x%08lx", (uint32_t)&__ro_data_start); break;
+    case 13: debug_line(".rodata end:            0x%08lx", (uint32_t)&__ro_data_end); break;
+    case 14: debug_line(".rodata start in flash: 0x%08lx", (uint32_t)&__ro_data_in_flash); break;
+    case 15: debug_line(".rodata end in flash:   0x%08lx", (uint32_t)(&__ro_data_in_flash + (&__ro_data_end - &__ro_data_start))); break;
 
-    debug_line("file system start:      0x%08lx", file_system_start);
+    case 16: debug_line("file system start:      0x%08lx", file_system_start); break;
+    default: return true;
+    }
+    return false;
 }
 
 #ifdef ENABLE_CORE_1

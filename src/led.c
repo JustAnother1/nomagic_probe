@@ -14,12 +14,12 @@
  */
 
 #include "led.h"
-#include <hal/hw/IO_BANK0.h>
-#include <hal/hw/PADS_BANK0.h>
-#include <hal/hw/PSM.h>
-#include <hal/hw/RESETS.h>
-#include <hal/hw/SIO.h>
-#include <hal/time_base.h>
+#include "hal/hw/IO_BANK0.h"
+#include "hal/hw/PADS_BANK0.h"
+#include "hal/hw/PSM.h"
+#include "hal/hw/RESETS.h"
+#include "hal/hw/SIO.h"
+#include "hal/time_base.h"
 
 #define NUM_MAX_STEPS  2
 

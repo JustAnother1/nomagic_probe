@@ -12,13 +12,13 @@
  * with this program; if not, see <http://www.gnu.org/licenses/>
  *
  */
-#include <hal/debug_uart.h>
+#include "hal/debug_uart.h"
 #include "hal/hw/RESETS.h"
-#include <hal/hw/IO_BANK0.h>
-#include <hal/hw/PADS_BANK0.h>
+#include "hal/hw/IO_BANK0.h"
+#include "hal/hw/PADS_BANK0.h"
 #include "hal/hw/UART0.h"
 #include "hal/hw/SYSCFG.h"
-#include <hal/hw/PSM.h>
+#include "hal/hw/PSM.h"
 #include "startup.h"
 
 uint8_t recv_buf[RECEIVE_BUFFER_SIZE];

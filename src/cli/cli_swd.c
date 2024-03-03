@@ -13,7 +13,7 @@
  *
  */
 #include <stdlib.h>
-#include <hal/time_base.h>
+#include "hal/time_base.h"
 #include "cli_swd.h"
 #include "cli.h"
 

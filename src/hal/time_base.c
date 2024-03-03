@@ -12,8 +12,8 @@
  * with this program; if not, see <http://www.gnu.org/licenses/>
  *
  */
-#include <hal/hw/PPB.h>
-#include <hal/time_base.h>
+#include "hal/hw/PPB.h"
+#include "hal/time_base.h"
 
 volatile uint32_t ms_since_boot;
 

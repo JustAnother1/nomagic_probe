@@ -19,7 +19,7 @@
 #include "cli_cfg.h"
 #include "hal/flash.h"
 #include "hal/boot_rom.h"
-#include <hal/hw/TIMER.h>
+#include "hal/hw/TIMER.h"
 #include "file/fake_fs.h"
 #include "file/file_system.h"
 #include "file/fake_root_folder.h"

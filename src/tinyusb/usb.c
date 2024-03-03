@@ -36,7 +36,7 @@
  * THE SOFTWARE.
  *
  */
-#include <hal/time_base.h>
+#include "hal/time_base.h"
 #include "usb.h"
 #include "hal/hw/CLOCKS.h"
 #include "hal/hw/IO_BANK0.h"

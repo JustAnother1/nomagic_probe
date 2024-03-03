@@ -13,7 +13,7 @@
  *
  */
 
-#include <hal/time_base.h>
+#include "hal/time_base.h"
 #include "flash.h"
 #include "cfg/cli_cfg.h"
 #include "cfg/cli_cfg.h"
@@ -324,22 +324,30 @@ void flash_read(uint32_t start_address, uint8_t* data, uint32_t length)
 }
 
 
-void flash_report(void)
+bool flash_report(uint32_t loop)
 {
+    switch(loop)
+    {
 #ifdef BOOT_ROM_ENABLED
-    debug_line("using BOOT ROM functions !");
+    case 0: debug_line("using BOOT ROM functions !"); break;
 #else
-    read_status_register();
-    if(0 != (STATUS_REGISTER_BUSY & status_register))
-    {
-        debug_line("Flash state: busy");
-    }
-    else
-    {
-        debug_line("Flash state: idle");
-    }
-    debug_line("status register: 0x%08lx (%ld)", status_register, status_register);
+    case 0: read_status_register(); break;
+    case 1:
+        if(0 != (STATUS_REGISTER_BUSY & status_register))
+        {
+            debug_line("Flash state: busy");
+        }
+        else
+        {
+            debug_line("Flash state: idle");
+        }
+        break;
+
+    case 2: debug_line("status register: 0x%08lx (%ld)", status_register, status_register); break;
 #endif
+        default : return true;
+    }
+    return false;
 }
 
 void flash_reset(void)
