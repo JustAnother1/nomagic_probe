@@ -187,7 +187,7 @@ bool cmd_swd_test(uint32_t loop)
             }
             return false;
         }
-        else if(2 == step)
+        else // if(2 == step)
         {
             if(true == cur_walk.is_done)
             {
@@ -197,10 +197,9 @@ bool cmd_swd_test(uint32_t loop)
             else
             {
                 // currently busy -> try again
-                return false;
             }
+            return false;
         }
-        return true;
     }
 }
 

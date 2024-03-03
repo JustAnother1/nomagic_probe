@@ -29,6 +29,9 @@
 #define ORDER_TIMEOUT_TIME_MS  100
 
 static void handle_order(void);
+static void start_timeout(void);
+static bool check_timeout(void);
+static void finished_order(void);
 
 
 static volatile uint32_t cmdq_read;
@@ -174,27 +177,9 @@ static void handle_order(void)
         if(cmdq_read != cmdq_write)
         {
             // new command available
-            uint32_t start_time = time_get_ms();
             // debug_line("swd: start order");
             cur_order = order_look_up[cmd_queue[cmdq_read].order];
-
-            timeout_time = start_time + ORDER_TIMEOUT_TIME_MS;
-            if(timeout_time > MAX_SAFE_COUNT)
-            {
-                // an end time of 0xffffffff would not work as all values are always < 0xffffffff
-                uint32_t remainder = ORDER_TIMEOUT_TIME_MS - (MAX_SAFE_COUNT - start_time);
-                timeout_time = 2 + remainder;
-                wait_for_wrap_around = true;
-            }
-            else if(timeout_time < start_time)
-            {
-                // wrap around
-                wait_for_wrap_around = true;
-            }
-            else
-            {
-                wait_for_wrap_around = false;
-            }
+            start_timeout();
             first = true;
         }
         else
@@ -235,46 +220,77 @@ static void handle_order(void)
             debug_line("swd: error %ld on order %s", order_state, order_names[cmd_queue[cmdq_read].order]);
         }
         // debug_line("swd: order %s done (%ld)", order_names[cmd_queue[cmdq_read].order], last_phase);
-        cur_order = NULL;
-        cmdq_read++;
-        if(CMD_QUEUE_LENGTH == cmdq_read)
-        {
-            cmdq_read = 0;
-        }
+        finished_order();
     }
     else
     {
         // order not done
-        uint32_t cur_time = time_get_ms();
-        if(true == wait_for_wrap_around)
+        if(true == check_timeout())
         {
-            if(10 > cur_time)
+            debug_line("ERROR: SWD: timeout in running %s order !", order_names[cmd_queue[cmdq_read].order]);
+            // TODO can we do something better than to just skip this command?
+            if(CMD_CONNECT == cmd_queue[cmdq_read].order)
             {
-                // wrap around happened
-                wait_for_wrap_around = false;
+                result_queue_add_result_of(COMMAND_QUEUE, cmd_queue[cmdq_read].transaction_id, (uint32_t)ERR_TIMEOUT);
             }
-            // else continue waiting
+            // do not try anymore
+            finished_order();
         }
-        else
+    }
+}
+
+static void finished_order(void)
+{
+    cur_order = NULL;
+    cmdq_read++;
+    if(CMD_QUEUE_LENGTH == cmdq_read)
+    {
+        cmdq_read = 0;
+    }
+}
+
+static bool check_timeout(void)
+{
+    uint32_t cur_time = time_get_ms();
+    if(true == wait_for_wrap_around)
+    {
+        if(10 > cur_time)
         {
-            if(cur_time > timeout_time)
-            {
-                // Timeout !!!
-                debug_line("ERROR: SWD: timeout in running %s order !", order_names[cmd_queue[cmdq_read].order]);
-                // TODO can we do something better than to just skip this command?
-                if(CMD_CONNECT == cmd_queue[cmdq_read].order)
-                {
-                    result_queue_add_result_of(COMMAND_QUEUE, cmd_queue[cmdq_read].transaction_id, (uint32_t)ERR_TIMEOUT);
-                }
-                // do not try anymore
-                cur_order = NULL;
-                cmdq_read++;
-                if(CMD_QUEUE_LENGTH == cmdq_read)
-                {
-                    cmdq_read = 0;
-                }
-            }
-            // else not a timeout, yet.
+            // wrap around happened
+            wait_for_wrap_around = false;
         }
+        // else continue waiting
+    }
+    else
+    {
+        if(cur_time > timeout_time)
+        {
+            // Timeout !!!
+            return true;
+        }
+        // else not a timeout, yet.
+    }
+    return false;
+}
+
+static void start_timeout(void)
+{
+    uint32_t start_time = time_get_ms();
+    timeout_time = start_time + ORDER_TIMEOUT_TIME_MS;
+    if(timeout_time > MAX_SAFE_COUNT)
+    {
+        // an end time of 0xffffffff would not work as all values are always < 0xffffffff
+        uint32_t remainder = ORDER_TIMEOUT_TIME_MS - (MAX_SAFE_COUNT - start_time);
+        timeout_time = 2 + remainder;
+        wait_for_wrap_around = true;
+    }
+    else if(timeout_time < start_time)
+    {
+        // wrap around
+        wait_for_wrap_around = true;
+    }
+    else
+    {
+        wait_for_wrap_around = false;
     }
 }

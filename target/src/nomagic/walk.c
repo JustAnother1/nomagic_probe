@@ -63,8 +63,14 @@ void walk_execute(walk_data_typ* data)
                 // Timeout !!!
                 debug_line("ERROR: Target walk(%d): timeout in running step %ld !", data->type, data->phase );
                 // TODO can we do something better than to just skip this command?
+                debug_line("walk(pi0:0x%08lX, pi1:0x%08lX, p:%ld, r:%ld, i:%ld, t:%d, d:%d, pb:%d)",
+                           data->par_i_0, data->par_i_1, data->phase, data->result, data->intern_0, data->type, data->is_done, data->par_b_0);
+                debug_line("step(pi0:0x%08lX, pi1:0x%08lX, p:%ld, r:%ld, i:%ld, t:%d, d:%d, pb:%d)",
+                           cur_step.par_i_0, cur_step.par_i_1, cur_step.phase, cur_step.result, cur_step.intern_0, cur_step.type, cur_step.is_done, cur_step.par_b_0);
+
                 // do not try anymore
                 data->is_done = true;
+                cur_step.is_done = true;
             }
             // else not a timeout, yet.
         }

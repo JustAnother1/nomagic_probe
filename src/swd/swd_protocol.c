@@ -333,7 +333,11 @@ Result connect_handler(command_typ* cmd, bool first_call)
     if(7 == phase)
     {
         phase_result = result_queue_get_result(PACKET_QUEUE, transaction_id, &read_data);
-        if(RESULT_OK == phase_result)
+        if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
+        {
+            return ERR_NOT_COMPLETED; // -> try again
+        }
+        else if(RESULT_OK == phase_result)
         {
             state.reg_DPIDR = read_data;
             state.is_connected = true;
@@ -421,7 +425,11 @@ Result connect_handler(command_typ* cmd, bool first_call)
     if(11 == phase)
     {
         phase_result = result_queue_get_result(PACKET_QUEUE, transaction_id, &read_data);
-        if(RESULT_OK == phase_result)
+        if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
+        {
+            return ERR_NOT_COMPLETED; // -> try again
+        }
+        else if(RESULT_OK == phase_result)
         {
             cycle_counter++;
             state.reg_CTRL_STAT = read_data;
@@ -463,7 +471,11 @@ Result connect_handler(command_typ* cmd, bool first_call)
         {
             phase_result = write_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, CSW_VAL, false);
         }
-        if(RESULT_OK == phase_result)
+        if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
+        {
+            return ERR_NOT_COMPLETED; // -> try again
+        }
+        else if(RESULT_OK == phase_result)
         {
             state.mem_ap.reg_CSW = CSW_VAL;
             phase = 14;
@@ -486,7 +498,11 @@ Result connect_handler(command_typ* cmd, bool first_call)
         {
             phase_result = read_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, &read_data, false);
         }
-        if(RESULT_OK == phase_result)
+        if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
+        {
+            return ERR_NOT_COMPLETED; // -> try again
+        }
+        else if(RESULT_OK == phase_result)
         {
             phase = 16;
             /*
