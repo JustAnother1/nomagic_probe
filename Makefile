@@ -19,6 +19,7 @@ DIS = $(CP) -S
 OBJDUMP = arm-none-eabi-objdump
 TST_CC = gcc
 TST_LD = cc
+GITREF = $(shell git describe --abbrev=40 --dirty --always --tags)
 
 # configuration
 # =============
@@ -287,10 +288,14 @@ help:
 	@echo "available targets"
 	@echo "================="
 	@echo "make clean              delete all generated files"
-	@echo "make all TARGET=DETECT  compile firmware creates elf and uf2 file. (no target support, no gdb-server, detect serial interface)"
-	@echo "make all TARGET=EXTERN  compile firmware creates elf and uf2 file. (target configuration needed)"
-	@echo "make all                compile firmware creates elf and uf2 file. (only support RP2040 target)"
-	@echo "make flash              write firmware to flash of RP2040 using openocd and CMSIS-DAP adapter(picoprobe)"
+	@echo "make all TARGET=DETECT  compile firmware creates elf and uf2 file."
+	@echo "                        (no target support, no gdb-server, detect serial interface)"
+	@echo "make all TARGET=EXTERN  compile firmware creates elf and uf2 file."
+	@echo "                        (target configuration needed)"
+	@echo "make all                compile firmware creates elf and uf2 file."
+	@echo "                        (only support RP2040 target)"
+	@echo "make flash              write firmware to flash of RP2040"
+	@echo "                        using openocd and CMSIS-DAP adapter(picoprobe)"
 	@echo "make doc                run doxygen"
 	@echo "make test               run unit tests"
 	@echo "make lcov               create coverage report of unit tests"
@@ -321,6 +326,14 @@ $(BIN_FOLDER)$(PROJECT).elf: $(OBJS) $(LIBS)
 	@echo "==========="
 	$(DIS) $< $@ > $@
 
+$(BIN_FOLDER)version.h:
+	@echo ""
+	@echo "create version.h"
+	@echo "================"
+	@echo -n "#define VERSION \"" > $(BIN_FOLDER)version.h
+	@cat version.txt >> $(BIN_FOLDER)version.h
+	@echo " $(GITREF)\"" >> $(BIN_FOLDER)version.h
+
 flash: $(BIN_FOLDER)$(PROJECT).elf
 	@echo ""
 	@echo "flashing"
@@ -340,7 +353,7 @@ all: $(BIN_FOLDER)$(PROJECT).uf2
 	$(SIZE) --format=GNU $(BIN_FOLDER)$(PROJECT).elf
 
 	
-$(BIN_FOLDER)%o: %c
+$(BIN_FOLDER)%o: %c $(BIN_FOLDER)version.h
 	@echo ""
 	@echo "=== compiling $@"
 	@$(MKDIR_P) $(@D)
@@ -388,6 +401,6 @@ lcov:
 clean:
 	@rm -rf $(BIN_FOLDER)/* tests/$(PROJECT)_tests tests/bin/ $(CLEAN_RM)
 
-.PHONY: help clean flash all list test doc
+.PHONY: help clean flash all list test doc $(BIN_FOLDER)version.h
 
 -include $(OBJS:.o=.d)

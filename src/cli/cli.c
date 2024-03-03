@@ -19,6 +19,7 @@
 #include <string.h>
 #include "hal/watchdog.h"
 #include "probe_api/debug_log.h"
+#include "../bin/version.h"
 
 #define NUM_COMMANDS  (sizeof(commands)/sizeof(cmd_typ))
 
@@ -302,11 +303,12 @@ bool cmd_help(uint32_t loop)
     // help command
     if(0 == loop)
     {
-        debug_msg("available commands :\r\n");
+        debug_line("nomagic probe cli version %s", VERSION);
+        debug_line("available commands :");
     }
     if(loop < NUM_COMMANDS)
     {
-        debug_msg("%15s : %s\r\n", commands[loop].name, commands[loop].help);
+        debug_line("%15s : %s", commands[loop].name, commands[loop].help);
     }
     else
     {
