@@ -23,8 +23,10 @@
 #include "swd_packets.h"
 #include "hal/time_base.h"
 
-#define CMD_QUEUE_LENGTH  5
-#define MAX_SAFE_COUNT    0xfffffff0  // comparing against < 0xffffffff is always true -> we want to avoid 0xffffffff as end time of timeout
+#define CMD_QUEUE_LENGTH       5
+// comparing against < 0xffffffff is always true -> we want to avoid 0xffffffff as end time of timeout
+#define MAX_SAFE_COUNT         0xfffffff0
+#define ORDER_TIMEOUT_TIME_MS  100
 
 static void handle_order(void);
 
@@ -176,11 +178,12 @@ static void handle_order(void)
             // debug_line("swd: start order");
             cur_order = order_look_up[cmd_queue[cmdq_read].order];
 
-            timeout_time = start_time + 100;
+            timeout_time = start_time + ORDER_TIMEOUT_TIME_MS;
             if(timeout_time > MAX_SAFE_COUNT)
             {
                 // an end time of 0xffffffff would not work as all values are always < 0xffffffff
-                timeout_time = 2;
+                uint32_t remainder = ORDER_TIMEOUT_TIME_MS - (MAX_SAFE_COUNT - start_time);
+                timeout_time = 2 + remainder;
                 wait_for_wrap_around = true;
             }
             else if(timeout_time < start_time)

@@ -4,11 +4,19 @@
 #include "arm/cortex-m.h"
 #include <stddef.h>
 #include "debug_log.h"
+#include "time.h"
+
+#define MAX_SAFE_COUNT    0xfffffff0  // comparing against < 0xffffffff is always true -> we want to avoid 0xffffffff as end time of timeout
+#define WALK_TIMEOUT_TIME_MS  300
+
 
 static step_data_typ cur_step;
 
 static uint32_t val_DHCSR;
 static uint32_t val_DEMCR;
+
+static uint32_t timeout_time;
+static bool wait_for_wrap_around;
 
 static void handle_connect(walk_data_typ* data);
 static void handle_scan(walk_data_typ* data);
@@ -36,12 +44,56 @@ void walk_execute(walk_data_typ* data)
         // we are not done -> do it now
         steps_execute(&cur_step);
     }
+    if(false == cur_step.is_done)
+    {
+        uint32_t cur_time = time_get_ms();
+        if(true == wait_for_wrap_around)
+        {
+            if(10 > cur_time)
+            {
+                // wrap around happened
+                wait_for_wrap_around = false;
+            }
+            // else continue waiting
+        }
+        else
+        {
+            if(cur_time > timeout_time)
+            {
+                // Timeout !!!
+                debug_line("ERROR: Target walk(%d): timeout in running step %ld !", data->type, data->phase );
+                // TODO can we do something better than to just skip this command?
+                // do not try anymore
+                data->is_done = true;
+            }
+            // else not a timeout, yet.
+        }
+    }
     else
     {
         if(false == data->is_done)
         {
             // take the next step on this walk
+            uint32_t start_time = time_get_ms();
+
             (*walks_look_up[data->type])(data);
+            timeout_time = start_time + WALK_TIMEOUT_TIME_MS;
+            if(timeout_time > MAX_SAFE_COUNT)
+            {
+                // an end time of 0xffffffff would not work as all values are always < 0xffffffff
+                uint32_t remainder = 100 - (MAX_SAFE_COUNT - start_time);
+                timeout_time = 2 + remainder;
+                wait_for_wrap_around = true;
+            }
+            else if(timeout_time < start_time)
+            {
+                // wrap around
+                wait_for_wrap_around = true;
+            }
+            else
+            {
+                wait_for_wrap_around = false;
+            }
         }
         else
         {
