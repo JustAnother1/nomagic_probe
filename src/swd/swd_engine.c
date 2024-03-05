@@ -22,6 +22,7 @@
 #include "result_queue.h"
 #include "swd_packets.h"
 #include "hal/time_base.h"
+#include "swd_packet_bits.h"
 
 #define CMD_QUEUE_LENGTH       5
 // comparing against < 0xffffffff is always true -> we want to avoid 0xffffffff as end time of timeout
@@ -66,13 +67,13 @@ void swd_init(void)
 
 void swd_tick(void)
 {
-    swd_packets_tick();
+    swd_packet_bits_tick();
     // handle commands
     handle_order();
 
     // handle things that need to be done regularly / independent of any commands
     swd_protocol_tick();
-    swd_packets_tick();
+    swd_packet_bits_tick();
 }
 
 Result swd_connect(bool multi, uint32_t target, uint32_t AP_sel)

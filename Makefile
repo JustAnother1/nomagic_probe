@@ -194,6 +194,7 @@ SRC += $(SRC_FOLDER)swd/result_queue.c
 SRC += $(SRC_FOLDER)swd/swd_engine.c
 SRC += $(SRC_FOLDER)swd/swd_protocol.c
 SRC += $(SRC_FOLDER)swd/swd_packets.c
+SRC += $(SRC_FOLDER)swd/swd_packet_bits.c
 SRC += $(SRC_FOLDER)swd/swd_gpio.c
 
 # USB driver

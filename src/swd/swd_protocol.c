@@ -21,6 +21,7 @@
 #include "swd_packets.h"
 #include "result_queue.h"
 #include "probe_api/debug_log.h"
+#include "swd_packet_bits.h"
 
 
 // timeout until the WDIO line will be put into low power mode (High)
@@ -91,7 +92,7 @@ void swd_protocol_init(void)
 
 void swd_protocol_tick(void)
 {
-    swd_packets_tick();
+    swd_packet_bits_tick();
     // to reduce current consumption of target put the SWDIO in idle (High) (Reason: Target must have a pull up on SWDIO)
     uint32_t now = time_us_32();
     if(state.last_activity_time_us + SWDIO_IDLE_TIMEOUT_US < state.last_activity_time_us)
@@ -99,7 +100,7 @@ void swd_protocol_tick(void)
         // wrap around
         if((now > state.last_activity_time_us + SWDIO_IDLE_TIMEOUT_US) && (now < state.last_activity_time_us))
         {
-            swd_packets_set_swdio_idle();
+            swd_packet_bits_set_swdio_idle();
         }
         // else wait for timeout
     }
@@ -107,7 +108,7 @@ void swd_protocol_tick(void)
     {
         if(now > state.last_activity_time_us + SWDIO_IDLE_TIMEOUT_US)
         {
-            swd_packets_set_swdio_idle();
+            swd_packet_bits_set_swdio_idle();
         }
         // else wait for timeout
     }
