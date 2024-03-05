@@ -26,7 +26,7 @@ typedef enum {
 }result_queue_typ;
 
 
-#define MAX_QUEUE_ENTRIES   10
+#define MAX_QUEUE_ENTRIES   40
 
 void result_queue_init(void);
 

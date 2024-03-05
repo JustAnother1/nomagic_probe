@@ -93,7 +93,7 @@ Result swd_connect(bool multi, uint32_t target, uint32_t AP_sel)
             cmd_queue[cmdq_write].flag = multi;
             cmd_queue[cmdq_write].i_val = target;
             cmd_queue[cmdq_write].i_val_2 = AP_sel;
-            cmd_queue[cmdq_write].transaction_id = tid;
+            cmd_queue[cmdq_write].transaction_id = (Result)tid;
             cmdq_write = next_idx;
             return (Result)tid;
         }
@@ -146,7 +146,7 @@ Result swd_read_ap(uint32_t addr)
         {
             cmd_queue[cmdq_write].order = CMD_READ;
             cmd_queue[cmdq_write].address = addr;
-            cmd_queue[cmdq_write].transaction_id = tid;
+            cmd_queue[cmdq_write].transaction_id = (Result)tid;
             cmdq_write = next_idx;
             return (Result)tid;
         }
@@ -204,7 +204,7 @@ static void handle_order(void)
             debug_line("swd: error %ld on order %s", order_state, order_names[cmd_queue[cmdq_read].order]);
             if(CMD_CONNECT == cmd_queue[cmdq_read].order)
             {
-                result_queue_add_result_of(COMMAND_QUEUE, cmd_queue[cmdq_read].transaction_id, (uint32_t)ERR_TARGET_ERROR);
+                result_queue_add_result_of(COMMAND_QUEUE, (uint32_t)cmd_queue[cmdq_read].transaction_id, (uint32_t)ERR_TARGET_ERROR);
             }
         }
         else if(RESULT_OK == order_state)
@@ -231,9 +231,15 @@ static void handle_order(void)
             // TODO can we do something better than to just skip this command?
             if(CMD_CONNECT == cmd_queue[cmdq_read].order)
             {
-                result_queue_add_result_of(COMMAND_QUEUE, cmd_queue[cmdq_read].transaction_id, (uint32_t)ERR_TIMEOUT);
+                result_queue_add_result_of(COMMAND_QUEUE, (uint32_t)cmd_queue[cmdq_read].transaction_id, (uint32_t)ERR_TIMEOUT);
             }
             // do not try anymore
+            if(0 < cmd_queue[cmdq_read].transaction_id)
+            {
+                // there is a transaction active for this packet, but we do not need that anymore
+                // result_queue_free_result(PACKET_QUEUE, cmd_queue[cmdq_read].transaction_id);  TODO
+                result_queue_free_result(COMMAND_QUEUE, (uint32_t)cmd_queue[cmdq_read].transaction_id);
+            }
             finished_order();
         }
     }

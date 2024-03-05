@@ -59,11 +59,10 @@ typedef struct{
 
 static swd_state_typ state;
 static uint32_t read_data;
-static Result transaction_id;
 static uint32_t cycle_counter;
 static uint32_t ctrl_stat;
 
-static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint32_t* data, bool first_call);
+static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint32_t* data, bool first_call, command_typ* cmd);
 static Result write_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint32_t data, bool first_call);
 
 
@@ -71,7 +70,6 @@ void swd_protocol_init(void)
 {
     memset(&state, 0, sizeof(state));
     read_data = 0;
-    transaction_id = 0;
     cycle_counter = 0;
     ctrl_stat = 0;
     state.is_connected = false;
@@ -321,7 +319,7 @@ Result connect_handler(command_typ* cmd, bool first_call)
         }
         else if(0 < phase_result)
         {
-            transaction_id = phase_result;
+            cmd->transaction_id = phase_result;
             phase = 7;
         }
         else
@@ -334,7 +332,7 @@ Result connect_handler(command_typ* cmd, bool first_call)
 // Phase 7 parse data from ID Register
     if(7 == phase)
     {
-        phase_result = result_queue_get_result(PACKET_QUEUE, transaction_id, &read_data);
+        phase_result = result_queue_get_result(PACKET_QUEUE, cmd->transaction_id, &read_data);
         if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
         {
             return ERR_NOT_COMPLETED; // -> try again
@@ -413,7 +411,7 @@ Result connect_handler(command_typ* cmd, bool first_call)
         }
         else if(0 < phase_result)
         {
-            transaction_id = phase_result;
+            cmd->transaction_id = phase_result;
             phase = 11;
         }
         else
@@ -426,7 +424,7 @@ Result connect_handler(command_typ* cmd, bool first_call)
 // Phase 11 parse data from CTRL/STAT Register
     if(11 == phase)
     {
-        phase_result = result_queue_get_result(PACKET_QUEUE, transaction_id, &read_data);
+        phase_result = result_queue_get_result(PACKET_QUEUE, cmd->transaction_id, &read_data);
         if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
         {
             return ERR_NOT_COMPLETED; // -> try again
@@ -446,6 +444,7 @@ Result connect_handler(command_typ* cmd, bool first_call)
                 if(cycle_counter < MAX_WAIT_POWER_ON)
                 {
                     phase = 10;
+                    return ERR_NOT_COMPLETED; // -> try again
                 }
                 else
                 {
@@ -493,12 +492,12 @@ Result connect_handler(command_typ* cmd, bool first_call)
     {
         if(14 == phase)
         {
-            phase_result = read_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, &read_data, true);
+            phase_result = read_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, &read_data, true, cmd);
             phase = 15;
         }
         else
         {
-            phase_result = read_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, &read_data, false);
+            phase_result = read_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, &read_data, false, cmd);
         }
         if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
         {
@@ -531,7 +530,7 @@ Result connect_handler(command_typ* cmd, bool first_call)
     if(16 == phase)
     {
         // done!
-        result_queue_add_result_of(COMMAND_QUEUE, cmd->transaction_id, RESULT_OK);
+        result_queue_add_result_of(COMMAND_QUEUE, (uint32_t)cmd->transaction_id, RESULT_OK);
         return RESULT_OK;
     }
 
@@ -641,16 +640,16 @@ Result read_handler(command_typ* cmd, bool first_call)
         Result res;
         if(3 == phase)
         {
-            res = read_ap_register(AP_BANK_DRW, AP_REGISTER_DRW, &read_data, true);
+            res = read_ap_register(AP_BANK_DRW, AP_REGISTER_DRW, &read_data, true, cmd);
             phase = 4;
         }
         else
         {
-            res = read_ap_register(AP_BANK_DRW, AP_REGISTER_DRW, &read_data, false);
+            res = read_ap_register(AP_BANK_DRW, AP_REGISTER_DRW, &read_data, false, cmd);
         }
         if(RESULT_OK == res)
         {
-            return result_queue_add_result_of(COMMAND_QUEUE, cmd->transaction_id, read_data);
+            return result_queue_add_result_of(COMMAND_QUEUE, (uint32_t)cmd->transaction_id, read_data);
         }
         else
         {
@@ -665,7 +664,7 @@ Result read_handler(command_typ* cmd, bool first_call)
 
 // static functions
 
-static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint32_t* data, bool first_call)
+static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint32_t* data, bool first_call, command_typ* cmd)
 {
     static Result phase = 0;
     Result phase_result;
@@ -712,7 +711,7 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
         }
         else if(0 < phase_result)
         {
-            transaction_id = phase_result;
+            cmd->transaction_id = phase_result;
             phase = 3;
         }
         else
@@ -725,7 +724,7 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
 // Phase 3 receive data from AP register read
     if(3 == phase)
     {
-        phase_result = result_queue_get_result(PACKET_QUEUE, transaction_id, data);
+        phase_result = result_queue_get_result(PACKET_QUEUE, cmd->transaction_id, data);
         if(RESULT_OK == phase_result)
         {
             phase = 4;
@@ -747,7 +746,7 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
         }
         else if(0 < phase_result)
         {
-            transaction_id = phase_result;
+            cmd->transaction_id = phase_result;
             phase = 5;
         }
         else
@@ -760,7 +759,7 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
 // Phase 5 parse data from CTRL/STAT Register
     if(5 == phase)
     {
-        phase_result = result_queue_get_result(PACKET_QUEUE, transaction_id, &ctrl_stat);
+        phase_result = result_queue_get_result(PACKET_QUEUE, cmd->transaction_id, &ctrl_stat);
         if(RESULT_OK == phase_result)
         {
             if(0 == (ctrl_stat & 0x40))
@@ -789,7 +788,7 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
         }
         else if(0 < phase_result)
         {
-            transaction_id = phase_result;
+            cmd->transaction_id = phase_result;
             phase = 7;
         }
         else
@@ -802,7 +801,7 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
 // Phase 7 parse data from RDBUFF Register
     if(7== phase)
     {
-        phase_result = result_queue_get_result(PACKET_QUEUE, transaction_id, data);
+        phase_result = result_queue_get_result(PACKET_QUEUE, cmd->transaction_id, data);
         if(ERR_NOT_COMPLETED == phase_result)
         {
             return ERR_NOT_COMPLETED; // -> try again
@@ -814,7 +813,7 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
         else
         {
             // some other error
-            debug_line("swd:read_result failed err:%ld, trID:%ld ", phase_result, transaction_id);
+            debug_line("swd:read_result failed err:%ld, trID:%ld ", phase_result, cmd->transaction_id);
             return phase_result;
         }
     }

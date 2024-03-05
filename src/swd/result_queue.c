@@ -46,7 +46,7 @@ void result_queue_print_status(result_queue_typ queue_id)
     debug_line("index: busy filled result");
     for(i = 0; i < MAX_QUEUE_ENTRIES; i++)
     {
-        debug_line("%5ld: %5d %7d 0x%08lX",
+        debug_line("%5ld:%5d%7d 0x%08lX",
                    i, busy[queue_id][i], filled[queue_id][i], results[queue_id][i]);
     }
 }

@@ -446,7 +446,15 @@ static Result read_handler(packet_definition_typ* pkg)
         }
         // TODO if this fails there is nothing I could do, also this should not fail ever, right?
         // TODO Handle WAIT and Failure ACK
+        debug_line("SWD ACK was Wait or Fail !");
+        res = result_queue_add_result_of(PACKET_QUEUE, pkg->transaction_id, 0x23232323);
+        if(RESULT_OK != res)
+        {
+            debug_line("SWD failed to put read data into result queue!");
+            // TODO
+        }
         return RESULT_OK;
+        // TODO return ERR_TARGET_ERROR;
     }
 
     // Data

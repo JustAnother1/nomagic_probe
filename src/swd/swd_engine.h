@@ -34,7 +34,7 @@ typedef struct{
     uint32_t address;
     uint32_t i_val;
     uint32_t i_val_2;
-    uint32_t transaction_id;
+    Result transaction_id;
 } command_typ;
 
 // parameter phase value is:
