@@ -19,10 +19,9 @@
 #include "hal/time_base.h"
 #include "swd_protocol.h"
 #include "swd_packets.h"
-#include "result_queue.h"
 #include "probe_api/debug_log.h"
 #include "swd_packet_bits.h"
-
+#include "swd_engine.h"
 
 // timeout until the WDIO line will be put into low power mode (High)
 #define SWDIO_IDLE_TIMEOUT_US    12000
@@ -95,7 +94,7 @@ void swd_protocol_tick(void)
     swd_packet_bits_tick();
     // to reduce current consumption of target put the SWDIO in idle (High) (Reason: Target must have a pull up on SWDIO)
     uint32_t now = time_us_32();
-    if(state.last_activity_time_us + SWDIO_IDLE_TIMEOUT_US < state.last_activity_time_us)
+    if(state.last_activity_time_us + SWDIO_IDLE_TIMEOUT_US < state.last_activity_time_us)  // TODO rethink
     {
         // wrap around
         if((now > state.last_activity_time_us + SWDIO_IDLE_TIMEOUT_US) && (now < state.last_activity_time_us))
@@ -125,9 +124,7 @@ bool swd_info(uint32_t which)
     bool done = false;
     switch(which)
     {
-    case 0: debug_line("command queue:"); result_queue_print_status(COMMAND_QUEUE); break;
-    case 1: debug_line("packet queue:"); result_queue_print_status(PACKET_QUEUE); break;
-    case 2: if(true == state.is_connected)
+    case 0: if(true == state.is_connected)
             {
                 debug_line("swd:                  connected");
             }
@@ -138,7 +135,7 @@ bool swd_info(uint32_t which)
             }
             break;
 
-    case 3: if(true == state.is_minimal_debug_port)
+    case 1: if(true == state.is_minimal_debug_port)
             {
                 debug_line("debug port:           minimal");
             }
@@ -148,16 +145,16 @@ bool swd_info(uint32_t which)
             }
             break;
 
-    case  4: debug_line("debug port version    %ld", state.dp_version); break;
-    case  5: debug_line("DPIDR                 0x%08lx", state.reg_DPIDR); break;
-    case  6: debug_line("SELECT                0x%08lx", state.reg_SELECT); break;
-    case  7: debug_line("CTRL/STAT             0x%08lx", state.reg_CTRL_STAT); break;
-    case  8: debug_line("APSEL                 %ld", state.mem_ap.ap_sel); break;
-    case  9: debug_line("AP version            %ld", state.mem_ap.version); break;
-    case 10: debug_line("BASE                  0x%08lx", state.mem_ap.reg_BASE); break;
-    case 11: debug_line("CSW                   0x%08lx", state.mem_ap.reg_CSW); break;
+    case  2: debug_line("debug port version    %ld", state.dp_version); break;
+    case  3: debug_line("DPIDR                 0x%08lx", state.reg_DPIDR); break;
+    case  4: debug_line("SELECT                0x%08lx", state.reg_SELECT); break;
+    case  5: debug_line("CTRL/STAT             0x%08lx", state.reg_CTRL_STAT); break;
+    case  6: debug_line("APSEL                 %ld", state.mem_ap.ap_sel); break;
+    case  7: debug_line("AP version            %ld", state.mem_ap.version); break;
+    case  8: debug_line("BASE                  0x%08lx", state.mem_ap.reg_BASE); break;
+    case  9: debug_line("CSW                   0x%08lx", state.mem_ap.reg_CSW); break;
 
-    case 12: if(true == state.mem_ap.large_data_support)
+    case 10: if(true == state.mem_ap.large_data_support)
             {
                 debug_line("large data support:   enabled");
             }
@@ -167,7 +164,7 @@ bool swd_info(uint32_t which)
             }
             break;
 
-    case 13: if(true == state.mem_ap.long_address_support)
+    case 11: if(true == state.mem_ap.long_address_support)
             {
                 debug_line("long address support: enabled");
             }
@@ -333,7 +330,7 @@ Result connect_handler(command_typ* cmd, bool first_call)
 // Phase 7 parse data from ID Register
     if(7 == phase)
     {
-        phase_result = result_queue_get_result(PACKET_QUEUE, cmd->transaction_id, &read_data);
+        phase_result = swd_packet_get_result(cmd->transaction_id, &read_data);
         if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
         {
             return ERR_NOT_COMPLETED; // -> try again
@@ -425,7 +422,7 @@ Result connect_handler(command_typ* cmd, bool first_call)
 // Phase 11 parse data from CTRL/STAT Register
     if(11 == phase)
     {
-        phase_result = result_queue_get_result(PACKET_QUEUE, cmd->transaction_id, &read_data);
+        phase_result = swd_packet_get_result(cmd->transaction_id, &read_data);
         if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
         {
             return ERR_NOT_COMPLETED; // -> try again
@@ -531,7 +528,7 @@ Result connect_handler(command_typ* cmd, bool first_call)
     if(16 == phase)
     {
         // done!
-        result_queue_add_result_of(COMMAND_QUEUE, (uint32_t)cmd->transaction_id, RESULT_OK);
+        swd_eingine_add_cmd_result(cmd->transaction_id, RESULT_OK);
         return RESULT_OK;
     }
 
@@ -650,12 +647,9 @@ Result read_handler(command_typ* cmd, bool first_call)
         }
         if(RESULT_OK == res)
         {
-            return result_queue_add_result_of(COMMAND_QUEUE, (uint32_t)cmd->transaction_id, read_data);
+            swd_eingine_add_cmd_result(cmd->transaction_id, read_data);
         }
-        else
-        {
-            return res;
-        }
+        return res;
     }
 
     debug_line("read handler: invalid phase!");
@@ -725,7 +719,7 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
 // Phase 3 receive data from AP register read
     if(3 == phase)
     {
-        phase_result = result_queue_get_result(PACKET_QUEUE, cmd->transaction_id, data);
+        phase_result = swd_packet_get_result(cmd->transaction_id, data);
         if(RESULT_OK == phase_result)
         {
             phase = 4;
@@ -760,7 +754,7 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
 // Phase 5 parse data from CTRL/STAT Register
     if(5 == phase)
     {
-        phase_result = result_queue_get_result(PACKET_QUEUE, cmd->transaction_id, &ctrl_stat);
+        phase_result = swd_packet_get_result(cmd->transaction_id, &ctrl_stat);
         if(RESULT_OK == phase_result)
         {
             if(0 == (ctrl_stat & 0x40))
@@ -802,7 +796,7 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
 // Phase 7 parse data from RDBUFF Register
     if(7== phase)
     {
-        phase_result = result_queue_get_result(PACKET_QUEUE, cmd->transaction_id, data);
+        phase_result = swd_packet_get_result(cmd->transaction_id, data);
         if(ERR_NOT_COMPLETED == phase_result)
         {
             return ERR_NOT_COMPLETED; // -> try again

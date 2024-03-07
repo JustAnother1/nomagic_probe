@@ -13,7 +13,6 @@
  *
  */
 #include "swd_packets.h"
-#include "result_queue.h"
 #include "probe_api/debug_log.h"
 #include "swd_packet_bits.h"
 
@@ -71,7 +70,7 @@ Result swd_packet_disconnect(void)
 
 Result swd_packet_get_result(Result transaction, uint32_t* data)
 {
-    return result_queue_get_result(PACKET_QUEUE, transaction, data);
+    return swd_packet_bits_get_data_value((uint32_t) transaction, data);
 }
 
 Result swd_packet_write(uint32_t APnotDP, uint32_t address, uint32_t data)
@@ -101,18 +100,10 @@ Result swd_packet_read(uint32_t APnotDP, uint32_t address)
         packet_queue[write_idx].type = READ;
         packet_queue[write_idx].APnotDP = APnotDP;
         packet_queue[write_idx].address = address;
-        res = result_queue_get_next_transaction_id(PACKET_QUEUE, &(packet_queue[write_idx].transaction_id));
-        if(RESULT_OK == res)
-        {
-            res = (Result)packet_queue[write_idx].transaction_id;
-            write_idx = next_write_idx;
-            return res;
-        }
-        else
-        {
-            // probably buffer full
-            return res;
-        }
+        packet_queue[write_idx].result_idx = swd_packet_bits_get_next_data_slot();
+        res = (Result)packet_queue[write_idx].result_idx;
+        write_idx = next_write_idx;
+        return res;
     }
     else
     {

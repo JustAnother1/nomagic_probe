@@ -16,6 +16,7 @@
 #define SWD_SWD_PACKET_BITS_H_
 
 #include <stdint.h>
+#include "probe_api/result.h"
 
 #define AP  1
 #define DP  0
@@ -98,7 +99,7 @@ typedef struct{
     uint32_t APnotDP;
     uint32_t address;
     uint32_t data;
-    uint32_t transaction_id;
+    uint32_t result_idx;
 } packet_definition_typ;
 
 extern volatile uint32_t read_idx;
@@ -108,6 +109,8 @@ extern packet_definition_typ packet_queue[PACKET_QUEUE_SIZE];
 void swd_packet_bits_init(void);
 void swd_packet_bits_tick(void);
 void swd_packet_bits_set_swdio_idle(void);
+uint32_t swd_packet_bits_get_next_data_slot(void);
+Result swd_packet_bits_get_data_value(uint32_t idx, uint32_t* data);
 
 // default is false
 void swd_packet_bits_set_sticky_overrun(bool value);

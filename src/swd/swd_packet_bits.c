@@ -94,7 +94,11 @@ static const packet_handler packet_handler_look_up[NUM_PAKETS] = {
 };
 volatile uint32_t read_idx;
 volatile uint32_t write_idx;
+volatile uint32_t data_write_idx;
 packet_definition_typ packet_queue[PACKET_QUEUE_SIZE];
+uint32_t packet_result_data[PACKET_QUEUE_SIZE];
+bool result_data_available[PACKET_QUEUE_SIZE];
+
 
 // ARM document defines this!
 static bool sticky_overrun = false;
@@ -104,8 +108,38 @@ void swd_packet_bits_init(void)
 {
     read_idx = 0;
     write_idx = 0;
+    data_write_idx = 0;
     sticky_overrun = false;
     swd_gpio_init();
+}
+
+uint32_t swd_packet_bits_get_next_data_slot(void)
+{
+    uint32_t res = data_write_idx;
+    result_data_available[res] = false;
+    data_write_idx++;
+    return res;
+}
+
+Result swd_packet_bits_get_data_value(uint32_t idx, uint32_t* data)
+{
+    if(idx < PACKET_QUEUE_SIZE)
+    {
+        if(true == result_data_available[idx])
+        {
+            *data = packet_result_data[idx];
+            return RESULT_OK;
+        }
+        else
+        {
+            return ERR_NOT_COMPLETED;
+        }
+    }
+    else
+    {
+        // invalid idx (out of bounds)
+        return ERR_INVALID_TRANSACTION_ID;
+    }
 }
 
 void swd_packet_bits_set_sticky_overrun(bool value)
@@ -224,10 +258,15 @@ static Result write_handler(packet_definition_typ* pkg)
             if(false == sticky_overrun)
             {
                 // TODO if this fails there is nothing I could do, also this should not fail ever, right?
-                return RESULT_OK;
+                return ERR_TARGET_ERROR;
             }
-            // else we need the data phase
-            // TODO Handle WAIT and Failure ACK
+            else
+            {
+                // else we need the data phase
+                // TODO Handle WAIT and Failure ACK
+                debug_line("SWD ACK was Wait or Fail !");
+                return ERR_TARGET_ERROR;
+            }
         }
     }
 
@@ -286,12 +325,13 @@ static Result read_handler(packet_definition_typ* pkg)
                 read_bit();
             }
         }
-        // TODO if this fails there is nothing I could do, also this should not fail ever, right?
         // TODO Handle WAIT and Failure ACK
         debug_line("SWD ACK was Wait or Fail !");
         // TODO res = result_queue_add_result_of(PACKET_QUEUE, pkg->transaction_id, 0x23232323);
-        return RESULT_OK;
-        // TODO return ERR_TARGET_ERROR;
+        packet_result_data[pkg->result_idx] = 0x23232323;
+        result_data_available[pkg->result_idx] = true;
+        // return RESULT_OK;
+        return ERR_TARGET_ERROR;
     }
 
     // Data
@@ -318,17 +358,12 @@ static Result read_handler(packet_definition_typ* pkg)
         {
             // parity error !
             ack = ERROR_PARITY;
-            // TODO Handle Parity Error
+            return ERR_TARGET_ERROR;
         }
     }
-    // TODO if this fails there is nothing I could do, also this should not fail ever, right?
 
-    // TODO res = result_queue_add_result_of(PACKET_QUEUE, pkg->transaction_id, read_data);
-    // TODO if(RESULT_OK != res)
-    // TODO {
-    // TODO     debug_line("SWD failed to put read data into result queue!");
-    // TODO     // TODO
-    // TODO }
+    packet_result_data[pkg->result_idx] = read_data;
+    result_data_available[pkg->result_idx] = true;
 
     return RESULT_OK;
 }

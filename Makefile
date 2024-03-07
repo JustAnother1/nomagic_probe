@@ -190,7 +190,6 @@ SRC += $(SRC_FOLDER)lib/strlen.c
 SRC += $(SRC_FOLDER)lib/strncmp.c
 
 # SWD
-SRC += $(SRC_FOLDER)swd/result_queue.c
 SRC += $(SRC_FOLDER)swd/swd_engine.c
 SRC += $(SRC_FOLDER)swd/swd_protocol.c
 SRC += $(SRC_FOLDER)swd/swd_packets.c

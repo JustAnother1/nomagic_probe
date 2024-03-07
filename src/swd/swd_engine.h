@@ -47,4 +47,6 @@ typedef struct{
 // positive value (1, 2, 3,...) = WORKING -> more steps necessary, call order_handler again
 typedef Result (*order_handler)(command_typ* cmd, bool first_call);
 
+void swd_eingine_add_cmd_result(Result idx, uint32_t data);
+
 #endif /* SWD_SWD_ENGINE_H_ */

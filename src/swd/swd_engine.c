@@ -19,7 +19,6 @@
 #include "probe_api/debug_log.h"
 #include "swd_protocol.h"
 #include <stddef.h>
-#include "result_queue.h"
 #include "swd_packets.h"
 #include "hal/time_base.h"
 #include "swd_packet_bits.h"
@@ -33,11 +32,14 @@ static void handle_order(void);
 static void start_timeout(void);
 static bool check_timeout(void);
 static void finished_order(void);
-
+static uint32_t next_cmd_result_slot(void);
 
 static volatile uint32_t cmdq_read;
 static volatile uint32_t cmdq_write;
+static volatile uint32_t cmd_result_data_write;
 static command_typ cmd_queue[CMD_QUEUE_LENGTH];
+uint32_t cmd_result_data[CMD_QUEUE_LENGTH];
+bool cmd_result_data_available[CMD_QUEUE_LENGTH];
 static const order_handler order_look_up[NUM_ORDERS] = {
         connect_handler,
         read_handler,
@@ -60,9 +62,9 @@ void swd_init(void)
 {
     cmdq_read = 0;
     cmdq_write = 0;
+    cmd_result_data_write = 0;
     cur_order = NULL;
     swd_protocol_init();
-    result_queue_init();
 }
 
 void swd_tick(void)
@@ -86,22 +88,14 @@ Result swd_connect(bool multi, uint32_t target, uint32_t AP_sel)
     }
     if(cmdq_read != next_idx)
     {
-        uint32_t tid;
-        Result res = result_queue_get_next_transaction_id(COMMAND_QUEUE, &tid);
-        if(RESULT_OK == res)
-        {
-            cmd_queue[cmdq_write].order = CMD_CONNECT;
-            cmd_queue[cmdq_write].flag = multi;
-            cmd_queue[cmdq_write].i_val = target;
-            cmd_queue[cmdq_write].i_val_2 = AP_sel;
-            cmd_queue[cmdq_write].transaction_id = (Result)tid;
-            cmdq_write = next_idx;
-            return (Result)tid;
-        }
-        else
-        {
-            return res;
-        }
+        uint32_t tid = next_cmd_result_slot();
+        cmd_queue[cmdq_write].order = CMD_CONNECT;
+        cmd_queue[cmdq_write].flag = multi;
+        cmd_queue[cmdq_write].i_val = target;
+        cmd_queue[cmdq_write].i_val_2 = AP_sel;
+        cmd_queue[cmdq_write].transaction_id = (Result)tid;
+        cmdq_write = next_idx;
+        return (Result)tid;
     }
     else
     {
@@ -141,20 +135,12 @@ Result swd_read_ap(uint32_t addr)
     }
     if(cmdq_read != next_idx)
     {
-        uint32_t tid;
-        Result res = result_queue_get_next_transaction_id(COMMAND_QUEUE, &tid);
-        if(RESULT_OK == res)
-        {
-            cmd_queue[cmdq_write].order = CMD_READ;
-            cmd_queue[cmdq_write].address = addr;
-            cmd_queue[cmdq_write].transaction_id = (Result)tid;
-            cmdq_write = next_idx;
-            return (Result)tid;
-        }
-        else
-        {
-            return res;
-        }
+        uint32_t tid = next_cmd_result_slot();
+        cmd_queue[cmdq_write].order = CMD_READ;
+        cmd_queue[cmdq_write].address = addr;
+        cmd_queue[cmdq_write].transaction_id = (Result)tid;
+        cmdq_write = next_idx;
+        return (Result)tid;
     }
     else
     {
@@ -164,7 +150,36 @@ Result swd_read_ap(uint32_t addr)
 
 Result swd_get_result(Result transaction, uint32_t* data)
 {
-    return result_queue_get_result(COMMAND_QUEUE, transaction, data);
+    if(transaction < CMD_QUEUE_LENGTH)
+    {
+        if(true == cmd_result_data_available[transaction])
+        {
+            *data = cmd_result_data[transaction];
+            return RESULT_OK;
+        }
+        else
+        {
+            return ERR_NOT_COMPLETED;
+        }
+    }
+    else
+    {
+        // invalid idx (out of bounds)
+        return ERR_INVALID_TRANSACTION_ID;
+    }
+}
+
+void swd_eingine_add_cmd_result(Result idx, uint32_t data)
+{
+    cmd_result_data[idx] = data;
+}
+
+static uint32_t next_cmd_result_slot(void)
+{
+    uint32_t res = cmd_result_data_write;
+    cmd_result_data_available[res] = false;
+    cmd_result_data_write++;
+    return res;
 }
 
 static void handle_order(void)
@@ -205,7 +220,7 @@ static void handle_order(void)
             debug_line("swd: error %ld on order %s", order_state, order_names[cmd_queue[cmdq_read].order]);
             if(CMD_CONNECT == cmd_queue[cmdq_read].order)
             {
-                result_queue_add_result_of(COMMAND_QUEUE, (uint32_t)cmd_queue[cmdq_read].transaction_id, (uint32_t)ERR_TARGET_ERROR);
+                cmd_result_data[cmd_queue[cmdq_read].transaction_id] = (uint32_t)ERR_TARGET_ERROR;
             }
         }
         else if(RESULT_OK == order_state)
@@ -229,17 +244,11 @@ static void handle_order(void)
         if(true == check_timeout())
         {
             debug_line("ERROR: SWD: timeout in running %s order !", order_names[cmd_queue[cmdq_read].order]);
-            // TODO can we do something better than to just skip this command?
-            if(CMD_CONNECT == cmd_queue[cmdq_read].order)
-            {
-                result_queue_add_result_of(COMMAND_QUEUE, (uint32_t)cmd_queue[cmdq_read].transaction_id, (uint32_t)ERR_TIMEOUT);
-            }
             // do not try anymore
             if(0 < cmd_queue[cmdq_read].transaction_id)
             {
                 // there is a transaction active for this packet, but we do not need that anymore
-                // result_queue_free_result(PACKET_QUEUE, cmd_queue[cmdq_read].transaction_id);  TODO
-                result_queue_free_result(COMMAND_QUEUE, (uint32_t)cmd_queue[cmdq_read].transaction_id);
+                cmd_result_data[cmd_queue[cmdq_read].transaction_id] = (uint32_t)ERR_TIMEOUT;
             }
             finished_order();
         }
