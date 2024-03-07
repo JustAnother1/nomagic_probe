@@ -49,34 +49,36 @@
 typedef struct{
     uint32_t target_id;
     uint32_t apsel;
-    bool multi;
-    uint8_t padding[3];
 } connect_param_typ;
 
 static connect_param_typ connect_parameter[] = {
-        // targetID | APSel | SWDv2 ? | padding = , {0, 0,0}
-        {         0,      0,    false,  {0, 0,0}}, // SWD v1
-        {0x01002927,      0,     true,  {0, 0,0}}, // RP2040 core 0
-        {0x11002927,      0,     true,  {0, 0,0}}, // RP2040 core 1
-        {0x21002927,      0,     true,  {0, 0,0}}, // RP2040 altered id
-        {0x31002927,      0,     true,  {0, 0,0}}, // RP2040 altered id
-        {0x41002927,      0,     true,  {0, 0,0}}, // RP2040 altered id
-        {0x51002927,      0,     true,  {0, 0,0}}, // RP2040 altered id
-        {0x61002927,      0,     true,  {0, 0,0}}, // RP2040 altered id
-        {0x71002927,      0,     true,  {0, 0,0}}, // RP2040 altered id
-        {0x81002927,      0,     true,  {0, 0,0}}, // RP2040 altered id
-        {0x91002927,      0,     true,  {0, 0,0}}, // RP2040 altered id
-        {0xa1002927,      0,     true,  {0, 0,0}}, // RP2040 altered id
-        {0xb1002927,      0,     true,  {0, 0,0}}, // RP2040 altered id
-        {0xc1002927,      0,     true,  {0, 0,0}}, // RP2040 altered id
-        {0xd1002927,      0,     true,  {0, 0,0}}, // RP2040 altered id
-        {0xe1002927,      0,     true,  {0, 0,0}}, // RP2040 altered id
-        {0xf1002927,      0,     true,  {0, 0,0}}, // RP2040 rescue data port
+        // targetID | APSel |
+        {0x01002927,      0 }, // RP2040 core 0
+        {0x11002927,      0 }, // RP2040 core 1
+        {0x21002927,      0 }, // RP2040 altered id
+        {0x31002927,      0 }, // RP2040 altered id
+        {0x41002927,      0 }, // RP2040 altered id
+        {0x51002927,      0 }, // RP2040 altered id
+        {0x61002927,      0 }, // RP2040 altered id
+        {0x71002927,      0 }, // RP2040 altered id
+        {0x81002927,      0 }, // RP2040 altered id
+        {0x91002927,      0 }, // RP2040 altered id
+        {0xa1002927,      0 }, // RP2040 altered id
+        {0xb1002927,      0 }, // RP2040 altered id
+        {0xc1002927,      0 }, // RP2040 altered id
+        {0xd1002927,      0 }, // RP2040 altered id
+        {0xe1002927,      0 }, // RP2040 altered id
+        {0xf1002927,      0 }, // RP2040 rescue data port
 };
 #define NUM_CONNECT_LOCATIONS (sizeof(connect_parameter)/sizeof(connect_param_typ))
 
+static bool test_swd_v1(void);
+static bool test_swd_v2(void);
 
 static walk_data_typ cur_walk;
+static bool checked_swdv1;
+static uint32_t step;
+static uint32_t location;
 
 
 void target_init(void)
@@ -124,82 +126,156 @@ void target_tick(void)
 // returning false leads to this function being called again by CLI
 bool cmd_swd_test(uint32_t loop)
 {
-    static uint32_t step;
-    static uint32_t location;
     if(0 == loop)
     {
         step = 0;
         location = 0;
+        checked_swdv1 = false;
         return false;
     }
     else
     {
-        // open SWD connection
-        if(0 == step)
+        if(false == checked_swdv1)
         {
-            if(true == cur_walk.is_done)
+            // check if we can connect using SWDv1
+            return test_swd_v1();
+        }
+        else
+        {
+            // check if we can connect using SWDv1
+            return test_swd_v2();
+        }
+    }
+}
+
+static bool test_swd_v1(void)
+{
+    // open SWD connection
+    if(0 == step)
+    {
+        if(true == cur_walk.is_done)
+        {
+            debug_line("trying to connect using SWDv1 ....");
+            cur_walk.type = WALK_CONNECT;
+            cur_walk.par_b_0 = false; // multi = SWDv2 -> false
+            cur_walk.par_i_0 = 0;
+            cur_walk.par_i_1 = 0;
+            cur_walk.phase = 0;
+            cur_walk.result = RESULT_OK;
+            cur_walk.is_done = false;
+            step = 1;
+        }
+        else
+        {
+            // currently busy -> try again
+        }
+        return false;
+    }
+    else if(1 == step)
+    {
+        if(true == cur_walk.is_done)
+        {
+            if(RESULT_OK == cur_walk.result)
             {
-                if(NUM_CONNECT_LOCATIONS > location)
-                {
-                    debug_line("trying to connect on location %ld/%d ....", location + 1, NUM_CONNECT_LOCATIONS);
-                    cur_walk.type = WALK_CONNECT;
-                    cur_walk.par_b_0 = connect_parameter[location].multi;
-                    cur_walk.par_i_0 = connect_parameter[location].target_id;
-                    cur_walk.par_i_1 = connect_parameter[location].apsel;
-                    cur_walk.phase = 0;
-                    cur_walk.result = RESULT_OK;
-                    cur_walk.is_done = false;
-                    step = 1;
-                }
-                else
-                {
-                    // scanned all location -> we are done
-                    debug_line("Done !");
-                    return true;
-                }
+                cur_walk.type = WALK_SCAN;
+                cur_walk.phase = 0;
+                cur_walk.is_done = false;
+                step = 2;
             }
             else
             {
-                // currently busy -> try again
+                checked_swdv1 = true;
+                step = 0;
             }
-            return false;
         }
-        else if(1 == step)
+        else
         {
-            if(true == cur_walk.is_done)
+            // currently busy -> try again
+        }
+        return false;
+    }
+    else // if(2 == step)
+    {
+        if(true == cur_walk.is_done)
+        {
+            return true;
+            step = 0;
+        }
+        else
+        {
+            // currently busy -> try again
+        }
+        return false;
+    }
+}
+
+static bool test_swd_v2(void)
+{
+    // open SWD connection
+    if(0 == step)
+    {
+        if(true == cur_walk.is_done)
+        {
+            if(NUM_CONNECT_LOCATIONS > location)
             {
-                if(RESULT_OK == cur_walk.result)
-                {
-                    cur_walk.type = WALK_SCAN;
-                    cur_walk.phase = 0;
-                    cur_walk.is_done = false;
-                    step = 2;
-                }
-                else
-                {
-                    location++;
-                    step = 0;
-                }
+                debug_line("trying to connect on location %ld/%d ....", location + 1, NUM_CONNECT_LOCATIONS);
+                cur_walk.type = WALK_CONNECT;
+                cur_walk.par_b_0 = true; // multi = SWDv2 -> true
+                cur_walk.par_i_0 = connect_parameter[location].target_id;
+                cur_walk.par_i_1 = connect_parameter[location].apsel;
+                cur_walk.phase = 0;
+                cur_walk.result = RESULT_OK;
+                cur_walk.is_done = false;
+                step = 1;
             }
             else
             {
-                // currently busy -> try again
+                // scanned all location -> we are done
+                debug_line("Done !");
+                return true;
             }
-            return false;
         }
-        else // if(2 == step)
+        else
         {
-            if(true == cur_walk.is_done)
+            // currently busy -> try again
+        }
+        return false;
+    }
+    else if(1 == step)
+    {
+        if(true == cur_walk.is_done)
+        {
+            if(RESULT_OK == cur_walk.result)
+            {
+                cur_walk.type = WALK_SCAN;
+                cur_walk.phase = 0;
+                cur_walk.is_done = false;
+                step = 2;
+            }
+            else
             {
                 location++;
                 step = 0;
             }
-            else
-            {
-                // currently busy -> try again
-            }
-            return false;
         }
+        else
+        {
+            // currently busy -> try again
+        }
+        return false;
+    }
+    else // if(2 == step)
+    {
+        if(true == cur_walk.is_done)
+        {
+            location++;
+            step = 0;
+        }
+        else
+        {
+            // currently busy -> try again
+        }
+        return false;
     }
 }
 

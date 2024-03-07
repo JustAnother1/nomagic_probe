@@ -258,6 +258,7 @@ static Result write_handler(packet_definition_typ* pkg)
             if(false == sticky_overrun)
             {
                 // TODO if this fails there is nothing I could do, also this should not fail ever, right?
+                debug_line("SWD(SO) ACK was Wait or Fail !");
                 return ERR_TARGET_ERROR;
             }
             else
@@ -358,6 +359,7 @@ static Result read_handler(packet_definition_typ* pkg)
         {
             // parity error !
             ack = ERROR_PARITY;
+            debug_line("SWD: parity error !");
             return ERR_TARGET_ERROR;
         }
     }
