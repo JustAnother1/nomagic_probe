@@ -107,6 +107,8 @@ extern volatile uint32_t write_idx;
 extern packet_definition_typ packet_queue[PACKET_QUEUE_SIZE];
 
 void swd_packet_bits_init(void);
+void swd_packet_bits_reset_error_condition(void);
+bool swd_packet_bits_is_operational(void);
 void swd_packet_bits_tick(void);
 void swd_packet_bits_set_swdio_idle(void);
 uint32_t swd_packet_bits_get_next_data_slot(void);

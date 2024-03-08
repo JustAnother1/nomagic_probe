@@ -92,12 +92,14 @@ static const packet_handler packet_handler_look_up[NUM_PAKETS] = {
         dormant_to_swd_handler,
         swd_to_dormant_handler
 };
+volatile bool operational;
 volatile uint32_t read_idx;
 volatile uint32_t write_idx;
 volatile uint32_t data_write_idx;
 packet_definition_typ packet_queue[PACKET_QUEUE_SIZE];
 uint32_t packet_result_data[PACKET_QUEUE_SIZE];
 bool result_data_available[PACKET_QUEUE_SIZE];
+bool result_data_error[PACKET_QUEUE_SIZE];
 
 
 // ARM document defines this!
@@ -106,33 +108,58 @@ static bool sticky_overrun = false;
 
 void swd_packet_bits_init(void)
 {
+    swd_packet_bits_reset_error_condition();
+    swd_gpio_init();
+}
+
+void swd_packet_bits_reset_error_condition(void)
+{
+    operational = true;
     read_idx = 0;
     write_idx = 0;
     data_write_idx = 0;
     sticky_overrun = false;
-    swd_gpio_init();
+}
+
+bool swd_packet_bits_is_operational(void)
+{
+    return operational;
 }
 
 uint32_t swd_packet_bits_get_next_data_slot(void)
 {
     uint32_t res = data_write_idx;
     result_data_available[res] = false;
+    result_data_error[res] = false;
     data_write_idx++;
     return res;
 }
 
 Result swd_packet_bits_get_data_value(uint32_t idx, uint32_t* data)
 {
+    if(false == operational)
+    {
+        return ERR_WRONG_STATE;
+    }
     if(idx < PACKET_QUEUE_SIZE)
     {
-        if(true == result_data_available[idx])
+        if(false == result_data_error[idx])
         {
-            *data = packet_result_data[idx];
-            return RESULT_OK;
+            if(true == result_data_available[idx])
+            {
+                *data = packet_result_data[idx];
+                return RESULT_OK;
+            }
+            else
+            {
+                // data not yet available
+                return ERR_NOT_COMPLETED;
+            }
         }
         else
         {
-            return ERR_NOT_COMPLETED;
+            // operation failed - data lost
+            return ERR_TARGET_ERROR;
         }
     }
     else
@@ -160,33 +187,33 @@ void swd_packet_bits_tick(void)
     }
     else
     {
-        // debug_line("swd: sending packet %s", packet_type_names[packet_queue[read_idx].type]);
-        // send a packet from buffer
-        Result res = (packet_handler_look_up[packet_queue[read_idx].type])(&(packet_queue[read_idx]));
-        if(RESULT_OK == res)
+        if(true == operational)
         {
-            // success ! packet will be send!
-            read_idx++;
-            if(PACKET_QUEUE_SIZE == read_idx)
+            // debug_line("swd: sending packet %s", packet_type_names[packet_queue[read_idx].type]);
+            // send a packet from buffer
+            Result res = (packet_handler_look_up[packet_queue[read_idx].type])(&(packet_queue[read_idx]));
+            if(RESULT_OK == res)
             {
-                read_idx = 0;
+                // success ! packet will be send!
+                read_idx++;
+                if(PACKET_QUEUE_SIZE == read_idx)
+                {
+                    read_idx = 0;
+                }
+            }
+            else if(ERR_QUEUE_FULL_TRY_AGAIN == res)
+            {
+                // try again next tick
+            }
+            else
+            {
+                // report this error !
+                operational = false;
+                // something went wrong!
+                debug_line("ERROR: Failed to send packet! Result: %ld", res);
             }
         }
-        else if(ERR_QUEUE_FULL_TRY_AGAIN == res)
-        {
-            // try again next tick
-        }
-        else
-        {
-            // something went wrong!
-            debug_line("ERROR: Failed to send packet! Result: %ld", res);
-            // skip this packet
-            read_idx++;
-            if(PACKET_QUEUE_SIZE == read_idx)
-            {
-                read_idx = 0;
-            }
-        }
+        // else not operational ! -> wait for ack to error
     }
 }
 
@@ -254,6 +281,8 @@ static Result write_handler(packet_definition_typ* pkg)
         }
         else
         {
+            operational = false;
+            debug_line("ERROR: write ap/dp: %ld, addr: %ld, data: 0x%lx, ack: %ld", APnotDP, address, data, ack);
             // handle "Sticky overrun"
             if(false == sticky_overrun)
             {
@@ -317,6 +346,8 @@ static Result read_handler(packet_definition_typ* pkg)
     // handle ACK
     if(ACK_OK != ack)
     {
+        operational = false;
+        debug_line("ERROR: read ap/dp: %ld, addr: %ld, ack: %ld", APnotDP, address, ack);
         // handle "Sticky overrun"
         if(true == sticky_overrun)
         {
@@ -329,8 +360,7 @@ static Result read_handler(packet_definition_typ* pkg)
         // TODO Handle WAIT and Failure ACK
         debug_line("SWD ACK was Wait or Fail !");
         // TODO res = result_queue_add_result_of(PACKET_QUEUE, pkg->transaction_id, 0x23232323);
-        packet_result_data[pkg->result_idx] = 0x23232323;
-        result_data_available[pkg->result_idx] = true;
+        result_data_error[pkg->result_idx] = true;
         // return RESULT_OK;
         return ERR_TARGET_ERROR;
     }

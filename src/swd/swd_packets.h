@@ -54,7 +54,7 @@ Result swd_packet_read(uint32_t APnotDP, uint32_t address);
  *
  * @param transaction transaction id as returned by @swd_packet_read()
  * @param data [OUT] the bits read
- * @return ERR_INVALID_TRANSACTION_ID, ERR_NOT_COMPLETED, ERR_WRONG_STATE or RESULT_OK
+ * @return ERR_INVALID_TRANSACTION_ID, ERR_NOT_COMPLETED, ERR_WRONG_STATE, ERR_TARGET_ERROR or RESULT_OK
  */
 Result swd_packet_get_result(Result transaction, uint32_t* data);
 

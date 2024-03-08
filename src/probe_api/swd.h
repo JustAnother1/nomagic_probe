@@ -72,4 +72,9 @@ Result swd_write_ap(uint32_t addr, uint32_t data);
  */
 Result swd_get_result(Result transaction, uint32_t* data);
 
+/** resets the SWD stack and removes all error indicator.
+ *  Call this before you call swd_connect() to start fresh.
+ */
+void swd_reset_error_condition(void);
+
 #endif /* PROBE_API_SWD_H_ */

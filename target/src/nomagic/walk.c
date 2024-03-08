@@ -69,6 +69,7 @@ void walk_execute(walk_data_typ* data)
                            cur_step.par_i_0, cur_step.par_i_1, cur_step.phase, cur_step.result, cur_step.intern_0, cur_step.type, cur_step.is_done, cur_step.par_b_0);
 
                 // do not try anymore
+                data->result = ERR_TIMEOUT;
                 data->is_done = true;
                 cur_step.is_done = true;
             }
@@ -77,6 +78,13 @@ void walk_execute(walk_data_typ* data)
     }
     else
     {
+        // step is done, next step?
+        if(RESULT_OK != cur_step.result)
+        {
+            // something went wrong !
+            data->result = cur_step.result;
+            data->is_done = true;
+        }
         if(false == data->is_done)
         {
             // take the next step on this walk
@@ -177,7 +185,9 @@ static void handle_connect(walk_data_typ* data)
             cur_step.phase = 0;
             cur_step.result = RESULT_OK;
             cur_step.is_done = false;
-            data->phase++;
+            data->phase++; // todo add more steps?
+            data->result = RESULT_OK;
+            data->is_done = true;
         }
         else
         {
@@ -188,15 +198,17 @@ static void handle_connect(walk_data_typ* data)
     }
     else
     {
-        data->result = cur_step.result;
+        // invalid phase
+        data->result = ERR_WRONG_STATE;
         data->is_done = true;
     }
 }
 
 static void handle_scan(walk_data_typ* data)
 {
+    // TODO this only a placeholder
     {
-        data->result = cur_step.result;
+        data->result = RESULT_OK;
         data->is_done = true;
     }
 }

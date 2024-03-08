@@ -57,14 +57,22 @@ static const char* order_names[NUM_ORDERS] = {
 static order_handler cur_order;
 static uint32_t timeout_time;
 static bool wait_for_wrap_around;
+static bool has_error;
 
 void swd_init(void)
+{
+    swd_reset_error_condition();
+    swd_protocol_init();
+}
+
+void swd_reset_error_condition(void)
 {
     cmdq_read = 0;
     cmdq_write = 0;
     cmd_result_data_write = 0;
     cur_order = NULL;
-    swd_protocol_init();
+    has_error = false;
+    swd_packet_bits_reset_error_condition();
 }
 
 void swd_tick(void)
@@ -81,6 +89,10 @@ void swd_tick(void)
 Result swd_connect(bool multi, uint32_t target, uint32_t AP_sel)
 {
     // TODO protect against concurrent access (cmdq_write)
+    if(true == has_error)
+    {
+        return ERR_WRONG_STATE;
+    }
     uint32_t next_idx = cmdq_write + 1;
     if(CMD_QUEUE_LENGTH == next_idx)
     {
@@ -106,6 +118,10 @@ Result swd_connect(bool multi, uint32_t target, uint32_t AP_sel)
 Result swd_write_ap(uint32_t addr, uint32_t data)
 {
     // TODO protect against concurrent access (cmdq_write)
+    if(true == has_error)
+    {
+        return ERR_WRONG_STATE;
+    }
     uint32_t next_idx = cmdq_write + 1;
     if(CMD_QUEUE_LENGTH == next_idx)
     {
@@ -128,6 +144,10 @@ Result swd_write_ap(uint32_t addr, uint32_t data)
 Result swd_read_ap(uint32_t addr)
 {
     // TODO protect against concurrent access (cmdq_write)
+    if(true == has_error)
+    {
+        return ERR_WRONG_STATE;
+    }
     uint32_t next_idx = cmdq_write + 1;
     if(CMD_QUEUE_LENGTH == next_idx)
     {
@@ -209,36 +229,12 @@ static void handle_order(void)
         // we already have an order
         first = false;
     }
+
     // call handler
     order_state = (*cur_order)(&cmd_queue[cmdq_read], first);
-    if(ERR_NOT_COMPLETED != order_state)
-    {
-        // order is finished
-        if(RESULT_OK > order_state)
-        {
-            // error
-            debug_line("swd: error %ld on order %s", order_state, order_names[cmd_queue[cmdq_read].order]);
-            if(CMD_CONNECT == cmd_queue[cmdq_read].order)
-            {
-                cmd_result_data[cmd_queue[cmdq_read].transaction_id] = (uint32_t)ERR_TARGET_ERROR;
-            }
-        }
-        else if(RESULT_OK == order_state)
-        {
-            // finished successfully
-            if(CMD_CONNECT == cmd_queue[cmdq_read].order)
-            {
-                debug_line("swd: connected");
-            }
-        }
-        else
-        {
-            debug_line("swd: error %ld on order %s", order_state, order_names[cmd_queue[cmdq_read].order]);
-        }
-        // debug_line("swd: order %s done (%ld)", order_names[cmd_queue[cmdq_read].order], last_phase);
-        finished_order();
-    }
-    else
+
+    // handle result of order
+    if((ERR_NOT_COMPLETED == order_state) || (ERR_QUEUE_FULL_TRY_AGAIN == order_state))
     {
         // order not done
         if(true == check_timeout())
@@ -253,6 +249,36 @@ static void handle_order(void)
             finished_order();
         }
     }
+    else
+    {
+        // order is finished
+        if(RESULT_OK > order_state)
+        {
+            // error
+            debug_line("swd: error %ld on order %s", order_state, order_names[cmd_queue[cmdq_read].order]);
+            if(CMD_CONNECT == cmd_queue[cmdq_read].order)
+            {
+                cmd_result_data[cmd_queue[cmdq_read].transaction_id] = (uint32_t)ERR_TARGET_ERROR;
+            }
+            has_error = true;
+        }
+        else if(RESULT_OK == order_state)
+        {
+            // finished successfully
+            if(CMD_CONNECT == cmd_queue[cmdq_read].order)
+            {
+                debug_line("swd: connected");
+            }
+        }
+        else
+        {
+            debug_line("swd: error %ld on order %s", order_state, order_names[cmd_queue[cmdq_read].order]);
+            has_error = true;
+        }
+        // debug_line("swd: order %s done (%ld)", order_names[cmd_queue[cmdq_read].order], last_phase);
+        finished_order();
+    }
+
 }
 
 static void finished_order(void)

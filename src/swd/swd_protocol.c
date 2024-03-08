@@ -200,11 +200,7 @@ Result connect_handler(command_typ* cmd, bool first_call)
         {
             // go through dormant state: 1. disconnect, 2. ...
             phase_result = swd_packet_disconnect();
-            if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
-            {
-                return ERR_NOT_COMPLETED; // -> try again
-            }
-            else if(RESULT_OK == phase_result)
+            if(RESULT_OK == phase_result)
             {
                 state.is_connected = false;
                 state.last_activity_time_us = time_us_32();
@@ -227,11 +223,7 @@ Result connect_handler(command_typ* cmd, bool first_call)
     if(2 == phase)
     {
         phase_result = jtag_to_dormant_state_sequence();
-        if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
-        {
-            return ERR_NOT_COMPLETED; // -> try again
-        }
-        else if(RESULT_OK == phase_result)
+        if(RESULT_OK == phase_result)
         {
             phase = 3;
         }
@@ -246,11 +238,7 @@ Result connect_handler(command_typ* cmd, bool first_call)
     if(3 == phase)
     {
         phase_result = leave_dormant_state_to_swd_sequence();
-        if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
-        {
-            return ERR_NOT_COMPLETED; // -> try again
-        }
-        else if(RESULT_OK == phase_result)
+        if(RESULT_OK == phase_result)
         {
             phase = 4;
         }
@@ -265,11 +253,7 @@ Result connect_handler(command_typ* cmd, bool first_call)
     if(4 == phase)
     {
         phase_result = swd_packet_line_reset();
-        if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
-        {
-            return ERR_NOT_COMPLETED; // -> try again
-        }
-        else if(RESULT_OK == phase_result)
+        if(RESULT_OK == phase_result)
         {
             phase = 5;
         }
@@ -286,11 +270,7 @@ Result connect_handler(command_typ* cmd, bool first_call)
         if(true == multi)
         {
             phase_result = swd_packet_write(DP, ADDR_TARGETSEL, target);
-            if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
-            {
-                return ERR_NOT_COMPLETED; // -> try again
-            }
-            else if(RESULT_OK == phase_result)
+            if(RESULT_OK == phase_result)
             {
                 phase = 6;
             }
@@ -311,11 +291,7 @@ Result connect_handler(command_typ* cmd, bool first_call)
     if(6 == phase)
     {
         phase_result = swd_packet_read(DP, ADDR_DPIDR);
-        if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
-        {
-            return ERR_NOT_COMPLETED; // -> try again
-        }
-        else if(0 < phase_result)
+        if(0 < phase_result)
         {
             cmd->transaction_id = phase_result;
             phase = 7;
@@ -331,12 +307,9 @@ Result connect_handler(command_typ* cmd, bool first_call)
     if(7 == phase)
     {
         phase_result = swd_packet_get_result(cmd->transaction_id, &read_data);
-        if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
+        if(RESULT_OK == phase_result)
         {
-            return ERR_NOT_COMPLETED; // -> try again
-        }
-        else if(RESULT_OK == phase_result)
-        {
+            debug_line("INFO: Read ID Register!");
             state.reg_DPIDR = read_data;
             state.is_connected = true;
             if(0 != ((1<<16) & read_data))
@@ -361,11 +334,7 @@ Result connect_handler(command_typ* cmd, bool first_call)
     if(8 == phase)
     {
         phase_result = swd_packet_write(DP, ADDR_ABORT, 0x1f);
-        if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
-        {
-            return ERR_NOT_COMPLETED; // -> try again
-        }
-        else if(RESULT_OK == phase_result)
+        if(RESULT_OK == phase_result)
         {
             phase = 9;
         }
@@ -381,11 +350,7 @@ Result connect_handler(command_typ* cmd, bool first_call)
     if(9 == phase)
     {
         phase_result = swd_packet_write(DP, ADDR_CTRL_STAT, 0x50000000);
-        if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
-        {
-            return ERR_NOT_COMPLETED; // -> try again
-        }
-        else if(RESULT_OK == phase_result)
+        if(RESULT_OK == phase_result)
         {
             phase = 10;
             cycle_counter = 0;
@@ -403,11 +368,7 @@ Result connect_handler(command_typ* cmd, bool first_call)
     if(10 == phase)
     {
         phase_result = swd_packet_read(DP, ADDR_CTRL_STAT);
-        if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
-        {
-            return ERR_NOT_COMPLETED; // -> try again
-        }
-        else if(0 < phase_result)
+        if(0 < phase_result)
         {
             cmd->transaction_id = phase_result;
             phase = 11;
@@ -423,11 +384,7 @@ Result connect_handler(command_typ* cmd, bool first_call)
     if(11 == phase)
     {
         phase_result = swd_packet_get_result(cmd->transaction_id, &read_data);
-        if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
-        {
-            return ERR_NOT_COMPLETED; // -> try again
-        }
-        else if(RESULT_OK == phase_result)
+        if(RESULT_OK == phase_result)
         {
             cycle_counter++;
             state.reg_CTRL_STAT = read_data;
@@ -470,11 +427,7 @@ Result connect_handler(command_typ* cmd, bool first_call)
         {
             phase_result = write_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, CSW_VAL, false);
         }
-        if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
-        {
-            return ERR_NOT_COMPLETED; // -> try again
-        }
-        else if(RESULT_OK == phase_result)
+        if(RESULT_OK == phase_result)
         {
             state.mem_ap.reg_CSW = CSW_VAL;
             phase = 14;
@@ -497,11 +450,7 @@ Result connect_handler(command_typ* cmd, bool first_call)
         {
             phase_result = read_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, &read_data, false, cmd);
         }
-        if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
-        {
-            return ERR_NOT_COMPLETED; // -> try again
-        }
-        else if(RESULT_OK == phase_result)
+        if(RESULT_OK == phase_result)
         {
             phase = 16;
             /*
@@ -675,11 +624,7 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
         if(req_select != state.reg_SELECT)
         {
             phase_result = swd_packet_write(DP, ADDR_SELECT, req_select);
-            if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
-            {
-                return ERR_NOT_COMPLETED; // -> try again
-            }
-            else if(RESULT_OK == phase_result)
+            if(RESULT_OK == phase_result)
             {
                 state.reg_SELECT = req_select;
                 phase = 2;
@@ -700,11 +645,7 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
     if(2 == phase)
     {
         phase_result = swd_packet_read(AP, ap_register);
-        if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
-        {
-            return ERR_NOT_COMPLETED; // -> try again
-        }
-        else if(0 < phase_result)
+        if(0 < phase_result)
         {
             cmd->transaction_id = phase_result;
             phase = 3;
@@ -735,11 +676,7 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
     if(4 == phase)
     {
         phase_result = swd_packet_read(DP, ADDR_CTRL_STAT);
-        if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
-        {
-            return ERR_NOT_COMPLETED; // -> try again
-        }
-        else if(0 < phase_result)
+        if(0 < phase_result)
         {
             cmd->transaction_id = phase_result;
             phase = 5;
@@ -777,11 +714,7 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
     if(6 == phase)
     {
         phase_result = swd_packet_read(DP, ADDR_RDBUFF);
-        if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
-        {
-            return ERR_NOT_COMPLETED; // -> try again
-        }
-        else if(0 < phase_result)
+        if(0 < phase_result)
         {
             cmd->transaction_id = phase_result;
             phase = 7;
@@ -840,11 +773,7 @@ static Result write_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint
         if(req_select != state.reg_SELECT)
         {
             phase_result = swd_packet_write(DP, ADDR_SELECT, req_select);
-            if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
-            {
-                return ERR_NOT_COMPLETED; // -> try again
-            }
-            else if(RESULT_OK == phase_result)
+            if(RESULT_OK == phase_result)
             {
                 state.reg_SELECT = req_select;
                 phase = 2;
@@ -865,11 +794,7 @@ static Result write_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint
     if(2 == phase)
     {
         phase_result = swd_packet_write(AP, ap_register, data);
-        if(ERR_QUEUE_FULL_TRY_AGAIN == phase_result)
-        {
-            return ERR_NOT_COMPLETED; // -> try again
-        }
-        else if(RESULT_OK == phase_result)
+        if(RESULT_OK == phase_result)
         {
             phase = 3;
         }

@@ -151,60 +151,50 @@ bool cmd_swd_test(uint32_t loop)
 static bool test_swd_v1(void)
 {
     // open SWD connection
+    if(false == cur_walk.is_done)
+    {
+        return false;
+    }
+    if(RESULT_OK != cur_walk.result)
+    {
+        debug_line("Failed to connect!");
+        checked_swdv1 = true;
+        return false;
+    }
     if(0 == step)
     {
-        if(true == cur_walk.is_done)
-        {
-            debug_line("trying to connect using SWDv1 ....");
-            cur_walk.type = WALK_CONNECT;
-            cur_walk.par_b_0 = false; // multi = SWDv2 -> false
-            cur_walk.par_i_0 = 0;
-            cur_walk.par_i_1 = 0;
-            cur_walk.phase = 0;
-            cur_walk.result = RESULT_OK;
-            cur_walk.is_done = false;
-            step = 1;
-        }
-        else
-        {
-            // currently busy -> try again
-        }
+        debug_line("trying to connect using SWDv1 ....");
+        cur_walk.type = WALK_CONNECT;
+        cur_walk.par_b_0 = false; // multi = SWDv2 -> false
+        cur_walk.par_i_0 = 0;
+        cur_walk.par_i_1 = 0;
+        cur_walk.phase = 0;
+        cur_walk.result = RESULT_OK;
+        cur_walk.is_done = false;
+        step = 1;
         return false;
     }
     else if(1 == step)
     {
-        if(true == cur_walk.is_done)
+        if(RESULT_OK == cur_walk.result)
         {
-            if(RESULT_OK == cur_walk.result)
-            {
-                cur_walk.type = WALK_SCAN;
-                cur_walk.phase = 0;
-                cur_walk.is_done = false;
-                step = 2;
-            }
-            else
-            {
-                checked_swdv1 = true;
-                step = 0;
-            }
+            cur_walk.type = WALK_SCAN;
+            cur_walk.phase = 0;
+            cur_walk.is_done = false;
+            step = 2;
         }
         else
         {
-            // currently busy -> try again
+            checked_swdv1 = true;
+            step = 0;
         }
         return false;
     }
     else // if(2 == step)
     {
-        if(true == cur_walk.is_done)
-        {
-            return true;
-            step = 0;
-        }
-        else
-        {
-            // currently busy -> try again
-        }
+        debug_line("Done with SWDv1...");
+        checked_swdv1 = true;
+        step = 0;
         return false;
     }
 }
