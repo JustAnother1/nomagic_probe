@@ -31,6 +31,7 @@ static const walk_handler walks_look_up[NUM_WALKS_DEFINED] = {
 void walk_init(void)
 {
     cur_step.is_done = true;
+    cur_step.result = RESULT_OK;
 }
 
 void walk_execute(walk_data_typ* data)
@@ -120,7 +121,6 @@ static void handle_connect(walk_data_typ* data)
 {
     if(0 == data->phase)
     {
-        // swd_connect()
         cur_step.type = STEP_CONNECT;
         cur_step.par_b_0 = data->par_b_0;
         cur_step.par_i_0 = data->par_i_0;
@@ -199,6 +199,7 @@ static void handle_connect(walk_data_typ* data)
     else
     {
         // invalid phase
+        debug_line("invalid phase in handle_connect() walk");
         data->result = ERR_WRONG_STATE;
         data->is_done = true;
     }

@@ -135,6 +135,10 @@ bool cmd_swd_test(uint32_t loop)
     }
     else
     {
+        if(false == cur_walk.is_done)
+        {
+            return false;
+        }
         if(false == checked_swdv1)
         {
             // check if we can connect using SWDv1
@@ -151,19 +155,18 @@ bool cmd_swd_test(uint32_t loop)
 static bool test_swd_v1(void)
 {
     // open SWD connection
-    if(false == cur_walk.is_done)
-    {
-        return false;
-    }
     if(RESULT_OK != cur_walk.result)
     {
         debug_line("Failed to connect!");
+        step = 0;
         checked_swdv1 = true;
         return false;
     }
     if(0 == step)
     {
+        debug_line(" ");
         debug_line("trying to connect using SWDv1 ....");
+        walk_init();
         cur_walk.type = WALK_CONNECT;
         cur_walk.par_b_0 = false; // multi = SWDv2 -> false
         cur_walk.par_i_0 = 0;
@@ -185,6 +188,7 @@ static bool test_swd_v1(void)
         }
         else
         {
+            debug_line("ERROR: SWDv1: failed to connect!");
             checked_swdv1 = true;
             step = 0;
         }
@@ -204,68 +208,60 @@ static bool test_swd_v2(void)
     // open SWD connection
     if(0 == step)
     {
-        if(true == cur_walk.is_done)
+        if(NUM_CONNECT_LOCATIONS > location)
         {
-            if(NUM_CONNECT_LOCATIONS > location)
-            {
-                debug_line("trying to connect on location %ld/%d ....", location + 1, NUM_CONNECT_LOCATIONS);
-                cur_walk.type = WALK_CONNECT;
-                cur_walk.par_b_0 = true; // multi = SWDv2 -> true
-                cur_walk.par_i_0 = connect_parameter[location].target_id;
-                cur_walk.par_i_1 = connect_parameter[location].apsel;
-                cur_walk.phase = 0;
-                cur_walk.result = RESULT_OK;
-                cur_walk.is_done = false;
-                step = 1;
-            }
-            else
-            {
-                // scanned all location -> we are done
-                debug_line("Done !");
-                return true;
-            }
+            debug_line(" ");
+            debug_line("trying to connect on location %ld/%d ....", location + 1, NUM_CONNECT_LOCATIONS);
+            walk_init();
+            cur_walk.type = WALK_CONNECT;
+            cur_walk.par_b_0 = true; // multi = SWDv2 -> true
+            cur_walk.par_i_0 = connect_parameter[location].target_id;
+            cur_walk.par_i_1 = connect_parameter[location].apsel;
+            cur_walk.phase = 0;
+            cur_walk.result = RESULT_OK;
+            cur_walk.is_done = false;
+            step = 1;
         }
         else
         {
-            // currently busy -> try again
+            // scanned all location -> we are done
+            debug_line("Done !");
+            return true;
         }
         return false;
     }
     else if(1 == step)
     {
-        if(true == cur_walk.is_done)
+        if(RESULT_OK == cur_walk.result)
         {
-            if(RESULT_OK == cur_walk.result)
-            {
-                cur_walk.type = WALK_SCAN;
-                cur_walk.phase = 0;
-                cur_walk.is_done = false;
-                step = 2;
-            }
-            else
-            {
-                location++;
-                step = 0;
-            }
+            cur_walk.type = WALK_SCAN;
+            cur_walk.phase = 0;
+            cur_walk.is_done = false;
+            step = 2;
         }
         else
         {
-            // currently busy -> try again
+            debug_line("ERROR: connect failed (%ld) !", cur_walk.result);
+            location++;
+            step = 0;
         }
         return false;
     }
     else // if(2 == step)
     {
-        if(true == cur_walk.is_done)
+        if(RESULT_OK == cur_walk.result)
         {
             location++;
             step = 0;
+            return false;
         }
         else
         {
-            // currently busy -> try again
+            debug_line("ERROR: scan failed (%ld) !", cur_walk.result);
+            location++;
+            step = 0;
+            return false;
         }
-        return false;
     }
 }
 

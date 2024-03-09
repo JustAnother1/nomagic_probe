@@ -91,6 +91,7 @@ Result swd_connect(bool multi, uint32_t target, uint32_t AP_sel)
     // TODO protect against concurrent access (cmdq_write)
     if(true == has_error)
     {
+        debug_line("called swd_connect() in error state!");
         return ERR_WRONG_STATE;
     }
     uint32_t next_idx = cmdq_write + 1;
@@ -120,6 +121,7 @@ Result swd_write_ap(uint32_t addr, uint32_t data)
     // TODO protect against concurrent access (cmdq_write)
     if(true == has_error)
     {
+        debug_line("swd_write_ap(): not operational !");
         return ERR_WRONG_STATE;
     }
     uint32_t next_idx = cmdq_write + 1;
@@ -146,6 +148,7 @@ Result swd_read_ap(uint32_t addr)
     // TODO protect against concurrent access (cmdq_write)
     if(true == has_error)
     {
+        debug_line("swd_read_ap(): not operational !");
         return ERR_WRONG_STATE;
     }
     uint32_t next_idx = cmdq_write + 1;
@@ -265,10 +268,6 @@ static void handle_order(void)
         else if(RESULT_OK == order_state)
         {
             // finished successfully
-            if(CMD_CONNECT == cmd_queue[cmdq_read].order)
-            {
-                debug_line("swd: connected");
-            }
         }
         else
         {

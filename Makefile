@@ -112,7 +112,7 @@ ifeq ($(HAS_DETECT), yes)
 endif
 
 
-CFLAGS  = -c -ggdb3
+CFLAGS  = -c -ggdb3 -MMD -MP
 CFLAGS += -O3
 # sometimes helps with debugging:
 # CFLAGS += -O0
@@ -244,7 +244,7 @@ INCDIR = $(patsubst %,-I%, $(INCDIRS))
 # =======================
 
 TST_LFLAGS = -lgcov --coverage
-TST_CFLAGS =  -Wall -Wextra -g3 -fprofile-arcs -ftest-coverage -Wno-int-to-pointer-cast -Wno-implicit-function-declaration
+TST_CFLAGS =  -c -Wall -Wextra -g3 -fprofile-arcs -ftest-coverage -Wno-int-to-pointer-cast -Wno-implicit-function-declaration
 TST_DDEFS = -DUNIT_TEST=1
 TST_DDEFS += -DFEAT_DEBUG_UART
 TST_INCDIRS = tests/
@@ -357,7 +357,7 @@ $(BIN_FOLDER)%o: %c $(BIN_FOLDER)version.h
 	@echo ""
 	@echo "=== compiling $@"
 	@$(MKDIR_P) $(@D)
-	$(CC) -MD -MP -c $(CFLAGS) $(DDEFS) $(INCDIR) $< -o $@
+	$(CC) $(CFLAGS) $(DDEFS) $(INCDIR) $< -o $@
 
 list: $(BIN_FOLDER)$(PROJECT).elf
 	@echo ""
@@ -378,7 +378,7 @@ tests/bin/%o: %c
 	@echo ""
 	@echo "=== compiling (tests) $@"
 	@$(MKDIR_P) $(@D)
-	$(TST_CC) -c $(TST_CFLAGS) $(TST_DDEFS) $(TST_INCDIR) $< -o $@
+	$(TST_CC) $(TST_CFLAGS) $(TST_DDEFS) $(TST_INCDIR) $< -o $@
 
 $(PROJECT)_tests: $(TST_OBJS)
 	@echo ""

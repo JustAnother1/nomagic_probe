@@ -38,6 +38,7 @@ static void handle_connect(step_data_typ* cur_step)
 {
     if(0 == cur_step->phase)
     {
+        // debug_line("resetting error condition!");
         swd_reset_error_condition();
         Result res = swd_connect(cur_step->par_b_0, cur_step->par_i_0, cur_step->par_i_1);
         if(RESULT_OK < res)

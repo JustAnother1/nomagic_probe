@@ -139,6 +139,7 @@ Result swd_packet_bits_get_data_value(uint32_t idx, uint32_t* data)
 {
     if(false == operational)
     {
+        debug_line("swd_packet_bits_get_data_value(): not operational !");
         return ERR_WRONG_STATE;
     }
     if(idx < PACKET_QUEUE_SIZE)
@@ -287,14 +288,14 @@ static Result write_handler(packet_definition_typ* pkg)
             if(false == sticky_overrun)
             {
                 // TODO if this fails there is nothing I could do, also this should not fail ever, right?
-                debug_line("SWD(SO) ACK was Wait or Fail !");
+                debug_line("ERROR: SWD(SO) ACK was %ld !", ack);
                 return ERR_TARGET_ERROR;
             }
             else
             {
                 // else we need the data phase
                 // TODO Handle WAIT and Failure ACK
-                debug_line("SWD ACK was Wait or Fail !");
+                debug_line("ERROR: SWD ACK was %ld !", ack);
                 return ERR_TARGET_ERROR;
             }
         }
@@ -358,7 +359,7 @@ static Result read_handler(packet_definition_typ* pkg)
             }
         }
         // TODO Handle WAIT and Failure ACK
-        debug_line("SWD ACK was Wait or Fail !");
+        debug_line("ERROR: SWD ACK was %ld !", ack);
         // TODO res = result_queue_add_result_of(PACKET_QUEUE, pkg->transaction_id, 0x23232323);
         result_data_error[pkg->result_idx] = true;
         // return RESULT_OK;
