@@ -22,6 +22,7 @@
 #include "probe_api/debug_log.h"
 #include "swd_packet_bits.h"
 #include "swd_engine.h"
+#include "probe_api/swd.h"
 
 // timeout until the WDIO line will be put into low power mode (High)
 #define SWDIO_IDLE_TIMEOUT_US    12000
@@ -605,6 +606,37 @@ Result read_handler(command_typ* cmd, bool first_call)
     return ERR_WRONG_STATE;
 }
 
+Result read_reg_handler(command_typ* cmd, bool first_call)
+{
+    Result res;
+    if(true == first_call)
+    {
+        res = read_ap_register(cmd->i_val, cmd->i_val_2, &read_data, true, cmd);
+    }
+    else
+    {
+        res = read_ap_register(cmd->i_val, cmd->i_val_2, &read_data, false, cmd);
+    }
+    if(RESULT_OK == res)
+    {
+        swd_eingine_add_cmd_result(cmd->transaction_id, read_data);
+    }
+    return res;
+}
+
+Result write_reg_handler(command_typ* cmd, bool first_call)
+{
+    Result res;
+    if(true == first_call)
+    {
+        res = write_ap_register(cmd->i_val, cmd->i_val_1, cmd->i_val_2, true);
+    }
+    else
+    {
+        res = write_ap_register(cmd->i_val, cmd->i_val_1, cmd->i_val_2, false);
+    }
+    return res;
+}
 
 // static functions
 

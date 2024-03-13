@@ -14,14 +14,15 @@ typedef enum {
 }walk_typ;
 
 typedef struct{
-    uint32_t par_i_0;//     targetId  |
-    uint32_t par_i_1;//     APSel     |
-    uint32_t phase;
-    Result result;
-    uint32_t intern_0;
-    walk_typ type;//     WALK_CONNECT |
+    uint32_t phase;    //
+    uint32_t par_i_0;  // targetId     |
+    uint32_t par_i_1;  // APSel        |
+    Result result;     // RESULT_OK    | RESULT_OK
+    uint32_t intern_0; //              | APnum
+    uint32_t read_0;   //              | value read from AP
+    walk_typ type;     // WALK_CONNECT | WALK_SCAN
+    bool par_b_0;      // isSWDv2?     |
     bool is_done;
-    bool par_b_0; //       isSWDv2?   |
     uint8_t padding;
 } walk_data_typ;
 

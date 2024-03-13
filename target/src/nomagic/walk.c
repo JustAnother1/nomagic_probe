@@ -5,6 +5,7 @@
 #include <stddef.h>
 #include "debug_log.h"
 #include "time.h"
+#include "swd.h"
 
 #define MAX_SAFE_COUNT    0xfffffff0  // comparing against < 0xffffffff is always true -> we want to avoid 0xffffffff as end time of timeout
 #define WALK_TIMEOUT_TIME_MS  300
@@ -20,6 +21,7 @@ static bool wait_for_wrap_around;
 
 static void handle_connect(walk_data_typ* data);
 static void handle_scan(walk_data_typ* data);
+static Result check_AP(uint32_t idr, bool first_call);
 
 typedef void (*walk_handler)(walk_data_typ* data);
 
@@ -147,7 +149,7 @@ static void handle_connect(walk_data_typ* data)
         }
         else
         {
-            // step 0 failed
+            // step failed
             data->result = cur_step.result;
             data->is_done = true;
         }
@@ -169,7 +171,7 @@ static void handle_connect(walk_data_typ* data)
         }
         else
         {
-            // step 1 failed
+            // step failed
             data->result = cur_step.result;
             data->is_done = true;
         }
@@ -191,7 +193,7 @@ static void handle_connect(walk_data_typ* data)
         }
         else
         {
-            // step 2 failed
+            // step failed
             data->result = cur_step.result;
             data->is_done = true;
         }
@@ -207,22 +209,79 @@ static void handle_connect(walk_data_typ* data)
 
 static void handle_scan(walk_data_typ* data)
 {
-    // TODO this only a placeholder
+    if(0 == data->phase)
     {
-        data->result = RESULT_OK;
-        data->is_done = true;
+        data->phase++;
+        data->intern_0 = 0; // AP address
+    }
+    else if(1 == data->phase)
+    {
+        debug_line("testing AP %ld", data->intern_0);
+        swd_protocol_set_AP_sel(data->intern_0);
+        // data->res = read_ap_register(AP_BANK_IDR, AP_REGISTER_IDR, &(data->read_0), true);
+        cur_step.type = STEP_AP_REG_READ;
+        cur_step.par_i_0 = AP_BANK_IDR;
+        cur_step.par_i_1 = AP_REGISTER_IDR;
+        cur_step.phase = 0;
+        cur_step.is_done = false;
+        data->phase++;
+    }
+    else if((2 == data->phase) || (3 == data->phase))
+    {
+        if(RESULT_OK == cur_step.result)
+        {
+            if(0 != cur_step.read_0)
+            {
+                // found an AP
+                Result tres;
+                if(2 == data->phase)
+                {
+                    tres = check_AP(cur_step.read_0, true);
+                    data->phase = 3;
+                }
+                else
+                {
+                    tres = check_AP(cur_step.read_0, false);
+                }
+                (void)tres;
+                data->intern_0++;
+                if(256 > data->intern_0)
+                {
+                    data->phase = 1;
+                }
+                else
+                {
+                    // we checked all possible AP
+                    data->result = RESULT_OK;
+                    data->is_done = true;
+                }
+            }
+            else
+            {
+                // no more APs in this device
+                debug_line("AP %ld: IDR = 0", data->intern_0);
+                swd_protocol_set_AP_sel(data->intern_0 -1); // use the last good AP
+                debug_line("Done!");
+                data->result = RESULT_OK;
+                data->is_done = true;
+            }
+        }
+        else
+        {
+            // step failed
+            data->result = cur_step.result;
+            data->is_done = true;
+        }
     }
 }
 
 
+// static uint32_t first_ap;
 
 /*
-static uint32_t reg_data;  // TODO sort these out
-static uint32_t first_ap;
-
-
 Result scan_handler(command_typ* cmd, bool first_call)
 {
+    uint32_t cycle_counter;
     static Result phase = 0;
     (void) cmd;
     if(true == first_call)
@@ -312,6 +371,20 @@ Result scan_handler(command_typ* cmd, bool first_call)
 
     return (Result)phase;
 }
+*/
+
+static Result check_AP(uint32_t idr, bool first_call)
+{
+    (void) idr;
+    (void) first_call;
+    return RESULT_OK;
+}
+
+/*
+
+
+static uint32_t reg_data;  // TODO sort these out
+
 
 static Result check_AP(uint32_t idr, bool first_call)
 {

@@ -19,6 +19,47 @@
 #include <stdbool.h>
 #include "result.h"
 
+// AP Addresses:
+// CSW
+#define AP_BANK_CSW      0x0
+#define AP_REGISTER_CSW  0x0
+// TAR
+#define AP_BANK_TAR      0x0
+#define AP_REGISTER_TAR  0x4
+// DRW
+#define AP_BANK_DRW      0x0
+#define AP_REGISTER_DRW  0xc
+// BD0
+#define AP_BANK_BD0      0x1
+#define AP_REGISTER_BD0  0x0
+// BD1
+#define AP_BANK_BD1      0x1
+#define AP_REGISTER_BD1  0x4
+// BD2
+#define AP_BANK_BD2      0x1
+#define AP_REGISTER_BD2  0x8
+// BD3
+#define AP_BANK_BD3      0x1
+#define AP_REGISTER_BD3  0xc
+// MBT
+#define AP_BANK_MBT      0x2
+#define AP_REGISTER_MBT  0x0
+// T0RT
+#define AP_BANK_T0RT     0x3
+#define AP_REGISTER_T0RT 0x0
+// CFG1
+#define AP_BANK_CFG1     0xe
+#define AP_REGISTER_CFG1 0x0
+// CFG
+#define AP_BANK_CFG      0xf
+#define AP_REGISTER_CFG  0x4
+// BASE
+#define AP_BANK_BASE     0xf
+#define AP_REGISTER_BASE 0x8
+// IDR
+#define AP_BANK_IDR      0xf  // 0xdf
+#define AP_REGISTER_IDR  0xc
+
 #if (defined FEAT_DEBUG_UART) || (defined FEAT_DEBUG_CDC)
 /** prints all available information on the debug UART.
  *
@@ -63,6 +104,23 @@ Result swd_read_ap(uint32_t addr);
  * @return ERR_QUEUE_FULL_TRY_AGAIN or RESULT_OK
  */
 Result swd_write_ap(uint32_t addr, uint32_t data);
+
+/** read a register inside the target Access port.
+ *
+ * @param bank the bank in the AP.
+ * @param reg the register in the AP.
+ * @return ERR_QUEUE_FULL_TRY_AGAIN or a transaction id.
+ */
+Result swd_read_ap_reg(uint32_t bank, uint32_t reg);
+
+/** write a register inside the target Access port.
+ *
+ * @param bank the bank in the AP.
+ * @param reg the register in the AP.
+ * @param data the data to write
+ * @return ERR_QUEUE_FULL_TRY_AGAIN or RESULT_OK
+ */
+Result swd_write_ap_reg(uint32_t bank, uint32_t reg, uint32_t data);
 
 /** try to receive some data.
  * If one received a transaction id from another function then the result of that function _must_ be read (to free the queue).

@@ -44,6 +44,8 @@ static const order_handler order_look_up[NUM_ORDERS] = {
         connect_handler,
         read_handler,
         write_handler,
+        read_reg_handler,
+        write_reg_handler,
 };
 
 #if (defined FEAT_DEBUG_UART) || (defined FEAT_DEBUG_CDC)
@@ -164,6 +166,63 @@ Result swd_read_ap(uint32_t addr)
         cmd_queue[cmdq_write].transaction_id = (Result)tid;
         cmdq_write = next_idx;
         return (Result)tid;
+    }
+    else
+    {
+        return ERR_QUEUE_FULL_TRY_AGAIN;
+    }
+}
+
+Result swd_read_ap_reg(uint32_t bank, uint32_t reg)
+{
+    // TODO protect against concurrent access (cmdq_write)
+    if(true == has_error)
+    {
+        debug_line("swd_read_ap_reg(): not operational !");
+        return ERR_WRONG_STATE;
+    }
+    uint32_t next_idx = cmdq_write + 1;
+    if(CMD_QUEUE_LENGTH == next_idx)
+    {
+        next_idx = 0;
+    }
+    if(cmdq_read != next_idx)
+    {
+        uint32_t tid = next_cmd_result_slot();
+        cmd_queue[cmdq_write].order = CMD_READ_REG;
+        cmd_queue[cmdq_write].i_val = bank;
+        cmd_queue[cmdq_write].i_val_2 = reg;
+        cmd_queue[cmdq_write].transaction_id = (Result)tid;
+        cmdq_write = next_idx;
+        return (Result)tid;
+    }
+    else
+    {
+        return ERR_QUEUE_FULL_TRY_AGAIN;
+    }
+}
+
+Result swd_write_ap_reg(uint32_t bank, uint32_t reg, uint32_t data)
+{
+    // TODO protect against concurrent access (cmdq_write)
+    if(true == has_error)
+    {
+        debug_line("swd_write_ap_reg(): not operational !");
+        return ERR_WRONG_STATE;
+    }
+    uint32_t next_idx = cmdq_write + 1;
+    if(CMD_QUEUE_LENGTH == next_idx)
+    {
+        next_idx = 0;
+    }
+    if(cmdq_read != next_idx)
+    {
+        cmd_queue[cmdq_write].order = CMD_WRITE_REG;
+        cmd_queue[cmdq_write].i_val = bank;
+        cmd_queue[cmdq_write].i_val_1 = reg;
+        cmd_queue[cmdq_write].i_val_2 = data;
+        cmdq_write = next_idx;
+        return RESULT_OK;
     }
     else
     {

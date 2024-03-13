@@ -47,4 +47,20 @@ Result read_handler(command_typ* cmd, bool first_call);
  */
 Result write_handler(command_typ* cmd, bool first_call);
 
+/** reads a value to the Access Port Register.
+ *
+ * @param first_call if true then start from the beginning, else continue unfinished task.
+ * @param cmd contains the parameters for the connection
+ * @return RESULT_OK if finished successfully else ERR_NOT_COMPLETED, or an error code.
+ */
+Result read_reg_handler(command_typ* cmd, bool first_call);
+
+/** writes a value to the Access Port Register.
+ *
+ * @param first_call if true then start from the beginning, else continue unfinished task.
+ * @param cmd contains the parameters for the connection
+ * @return RESULT_OK if finished successfully else ERR_NOT_COMPLETED, or an error code.
+ */
+Result write_reg_handler(command_typ* cmd, bool first_call);
+
 #endif /* SRC_SWD_SWD_PROTOCOL_H_ */

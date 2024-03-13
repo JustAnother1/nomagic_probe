@@ -333,7 +333,6 @@ static Result write_handler(packet_definition_typ* pkg)
 
 static Result read_handler(packet_definition_typ* pkg)
 {
-    // TODO Result res;
     uint32_t i;
     uint32_t num_ones = 0;
     uint32_t ack;
@@ -360,7 +359,6 @@ static Result read_handler(packet_definition_typ* pkg)
         }
         // TODO Handle WAIT and Failure ACK
         debug_line("ERROR: SWD ACK was %ld !", ack);
-        // TODO res = result_queue_add_result_of(PACKET_QUEUE, pkg->transaction_id, 0x23232323);
         result_data_error[pkg->result_idx] = true;
         // return RESULT_OK;
         return ERR_TARGET_ERROR;
