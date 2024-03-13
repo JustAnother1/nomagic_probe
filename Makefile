@@ -128,7 +128,16 @@ CFLAGS += -ffunction-sections -fdata-sections
 
 LKR_SCRIPT = $(SRC_FOLDER)hal/RP2040.ld
 
-LFLAGS  = -ffreestanding -nostdlib -nolibc -nodefaultlibs -nostartfiles -specs=nosys.specs -fno-builtin -fno-builtin-function
+
+
+LFLAGS  = -ffreestanding -nostartfiles
+# disabled the following due to this issue:
+#  undefined reference to `__gnu_thumb1_case_si'
+# LFLAGS += -nostdlib -nolibc -nodefaultlibs 
+# LFLAGS += -specs=nosys.specs
+# LFLAGS += -fno-builtin -fno-builtin-function
+# https://wiki.osdev.org/Libgcc : All code compiled with GCC must be linked with libgcc. 
+LFLAGS += -lgcc
 LFLAGS += -Wl,--gc-sections,-Map=$(BIN_FOLDER)$(PROJECT).map -g
 LFLAGS += -fno-common -T$(LKR_SCRIPT)
 
