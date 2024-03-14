@@ -76,8 +76,8 @@ static void turn_to_output(void);
 static void jtag_to_swd_sequence(void);
 static Result line_reset_handler(packet_definition_typ* pkg);
 static Result disconnect_handler(packet_definition_typ* pkg);
-static Result write_handler(packet_definition_typ* pkg);
-static Result read_handler(packet_definition_typ* pkg);
+static Result write_package_handler(packet_definition_typ* pkg);
+static Result read_package_handler(packet_definition_typ* pkg);
 static Result jtag_to_dormant_handler(packet_definition_typ* pkg);
 static Result dormant_to_swd_handler(packet_definition_typ* pkg);
 static Result swd_to_dormant_handler(packet_definition_typ* pkg);
@@ -86,8 +86,8 @@ static Result swd_to_dormant_handler(packet_definition_typ* pkg);
 static const packet_handler packet_handler_look_up[NUM_PAKETS] = {
         line_reset_handler,
         disconnect_handler,
-        write_handler,
-        read_handler,
+        write_package_handler,
+        read_package_handler,
         jtag_to_dormant_handler,
         dormant_to_swd_handler,
         swd_to_dormant_handler
@@ -260,7 +260,7 @@ static Result disconnect_handler(packet_definition_typ* pkg)
     return RESULT_OK;
 }
 
-static Result write_handler(packet_definition_typ* pkg)
+static Result write_package_handler(packet_definition_typ* pkg)
 {
     uint32_t i;
     uint32_t num_ones = 0;
@@ -288,14 +288,14 @@ static Result write_handler(packet_definition_typ* pkg)
             if(false == sticky_overrun)
             {
                 // TODO if this fails there is nothing I could do, also this should not fail ever, right?
-                debug_line("ERROR: SWD(SO) ACK was %ld !", ack);
+                debug_line("ERROR: SWD ACK was %ld !", ack);
                 return ERR_TARGET_ERROR;
             }
             else
             {
                 // else we need the data phase
                 // TODO Handle WAIT and Failure ACK
-                debug_line("ERROR: SWD ACK was %ld !", ack);
+                debug_line("ERROR: SWD(SO) ACK was %ld !", ack);
                 return ERR_TARGET_ERROR;
             }
         }
@@ -331,7 +331,7 @@ static Result write_handler(packet_definition_typ* pkg)
     return RESULT_OK;
 }
 
-static Result read_handler(packet_definition_typ* pkg)
+static Result read_package_handler(packet_definition_typ* pkg)
 {
     uint32_t i;
     uint32_t num_ones = 0;
