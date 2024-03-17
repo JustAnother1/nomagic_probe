@@ -291,11 +291,18 @@ Result connect_handler(command_typ* cmd, bool first_call)
 // Phase 6 read ID Register
     if(6 == phase)
     {
+        debug_line("INFO: request reading ID Register!");
         phase_result = swd_packet_read(DP, ADDR_DPIDR);
-        if(0 < phase_result)
+        if(RESULT_OK < phase_result)
         {
             cmd->transaction_id = phase_result;
             phase = 7;
+        }
+        else if(RESULT_OK == phase_result)
+        {
+            // this should not happen
+            debug_line("ERROR: Invalid ID received for SWD read!");
+            return ERR_INVALID_TRANSACTION_ID;
         }
         else
         {

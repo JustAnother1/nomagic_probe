@@ -132,7 +132,11 @@ uint32_t swd_packet_bits_get_next_data_slot(void)
     result_data_available[res] = false;
     result_data_error[res] = false;
     data_write_idx++;
-    return res;
+    if(PACKET_QUEUE_SIZE == data_write_idx)
+    {
+        data_write_idx = 0;
+    }
+    return res + 1;  // 0 (=RESULT_OK) can not be a valid index -> +1
 }
 
 Result swd_packet_bits_get_data_value(uint32_t idx, uint32_t* data)
@@ -142,6 +146,7 @@ Result swd_packet_bits_get_data_value(uint32_t idx, uint32_t* data)
         debug_line("swd_packet_bits_get_data_value(): not operational !");
         return ERR_WRONG_STATE;
     }
+    idx = idx -1; // 0 (=RESULT_OK) can not be a valid index -> -1
     if(idx < PACKET_QUEUE_SIZE)
     {
         if(false == result_data_error[idx])
@@ -340,6 +345,7 @@ static Result read_package_handler(packet_definition_typ* pkg)
     uint32_t read_data = 0;
     uint32_t APnotDP = pkg->APnotDP;
     uint32_t address = pkg->address;
+    uint32_t res_idx = pkg->result_idx -1;  // 0 (=RESULT_OK) can not be a valid index -> -1
 
     ack = send_packet_request(APnotDP, 1, address);
 
@@ -359,7 +365,7 @@ static Result read_package_handler(packet_definition_typ* pkg)
         }
         // TODO Handle WAIT and Failure ACK
         debug_line("ERROR: SWD ACK was %ld !", ack);
-        result_data_error[pkg->result_idx] = true;
+        result_data_error[res_idx] = true;
         // return RESULT_OK;
         return ERR_TARGET_ERROR;
     }
@@ -393,8 +399,8 @@ static Result read_package_handler(packet_definition_typ* pkg)
         }
     }
 
-    packet_result_data[pkg->result_idx] = read_data;
-    result_data_available[pkg->result_idx] = true;
+    packet_result_data[res_idx] = read_data;
+    result_data_available[res_idx] = true;
 
     return RESULT_OK;
 }
