@@ -21,7 +21,7 @@ static bool wait_for_wrap_around;
 
 static void handle_connect(walk_data_typ* data);
 static void handle_scan(walk_data_typ* data);
-static Result check_AP(uint32_t idr, bool first_call);
+static Result check_AP(uint32_t idr, bool first_call, uint32_t * phase);
 
 typedef void (*walk_handler)(walk_data_typ* data);
 
@@ -198,6 +198,12 @@ static void handle_connect(walk_data_typ* data)
             data->is_done = true;
         }
     }
+    else if(4 == data->phase)
+    {
+        data->phase++; // todo add more steps?
+        data->result = RESULT_OK;
+        data->is_done = true;
+    }
     else
     {
         // invalid phase
@@ -236,12 +242,12 @@ static void handle_scan(walk_data_typ* data)
                 Result tres;
                 if(2 == data->phase)
                 {
-                    tres = check_AP(cur_step.read_0, true);
+                    tres = check_AP(cur_step.read_0, true, &(data->intern_0));
                     data->phase = 3;
                 }
                 else
                 {
-                    tres = check_AP(cur_step.read_0, false);
+                    tres = check_AP(cur_step.read_0, false, &(data->intern_0));
                 }
                 (void)tres;
                 data->intern_0++;
@@ -275,104 +281,7 @@ static void handle_scan(walk_data_typ* data)
     }
 }
 
-
-// static uint32_t first_ap;
-
 /*
-Result scan_handler(command_typ* cmd, bool first_call)
-{
-    uint32_t cycle_counter;
-    static Result phase = 0;
-    (void) cmd;
-    if(true == first_call)
-    {
-        cycle_counter = 0;
-        first_ap = 0xffffffff;
-        phase = 1;
-    }
-
-    if(1 == phase)
-    {
-        debug_line("testing AP %ld", cycle_counter);
-        state.mem_ap.ap_sel = cycle_counter;
-        phase = 2;
-    }
-
-// Phase 2-5 read IDR Register
-
-    if((2 == phase ) || (3 == phase))
-    {
-        Result res;
-        if(2 == phase)
-        {
-            res = read_ap_register(AP_BANK_IDR, AP_REGISTER_IDR, &read_data, true);
-            phase = 3;
-        }
-        else
-        {
-            res = read_ap_register(AP_BANK_IDR, AP_REGISTER_IDR, &read_data, false);
-        }
-        if(RESULT_OK == res)
-        {
-            phase = 4;
-        }
-        else
-        {
-            return res;
-        }
-    }
-
-    if((4 == phase ) || (5 == phase))
-    {
-        if(0 != read_data)
-        {
-            Result tres;
-            if(4 == phase)
-            {
-                debug_line("AP %ld: 0x%08lx", cycle_counter, read_data);
-                tres = check_AP(read_data, true);
-                phase = 5;
-            }
-            else
-            {
-                tres = check_AP(read_data, false);
-            }
-            if(RESULT_OK == tres)
-            {
-                // done with this AP
-                cycle_counter++;
-                if(256 > cycle_counter)
-                {
-                    phase = 1;
-                    state.mem_ap.ap_sel = cycle_counter;
-                    return ERR_NOT_COMPLETED;
-                }
-                else
-                {
-                    // scan complete
-                    debug_line("Done!");
-                    return RESULT_OK;
-                }
-            }
-            else
-            {
-                return tres;
-            }
-        }
-        else
-        {
-            // reached end of APs
-            debug_line("AP %ld: IDR 0x%08lx", cycle_counter, read_data);
-            state.mem_ap.ap_sel = cycle_counter - 1;  // use the last good AP
-            debug_line("Done!");
-           return RESULT_OK;
-        }
-    }
-
-    return (Result)phase;
-}
-*/
-
 static Result check_AP(uint32_t idr, bool first_call)
 {
     (void) idr;
@@ -380,33 +289,31 @@ static Result check_AP(uint32_t idr, bool first_call)
     return RESULT_OK;
 }
 
-/*
 
 
 static uint32_t reg_data;  // TODO sort these out
+*/
 
-
-static Result check_AP(uint32_t idr, bool first_call)
+static Result check_AP(uint32_t idr, bool first_call, uint32_t * phase)
 {
-    static Result phase = 0;
+    // static Result phase = 0;
     uint32_t class = (idr & (0xf << 13))>> 13;
-    state.mem_ap.ap_sel = cycle_counter;
     if(8 == class)
     {
         // Memory Access Port (MEM-AP)
         if(true == first_call)
         {
-            state.mem_ap.version = AP_VERSION_APv1;
             debug_line("APv1:");
             debug_line("AP: IDR: Revision: %ld", (idr & (0xful<<28))>>28 );
             debug_line("AP: IDR: Jep 106 : %ld x 0x7f + 0x%02lx", (idr & (0xf << 24))>>24, (idr & (0x7f<<17))>>17 );
             debug_line("AP: IDR: class :   %ld", class );
             debug_line("AP: IDR: variant:  %ld", (idr & (0xf<<4))>>4 );
             debug_line("AP: IDR: type:     %ld", (idr & 0xf) );
-            phase = 1;
-            return ERR_NOT_COMPLETED;
+            *phase = 1;
+            // return ERR_NOT_COMPLETED;
         }
-
+        return RESULT_OK; // done with this AP
+/*
         if((1 == phase) || (2 == phase))
         {
             Result res;
@@ -578,22 +485,17 @@ static Result check_AP(uint32_t idr, bool first_call)
             // TODO check number of Break Points
             // TODO check number of Watch points
 
-
-            if(cycle_counter < first_ap)
-            {
-                first_ap = cycle_counter;
-            }
             return RESULT_OK; // done with this AP
         }
 
         // phase has invalid value
         debug_line("check ap: invalid phase!");
         return (Result)ERR_WRONG_STATE;
+        */
     }
     else if(9 == class)
     {
         // Memory Access Port (MEM-AP)
-        state.mem_ap.version = AP_VERSION_APv2;
         debug_line("APv2:");
         debug_line("AP: IDR: Revision: %ld", (idr & (0xful<<28))>>28 );
         debug_line("AP: IDR: Jep 106 : %ld x 0x7f + 0x%02lx", (idr & (0xf << 24))>>24, (idr & (0x7f<<17))>>17 );
@@ -601,11 +503,6 @@ static Result check_AP(uint32_t idr, bool first_call)
         debug_line("AP: IDR: variant:  %ld", (idr & (0xf<<4))>>4 );
         debug_line("AP: IDR: type:     %ld", (idr & 0xf) );
         // TODO
-
-        if(cycle_counter < first_ap)
-        {
-            first_ap = cycle_counter;
-        }
 
         return RESULT_OK; // done with this AP
     }
@@ -615,4 +512,3 @@ static Result check_AP(uint32_t idr, bool first_call)
         return RESULT_OK; // done with this AP
     }
 }
-*/

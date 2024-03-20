@@ -131,6 +131,8 @@ bool cmd_swd_test(uint32_t loop)
         step = 0;
         location = 0;
         checked_swdv1 = false;
+        cur_walk.result = RESULT_OK;
+        cur_walk.is_done = true;
         return false;
     }
     else
@@ -220,7 +222,7 @@ static bool test_swd_v2(void)
             cur_walk.phase = 0;
             cur_walk.result = RESULT_OK;
             cur_walk.is_done = false;
-            step = 1;
+            step++;
         }
         else
         {
@@ -237,7 +239,7 @@ static bool test_swd_v2(void)
             cur_walk.type = WALK_SCAN;
             cur_walk.phase = 0;
             cur_walk.is_done = false;
-            step = 2;
+            step++;
         }
         else
         {

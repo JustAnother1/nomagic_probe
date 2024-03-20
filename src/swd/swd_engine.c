@@ -232,6 +232,12 @@ Result swd_write_ap_reg(uint32_t bank, uint32_t reg, uint32_t data)
 
 Result swd_get_result(Result transaction, uint32_t* data)
 {
+    if(transaction < 1)
+    {
+        // 0 or negative values are not valid
+        return ERR_INVALID_TRANSACTION_ID;
+    }
+    transaction--;
     if(transaction < CMD_QUEUE_LENGTH)
     {
         if(true == cmd_result_data_available[transaction])

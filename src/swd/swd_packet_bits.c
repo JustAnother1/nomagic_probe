@@ -275,11 +275,12 @@ static Result write_package_handler(packet_definition_typ* pkg)
     uint32_t data = pkg->data;
 
     ack = send_packet_request(APnotDP, 0, address);
+    turn_to_output();
 
     // handle ACK
     if(ACK_OK != ack)
     {
-        if((0 == APnotDP) && (ADDR_TARGETSEL == address))
+        if((DP == APnotDP) && (ADDR_TARGETSEL == address))
         {
             // this is a TARGETSEL access and the device is not active.
             // -> line is not driven -> ignore ACK -> OK
@@ -288,12 +289,44 @@ static Result write_package_handler(packet_definition_typ* pkg)
         else
         {
             operational = false;
-            debug_line("ERROR: write ap/dp: %ld, addr: %ld, data: 0x%lx, ack: %ld", APnotDP, address, data, ack);
+            if(DP == APnotDP)
+            {
+                debug_line("ERROR: write DP addr: %ld, data: 0x%lx, ack: %ld", address, data, ack);
+            }
+            else
+            {
+                debug_line("ERROR: write AP addr: %ld, data: 0x%lx, ack: %ld", address, data, ack);
+            }
             // handle "Sticky overrun"
             if(false == sticky_overrun)
             {
                 // TODO if this fails there is nothing I could do, also this should not fail ever, right?
-                debug_line("ERROR: SWD ACK was %ld !", ack);
+                switch(ack)
+                {
+                case ACK_PROTOCOL_ERROR_0:   // on wire: line not driven -> read as low
+                    debug_line("ERROR: SWD ACK was 0 (target not connected?) !");
+                    break;
+
+                case ACK_OK:                 // on wire: 1 0 0
+                    debug_line("ERROR: SWD ACK was OK !?!");
+                    break;
+
+                case ACK_WAIT:               // on wire: 0 1 0
+                    debug_line("ERROR: SWD ACK was WAIT !");
+                    break;
+
+                case ACK_FAULT:              // on wire: 0 0 1
+                    debug_line("ERROR: SWD ACK was FAULT !");
+                    break;
+
+                case ACK_PROTOCOL_ERROR_1:   // on wire: line not driven -> read as high
+                    debug_line("ERROR: SWD ACK was 7 (target not connected?) !");
+                    break;
+
+                default:
+                    debug_line("ERROR: SWD ACK was %ld !", ack);
+                    break;
+                }
                 return ERR_TARGET_ERROR;
             }
             else
@@ -305,8 +338,6 @@ static Result write_package_handler(packet_definition_typ* pkg)
             }
         }
     }
-
-    turn_to_output();
 
     // Data
     for(i = 0; i < 32; i++)
@@ -364,9 +395,34 @@ static Result read_package_handler(packet_definition_typ* pkg)
             }
         }
         // TODO Handle WAIT and Failure ACK
-        debug_line("ERROR: SWD ACK was %ld !", ack);
+        switch(ack)
+        {
+        case ACK_PROTOCOL_ERROR_0:   // on wire: line not driven -> read as low
+            debug_line("ERROR: SWD ACK was 0 (target not connected?) !");
+            break;
+
+        case ACK_OK:                 // on wire: 1 0 0
+            debug_line("ERROR: SWD ACK was OK !?!");
+            break;
+
+        case ACK_WAIT:               // on wire: 0 1 0
+            debug_line("ERROR: SWD ACK was WAIT !");
+            break;
+
+        case ACK_FAULT:              // on wire: 0 0 1
+            debug_line("ERROR: SWD ACK was FAULT !");
+            break;
+
+        case ACK_PROTOCOL_ERROR_1:   // on wire: line not driven -> read as high
+            debug_line("ERROR: SWD ACK was 7 (target not connected?) !");
+            break;
+
+        default:
+            debug_line("ERROR: SWD ACK was %ld !", ack);
+            break;
+        }
         result_data_error[res_idx] = true;
-        // return RESULT_OK;
+        turn_to_output();
         return ERR_TARGET_ERROR;
     }
 
@@ -745,7 +801,7 @@ static uint32_t send_packet_request(uint32_t APnotDP, uint32_t read_not_write, u
     write_bit(1);
 
     // AP or DP
-    if(0 == APnotDP)
+    if(DP == APnotDP)
     {
         // -> DP = 0
         write_bit(0);

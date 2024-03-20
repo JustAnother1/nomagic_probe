@@ -381,6 +381,12 @@ Result connect_handler(command_typ* cmd, bool first_call)
             cmd->transaction_id = phase_result;
             phase = 11;
         }
+        else if(RESULT_OK == phase_result)
+        {
+            // this should not happen
+            debug_line("ERROR: Invalid ID received for SWD read!");
+            return ERR_INVALID_TRANSACTION_ID;
+        }
         else
         {
             // some other error
@@ -689,6 +695,12 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
             cmd->transaction_id = phase_result;
             phase = 3;
         }
+        else if(RESULT_OK == phase_result)
+        {
+            // this should not happen
+            debug_line("ERROR: Invalid ID received for SWD read!");
+            return ERR_INVALID_TRANSACTION_ID;
+        }
         else
         {
             // some other error
@@ -719,6 +731,12 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
         {
             cmd->transaction_id = phase_result;
             phase = 5;
+        }
+        else if(RESULT_OK == phase_result)
+        {
+            // this should not happen
+            debug_line("ERROR: Invalid ID received for SWD read!");
+            return ERR_INVALID_TRANSACTION_ID;
         }
         else
         {
@@ -757,6 +775,12 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
         {
             cmd->transaction_id = phase_result;
             phase = 7;
+        }
+        else if(RESULT_OK == phase_result)
+        {
+            // this should not happen
+            debug_line("ERROR: Invalid ID received for SWD read!");
+            return ERR_INVALID_TRANSACTION_ID;
         }
         else
         {

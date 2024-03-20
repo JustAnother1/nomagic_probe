@@ -118,7 +118,7 @@ static inline uint32_t read_SWDIO(void)
 
 static inline void quarter_clock_delay(void)
 {
-    // delay_us(swd_freq_delay);
+    delay_us(swd_freq_delay);
 
 /*
     volatile uint32_t cnt = swd_freq_delay;
@@ -126,13 +126,13 @@ static inline void quarter_clock_delay(void)
         cnt--;
     }
 */
-
+/*
     __asm__ __volatile__ ("nop");
     __asm__ __volatile__ ("nop");
     __asm__ __volatile__ ("nop");
     __asm__ __volatile__ ("nop");
     __asm__ __volatile__ ("nop");
-
+*/
 }
 
 #endif /* SRC_SWD_SWD_GPIO_H_ */
