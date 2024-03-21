@@ -15,6 +15,7 @@
 
 #include <stdbool.h>
 #include <string.h>
+#include <stdlib.h>
 #include "target_info.h"
 #include "arm/cortex-m.h"
 #include "target_actions.h"
@@ -24,6 +25,7 @@
 #include "swd.h"
 #include "arm/cortex-m.h"
 #include "walk.h"
+#include "cli.h"
 
 // RP2040:
 // Core 0: 0x01002927
@@ -77,6 +79,8 @@ static bool test_swd_v2(void);
 
 static walk_data_typ cur_walk;
 static bool checked_swdv1;
+static bool checked_swdv2;
+static bool single_location;
 static uint32_t step;
 static uint32_t location;
 
@@ -128,11 +132,30 @@ bool cmd_swd_test(uint32_t loop)
 {
     if(0 == loop)
     {
+        uint8_t* para_str = cli_get_parameter(0);
+        checked_swdv1 = false;
+        checked_swdv2 = false;
         step = 0;
         location = 0;
-        checked_swdv1 = false;
+        single_location = false;
         cur_walk.result = RESULT_OK;
         cur_walk.is_done = true;
+        if('1' == *para_str)
+        {
+            // SWDv1 only
+            checked_swdv2 = true;
+        }
+        else if('2' == *para_str)
+        {
+            // SWDv2 only
+            checked_swdv1 = true;
+            para_str = cli_get_parameter(1);
+            if(NULL != para_str)
+            {
+                location = (uint32_t)atoi((char*)para_str);
+                single_location = true;
+            }
+        }
         return false;
     }
     else
@@ -146,10 +169,14 @@ bool cmd_swd_test(uint32_t loop)
             // check if we can connect using SWDv1
             return test_swd_v1();
         }
-        else
+        else if(false == checked_swdv2)
         {
             // check if we can connect using SWDv1
             return test_swd_v2();
+        }
+        else
+        {
+            return true;
         }
     }
 }
@@ -246,6 +273,10 @@ static bool test_swd_v2(void)
             debug_line("ERROR: connect failed (%ld) !", cur_walk.result);
             location++;
             step = 0;
+            if(true == single_location)
+            {
+                return true;
+            }
         }
         return false;
     }
@@ -255,6 +286,10 @@ static bool test_swd_v2(void)
         {
             location++;
             step = 0;
+            if(true == single_location)
+            {
+                return true;
+            }
             return false;
         }
         else
@@ -262,6 +297,10 @@ static bool test_swd_v2(void)
             debug_line("ERROR: scan failed (%ld) !", cur_walk.result);
             location++;
             step = 0;
+            if(true == single_location)
+            {
+                return true;
+            }
             return false;
         }
     }

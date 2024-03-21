@@ -12,7 +12,8 @@
  * with this program; if not, see <http://www.gnu.org/licenses/>
  *
  */
-#include "cli.h"
+#include "probe_api/cli.h"
+#include "cli_priv.h"
 #include "cfg/cli_cfg.h"
 #include "cfg/cli_commands.h"
 #include <stdint.h>

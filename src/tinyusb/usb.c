@@ -46,7 +46,7 @@
 #include "hal/hw/USBCTRL_DPRAM.h"
 #include "hal/startup.h"
 #include "usb_cdc.h"
-#include "cli/cli.h"
+#include "cli/cli_priv.h"
 
 // TinyUSB:
 #include "tusb.h"

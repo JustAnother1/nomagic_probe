@@ -15,7 +15,7 @@
 #include <stdlib.h>
 
 #include "cli_memory.h"
-#include "cli.h"
+#include "probe_api/cli.h"
 #include "cli_cfg.h"
 #include "hal/flash.h"
 #include "hal/boot_rom.h"

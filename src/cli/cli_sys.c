@@ -19,7 +19,7 @@
 #include "hal/hw_divider.h"
 #include "hal/hw/TIMER.h"
 #include "hal/time_base.h"
-#include "cli.h"
+#include "probe_api/cli.h"
 #include "hal/watchdog.h"
 #include "hal/boot_rom.h"
 #include "hal/flash.h"

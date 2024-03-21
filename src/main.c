@@ -23,7 +23,7 @@
 #ifdef BOOT_ROM_ENABLED
 #include "hal/boot_rom.h"
 #endif
-#include "cli/cli.h"
+#include "cli/cli_priv.h"
 #include "hal/time_base.h"
 #include <stdint.h>
 #include "tinyusb/usb.h"
