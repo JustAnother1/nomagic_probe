@@ -68,8 +68,8 @@ void RTC_IRQ(void) __attribute__ ((weak, interrupt ("IRQ")));
 static void wake_up_core1(void);
 #endif
 _Noreturn void error_state(void) __attribute__ ((weak, __noreturn__));
-_Noreturn void Reset_Handler()__attribute__((__noreturn__, section(".third_stage_boot")));
-_Noreturn void Int_Handler()__attribute__((__noreturn__, section(".third_stage_boot")));
+_Noreturn void Reset_Handler(void)__attribute__((__noreturn__, section(".third_stage_boot")));
+_Noreturn void Int_Handler(void)__attribute__((__noreturn__, section(".third_stage_boot")));
 
 const VECTOR_FUNCTION_Type __STAGE_3_VECTOR_TABLE[64] __attribute__((used, section(".vectors")))
 = {
@@ -225,7 +225,7 @@ extern uint32_t __ro_data_in_flash;
 
 uint32_t file_system_start;
 
-_Noreturn void Int_Handler()
+_Noreturn void Int_Handler(void)
 {
     // No Interrupts during 3rd stage boot loader !!!
     __asm__ __volatile__ ("bkpt #0");
@@ -514,7 +514,7 @@ static void wake_up_core1(void)
 }
 #endif
 
-_Noreturn void Reset_Handler()
+_Noreturn void Reset_Handler(void)
 {
     /// !!! DO NOT CALL ANY FUNCTIONS BETWEEN THIS LINE
     uint32_t *code_start_p =  &__code_start;
