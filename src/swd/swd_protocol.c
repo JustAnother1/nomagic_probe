@@ -59,20 +59,14 @@ typedef struct{
 
 
 static swd_state_typ state;
-static uint32_t read_data;
-static uint32_t cycle_counter;
-static uint32_t ctrl_stat;
 
 static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint32_t* data, bool first_call, command_typ* cmd);
-static Result write_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint32_t data, bool first_call);
+static Result write_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint32_t data, bool first_call, command_typ* cmd);
 
 
 void swd_protocol_init(void)
 {
     memset(&state, 0, sizeof(state));
-    read_data = 0;
-    cycle_counter = 0;
-    ctrl_stat = 0;
     state.is_connected = false;
     state.is_minimal_debug_port = false;
     state.dp_version = 0;
@@ -175,6 +169,25 @@ bool swd_info(uint32_t which)
             }
             break;
 
+    case 12:
+    case 13:
+    case 14:
+    case 15:
+    case 16:
+    {
+        uint32_t read = 0;
+        Result res = swd_get_result((Result)(which - 11), &read);
+        if(ERR_NOT_COMPLETED == res)
+        {
+            debug_line("Result %ld : not ready !", which - 11);
+        }
+        else if(RESULT_OK == res)
+        {
+            debug_line("Result %ld : 0x%08lx !", which - 11, read);
+        }
+    }
+    break;
+
     default: done = true;
     }
     return done;
@@ -183,7 +196,6 @@ bool swd_info(uint32_t which)
 
 Result connect_handler(command_typ* cmd, bool first_call)
 {
-    static Result phase = 0;
     Result phase_result;
     bool multi = cmd->flag;
     uint32_t target = cmd->i_val;
@@ -191,11 +203,11 @@ Result connect_handler(command_typ* cmd, bool first_call)
     if(true == first_call)
     {
         state.mem_ap.ap_sel = cmd->i_val_2;
-        phase = 1;
+        cmd->phase = 1;
     }
 
 // Phase 1 (multi(SWDv2) only - disconnect)
-    if(1 == phase)
+    if(1 == cmd->phase)
     {
         if(true == multi)
         {
@@ -205,7 +217,7 @@ Result connect_handler(command_typ* cmd, bool first_call)
             {
                 state.is_connected = false;
                 state.last_activity_time_us = time_us_32();
-                phase = 2;
+                cmd->phase = 2;
             }
             else
             {
@@ -216,17 +228,17 @@ Result connect_handler(command_typ* cmd, bool first_call)
         else
         {
             // skip the multi only steps
-            phase = 4;
+            cmd->phase = 4;
         }
     }
 
 // Phase 2 (multi(SWDv2) only) JTAG->Dormant
-    if(2 == phase)
+    if(2 == cmd->phase)
     {
         phase_result = jtag_to_dormant_state_sequence();
         if(RESULT_OK == phase_result)
         {
-            phase = 3;
+            cmd->phase = 3;
         }
         else
         {
@@ -236,12 +248,12 @@ Result connect_handler(command_typ* cmd, bool first_call)
     }
 
 // Phase 3 (multi(SWDv2) only) Dormant -> SWD
-    if(3 == phase)
+    if(3 == cmd->phase)
     {
         phase_result = leave_dormant_state_to_swd_sequence();
         if(RESULT_OK == phase_result)
         {
-            phase = 4;
+            cmd->phase = 4;
         }
         else
         {
@@ -251,12 +263,12 @@ Result connect_handler(command_typ* cmd, bool first_call)
     }
 
 // Phase 4 line reset
-    if(4 == phase)
+    if(4 == cmd->phase)
     {
         phase_result = swd_packet_line_reset();
         if(RESULT_OK == phase_result)
         {
-            phase = 5;
+            cmd->phase = 5;
         }
         else
         {
@@ -266,14 +278,14 @@ Result connect_handler(command_typ* cmd, bool first_call)
     }
 
 // Phase 5 (multi(SWDv2) only) send TargetSelect Packet
-    if(5 == phase)
+    if(5 == cmd->phase)
     {
         if(true == multi)
         {
             phase_result = swd_packet_write(DP, ADDR_TARGETSEL, target);
             if(RESULT_OK == phase_result)
             {
-                phase = 6;
+                cmd->phase = 6;
             }
             else
             {
@@ -284,19 +296,19 @@ Result connect_handler(command_typ* cmd, bool first_call)
         else
         {
             // skip to next phase
-            phase = 6;
+            cmd->phase = 6;
         }
     }
 
 // Phase 6 read ID Register
-    if(6 == phase)
+    if(6 == cmd->phase)
     {
         debug_line("INFO: request reading ID Register!");
         phase_result = swd_packet_read(DP, ADDR_DPIDR);
         if(RESULT_OK < phase_result)
         {
-            cmd->transaction_id = phase_result;
-            phase = 7;
+            cmd->sub_transaction_id = phase_result;
+            cmd->phase = 7;
         }
         else if(RESULT_OK == phase_result)
         {
@@ -312,15 +324,15 @@ Result connect_handler(command_typ* cmd, bool first_call)
     }
 
 // Phase 7 parse data from ID Register
-    if(7 == phase)
+    if(7 == cmd->phase)
     {
-        phase_result = swd_packet_get_result(cmd->transaction_id, &read_data);
+        phase_result = swd_packet_get_result(cmd->sub_transaction_id, &(cmd->read_data));
         if(RESULT_OK == phase_result)
         {
             debug_line("INFO: Read ID Register!");
-            state.reg_DPIDR = read_data;
+            state.reg_DPIDR = cmd->read_data;
             state.is_connected = true;
-            if(0 != ((1<<16) & read_data))
+            if(0 != ((1<<16) & cmd->read_data))
             {
                 state.is_minimal_debug_port = true;
             }
@@ -328,8 +340,8 @@ Result connect_handler(command_typ* cmd, bool first_call)
             {
                 state.is_minimal_debug_port = false;
             }
-            state.dp_version = (read_data & 0xF000)>>12;  // bit 12 to 15
-            phase = 8;
+            state.dp_version = (cmd->read_data & 0xF000)>>12;  // bit 12 to 15
+            cmd->phase = 8;
         }
         else
         {
@@ -339,12 +351,12 @@ Result connect_handler(command_typ* cmd, bool first_call)
     }
 
 // Phase 8 clear all previous errors
-    if(8 == phase)
+    if(8 == cmd->phase)
     {
         phase_result = swd_packet_write(DP, ADDR_ABORT, 0x1f);
         if(RESULT_OK == phase_result)
         {
-            phase = 9;
+            cmd->phase = 9;
         }
         else
         {
@@ -355,13 +367,13 @@ Result connect_handler(command_typ* cmd, bool first_call)
 
 // Phase 9 Issue a debug power request (CTRL/STAT)
     // TODO maybe have an configuration option to only power up the debug part ad not the system. Might be relevant for low power systems that are sleeping.
-    if(9 == phase)
+    if(9 == cmd->phase)
     {
         phase_result = swd_packet_write(DP, ADDR_CTRL_STAT, 0x50000000);
         if(RESULT_OK == phase_result)
         {
-            phase = 10;
-            cycle_counter = 0;
+            cmd->phase = 10;
+            cmd->retry_counter = 0;
         }
         else
         {
@@ -373,13 +385,13 @@ Result connect_handler(command_typ* cmd, bool first_call)
 // Phase 9 + 10 : wait for debug part of chip to be powered on
 
 // Phase 10 read CTRL/STAT Register
-    if(10 == phase)
+    if(10 == cmd->phase)
     {
         phase_result = swd_packet_read(DP, ADDR_CTRL_STAT);
         if(0 < phase_result)
         {
-            cmd->transaction_id = phase_result;
-            phase = 11;
+            cmd->sub_transaction_id = phase_result;
+            cmd->phase = 11;
         }
         else if(RESULT_OK == phase_result)
         {
@@ -395,24 +407,24 @@ Result connect_handler(command_typ* cmd, bool first_call)
     }
 
 // Phase 11 parse data from CTRL/STAT Register
-    if(11 == phase)
+    if(11 == cmd->phase)
     {
-        phase_result = swd_packet_get_result(cmd->transaction_id, &read_data);
+        phase_result = swd_packet_get_result(cmd->sub_transaction_id, &(cmd->read_data));
         if(RESULT_OK == phase_result)
         {
-            cycle_counter++;
-            state.reg_CTRL_STAT = read_data;
-            if(0xf0000000 == (0xf0000000 & read_data))
+            cmd->retry_counter++;
+            state.reg_CTRL_STAT = cmd->read_data;
+            if(0xf0000000 == (0xf0000000 & cmd->read_data))
             {
                 // chip debug part is now powered on
-                phase = 12;
+                cmd->phase = 12;
             }
             else
             {
                 // not powered on yet -> try again
-                if(cycle_counter < MAX_WAIT_POWER_ON)
+                if(cmd->retry_counter < MAX_WAIT_POWER_ON)
                 {
-                    phase = 10;
+                    cmd->phase = 10;
                     return ERR_NOT_COMPLETED; // -> try again
                 }
                 else
@@ -430,21 +442,21 @@ Result connect_handler(command_typ* cmd, bool first_call)
     }
 
     // write CSW
-    if((12 == phase) || (13 == phase))
+    if((12 == cmd->phase) || (13 == cmd->phase))
     {
-        if(12 == phase)
+        if(12 == cmd->phase)
         {
-            phase_result = write_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, CSW_VAL, true);
-            phase = 13;
+            phase_result = write_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, CSW_VAL, true, cmd);
+            cmd->phase = 13;
         }
         else
         {
-            phase_result = write_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, CSW_VAL, false);
+            phase_result = write_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, CSW_VAL, false, cmd);
         }
         if(RESULT_OK == phase_result)
         {
             state.mem_ap.reg_CSW = CSW_VAL;
-            phase = 14;
+            cmd->phase = 14;
         }
         else
         {
@@ -453,20 +465,20 @@ Result connect_handler(command_typ* cmd, bool first_call)
     }
 
     // read CSW
-    if((14 == phase) || (15 == phase))
+    if((14 == cmd->phase) || (15 == cmd->phase))
     {
-        if(14 == phase)
+        if(14 == cmd->phase)
         {
-            phase_result = read_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, &read_data, true, cmd);
-            phase = 15;
+            phase_result = read_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, &(cmd->read_data), true, cmd);
+            cmd->phase = 15;
         }
         else
         {
-            phase_result = read_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, &read_data, false, cmd);
+            phase_result = read_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, &(cmd->read_data), false, cmd);
         }
         if(RESULT_OK == phase_result)
         {
-            phase = 16;
+            cmd->phase = 16;
             /*
             // test if AP is now enabled
             if(0 != (read_data & 0x40))
@@ -488,48 +500,47 @@ Result connect_handler(command_typ* cmd, bool first_call)
     }
 
 // Phase 16 - we are done
-    if(16 == phase)
+    if(16 == cmd->phase)
     {
         // done!
         swd_eingine_add_cmd_result(cmd->transaction_id, RESULT_OK);
         return RESULT_OK;
     }
 
-    debug_line("connect handler: invalid phase(%ld)!", phase);
+    debug_line("connect handler: invalid phase(%ld)!", cmd->phase);
     return ERR_WRONG_STATE;
 }
 
 Result write_handler(command_typ* cmd, bool first_call)
 {
-    static Result phase = 0;
     if(true == first_call)
     {
-        phase = 1;
+        cmd->phase = 1;
     }
 
-    if((1 == phase) || (2 == phase))
+    if((1 == cmd->phase) || (2 == cmd->phase))
     {
         if(cmd->address == state.mem_ap.reg_TAR)
         {
             // we can skip this step
-            phase = 3;
+            cmd->phase = 3;
         }
         else
         {
             Result res;
-            if(1 == phase)
+            if(1 == cmd->phase)
             {
-                res = write_ap_register(AP_BANK_TAR, AP_REGISTER_TAR, cmd->address, true);
-                phase = 2;
+                res = write_ap_register(AP_BANK_TAR, AP_REGISTER_TAR, cmd->address, true, cmd);
+                cmd->phase = 2;
             }
             else
             {
-                res = write_ap_register(AP_BANK_TAR, AP_REGISTER_TAR, cmd->address, false);
+                res = write_ap_register(AP_BANK_TAR, AP_REGISTER_TAR, cmd->address, false, cmd);
             }
             if(RESULT_OK == res)
             {
                 state.mem_ap.reg_TAR = cmd->address;
-                phase = 3;
+                cmd->phase = 3;
             }
             else
             {
@@ -538,17 +549,17 @@ Result write_handler(command_typ* cmd, bool first_call)
         }
     }
 
-    if((3 == phase) || (4 == phase))
+    if((3 == cmd->phase) || (4 == cmd->phase))
     {
         Result res;
-        if(3 == phase)
+        if(3 == cmd->phase)
         {
-            res = write_ap_register(AP_BANK_DRW, AP_REGISTER_DRW, cmd->i_val, true);
-            phase = 4;
+            res = write_ap_register(AP_BANK_DRW, AP_REGISTER_DRW, cmd->i_val, true, cmd);
+            cmd->phase = 4;
         }
         else
         {
-            res = write_ap_register(AP_BANK_DRW, AP_REGISTER_DRW, cmd->i_val, false);
+            res = write_ap_register(AP_BANK_DRW, AP_REGISTER_DRW, cmd->i_val, false, cmd);
         }
         return res;
     }
@@ -559,35 +570,34 @@ Result write_handler(command_typ* cmd, bool first_call)
 
 Result read_handler(command_typ* cmd, bool first_call)
 {
-    static Result phase = 0;
     if(true == first_call)
     {
-        phase = 1;
+        cmd->phase = 1;
     }
 
-    if((1 == phase) || (2 == phase))
+    if((1 == cmd->phase) || (2 == cmd->phase))
     {
         if(cmd->address == state.mem_ap.reg_TAR)
         {
             // we can skip this step
-            phase = 3;
+            cmd->phase = 3;
         }
         else
         {
             Result res;
-            if(1 == phase)
+            if(1 == cmd->phase)
             {
-                res = write_ap_register(AP_BANK_TAR, AP_REGISTER_TAR, cmd->address, true);
-                phase = 2;
+                res = write_ap_register(AP_BANK_TAR, AP_REGISTER_TAR, cmd->address, true, cmd);
+                cmd->phase = 2;
             }
             else
             {
-                res = write_ap_register(AP_BANK_TAR, AP_REGISTER_TAR, cmd->address, false);
+                res = write_ap_register(AP_BANK_TAR, AP_REGISTER_TAR, cmd->address, false, cmd);
             }
             if(RESULT_OK == res)
             {
                 state.mem_ap.reg_TAR = cmd->address;
-                phase = 3;
+                cmd->phase = 3;
             }
             else
             {
@@ -596,21 +606,21 @@ Result read_handler(command_typ* cmd, bool first_call)
         }
     }
 
-    if((3 == phase) || (4 == phase))
+    if((3 == cmd->phase) || (4 == cmd->phase))
     {
         Result res;
-        if(3 == phase)
+        if(3 == cmd->phase)
         {
-            res = read_ap_register(AP_BANK_DRW, AP_REGISTER_DRW, &read_data, true, cmd);
-            phase = 4;
+            res = read_ap_register(AP_BANK_DRW, AP_REGISTER_DRW, &(cmd->read_data), true, cmd);
+            cmd->phase = 4;
         }
         else
         {
-            res = read_ap_register(AP_BANK_DRW, AP_REGISTER_DRW, &read_data, false, cmd);
+            res = read_ap_register(AP_BANK_DRW, AP_REGISTER_DRW, &(cmd->read_data), false, cmd);
         }
         if(RESULT_OK == res)
         {
-            swd_eingine_add_cmd_result(cmd->transaction_id, read_data);
+            swd_eingine_add_cmd_result(cmd->transaction_id, cmd->read_data);
         }
         return res;
     }
@@ -624,15 +634,15 @@ Result read_reg_handler(command_typ* cmd, bool first_call)
     Result res;
     if(true == first_call)
     {
-        res = read_ap_register(cmd->i_val, cmd->i_val_2, &read_data, true, cmd);
+        res = read_ap_register(cmd->i_val, cmd->i_val_2, &(cmd->read_data), true, cmd);
     }
     else
     {
-        res = read_ap_register(cmd->i_val, cmd->i_val_2, &read_data, false, cmd);
+        res = read_ap_register(cmd->i_val, cmd->i_val_2, &(cmd->read_data), false, cmd);
     }
     if(RESULT_OK == res)
     {
-        swd_eingine_add_cmd_result(cmd->transaction_id, read_data);
+        swd_eingine_add_cmd_result(cmd->transaction_id, cmd->read_data);
     }
     return res;
 }
@@ -642,11 +652,11 @@ Result write_reg_handler(command_typ* cmd, bool first_call)
     Result res;
     if(true == first_call)
     {
-        res = write_ap_register(cmd->i_val, cmd->i_val_1, cmd->i_val_2, true);
+        res = write_ap_register(cmd->i_val, cmd->i_val_1, cmd->i_val_2, true, cmd);
     }
     else
     {
-        res = write_ap_register(cmd->i_val, cmd->i_val_1, cmd->i_val_2, false);
+        res = write_ap_register(cmd->i_val, cmd->i_val_1, cmd->i_val_2, false, cmd);
     }
     return res;
 }
@@ -655,15 +665,14 @@ Result write_reg_handler(command_typ* cmd, bool first_call)
 
 static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint32_t* data, bool first_call, command_typ* cmd)
 {
-    static Result phase = 0;
     Result phase_result;
 
     if(true == first_call)
     {
-        phase = 1;
+        cmd->sub_phase = 1;
     }
 
-    if(1 == phase)
+    if(1 == cmd->sub_phase)
     {
         uint32_t req_select = (ap_bank_reg << 4) | (state.mem_ap.ap_sel <<24);
         if(req_select != state.reg_SELECT)
@@ -672,7 +681,7 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
             if(RESULT_OK == phase_result)
             {
                 state.reg_SELECT = req_select;
-                phase = 2;
+                cmd->sub_phase = 2;
             }
             else
             {
@@ -682,18 +691,18 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
         }
         else
         {
-            phase = 2;
+            cmd->sub_phase = 2;
         }
     }
 
 // Phase 2 read AP Register
-    if(2 == phase)
+    if(2 == cmd->sub_phase)
     {
         phase_result = swd_packet_read(AP, ap_register);
         if(0 < phase_result)
         {
-            cmd->transaction_id = phase_result;
-            phase = 3;
+            cmd->sub_transaction_id = phase_result;
+            cmd->sub_phase = 3;
         }
         else if(RESULT_OK == phase_result)
         {
@@ -709,12 +718,12 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
     }
 
 // Phase 3 receive data from AP register read
-    if(3 == phase)
+    if(3 == cmd->sub_phase)
     {
-        phase_result = swd_packet_get_result(cmd->transaction_id, data);
+        phase_result = swd_packet_get_result(cmd->sub_transaction_id, data);
         if(RESULT_OK == phase_result)
         {
-            phase = 4;
+            cmd->sub_phase = 4;
         }
         else
         {
@@ -724,13 +733,13 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
     }
 
 // Phase 4 read CTRL/STAT Register
-    if(4 == phase)
+    if(4 == cmd->sub_phase)
     {
         phase_result = swd_packet_read(DP, ADDR_CTRL_STAT);
         if(0 < phase_result)
         {
-            cmd->transaction_id = phase_result;
-            phase = 5;
+            cmd->sub_transaction_id = phase_result;
+            cmd->sub_phase = 5;
         }
         else if(RESULT_OK == phase_result)
         {
@@ -746,18 +755,18 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
     }
 
 // Phase 5 parse data from CTRL/STAT Register
-    if(5 == phase)
+    if(5 == cmd->sub_phase)
     {
-        phase_result = swd_packet_get_result(cmd->transaction_id, &ctrl_stat);
+        phase_result = swd_packet_get_result(cmd->sub_transaction_id, &(state.reg_CTRL_STAT));
         if(RESULT_OK == phase_result)
         {
-            if(0 == (ctrl_stat & 0x40))
+            if(0 == (state.reg_CTRL_STAT & 0x40))
             {
-                debug_line("CTRL/STAT 0x%08lx", ctrl_stat);
+                debug_line("CTRL/STAT 0x%08lx", state.reg_CTRL_STAT);
                 debug_line("SWD:AP(%ld): AP read failed", state.mem_ap.ap_sel);
                 return ERR_TARGET_ERROR;
             }
-            phase = 6;
+            cmd->sub_phase = 6;
         }
         else
         {
@@ -768,13 +777,13 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
 
 
 // Phase 6 read RDBUFF Register
-    if(6 == phase)
+    if(6 == cmd->sub_phase)
     {
         phase_result = swd_packet_read(DP, ADDR_RDBUFF);
         if(0 < phase_result)
         {
-            cmd->transaction_id = phase_result;
-            phase = 7;
+            cmd->sub_transaction_id = phase_result;
+            cmd->sub_phase = 7;
         }
         else if(RESULT_OK == phase_result)
         {
@@ -790,27 +799,27 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
     }
 
 // Phase 7 parse data from RDBUFF Register
-    if(7== phase)
+    if(7== cmd->sub_phase)
     {
-        phase_result = swd_packet_get_result(cmd->transaction_id, data);
+        phase_result = swd_packet_get_result(cmd->sub_transaction_id, data);
         if(ERR_NOT_COMPLETED == phase_result)
         {
             return ERR_NOT_COMPLETED; // -> try again
         }
         else if(RESULT_OK == phase_result)
         {
-            phase = 8;
+            cmd->sub_phase = 8;
         }
         else
         {
             // some other error
-            debug_line("swd:read_result failed err:%ld, trID:%ld ", phase_result, cmd->transaction_id);
+            debug_line("swd:read_result failed err:%ld, trID:%ld ", phase_result, cmd->sub_transaction_id);
             return phase_result;
         }
     }
 
 // Phase 8 - we are done
-    if(8 == phase)
+    if(8 == cmd->sub_phase)
     {
         // done!
         return RESULT_OK;
@@ -820,17 +829,16 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
     return ERR_WRONG_STATE;
 }
 
-static Result write_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint32_t data, bool first_call)
+static Result write_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint32_t data, bool first_call, command_typ* cmd)
 {
-    static Result phase = 0;
     Result phase_result;
 
     if(true == first_call)
     {
-        phase = 1;
+        cmd->sub_phase = 1;
     }
 
-    if(1 == phase)
+    if(1 == cmd->sub_phase)
     {
         uint32_t req_select = (ap_bank_reg << 4) | (state.mem_ap.ap_sel <<24);
         if(req_select != state.reg_SELECT)
@@ -839,7 +847,7 @@ static Result write_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint
             if(RESULT_OK == phase_result)
             {
                 state.reg_SELECT = req_select;
-                phase = 2;
+                cmd->sub_phase = 2;
             }
             else
             {
@@ -849,17 +857,17 @@ static Result write_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint
         }
         else
         {
-            phase = 2;
+            cmd->sub_phase = 2;
         }
     }
 
 // Phase 2 write to AP register
-    if(2 == phase)
+    if(2 == cmd->sub_phase)
     {
         phase_result = swd_packet_write(AP, ap_register, data);
         if(RESULT_OK == phase_result)
         {
-            phase = 3;
+            cmd->sub_phase = 3;
         }
         else
         {
@@ -869,7 +877,7 @@ static Result write_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint
     }
 
 // Phase 3 - we are done
-    if(3 == phase)
+    if(3 == cmd->sub_phase)
     {
         // done!
         return RESULT_OK;

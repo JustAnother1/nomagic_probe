@@ -160,6 +160,7 @@ bool cmd_swd_test(uint32_t loop)
     }
     else
     {
+        // TODO  check timeout
         if(false == cur_walk.is_done)
         {
             return false;

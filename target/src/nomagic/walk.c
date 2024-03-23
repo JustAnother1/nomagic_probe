@@ -229,6 +229,7 @@ static void handle_scan(walk_data_typ* data)
         cur_step.par_i_0 = AP_BANK_IDR;
         cur_step.par_i_1 = AP_REGISTER_IDR;
         cur_step.phase = 0;
+        cur_step.result = RESULT_OK;
         cur_step.is_done = false;
         data->phase++;
     }
@@ -236,18 +237,20 @@ static void handle_scan(walk_data_typ* data)
     {
         if(RESULT_OK == cur_step.result)
         {
+            debug_line("scan AP result OK");
             if(0 != cur_step.read_0)
             {
                 // found an AP
                 Result tres;
                 if(2 == data->phase)
                 {
-                    tres = check_AP(cur_step.read_0, true, &(data->intern_0));
+                    debug_line("Found AP !");
+                    tres = check_AP(cur_step.read_0, true, &(data->sub_phase));
                     data->phase = 3;
                 }
                 else
                 {
-                    tres = check_AP(cur_step.read_0, false, &(data->intern_0));
+                    tres = check_AP(cur_step.read_0, false, &(data->sub_phase));
                 }
                 (void)tres;
                 data->intern_0++;

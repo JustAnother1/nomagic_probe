@@ -32,12 +32,17 @@ typedef enum {
 
 typedef struct{
     order_typ order;
-    bool flag;
     uint32_t address;
     uint32_t i_val;
     uint32_t i_val_1;
     uint32_t i_val_2;
     Result transaction_id;
+    Result sub_transaction_id;
+    uint32_t phase;
+    uint32_t sub_phase;
+    uint32_t retry_counter;
+    uint32_t read_data;
+    bool flag;
 } command_typ;
 
 // parameter phase value is:

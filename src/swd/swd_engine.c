@@ -63,6 +63,12 @@ static bool has_error;
 
 void swd_init(void)
 {
+    uint32_t i;
+    for(i = 0; i < CMD_QUEUE_LENGTH;i++)
+    {
+        cmd_result_data_available[i] = false;
+        cmd_result_data[i] = 0;
+    }
     swd_reset_error_condition();
     swd_protocol_init();
 }
@@ -259,7 +265,16 @@ Result swd_get_result(Result transaction, uint32_t* data)
 
 void swd_eingine_add_cmd_result(Result idx, uint32_t data)
 {
+    if((idx < 1) || (idx > CMD_QUEUE_LENGTH))
+    {
+        // 0 or negative values are not valid
+        debug_line("swd_eingine_add_cmd_result() : ERR_INVALID_TRANSACTION_ID");
+        return;
+    }
+    idx = idx -1;
     cmd_result_data[idx] = data;
+    cmd_result_data_available[idx] = true;
+
 }
 
 static uint32_t next_cmd_result_slot(void)
@@ -267,6 +282,11 @@ static uint32_t next_cmd_result_slot(void)
     uint32_t res = cmd_result_data_write;
     cmd_result_data_available[res] = false;
     cmd_result_data_write++;
+    if(CMD_QUEUE_LENGTH == cmd_result_data_write)
+    {
+        cmd_result_data_write = 0;
+    }
+    res = res + 1;
     return res;
 }
 
