@@ -26,7 +26,6 @@
 
 static uint8_t line_buffer[MAX_LINE_LENGTH];
 static uint32_t line_pos;
-static uint32_t parse_pos;
 static uint32_t parameter_pos;
 static uint32_t num_calls;
 static bool last_was_n;
@@ -37,7 +36,7 @@ static cmd_func_typ cur_func;
 static uint8_t* parameters[MAX_PARAMETERS];
 
 static void parse(void);
-static void execute(void);
+static void execute(char* line);
 
 
 void cli_init(void)
@@ -50,7 +49,6 @@ void cli_init(void)
     last_was_n = false;
     last_was_r = false;
     line_pos = 0;
-    parse_pos = 0;
     parameter_pos = 0;
     num_calls = 0;
     found_end = false;
@@ -96,7 +94,6 @@ void cli_tick(void)
         }
         }
         line_pos = 0;
-        parse_pos = 0;
         parameter_pos = 0;
         num_calls = 0;
         found_end = false;
@@ -166,15 +163,25 @@ uint8_t* cli_get_parameter(uint32_t parameter_index)
 
 static void parse()
 {
+    bool at_start = true;
+    uint8_t* line = line_buffer;
     uint32_t i;
-    for(i = parse_pos; i < line_pos; i++)
+    for(i = 0; i < line_pos; i++)
     {
         switch(line_buffer[i])
         {
-        case ' ' :  line_buffer[i] = 0;
-                    last_was_n = false;
-                    last_was_r = false;
-                    found_end = true;
+        case ' ' :  if(false == at_start)
+                    {
+                        line_buffer[i] = 0;
+                        last_was_n = false;
+                        last_was_r = false;
+                        found_end = true;
+                    }
+                    else
+                    {
+                        // white space at beginning -> ignore
+                        line = &line_buffer[i + 1];
+                    }
                     break;
 
         case '\r' : line_buffer[i] = 0;
@@ -183,16 +190,17 @@ static void parse()
                         if(true == last_was_r)
                         {
                             // \r\n\r -> next prompt
-                            execute();
+                            execute((char*)line);
                             last_was_n = false;
                         }
                         // else no prompt as \n\r
                     }
                     else
                     {
-                        execute();
+                        execute((char*)line);
                     }
                     last_was_r = true;
+                    at_start = false;
                     break;
 
         case '\n' : line_buffer[i] = 0;
@@ -201,16 +209,17 @@ static void parse()
                         if(true == last_was_n)
                         {
                             // \r\n\r -> next prompt
-                            execute();
+                            execute((char*)line);
                             last_was_r = false;
                         }
                         // else no prompt as \r\n
                     }
                     else
                     {
-                        execute();
+                        execute((char*)line);
                     }
                     last_was_n = true;
+                    at_start = false;
                     break;
 
         default:    last_was_n = false;
@@ -225,14 +234,15 @@ static void parse()
                         found_end = false;
                         parameter_pos++;
                     }
+                    at_start = false;
                     break;
         }
     }
 }
 
-static void execute(void)
+static void execute(char* line)
 {
-    uint32_t len = strlen((char*)line_buffer);
+    uint32_t len = strlen(line);
     if(0 != len)
     {
         uint32_t i;
@@ -246,7 +256,7 @@ static void execute(void)
         {
             if(len >= strlen(commands[i].name))
             {
-                if(0 == strncmp(commands[i].name, (char*)line_buffer, len))
+                if(0 == strncmp(commands[i].name, line, len))
                 {
                     found = true;
                     break;
@@ -257,8 +267,8 @@ static void execute(void)
         }
         if((false == found) || (i >= NUM_COMMANDS))
         {
-            uint8_t* c = line_buffer;
-            debug_msg("Invalid command (%s) [", (char*)line_buffer);
+            uint8_t* c = (uint8_t*)line;
+            debug_msg("Invalid command (%s) [", line);
             while(*c != 0)
             {
                 debug_msg(" %02x", *c);
@@ -296,7 +306,6 @@ static void execute(void)
         }
     }
     line_pos = 0;
-    parse_pos = 0;
     parameter_pos = 0;
     found_end = false;
     still_executing = false;
