@@ -126,10 +126,6 @@ void walk_execute(walk_data_typ* data)
                 wait_for_wrap_around = false;
             }
         }
-        else
-        {
-            // we are done !
-        }
     }
 }
 
@@ -251,22 +247,33 @@ static void handle_scan(walk_data_typ* data)
     {
         if(RESULT_OK == cur_step.result)
         {
-            debug_line("scan AP result OK");
-            if(0 != cur_step.read_0)
+            // found an AP
+            Result tres;
+            if(2 == data->phase)
             {
-                // found an AP
-                Result tres;
-                if(2 == data->phase)
+                if(0 != cur_step.read_0)
                 {
                     debug_line("Found AP !");
-                    tres = check_AP(cur_step.read_0, true, &(data->sub_phase));
+                    data->intern_1 = cur_step.read_0;
+                    tres = check_AP(data->intern_1, true, &(data->sub_phase));
                     data->phase = 3;
                 }
                 else
                 {
-                    tres = check_AP(cur_step.read_0, false, &(data->sub_phase));
+                    // no more APs in this device
+                    debug_line("AP %ld: IDR = 0", data->intern_0);
+                    swd_protocol_set_AP_sel(data->intern_0 -1); // use the last good AP
+                    debug_line("Done!");
+                    data->result = RESULT_OK;
+                    data->is_done = true;
                 }
-                (void)tres;
+            }
+            else
+            {
+                tres = check_AP(data->intern_1, false, &(data->sub_phase));
+            }
+            if(RESULT_OK == tres)
+            {
                 data->intern_0++;
                 if(256 > data->intern_0)
                 {
@@ -279,13 +286,14 @@ static void handle_scan(walk_data_typ* data)
                     data->is_done = true;
                 }
             }
+            else if(ERR_NOT_COMPLETED == tres)
+            {
+                // try again
+            }
             else
             {
-                // no more APs in this device
-                debug_line("AP %ld: IDR = 0", data->intern_0);
-                swd_protocol_set_AP_sel(data->intern_0 -1); // use the last good AP
-                debug_line("Done!");
-                data->result = RESULT_OK;
+                // step failed
+                data->result = cur_step.result;
                 data->is_done = true;
             }
         }
@@ -297,19 +305,6 @@ static void handle_scan(walk_data_typ* data)
         }
     }
 }
-
-/*
-static Result check_AP(uint32_t idr, bool first_call)
-{
-    (void) idr;
-    (void) first_call;
-    return RESULT_OK;
-}
-
-
-
-static uint32_t reg_data;  // TODO sort these out
-*/
 
 static Result check_AP(uint32_t idr, bool first_call, uint32_t * phase)
 {
@@ -327,188 +322,195 @@ static Result check_AP(uint32_t idr, bool first_call, uint32_t * phase)
             debug_line("AP: IDR: variant:  %ld", (idr & (0xf<<4))>>4 );
             debug_line("AP: IDR: type:     %ld", (idr & 0xf) );
             *phase = 1;
-            // return ERR_NOT_COMPLETED;
+            return ERR_NOT_COMPLETED;
         }
-        return RESULT_OK; // done with this AP
-/*
-        if((1 == phase) || (2 == phase))
+        else if(1 == *phase)
         {
-            Result res;
-            if(1 == phase)
+            cur_step.type = STEP_AP_REG_READ;
+            cur_step.par_i_0 = AP_BANK_CSW;
+            cur_step.par_i_1 = AP_REGISTER_CSW;
+            cur_step.phase = 0;
+            cur_step.result = RESULT_OK;
+            cur_step.is_done = false;
+            *phase = 2;
+            return ERR_NOT_COMPLETED;
+        }
+        else if(2 == *phase)
+        {
+            if(RESULT_OK == cur_step.result)
             {
-                res = read_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, &reg_data, true);
-                phase = 2;
-            }
-            else
-            {
-                res = read_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, &reg_data, false);
-            }
-            if(RESULT_OK == res)
-            {
-                debug_line("AP: CSW  : 0x%08lx", reg_data);
-                state.mem_ap.reg_CSW = reg_data;
+                // found an AP
+                debug_line("AP: CSW  : 0x%08lx", cur_step.read_0);
 
                 // change CSW !!!
-                reg_data = reg_data & ~0x3ful; // no auto address increment
-                reg_data = reg_data | 0x80000002; // DbgSwEnable + data size = 32bit
-                phase = 3;
+                cur_step.read_0 = cur_step.read_0 & ~0x3ful; // no auto address increment
+                cur_step.read_0 = cur_step.read_0 | 0x80000002; // DbgSwEnable + data size = 32bit
+
+                // write CSW
+                cur_step.type = STEP_AP_REG_WRITE;
+                cur_step.par_i_0 = AP_BANK_CSW;
+                cur_step.par_i_1 = AP_REGISTER_CSW;
+                cur_step.par_i_1 = cur_step.read_0;
+                cur_step.read_0 = 0;
+                cur_step.phase = 0;
+                cur_step.result = RESULT_OK;
+                cur_step.is_done = false;
+                *phase = 3;
                 return ERR_NOT_COMPLETED;
             }
             else
             {
-                return res;
+                // step failed
+                debug_line("Failed to read CSW (%ld) !", cur_step.result);
+                return cur_step.result;
             }
         }
 
-        if((3 == phase) || (4 == phase))
+        else if(3 == *phase)
         {
-            Result res;
-            if(3 == phase)
+            if(RESULT_OK == cur_step.result)
             {
-                res = write_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, reg_data, true);
-                phase = 4;
-            }
-            else
-            {
-                res = write_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, reg_data, false);
-            }
-            if(RESULT_OK == res)
-            {
-                phase = 5;
+                cur_step.type = STEP_AP_REG_READ;
+                cur_step.par_i_0 = AP_BANK_BASE;
+                cur_step.par_i_1 = AP_REGISTER_BASE;
+                cur_step.phase = 0;
+                cur_step.result = RESULT_OK;
+                cur_step.is_done = false;
+                *phase = 4;
                 return ERR_NOT_COMPLETED;
             }
             else
             {
-                return res;
+                // step failed
+                debug_line("Failed to write CSW (%ld) !", cur_step.result);
+                return cur_step.result;
             }
         }
 
-        if((5 == phase) || (6 == phase))
+        else if(4 == *phase)
         {
-            Result res;
-            if(5 == phase)
+            if(RESULT_OK == cur_step.result)
             {
-                res = read_ap_register(AP_BANK_BASE, AP_REGISTER_BASE, &reg_data, true);
-                phase = 6;
+                debug_line("AP: BASE : 0x%08lx", cur_step.read_0);
+                debug_line("AP: ROM Table starts at 0x%08lx", cur_step.read_0 & 0xfffffffc); // lowest two bits are 0. (4 Byte = 32 bit alignment)
+                cur_step.type = STEP_AP_REG_READ;
+                cur_step.par_i_0 = AP_BANK_CFG;
+                cur_step.par_i_1 = AP_REGISTER_CFG;
+                cur_step.phase = 0;
+                cur_step.result = RESULT_OK;
+                cur_step.is_done = false;
+                *phase = 5;
+                return ERR_NOT_COMPLETED;
             }
             else
             {
-                res = read_ap_register(AP_BANK_BASE, AP_REGISTER_BASE, &reg_data, false);
-            }
-            if(RESULT_OK == res)
-            {
-                debug_line("AP: BASE : 0x%08lx", reg_data);
-                state.mem_ap.reg_BASE = reg_data;
-                phase = 7;
-            }
-            else
-            {
-                return res;
+                // step failed
+                debug_line("Failed to read BASE (%ld) !", cur_step.result);
+                return cur_step.result;
             }
         }
 
-        if((7 == phase) || (8 == phase))
+        else if(5 == *phase)
         {
-            Result res;
-            if(7 == phase)
+            if(RESULT_OK == cur_step.result)
             {
-                res = read_ap_register(AP_BANK_CFG, AP_REGISTER_CFG, &reg_data, true);
-                phase = 8;
-            }
-            else
-            {
-                res = read_ap_register(AP_BANK_CFG, AP_REGISTER_CFG, &reg_data, false);
-            }
-            if(RESULT_OK == res)
-            {
-                debug_line("AP: CFG  : 0x%08lx", reg_data);
-                if(0 == (reg_data & 0x02))
+                bool val;
+                debug_line("AP: CFG  : 0x%08lx", cur_step.read_0);
+                if(0 == (cur_step.read_0 & 0x02))
                 {
-                    state.mem_ap.long_address_support = false;
+                    val = false;
                 }
                 else
                 {
-                    state.mem_ap.long_address_support = true;
+                    val = true;
                 }
-                if(0 == (reg_data & 0x04))
+                debug_line("long address supported = %d", val);
+
+                if(0 == (cur_step.read_0 & 0x04))
                 {
-                    state.mem_ap.large_data_support = false;
+                    val = false;
                 }
                 else
                 {
-                    state.mem_ap.large_data_support = true;
+                    val = true;
                 }
-                phase = 9;
+                debug_line("large data supported = %d", val);
+
+                cur_step.type = STEP_AP_REG_READ;
+                cur_step.par_i_0 = AP_BANK_CFG1;
+                cur_step.par_i_1 = AP_REGISTER_CFG1;
+                cur_step.phase = 0;
+                cur_step.result = RESULT_OK;
+                cur_step.is_done = false;
+                *phase = 6;
+                return ERR_NOT_COMPLETED;
             }
             else
             {
-                return res;
+                // step failed
+                debug_line("Failed to read CFG (%ld) !", cur_step.result);
+                return cur_step.result;
             }
         }
 
-        if((9 == phase) || (10 == phase))
+        else if(6 == *phase)
         {
-            Result res;
-            if(9 == phase)
+            if(RESULT_OK == cur_step.result)
             {
-                res = read_ap_register(AP_BANK_CFG1, AP_REGISTER_CFG1, &reg_data, true);
-                phase = 10;
+                debug_line("AP: CFG1 : 0x%08lx", cur_step.read_0);
+
+                // TODO read ROM Table
+                // ROM Table:
+                // ==========
+                // each 32bit Entry is defined as:
+                // bit 31-12: Address Offset _signed_ base address offset relative to the ROM table base address
+                // bit 11-2: reserved
+                // bit 1: Format: 0= 8 bit format(not used); 1= 32bit format.
+                // bit 0: Entry present: 0= ignore this entry; 1= valid entry
+                // entry 0x00000000 marks end of table!
+
+                // actual table: (rp2040 @ 0xe00ff003) = BASE & 0xfffffffc; // lowest two bits are 0.
+                // offset, name,   value,                    description
+                // ------  ----    -----                     -----------
+                // 0,      SCS,    0xfff0f003,               points to the SCS @ 0xe000e000.
+                // 4,      ROMDWT, 0xfff02002 or 0xfff02003, points to DWT @ 0xe0001000 bit0 is 1 if DWT is fitted.
+                // 8,      ROMBPU, 0xfff03002 or 0xfff03003, points to the BPU @ 0xe0002000 bit 0 is set if BPU is fitted.
+                // 0xc,    End,    0x00000000,               End of table marker.
+
+
+                 // i = 0
+                 // do{
+                 //  read memory @ Base & 0xfffffffc + 4*i
+                 //  i = 0 -> SCS
+                 //  i = 1 -> ROMDWT
+                 //  i = 2 -> ROMBPU
+                 // } while(i < 1024 and read != 0)
+
+                // TODO read ROM Table from address pointed to by BASE Register (Architecture P 318)
+                // TODO check number of Break Points
+                // TODO check number of Watch points
+                *phase = 7;
+                return ERR_NOT_COMPLETED;
             }
             else
             {
-                res = read_ap_register(AP_BANK_CFG1, AP_REGISTER_CFG1, &reg_data, false);
-            }
-            if(RESULT_OK == res)
-            {
-                debug_line("AP: CFG1 : 0x%08lx", reg_data);
-                phase = 11;
-            }
-            else
-            {
-                return res;
+                // step failed
+                debug_line("Failed to read CFG1 (%ld) !", cur_step.result);
+                return cur_step.result;
             }
         }
 
-        if(11 == phase)
+        else if(7 == *phase)
         {
-            // TODO read ROM Table
-            // ROM Table:
-            // ==========
-            // each 32bit Entry is defined as:
-            // bit 31-12: Address Offset _signed_ base address offset relative to the ROM table base address
-            // bit 11-2: reserved
-            // bit 1: Format: 0= 8 bit format(not used); 1= 32bit format.
-            // bit 0: Entry present: 0= ignore this entry; 1= valid entry
-            // entry 0x00000000 marks end of table!
-
-            // actual table: (rp2040 @ 0xe00ff003) = BASE & 0xfffffffc; // lowest two bits are 0.
-            // offset, name,   value,                    description
-            // ------  ----    -----                     -----------
-            // 0,      SCS,    0xfff0f003,               points to the SCS @ 0xe000e000.
-            // 4,      ROMDWT, 0xfff02002 or 0xfff02003, points to DWT @ 0xe0001000 bit0 is 1 if DWT is fitted.
-            // 8,      ROMBPU, 0xfff03002 or 0xfff03003, points to the BPU @ 0xe0002000 bit 0 is set if BPU is fitted.
-            // 0xc,    End,    0x00000000,               End of table marker.
-
-
-             // i = 0
-             // do{
-             //  read memory @ Base & 0xfffffffc + 4*i
-             //  i = 0 -> SCS
-             //  i = 1 -> ROMDWT
-             //  i = 2 -> ROMBPU
-             // } while(i < 1024 and read != 0)
-
-            // TODO read ROM Table from address pointed to by BASE Register (Architecture P 318)
-            // TODO check number of Break Points
-            // TODO check number of Watch points
-
+            debug_line("Done with this AP!");
             return RESULT_OK; // done with this AP
         }
-
-        // phase has invalid value
-        debug_line("check ap: invalid phase!");
-        return (Result)ERR_WRONG_STATE;
-        */
+        else
+        {
+            // phase has invalid value
+            debug_line("check ap: invalid phase (%ld)!", *phase);
+            return ERR_WRONG_STATE;
+        }
     }
     else if(9 == class)
     {
