@@ -361,8 +361,13 @@ all: $(BIN_FOLDER)$(PROJECT).uf2
 	@echo "===="
 	$(SIZE) --format=GNU $(BIN_FOLDER)$(PROJECT).elf
 
-	
-$(BIN_FOLDER)%o: %c $(BIN_FOLDER)version.h
+$(BIN_FOLDER)$(SRC_FOLDER)cli/cli.o: $(SRC_FOLDER)cli/cli.c $(BIN_FOLDER)version.h
+	@echo ""
+	@echo "=== compiling $@"
+	@$(MKDIR_P) $(@D)
+	$(CC) $(CFLAGS) $(DDEFS) $(INCDIR) $< -o $@
+
+$(BIN_FOLDER)%o: %c
 	@echo ""
 	@echo "=== compiling $@"
 	@$(MKDIR_P) $(@D)
