@@ -1,7 +1,7 @@
 #include "munit.h"
 #include <stdint.h>
 #include <stdbool.h>
-#include "../src/cli/cli.h"
+#include "../src/probe_api/cli.h"
 #include "../src/lib/printf.h"
 #include "cli_tests.h"
 #include "usb_msc_tests.h"

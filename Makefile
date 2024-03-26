@@ -253,7 +253,7 @@ INCDIR = $(patsubst %,-I%, $(INCDIRS))
 # =======================
 
 TST_LFLAGS = -lgcov --coverage
-TST_CFLAGS =  -c -Wall -Wextra -g3 -fprofile-arcs -ftest-coverage -Wno-int-to-pointer-cast -Wno-implicit-function-declaration
+TST_CFLAGS =  -c -Wall -Wextra -g3 -fprofile-arcs -ftest-coverage -Wno-int-to-pointer-cast -Wno-implicit-function-declaration -Wno-format
 TST_DDEFS = -DUNIT_TEST=1
 TST_DDEFS += -DFEAT_DEBUG_UART
 TST_INCDIRS = tests/
@@ -387,6 +387,13 @@ doc:
 	@echo "doxygen"
 	@echo "========"
 	doxygen
+
+tests/bin/src/cli/cli.o: src/cli/cli.c
+	@echo ""
+	@echo "=== compiling (tests) $@"
+	@$(MKDIR_P) $(@D)
+	@echo "#define VERSION \"x.x.x\"" > tests/bin/version.h
+	$(TST_CC) $(TST_CFLAGS) $(TST_DDEFS) $(TST_INCDIR) $< -o $@
 
 tests/bin/%o: %c
 	@echo ""
