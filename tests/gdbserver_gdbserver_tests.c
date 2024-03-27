@@ -19,20 +19,17 @@
 #include "../src/gdbserver/gdbserver.h"
 #include "mocks.h"
 
+extern uint8_t send_buf[TST_SEND_BUFFER_SIZE];
+
 void* gdbserver_gdbserver_setup(const MunitParameter params[], void* user_data)
 {
     (void)params;
     (void)user_data;
-    return NULL;
 
-    recv_read_pos = 0;
-    recv_write_pos = 0;
-    send_read_pos = 0;
-    send_write_pos = 0;
-
-    memset(send_buf, 0, SEND_BUFFER_SIZE);
+    reset_send_receive_buffers();
 
     gdbserver_init();
+    return NULL;
 }
 
 
@@ -46,10 +43,8 @@ MunitResult test_gdbserver_empty_packet(const MunitParameter params[], void* use
     reply_packet_prepare();  // adds "$"
     reply_packet_send();   // adds "#xx
 
-    munit_assert_uint32(0, ==, recv_read_pos);
-    munit_assert_uint32(0, ==, recv_write_pos);
-    munit_assert_uint32(0, ==, send_read_pos);
-    munit_assert_uint32(4, ==, send_write_pos);
+    munit_assert_uint32(4, ==, get_num_bytes_in_send_buffer());
+    munit_assert_uint32(0, ==, get_num_bytes_in_recv_buffer());
     // printf("\n%s\n", send_buf);
     munit_assert_uint32(send_buf[0], ==, '$');
     munit_assert_uint32(send_buf[1], ==, '#');
@@ -72,10 +67,8 @@ MunitResult test_gdbserver_hex(const MunitParameter params[], void* user_data)
     reply_packet_send();   // adds "#xx
 
     // printf("\n%s\n", send_buf);
-    munit_assert_uint32(0, ==, recv_read_pos);
-    munit_assert_uint32(0, ==, recv_write_pos);
-    munit_assert_uint32(0, ==, send_read_pos);
-    munit_assert_uint32(6, ==, send_write_pos);
+    munit_assert_uint32(6, ==, get_num_bytes_in_send_buffer());
+    munit_assert_uint32(0, ==, get_num_bytes_in_recv_buffer());
     munit_assert_uint32(send_buf[0], ==, '$');
     munit_assert_uint32(send_buf[1], ==, '2');
     munit_assert_uint32(send_buf[2], ==, 'a');
@@ -98,10 +91,8 @@ MunitResult test_gdbserver_hex_sqish(const MunitParameter params[], void* user_d
     reply_packet_send();   // adds "#xx
 
     // printf("\n%s\n", send_buf);
-    munit_assert_uint32(0, ==, recv_read_pos);
-    munit_assert_uint32(0, ==, recv_write_pos);
-    munit_assert_uint32(0, ==, send_read_pos);
-    munit_assert_uint32(7, ==, send_write_pos);
+    munit_assert_uint32(7, ==, get_num_bytes_in_send_buffer());
+    munit_assert_uint32(0, ==, get_num_bytes_in_recv_buffer());
     munit_assert_uint32(send_buf[0], ==, '$');
     munit_assert_uint32(send_buf[1], ==, '1');
     munit_assert_uint32(send_buf[2], ==, 'f');

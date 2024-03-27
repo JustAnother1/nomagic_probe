@@ -3,17 +3,14 @@
 #include "../src/probe_api/cli.h"
 #include "../src/lib/printf.h"
 
+extern uint8_t send_buf[TST_SEND_BUFFER_SIZE];
+
 void* cli_setup(const MunitParameter params[], void* user_data) {
     (void)params;
     (void)user_data;
     init_printf(NULL, debug_putc);
-    recv_read_pos = 0;
-    recv_write_pos = 0;
-    send_read_pos = 0;
-    send_write_pos = 0;
-    memset(recv_buf, 0, RECEIVE_BUFFER_SIZE);
-    memset(send_buf, 0, SEND_BUFFER_SIZE);
-    echo_enabled = false;
+    reset_send_receive_buffers();
+    set_echo_enabled(false);
     cli_init();
     return NULL;
 }
@@ -29,8 +26,7 @@ MunitResult test_cli_init(const MunitParameter params[], void* user_data) {
     (void) params;
     (void) user_data;
     // cli_init(); <- part of setup
-    munit_assert_uint32(0, ==, send_read_pos);
-    munit_assert_uint32(36, ==, send_write_pos);
+    munit_assert_uint32(36, ==, get_num_bytes_in_send_buffer());
     munit_assert_memory_equal(36, res_buf, send_buf);
     return MUNIT_OK;
 }
@@ -41,15 +37,10 @@ MunitResult test_cli_tick_idle(const MunitParameter params[], void* user_data) {
      * being unused. */
     (void) params;
     (void) user_data;
-    recv_read_pos = 0;
-    recv_write_pos = 0;
-    send_read_pos = 0;
-    send_write_pos = 0;
+    reset_send_receive_buffers();
     cli_tick();
-    munit_assert_uint32(0, ==, recv_read_pos);
-    munit_assert_uint32(0, ==, recv_write_pos);
-    munit_assert_uint32(0, ==, send_read_pos);
-    munit_assert_uint32(0, ==, send_write_pos);
+    munit_assert_uint32(0, ==, get_num_bytes_in_send_buffer());
+    munit_assert_uint32(0, ==, get_num_bytes_in_recv_buffer());
     return MUNIT_OK;
 }
 
@@ -60,17 +51,12 @@ MunitResult test_cli_tick_echo(const MunitParameter params[], void* user_data) {
      * being unused. */
     (void) params;
     (void) user_data;
-    recv_read_pos = 0;
-    recv_write_pos = 0;
-    send_read_pos = 0;
-    send_write_pos = 0;
-    echo_enabled = true;
+    reset_send_receive_buffers();
+    set_echo_enabled(true);
     send_bytes_to_cli(&data, 1);
     cli_tick();
-    munit_assert_uint32(1, ==, recv_read_pos);
-    munit_assert_uint32(1, ==, recv_write_pos);
-    munit_assert_uint32(0, ==, send_read_pos);
-    munit_assert_uint32(1, ==, send_write_pos);
+    munit_assert_uint32(0, ==, get_num_bytes_in_recv_buffer());
+    munit_assert_uint32(1, ==, get_num_bytes_in_send_buffer());
     munit_assert_uint32(send_buf[0], ==, 0x42);
     return MUNIT_OK;
 }
@@ -82,16 +68,11 @@ MunitResult test_cli_tick_no_echo(const MunitParameter params[], void* user_data
      * being unused. */
     (void) params;
     (void) user_data;
-    recv_read_pos = 0;
-    recv_write_pos = 0;
-    send_read_pos = 0;
-    send_write_pos = 0;
+    reset_send_receive_buffers();
     send_bytes_to_cli(&data, 1);
     cli_tick();
-    munit_assert_uint32(1, ==, recv_read_pos);
-    munit_assert_uint32(1, ==, recv_write_pos);
-    munit_assert_uint32(0, ==, send_read_pos);
-    munit_assert_uint32(0, ==, send_write_pos);
+    munit_assert_uint32(0, ==, get_num_bytes_in_send_buffer());
+    munit_assert_uint32(0, ==, get_num_bytes_in_recv_buffer());
     return MUNIT_OK;
 }
 
@@ -102,16 +83,11 @@ MunitResult test_cli_tick_prompt_r(const MunitParameter params[], void* user_dat
      * being unused. */
     (void) params;
     (void) user_data;
-    recv_read_pos = 0;
-    recv_write_pos = 0;
-    send_read_pos = 0;
-    send_write_pos = 0;
+    reset_send_receive_buffers();
     send_bytes_to_cli(&data, 1);
     cli_tick();
-    munit_assert_uint32(1, ==, recv_read_pos);
-    munit_assert_uint32(1, ==, recv_write_pos);
-    munit_assert_uint32(0, ==, send_read_pos);
-    munit_assert_uint32(5, ==, send_write_pos);
+    munit_assert_uint32(5, ==, get_num_bytes_in_send_buffer());
+    munit_assert_uint32(0, ==, get_num_bytes_in_recv_buffer());
     return MUNIT_OK;
 }
 
@@ -122,16 +98,11 @@ MunitResult test_cli_tick_prompt_n(const MunitParameter params[], void* user_dat
      * being unused. */
     (void) params;
     (void) user_data;
-    recv_read_pos = 0;
-    recv_write_pos = 0;
-    send_read_pos = 0;
-    send_write_pos = 0;
+    reset_send_receive_buffers();
     send_bytes_to_cli(&data, 1);
     cli_tick();
-    munit_assert_uint32(1, ==, recv_read_pos);
-    munit_assert_uint32(1, ==, recv_write_pos);
-    munit_assert_uint32(0, ==, send_read_pos);
-    munit_assert_uint32(5, ==, send_write_pos);
+    munit_assert_uint32(5, ==, get_num_bytes_in_send_buffer());
+    munit_assert_uint32(0, ==, get_num_bytes_in_recv_buffer());
     return MUNIT_OK;
 }
 
@@ -142,16 +113,11 @@ MunitResult test_cli_tick_prompt_rn(const MunitParameter params[], void* user_da
      * being unused. */
     (void) params;
     (void) user_data;
-    recv_read_pos = 0;
-    recv_write_pos = 0;
-    send_read_pos = 0;
-    send_write_pos = 0;
+    reset_send_receive_buffers();
     send_bytes_to_cli(data, 2);
     cli_tick();
-    munit_assert_uint32(2, ==, recv_read_pos);
-    munit_assert_uint32(2, ==, recv_write_pos);
-    munit_assert_uint32(0, ==, send_read_pos);
-    munit_assert_uint32(5, ==, send_write_pos);
+    munit_assert_uint32(5, ==, get_num_bytes_in_send_buffer());
+    munit_assert_uint32(0, ==, get_num_bytes_in_recv_buffer());
     return MUNIT_OK;
 }
 
@@ -162,16 +128,11 @@ MunitResult test_cli_tick_prompt_nr(const MunitParameter params[], void* user_da
      * being unused. */
     (void) params;
     (void) user_data;
-    recv_read_pos = 0;
-    recv_write_pos = 0;
-    send_read_pos = 0;
-    send_write_pos = 0;
+    reset_send_receive_buffers();
     send_bytes_to_cli(data, 2);
     cli_tick();
-    munit_assert_uint32(2, ==, recv_read_pos);
-    munit_assert_uint32(2, ==, recv_write_pos);
-    munit_assert_uint32(0, ==, send_read_pos);
-    munit_assert_uint32(5, ==, send_write_pos);
+    munit_assert_uint32(5, ==, get_num_bytes_in_send_buffer());
+    munit_assert_uint32(0, ==, get_num_bytes_in_recv_buffer());
     return MUNIT_OK;
 }
 
@@ -182,16 +143,11 @@ MunitResult test_cli_tick_prompt_nn(const MunitParameter params[], void* user_da
      * being unused. */
     (void) params;
     (void) user_data;
-    recv_read_pos = 0;
-    recv_write_pos = 0;
-    send_read_pos = 0;
-    send_write_pos = 0;
+    reset_send_receive_buffers();
     send_bytes_to_cli(data, 2);
     cli_tick();
-    munit_assert_uint32(2, ==, recv_read_pos);
-    munit_assert_uint32(2, ==, recv_write_pos);
-    munit_assert_uint32(0, ==, send_read_pos);
-    munit_assert_uint32(10, ==, send_write_pos);
+    munit_assert_uint32(10, ==, get_num_bytes_in_send_buffer());
+    munit_assert_uint32(0, ==, get_num_bytes_in_recv_buffer());
     return MUNIT_OK;
 }
 
@@ -202,16 +158,11 @@ MunitResult test_cli_tick_prompt_rr(const MunitParameter params[], void* user_da
      * being unused. */
     (void) params;
     (void) user_data;
-    recv_read_pos = 0;
-    recv_write_pos = 0;
-    send_read_pos = 0;
-    send_write_pos = 0;
+    reset_send_receive_buffers();
     send_bytes_to_cli(data, 2);
     cli_tick();
-    munit_assert_uint32(2, ==, recv_read_pos);
-    munit_assert_uint32(2, ==, recv_write_pos);
-    munit_assert_uint32(0, ==, send_read_pos);
-    munit_assert_uint32(10, ==, send_write_pos);
+    munit_assert_uint32(10, ==, get_num_bytes_in_send_buffer());
+    munit_assert_uint32(0, ==, get_num_bytes_in_recv_buffer());
     return MUNIT_OK;
 }
 
@@ -222,16 +173,11 @@ MunitResult test_cli_tick_prompt_rnr(const MunitParameter params[], void* user_d
      * being unused. */
     (void) params;
     (void) user_data;
-    recv_read_pos = 0;
-    recv_write_pos = 0;
-    send_read_pos = 0;
-    send_write_pos = 0;
+    reset_send_receive_buffers();
     send_bytes_to_cli(data, 3);
     cli_tick();
-    munit_assert_uint32(3, ==, recv_read_pos);
-    munit_assert_uint32(3, ==, recv_write_pos);
-    munit_assert_uint32(0, ==, send_read_pos);
-    munit_assert_uint32(10, ==, send_write_pos);
+    munit_assert_uint32(10, ==, get_num_bytes_in_send_buffer());
+    munit_assert_uint32(0, ==, get_num_bytes_in_recv_buffer());
     return MUNIT_OK;
 }
 
@@ -242,16 +188,11 @@ MunitResult test_cli_tick_prompt_nrn(const MunitParameter params[], void* user_d
      * being unused. */
     (void) params;
     (void) user_data;
-    recv_read_pos = 0;
-    recv_write_pos = 0;
-    send_read_pos = 0;
-    send_write_pos = 0;
+    reset_send_receive_buffers();
     send_bytes_to_cli(data, 3);
     cli_tick();
-    munit_assert_uint32(3, ==, recv_read_pos);
-    munit_assert_uint32(3, ==, recv_write_pos);
-    munit_assert_uint32(0, ==, send_read_pos);
-    munit_assert_uint32(10, ==, send_write_pos);
+    munit_assert_uint32(10, ==, get_num_bytes_in_send_buffer());
+    munit_assert_uint32(0, ==, get_num_bytes_in_recv_buffer());
     return MUNIT_OK;
 }
 
@@ -262,16 +203,11 @@ MunitResult test_cli_tick_prompt_rnrn(const MunitParameter params[], void* user_
      * being unused. */
     (void) params;
     (void) user_data;
-    recv_read_pos = 0;
-    recv_write_pos = 0;
-    send_read_pos = 0;
-    send_write_pos = 0;
+    reset_send_receive_buffers();
     send_bytes_to_cli(data, 4);
     cli_tick();
-    munit_assert_uint32(4, ==, recv_read_pos);
-    munit_assert_uint32(4, ==, recv_write_pos);
-    munit_assert_uint32(0, ==, send_read_pos);
-    munit_assert_uint32(10, ==, send_write_pos);
+    munit_assert_uint32(10, ==, get_num_bytes_in_send_buffer());
+    munit_assert_uint32(0, ==, get_num_bytes_in_recv_buffer());
     return MUNIT_OK;
 }
 
@@ -282,23 +218,18 @@ MunitResult test_cli_tick_prompt_nrnr(const MunitParameter params[], void* user_
      * being unused. */
     (void) params;
     (void) user_data;
-    recv_read_pos = 0;
-    recv_write_pos = 0;
-    send_read_pos = 0;
-    send_write_pos = 0;
+    reset_send_receive_buffers();
     send_bytes_to_cli(data, 4);
     cli_tick();
-    munit_assert_uint32(4, ==, recv_read_pos);
-    munit_assert_uint32(4, ==, recv_write_pos);
-    munit_assert_uint32(0, ==, send_read_pos);
-    munit_assert_uint32(10, ==, send_write_pos);
+    munit_assert_uint32(10, ==, get_num_bytes_in_send_buffer());
+    munit_assert_uint32(0, ==, get_num_bytes_in_recv_buffer());
     return MUNIT_OK;
 }
 
 MunitResult test_cli_tick_cmd_invalid(const MunitParameter params[], void* user_data) {
     // Objective: \n\r\n\r causes only two new prompts
     uint8_t data[] = {'b', 'l', 'a', '\r'};
-    uint8_t res_buf[] = {'\r', '\n',
+    uint8_t res_buf[] = {'\r', '\n', '\r', '\n',
 'I', 'n', 'v', 'a', 'l', 'i', 'd', ' ', 'c', 'o', 'm', 'm', 'a', 'n', 'd', ' ', '(', 'b', 'l', 'a', ')', ' ',
 '[', ' ', '6', '2', ' ', '6', 'c', ' ', '6', '1', ' ', ']',' ',' ', 't', 'y', 'p', 'e', ' ',
 '\'', 'h', 'e', 'l', 'p', '\'', ' ',
@@ -309,16 +240,13 @@ MunitResult test_cli_tick_cmd_invalid(const MunitParameter params[], void* user_
      * being unused. */
     (void) params;
     (void) user_data;
-    recv_read_pos = 0;
-    recv_write_pos = 0;
-    send_read_pos = 0;
-    send_write_pos = 0;
+    reset_send_receive_buffers();
     send_bytes_to_cli(data, 4);
     cli_tick();
-    munit_assert_uint32(4, ==, recv_read_pos);
-    munit_assert_uint32(4, ==, recv_write_pos);
-    munit_assert_uint32(0, ==, send_read_pos);
-    munit_assert_uint32(84, ==, send_write_pos);
+    munit_assert_uint32(88, ==, get_num_bytes_in_send_buffer());
+    munit_assert_uint32(0, ==, get_num_bytes_in_recv_buffer());
+    // printf("send_buf = %.*s",36,send_buf);
+    dump_buffer_ascii((char*)send_buf, 36);
     munit_assert_memory_equal(36, res_buf, send_buf);
     return MUNIT_OK;
 }
@@ -326,7 +254,8 @@ MunitResult test_cli_tick_cmd_invalid(const MunitParameter params[], void* user_
 MunitResult test_cli_tick_cmd_help(const MunitParameter params[], void* user_data) {
     // Objective: \n\r\n\r causes only two new prompts
     uint8_t data[] = {'h', 'e', 'l', 'p', '\r'};
-    uint8_t res_buf[] = {'\r', '\n',
+    uint8_t res_buf[] = {'\r', '\n', '\r', '\n',
+'n', 'o', 'm', 'a', 'g', 'i', 'c', ' ', 'p', 'r', 'o', 'b', 'e', ' ', 'c', 'l', 'i', ' ', 'v', 'e', 'r', 's', 'i', 'o', 'n', ' ', 'x', '.', 'x', '.', 'x', '\r', '\n',
 'a', 'v', 'a', 'i', 'l', 'a', 'b', 'l', 'e', ' ', 'c', 'o', 'm', 'm', 'a', 'n', 'd', 's', ' ', ':', '\r', '\n',
 ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'h', 'e', 'l', 'p', ' ', ':', ' ', 'l', 'i', 's', 't', ' ', 'a', 'l', 'l', ' ', 'a', 'v', 'a', 'i', 'l', 'a', 'b', 'l', 'e', ' ', 'c', 'o', 'm', 'm', 'a', 'n', 'd', 's', '\r', '\n',
 ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 't', 'i', 'm', 'e', ' ', ':', ' ', 't', 'i', 'm', 'e', ' ', 's', 'i', 'n', 'c', 'e', ' ', 'p', 'o', 'w', 'e', 'r', ' ', 'o', 'n', '\r', '\n',
@@ -336,21 +265,18 @@ MunitResult test_cli_tick_cmd_help(const MunitParameter params[], void* user_dat
      * being unused. */
     (void) params;
     (void) user_data;
-    recv_read_pos = 0;
-    recv_write_pos = 0;
-    send_read_pos = 0;
-    send_write_pos = 0;
+    reset_send_receive_buffers();
     send_bytes_to_cli(data, 5);
     cli_tick();
     cli_tick();
     cli_tick();
     cli_tick();
     cli_tick();
-    munit_assert_uint32(5, ==, recv_read_pos);
-    munit_assert_uint32(5, ==, recv_write_pos);
-    munit_assert_uint32(0, ==, send_read_pos);
-    munit_assert_uint32(147, ==, send_write_pos);
+    munit_assert_uint32(182, ==, get_num_bytes_in_send_buffer());
+    munit_assert_uint32(0, ==, get_num_bytes_in_recv_buffer());
     // STRNCMP_EQUAL("\r\navailable commands :\r\ntime : time since power on\r\ntest : test command\r\n $ ", (const char*)send_buf, 82);
+    //printf("send_buf = %.*s",78,send_buf);
+    dump_buffer_ascii((char*)send_buf, 78);
     munit_assert_memory_equal(78, res_buf, send_buf);
     return MUNIT_OK;
 }
