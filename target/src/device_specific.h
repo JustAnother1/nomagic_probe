@@ -33,7 +33,9 @@ typedef enum {
 }action_typ;
 
 typedef struct{
+    uint32_t phase;
     action_typ action;
+    uint8_t padding[3];
 } action_data_typ;
 
 Result handle_target_reply_g(action_data_typ* action, bool first_call);

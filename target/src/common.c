@@ -65,13 +65,22 @@ static const char* action_names[NUM_ACTIONS] = {
 #endif
 
 static uint32_t timeout_counter;
+static bool attached;
 
-void target_common_init(void)
+void target_init(void)
 {
+    swd_init();
     action_read = 0;
     action_write = 0;
     cur_action = NULL;
     timeout_counter = 0;
+    attached = false;
+}
+
+void target_tick(void)
+{
+    swd_tick();
+    handle_actions();
 }
 
 void send_part(char* part, uint32_t size, uint32_t offset, uint32_t length)
@@ -109,11 +118,6 @@ Result target_request_read(uint32_t address)
 Result target_read_result(Result transaction, uint32_t* data)
 {
     return swd_get_result(transaction, data);
-}
-
-void target_common_tick(void)
-{
-    handle_actions();
 }
 
 void target_reply_g(void)

@@ -64,15 +64,6 @@
 "<memory type=\"ram\" start=\"0x20000000\" length=\"0x20042000\"/>\r\n" \
 "</memory-map>\r\n"
 
-static bool attached;
-
-void target_init(void)
-{
-    swd_init();
-    target_common_init();
-    attached = false;
-}
-
 bool cmd_target_info(uint32_t loop)
 {
     (void)loop;
@@ -80,12 +71,6 @@ bool cmd_target_info(uint32_t loop)
     debug_line("=============");
     debug_line(" target: RP2040");
     return true; // true == Done; false = call me again
-}
-
-void target_tick(void)
-{
-    swd_tick();
-    target_common_tick();
 }
 
 Result target_connect(bool first_call)
