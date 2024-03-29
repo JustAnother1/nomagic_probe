@@ -21,6 +21,7 @@
 #include "result.h"
 #include "swd.h"
 #include "debug_log.h"
+#include "nomagic/walk.h"
 
 #define ACTION_QUEUE_LENGTH 5
 
@@ -66,20 +67,27 @@ static const char* action_names[NUM_ACTIONS] = {
 
 static uint32_t timeout_counter;
 static bool attached;
+static walk_data_typ cur_walk;
 
 void target_init(void)
 {
-    swd_init();
     action_read = 0;
     action_write = 0;
     cur_action = NULL;
     timeout_counter = 0;
     attached = false;
+    cur_walk.is_done = true;
+    swd_init();
+    walk_init();
 }
 
 void target_tick(void)
 {
     swd_tick();
+    if(false == cur_walk.is_done)
+    {
+        walk_execute(&cur_walk);
+    }
     handle_actions();
 }
 

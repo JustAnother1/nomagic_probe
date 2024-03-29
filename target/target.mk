@@ -44,13 +44,13 @@ LIB_INCDIR = $(patsubst %,-I%, $(LIB_INCDIRS))
 
 ifeq ($(TARGET), DETECT)
 LIB_SRC += $(LIB_SRC_FOLDER)nomagic/detect.c
-LIB_SRC += $(LIB_SRC_FOLDER)nomagic/steps.c
-LIB_SRC += $(LIB_SRC_FOLDER)nomagic/walk.c
 else
 LIB_SRC += $(LIB_SRC_FOLDER)common.c
 LIB_SRC += $(LIB_SRC_FOLDER)raspberrypi/rp2040.c
 endif
 
+LIB_SRC += $(LIB_SRC_FOLDER)nomagic/steps.c
+LIB_SRC += $(LIB_SRC_FOLDER)nomagic/walk.c
 LIB_SRC += $(LIB_SRC_FOLDER)arm/cortex-m.c
 
 LIB_OBJS = $(addprefix $(LIB_BIN_FOLDER),$(LIB_SRC:.c=.o))
