@@ -48,9 +48,8 @@ cmd_typ commands[] = {
 #endif
 #ifdef FEAT_DETECT
         {"swd_test",    "explore the SWD interface", cmd_swd_test},
-#else  // TODO enable commands also in detect mode.
+#else
         {"swd_open",    "open a connection on the SWD interface", cmd_swd_connect},
-        {"swd_read",    "read a memory address", cmd_swd_ap_read},
 #endif
         {"flash_reset", "reset the external QSPI flash", cmd_flash_reset},
 #ifdef FEAT_USB_MSC

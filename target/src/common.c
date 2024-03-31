@@ -105,11 +105,6 @@ bool cmd_target_info(uint32_t loop)
     return true; // true == Done; false = call me again
 }
 
-bool target_is_connected(void)
-{
-    return attached;
-}
-
 void send_part(char* part, uint32_t size, uint32_t offset, uint32_t length)
 {
     reply_packet_prepare();
@@ -135,16 +130,6 @@ void send_part(char* part, uint32_t size, uint32_t offset, uint32_t length)
     }
     reply_packet_add_max(&part[offset], length);
     reply_packet_send();
-}
-
-Result target_request_read(uint32_t address)
-{
-    return swd_read_ap(address);
-}
-
-Result target_read_result(Result transaction, uint32_t* data)
-{
-    return swd_get_result(transaction, data);
 }
 
 void target_reply_g(void)

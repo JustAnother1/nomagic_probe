@@ -22,12 +22,9 @@
 void target_init(void);
 void target_tick(void);
 bool cmd_target_info(uint32_t loop);
-bool target_is_connected(void);
-Result target_close_connection(bool first_call);
-Result target_connect(bool first_call);
-Result target_request_read(uint32_t address);
-Result target_read_result(Result transaction, uint32_t* data);
 
+void target_close_connection(void);
+void target_connect(void);
 void target_reply_g(void);
 void target_reply_questionmark(void);
 void target_reply_write_g(char* received, uint32_t length);

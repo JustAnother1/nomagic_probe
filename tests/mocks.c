@@ -170,6 +170,11 @@ void send_bytes_to_cli(uint8_t *buf, uint32_t length)
     }
 }
 
+bool mock_is_connected(void)
+{
+    return true;
+}
+
 void debug_putc(void* p, char c)
 {
     (void) p; // not used
@@ -235,11 +240,14 @@ void target_init(void)
 {
     // nothing to do here
 }
-Result target_connect(bool first_call)
+void target_connect(void)
 {
-    (void) first_call;
-    // 0 would be OK, everything negative is an error
-    return -1;
+
+}
+
+void target_close_connection(void)
+{
+
 }
 
 void target_reply_g(void)

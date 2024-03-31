@@ -130,10 +130,6 @@ void target_tick(void)
     }
 }
 
-bool target_is_connected(void)
-{
-    return false;
-}
 
 // get called from CLI.
 // loop is 0 on first call and will increase by 1 on each following call.

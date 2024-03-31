@@ -27,74 +27,67 @@
 
 void target_init(void)
 {
-
+    debug_line("loader: not available!");
 }
 
 void target_tick(void)
 {
-
+    // no debug printout as this gets called all the time
 }
 
 void target_reply_g(void)
 {
-
+    debug_line("loader: not available!");
 }
 
 void target_reply_questionmark(void)
 {
-
+    debug_line("loader: not available!");
 }
 
 void target_reply_write_g(char* received, uint32_t length)
 {
     (void) received; // TODO
     (void) length; // TODO
+    debug_line("loader: not available!");
 }
 
 void target_reply_continue(char* received, uint32_t length)
 {
     (void) received; // TODO
     (void) length; // TODO
+    debug_line("loader: not available!");
 }
 
 void target_reply_read_memory(char* received, uint32_t length)
 {
     (void) received; // TODO
     (void) length; // TODO
+    debug_line("loader: not available!");
 }
 
 void target_reply_write_memory(char* received, uint32_t length)
 {
     (void) received; // TODO
     (void) length; // TODO
+    debug_line("loader: not available!");
 }
 
 void target_reply_step(char* received, uint32_t length)
 {
     (void) received; // TODO
     (void) length; // TODO
+    debug_line("loader: not available!");
 }
 
-Result target_request_read(uint32_t address)
+void target_connect(void)
 {
-    (void) address;
     debug_line("loader: not available!");
-    return ERR_WRONG_STATE;
 }
 
-Result target_read_result(Result transaction, uint32_t* data)
+void target_close_connection(void)
 {
-    (void)transaction;
-    (void)data;
     debug_line("loader: not available!");
-    return ERR_WRONG_STATE;
-}
-
-Result target_connect(bool first_call)
-{
-    (void) first_call;
-    debug_line("loader: not available!");
-    return ERR_WRONG_STATE;
 }
 
 void target_send_file(char* filename, uint32_t offset, uint32_t len)
@@ -102,6 +95,7 @@ void target_send_file(char* filename, uint32_t offset, uint32_t len)
     (void) filename;
     (void) offset;
     (void) len;
+    debug_line("loader: not available!");
 }
 
 bool cmd_target_info(uint32_t loop)

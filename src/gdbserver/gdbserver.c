@@ -62,67 +62,19 @@ void gdbserver_tick(void)
 {
     if(GDBSERVER_IS_CONNECTED)
     {
-        if((true == target_is_connected()) || (true == connection_failed))
+        if(false == connected)
         {
+            target_connect();
             connected = true;
-            communicate_with_gdb();
         }
-        else
-        {
-            Result res;
-            if(10000 < retry_counter)
-            {
-                connection_failed = true;
-                debug_line("ERROR: SWD: failed to connect (timeout)!");
-                return;
-            }
-            if(0 == retry_counter)
-            {
-                debug_line("gdb: connecting to target...");
-                res = target_connect(true);
-            }
-            else
-            {
-                res = target_connect(false);
-            }
-            retry_counter++;
-            if(RESULT_OK == res)
-            {
-                // target_is_connected() should now return true
-            }
-            else if(ERR_NOT_COMPLETED == res)
-            {
-                // not yet complete -> try again
-            }
-            else
-            {
-                connection_failed = true;
-                debug_line("ERROR: SWD: failed to connect (%ld)!", res);
-            }
-        }
+        communicate_with_gdb();
     }
     else
     {
         if(true == connected)
         {
-            connection_failed = false;
-            retry_counter = 0;
+            target_close_connection();
             connected = false;
-            debug_line("gdb: disconnecting from target...");
-            (void)target_close_connection(true); // result is not interesting
-            // -> target_is_connected() should return false if finished and if ran into error
-        }
-        else
-        {
-            if(true == target_is_connected())
-            {
-                (void)target_close_connection(false);  // disconnect seems to be not done yet.
-            }
-            else
-            {
-                // neither the gdb nor the target can talk to us
-                // -> do nothing
-            }
         }
     }
 }

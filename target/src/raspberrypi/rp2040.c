@@ -64,9 +64,8 @@
     "<memory type=\"ram\" start=\"0x20000000\" length=\"0x20042000\"/>\r\n" \
 "</memory-map>\r\n"
 
-Result target_close_connection(bool first_call)
+void target_close_connection(void)
 {
-    (void)first_call;
     /*  TODO
     if(true == first_call)
     {
@@ -96,11 +95,11 @@ Result target_close_connection(bool first_call)
         return false;
     }
     */
-    return RESULT_OK;
 }
 
-Result target_connect(bool first_call)
+void target_connect(void)
 {
+    /*
     static Result phase = 0;
     static Result transaction_id;
     Result res;
@@ -168,7 +167,7 @@ Result target_connect(bool first_call)
             return res;
         }
     }
-/*
+/ *
     if((5 == phase) || (6 == phase))
     {
         if(5 == phase)
@@ -190,7 +189,7 @@ Result target_connect(bool first_call)
             return res;
         }
     }
-*/
+* /
     if(7 == phase)
     {
         // all done
@@ -199,6 +198,7 @@ Result target_connect(bool first_call)
 
     debug_line("target connect: invalid phase!");
     return ERR_WRONG_STATE;
+    */
 }
 
 Result handle_target_reply_g(action_data_typ* action, bool first_call)
