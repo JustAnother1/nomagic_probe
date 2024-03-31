@@ -25,14 +25,6 @@
 
 #define ACTION_QUEUE_LENGTH 5
 
-// parameter phase value is:
-// 0 == calling for the first time
-// negative value (-1, -2,..    = currently not used
-// positive value (1, 2, 3,...) = returned value of last call
-// return value is:
-// 0                            = OK      -> order was executed successfully
-// negative value (-1, -2,..    = ERROR   -> something went wrong, order failed
-// positive value (1, 2, 3,...) = WORKING -> more steps necessary, call order_handler again
 typedef Result (*action_handler)(action_data_typ* action, bool first_call);
 
 
@@ -89,6 +81,33 @@ void target_tick(void)
         walk_execute(&cur_walk);
     }
     handle_actions();
+}
+
+bool cmd_target_info(uint32_t loop)
+{
+    (void)loop;
+    debug_line("Target Status");
+    debug_line("=============");
+    debug_line("target: RP2040");  // TODO target cfg
+    // walk state
+    if(true == cur_walk.is_done)
+    {
+        debug_line("SWD state: idle");
+    }
+    else
+    {
+        debug_line("SWD state: active");
+        debug_line("type: %d", cur_walk.type);
+        debug_line("phase: %ld", cur_walk.phase);
+
+    }
+
+    return true; // true == Done; false = call me again
+}
+
+bool target_is_connected(void)
+{
+    return attached;
 }
 
 void send_part(char* part, uint32_t size, uint32_t offset, uint32_t length)

@@ -57,20 +57,18 @@
 
 #define MEMORY_MAP_CONTENT  \
 "<memory-map>\r\n" \
-"<memory type=\"rom\" start=\"0x00000000\" length=\"0x00004000\"/>\r\n" \
-"<memory type=\"flash\" start=\"0x10000000\" length=\"0x4000000\">\r\n" \
-"<property name=\"blocksize\">0x1000</property>\r\n" \
-"</memory>\r\n" \
-"<memory type=\"ram\" start=\"0x20000000\" length=\"0x20042000\"/>\r\n" \
+    "<memory type=\"rom\" start=\"0x00000000\" length=\"0x00004000\"/>\r\n" \
+    "<memory type=\"flash\" start=\"0x10000000\" length=\"0x4000000\">\r\n" \
+        "<property name=\"blocksize\">0x1000</property>\r\n" \
+    "</memory>\r\n" \
+    "<memory type=\"ram\" start=\"0x20000000\" length=\"0x20042000\"/>\r\n" \
 "</memory-map>\r\n"
 
-bool cmd_target_info(uint32_t loop)
+Result target_close_connection(bool first_call)
 {
-    (void)loop;
-    debug_line("Target Status");
-    debug_line("=============");
-    debug_line(" target: RP2040");
-    return true; // true == Done; false = call me again
+    (void) first_call;
+    // TODO implement
+    return RESULT_OK;
 }
 
 Result target_connect(bool first_call)
