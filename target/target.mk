@@ -28,11 +28,11 @@ LIB_CFLAGS += -Wall -Wextra -pedantic -Wshadow -Wdouble-promotion -Wconversion -
 LIB_CFLAGS += -ffunction-sections -fdata-sections -Wpadded
 
 ifeq ($(HAS_DEBUG_UART), yes)
-	LIB_DDEFS += -DFEAT_DEBUG_UART
+LIB_DDEFS += -DFEAT_DEBUG_UART
 endif
 
 ifeq ($(HAS_DEBUG_CDC), yes)
-	LIB_DDEFS += -DFEAT_DEBUG_CDC
+LIB_DDEFS += -DFEAT_DEBUG_CDC
 endif
 
 LIB_DDEFS += -DTARGET=$(TARGET)
@@ -44,6 +44,7 @@ LIB_INCDIR = $(patsubst %,-I%, $(LIB_INCDIRS))
 
 ifeq ($(TARGET), DETECT)
 LIB_SRC += $(LIB_SRC_FOLDER)nomagic/detect.c
+LIB_DDEFS += -DFEAT_DETECT
 else
 LIB_SRC += $(LIB_SRC_FOLDER)common.c
 LIB_SRC += $(LIB_SRC_FOLDER)raspberrypi/rp2040.c

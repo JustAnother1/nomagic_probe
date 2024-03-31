@@ -26,6 +26,7 @@ typedef enum {
     CMD_WRITE,
     CMD_READ_REG,
     CMD_WRITE_REG,
+    CMD_DISCONNECT,
     // new orders go here
     NUM_ORDERS,  // <- do not use other than array size !
 }order_typ;

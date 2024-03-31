@@ -22,7 +22,10 @@
 
 typedef enum {
     WALK_CONNECT = 0,
+    WALK_DISCONNECT,
+#ifdef FEAT_DETECT
     WALK_SCAN,
+#endif
     // new walks go here
     NUM_WALKS_DEFINED,  // <- do not use other than array size !
 }walk_typ;

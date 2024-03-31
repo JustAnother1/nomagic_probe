@@ -12,7 +12,7 @@
  * with this program; if not, see <http://www.gnu.org/licenses/>
  *
  */
-
+#ifdef FEAT_DETECT
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
@@ -359,4 +359,4 @@ static bool test_swd_v2(void)
         }
     }
 }
-
+#endif // FEAT_DETECT

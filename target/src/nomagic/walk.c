@@ -34,14 +34,21 @@ static uint32_t timeout_time;
 static bool wait_for_wrap_around;
 
 static void handle_connect(walk_data_typ* data);
+static void handle_disconnect(walk_data_typ* data);
+
+#ifdef FEAT_DETECT
 static void handle_scan(walk_data_typ* data);
 static Result check_AP(uint32_t idr, bool first_call, uint32_t * phase);
+#endif
 
 typedef void (*walk_handler)(walk_data_typ* data);
 
 static const walk_handler walks_look_up[NUM_WALKS_DEFINED] = {
         handle_connect,
+        handle_disconnect,
+#ifdef FEAT_DETECT
         handle_scan,
+#endif
 };
 
 void walk_init(void)
@@ -223,6 +230,35 @@ static void handle_connect(walk_data_typ* data)
     }
 }
 
+static void handle_disconnect(walk_data_typ* data)
+{
+    if(0 == data->phase)
+    {
+        cur_step.type = STEP_DISCONNECT;
+        cur_step.phase = 0;
+        cur_step.result = RESULT_OK;
+        cur_step.is_done = false;
+        data->phase++;
+    }
+    else if(1 == data->phase)
+    {
+        // write DEBUGEN in DHCSR
+        if(RESULT_OK == cur_step.result)
+        {
+            data->result = RESULT_OK;
+            data->is_done = true;
+        }
+        else
+        {
+            // step failed
+            data->result = cur_step.result;
+            data->is_done = true;
+        }
+    }
+}
+
+
+#ifdef FEAT_DETECT
 static void handle_scan(walk_data_typ* data)
 {
     if(0 == data->phase)
@@ -531,3 +567,4 @@ static Result check_AP(uint32_t idr, bool first_call, uint32_t * phase)
         return RESULT_OK; // done with this AP
     }
 }
+#endif // FEAT_DETECT

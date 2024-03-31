@@ -122,6 +122,12 @@ Result swd_read_ap_reg(uint32_t bank, uint32_t reg);
  */
 Result swd_write_ap_reg(uint32_t bank, uint32_t reg, uint32_t data);
 
+/** close connection to the target chip.
+ *
+ * @return ERR_QUEUE_FULL_TRY_AGAIN or RESULT_OK
+ */
+Result swd_disconnect(void);
+
 /** try to receive some data.
  * If one received a transaction id from another function then the result of that function _must_ be read (to free the queue).
  * @param transaction the transaction id

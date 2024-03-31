@@ -661,6 +661,22 @@ Result write_reg_handler(command_typ* cmd, bool first_call)
     return res;
 }
 
+Result disconnect_handler(command_typ* cmd, bool first_call)
+{
+    (void) first_call;
+    Result res = swd_packet_disconnect();
+    if(RESULT_OK == res)
+    {
+        // done!
+        swd_eingine_add_cmd_result(cmd->transaction_id, RESULT_OK);
+        return RESULT_OK;
+    }
+    else
+    {
+        return res;
+    }
+}
+
 // static functions
 
 static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint32_t* data, bool first_call, command_typ* cmd)

@@ -66,8 +66,36 @@
 
 Result target_close_connection(bool first_call)
 {
-    (void) first_call;
-    // TODO implement
+    (void)first_call;
+    /*  TODO
+    if(true == first_call)
+    {
+        cur_walk.result = RESULT_OK;
+        cur_walk.is_done = true;
+    }
+    if(0 == step)
+    {
+        debug_line("closing SWD connection !");
+        cur_walk.type = WALK_DISCONNECT;
+        cur_walk.phase = 0;
+        cur_walk.result = RESULT_OK;
+        cur_walk.is_done = false;
+        step = 1;
+        return false;
+    }
+    else // if(1 == step)
+    {
+        if(RESULT_OK == cur_walk.result)
+        {
+            debug_line("Disconnected!");
+        }
+        else
+        {
+            debug_line("ERROR: failed to disconnect!");
+        }
+        return false;
+    }
+    */
     return RESULT_OK;
 }
 
