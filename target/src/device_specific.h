@@ -21,7 +21,9 @@
 #include "result.h"
 
 typedef enum {
-    GDB_CMD_G = 0,
+    SWD_CONNECT,
+    SWD_CLOSE_CONNECTION,
+    GDB_CMD_G,
     GDB_CMD_QUESTIONMARK,
     GDB_CMD_WRITE_G,
     GDB_CMD_CONTINUE,
@@ -38,7 +40,10 @@ typedef struct{
     uint8_t padding[3];
 } action_data_typ;
 
-Result handle_target_reply_g(action_data_typ* action, bool first_call);
+typedef Result (*action_handler)(action_data_typ* action, bool first_call);
 
+Result handle_target_reply_g(action_data_typ* action, bool first_call);
+Result handle_target_connect(action_data_typ* action, bool first_call);
+Result handle_target_close_connection(action_data_typ* action, bool first_call);
 
 #endif /* DEVICE_SPECIFIC_H_ */

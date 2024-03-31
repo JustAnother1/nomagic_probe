@@ -25,8 +25,6 @@
 
 #define ACTION_QUEUE_LENGTH 5
 
-typedef Result (*action_handler)(action_data_typ* action, bool first_call);
-
 
 static void handle_actions(void);
 static Result handle_target_reply_questionmark(action_data_typ* action, bool first_call);
@@ -42,6 +40,8 @@ static volatile uint32_t action_write;
 static action_handler cur_action;
 static action_data_typ action_queue[ACTION_QUEUE_LENGTH];
 static const action_handler action_look_up[NUM_ACTIONS] = {
+        handle_target_connect,
+        handle_target_close_connection,
         handle_target_reply_g,
         handle_target_reply_questionmark,
         handle_target_reply_write_g,
@@ -50,12 +50,6 @@ static const action_handler action_look_up[NUM_ACTIONS] = {
         handle_target_reply_write_memory,
         handle_target_reply_step,
 };
-
-#if (defined FEAT_DEBUG_UART) || (defined FEAT_DEBUG_CDC)
-static const char* action_names[NUM_ACTIONS] = {
-        "read general register",
-};
-#endif
 
 static uint32_t timeout_counter;
 static bool attached;
@@ -130,6 +124,52 @@ void send_part(char* part, uint32_t size, uint32_t offset, uint32_t length)
     }
     reply_packet_add_max(&part[offset], length);
     reply_packet_send();
+}
+
+void target_connect(void)
+{
+    // TODO protect against concurrent access (action_write)
+    uint32_t next_idx = action_write + 1;
+    if(ACTION_QUEUE_LENGTH == next_idx)
+    {
+        next_idx = 0;
+    }
+    if(action_read != next_idx)
+    {
+        action_queue[action_write].action = SWD_CONNECT;
+        action_write = next_idx;
+    }
+    else
+    {
+        // can not happen, as gdb can only do one command after the other,...
+        for(;;)
+        {
+            ;  // TODO
+        }
+    }
+}
+
+void target_close_connection(void)
+{
+    // TODO protect against concurrent access (action_write)
+    uint32_t next_idx = action_write + 1;
+    if(ACTION_QUEUE_LENGTH == next_idx)
+    {
+        next_idx = 0;
+    }
+    if(action_read != next_idx)
+    {
+        action_queue[action_write].action = SWD_CLOSE_CONNECTION;
+        action_write = next_idx;
+    }
+    else
+    {
+        // can not happen, as gdb can only do one command after the other,...
+        for(;;)
+        {
+            ;  // TODO
+        }
+    }
 }
 
 void target_reply_g(void)
@@ -398,7 +438,7 @@ static void handle_actions(void)
         if(RESULT_OK > res)
         {
             // error
-            debug_line("target: error %ld on action %s", res, action_names[action_queue[action_read].action]);
+            debug_line("target: error %ld on action %d", res, action_queue[action_read].action);
         }
         cur_action = NULL;
         action_read++;
@@ -414,7 +454,7 @@ static void handle_actions(void)
 
         if(100 < timeout_counter)
         {
-            debug_line("ERROR: target: SWD: timeout in running %s order !", action_names[action_queue[action_read].action]);
+            debug_line("ERROR: target: SWD: timeout in running %d order !", action_queue[action_read].action);
             timeout_counter = 0;
             // TODO can we do something better than to just skip this command?
             // do not try anymore

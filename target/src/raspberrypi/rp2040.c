@@ -64,8 +64,13 @@
     "<memory type=\"ram\" start=\"0x20000000\" length=\"0x20042000\"/>\r\n" \
 "</memory-map>\r\n"
 
-void target_close_connection(void)
+
+Result handle_target_close_connection(action_data_typ* action, bool first_call)
 {
+    (void) action;
+    (void) first_call;
+    // TODO
+    return RESULT_OK;
     /*  TODO
     if(true == first_call)
     {
@@ -97,8 +102,12 @@ void target_close_connection(void)
     */
 }
 
-void target_connect(void)
+Result handle_target_connect(action_data_typ* action, bool first_call)
 {
+    (void) action;
+    (void) first_call;
+    // TODO
+    return RESULT_OK;
     /*
     static Result phase = 0;
     static Result transaction_id;
