@@ -19,6 +19,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include "result.h"
+#include "nomagic/walk.h"
 
 typedef enum {
     SWD_CONNECT,
@@ -36,6 +37,7 @@ typedef enum {
 
 typedef struct{
     uint32_t phase;
+    walk_data_typ* walk;
     action_typ action;
     uint8_t padding[3];
 } action_data_typ;

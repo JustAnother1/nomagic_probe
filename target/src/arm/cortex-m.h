@@ -150,7 +150,6 @@
 "</threads>\r\n"
 
 
-Result cortex_m_init(bool first_call);
 Result cortex_m_add_general_registers(bool first_call);
 Result cortex_m_halt_cpu(bool first_call);
 

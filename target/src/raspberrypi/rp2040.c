@@ -67,29 +67,19 @@
 
 Result handle_target_close_connection(action_data_typ* action, bool first_call)
 {
-    (void) action;
-    (void) first_call;
-    // TODO
-    return RESULT_OK;
-    /*  TODO
     if(true == first_call)
     {
-        cur_walk.result = RESULT_OK;
-        cur_walk.is_done = true;
-    }
-    if(0 == step)
-    {
         debug_line("closing SWD connection !");
-        cur_walk.type = WALK_DISCONNECT;
-        cur_walk.phase = 0;
-        cur_walk.result = RESULT_OK;
-        cur_walk.is_done = false;
-        step = 1;
-        return false;
+        action->walk->type = WALK_DISCONNECT;
+        action->walk->phase = 0;
+        action->walk->result = RESULT_OK;
+        action->walk->is_done = false;
+        action->phase = 1;
+        return ERR_NOT_COMPLETED;
     }
     else // if(1 == step)
     {
-        if(RESULT_OK == cur_walk.result)
+        if(RESULT_OK == action->walk->result)
         {
             debug_line("Disconnected!");
         }
@@ -97,117 +87,37 @@ Result handle_target_close_connection(action_data_typ* action, bool first_call)
         {
             debug_line("ERROR: failed to disconnect!");
         }
-        return false;
     }
-    */
+    return action->walk->result;
 }
 
 Result handle_target_connect(action_data_typ* action, bool first_call)
 {
-    (void) action;
-    (void) first_call;
-    // TODO
-    return RESULT_OK;
-    /*
-    static Result phase = 0;
-    static Result transaction_id;
-    Result res;
     if(true == first_call)
     {
-        debug_line("SWDv2 (0x%08x)", SWD_ID_CORE_0);
-        phase = 1;
+        debug_line("connecting SWDv2 (0x%08x)", SWD_ID_CORE_0);
+        action->walk->type = WALK_CONNECT;
+        action->walk->par_b_0 = true; // multi = SWDv2 -> true
+        action->walk->par_i_0 = SWD_ID_CORE_0;  // TODO multi core
+        action->walk->par_i_1 = SWD_AP_SEL;
+        action->walk->phase = 0;
+        action->walk->result = RESULT_OK;
+        action->walk->is_done = false;
+        action->phase = 1;
+        return ERR_NOT_COMPLETED;
     }
-
-    if(1 == phase)
+    if(1 == action->phase)
     {
-        res = swd_connect(true, SWD_ID_CORE_0, SWD_AP_SEL);
-        if(RESULT_OK < res)
+        if(RESULT_OK == action->walk->result)
         {
-            transaction_id = res;
-            phase = 2;
+            debug_line("connected!");
         }
         else
         {
-            return res;
+            debug_line("ERROR: failed to connect!");
         }
     }
-
-    if(2 == phase)
-    {
-        uint32_t data;
-        res = swd_get_result(transaction_id, &data);
-        if(RESULT_OK == res)
-        {
-            if(RESULT_OK == data)
-            {
-                phase = 3;
-            }
-            else
-            {
-                debug_line("target: SWD connect failed ! (%ld)", data);
-                return ERR_TARGET_ERROR;
-            }
-        }
-        else
-        {
-            return res;
-        }
-    }
-
-    if((3 == phase) || (4 == phase))
-    {
-        if(3 == phase)
-        {
-            res = cortex_m_init(true);
-            phase = 4;
-        }
-        else
-        {
-            res = cortex_m_init(false);
-        }
-        if(RESULT_OK == res)
-        {
-            debug_line("target: initialized cortex-m");
-            //phase = 5;
-            phase = 7;
-        }
-        else
-        {
-            return res;
-        }
-    }
-/ *
-    if((5 == phase) || (6 == phase))
-    {
-        if(5 == phase)
-        {
-            res = cortex_m_halt_cpu(true);
-            phase = 6;
-        }
-        else
-        {
-            res = cortex_m_halt_cpu(false);
-        }
-        if(RESULT_OK == res)
-        {
-            debug_line("target: halted CPU");
-            phase = 7;
-        }
-        else
-        {
-            return res;
-        }
-    }
-* /
-    if(7 == phase)
-    {
-        // all done
-        return RESULT_OK;
-    }
-
-    debug_line("target connect: invalid phase!");
-    return ERR_WRONG_STATE;
-    */
+    return action->walk->result;
 }
 
 Result handle_target_reply_g(action_data_typ* action, bool first_call)

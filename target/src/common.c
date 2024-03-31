@@ -74,7 +74,10 @@ void target_tick(void)
     {
         walk_execute(&cur_walk);
     }
-    handle_actions();
+    else
+    {
+        handle_actions();
+    }
 }
 
 bool cmd_target_info(uint32_t loop)
@@ -415,6 +418,8 @@ static void handle_actions(void)
         if(action_read != action_write)
         {
             // new action available
+            action_queue[action_read].phase = 0;
+            action_queue[action_read].walk = &cur_walk;
             cur_action = action_look_up[action_queue[action_read].action];
             first = true;
             timeout_counter = 0;

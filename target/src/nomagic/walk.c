@@ -176,7 +176,9 @@ static void handle_connect(walk_data_typ* data)
         // init DEMCR
         if(RESULT_OK == cur_step.result)
         {
-            // TODO DEMCR.DWTENA bit to 1 to enable Watch points
+            // bit 24: DWTENA:       0= DWT disabled;                 1= DWT enabled.
+            // bit 10: VC_HARDERR:   0= haling on HardFault disabled; 1= halting on HardFault enabled.
+            // bit 0:  VC_CORERESET: 0= Reset Vector Catch disabled;  1= Reset Vector Catch enabled.
             val_DEMCR = (1 << 24) | (1 << 10) | 1;
             cur_step.type = STEP_AP_WRITE;
             cur_step.par_i_0 = DEMCR;
@@ -197,6 +199,10 @@ static void handle_connect(walk_data_typ* data)
     {
         if(RESULT_OK == cur_step.result)
         {
+            // bit 3: C_MASKINTS: 0= do not mask;                       1= Mask PendSV, SysTick and external configurable interrupts.
+            // bit 2: C_STEP:     0= single stepping disabled;          1= single stepping enabled.
+            // bit 1: C_HALT:     0= Request a halted processor to run; 1= Request a running processor to halt.
+            // bit 0: C_DEBUGEN:  0= Halting debug disabled;            1= Halting debug enabled.
             val_DHCSR = 0xf;
             cur_step.type = STEP_AP_WRITE;
             cur_step.par_i_0 = DHCSR;
@@ -242,7 +248,6 @@ static void handle_disconnect(walk_data_typ* data)
     }
     else if(1 == data->phase)
     {
-        // write DEBUGEN in DHCSR
         if(RESULT_OK == cur_step.result)
         {
             data->result = RESULT_OK;
