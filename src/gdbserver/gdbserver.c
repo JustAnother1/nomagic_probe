@@ -39,6 +39,7 @@ static uint8_t line_buffer[MAX_COMMAND_LENGTH];
 static uint32_t line_pos;
 static uint32_t reply_length;
 static uint8_t reply_buffer[MAX_REPLY_LENGTH];
+static uint32_t sum;
 static state_typ state;
 static char checksum[2];
 static bool connected;
@@ -83,6 +84,8 @@ void reply_packet_prepare(void)
 {
     reply_buffer[0] = '$';
     reply_length = 1;
+    sum = 0;  // checksum does not include the '$'
+    GDBSERVER_SEND_BYTES(reply_buffer, 1);
 }
 
 void reply_packet_add(char* data)
@@ -91,15 +94,24 @@ void reply_packet_add(char* data)
     while((0 != *data) && (reply_length + length < MAX_REPLY_LENGTH))
     {
         reply_buffer[reply_length + length] = (uint8_t)(*data);
+        sum = sum + (uint8_t)(*data);
         length++;
         data++;
     }
+    GDBSERVER_SEND_BYTES(&(reply_buffer[reply_length]), length);
     reply_length = reply_length + length;
 }
 
 void reply_packet_add_max(char* data, uint32_t length)
 {
-    memcpy(&reply_buffer[reply_length], data, length);
+    uint32_t i;
+    memcpy(&(reply_buffer[reply_length]), data, length);
+    GDBSERVER_SEND_BYTES(&(reply_buffer[reply_length]), length);
+    for(i = 0; i < length; i++)
+    {
+        sum = sum + (uint8_t)(*data);
+        data++;
+    }
     reply_length = reply_length + length;
 }
 
@@ -136,16 +148,16 @@ void reply_packet_add_hex(uint32_t data, uint32_t digits)
     for(i = 0; i < report; i++)
     {
         reply_buffer[reply_length + i] = (uint8_t)(buf[(report - 1) -i]);
+        sum = sum + (uint8_t)(buf[(report - 1) -i]);
+        GDBSERVER_SEND_BYTES(&(reply_buffer[reply_length + i]), 1);
     }
     reply_length = reply_length + report;
 }
 
 void reply_packet_send(void)
 {
-    uint32_t sum;
     char reply_checksum[2];
-
-    sum = calculateChecksum((char*)&reply_buffer[1], reply_length -1);  // checksum does not include the '$'
+    // sum = calculateChecksum((char*)&reply_buffer[1], reply_length -1);  // checksum does not include the '$'
     sum = sum & 0xff;
     int_to_hex(reply_checksum, sum, 2);
     if(reply_length + 4 > MAX_REPLY_LENGTH)
@@ -159,7 +171,7 @@ void reply_packet_send(void)
     reply_buffer[reply_length + 2] = (uint8_t)reply_checksum[0]; // low nibble
     reply_buffer[reply_length + 3]  = 0;
     debug_line("gdbs sending: %s", reply_buffer);
-    GDBSERVER_SEND_BYTES(reply_buffer, reply_length + 3);
+    GDBSERVER_SEND_BYTES(&(reply_buffer[reply_length]), 3);
 }
 
 void send_error_packet(void)
