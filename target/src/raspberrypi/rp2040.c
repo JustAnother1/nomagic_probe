@@ -26,6 +26,7 @@
 #include "common.h"
 #include "device_specific.h"
 #include "arm/cortex-m.h"
+#include "hex.h"
 
 // RP2040:
 // Core 0: 0x01002927
@@ -85,7 +86,7 @@ Result handle_target_close_connection(action_data_typ* action, bool first_call)
         }
         else
         {
-            debug_line("ERROR: failed to disconnect!");
+            debug_line("ERROR: failed to disconnect(%ld)!", action->walk->result);
         }
     }
     return action->walk->result;
@@ -122,22 +123,54 @@ Result handle_target_connect(action_data_typ* action, bool first_call)
 
 Result handle_target_reply_g(action_data_typ* action, bool first_call)
 {
-    Result res;
-    (void) action;
     if(true == first_call)
     {
         reply_packet_prepare();
-        res = cortex_m_add_general_registers(true);
+        action->phase = 1;
+        action->intern_0 = 0;
+        return ERR_NOT_COMPLETED;
     }
-    else
+    // else ...
+    if(1 == action->phase)
     {
-        res = cortex_m_add_general_registers(false);
+        debug_line("%ld", action->intern_0);
+        action->walk->type = WALK_READ_SPECIAL_REGISTER;
+        action->walk->par_i_0 = action->intern_0;  // select the register to read
+        action->walk->phase = 0;
+        action->walk->result = RESULT_OK;
+        action->walk->is_done = false;
+        action->phase = 2;
+        return ERR_NOT_COMPLETED;
     }
-    if(RESULT_OK == res)
+    else //if(2 == action->phase)
     {
-        reply_packet_send();
+        if(RESULT_OK == action->walk->result)
+        {
+            char buf[9];
+            buf[8] = 0;
+            int_to_hex(buf, action->walk->read_0, 8);
+            reply_packet_add(buf);
+            debug_line("read 0x%08lx", action->walk->read_0);
+            action->intern_0++;
+            action->phase = 1;
+            if(17 == action->intern_0)
+            {
+                // finished
+                reply_packet_send();
+                return RESULT_OK;
+            }
+            else
+            {
+                // continue with next register
+                return ERR_NOT_COMPLETED;
+            }
+        }
+        else
+        {
+            debug_line("ERROR: failed to read special register (%ld)!", action->walk->result);
+            return action->walk->result;
+        }
     }
-    return res;
 }
 
 void target_send_file(char* filename, uint32_t offset, uint32_t len)

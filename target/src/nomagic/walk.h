@@ -19,14 +19,16 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include "result.h"
+#include "steps.h"
 
 typedef enum {
     WALK_CONNECT = 0,
     WALK_DISCONNECT,
+    WALK_READ_SPECIAL_REGISTER,
+    // new walks go here
 #ifdef FEAT_DETECT
     WALK_SCAN,
 #endif
-    // new walks go here
     NUM_WALKS_DEFINED,  // <- do not use other than array size !
 }walk_typ;
 
@@ -39,6 +41,7 @@ typedef struct{
     uint32_t intern_0;  //              | APnum
     uint32_t intern_1;  //              | AP class
     uint32_t read_0;    //              | value read from AP
+    step_data_typ cur_step;
     walk_typ type;      // WALK_CONNECT | WALK_SCAN
     bool par_b_0;       // isSWDv2?     |
     bool is_done;

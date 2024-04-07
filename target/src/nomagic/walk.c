@@ -24,9 +24,6 @@
 #define MAX_SAFE_COUNT    0xfffffff0  // comparing against < 0xffffffff is always true -> we want to avoid 0xffffffff as end time of timeout
 #define WALK_TIMEOUT_TIME_MS  300
 
-
-static step_data_typ cur_step;
-
 static uint32_t val_DHCSR;
 static uint32_t val_DEMCR;
 
@@ -35,6 +32,7 @@ static bool wait_for_wrap_around;
 
 static void handle_connect(walk_data_typ* data);
 static void handle_disconnect(walk_data_typ* data);
+static void handle_read_special_register(walk_data_typ* data);
 
 #ifdef FEAT_DETECT
 static void handle_scan(walk_data_typ* data);
@@ -46,6 +44,7 @@ typedef void (*walk_handler)(walk_data_typ* data);
 static const walk_handler walks_look_up[NUM_WALKS_DEFINED] = {
         handle_connect,
         handle_disconnect,
+        handle_read_special_register,
 #ifdef FEAT_DETECT
         handle_scan,
 #endif
@@ -53,8 +52,6 @@ static const walk_handler walks_look_up[NUM_WALKS_DEFINED] = {
 
 void walk_init(void)
 {
-    cur_step.is_done = true;
-    cur_step.result = RESULT_OK;
 }
 
 void walk_execute(walk_data_typ* data)
@@ -63,12 +60,12 @@ void walk_execute(walk_data_typ* data)
     {
         return;
     }
-    if(false == cur_step.is_done)
+    if(false == data->cur_step.is_done)
     {
         // we are not done -> do it now
-        steps_execute(&cur_step);
+        steps_execute(&(data->cur_step));
     }
-    if(false == cur_step.is_done)
+    if(false == data->cur_step.is_done)
     {
         uint32_t cur_time = time_get_ms();
         if(true == wait_for_wrap_around)
@@ -88,14 +85,28 @@ void walk_execute(walk_data_typ* data)
                 debug_line("ERROR: Target walk(%d): timeout in running step %ld !", data->type, data->phase );
                 // TODO can we do something better than to just skip this command?
                 debug_line("walk(pi0:0x%08lX, pi1:0x%08lX, p:%ld, r:%ld, i:%ld, t:%d, d:%d, pb:%d)",
-                           data->par_i_0, data->par_i_1, data->phase, data->result, data->intern_0, data->type, data->is_done, data->par_b_0);
+                           data->par_i_0,
+                           data->par_i_1,
+                           data->phase,
+                           data->result,
+                           data->intern_0,
+                           data->type,
+                           data->is_done,
+                           data->par_b_0);
                 debug_line("step(pi0:0x%08lX, pi1:0x%08lX, p:%ld, r:%ld, i:%ld, t:%d, d:%d, pb:%d)",
-                           cur_step.par_i_0, cur_step.par_i_1, cur_step.phase, cur_step.result, cur_step.intern_0, cur_step.type, cur_step.is_done, cur_step.par_b_0);
+                           data->cur_step.par_i_0,
+                           data->cur_step.par_i_1,
+                           data->cur_step.phase,
+                           data->cur_step.result,
+                           data->cur_step.intern_0,
+                           data->cur_step.type,
+                           data->cur_step.is_done,
+                           data->cur_step.par_b_0);
 
                 // do not try anymore
                 data->result = ERR_TIMEOUT;
                 data->is_done = true;
-                cur_step.is_done = true;
+                data->cur_step.is_done = true;
             }
             // else not a timeout, yet.
         }
@@ -103,10 +114,10 @@ void walk_execute(walk_data_typ* data)
     else
     {
         // step is done, next step?
-        if(RESULT_OK != cur_step.result)
+        if(RESULT_OK != data->cur_step.result)
         {
             // something went wrong !
-            data->result = cur_step.result;
+            data->result = data->cur_step.result;
             data->is_done = true;
         }
         if(false == data->is_done)
@@ -140,76 +151,76 @@ static void handle_connect(walk_data_typ* data)
 {
     if(0 == data->phase)
     {
-        cur_step.type = STEP_CONNECT;
-        cur_step.par_b_0 = data->par_b_0;
-        cur_step.par_i_0 = data->par_i_0;
-        cur_step.par_i_1 = data->par_i_1;
-        cur_step.phase = 0;
-        cur_step.result = RESULT_OK;
-        cur_step.is_done = false;
+        data->cur_step.type = STEP_CONNECT;
+        data->cur_step.par_b_0 = data->par_b_0;
+        data->cur_step.par_i_0 = data->par_i_0;
+        data->cur_step.par_i_1 = data->par_i_1;
+        data->cur_step.phase = 0;
+        data->cur_step.result = RESULT_OK;
+        data->cur_step.is_done = false;
         data->phase++;
     }
     else if(1 == data->phase)
     {
         // write DEBUGEN in DHCSR
-        if(RESULT_OK == cur_step.result)
+        if(RESULT_OK == data->cur_step.result)
         {
             // cortex-M init
             val_DHCSR = 1;  // C_DEBUGEN = 1; C_HALT = b10;
-            cur_step.type = STEP_AP_WRITE;
-            cur_step.par_i_0 = DHCSR;
-            cur_step.par_i_1 = DBGKEY | (0xffff & val_DHCSR);
-            cur_step.phase = 0;
-            cur_step.result = RESULT_OK;
-            cur_step.is_done = false;
+            data->cur_step.type = STEP_AP_WRITE;
+            data->cur_step.par_i_0 = DHCSR;
+            data->cur_step.par_i_1 = DBGKEY | (0xffff & val_DHCSR);
+            data->cur_step.phase = 0;
+            data->cur_step.result = RESULT_OK;
+            data->cur_step.is_done = false;
             data->phase++;
         }
         else
         {
             // step failed
-            data->result = cur_step.result;
+            data->result = data->cur_step.result;
             data->is_done = true;
         }
     }
     else if(2 == data->phase)
     {
         // init DEMCR
-        if(RESULT_OK == cur_step.result)
+        if(RESULT_OK == data->cur_step.result)
         {
             // bit 24: DWTENA:       0= DWT disabled;                 1= DWT enabled.
             // bit 10: VC_HARDERR:   0= haling on HardFault disabled; 1= halting on HardFault enabled.
             // bit 0:  VC_CORERESET: 0= Reset Vector Catch disabled;  1= Reset Vector Catch enabled.
             val_DEMCR = (1 << 24) | (1 << 10) | 1;
-            cur_step.type = STEP_AP_WRITE;
-            cur_step.par_i_0 = DEMCR;
-            cur_step.par_i_1 = val_DEMCR;
-            cur_step.phase = 0;
-            cur_step.result = RESULT_OK;
-            cur_step.is_done = false;
+            data->cur_step.type = STEP_AP_WRITE;
+            data->cur_step.par_i_0 = DEMCR;
+            data->cur_step.par_i_1 = val_DEMCR;
+            data->cur_step.phase = 0;
+            data->cur_step.result = RESULT_OK;
+            data->cur_step.is_done = false;
             data->phase++;
         }
         else
         {
             // step failed
-            data->result = cur_step.result;
+            data->result = data->cur_step.result;
             data->is_done = true;
         }
     }
     else if(3 == data->phase)
     {
-        if(RESULT_OK == cur_step.result)
+        if(RESULT_OK == data->cur_step.result)
         {
             // bit 3: C_MASKINTS: 0= do not mask;                       1= Mask PendSV, SysTick and external configurable interrupts.
             // bit 2: C_STEP:     0= single stepping disabled;          1= single stepping enabled.
             // bit 1: C_HALT:     0= Request a halted processor to run; 1= Request a running processor to halt.
             // bit 0: C_DEBUGEN:  0= Halting debug disabled;            1= Halting debug enabled.
             val_DHCSR = 0xf;
-            cur_step.type = STEP_AP_WRITE;
-            cur_step.par_i_0 = DHCSR;
-            cur_step.par_i_1 = DBGKEY | (0xffff & val_DHCSR);
-            cur_step.phase = 0;
-            cur_step.result = RESULT_OK;
-            cur_step.is_done = false;
+            data->cur_step.type = STEP_AP_WRITE;
+            data->cur_step.par_i_0 = DHCSR;
+            data->cur_step.par_i_1 = DBGKEY | (0xffff & val_DHCSR);
+            data->cur_step.phase = 0;
+            data->cur_step.result = RESULT_OK;
+            data->cur_step.is_done = false;
             data->phase++; // todo add more steps?
             data->result = RESULT_OK;
             data->is_done = true;
@@ -217,7 +228,7 @@ static void handle_connect(walk_data_typ* data)
         else
         {
             // step failed
-            data->result = cur_step.result;
+            data->result = data->cur_step.result;
             data->is_done = true;
         }
     }
@@ -240,15 +251,15 @@ static void handle_disconnect(walk_data_typ* data)
 {
     if(0 == data->phase)
     {
-        cur_step.type = STEP_DISCONNECT;
-        cur_step.phase = 0;
-        cur_step.result = RESULT_OK;
-        cur_step.is_done = false;
+        data->cur_step.type = STEP_DISCONNECT;
+        data->cur_step.phase = 0;
+        data->cur_step.result = RESULT_OK;
+        data->cur_step.is_done = false;
         data->phase++;
     }
     else if(1 == data->phase)
     {
-        if(RESULT_OK == cur_step.result)
+        if(RESULT_OK == data->cur_step.result)
         {
             data->result = RESULT_OK;
             data->is_done = true;
@@ -256,9 +267,60 @@ static void handle_disconnect(walk_data_typ* data)
         else
         {
             // step failed
-            data->result = cur_step.result;
+            data->result = data->cur_step.result;
             data->is_done = true;
         }
+    }
+}
+
+static void handle_read_special_register(walk_data_typ* data)
+{
+    // 1. write to DCRSR the REGSEL value and REGWnR = 0
+    if(0 == data->phase)
+    {
+        data->cur_step.type = STEP_AP_WRITE;
+        data->cur_step.phase = 0;
+        data->cur_step.result = RESULT_OK;
+        data->cur_step.is_done = false;
+        data->cur_step.par_i_0 = DCRSR;
+        data->cur_step.par_i_1 = data->par_i_0;
+        data->phase++;
+    }
+    // 2. read DHCSR until S_REGRDY is 1
+    else if(1 == data->phase)
+    {
+        data->cur_step.type = STEP_AP_READ;
+        data->cur_step.phase = 0;
+        data->cur_step.result = RESULT_OK;
+        data->cur_step.is_done = false;
+        data->cur_step.par_i_0 = DHCSR;
+        data->phase++;
+    }
+    // 3. read data from DCRDR
+    else if(2 == data->phase)
+    {
+        if(0 == (data->cur_step.read_0 & (1<<16)))
+        {
+            // no data available -> read again
+            data->phase = 1;
+        }
+        else
+        {
+            // data available -> read data
+            data->cur_step.type = STEP_AP_READ;
+            data->cur_step.phase = 0;
+            data->cur_step.result = RESULT_OK;
+            data->cur_step.is_done = false;
+            data->cur_step.par_i_0 = DCRDR;
+            data->phase++;
+        }
+    }
+
+    else if(3 == data->phase)
+    {
+        data->read_0 = data->cur_step.read_0;
+        data->result = RESULT_OK;
+        data->is_done = true;
     }
 }
 
@@ -276,27 +338,27 @@ static void handle_scan(walk_data_typ* data)
         debug_line("testing AP %ld", data->intern_0);
         swd_protocol_set_AP_sel(data->intern_0);
         // data->res = read_ap_register(AP_BANK_IDR, AP_REGISTER_IDR, &(data->read_0), true);
-        cur_step.type = STEP_AP_REG_READ;
-        cur_step.par_i_0 = AP_BANK_IDR;
-        cur_step.par_i_1 = AP_REGISTER_IDR;
-        cur_step.phase = 0;
-        cur_step.result = RESULT_OK;
-        cur_step.is_done = false;
+        data->cur_step.type = STEP_AP_REG_READ;
+        data->cur_step.par_i_0 = AP_BANK_IDR;
+        data->cur_step.par_i_1 = AP_REGISTER_IDR;
+        data->cur_step.phase = 0;
+        data->cur_step.result = RESULT_OK;
+        data->cur_step.is_done = false;
         data->phase++;
     }
     else if((2 == data->phase) || (3 == data->phase))
     {
-        if(RESULT_OK == cur_step.result)
+        if(RESULT_OK == data->cur_step.result)
         {
             // found an AP
             Result tres;
             if(2 == data->phase)
             {
-                if(0 != cur_step.read_0)
+                if(0 != data->cur_step.read_0)
                 {
                     debug_line("Found AP !");
-                    data->intern_1 = cur_step.read_0;
-                    tres = check_AP(data->intern_1, true, &(data->sub_phase));
+                    data->intern_1 = data->cur_step.read_0;
+                    tres = check_AP(data->intern_1, true, &(data->sub_phase), data);
                     data->phase = 3;
                 }
                 else
@@ -311,7 +373,7 @@ static void handle_scan(walk_data_typ* data)
             }
             else
             {
-                tres = check_AP(data->intern_1, false, &(data->sub_phase));
+                tres = check_AP(data->intern_1, false, &(data->sub_phase), data);
             }
             if(RESULT_OK == tres)
             {
@@ -334,20 +396,20 @@ static void handle_scan(walk_data_typ* data)
             else
             {
                 // step failed
-                data->result = cur_step.result;
+                data->result = data->cur_step.result;
                 data->is_done = true;
             }
         }
         else
         {
             // step failed
-            data->result = cur_step.result;
+            data->result = data->cur_step.result;
             data->is_done = true;
         }
     }
 }
 
-static Result check_AP(uint32_t idr, bool first_call, uint32_t * phase)
+static Result check_AP(uint32_t idr, bool first_call, uint32_t * phase, walk_data_typ* data)
 {
     // static Result phase = 0;
     uint32_t class = (idr & (0xf << 13))>> 13;
@@ -367,97 +429,97 @@ static Result check_AP(uint32_t idr, bool first_call, uint32_t * phase)
         }
         else if(1 == *phase)
         {
-            cur_step.type = STEP_AP_REG_READ;
-            cur_step.par_i_0 = AP_BANK_CSW;
-            cur_step.par_i_1 = AP_REGISTER_CSW;
-            cur_step.phase = 0;
-            cur_step.result = RESULT_OK;
-            cur_step.is_done = false;
+            data->cur_step.type = STEP_AP_REG_READ;
+            data->cur_step.par_i_0 = AP_BANK_CSW;
+            data->cur_step.par_i_1 = AP_REGISTER_CSW;
+            data->cur_step.phase = 0;
+            data->cur_step.result = RESULT_OK;
+            data->cur_step.is_done = false;
             *phase = 2;
             return ERR_NOT_COMPLETED;
         }
         else if(2 == *phase)
         {
-            if(RESULT_OK == cur_step.result)
+            if(RESULT_OK == data->cur_step.result)
             {
                 // found an AP
-                debug_line("AP: CSW  : 0x%08lx", cur_step.read_0);
+                debug_line("AP: CSW  : 0x%08lx", data->cur_step.read_0);
 
                 // change CSW !!!
-                cur_step.read_0 = cur_step.read_0 & ~0x3ful; // no auto address increment
-                cur_step.read_0 = cur_step.read_0 | 0x80000002; // DbgSwEnable + data size = 32bit
+                data->cur_step.read_0 = data->cur_step.read_0 & ~0x3ful; // no auto address increment
+                data->cur_step.read_0 = data->cur_step.read_0 | 0x80000002; // DbgSwEnable + data size = 32bit
 
                 // write CSW
-                cur_step.type = STEP_AP_REG_WRITE;
-                cur_step.par_i_0 = AP_BANK_CSW;
-                cur_step.par_i_1 = AP_REGISTER_CSW;
-                cur_step.par_i_1 = cur_step.read_0;
-                cur_step.read_0 = 0;
-                cur_step.phase = 0;
-                cur_step.result = RESULT_OK;
-                cur_step.is_done = false;
+                data->cur_step.type = STEP_AP_REG_WRITE;
+                data->cur_step.par_i_0 = AP_BANK_CSW;
+                data->cur_step.par_i_1 = AP_REGISTER_CSW;
+                data->cur_step.par_i_1 = data->cur_step.read_0;
+                data->cur_step.read_0 = 0;
+                data->cur_step.phase = 0;
+                data->cur_step.result = RESULT_OK;
+                data->cur_step.is_done = false;
                 *phase = 3;
                 return ERR_NOT_COMPLETED;
             }
             else
             {
                 // step failed
-                debug_line("Failed to read CSW (%ld) !", cur_step.result);
-                return cur_step.result;
+                debug_line("Failed to read CSW (%ld) !", data->cur_step.result);
+                return data->cur_step.result;
             }
         }
 
         else if(3 == *phase)
         {
-            if(RESULT_OK == cur_step.result)
+            if(RESULT_OK == data->cur_step.result)
             {
-                cur_step.type = STEP_AP_REG_READ;
-                cur_step.par_i_0 = AP_BANK_BASE;
-                cur_step.par_i_1 = AP_REGISTER_BASE;
-                cur_step.phase = 0;
-                cur_step.result = RESULT_OK;
-                cur_step.is_done = false;
+                data->cur_step.type = STEP_AP_REG_READ;
+                data->cur_step.par_i_0 = AP_BANK_BASE;
+                data->cur_step.par_i_1 = AP_REGISTER_BASE;
+                data->cur_step.phase = 0;
+                data->cur_step.result = RESULT_OK;
+                data->cur_step.is_done = false;
                 *phase = 4;
                 return ERR_NOT_COMPLETED;
             }
             else
             {
                 // step failed
-                debug_line("Failed to write CSW (%ld) !", cur_step.result);
-                return cur_step.result;
+                debug_line("Failed to write CSW (%ld) !", data->cur_step.result);
+                return data->cur_step.result;
             }
         }
 
         else if(4 == *phase)
         {
-            if(RESULT_OK == cur_step.result)
+            if(RESULT_OK == data->cur_step.result)
             {
-                debug_line("AP: BASE : 0x%08lx", cur_step.read_0);
-                debug_line("AP: ROM Table starts at 0x%08lx", cur_step.read_0 & 0xfffffffc); // lowest two bits are 0. (4 Byte = 32 bit alignment)
-                cur_step.type = STEP_AP_REG_READ;
-                cur_step.par_i_0 = AP_BANK_CFG;
-                cur_step.par_i_1 = AP_REGISTER_CFG;
-                cur_step.phase = 0;
-                cur_step.result = RESULT_OK;
-                cur_step.is_done = false;
+                debug_line("AP: BASE : 0x%08lx", data->cur_step.read_0);
+                debug_line("AP: ROM Table starts at 0x%08lx", data->cur_step.read_0 & 0xfffffffc); // lowest two bits are 0. (4 Byte = 32 bit alignment)
+                data->cur_step.type = STEP_AP_REG_READ;
+                data->cur_step.par_i_0 = AP_BANK_CFG;
+                data->cur_step.par_i_1 = AP_REGISTER_CFG;
+                data->cur_step.phase = 0;
+                data->cur_step.result = RESULT_OK;
+                data->cur_step.is_done = false;
                 *phase = 5;
                 return ERR_NOT_COMPLETED;
             }
             else
             {
                 // step failed
-                debug_line("Failed to read BASE (%ld) !", cur_step.result);
-                return cur_step.result;
+                debug_line("Failed to read BASE (%ld) !", data->cur_step.result);
+                return data->cur_step.result;
             }
         }
 
         else if(5 == *phase)
         {
-            if(RESULT_OK == cur_step.result)
+            if(RESULT_OK == data->cur_step.result)
             {
                 bool val;
-                debug_line("AP: CFG  : 0x%08lx", cur_step.read_0);
-                if(0 == (cur_step.read_0 & 0x02))
+                debug_line("AP: CFG  : 0x%08lx", data->cur_step.read_0);
+                if(0 == (data->cur_step.read_0 & 0x02))
                 {
                     val = false;
                 }
@@ -467,7 +529,7 @@ static Result check_AP(uint32_t idr, bool first_call, uint32_t * phase)
                 }
                 debug_line("long address supported = %d", val);
 
-                if(0 == (cur_step.read_0 & 0x04))
+                if(0 == (data->cur_step.read_0 & 0x04))
                 {
                     val = false;
                 }
@@ -477,28 +539,28 @@ static Result check_AP(uint32_t idr, bool first_call, uint32_t * phase)
                 }
                 debug_line("large data supported = %d", val);
 
-                cur_step.type = STEP_AP_REG_READ;
-                cur_step.par_i_0 = AP_BANK_CFG1;
-                cur_step.par_i_1 = AP_REGISTER_CFG1;
-                cur_step.phase = 0;
-                cur_step.result = RESULT_OK;
-                cur_step.is_done = false;
+                data->cur_step.type = STEP_AP_REG_READ;
+                data->cur_step.par_i_0 = AP_BANK_CFG1;
+                data->cur_step.par_i_1 = AP_REGISTER_CFG1;
+                data->cur_step.phase = 0;
+                data->cur_step.result = RESULT_OK;
+                data->cur_step.is_done = false;
                 *phase = 6;
                 return ERR_NOT_COMPLETED;
             }
             else
             {
                 // step failed
-                debug_line("Failed to read CFG (%ld) !", cur_step.result);
-                return cur_step.result;
+                debug_line("Failed to read CFG (%ld) !", data->cur_step.result);
+                return data->cur_step.result;
             }
         }
 
         else if(6 == *phase)
         {
-            if(RESULT_OK == cur_step.result)
+            if(RESULT_OK == data->cur_step.result)
             {
-                debug_line("AP: CFG1 : 0x%08lx", cur_step.read_0);
+                debug_line("AP: CFG1 : 0x%08lx", data->cur_step.read_0);
 
                 // TODO read ROM Table
                 // ROM Table:
@@ -536,8 +598,8 @@ static Result check_AP(uint32_t idr, bool first_call, uint32_t * phase)
             else
             {
                 // step failed
-                debug_line("Failed to read CFG1 (%ld) !", cur_step.result);
-                return cur_step.result;
+                debug_line("Failed to read CFG1 (%ld) !", data->cur_step.result);
+                return data->cur_step.result;
             }
         }
 

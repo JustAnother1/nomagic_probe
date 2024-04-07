@@ -215,10 +215,15 @@ static void communicate_with_gdb(void)
                     }
                     else if('-' == data)
                     {
+                        // host is not happy with what we send -> probably some error on our side
+                        // data from last command is still valid -> retry doing it
+                        commands_execute((char*)line_buffer, line_pos, (char*)checksum);
+                        /*
                         // Transmit error
                         // -> Resent last message
                         debug_line("resending: %s", reply_buffer);
                         GDBSERVER_SEND_BYTES(reply_buffer, reply_length);
+                        */
                     }
                     else if(0x03 == data)
                     {

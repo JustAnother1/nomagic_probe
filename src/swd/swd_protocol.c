@@ -520,12 +520,13 @@ Result write_handler(command_typ* cmd, bool first_call)
 
     if((1 == cmd->phase) || (2 == cmd->phase))
     {
+        /* TODO auto increment !
         if(cmd->address == state.mem_ap.reg_TAR)
         {
             // we can skip this step
             cmd->phase = 3;
         }
-        else
+        else */
         {
             Result res;
             if(1 == cmd->phase)
@@ -577,12 +578,13 @@ Result read_handler(command_typ* cmd, bool first_call)
 
     if((1 == cmd->phase) || (2 == cmd->phase))
     {
+        /* TODO auto increment !
         if(cmd->address == state.mem_ap.reg_TAR)
         {
             // we can skip this step
             cmd->phase = 3;
         }
-        else
+        else */
         {
             Result res;
             if(1 == cmd->phase)

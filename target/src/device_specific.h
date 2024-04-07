@@ -37,6 +37,8 @@ typedef enum {
 
 typedef struct{
     uint32_t phase;
+    uint32_t intern_0;
+    uint32_t par_i_0;
     walk_data_typ* walk;
     action_typ action;
     uint8_t padding[3];

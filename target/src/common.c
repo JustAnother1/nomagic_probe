@@ -22,8 +22,11 @@
 #include "swd.h"
 #include "debug_log.h"
 #include "nomagic/walk.h"
+#include "time.h"
 
 #define ACTION_QUEUE_LENGTH 5
+#define MAX_SAFE_COUNT    0xfffffff0  // comparing against < 0xffffffff is always true -> we want to avoid 0xffffffff as end time of timeout
+#define WALK_TIMEOUT_TIME_MS  300
 
 
 static void handle_actions(void);
@@ -51,7 +54,8 @@ static const action_handler action_look_up[NUM_ACTIONS] = {
         handle_target_reply_step,
 };
 
-static uint32_t timeout_counter;
+static uint32_t timeout_time;
+static bool wait_for_wrap_around;
 static bool attached;
 static walk_data_typ cur_walk;
 
@@ -60,9 +64,10 @@ void target_init(void)
     action_read = 0;
     action_write = 0;
     cur_action = NULL;
-    timeout_counter = 0;
     attached = false;
     cur_walk.is_done = true;
+    cur_walk.cur_step.is_done = true;
+    cur_walk.cur_step.result = RESULT_OK;
     swd_init();
     walk_init();
 }
@@ -82,7 +87,8 @@ void target_tick(void)
 
 bool cmd_target_info(uint32_t loop)
 {
-    (void)loop;
+    if(0 == loop)
+    {
     debug_line("Target Status");
     debug_line("=============");
     debug_line("target: RP2040");  // TODO target cfg
@@ -90,16 +96,46 @@ bool cmd_target_info(uint32_t loop)
     if(true == cur_walk.is_done)
     {
         debug_line("SWD state: idle");
+        return true; // true == Done; false = call me again
     }
     else
     {
         debug_line("SWD state: active");
-        debug_line("type: %d", cur_walk.type);
-        debug_line("phase: %ld", cur_walk.phase);
-
+    }
+    }
+    else if(1 == loop)
+    {
+        debug_line("walk type: %d", cur_walk.type);
+        debug_line("step type : %d", cur_walk.cur_step.type);
+        debug_line("walk phase: %ld", cur_walk.phase);
+        debug_line("step phase : %ld", cur_walk.cur_step.phase);
+        debug_line("walk is done : %d", cur_walk.is_done);
+        debug_line("step is done : %d", cur_walk.cur_step.is_done);
+        debug_line("action_write : %ld", action_write);
+        debug_line("action_read : %ld", action_read);
+    }
+    else
+    {
+        if(loop -2 < ACTION_QUEUE_LENGTH)
+        {
+            debug_line("action_queue[%ld].action = %d", loop -2, action_queue[loop-2].action);
+            debug_line(".phase = %ld, .intern_0 = %ld, .par_i_0 = %ld",
+                       action_queue[loop-2].phase,
+                       action_queue[loop-2].intern_0,
+                       action_queue[loop-2].par_i_0);
+            debug_line(".walk.is_done = %d, .walk.type = %d, .walk.result = %ld, .walk.phase = %ld",
+                       action_queue[loop-2].walk->is_done,
+                       action_queue[loop-2].walk->type,
+                       action_queue[loop-2].walk->result,
+                       action_queue[loop-2].walk->phase);
+        }
+        else
+        {
+            return true; // true == Done; false = call me again
+        }
     }
 
-    return true; // true == Done; false = call me again
+    return false; // true == Done; false = call me again
 }
 
 void send_part(char* part, uint32_t size, uint32_t offset, uint32_t length)
@@ -145,10 +181,8 @@ void target_connect(void)
     else
     {
         // can not happen, as gdb can only do one command after the other,...
-        for(;;)
-        {
-            ;  // TODO
-        }
+        debug_line("ERROR: GDB Server action queue full !");
+        action_queue[action_write].action = SWD_CONNECT;
     }
 }
 
@@ -168,10 +202,8 @@ void target_close_connection(void)
     else
     {
         // can not happen, as gdb can only do one command after the other,...
-        for(;;)
-        {
-            ;  // TODO
-        }
+        debug_line("ERROR: GDB Server action queue full !");
+        action_queue[action_write].action = SWD_CLOSE_CONNECTION;
     }
 }
 
@@ -191,10 +223,8 @@ void target_reply_g(void)
     else
     {
         // can not happen, as gdb can only do one command after the other,...
-        for(;;)
-        {
-            ;  // TODO
-        }
+        debug_line("ERROR: GDB Server action queue full !");
+        action_queue[action_write].action = GDB_CMD_G;
     }
 }
 
@@ -214,10 +244,8 @@ void target_reply_questionmark(void)
     else
     {
         // can not happen, as gdb can only do one command after the other,...
-        for(;;)
-        {
-            ;  // TODO
-        }
+        debug_line("ERROR: GDB Server action queue full !");
+        action_queue[action_write].action = GDB_CMD_QUESTIONMARK;
     }
 }
 
@@ -239,10 +267,8 @@ void target_reply_write_g(char* received, uint32_t length)
     else
     {
         // can not happen, as gdb can only do one command after the other,...
-        for(;;)
-        {
-            ;  // TODO
-        }
+        debug_line("ERROR: GDB Server action queue full !");
+        action_queue[action_write].action = GDB_CMD_WRITE_G;
     }
 }
 
@@ -264,10 +290,8 @@ void target_reply_continue(char* received, uint32_t length)
     else
     {
         // can not happen, as gdb can only do one command after the other,...
-        for(;;)
-        {
-            ;  // TODO
-        }
+        debug_line("ERROR: GDB Server action queue full !");
+        action_queue[action_write].action = GDB_CMD_CONTINUE;
     }
 }
 
@@ -289,10 +313,8 @@ void target_reply_read_memory(char* received, uint32_t length)
     else
     {
         // can not happen, as gdb can only do one command after the other,...
-        for(;;)
-        {
-            ;  // TODO
-        }
+        debug_line("ERROR: GDB Server action queue full !");
+        action_queue[action_write].action = GDB_CMD_READ_MEMORY;
     }
 }
 
@@ -314,10 +336,8 @@ void target_reply_write_memory(char* received, uint32_t length)
     else
     {
         // can not happen, as gdb can only do one command after the other,...
-        for(;;)
-        {
-            ;  // TODO
-        }
+        debug_line("ERROR: GDB Server action queue full !");
+        action_queue[action_write].action = GDB_CMD_WRITE_MEMORY;
     }
 }
 
@@ -339,10 +359,8 @@ void target_reply_step(char* received, uint32_t length)
     else
     {
         // can not happen, as gdb can only do one command after the other,...
-        for(;;)
-        {
-            ;  // TODO
-        }
+        debug_line("ERROR: GDB Server action queue full !");
+        action_queue[action_write].action = GDB_CMD_STEP;
     }
 }
 
@@ -418,11 +436,28 @@ static void handle_actions(void)
         if(action_read != action_write)
         {
             // new action available
+            uint32_t start_time = time_get_ms();
             action_queue[action_read].phase = 0;
             action_queue[action_read].walk = &cur_walk;
             cur_action = action_look_up[action_queue[action_read].action];
             first = true;
-            timeout_counter = 0;
+            timeout_time = start_time + WALK_TIMEOUT_TIME_MS;
+            if(timeout_time > MAX_SAFE_COUNT)
+            {
+                // an end time of 0xffffffff would not work as all values are always < 0xffffffff
+                uint32_t remainder = 100 - (MAX_SAFE_COUNT - start_time);
+                timeout_time = 2 + remainder;
+                wait_for_wrap_around = true;
+            }
+            else if(timeout_time < start_time)
+            {
+                // wrap around
+                wait_for_wrap_around = true;
+            }
+            else
+            {
+                wait_for_wrap_around = false;
+            }
         }
         else
         {
@@ -455,12 +490,11 @@ static void handle_actions(void)
     else
     {
         // order not done
-        timeout_counter++;
+        uint32_t cur_time = time_get_ms();
 
-        if(100 < timeout_counter)
+        if(cur_time > timeout_time)
         {
             debug_line("ERROR: target: SWD: timeout in running %d order !", action_queue[action_read].action);
-            timeout_counter = 0;
             // TODO can we do something better than to just skip this command?
             // do not try anymore
             cur_action = NULL;

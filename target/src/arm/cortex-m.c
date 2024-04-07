@@ -285,6 +285,6 @@ static Result read_specialRegisters(bool first_call, uint32_t regsel, uint32_t* 
         return RESULT_OK;
     }
 
-    debug_line("read special registers: invalid phase!");
+    debug_line("read special registers: invalid phase(%ld)!", phase);
     return ERR_WRONG_STATE;
 }
