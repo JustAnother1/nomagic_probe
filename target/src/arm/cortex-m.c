@@ -22,7 +22,7 @@
 #include "cortex-m.h"
 
 // static Result write_specialRegisters(bool first_call, uint32_t regsel, uint32_t data);
-static Result read_specialRegisters(bool first_call, uint32_t regsel, uint32_t* data);
+// static Result read_specialRegisters(bool first_call, uint32_t regsel, uint32_t* data);
 
 static uint32_t val_DHCSR;
 
@@ -120,6 +120,7 @@ Result cortex_m_halt_cpu(bool first_call)
     return ERR_WRONG_STATE;
 }
 
+/*
 Result cortex_m_add_general_registers(bool first_call)
 {
     static uint32_t phase = 0;
@@ -173,7 +174,7 @@ Result cortex_m_add_general_registers(bool first_call)
 
     debug_line("add general registers: invalid phase!");
     return ERR_WRONG_STATE;
-}
+}*/
 
 /*
 static Result write_specialRegisters(bool first_call, uint32_t regsel, uint32_t data)
@@ -187,6 +188,7 @@ static Result write_specialRegisters(bool first_call, uint32_t regsel, uint32_t 
 }
 */
 
+/*
 static Result read_specialRegisters(bool first_call, uint32_t regsel, uint32_t* data)
 {
     static Result phase = 0;
@@ -288,3 +290,4 @@ static Result read_specialRegisters(bool first_call, uint32_t regsel, uint32_t* 
     debug_line("read special registers: invalid phase(%ld)!", phase);
     return ERR_WRONG_STATE;
 }
+*/
