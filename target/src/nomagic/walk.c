@@ -285,6 +285,7 @@ static void handle_read_special_register(walk_data_typ* data)
         data->cur_step.par_i_0 = DCRSR;
         data->cur_step.par_i_1 = data->par_i_0;
         data->phase++;
+        data->intern_0 = 0;  // retry counter
     }
     // 2. read DHCSR until S_REGRDY is 1
     else if(1 == data->phase)
@@ -301,8 +302,19 @@ static void handle_read_special_register(walk_data_typ* data)
     {
         if(0 == (data->cur_step.read_0 & (1<<16)))
         {
-            // no data available -> read again
-            data->phase = 1;
+            data->intern_0++;
+            if(100 < data->intern_0)
+            {
+                // no data available -> read again
+                data->phase = 1;
+            }
+            else
+            {
+                // too many retries
+                debug_line("ERROR: too many retries !");
+                data->result = ERR_TIMEOUT;
+                data->is_done = true;
+            }
         }
         else
         {
