@@ -441,13 +441,28 @@ Result connect_handler(command_typ* cmd, bool first_call)
         }
     }
 
-    // write CSW
-    if((12 == cmd->phase) || (13 == cmd->phase))
+    // Write APSel to SELECT Register
+    if(12 == cmd->phase)
     {
-        if(12 == cmd->phase)
+        phase_result = swd_packet_write(DP, ADDR_SELECT, (state.mem_ap.ap_sel <<24));
+        if(RESULT_OK == phase_result)
+        {
+            cmd->phase = 13;
+        }
+        else
+        {
+            // some other error
+            return phase_result;
+        }
+    }
+
+    // write CSW
+    if((13 == cmd->phase) || (14 == cmd->phase))
+    {
+        if(13 == cmd->phase)
         {
             phase_result = write_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, CSW_VAL, true, cmd);
-            cmd->phase = 13;
+            cmd->phase = 14;
         }
         else
         {
@@ -456,7 +471,7 @@ Result connect_handler(command_typ* cmd, bool first_call)
         if(RESULT_OK == phase_result)
         {
             state.mem_ap.reg_CSW = CSW_VAL;
-            cmd->phase = 14;
+            cmd->phase = 15;
         }
         else
         {
@@ -465,12 +480,12 @@ Result connect_handler(command_typ* cmd, bool first_call)
     }
 
     // read CSW
-    if((14 == cmd->phase) || (15 == cmd->phase))
+    if((15 == cmd->phase) || (16 == cmd->phase))
     {
-        if(14 == cmd->phase)
+        if(15 == cmd->phase)
         {
             phase_result = read_ap_register(AP_BANK_CSW, AP_REGISTER_CSW, &(cmd->read_data), true, cmd);
-            cmd->phase = 15;
+            cmd->phase = 16;
         }
         else
         {
@@ -478,7 +493,7 @@ Result connect_handler(command_typ* cmd, bool first_call)
         }
         if(RESULT_OK == phase_result)
         {
-            cmd->phase = 16;
+            cmd->phase = 17;
             /*
             // test if AP is now enabled
             if(0 != (read_data & 0x40))
@@ -500,7 +515,7 @@ Result connect_handler(command_typ* cmd, bool first_call)
     }
 
 // Phase 16 - we are done
-    if(16 == cmd->phase)
+    if(17 == cmd->phase)
     {
         // done!
         swd_eingine_add_cmd_result(cmd->transaction_id, RESULT_OK);
