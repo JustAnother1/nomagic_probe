@@ -133,7 +133,6 @@ Result handle_target_reply_g(action_data_typ* action, bool first_call)
     // else ...
     if(1 == action->phase)
     {
-        debug_line("%ld", action->intern_0);
         action->walk->type = WALK_READ_SPECIAL_REGISTER;
         action->walk->par_i_0 = action->intern_0;  // select the register to read
         action->walk->phase = 0;
