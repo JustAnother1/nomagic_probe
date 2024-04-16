@@ -30,46 +30,46 @@
 
 typedef void (*VECTOR_FUNCTION_Type)(void);
 
-void default_Handler(void) __attribute__ ((weak, interrupt ("IRQ")));
-void NMI_Handler(void) __attribute__ ((weak, interrupt ("IRQ")));
+void default_Handler(void)    __attribute__ ((weak, interrupt ("IRQ")));
+void NMI_Handler(void)        __attribute__ ((weak, interrupt ("IRQ")));
 void Hard_Fault_Handler(void) __attribute__ ((weak, interrupt ("IRQ")));
-void SVCall_Handler(void) __attribute__ ((weak, interrupt ("IRQ")));
-void PendSV_Handler(void) __attribute__ ((weak, interrupt ("IRQ")));
-void SysTick_Handler(void) __attribute__ ((weak, interrupt ("IRQ")));
+void SVCall_Handler(void)     __attribute__ ((weak, interrupt ("IRQ")));
+void PendSV_Handler(void)     __attribute__ ((weak, interrupt ("IRQ")));
+void SysTick_Handler(void)    __attribute__ ((weak, interrupt ("IRQ")));
 
-void TIMER_IRQ_0(void) __attribute__ ((weak, interrupt ("IRQ")));
-void TIMER_IRQ_1(void) __attribute__ ((weak, interrupt ("IRQ")));
-void TIMER_IRQ_2(void) __attribute__ ((weak, interrupt ("IRQ")));
-void TIMER_IRQ_3(void) __attribute__ ((weak, interrupt ("IRQ")));
-void PWM_IRQ_WRAP(void) __attribute__ ((weak, interrupt ("IRQ")));
-void USBCTRL_IRQ(void) __attribute__ ((weak, interrupt ("IRQ")));
-void XIP_IRQ(void) __attribute__ ((weak, interrupt ("IRQ")));
-void PIO0_IRQ_0(void) __attribute__ ((weak, interrupt ("IRQ")));
-void PIO0_IRQ_1(void) __attribute__ ((weak, interrupt ("IRQ")));
-void PIO1_IRQ_0(void) __attribute__ ((weak, interrupt ("IRQ")));
-void PIO1_IRQ_1(void) __attribute__ ((weak, interrupt ("IRQ")));
-void DMA_IRQ_0(void) __attribute__ ((weak, interrupt ("IRQ")));
-void DMA_IRQ_1(void) __attribute__ ((weak, interrupt ("IRQ")));
-void IO_IRQ_BANK0(void) __attribute__ ((weak, interrupt ("IRQ")));
-void IO_IRQ_QSPI(void) __attribute__ ((weak, interrupt ("IRQ")));
-void SIO_IRQ_PROC0(void) __attribute__ ((weak, interrupt ("IRQ")));
-void SIO_IRQ_PROC1(void) __attribute__ ((weak, interrupt ("IRQ")));
-void CLOCKS_IRQ(void) __attribute__ ((weak, interrupt ("IRQ")));
-void SPI0_IRQ(void) __attribute__ ((weak, interrupt ("IRQ")));
-void SPI1_IRQ(void) __attribute__ ((weak, interrupt ("IRQ")));
-void UART0_IRQ(void) __attribute__ ((weak, interrupt ("IRQ")));
-void UART1_IRQ(void) __attribute__ ((weak, interrupt ("IRQ")));
-void ADC_IRQ_FIFO(void) __attribute__ ((weak, interrupt ("IRQ")));
-void I2C0_IRQ(void) __attribute__ ((weak, interrupt ("IRQ")));
-void I2C1_IRQ(void) __attribute__ ((weak, interrupt ("IRQ")));
-void RTC_IRQ(void) __attribute__ ((weak, interrupt ("IRQ")));
+void TIMER_IRQ_0(void)        __attribute__ ((weak, interrupt ("IRQ")));
+void TIMER_IRQ_1(void)        __attribute__ ((weak, interrupt ("IRQ")));
+void TIMER_IRQ_2(void)        __attribute__ ((weak, interrupt ("IRQ")));
+void TIMER_IRQ_3(void)        __attribute__ ((weak, interrupt ("IRQ")));
+void PWM_IRQ_WRAP(void)       __attribute__ ((weak, interrupt ("IRQ")));
+void USBCTRL_IRQ(void)        __attribute__ ((weak, interrupt ("IRQ")));
+void XIP_IRQ(void)            __attribute__ ((weak, interrupt ("IRQ")));
+void PIO0_IRQ_0(void)         __attribute__ ((weak, interrupt ("IRQ")));
+void PIO0_IRQ_1(void)         __attribute__ ((weak, interrupt ("IRQ")));
+void PIO1_IRQ_0(void)         __attribute__ ((weak, interrupt ("IRQ")));
+void PIO1_IRQ_1(void)         __attribute__ ((weak, interrupt ("IRQ")));
+void DMA_IRQ_0(void)          __attribute__ ((weak, interrupt ("IRQ")));
+void DMA_IRQ_1(void)          __attribute__ ((weak, interrupt ("IRQ")));
+void IO_IRQ_BANK0(void)       __attribute__ ((weak, interrupt ("IRQ")));
+void IO_IRQ_QSPI(void)        __attribute__ ((weak, interrupt ("IRQ")));
+void SIO_IRQ_PROC0(void)      __attribute__ ((weak, interrupt ("IRQ")));
+void SIO_IRQ_PROC1(void)      __attribute__ ((weak, interrupt ("IRQ")));
+void CLOCKS_IRQ(void)         __attribute__ ((weak, interrupt ("IRQ")));
+void SPI0_IRQ(void)           __attribute__ ((weak, interrupt ("IRQ")));
+void SPI1_IRQ(void)           __attribute__ ((weak, interrupt ("IRQ")));
+void UART0_IRQ(void)          __attribute__ ((weak, interrupt ("IRQ")));
+void UART1_IRQ(void)          __attribute__ ((weak, interrupt ("IRQ")));
+void ADC_IRQ_FIFO(void)       __attribute__ ((weak, interrupt ("IRQ")));
+void I2C0_IRQ(void)           __attribute__ ((weak, interrupt ("IRQ")));
+void I2C1_IRQ(void)           __attribute__ ((weak, interrupt ("IRQ")));
+void RTC_IRQ(void)            __attribute__ ((weak, interrupt ("IRQ")));
 
 #ifdef ENABLE_CORE_1
 static void wake_up_core1(void);
 #endif
-_Noreturn void error_state(void) __attribute__ ((weak, __noreturn__));
-_Noreturn void Reset_Handler(void)__attribute__((__noreturn__, section(".third_stage_boot")));
-_Noreturn void Int_Handler(void)__attribute__((__noreturn__, section(".third_stage_boot")));
+_Noreturn void error_state(void)   __attribute__ ((weak, __noreturn__));
+_Noreturn void Reset_Handler(void) __attribute__((__noreturn__, section(".third_stage_boot")));
+_Noreturn void Int_Handler(void)   __attribute__((__noreturn__, section(".third_stage_boot")));
 
 const VECTOR_FUNCTION_Type __STAGE_3_VECTOR_TABLE[64] __attribute__((used, section(".vectors")))
 = {
@@ -244,162 +244,194 @@ _Noreturn void Int_Handler(void)
     }
 }
 
-void NMI_Handler(void) {
+void NMI_Handler(void)
+{
     watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_NMI);
     error_state();
 }
 
-void Hard_Fault_Handler(void) {
+void Hard_Fault_Handler(void)
+{
     watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_HARD_FAULT);
     error_state();
 }
 
-void SVCall_Handler(void) {
+void SVCall_Handler(void)
+{
     watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_SVCALL);
     error_state();
 }
 
-void PendSV_Handler(void) {
+void PendSV_Handler(void)
+{
     watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_PENDSV);
     error_state();
 }
 
-void SysTick_Handler(void) {
+void SysTick_Handler(void)
+{
     watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_SYSTICK);
     error_state();
 }
 
-void TIMER_IRQ_0(void) {
+void TIMER_IRQ_0(void)
+{
     watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_TIMER_0);
     error_state();
 }
 
-void TIMER_IRQ_1(void) {
+void TIMER_IRQ_1(void)
+{
     watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_TIMER_1);
     error_state();
 }
 
-void TIMER_IRQ_2(void) {
+void TIMER_IRQ_2(void)
+{
     watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_TIMER_2);
     error_state();
 }
 
-void TIMER_IRQ_3(void) {
+void TIMER_IRQ_3(void)
+{
     watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_TIMER_3);
     error_state();
 }
 
-void PWM_IRQ_WRAP(void) {
+void PWM_IRQ_WRAP(void)
+{
     watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_PWM);
     error_state();
 }
 
-void USBCTRL_IRQ(void) {
+void USBCTRL_IRQ(void)
+{
     watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_USB_CTRL);
     error_state();
 }
 
-void XIP_IRQ(void) {
+void XIP_IRQ(void)
+{
     watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_XIP);
     error_state();
 }
 
-void PIO0_IRQ_0(void) {
+void PIO0_IRQ_0(void)
+{
     watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_PIO_0_0);
     error_state();
 }
 
-void PIO0_IRQ_1(void) {
+void PIO0_IRQ_1(void)
+{
     watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_PIO_0_1);
     error_state();
 }
 
-void PIO1_IRQ_0(void) {
+void PIO1_IRQ_0(void)
+{
     watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_PIO_1_0);
     error_state();
 }
 
-void PIO1_IRQ_1(void) {
+void PIO1_IRQ_1(void)
+{
     watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_PIO_1_1);
     error_state();
 }
 
-void DMA_IRQ_0(void) {
+void DMA_IRQ_0(void)
+{
     watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_DMA_0);
     error_state();
 }
 
-void DMA_IRQ_1(void) {
+void DMA_IRQ_1(void)
+{
     watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_DMA_1);
     error_state();
 }
 
-void IO_IRQ_BANK0(void) {
+void IO_IRQ_BANK0(void)
+{
     watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_GPIO_BANK_0);
     error_state();
 }
 
-void IO_IRQ_QSPI(void) {
+void IO_IRQ_QSPI(void)
+{
     watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_GPIO_QSPI);
     error_state();
 }
 
-void SIO_IRQ_PROC0(void) {
+void SIO_IRQ_PROC0(void)
+{
     watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_SIO_PROC_0);
     error_state();
 }
 
-void SIO_IRQ_PROC1(void) {
+void SIO_IRQ_PROC1(void)
+{
     watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_SIO_PROC_1);
     error_state();
 }
 
-void CLOCKS_IRQ(void) {
+void CLOCKS_IRQ(void)
+{
     watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_CLOCKS);
     error_state();
 }
 
-void SPI0_IRQ(void) {
+void SPI0_IRQ(void)
+{
     watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_SPI_0);
     error_state();
 }
 
-void SPI1_IRQ(void) {
+void SPI1_IRQ(void)
+{
     watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_SPI_1);
     error_state();
 }
 
-void UART0_IRQ(void) {
+void UART0_IRQ(void)
+{
     watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_UART_0);
     error_state();
 }
 
-void UART1_IRQ(void) {
+void UART1_IRQ(void)
+{
     watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_UART_1);
     error_state();
 }
 
-void ADC_IRQ_FIFO(void) {
+void ADC_IRQ_FIFO(void)
+{
     watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_ADC_FIFO);
     error_state();
 }
 
-void I2C0_IRQ(void) {
+void I2C0_IRQ(void)
+{
     watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_I2C_0);
     error_state();
 }
 
-void I2C1_IRQ(void) {
+void I2C1_IRQ(void)
+{
     watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_I2C_1);
     error_state();
 }
 
-void RTC_IRQ(void) {
+void RTC_IRQ(void)
+{
     watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_RTC);
     error_state();
 }
 
-void default_Handler(void) {
+void default_Handler(void)
+{
     watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_DEFAULT);
     error_state();
 }
@@ -422,23 +454,23 @@ _Noreturn void error_state(void)
     }
 }
 
-bool startup_report(uint32_t loop)
+bool startup_report(const uint32_t loop)
 {
     switch(loop)
     {
-    case 0: debug_line("3rd stage boot start:   0x%08lx", (uint32_t)&__third_boot_start); break;
-    case 1: debug_line("3rd stage boot end:     0x%08lx", (uint32_t)&__third_boot_end); break;
+    case 0:  debug_line("3rd stage boot start:   0x%08lx", (uint32_t)&__third_boot_start); break;
+    case 1:  debug_line("3rd stage boot end:     0x%08lx", (uint32_t)&__third_boot_end); break;
 
-    case 2: debug_line(".code start:            0x%08lx", (uint32_t)&__code_start); break;
-    case 3: debug_line(".code end:              0x%08lx", (uint32_t)&__code_end); break;
-    case 4: debug_line(".code start in flash:   0x%08lx", (uint32_t)&__code_in_flash); break;
-    case 5: debug_line(".code end in flash:     0x%08lx", (uint32_t)(&__code_in_flash + (&__code_end - &__code_start))); break;
+    case 2:  debug_line(".code start:            0x%08lx", (uint32_t)&__code_start); break;
+    case 3:  debug_line(".code end:              0x%08lx", (uint32_t)&__code_end); break;
+    case 4:  debug_line(".code start in flash:   0x%08lx", (uint32_t)&__code_in_flash); break;
+    case 5:  debug_line(".code end in flash:     0x%08lx", (uint32_t)(&__code_in_flash + (&__code_end - &__code_start))); break;
 
-    case 6: debug_line(".bss start:             0x%08lx", (uint32_t)&__bss_start); break;
-    case 7: debug_line(".bss end:               0x%08lx", (uint32_t)&__bss_end); break;
+    case 6:  debug_line(".bss start:             0x%08lx", (uint32_t)&__bss_start); break;
+    case 7:  debug_line(".bss end:               0x%08lx", (uint32_t)&__bss_end); break;
 
-    case 8: debug_line(".data start:            0x%08lx", (uint32_t)&__data_start); break;
-    case 9: debug_line(".data end:              0x%08lx", (uint32_t)&__data_end); break;
+    case 8:  debug_line(".data start:            0x%08lx", (uint32_t)&__data_start); break;
+    case 9:  debug_line(".data end:              0x%08lx", (uint32_t)&__data_end); break;
     case 10: debug_line(".data start in flash:   0x%08lx", (uint32_t)&__data_in_flash); break;
     case 11: debug_line(".data end in flash:     0x%08lx", (uint32_t)(&__data_in_flash + (&__data_end - &__data_start))); break;
 

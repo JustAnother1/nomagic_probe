@@ -56,7 +56,7 @@ void watchdog_feed(void)
     WATCHDOG->LOAD = reaload_value;
 }
 
-bool watchdog_report(uint32_t loop)
+bool watchdog_report(const uint32_t loop)
 {
     uint32_t i;
     switch(loop)
@@ -164,12 +164,12 @@ bool watchdog_report(uint32_t loop)
     return false;
 }
 
-void watchdog_report_issue(uint32_t issue)
+void watchdog_report_issue(const uint32_t issue)
 {
     WATCHDOG->SCRATCH7 = WATCHDOG->SCRATCH7 | issue;
 }
 
-void watchdog_enter_section(uint32_t section)
+void watchdog_enter_section(const uint32_t section)
 {
     if(0 == SIO->CPUID)
     {
@@ -180,7 +180,7 @@ void watchdog_enter_section(uint32_t section)
         WATCHDOG->SCRATCH5 = WATCHDOG->SCRATCH5 | section;
     }
 }
-void watchdog_leave_section(uint32_t section)
+void watchdog_leave_section(const uint32_t section)
 {
     if(0 == SIO->CPUID)
     {

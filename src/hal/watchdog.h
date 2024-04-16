@@ -67,10 +67,10 @@ void watchdog_enable(void);
 //! if you don't feed the watch dog regularly it gets angry!
 void watchdog_feed(void);
 //! reports type of reset
-bool watchdog_report(uint32_t loop);
-void watchdog_report_issue(uint32_t issue);
+bool watchdog_report(const uint32_t loop);
+void watchdog_report_issue(const uint32_t issue);
 
-void watchdog_enter_section(uint32_t section);
-void watchdog_leave_section(uint32_t section);
+void watchdog_enter_section(const uint32_t section);
+void watchdog_leave_section(const uint32_t section);
 
 #endif /* HAL_WATCHDOG_H_ */

@@ -92,7 +92,7 @@ void debug_uart_tick(void)
 }
 
 // send data:
-uint32_t debug_uart_send_bytes(uint8_t* data, uint32_t length)
+uint32_t debug_uart_send_bytes(const uint8_t* data, const uint32_t length)
 {
     uint32_t i;
     for (i = 0; i < length; i++)
@@ -115,7 +115,7 @@ uint32_t debug_uart_send_bytes(uint8_t* data, uint32_t length)
     return i;
 }
 
-void debug_uart_send_String(char* str)
+void debug_uart_send_String(const char* str)
 {
     while(*str != 0)
     {
@@ -173,7 +173,7 @@ uint8_t debug_uart_get_next_received_byte(void)
     return res;
 }
 
-bool debug_uart_get_received_bytes(uint8_t *buf, uint32_t length)
+bool debug_uart_get_received_bytes(uint8_t *buf, const uint32_t length)
 {
     uint32_t i;
     if (length < debug_uart_get_num_received_bytes())

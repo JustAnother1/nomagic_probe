@@ -29,13 +29,13 @@ void debug_uart_initialize(void);
 void debug_uart_tick(void);
 
 // send data:
-uint32_t debug_uart_send_bytes(uint8_t *data, uint32_t length);
-void debug_uart_send_String(char* str);
+uint32_t debug_uart_send_bytes(const uint8_t *data, const uint32_t length);
+void debug_uart_send_String(const char* str);
 void debug_putc(void* p, char c);
 
 // get received data:
 uint32_t debug_uart_get_num_received_bytes(void);
 uint8_t debug_uart_get_next_received_byte(void);
-bool debug_uart_get_received_bytes(uint8_t *buf, uint32_t length);
+bool debug_uart_get_received_bytes(uint8_t *buf, const uint32_t length);
 
 #endif // HAL_DEBUG_UART_H

@@ -89,7 +89,7 @@ typedef struct {
 
 #define NVIC    ((volatile NVIC_Type*) 0xE000E100)
 
-static inline void NVIC_EnableIRQ(uint32_t IRQ_Number, uint32_t priority) {
+static inline void NVIC_EnableIRQ(const uint32_t IRQ_Number, const uint32_t priority) {
 	// set Priority
     NVIC->IP[(IRQ_Number >> 2)] = ((uint32_t)(
     NVIC->IP[(IRQ_Number >> 2)] & ~(0xFFUL << (IRQ_Number & 0x03UL) * 8UL))
@@ -107,7 +107,7 @@ static inline void NVIC_EnableIRQ(uint32_t IRQ_Number, uint32_t priority) {
   \param [in]      IRQn  Device specific interrupt number.
   \note    IRQn must not be negative.
  */
-static inline void NVIC_DisableIRQ(int32_t IRQn)
+static inline void NVIC_DisableIRQ(const int32_t IRQn)
 {
   if (IRQn >= 0)
   {
@@ -117,6 +117,6 @@ static inline void NVIC_DisableIRQ(int32_t IRQn)
   }
 }
 
-bool startup_report(uint32_t loop);
+bool startup_report(const uint32_t loop);
 
 #endif // HAL_STARTUP_H
