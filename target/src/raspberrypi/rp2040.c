@@ -123,6 +123,36 @@ Result handle_target_connect(action_data_typ* action, bool first_call)
 
 Result handle_target_reply_g(action_data_typ* action, bool first_call)
 {
+    // ‘g’
+    //    Read general registers.
+    //    Reply:
+    //    ‘XX…’
+    //        Each byte of register data is described by two hex digits.
+    // The bytes with the register are transmitted in target byte order.
+    // The size of each register and their position within the ‘g’ packet
+    // are determined by the target description (see Target Descriptions);
+    // in the absence of a target description, this is done using code
+    // internal to GDB; typically this is some customary register layout
+    // for the architecture in question.
+    //        When reading registers, the stub may also return a string of
+    // literal ‘x’’s in place of the register data digits, to indicate that
+    // the corresponding register’s value is unavailable. For example, when
+    // reading registers from a trace frame (see Using the Collected Data),
+    // this means that the register has not been collected in the trace frame.
+    // When reading registers from a live program, this indicates that the stub
+    // has no means to access the register contents, even though the
+    // corresponding register is known to exist. Note that if a register truly
+    // does not exist on the target, then it is better to not include it in the
+    // target description in the first place.
+    //        For example, for an architecture with 4 registers of 4 bytes each,
+    // the following reply indicates to GDB that registers 0 and 2 are
+    // unavailable, while registers 1 and 3 are available, and both have zero
+    // value:
+    //        -> g
+    //        <- xxxxxxxx00000000xxxxxxxx00000000
+    //    ‘E NN’
+    //        for an error.
+
     if(true == first_call)
     {
         reply_packet_prepare();
@@ -170,6 +200,26 @@ Result handle_target_reply_g(action_data_typ* action, bool first_call)
             return action->walk->result;
         }
     }
+}
+
+Result handle_target_reply_write_g(action_data_typ* action, bool first_call)
+{
+    // ‘G XX…’
+    //     Write general registers. See read registers packet, for a description
+    // of the XX… data.
+    //     Reply:
+    //     ‘OK’
+    //         for success
+    //     ‘E NN’
+    //         for an error
+
+    (void) action; // TODO
+    (void) first_call; // TODO
+    // TODO
+    reply_packet_prepare();
+    reply_packet_add("OK");
+    reply_packet_send();
+    return RESULT_OK;
 }
 
 void target_send_file(char* filename, uint32_t offset, uint32_t len)

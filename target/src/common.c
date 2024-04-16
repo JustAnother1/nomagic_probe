@@ -31,7 +31,6 @@
 
 static void handle_actions(void);
 static Result handle_target_reply_questionmark(action_data_typ* action, bool first_call);
-static Result handle_target_reply_write_g(action_data_typ* action, bool first_call);
 static Result handle_target_reply_continue(action_data_typ* action, bool first_call);
 static Result handle_target_reply_read_memory(action_data_typ* action, bool first_call);
 static Result handle_target_reply_write_memory(action_data_typ* action, bool first_call);
@@ -366,6 +365,12 @@ void target_reply_step(char* received, uint32_t length)
 
 static Result handle_target_reply_questionmark(action_data_typ* action, bool first_call)
 {
+    // This is sent when connection is first established to query the reason the target halted.
+    // The reply is the same as for step and continue. This packet has a special interpretation
+    // when the target is in non-stop mode; see Remote Non-Stop.
+    // Reply: See Stop Reply Packets, for the reply specifications.
+    // https://sourceware.org/gdb/current/onlinedocs/gdb.html/Stop-Reply-Packets.html#Stop-Reply-Packets
+
     (void) action;
     (void) first_call;
     // TODO report correct reason
@@ -375,19 +380,13 @@ static Result handle_target_reply_questionmark(action_data_typ* action, bool fir
     return RESULT_OK;
 }
 
-static Result handle_target_reply_write_g(action_data_typ* action, bool first_call)
-{
-    (void) action; // TODO
-    (void) first_call; // TODO
-    // TODO
-    reply_packet_prepare();
-    reply_packet_add("OK");
-    reply_packet_send();
-    return RESULT_OK;
-}
-
 static Result handle_target_reply_continue(action_data_typ* action, bool first_call)
 {
+    // ‘c [addr]’
+    // Continue at addr, which is the address to resume. If addr is omitted, resume at current address.
+    // This packet is deprecated for multi-threading support. See vCont packet.
+    // Reply: See Stop Reply Packets, for the reply specifications.
+
     (void) action; // TODO
     (void) first_call; // TODO
     // TODO
@@ -398,6 +397,24 @@ static Result handle_target_reply_continue(action_data_typ* action, bool first_c
 
 static Result handle_target_reply_read_memory(action_data_typ* action, bool first_call)
 {
+    // ‘m addr,length’
+    //     Read length addressable memory units starting at address addr
+    // (see addressable memory unit). Note that addr may not be aligned to any
+    // particular boundary.
+    //     The stub need not use any particular size or alignment when gathering
+    // data from memory for the response; even if addr is word-aligned and
+    // length is a multiple of the word size, the stub is free to use byte
+    // accesses, or not. For this reason, this packet may not be suitable for
+    // accessing memory-mapped I/O devices.
+    //     Reply:
+    //     ‘XX…’
+    //         Memory contents; each byte is transmitted as a two-digit
+    // hexadecimal number. The reply may contain fewer addressable memory units
+    // than requested if the server was able to read only part of the region of
+    // memory.
+    //     ‘E NN’
+    //         NN is errno
+
     (void) action; // TODO
     (void) first_call; // TODO
     // TODO
@@ -408,10 +425,22 @@ static Result handle_target_reply_read_memory(action_data_typ* action, bool firs
 
 static Result handle_target_reply_write_memory(action_data_typ* action, bool first_call)
 {
+    // ‘M addr,length:XX…’
+    //     Write length addressable memory units starting at address addr (see
+    // addressable memory unit). The data is given by XX…; each byte is
+    // transmitted as a two-digit hexadecimal number.
+    //     Reply:
+    //     ‘OK’
+    //         for success
+    //     ‘E NN’
+    //         for an error (this includes the case where only part of the data
+    // was written).
+
     (void) action; // TODO
     (void) first_call; // TODO
     // TODO
     reply_packet_prepare();
+    reply_packet_add("OK");
     reply_packet_send();
     return RESULT_OK;
 }
