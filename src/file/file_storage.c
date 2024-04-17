@@ -28,35 +28,39 @@ uint16_t file_storage_getblock_size(void)
     return BLOCK_SIZE;
 }
 
-int32_t  file_storage_read(uint32_t block, uint32_t offset, uint8_t* buffer, uint32_t bufsize)
+int32_t  file_storage_read(const uint32_t block, const uint32_t offset, uint8_t* buffer, const uint32_t bufsize)
 {
+    uint32_t start = offset;
     uint32_t abs_offset;
+    uint32_t block_num = block;
     // debug_line("read: block:%ld, offset: %ld, size: %ld", block, offset, bufsize);
-    while(offset >= BLOCK_SIZE)
+    while(start >= BLOCK_SIZE)
     {
-        offset = offset - BLOCK_SIZE;
-        block++;
+        start = start - BLOCK_SIZE;
+        block_num++;
     }
-    if(block >= file_system_block_count())
+    if(block_num >= file_system_block_count())
     {
         return -1;  // read outside of disk
     }
-    abs_offset = (block * BLOCK_SIZE) + offset;
+    abs_offset = (block_num * BLOCK_SIZE) + start;
     return fake_fs_read(abs_offset, buffer, bufsize);
 }
 
-int32_t  file_storage_write(uint32_t block, uint32_t offset, uint8_t* buffer, uint32_t bufsize)
+int32_t  file_storage_write(const uint32_t block, const uint32_t offset, uint8_t* buffer, const uint32_t bufsize)
 {
+    uint32_t start = offset;
     uint32_t abs_offset;
-    while(offset >= BLOCK_SIZE)
+    uint32_t block_num = block;
+    while(start >= BLOCK_SIZE)
     {
-        offset = offset - BLOCK_SIZE;
-        block++;
+        start = start - BLOCK_SIZE;
+        block_num++;
     }
-    if(block >= file_system_block_count())
+    if(block_num >= file_system_block_count())
     {
         return -1;  // write outside of disk
     }
-    abs_offset = (block * BLOCK_SIZE) + offset;
+    abs_offset = (block_num * BLOCK_SIZE) + offset;
     return fake_fs_write(abs_offset, buffer, bufsize);
 }

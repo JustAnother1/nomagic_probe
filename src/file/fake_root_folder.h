@@ -35,15 +35,10 @@ typedef struct{
 
 _Static_assert(sizeof(fat_entry) == 32, "FAT entry size incorrect ! stuffing?");
 
-int32_t fake_root_folder_read(uint32_t offset, uint8_t* buffer, uint32_t bufsize);
-int32_t fake_root_folder_write(uint32_t offset, uint8_t* buffer, uint32_t bufsize);
+int32_t fake_root_folder_read(const uint32_t offset, uint8_t* buffer, const uint32_t bufsize);
+int32_t fake_root_folder_write(const uint32_t offset, uint8_t* buffer, const uint32_t bufsize);
 
-fat_entry* fake_root_get_entry_of_file_named(char* filename);
-fat_entry* fake_root_get_entry_of_file_idx(uint32_t idx);
-
-uint32_t fake_root_folder_get_first_sector_of(char* filename);
-uint32_t fake_root_folder_get_size_of(char* filename);
-char* fake_root_folder_get_filename_for(uint32_t idx);
-char* fake_root_folder_get_extension_for(uint32_t idx);
+fat_entry* fake_root_get_entry_of_file_named(const char* filename);
+fat_entry* fake_root_get_entry_of_file_idx(const uint32_t idx);
 
 #endif /* FILE_FAKE_ROOT_FOLDER_H_ */

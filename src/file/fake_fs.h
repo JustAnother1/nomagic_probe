@@ -170,9 +170,9 @@ lba sector | lba start address | lba end address | Block | FAT Sector | fs secto
 #define FIRST_FREE_FAT_SECTOR   6
 #endif
 
-int32_t fake_fs_read(uint32_t offset, uint8_t* buffer, uint32_t bufsize);
-int32_t fake_fs_write(uint32_t offset, uint8_t* buffer, uint32_t bufsize);
-int32_t fake_fs_read_fat_sector(uint32_t sector, uint32_t offset, uint8_t* buffer, uint32_t bufsize);
+int32_t fake_fs_read(const uint32_t offset, uint8_t* buffer, const uint32_t bufsize);
+int32_t fake_fs_write(const uint32_t offset, uint8_t* buffer, const uint32_t bufsize);
+int32_t fake_fs_read_fat_sector(const uint32_t sector, const uint32_t offset, uint8_t* buffer, const uint32_t bufsize);
 
 
 #endif /* FILE_FAKE_FS_H_ */

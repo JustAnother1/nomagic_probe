@@ -20,7 +20,7 @@
 
 void cli_init(void);
 void cli_tick(void);
-bool cmd_help(uint32_t loop);
+bool cmd_help(const uint32_t loop);
 void cli_welcome(void);
 
 #endif /* CLI_CLI_H_ */

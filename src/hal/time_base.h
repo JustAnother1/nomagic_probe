@@ -18,7 +18,7 @@
 #include <stdint.h>
 #include "hal/hw/TIMER.h"
 
-void delay_us(uint32_t usec);
+void delay_us(const uint32_t usec);
 
 void init_time(void);
 uint32_t time_get_ms(void);

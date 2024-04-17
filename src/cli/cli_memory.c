@@ -32,7 +32,7 @@ static uint32_t num_loops = 0;
 static uint32_t file_size  = 0;
 #endif
 
-bool cmd_memory_display(uint32_t loop)
+bool cmd_memory_display(const uint32_t loop)
 {
     if(0 == loop)
     {
@@ -87,7 +87,7 @@ bool cmd_memory_display(uint32_t loop)
     return false; // we need to do more
 }
 
-bool cmd_memory_dump(uint32_t loop)
+bool cmd_memory_dump(const uint32_t loop)
 {
     uint8_t line_buffer[16];
     uint8_t* line;
@@ -140,7 +140,7 @@ bool cmd_memory_dump(uint32_t loop)
     }
 }
 
-bool cmd_flash_memory_erase(uint32_t loop)
+bool cmd_flash_memory_erase(const uint32_t loop)
 {
     uint32_t diff;
     (void) loop;
@@ -153,7 +153,7 @@ bool cmd_flash_memory_erase(uint32_t loop)
     return true; // we are done
 }
 
-bool cmd_flash_memory_write(uint32_t loop)
+bool cmd_flash_memory_write(const uint32_t loop)
 {
     (void) loop;
     uint32_t i;
@@ -187,7 +187,7 @@ bool cmd_flash_memory_write(uint32_t loop)
     return true; // we are done
 }
 
-bool cmd_flash_reset(uint32_t loop)
+bool cmd_flash_reset(const uint32_t loop)
 {
     (void) loop;
     flash_reset();
@@ -195,7 +195,7 @@ bool cmd_flash_reset(uint32_t loop)
 }
 
 #ifdef BOOT_ROM_ENABLED
-bool cmd_flash_disable_XIP(uint32_t loop)
+bool cmd_flash_disable_XIP(const uint32_t loop)
 {
     uint32_t diff;
     (void) loop;
@@ -212,7 +212,7 @@ bool cmd_flash_disable_XIP(uint32_t loop)
     return true; // we are done
 }
 
-bool cmd_flash_enable_XIP(uint32_t loop)
+bool cmd_flash_enable_XIP(const uint32_t loop)
 {
     uint32_t diff;
     (void)loop;
@@ -232,7 +232,7 @@ bool cmd_flash_enable_XIP(uint32_t loop)
 
 #ifdef FEAT_USB_MSC
 
-bool cmd_file_dump(uint32_t loop)
+bool cmd_file_dump(const uint32_t loop)
 {
     (void) loop;
     if(0 == loop)
@@ -322,7 +322,7 @@ bool cmd_file_dump(uint32_t loop)
     }
 }
 
-bool cmd_file_ls(uint32_t loop)
+bool cmd_file_ls(const uint32_t loop)
 {
     if(0 == loop)
     {
@@ -356,7 +356,7 @@ bool cmd_file_ls(uint32_t loop)
     }
 }
 
-bool cmd_file_format(uint32_t loop)
+bool cmd_file_format(const uint32_t loop)
 {
     (void) loop;
     file_system_format();

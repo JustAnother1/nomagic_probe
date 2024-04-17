@@ -25,12 +25,12 @@
 #include "file_storage.h"
 #include "fake_favicon.h"
 
-static int32_t faked_read(uint32_t offset, uint8_t* buffer, uint32_t bufsize);
-static int32_t faked_write(uint32_t offset, uint8_t* buffer, uint32_t bufsize);
+static int32_t faked_read(const uint32_t offset, uint8_t* buffer, const uint32_t bufsize);
+static int32_t faked_write(const uint32_t offset, uint8_t* buffer, const uint32_t bufsize);
 
 
 
-int32_t fake_fs_read(uint32_t offset, uint8_t* buffer, uint32_t bufsize)
+int32_t fake_fs_read(const uint32_t offset, uint8_t* buffer, const uint32_t bufsize)
 {
     if(offset < (NUM_FAKED_BLOCKS * BLOCK_SIZE))
     {
@@ -48,14 +48,14 @@ int32_t fake_fs_read(uint32_t offset, uint8_t* buffer, uint32_t bufsize)
     }
 }
 
-int32_t fake_fs_read_fat_sector(uint32_t sector, uint32_t offset, uint8_t* buffer, uint32_t bufsize)
+int32_t fake_fs_read_fat_sector(const uint32_t sector, const uint32_t offset, uint8_t* buffer, const uint32_t bufsize)
 {
     // MBR + boot sector + fat + root folder - 2 sectors (sector 0 and sector 1 are not used) => 5120 Bytes
     uint32_t abs_offset = 5120 + (sector * FLASH_SECTOR_SIZE) + offset;
     return fake_fs_read(abs_offset, buffer, bufsize);
 }
 
-int32_t fake_fs_write(uint32_t offset, uint8_t* buffer, uint32_t bufsize)
+int32_t fake_fs_write(const uint32_t offset, uint8_t* buffer, const uint32_t bufsize)
 {
     if(offset < (NUM_FAKED_BLOCKS * BLOCK_SIZE))
     {
@@ -74,9 +74,10 @@ int32_t fake_fs_write(uint32_t offset, uint8_t* buffer, uint32_t bufsize)
     }
 }
 
-static int32_t faked_read(uint32_t offset, uint8_t* buffer, uint32_t bufsize)
+static int32_t faked_read(const uint32_t offset, uint8_t* buffer, const uint32_t bufsize)
 {
-    uint32_t end = offset%BLOCK_SIZE + (uint32_t)bufsize -1;
+    uint32_t start = offset;
+    uint32_t end = (offset % BLOCK_SIZE) + (uint32_t)bufsize - 1;
     if(end >= BLOCK_SIZE)
     {
         // read outside of block requested
@@ -84,82 +85,82 @@ static int32_t faked_read(uint32_t offset, uint8_t* buffer, uint32_t bufsize)
     }
 
     // Master Boot Record (MBR)
-    if(BLOCK_SIZE > offset)
+    if(BLOCK_SIZE > start)
     {
         // MBR
-        return fake_mbr(offset, buffer, bufsize);
+        return fake_mbr(start, buffer, bufsize);
     }
     else
     {
-        offset = offset - BLOCK_SIZE;
+        start = start - BLOCK_SIZE;
     }
 
     // boot sector
-    if(BLOCK_SIZE > offset)
+    if(BLOCK_SIZE > start)
     {
         // boot sector
-        return fake_boot_sector(offset, buffer, bufsize);
+        return fake_boot_sector(start, buffer, bufsize);
     }
-    offset = offset - BLOCK_SIZE;
+    start = start - BLOCK_SIZE;
 
     // FAT
-    if(16 * BLOCK_SIZE > offset)
+    if(16 * BLOCK_SIZE > start)
     {
         // FAT - File Allocation Table
-        return fake_fat_read(offset, buffer, bufsize);
+        return fake_fat_read(start, buffer, bufsize);
     }
     else
     {
-        offset = offset - 16 * BLOCK_SIZE;
+        start = start - 16 * BLOCK_SIZE;
     }
 
     // root folder
-    if(8 * BLOCK_SIZE > offset)
+    if(8 * BLOCK_SIZE > start)
     {
         // root folder
-        return fake_root_folder_read(offset, buffer, bufsize);
+        return fake_root_folder_read(start, buffer, bufsize);
     }
     else
     {
-        offset = offset - 8 * BLOCK_SIZE;
+        start = start - 8 * BLOCK_SIZE;
     }
 
     // read me file
-    if(8 * BLOCK_SIZE > offset)
+    if(8 * BLOCK_SIZE > start)
     {
         // read me file
-        return fake_readme_file(offset, buffer, bufsize);
+        return fake_readme_file(start, buffer, bufsize);
     }
     else
     {
-        offset = offset - 8 * BLOCK_SIZE;
+        start = start - 8 * BLOCK_SIZE;
     }
 
     // autorun.inf
-    if(8 * BLOCK_SIZE > offset)
+    if(8 * BLOCK_SIZE > start)
     {
-        return fake_autorun_inf_file(offset, buffer, bufsize);
+        return fake_autorun_inf_file(start, buffer, bufsize);
     }
     else
     {
-        offset = offset - 8 * BLOCK_SIZE;
+        start = start - 8 * BLOCK_SIZE;
     }
 
     // favicon.ico
-    if(FAVICON_BLOCKS_USED * BLOCK_SIZE > offset)
+    if(FAVICON_BLOCKS_USED * BLOCK_SIZE > start)
     {
-        return fake_favicon_ico_file(offset, buffer, bufsize);
+        return fake_favicon_ico_file(start, buffer, bufsize);
     }
     else
     {
-        offset = offset - FAVICON_BLOCKS_USED * BLOCK_SIZE;
+        start = start - FAVICON_BLOCKS_USED * BLOCK_SIZE;
     }
 
     // read outside of faked blocks
     return -1;
 }
 
-static int32_t faked_write(uint32_t offset, uint8_t* buffer, uint32_t bufsize)
+static int32_t faked_write(const uint32_t offset, uint8_t* buffer, const uint32_t bufsize)
 {
     if((offset >= 2*BLOCK_SIZE) && (offset < 18 * BLOCK_SIZE))
     {

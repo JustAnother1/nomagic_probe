@@ -19,7 +19,9 @@
 #include "tinyusb/src/class/cdc/cdc_device.h"
 #include "probe_api/debug_log.h"
 
-static void print_bool(bool val)
+static void print_bool(const bool val);
+
+static void print_bool(const bool val)
 {
     if(true == val)
     {
@@ -31,7 +33,7 @@ static void print_bool(bool val)
     }
 }
 
-bool cmd_usb_info(uint32_t loop)
+bool cmd_usb_info(const uint32_t loop)
 {
     (void)loop;
     debug_line("USB Status");

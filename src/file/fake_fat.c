@@ -47,7 +47,7 @@ const uint8_t fat_table[] = {
 // data gets stored inverted in Flash as an empty FAT entry is all 0.
 // This should make it possible to just overwrite the Flash memory if a new entry is created.
 
-int32_t fake_fat_read(uint32_t offset, uint8_t* buffer, uint32_t bufsize)
+int32_t fake_fat_read(const uint32_t offset, uint8_t* buffer, const uint32_t bufsize)
 {
     uint32_t i;
     uint32_t some = 0;
@@ -74,7 +74,7 @@ int32_t fake_fat_read(uint32_t offset, uint8_t* buffer, uint32_t bufsize)
     return (int32_t)bufsize;
 }
 
-int32_t fake_fat_write(uint32_t offset, uint8_t* buffer, uint32_t bufsize)
+int32_t fake_fat_write(const uint32_t offset, uint8_t* buffer, const uint32_t bufsize)
 {
     uint32_t i;
     for(i = 0; i < bufsize; i++)

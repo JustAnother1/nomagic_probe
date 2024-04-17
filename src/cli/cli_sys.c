@@ -27,7 +27,7 @@
 #include "probe_api/debug_log.h"
 #include "probe_api/swd.h"
 
-bool cmd_time(uint32_t loop)
+bool cmd_time(const uint32_t loop)
 {
     (void)loop;
     uint32_t now = time_get_ms();
@@ -81,7 +81,7 @@ bool cmd_time(uint32_t loop)
     return true;  // we are done
 }
 
-bool cmd_parameter_raw(uint32_t loop)
+bool cmd_parameter_raw(const uint32_t loop)
 {
     (void)loop;
     uint32_t i = 0;
@@ -102,7 +102,7 @@ bool cmd_parameter_raw(uint32_t loop)
     return true;  // we are done
 }
 
-bool cmd_die(uint32_t loop)
+bool cmd_die(const uint32_t loop)
 {
     (void)loop;
     for(;;)
@@ -112,7 +112,7 @@ bool cmd_die(uint32_t loop)
     return false;  // will never happen
 }
 
-bool cmd_hil_test(uint32_t loop)
+bool cmd_hil_test(const uint32_t loop)
 {
     (void)loop;
     uint32_t a;
@@ -159,7 +159,7 @@ bool cmd_hil_test(uint32_t loop)
     return true;  // we are done
 }
 
-bool cmd_info_overview(uint32_t loop)
+bool cmd_info_overview(const uint32_t loop)
 {
     switch(loop)
     {
@@ -175,7 +175,7 @@ bool cmd_info_overview(uint32_t loop)
     return false;
 }
 
-bool cmd_info(uint32_t loop)
+bool cmd_info(const uint32_t loop)
 {
     static uint32_t which_info;
     if(0 == loop)

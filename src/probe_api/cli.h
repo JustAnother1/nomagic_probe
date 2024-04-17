@@ -22,7 +22,7 @@
  * @param parameter_index which parameter is requested
  * @return pointer to a 0 terminated string represented the requested parameter or NULL if no such parameter.
  */
-uint8_t* cli_get_parameter(uint32_t parameter_index);
+uint8_t* cli_get_parameter(const uint32_t parameter_index);
 
 
 #endif /* PROBE_API_CLI_H_ */

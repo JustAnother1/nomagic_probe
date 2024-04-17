@@ -22,14 +22,14 @@
 #include "target_api/target_actions.h"
 
 
-bool cmd_swd_connect(uint32_t loop)
+bool cmd_swd_connect(const uint32_t loop)
 {
     (void)loop;
     target_connect();
     return true;
 }
 
-bool cmd_swd_read_memory(uint32_t loop)
+bool cmd_swd_read_memory(const uint32_t loop)
 {
     static uint32_t addr;
     static int32_t phase;
@@ -88,7 +88,7 @@ bool cmd_swd_read_memory(uint32_t loop)
     return false;
 }
 
-bool cmd_swd_write_memory(uint32_t loop)
+bool cmd_swd_write_memory(const uint32_t loop)
 {
     static uint32_t val;
     static uint32_t addr;

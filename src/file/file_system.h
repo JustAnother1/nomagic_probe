@@ -63,14 +63,14 @@ If a sector get written again then the file system can either detect that an ove
 #define FS_SECTOR_ROOT_FOLDER    4
 
 void file_system_init(void);
-bool file_system_report(uint32_t loop);
+bool file_system_report(const uint32_t loop);
 uint32_t file_system_block_count(void);
 
 // returns the number of bytes read or a negative number to indicate an error
-int32_t file_system_read(uint32_t offset, uint8_t* buffer, uint32_t bufsize);
+int32_t file_system_read(const uint32_t offset, uint8_t* buffer, const uint32_t bufsize);
 
 // returns the number of bytes read or a negative number to indicate an error
-int32_t file_system_write(uint32_t offset, uint8_t* buffer, uint32_t bufsize);
+int32_t file_system_write(const uint32_t offset, uint8_t* buffer, const uint32_t bufsize);
 
 void file_system_format(void);
 

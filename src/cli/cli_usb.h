@@ -18,7 +18,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-bool cmd_usb_info(uint32_t loop);
+bool cmd_usb_info(const uint32_t loop);
 
 
 #endif /* CLI_CLI_USB_H_ */

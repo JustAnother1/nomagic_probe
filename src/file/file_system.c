@@ -46,17 +46,17 @@ static uint32_t super_sector;
 static uint32_t start_search_sector;
 
 static uint32_t scan_flash(void);
-static bool block_is_empty(uint8_t* block);
+static bool block_is_empty(const uint8_t* block);
 static void create_file_system(void);
 static uint32_t find_next_free_sector(void);
-static void write_super_sector(uint32_t sector_number);
-static uint32_t getLocationOfSector(uint32_t sector);
-static int32_t write_block(uint32_t location, uint32_t block, uint32_t offset, uint8_t* buffer, uint32_t bufsize);
+static void write_super_sector(const uint32_t sector_number);
+static uint32_t getLocationOfSector(const uint32_t sector);
+static int32_t write_block(const uint32_t location, const uint32_t block, const uint32_t offset, uint8_t* buffer, const uint32_t bufsize);
 static uint32_t erase_all_used_sectors(void);
 static uint32_t erase_all_sectors(void);
-static void read_block(uint32_t sector, uint32_t block);
+static void read_block(const uint32_t sector, const uint32_t block);
 static void open_file_system(void);
-static void mark_as_used(uint32_t sector);
+static void mark_as_used(const uint32_t sector);
 
 void file_system_init(void)
 {
@@ -84,7 +84,7 @@ uint32_t file_system_block_count(void)
     return block_count;
 }
 
-bool file_system_report(uint32_t loop)
+bool file_system_report(const uint32_t loop)
 {
     if(0 == loop)
     {
@@ -114,16 +114,17 @@ bool file_system_report(uint32_t loop)
     return false;
 }
 
-int32_t file_system_read(uint32_t offset, uint8_t* buffer, uint32_t bufsize)
+int32_t file_system_read(const uint32_t offset, uint8_t* buffer, const uint32_t bufsize)
 {
+    uint32_t bytes_to_go;
     uint32_t location;  // flash sector the data is located in
     uint32_t block; // block number in sector
     uint32_t len = 0; // number of bytes used in this read operation
     uint32_t read = 0; // number of bytes already read in previous read operation
     uint32_t sector = offset / FLASH_SECTOR_SIZE;
-    offset = offset - sector * FLASH_SECTOR_SIZE;
-    block = offset / FLASH_BLOCK_SIZE;
-    offset = offset - block * FLASH_BLOCK_SIZE;
+    uint32_t start  = offset - sector * FLASH_SECTOR_SIZE;
+    block = start / FLASH_BLOCK_SIZE;
+    start = start - block * FLASH_BLOCK_SIZE;
 
     if(1 > bufsize)
     {
@@ -141,20 +142,21 @@ int32_t file_system_read(uint32_t offset, uint8_t* buffer, uint32_t bufsize)
         return (int32_t)bufsize;
     }
     // debug_line("reading %ld bytes from sector %ld, block %2ld, offset %ld.", bufsize, sector, block, offset);
+    bytes_to_go = bufsize;
     do {
         read_block(location, block);
-        if(bufsize > FLASH_BLOCK_SIZE)
+        if(bytes_to_go > FLASH_BLOCK_SIZE)
         {
-            len = FLASH_BLOCK_SIZE - offset;
+            len = FLASH_BLOCK_SIZE - start;
         }
         else
         {
-            len = bufsize - offset;
+            len = bytes_to_go - start;
         }
-        memcpy(&buffer[read], &buf.bytes[offset], len);
-        bufsize = bufsize - len;
+        memcpy(&buffer[read], &buf.bytes[start], len);
+        bytes_to_go = bytes_to_go - len;
         read = read + len;
-        offset = 0;
+        start = 0;
         block++;
         if(FLASH_BLOCKS_PER_SECTOR == block)
         {
@@ -167,24 +169,25 @@ int32_t file_system_read(uint32_t offset, uint8_t* buffer, uint32_t bufsize)
                 // sector not found in sectorMap
                 // -> we never wrote to that sector
                 // -> therefore it is still empty
-                memset(&buffer[read], 0xff, bufsize);
-                return (int32_t)(read + bufsize);
+                memset(&buffer[read], 0xff, bytes_to_go);
+                return (int32_t)(read + bytes_to_go);
             }
         }
-    } while(0 < bufsize);
+    } while(0 < bytes_to_go);
     return (int32_t)read;
 }
 
-int32_t file_system_write(uint32_t offset, uint8_t* buffer, uint32_t bufsize)
+int32_t file_system_write(const uint32_t offset, uint8_t* buffer, const uint32_t bufsize)
 {
+    uint32_t bytes_to_go;
     int32_t res;
     uint32_t len;
     uint32_t written = 0;
     uint32_t block; // block number in sector
     uint32_t sector = offset / FLASH_SECTOR_SIZE;
-    offset = offset - sector * FLASH_SECTOR_SIZE;
-    block = offset / FLASH_BLOCK_SIZE;
-    offset = offset - block * FLASH_BLOCK_SIZE;
+    uint32_t start =  offset - sector * FLASH_SECTOR_SIZE;
+    block = start / FLASH_BLOCK_SIZE;
+    start = start - block * FLASH_BLOCK_SIZE;
 
     if(1 > bufsize)
     {
@@ -192,21 +195,22 @@ int32_t file_system_write(uint32_t offset, uint8_t* buffer, uint32_t bufsize)
         return 0;
     }
 
+    bytes_to_go = bufsize;
     do{
-        len = FLASH_BLOCK_SIZE - offset;
+        len = FLASH_BLOCK_SIZE - start;
         if(len > bufsize)
         {
             len = bufsize;
         }
         // TODO somehow handle the situation that there not overwriteable changes in more than one block of this transaction
-        res = write_block(sector, block, offset, &buffer[written], len);
+        res = write_block(sector, block, start, &buffer[written], len);
         if(0 > res)
         {
             return res;
         }
-        bufsize = bufsize - len;
+        bytes_to_go = bytes_to_go - len;
         written = written + len;
-        offset = 0;
+        start = 0;
         block++;
         if(FLASH_BLOCKS_PER_SECTOR == block)
         {
@@ -225,8 +229,9 @@ void file_system_format(void)
     create_file_system();
 }
 
-static int32_t write_block(uint32_t sector, uint32_t block, uint32_t offset, uint8_t* buffer, uint32_t bufsize)
+static int32_t write_block(const uint32_t sector, const uint32_t block, const uint32_t offset, uint8_t* buffer, const uint32_t bufsize)
 {
+    uint32_t num_bytes_to_copy;
     uint32_t i;
     uint32_t location;  // flash sector the data is located in
     bool changed = false; // data to be written is identical to what is already stored -> no change
@@ -254,9 +259,11 @@ static int32_t write_block(uint32_t sector, uint32_t block, uint32_t offset, uin
         }
     }
 
-    if(bufsize + offset > FLASH_BLOCK_SIZE)
+    num_bytes_to_copy = bufsize;
+
+    if(num_bytes_to_copy + offset > FLASH_BLOCK_SIZE)
     {
-        bufsize = FLASH_BLOCK_SIZE - offset;
+        num_bytes_to_copy = FLASH_BLOCK_SIZE - offset;
     }
 
     // read the block
@@ -274,7 +281,7 @@ static int32_t write_block(uint32_t sector, uint32_t block, uint32_t offset, uin
        1   |    0      |  yes   |   yes       |   no
        1   |    1      |  no    |   yes       |   no
      */
-    for(i = offset; i < bufsize; i++)
+    for(i = offset; i < num_bytes_to_copy; i++)
     {
         if(false == changed)
         {
@@ -296,7 +303,7 @@ static int32_t write_block(uint32_t sector, uint32_t block, uint32_t offset, uin
     }
 
     // copy data (necessary due to offset)
-    memcpy(buf.bytes, &buffer[offset], bufsize);
+    memcpy(buf.bytes, &buffer[offset], num_bytes_to_copy);
 
     if(true == changed)
     {
@@ -335,7 +342,7 @@ static int32_t write_block(uint32_t sector, uint32_t block, uint32_t offset, uin
     {
         // no change -> another job well done
     }
-    return (int32_t)bufsize;
+    return (int32_t)num_bytes_to_copy;
 }
 
 static uint32_t scan_flash(void)
@@ -429,7 +436,7 @@ static uint32_t scan_flash(void)
     return last_sector;
 }
 
-static bool block_is_empty(uint8_t* block)
+static bool block_is_empty(const uint8_t* block)
 {
     uint32_t i;
     for(i = 0; i < FLASH_BLOCK_SIZE; i++)
@@ -470,7 +477,7 @@ static uint32_t find_next_free_sector(void)
     return NO_SECTOR;
 }
 
-static void write_super_sector(uint32_t sector_number)
+static void write_super_sector(const uint32_t sector_number)
 {
     uint32_t offset = 0;
     uint32_t map_size = sizeof(sector_map);
@@ -546,7 +553,7 @@ static uint32_t erase_all_sectors(void)
     return num_erased;
 }
 
-static uint32_t getLocationOfSector(uint32_t sector)
+static uint32_t getLocationOfSector(const uint32_t sector)
 {
     uint32_t i;
     // scan sectorMap for the sector
@@ -560,13 +567,13 @@ static uint32_t getLocationOfSector(uint32_t sector)
     return NO_SECTOR;
 }
 
-static void read_block(uint32_t sector, uint32_t block)
+static void read_block(const uint32_t sector, const uint32_t block)
 {
     uint32_t start_address = file_system_start + (sector * FLASH_SECTOR_SIZE) + (block * FLASH_BLOCK_SIZE);
     flash_read(start_address, buf.bytes, FLASH_BLOCK_SIZE);
 }
 
-static void mark_as_used(uint32_t sector)
+static void mark_as_used(const uint32_t sector)
 {
     uint8_t empty[FLASH_BLOCK_SIZE] = {0};
     flash_write_block(file_system_start + sector * FLASH_SECTOR_SIZE + 0 * FLASH_BLOCK_SIZE, empty, FLASH_BLOCK_SIZE);

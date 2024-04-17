@@ -17,7 +17,7 @@
 #include "fake_text_files.h"
 #include "file_storage.h"
 
-int32_t fake_readme_file(uint32_t offset, uint8_t* buffer, uint32_t bufsize)
+int32_t fake_readme_file(const uint32_t offset, uint8_t* buffer, const uint32_t bufsize)
 {
     uint32_t some = 0;
     if(BLOCK_SIZE > offset)
@@ -41,7 +41,7 @@ int32_t fake_readme_file(uint32_t offset, uint8_t* buffer, uint32_t bufsize)
     return (int32_t)bufsize;
 }
 
-int32_t fake_autorun_inf_file(uint32_t offset, uint8_t* buffer, uint32_t bufsize)
+int32_t fake_autorun_inf_file(const uint32_t offset, uint8_t* buffer, const uint32_t bufsize)
 {
     uint32_t some = 0;
     if(BLOCK_SIZE > offset)

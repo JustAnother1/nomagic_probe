@@ -17,8 +17,8 @@
 
 #include "cfg/cli_cfg.h"
 
-bool cmd_swd_connect(uint32_t loop);
-bool cmd_swd_read_memory(uint32_t loop);
-bool cmd_swd_write_memory(uint32_t loop);
+bool cmd_swd_connect(const uint32_t loop);
+bool cmd_swd_read_memory(const uint32_t loop);
+bool cmd_swd_write_memory(const uint32_t loop);
 
 #endif /* CLI_CLI_SWD_H_ */

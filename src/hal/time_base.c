@@ -19,14 +19,15 @@ volatile uint32_t ms_since_boot;
 
 void delay_us(uint32_t usec)
 {
-    while (usec != 0)
+    uint32_t loops = usec;
+    while(loops != 0)
     {
         volatile uint32_t cnt = 11;
         while (cnt > 0)
         {
             cnt--;
         }
-        usec--;
+        loops--;
     }
 }
 

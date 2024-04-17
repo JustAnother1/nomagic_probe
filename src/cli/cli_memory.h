@@ -18,17 +18,17 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-bool cmd_memory_display(uint32_t loop);
-bool cmd_memory_dump(uint32_t loop);
-bool cmd_flash_memory_erase(uint32_t loop);
-bool cmd_flash_memory_write(uint32_t loop);
-bool cmd_flash_disable_XIP(uint32_t loop);
-bool cmd_flash_enable_XIP(uint32_t loop);
-bool cmd_flash_reset(uint32_t loop);
+bool cmd_memory_display(const uint32_t loop);
+bool cmd_memory_dump(const uint32_t loop);
+bool cmd_flash_memory_erase(const uint32_t loop);
+bool cmd_flash_memory_write(const uint32_t loop);
+bool cmd_flash_disable_XIP(const uint32_t loop);
+bool cmd_flash_enable_XIP(const uint32_t loop);
+bool cmd_flash_reset(const uint32_t loop);
 #ifdef FEAT_USB_MSC
-bool cmd_file_dump(uint32_t loop);
-bool cmd_file_ls(uint32_t loop);
-bool cmd_file_format(uint32_t loop);
+bool cmd_file_dump(const uint32_t loop);
+bool cmd_file_ls(const uint32_t loop);
+bool cmd_file_format(const uint32_t loop);
 #endif
 
 #endif /* CLI_CLI_MEMORY_H_ */

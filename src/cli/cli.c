@@ -36,7 +36,7 @@ static cmd_func_typ cur_func;
 static uint8_t* parameters[MAX_PARAMETERS];
 
 static void parse(void);
-static void execute(char* line);
+static void execute(const char* line);
 
 
 void cli_init(void)
@@ -149,7 +149,7 @@ void cli_tick(void)
     // else no new bytes -> nothing to do
 }
 
-uint8_t* cli_get_parameter(uint32_t parameter_index)
+uint8_t* cli_get_parameter(const uint32_t parameter_index)
 {
     if(parameter_index < MAX_PARAMETERS)
     {
@@ -161,7 +161,7 @@ uint8_t* cli_get_parameter(uint32_t parameter_index)
     }
 }
 
-static void parse()
+static void parse(void)
 {
     bool at_start = true;
     uint8_t* line = line_buffer;
@@ -240,7 +240,7 @@ static void parse()
     }
 }
 
-static void execute(char* line)
+static void execute(const char* line)
 {
     uint32_t len = strlen(line);
     if(0 != len)
@@ -313,7 +313,7 @@ static void execute(char* line)
     debug_msg(PROMPT);
 }
 
-bool cmd_help(uint32_t loop)
+bool cmd_help(const uint32_t loop)
 {
     // help command
     if(0 == loop)

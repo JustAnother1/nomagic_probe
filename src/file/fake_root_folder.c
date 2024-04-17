@@ -100,7 +100,7 @@ const uint8_t root_directory[] = {
 // data gets stored inverted in Flash as an empty FAT entry is all 0.
 // This should make it possible to just overwrite the Flash memory if a new entry is created.
 
-int32_t fake_root_folder_read(uint32_t offset, uint8_t* buffer, uint32_t bufsize)
+int32_t fake_root_folder_read(const uint32_t offset, uint8_t* buffer, const uint32_t bufsize)
 {
     uint32_t i;
     uint32_t some = 0;
@@ -127,7 +127,7 @@ int32_t fake_root_folder_read(uint32_t offset, uint8_t* buffer, uint32_t bufsize
     return (int32_t)bufsize;
 }
 
-int32_t fake_root_folder_write(uint32_t offset, uint8_t* buffer, uint32_t bufsize)
+int32_t fake_root_folder_write(const uint32_t offset, uint8_t* buffer, const uint32_t bufsize)
 {
     uint32_t i;
     buf_offset = INVALID_OFFSET;
@@ -138,7 +138,7 @@ int32_t fake_root_folder_write(uint32_t offset, uint8_t* buffer, uint32_t bufsiz
     return file_system_write((FS_SECTOR_ROOT_FOLDER * FLASH_SECTOR_SIZE) + offset, buffer, bufsize);
 }
 
-fat_entry* fake_root_get_entry_of_file_idx(uint32_t idx)
+fat_entry* fake_root_get_entry_of_file_idx(const uint32_t idx)
 {
     if(idx < FLASH_SECTOR_SIZE/sizeof(buf) * NUM_ENTRIES_PER_BLOCK)
     {
@@ -166,7 +166,7 @@ fat_entry* fake_root_get_entry_of_file_idx(uint32_t idx)
     }
 }
 
-fat_entry* fake_root_get_entry_of_file_named(char* filename)
+fat_entry* fake_root_get_entry_of_file_named(const char* filename)
 {
     // convert into name + extension
     char name[8];

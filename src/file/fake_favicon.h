@@ -28,6 +28,6 @@
 #define FAVICON_BLOCKS_USED 16
 #endif
 
-int32_t fake_favicon_ico_file(uint32_t offset, uint8_t* buffer, uint32_t bufsize);
+int32_t fake_favicon_ico_file(const uint32_t offset, uint8_t* buffer, const uint32_t bufsize);
 
 #endif /* FILE_FAKE_FAVICON_H_ */
