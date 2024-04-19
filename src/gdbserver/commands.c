@@ -97,12 +97,14 @@ void commands_execute(char* received, uint32_t length, char* checksum)
             break;
 
         case '?':  // Report why the target halted
+            gdb_is_now_busy();
             target_reply_questionmark();
             break;
 
         case 'c':  // continue
         case 'C':  // continue
             // TODO
+            gdb_is_now_busy();
             target_reply_continue(received, length);
             break;
 
@@ -114,10 +116,12 @@ void commands_execute(char* received, uint32_t length, char* checksum)
             break;
 
         case 'g':  // read general Registers
+            gdb_is_now_busy();
             target_reply_g();
             break;
 
         case 'G':  // write general Registers
+            gdb_is_now_busy();
             target_reply_write_g(received, length);
             break;
 
@@ -129,10 +133,12 @@ void commands_execute(char* received, uint32_t length, char* checksum)
             break;
 
         case 'M':  // write main memory : M addr,length:XX...
+            gdb_is_now_busy();
             target_reply_write_memory(received, length);
             break;
 
         case 'm':  // read main memory : m addr,length
+            gdb_is_now_busy();
             target_reply_read_memory(received, length);
             break;
 
@@ -167,6 +173,7 @@ void commands_execute(char* received, uint32_t length, char* checksum)
         case 'R':  // Restart the program being run
         case 's':  // step
         case 'S':  // step
+            gdb_is_now_busy();
             target_reply_step(received, length);
             break;
 

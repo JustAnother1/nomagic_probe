@@ -250,6 +250,41 @@ void target_reply_questionmark(void)
 
 void target_reply_write_g(char* received, uint32_t length)
 {
+    // ‘G XX…’
+    //     Write general registers. See read registers packet, for a description
+    // of the XX… data.
+    //    ‘XX…’
+    //        Each byte of register data is described by two hex digits.
+    // The bytes with the register are transmitted in target byte order.
+    // The size of each register and their position within the ‘g’ packet
+    // are determined by the target description (see Target Descriptions);
+    // in the absence of a target description, this is done using code
+    // internal to GDB; typically this is some customary register layout
+    // for the architecture in question.
+    //        When reading registers, the stub may also return a string of
+    // literal ‘x’’s in place of the register data digits, to indicate that
+    // the corresponding register’s value is unavailable. For example, when
+    // reading registers from a trace frame (see Using the Collected Data),
+    // this means that the register has not been collected in the trace frame.
+    // When reading registers from a live program, this indicates that the stub
+    // has no means to access the register contents, even though the
+    // corresponding register is known to exist. Note that if a register truly
+    // does not exist on the target, then it is better to not include it in the
+    // target description in the first place.
+    //        For example, for an architecture with 4 registers of 4 bytes each,
+    // the following reply indicates to GDB that registers 0 and 2 are
+    // unavailable, while registers 1 and 3 are available, and both have zero
+    // value:
+    //        -> g
+    //        <- xxxxxxxx00000000xxxxxxxx00000000
+    //     Reply:
+    //     ‘OK’
+    //         for success
+    //     ‘E NN’
+    //         for an error
+
+    // received is something like "G xxxxxxxx00000000xxxxxxxx00000000"
+
     (void) received; // TODO
     (void) length; // TODO
     // TODO protect against concurrent access (action_write)

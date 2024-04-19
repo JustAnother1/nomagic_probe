@@ -24,6 +24,7 @@ void reply_packet_send(void);
 void send_error_packet(void);
 void send_ack_packet(void);
 void send_unknown_command_reply(void);
-
+void gdb_is_now_busy(void);
+void gd_is_not_busy_anymore(void);
 
 #endif /* PROBE_API_GDB_PACKETS_H_ */

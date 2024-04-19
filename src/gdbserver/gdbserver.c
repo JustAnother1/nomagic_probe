@@ -45,6 +45,7 @@ static char checksum[2];
 static bool connected;
 static bool connection_failed;
 static uint32_t retry_counter;
+static bool busy_processing_cmd;
 
 
 void gdbserver_init(void)
@@ -56,6 +57,7 @@ void gdbserver_init(void)
     connection_failed = false;
     retry_counter = 0;
     connected = false;
+    busy_processing_cmd = false;
     commands_init();
 }
 
@@ -172,6 +174,7 @@ void reply_packet_send(void)
     reply_buffer[reply_length + 3]  = 0;
     debug_line("gdbs sending: %s", reply_buffer);
     GDBSERVER_SEND_BYTES(&(reply_buffer[reply_length]), 3);
+    gd_is_not_busy_anymore();
 }
 
 void send_error_packet(void)
@@ -190,9 +193,27 @@ void send_unknown_command_reply(void)
     reply_packet_send();
 }
 
+void gdb_is_now_busy(void)
+{
+    busy_processing_cmd = true;
+}
+
+void gd_is_not_busy_anymore(void)
+{
+    busy_processing_cmd = false;
+}
+
 static void communicate_with_gdb(void)
 {
     uint32_t num_bytes_received;
+    if(true == busy_processing_cmd)
+    {
+        // we are still processing the last command
+        // reading the next command does not make sense
+        // there will probably be no next command yet
+        // and if there were we would not be ready to work on it
+        return;
+    }
 
     num_bytes_received = GDBSERVER_NUM_RECEIVED_BYTES();
 
