@@ -34,7 +34,9 @@ bool cmd_time(const uint32_t loop)
 
     uint32_t micro_now = TIMER->TIMERAWL;
     debug_line("micro seconds: %lu µs", micro_now);
-
+    // as you can see above the micro second time will always be a bit "later"
+    // then the time in milliseconds, just because it is read after the
+    // millisecond time is read.
     debug_msg("time since boot up : ");
     if(now < 1000)
     {
