@@ -202,7 +202,7 @@ int32_t file_system_write(const uint32_t offset, uint8_t* buffer, const uint32_t
         {
             len = bufsize;
         }
-        // TODO somehow handle the situation that there not overwriteable changes in more than one block of this transaction
+        // TODO somehow handle the situation that there are not over-write-able changes in more than one block of this transaction
         res = write_block(sector, block, start, &buffer[written], len);
         if(0 > res)
         {
