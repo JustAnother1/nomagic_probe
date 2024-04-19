@@ -26,6 +26,7 @@
 #include <stdnoreturn.h>
 #include "hal/debug_uart.h"
 #include "hal/watchdog.h"
+#include "hal/time_base.h"
 #include "probe_api/debug_log.h"
 
 typedef void (*VECTOR_FUNCTION_Type)(void);
@@ -252,7 +253,36 @@ void NMI_Handler(void)
 
 void Hard_Fault_Handler(void)
 {
+    // Configurable Fault Status Registers (CFSR) - 0xE000ED28
+    // Bit   |  Name       | reason to be set
+    // 31-26 | reserved    |
+    // 25    | DIVBYZERO   | divide by zero
+    // 24    | UNALIGNED   | accessing 32bit data at an odd address,..
+    // 20-23 | reserved    |
+    // 19    | NOCP        | using co-processor functionality with no co-processor present
+    // 18    | INVPC       | Indicates an integrity check failure on EXC_RETURN
+    // 17    | INVSTATE    | invalid Execution Program Status Register (EPSR) value.
+    // 16    | UNDEFINSTR  | undefined instruction was executed
+    // 15    | BFARVALID   | Bus Fault Address Register (BFAR 0xE000ED38), holds the address which triggered the fault.
+    // 14    | reserved    |
+    // 13    | LSPERR      | fault occurred during lazy state preservation (Stack?)
+    // 12    | STKERR      | fault occurred during exception entry (Stack?)
+    // 11    | UNSTKERR    | fault occurred trying to return from an exception (Stack?)
+    // 10    | IMPRECISERR | precise address of error is unknown
+    //  9    | PRECISERR   | instruction which was executing prior to exception entry triggered the fault
+    //  8    | IBUSERR     | instruction bus error?
+    //  7    | MMARVALID   | MemManage Fault Address Register (MMFAR 0xE000ED34), holds the address which triggered the MemManage fault.
+    //  6    | reserved    |
+    //  5    | MLSPERR     | MemManage fault occurred during lazy state preservation
+    //  4    | MSTKERR     | MemManage fault occurred during exception entry
+    //  3    | MUNSTKERR   | MemManage fault occurred while returning from an exception
+    //  2    | reserved    |
+    //  1    | DACCVIOL    | data access triggered the MemManage fault
+    //  0    | IACCVIOL    | attempt to execute an instruction triggered an MPU or Execute Never (XN) fault
+
+    uint32_t reason = *((uint32_t *) 0xE000ED28);
     watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_HARD_FAULT);
+    watchdog_report_value(reason);
     error_state();
 }
 
@@ -438,19 +468,18 @@ void default_Handler(void)
 
 _Noreturn void error_state(void)
 {
+    // make sure that all debug messages have been send
+    debug_uart_flush();
+    // TODO only break if debugger is attached
     __asm__ __volatile__ ("bkpt #0");
 
     for (;;)
     {
-        /*
-        // uint8_t data = 23;
+        // error blink
         SIO->GPIO_OUT_SET = 1 << 25;
-        // Delay
         delay_us(10 * 1000);
         SIO->GPIO_OUT_CLR = 1 << 25;
-        // Delay
         delay_us(190 * 1000);
-        */
     }
 }
 
