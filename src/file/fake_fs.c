@@ -24,6 +24,7 @@
 #include "fake_text_files.h"
 #include "file_storage.h"
 #include "fake_favicon.h"
+#include "probe_api/debug_log.h"
 
 static int32_t faked_read(const uint32_t offset, uint8_t* buffer, const uint32_t bufsize);
 static int32_t faked_write(const uint32_t offset, uint8_t* buffer, const uint32_t bufsize);
@@ -171,8 +172,10 @@ static int32_t faked_write(const uint32_t offset, uint8_t* buffer, const uint32_
     else if((offset >= 18 * BLOCK_SIZE) && (offset < 26 * BLOCK_SIZE))
     {
         // root directory
-        // debug_line("fake_fs: root folder write");
-        return fake_root_folder_write(offset - (18 * BLOCK_SIZE), buffer, bufsize);
+        debug_line("fake_fs: root folder write (0x%08lx) IGNORED! FIX ME!", offset - (18 * BLOCK_SIZE));
+        // TODO fix !!! -> causes Hard Fault
+        // return fake_root_folder_write(offset - (18 * BLOCK_SIZE), buffer, bufsize);
+        return (int32_t)bufsize;
     }
     else
     {
