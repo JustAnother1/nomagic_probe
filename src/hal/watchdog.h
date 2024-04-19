@@ -69,6 +69,7 @@ void watchdog_feed(void);
 //! reports type of reset
 bool watchdog_report(const uint32_t loop);
 void watchdog_report_issue(const uint32_t issue);
+void watchdog_report_value(const uint32_t value);
 
 void watchdog_enter_section(const uint32_t section);
 void watchdog_leave_section(const uint32_t section);

@@ -191,3 +191,8 @@ void watchdog_leave_section(const uint32_t section)
         WATCHDOG->SCRATCH5 = WATCHDOG->SCRATCH5 & ~section;
     }
 }
+
+void watchdog_report_value(const uint32_t value)
+{
+    WATCHDOG->SCRATCH4 = value;
+}
