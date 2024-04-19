@@ -27,6 +27,7 @@
 // initialize:
 void debug_uart_initialize(void);
 void debug_uart_tick(void);
+void debug_uart_flush(void);
 
 // send data:
 uint32_t debug_uart_send_bytes(const uint8_t *data, const uint32_t length);

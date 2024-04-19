@@ -91,6 +91,67 @@ void debug_uart_tick(void)
     }
 }
 
+void UART0_IRQ(void)
+{
+    uint32_t irq = UART0->UARTMIS;
+    if (0 != (irq & (1 << UART0_UARTRIS_OERIS_OFFSET))) // Overrun error
+    {
+        UART0->UARTICR = (1 << UART0_UARTRIS_OERIS_OFFSET); // clear Interrupt
+    }
+    if (0 != (irq & (1 << UART0_UARTRIS_BERIS_OFFSET))) // Break error
+    {
+        UART0->UARTICR = (1 << UART0_UARTRIS_BERIS_OFFSET); // clear Interrupt
+    }
+    if (0 != (irq & (1 << UART0_UARTRIS_PERIS_OFFSET))) // Parity error
+    {
+        UART0->UARTICR = (1 << UART0_UARTRIS_PERIS_OFFSET); // clear Interrupt
+    }
+    if (0 != (irq & (1 << UART0_UARTRIS_FERIS_OFFSET))) // Framing error
+    {
+        UART0->UARTICR = (1 << UART0_UARTRIS_FERIS_OFFSET); // clear Interrupt
+    }
+    if (0 != (irq & (1 << UART0_UARTRIS_RTRIS_OFFSET))) // Receive timeout
+    {
+        UART0->UARTICR = (1 << UART0_UARTRIS_RTRIS_OFFSET); // clear Interrupt
+    }
+    if (0 != (irq & (1 << UART0_UARTRIS_TXRIS_OFFSET))) {  // Transmit
+        // we can send a byte
+        is_sending = false;
+        UART0->UARTICR = (1 << UART0_UARTRIS_TXRIS_OFFSET); // clear Interrupt
+    }
+    if (0 != (irq & (1 << UART0_UARTRIS_RXRIS_OFFSET))) // Receive
+    {
+        // we received a byte
+        receive_a_byte();
+        UART0->UARTICR = (1 << UART0_UARTRIS_RXRIS_OFFSET); // clear Interrupt
+    }
+    if (0 != (irq & (1 << UART0_UARTRIS_DSRRMIS_OFFSET))) // DSR
+    {
+        UART0->UARTICR = (1 << UART0_UARTRIS_DSRRMIS_OFFSET); // clear Interrupt
+    }
+    if (0 != (irq & (1 << UART0_UARTRIS_DCDRMIS_OFFSET))) // DCD
+    {
+        UART0->UARTICR = (1 << UART0_UARTRIS_DCDRMIS_OFFSET); // clear Interrupt
+    }
+    if (0 != (irq & (1 << UART0_UARTRIS_CTSRMIS_OFFSET))) // CTS
+    {
+        UART0->UARTICR = (1 << UART0_UARTRIS_CTSRMIS_OFFSET); // clear Interrupt
+    }
+    if (0 != (irq & (1 << UART0_UARTRIS_RIRMIS_OFFSET))) // RI
+    {
+        UART0->UARTICR = (1 << UART0_UARTRIS_RIRMIS_OFFSET); // clear Interrupt
+    }
+}
+
+void debug_uart_flush(void)
+{
+    while(send_read_pos != send_write_pos)
+    {
+        UART0_IRQ();
+        debug_uart_tick();
+    }
+}
+
 // send data:
 uint32_t debug_uart_send_bytes(const uint8_t* data, const uint32_t length)
 {
@@ -239,56 +300,3 @@ static void receive_a_byte(void)
         }
     }
 }
-
-void UART0_IRQ(void)
-{
-    uint32_t irq = UART0->UARTMIS;
-    if (0 != (irq & (1 << UART0_UARTRIS_OERIS_OFFSET))) // Overrun error
-    {
-        UART0->UARTICR = (1 << UART0_UARTRIS_OERIS_OFFSET); // clear Interrupt
-    }
-    if (0 != (irq & (1 << UART0_UARTRIS_BERIS_OFFSET))) // Break error
-    {
-        UART0->UARTICR = (1 << UART0_UARTRIS_BERIS_OFFSET); // clear Interrupt
-    }
-    if (0 != (irq & (1 << UART0_UARTRIS_PERIS_OFFSET))) // Parity error
-    {
-        UART0->UARTICR = (1 << UART0_UARTRIS_PERIS_OFFSET); // clear Interrupt
-    }
-    if (0 != (irq & (1 << UART0_UARTRIS_FERIS_OFFSET))) // Framing error
-    {
-        UART0->UARTICR = (1 << UART0_UARTRIS_FERIS_OFFSET); // clear Interrupt
-    }
-    if (0 != (irq & (1 << UART0_UARTRIS_RTRIS_OFFSET))) // Receive timeout
-    {
-        UART0->UARTICR = (1 << UART0_UARTRIS_RTRIS_OFFSET); // clear Interrupt
-    }
-    if (0 != (irq & (1 << UART0_UARTRIS_TXRIS_OFFSET))) {  // Transmit
-        // we can send a byte
-        is_sending = false;
-    	UART0->UARTICR = (1 << UART0_UARTRIS_TXRIS_OFFSET); // clear Interrupt
-    }
-    if (0 != (irq & (1 << UART0_UARTRIS_RXRIS_OFFSET))) // Receive
-    {
-        // we received a byte
-        receive_a_byte();
-        UART0->UARTICR = (1 << UART0_UARTRIS_RXRIS_OFFSET); // clear Interrupt
-    }
-    if (0 != (irq & (1 << UART0_UARTRIS_DSRRMIS_OFFSET))) // DSR
-    {
-        UART0->UARTICR = (1 << UART0_UARTRIS_DSRRMIS_OFFSET); // clear Interrupt
-    }
-    if (0 != (irq & (1 << UART0_UARTRIS_DCDRMIS_OFFSET))) // DCD
-    {
-        UART0->UARTICR = (1 << UART0_UARTRIS_DCDRMIS_OFFSET); // clear Interrupt
-    }
-    if (0 != (irq & (1 << UART0_UARTRIS_CTSRMIS_OFFSET))) // CTS
-    {
-        UART0->UARTICR = (1 << UART0_UARTRIS_CTSRMIS_OFFSET); // clear Interrupt
-    }
-    if (0 != (irq & (1 << UART0_UARTRIS_RIRMIS_OFFSET))) // RI
-    {
-        UART0->UARTICR = (1 << UART0_UARTRIS_RIRMIS_OFFSET); // clear Interrupt
-    }
-}
-
