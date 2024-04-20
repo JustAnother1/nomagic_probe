@@ -250,6 +250,7 @@ static void communicate_with_gdb(void)
                     {
                         // host is not happy with what we send -> probably some error on our side
                         // data from last command is still valid -> retry doing it
+                        line_buffer[line_pos] = '\0';
                         commands_execute((char*)line_buffer, line_pos, (char*)checksum);
                         /*
                         // Transmit error

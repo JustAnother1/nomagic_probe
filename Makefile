@@ -195,6 +195,7 @@ SRC += $(SRC_FOLDER)lib/memcpy.c
 SRC += $(SRC_FOLDER)lib/memmove.c
 SRC += $(SRC_FOLDER)lib/memset.c
 SRC += $(SRC_FOLDER)lib/printf.c
+SRC += $(SRC_FOLDER)lib/strchr.c
 SRC += $(SRC_FOLDER)lib/strlen.c
 SRC += $(SRC_FOLDER)lib/strncmp.c
 

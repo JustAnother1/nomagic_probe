@@ -25,13 +25,34 @@
 #include "cmd_qsupported.h"
 #include "cmd_qxfer.h"
 
+#define MAX_MEMORY_POSITIONS   20
+
 typedef struct {
     bool extended_mode;
     bool noAckMode;
 } config_typ;
 
+typedef struct {
+    uint32_t value;
+    bool has_value;
+} mem_val_typ;
+
+typedef struct {
+    uint32_t address;
+    uint32_t length;
+    mem_val_typ memory[MAX_MEMORY_POSITIONS];
+} parameter_typ;
+
+typedef enum parameter_pattern {
+    PARAM_XX,
+    PARAM_ADDR_LENGTH_XX,
+    PARAM_ADDR_LENGTH,
+} param_pattern_typ;
+
+
 
 static config_typ cfg;
+static parameter_typ parsed_parameter;
 
 static bool checksumOK(char* received, uint32_t length, char* checksum);
 static uint32_t cmd_length(char* received, uint32_t length);
@@ -39,6 +60,8 @@ static void handle_general_query(char* received, uint32_t length);
 static void handle_general_set(char* received, uint32_t length);
 static void handle_vee(char* received, uint32_t length);
 static void handle_tee(char* received, uint32_t length);
+static bool parse_parameter(param_pattern_typ pattern, char* parameter);
+static bool parse_memory(char* parameter);
 
 void commands_init(void)
 {
@@ -121,8 +144,12 @@ void commands_execute(char* received, uint32_t length, char* checksum)
             break;
 
         case 'G':  // write general Registers
-            gdb_is_now_busy();
-            target_reply_write_g(received, length);
+            received++;
+            if(true == parse_parameter(PARAM_XX, received))
+            {
+                gdb_is_now_busy();
+                target_reply_write_g(received, length);
+            }
             break;
 
         case 'H':  // report the current tread
@@ -133,13 +160,21 @@ void commands_execute(char* received, uint32_t length, char* checksum)
             break;
 
         case 'M':  // write main memory : M addr,length:XX...
-            gdb_is_now_busy();
-            target_reply_write_memory(received, length);
+            received++;
+            if(true == parse_parameter(PARAM_ADDR_LENGTH_XX, received))
+            {
+                gdb_is_now_busy();
+                target_reply_write_memory(received, length);
+            }
             break;
 
         case 'm':  // read main memory : m addr,length
-            gdb_is_now_busy();
-            target_reply_read_memory(received, length);
+            received++;
+            if(true == parse_parameter(PARAM_ADDR_LENGTH, received))
+            {
+                gdb_is_now_busy();
+                target_reply_read_memory(received, length);
+            }
             break;
 
         case 'P':  // read  or write specific Register
@@ -486,3 +521,105 @@ static void handle_general_set(char* received, uint32_t length)
     }
 }
 
+static bool parse_parameter(param_pattern_typ pattern, char* parameter)
+{
+    switch(pattern)
+    {
+    case PARAM_XX: // XX
+        return parse_memory(parameter);
+
+    case PARAM_ADDR_LENGTH_XX: // addr,length:XX
+    {
+        char* mem_start;
+        char* split_pos = strchr(parameter, ',');
+        if(NULL == split_pos)
+        {
+            // pattern needs to have a ","
+            reply_packet_prepare();
+            reply_packet_add("E 03");
+            reply_packet_send();
+            return false;
+        }
+        *split_pos = '\0';
+        split_pos++;
+        mem_start = strchr(parameter, ':');
+        if(NULL == mem_start)
+        {
+            // pattern needs to have a ":"
+            reply_packet_prepare();
+            reply_packet_add("E 04");
+            reply_packet_send();
+            return false;
+        }
+        *mem_start = '\0';
+        mem_start++;
+        parsed_parameter.address = hex_to_int(parameter, 0);
+        parsed_parameter.length = hex_to_int(split_pos, 0);
+        // XX is now in mem_start
+        return parse_memory(mem_start);
+    }
+
+    case PARAM_ADDR_LENGTH: // addr,length
+    {
+        char* split_pos = strchr(parameter, ',');
+        if(NULL == split_pos)
+        {
+            // pattern needs to have a ","
+            reply_packet_prepare();
+            reply_packet_add("E 03");
+            reply_packet_send();
+            return false;
+        }
+        *split_pos = '\0';
+        split_pos++;
+        parsed_parameter.address = hex_to_int(parameter, 0);
+        parsed_parameter.length = hex_to_int(split_pos, 0);
+        break;
+    }
+
+    default:
+        // invalid pattern
+        reply_packet_prepare();
+        reply_packet_add("E 02");
+        reply_packet_send();
+        return false;
+    }
+    return true;
+}
+
+static bool parse_memory(char* parameter)
+{
+    // string is something like this:  xxxxxxxx00000000xxxxxxxx00000000
+    uint32_t i;
+    uint32_t len = strlen(parameter);
+    if(len < 8)
+    {
+        // we need at least one 32bit value
+        reply_packet_prepare();
+        reply_packet_add("E 05");
+        reply_packet_send();
+        return false;
+    }
+    if(0 != len%8)
+    {
+        // we are doing 32bit values only
+        reply_packet_prepare();
+        reply_packet_add("E 06");
+        reply_packet_send();
+        return false;
+    }
+    for(i = 0; i < len/8; i++)
+    {
+        if(('x' == parameter[i*8]) || ('X' == parameter[i*8]))
+        {
+            // this value is skipped
+            parsed_parameter.memory[i].has_value = false;
+        }
+        else
+        {
+            parsed_parameter.memory[i].has_value = true;
+            parsed_parameter.memory[i].value = hex_to_int(&(parameter[i*8]), 8);
+        }
+    }
+    return true;
+}
