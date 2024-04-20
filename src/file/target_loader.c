@@ -45,38 +45,33 @@ void target_reply_questionmark(void)
     debug_line("loader: not available!");
 }
 
-void target_reply_write_g(char* received, uint32_t length)
+void target_reply_write_g(parameter_typ* parsed_parameter)
 {
-    (void) received; // TODO
-    (void) length; // TODO
+    (void) parsed_parameter; // TODO
     debug_line("loader: not available!");
 }
 
-void target_reply_continue(char* received, uint32_t length)
+void target_reply_continue(parameter_typ* parsed_parameter)
 {
-    (void) received; // TODO
-    (void) length; // TODO
+    (void) parsed_parameter; // TODO
     debug_line("loader: not available!");
 }
 
-void target_reply_read_memory(char* received, uint32_t length)
+void target_reply_read_memory(parameter_typ* parsed_parameter)
 {
-    (void) received; // TODO
-    (void) length; // TODO
+    (void) parsed_parameter; // TODO
     debug_line("loader: not available!");
 }
 
-void target_reply_write_memory(char* received, uint32_t length)
+void target_reply_write_memory(parameter_typ* parsed_parameter)
 {
-    (void) received; // TODO
-    (void) length; // TODO
+    (void) parsed_parameter; // TODO
     debug_line("loader: not available!");
 }
 
-void target_reply_step(char* received, uint32_t length)
+void target_reply_step(parameter_typ* parsed_parameter)
 {
-    (void) received; // TODO
-    (void) length; // TODO
+    (void) parsed_parameter; // TODO
     debug_line("loader: not available!");
 }
 

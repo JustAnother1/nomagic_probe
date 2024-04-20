@@ -19,6 +19,21 @@
 #include <stdint.h>
 #include "../probe_api/result.h"
 
+#define MAX_MEMORY_POSITIONS   20
+
+typedef struct {
+    uint32_t value;
+    bool has_value;
+    uint8_t padding[3];
+} mem_val_typ;
+
+typedef struct {
+    uint32_t address;
+    uint32_t length;
+    uint32_t num_memeory_locations;
+    mem_val_typ memory[MAX_MEMORY_POSITIONS];
+} parameter_typ;
+
 void target_init(void);
 void target_tick(void);
 bool cmd_target_info(uint32_t loop);
@@ -27,10 +42,10 @@ void target_close_connection(void);
 void target_connect(void);
 void target_reply_g(void);
 void target_reply_questionmark(void);
-void target_reply_write_g(char* received, uint32_t length);
-void target_reply_continue(char* received, uint32_t length);
-void target_reply_read_memory(char* received, uint32_t length);
-void target_reply_write_memory(char* received, uint32_t length);
-void target_reply_step(char* received, uint32_t length);
+void target_reply_write_g(parameter_typ* parsed_parameter);
+void target_reply_continue(parameter_typ* parsed_parameter);
+void target_reply_read_memory(parameter_typ* parsed_parameter);
+void target_reply_write_memory(parameter_typ* parsed_parameter);
+void target_reply_step(parameter_typ* parsed_parameter);
 
 #endif /* TARGET_TARGET_ACTIONS_H_ */

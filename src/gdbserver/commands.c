@@ -25,23 +25,10 @@
 #include "cmd_qsupported.h"
 #include "cmd_qxfer.h"
 
-#define MAX_MEMORY_POSITIONS   20
-
 typedef struct {
     bool extended_mode;
     bool noAckMode;
 } config_typ;
-
-typedef struct {
-    uint32_t value;
-    bool has_value;
-} mem_val_typ;
-
-typedef struct {
-    uint32_t address;
-    uint32_t length;
-    mem_val_typ memory[MAX_MEMORY_POSITIONS];
-} parameter_typ;
 
 typedef enum parameter_pattern {
     PARAM_XX,
@@ -128,7 +115,8 @@ void commands_execute(char* received, uint32_t length, char* checksum)
         case 'C':  // continue
             // TODO
             gdb_is_now_busy();
-            target_reply_continue(received, length);
+            // TODO  parameter_typ* parsed_parameter  !!!
+            target_reply_continue(&parsed_parameter);
             break;
 
         case 'D':  // Detach from client
@@ -148,7 +136,7 @@ void commands_execute(char* received, uint32_t length, char* checksum)
             if(true == parse_parameter(PARAM_XX, received))
             {
                 gdb_is_now_busy();
-                target_reply_write_g(received, length);
+                target_reply_write_g(&parsed_parameter);
             }
             break;
 
@@ -164,7 +152,7 @@ void commands_execute(char* received, uint32_t length, char* checksum)
             if(true == parse_parameter(PARAM_ADDR_LENGTH_XX, received))
             {
                 gdb_is_now_busy();
-                target_reply_write_memory(received, length);
+                target_reply_write_memory(&parsed_parameter);
             }
             break;
 
@@ -173,7 +161,7 @@ void commands_execute(char* received, uint32_t length, char* checksum)
             if(true == parse_parameter(PARAM_ADDR_LENGTH, received))
             {
                 gdb_is_now_busy();
-                target_reply_read_memory(received, length);
+                target_reply_read_memory(&parsed_parameter);
             }
             break;
 
@@ -209,7 +197,8 @@ void commands_execute(char* received, uint32_t length, char* checksum)
         case 's':  // step
         case 'S':  // step
             gdb_is_now_busy();
-            target_reply_step(received, length);
+            // TODO  parameter_typ* parsed_parameter  !!!
+            target_reply_step(&parsed_parameter);
             break;
 
         case 'T':  // report if a particular Thread is alive
@@ -608,6 +597,7 @@ static bool parse_memory(char* parameter)
         reply_packet_send();
         return false;
     }
+    parsed_parameter.num_memeory_locations = len/8;
     for(i = 0; i < len/8; i++)
     {
         if(('x' == parameter[i*8]) || ('X' == parameter[i*8]))

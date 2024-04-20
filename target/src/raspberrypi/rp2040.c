@@ -215,7 +215,16 @@ Result handle_target_reply_write_g(action_data_typ* action, bool first_call)
 
     (void) action; // TODO
     (void) first_call; // TODO
-    // TODO
+    uint32_t i;
+    for(i = 0; i < action->parameter->num_memeory_locations; i++)
+    {
+        if(true == action->parameter->memory->has_value)
+        {
+            // write that value
+            // TODO
+        }
+        // else skip that value
+    }
     reply_packet_prepare();
     reply_packet_add("OK");
     reply_packet_send();

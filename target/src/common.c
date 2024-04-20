@@ -248,7 +248,7 @@ void target_reply_questionmark(void)
     }
 }
 
-void target_reply_write_g(char* received, uint32_t length)
+void target_reply_write_g(parameter_typ* parsed_parameter)
 {
     // ‘G XX…’
     //     Write general registers. See read registers packet, for a description
@@ -283,119 +283,99 @@ void target_reply_write_g(char* received, uint32_t length)
     //     ‘E NN’
     //         for an error
 
-    // received is something like "G xxxxxxxx00000000xxxxxxxx00000000"
 
-    (void) received; // TODO
-    (void) length; // TODO
     // TODO protect against concurrent access (action_write)
     uint32_t next_idx = action_write + 1;
     if(ACTION_QUEUE_LENGTH == next_idx)
     {
         next_idx = 0;
     }
-    if(action_read != next_idx)
+    if(action_read == next_idx)
     {
-        action_queue[action_write].action = GDB_CMD_WRITE_G;
-        action_write = next_idx;
-    }
-    else
-    {
+        // TODO remove?
         // can not happen, as gdb can only do one command after the other,...
         debug_line("ERROR: GDB Server action queue full !");
-        action_queue[action_write].action = GDB_CMD_WRITE_G;
     }
+    action_queue[action_write].action = GDB_CMD_WRITE_G;
+    action_queue[action_write].parameter = parsed_parameter;
+    action_write = next_idx;
 }
 
-void target_reply_continue(char* received, uint32_t length)
+void target_reply_continue(parameter_typ* parsed_parameter)
 {
-    (void) received; // TODO
-    (void) length; // TODO
     // TODO protect against concurrent access (action_write)
     uint32_t next_idx = action_write + 1;
     if(ACTION_QUEUE_LENGTH == next_idx)
     {
         next_idx = 0;
     }
-    if(action_read != next_idx)
+    if(action_read == next_idx)
     {
-        action_queue[action_write].action = GDB_CMD_CONTINUE;
-        action_write = next_idx;
-    }
-    else
-    {
+        // TODO remove?
         // can not happen, as gdb can only do one command after the other,...
         debug_line("ERROR: GDB Server action queue full !");
-        action_queue[action_write].action = GDB_CMD_CONTINUE;
     }
+    action_queue[action_write].action = GDB_CMD_CONTINUE;
+    action_queue[action_write].parameter = parsed_parameter;
+    action_write = next_idx;
+
 }
 
-void target_reply_read_memory(char* received, uint32_t length)
+void target_reply_read_memory(parameter_typ* parsed_parameter)
 {
-    (void) received; // TODO
-    (void) length; // TODO
     // TODO protect against concurrent access (action_write)
     uint32_t next_idx = action_write + 1;
     if(ACTION_QUEUE_LENGTH == next_idx)
     {
         next_idx = 0;
     }
-    if(action_read != next_idx)
+    if(action_read == next_idx)
     {
-        action_queue[action_write].action = GDB_CMD_READ_MEMORY;
-        action_write = next_idx;
-    }
-    else
-    {
+        // TODO remove?
         // can not happen, as gdb can only do one command after the other,...
         debug_line("ERROR: GDB Server action queue full !");
-        action_queue[action_write].action = GDB_CMD_READ_MEMORY;
     }
+    action_queue[action_write].action = GDB_CMD_READ_MEMORY;
+    action_queue[action_write].parameter = parsed_parameter;
+    action_write = next_idx;
 }
 
-void target_reply_write_memory(char* received, uint32_t length)
+void target_reply_write_memory(parameter_typ* parsed_parameter)
 {
-    (void) received; // TODO
-    (void) length; // TODO
     // TODO protect against concurrent access (action_write)
     uint32_t next_idx = action_write + 1;
     if(ACTION_QUEUE_LENGTH == next_idx)
     {
         next_idx = 0;
     }
-    if(action_read != next_idx)
+    if(action_read == next_idx)
     {
-        action_queue[action_write].action = GDB_CMD_WRITE_MEMORY;
-        action_write = next_idx;
-    }
-    else
-    {
+        // TODO remove?
         // can not happen, as gdb can only do one command after the other,...
         debug_line("ERROR: GDB Server action queue full !");
-        action_queue[action_write].action = GDB_CMD_WRITE_MEMORY;
     }
+    action_queue[action_write].action = GDB_CMD_WRITE_MEMORY;
+    action_queue[action_write].parameter = parsed_parameter;
+    action_write = next_idx;
 }
 
-void target_reply_step(char* received, uint32_t length)
+void target_reply_step(parameter_typ* parsed_parameter)
 {
-    (void) received; // TODO
-    (void) length; // TODO
     // TODO protect against concurrent access (action_write)
     uint32_t next_idx = action_write + 1;
     if(ACTION_QUEUE_LENGTH == next_idx)
     {
         next_idx = 0;
     }
-    if(action_read != next_idx)
+    if(action_read == next_idx)
     {
-        action_queue[action_write].action = GDB_CMD_STEP;
-        action_write = next_idx;
-    }
-    else
-    {
+        // TODO remove?
         // can not happen, as gdb can only do one command after the other,...
         debug_line("ERROR: GDB Server action queue full !");
-        action_queue[action_write].action = GDB_CMD_STEP;
     }
+    action_queue[action_write].action = GDB_CMD_STEP;
+    action_queue[action_write].parameter = parsed_parameter;
+    action_write = next_idx;
 }
 
 static Result handle_target_reply_questionmark(action_data_typ* action, bool first_call)

@@ -1,5 +1,6 @@
 #include "mocks.h"
 #include "../src/probe_api/result.h"
+#include "../src/target_api/target_actions.h"
 #include <stdio.h>
 
 uint8_t recv_buf[TST_RECEIVE_BUFFER_SIZE];
@@ -260,34 +261,29 @@ void target_reply_questionmark(void)
 
 }
 
-void target_reply_write_g(char* received, uint32_t length)
+void target_reply_write_g(parameter_typ* parsed_parameter)
 {
-    (void) received; // TODO
-    (void) length; // TODO
+    (void) parsed_parameter; // TODO
 }
 
-void target_reply_continue(char* received, uint32_t length)
+void target_reply_continue(parameter_typ* parsed_parameter)
 {
-    (void) received; // TODO
-    (void) length; // TODO
+    (void) parsed_parameter; // TODO
 }
 
-void target_reply_read_memory(char* received, uint32_t length)
+void target_reply_read_memory(parameter_typ* parsed_parameter)
 {
-    (void) received; // TODO
-    (void) length; // TODO
+    (void) parsed_parameter; // TODO
 }
 
-void target_reply_write_memory(char* received, uint32_t length)
+void target_reply_write_memory(parameter_typ* parsed_parameter)
 {
-    (void) received; // TODO
-    (void) length; // TODO
+    (void) parsed_parameter; // TODO
 }
 
-void target_reply_step(char* received, uint32_t length)
+void target_reply_step(parameter_typ* parsed_parameter)
 {
-    (void) received; // TODO
-    (void) length; // TODO
+    (void) parsed_parameter; // TODO
 }
 
 void debug_line(const char *fmt, ...)

@@ -20,6 +20,7 @@
 #include <stdint.h>
 #include "result.h"
 #include "nomagic/walk.h"
+#include "target_actions.h"
 
 typedef enum {
     SWD_CONNECT,
@@ -40,6 +41,7 @@ typedef struct{
     uint32_t intern_0;
     uint32_t par_i_0;
     walk_data_typ* walk;
+    parameter_typ* parameter;
     action_typ action;
     uint8_t padding[3];
 } action_data_typ;
