@@ -32,6 +32,8 @@ typedef struct {
     uint32_t length;
     uint32_t num_memeory_locations;
     mem_val_typ memory[MAX_MEMORY_POSITIONS];
+    bool has_address;
+    uint8_t padding[3];
 } parameter_typ;
 
 void target_init(void);

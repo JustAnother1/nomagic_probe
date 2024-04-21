@@ -34,6 +34,7 @@ typedef enum parameter_pattern {
     PARAM_XX,
     PARAM_ADDR_LENGTH_XX,
     PARAM_ADDR_LENGTH,
+    PARAM_OPT_ADDR,
 } param_pattern_typ;
 
 
@@ -196,9 +197,12 @@ void commands_execute(char* received, uint32_t length, char* checksum)
         case 'R':  // Restart the program being run
         case 's':  // step
         case 'S':  // step
-            gdb_is_now_busy();
-            // TODO  parameter_typ* parsed_parameter  !!!
-            target_reply_step(&parsed_parameter);
+            received++;
+            if(true == parse_parameter(PARAM_OPT_ADDR, received))
+            {
+                gdb_is_now_busy();
+                target_reply_step(&parsed_parameter);
+            }
             break;
 
         case 'T':  // report if a particular Thread is alive
@@ -512,6 +516,9 @@ static void handle_general_set(char* received, uint32_t length)
 
 static bool parse_parameter(param_pattern_typ pattern, char* parameter)
 {
+    // reset values
+    parsed_parameter.has_address = false;
+    parsed_parameter.num_memeory_locations = 0;
     switch(pattern)
     {
     case PARAM_XX: // XX
@@ -543,6 +550,7 @@ static bool parse_parameter(param_pattern_typ pattern, char* parameter)
         *mem_start = '\0';
         mem_start++;
         parsed_parameter.address = hex_to_int(parameter, 0);
+        parsed_parameter.has_address = true;
         parsed_parameter.length = hex_to_int(split_pos, 0);
         // XX is now in mem_start
         return parse_memory(mem_start);
@@ -562,9 +570,22 @@ static bool parse_parameter(param_pattern_typ pattern, char* parameter)
         *split_pos = '\0';
         split_pos++;
         parsed_parameter.address = hex_to_int(parameter, 0);
+        parsed_parameter.has_address = true;
         parsed_parameter.length = hex_to_int(split_pos, 0);
         break;
     }
+
+    case PARAM_OPT_ADDR: // optionaly addr
+        if('\0' != *parameter)
+        {
+            parsed_parameter.address = hex_to_int(parameter, 0);
+            parsed_parameter.has_address = true;
+        }
+        else
+        {
+            parsed_parameter.has_address = false;
+        }
+        break;
 
     default:
         // invalid pattern

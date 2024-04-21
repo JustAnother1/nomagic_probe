@@ -33,6 +33,9 @@ static bool wait_for_wrap_around;
 static void handle_connect(walk_data_typ* data);
 static void handle_disconnect(walk_data_typ* data);
 static void handle_read_special_register(walk_data_typ* data);
+static void handle_write_special_register(walk_data_typ* data);
+static void handle_read_memory(walk_data_typ* data);
+static void handle_write_memory(walk_data_typ* data);
 
 #ifdef FEAT_DETECT
 static void handle_scan(walk_data_typ* data);
@@ -45,6 +48,9 @@ static const walk_handler walks_look_up[NUM_WALKS_DEFINED] = {
         handle_connect,
         handle_disconnect,
         handle_read_special_register,
+        handle_write_special_register,
+        handle_read_memory,
+        handle_write_memory,
 #ifdef FEAT_DETECT
         handle_scan,
 #endif
@@ -333,6 +339,33 @@ static void handle_read_special_register(walk_data_typ* data)
         data->read_0 = data->cur_step.read_0;
         data->result = RESULT_OK;
         data->is_done = true;
+    }
+}
+
+static void handle_write_special_register(walk_data_typ* data)
+{
+    // TODO
+    if(0 == data->phase)
+    {
+
+    }
+}
+
+static void handle_read_memory(walk_data_typ* data)
+{
+    // TODO
+    if(0 == data->phase)
+    {
+
+    }
+}
+
+static void handle_write_memory(walk_data_typ* data)
+{
+    // TODO
+    if(0 == data->phase)
+    {
+
     }
 }
 

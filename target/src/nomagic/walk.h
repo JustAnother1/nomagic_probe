@@ -25,11 +25,14 @@ typedef enum {
     WALK_CONNECT = 0,
     WALK_DISCONNECT,
     WALK_READ_SPECIAL_REGISTER,
+    WALK_WRITE_SPECIAL_REGISTER,
+    WALK_READ_MEMORY,
+    WALK_WRITE_MEMORY,
     // new walks go here
 #ifdef FEAT_DETECT
     WALK_SCAN,
 #endif
-    NUM_WALKS_DEFINED,  // <- do not use other than array size !
+    NUM_WALKS_DEFINED  // <- do not use other than array size !
 }walk_typ;
 
 typedef struct{

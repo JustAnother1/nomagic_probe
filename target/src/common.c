@@ -23,6 +23,7 @@
 #include "debug_log.h"
 #include "nomagic/walk.h"
 #include "time.h"
+#include "hex.h"
 
 #define ACTION_QUEUE_LENGTH 5
 #define MAX_SAFE_COUNT    0xfffffff0  // comparing against < 0xffffffff is always true -> we want to avoid 0xffffffff as end time of timeout
@@ -430,12 +431,56 @@ static Result handle_target_reply_read_memory(action_data_typ* action, bool firs
     //     ‘E NN’
     //         NN is errno
 
-    (void) action; // TODO
-    (void) first_call; // TODO
-    // TODO
-    reply_packet_prepare();
-    reply_packet_send();
-    return RESULT_OK;
+    if(true == first_call)
+    {
+        reply_packet_prepare();
+        action->phase = 1;
+        action->intern_0 = 0;
+        return ERR_NOT_COMPLETED;
+    }
+    // else ...
+    if(1 == action->phase)
+    {
+        action->walk->type = WALK_READ_MEMORY;
+        action->walk->par_i_0 = action->parameter->address + action->intern_0*4;
+        action->walk->phase = 0;
+        action->walk->result = RESULT_OK;
+        action->walk->is_done = false;
+        action->phase = 2;
+        return ERR_NOT_COMPLETED;
+    }
+    else //if(2 == action->phase)
+    {
+        if(RESULT_OK == action->walk->result)
+        {
+            char buf[9];
+            buf[8] = 0;
+            int_to_hex(buf, action->walk->read_0, 8);
+            reply_packet_add(buf);
+            debug_line("read 0x%08lx", action->walk->read_0);
+            action->intern_0++;
+            action->phase = 1;
+            if(action->parameter->length == action->intern_0)
+            {
+                // finished
+                reply_packet_send();
+                return RESULT_OK;
+            }
+            else
+            {
+                // continue with next register
+                return ERR_NOT_COMPLETED;
+            }
+        }
+        else
+        {
+            debug_line("ERROR: failed to read memory (%ld)!", action->walk->result);
+            reply_packet_prepare();
+            reply_packet_add("E23");
+            reply_packet_send();
+            return action->walk->result;
+        }
+    }
 }
 
 static Result handle_target_reply_write_memory(action_data_typ* action, bool first_call)
@@ -451,13 +496,61 @@ static Result handle_target_reply_write_memory(action_data_typ* action, bool fir
     //         for an error (this includes the case where only part of the data
     // was written).
 
-    (void) action; // TODO
-    (void) first_call; // TODO
-    // TODO
-    reply_packet_prepare();
-    reply_packet_add("OK");
-    reply_packet_send();
-    return RESULT_OK;
+    if(true == first_call)
+    {
+        reply_packet_prepare();
+        action->phase = 1;
+        action->intern_0 = action->parameter->length;
+        return ERR_NOT_COMPLETED;
+    }
+    if(1 == action->phase)
+    {
+        uint32_t i;
+        bool found = false;
+        for(i = 0; i < action->parameter->num_memeory_locations; i++)
+        {
+            if(true == action->parameter->memory[i].has_value)
+            {
+                // write that value
+                found = true;
+                break;
+            }
+            // else skip that value
+        }
+        if(false == found)
+        {
+            // no memory location found -> we are done
+            reply_packet_add("OK");
+            reply_packet_send();
+            return RESULT_OK;
+        }
+        // else
+        action->walk->type = WALK_WRITE_MEMORY;
+        action->walk->par_i_0 = action->parameter->address + i*4;
+        action->walk->par_i_1 = action->parameter->memory[i].value;
+        action->walk->phase = 0;
+        action->walk->result = RESULT_OK;
+        action->walk->is_done = false;
+        action->phase = 2;
+        return ERR_NOT_COMPLETED;
+    }
+    else //if(2 == action->phase)
+    {
+        if(RESULT_OK == action->walk->result)
+        {
+            action->phase = 1;
+            // continue with next register
+            return ERR_NOT_COMPLETED;
+        }
+        else
+        {
+            debug_line("ERROR: failed to write special register (%ld)!", action->walk->result);
+            reply_packet_prepare();
+            reply_packet_add("E23");
+            reply_packet_send();
+            return action->walk->result;
+        }
+    }
 }
 
 static Result handle_target_reply_step(action_data_typ* action, bool first_call)

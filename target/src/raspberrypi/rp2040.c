@@ -197,6 +197,9 @@ Result handle_target_reply_g(action_data_typ* action, bool first_call)
         else
         {
             debug_line("ERROR: failed to read special register (%ld)!", action->walk->result);
+            reply_packet_prepare();
+            reply_packet_add("E23");
+            reply_packet_send();
             return action->walk->result;
         }
     }
@@ -213,22 +216,61 @@ Result handle_target_reply_write_g(action_data_typ* action, bool first_call)
     //     ‘E NN’
     //         for an error
 
-    (void) action; // TODO
-    (void) first_call; // TODO
-    uint32_t i;
-    for(i = 0; i < action->parameter->num_memeory_locations; i++)
+    if(true == first_call)
     {
-        if(true == action->parameter->memory->has_value)
-        {
-            // write that value
-            // TODO
-        }
-        // else skip that value
+        reply_packet_prepare();
+        action->phase = 1;
+        action->intern_0 = 0;
+        return ERR_NOT_COMPLETED;
     }
-    reply_packet_prepare();
-    reply_packet_add("OK");
-    reply_packet_send();
-    return RESULT_OK;
+    if(1 == action->phase)
+    {
+        uint32_t i;
+        bool found = false;
+        for(i = 0; i < action->parameter->num_memeory_locations; i++)
+        {
+            if(true == action->parameter->memory[i].has_value)
+            {
+                // write that value
+                found = true;
+                break;
+            }
+            // else skip that value
+        }
+        if(false == found)
+        {
+            // no memory location found -> we are done
+            reply_packet_add("OK");
+            reply_packet_send();
+            return RESULT_OK;
+        }
+        // else
+        action->walk->type = WALK_WRITE_SPECIAL_REGISTER;
+        action->walk->par_i_0 = i;  // select the register to write
+        action->walk->par_i_1 = action->parameter->memory[i].value;
+        action->walk->phase = 0;
+        action->walk->result = RESULT_OK;
+        action->walk->is_done = false;
+        action->phase = 2;
+        return ERR_NOT_COMPLETED;
+    }
+    else //if(2 == action->phase)
+    {
+        if(RESULT_OK == action->walk->result)
+        {
+            action->phase = 1;
+            // continue with next register
+            return ERR_NOT_COMPLETED;
+        }
+        else
+        {
+            debug_line("ERROR: failed to write special register (%ld)!", action->walk->result);
+            reply_packet_prepare();
+            reply_packet_add("E23");
+            reply_packet_send();
+            return action->walk->result;
+        }
+    }
 }
 
 void target_send_file(char* filename, uint32_t offset, uint32_t len)
