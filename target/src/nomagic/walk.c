@@ -344,28 +344,103 @@ static void handle_read_special_register(walk_data_typ* data)
 
 static void handle_write_special_register(walk_data_typ* data)
 {
-    // TODO
+    // 1. write value to DCRDR.
     if(0 == data->phase)
     {
-
+        data->cur_step.type = STEP_AP_WRITE;
+        data->cur_step.phase = 0;
+        data->cur_step.result = RESULT_OK;
+        data->cur_step.is_done = false;
+        data->cur_step.par_i_0 = DCRDR ;
+        data->cur_step.par_i_1 = data->par_i_0 | (1<<16); //  REGWnR = 1
+        data->phase++;
+        data->intern_0 = 0;  // retry counter
+    }
+    // 2. write to DCRSR the REGSEL value and REGWnR = 1
+    else if(1 == data->phase)
+    {
+        data->cur_step.type = STEP_AP_WRITE;
+        data->cur_step.phase = 0;
+        data->cur_step.result = RESULT_OK;
+        data->cur_step.is_done = false;
+        data->cur_step.par_i_0 = DCRSR ;
+        data->cur_step.par_i_1 = data->par_i_0 | (1<<16); //  REGWnR = 1
+        data->phase++;
+        data->intern_0 = 0;  // retry counter
+    }
+    // 2. read DHCSR until S_REGRDY is 1
+    else if(2 == data->phase)
+    {
+        data->cur_step.type = STEP_AP_READ;
+        data->cur_step.phase = 0;
+        data->cur_step.result = RESULT_OK;
+        data->cur_step.is_done = false;
+        data->cur_step.par_i_0 = DHCSR;
+        data->phase++;
+    }
+    else if(3 == data->phase)
+    {
+        if(0 == (data->cur_step.read_0 & (1<<16)))
+        {
+            // write not finished
+            data->intern_0++;
+            if(100 < data->intern_0)
+            {
+                // write not finished -> read again
+                data->phase = 2;
+            }
+            else
+            {
+                // too many retries
+                debug_line("ERROR: too many retries !");
+                data->result = ERR_TIMEOUT;
+                data->is_done = true;
+            }
+        }
+        else
+        {
+            // write finished
+            data->result = RESULT_OK;
+            data->is_done = true;
+        }
     }
 }
 
 static void handle_read_memory(walk_data_typ* data)
 {
-    // TODO
     if(0 == data->phase)
     {
-
+        data->cur_step.type = STEP_AP_READ;
+        data->cur_step.phase = 0;
+        data->cur_step.result = RESULT_OK;
+        data->cur_step.is_done = false;
+        data->cur_step.par_i_0 = data->par_i_0;
+        data->phase++;
+    }
+    else
+    {
+        data->read_0 = data->cur_step.read_0;
+        data->result = RESULT_OK;
+        data->is_done = true;
     }
 }
 
 static void handle_write_memory(walk_data_typ* data)
 {
-    // TODO
     if(0 == data->phase)
     {
-
+        data->cur_step.type = STEP_AP_WRITE;
+        data->cur_step.phase = 0;
+        data->cur_step.result = RESULT_OK;
+        data->cur_step.is_done = false;
+        data->cur_step.par_i_0 = data->par_i_0; // address
+        data->cur_step.par_i_1 = data->par_i_1; // value
+        data->phase++;
+    }
+    else
+    {
+        data->result = RESULT_OK;
+        data->is_done = true;
     }
 }
 
