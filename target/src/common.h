@@ -19,8 +19,21 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+typedef enum {
+    NOT_CONNECTED,     // No SWD communication, target MCU might not be present at all
+    CONNECTING,        // SWD starts communication, transitional state,
+                       // should not take long to either go to connected
+                       // or fail and go back to not connected
+    CONNECTED_HALTED,  // SWD communication active, MCU is not running / no code execution.
+    CONNECTED_RUNNING, // SWD communication active, MCU is running / executing code.
+    // new status go here
+    NUM_TARGET_STATUS, // <- do not use other than array size !
+}target_status_typ;
+
+
 void target_common_init(void);
 void send_part(char* part, uint32_t size, uint32_t offset, uint32_t length);
 void target_common_tick(void);
+void target_set_status(target_status_typ new_status);
 
 #endif /* COMMON_H_ */

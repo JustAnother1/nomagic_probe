@@ -24,11 +24,11 @@
 #include "nomagic/walk.h"
 #include "time.h"
 #include "hex.h"
+#include "common.h"
 
 #define ACTION_QUEUE_LENGTH 5
 #define MAX_SAFE_COUNT    0xfffffff0  // comparing against < 0xffffffff is always true -> we want to avoid 0xffffffff as end time of timeout
 #define WALK_TIMEOUT_TIME_MS  300
-
 
 static void handle_actions(void);
 static Result handle_target_reply_questionmark(action_data_typ* action, bool first_call);
@@ -58,6 +58,7 @@ static uint32_t timeout_time;
 static bool wait_for_wrap_around;
 static bool attached;
 static walk_data_typ cur_walk;
+static target_status_typ target_status;
 
 void target_init(void)
 {
@@ -68,8 +69,14 @@ void target_init(void)
     cur_walk.is_done = true;
     cur_walk.cur_step.is_done = true;
     cur_walk.cur_step.result = RESULT_OK;
+    target_status = NOT_CONNECTED;
     swd_init();
     walk_init();
+}
+
+void target_set_status(target_status_typ new_status)
+{
+    target_status = new_status;
 }
 
 void target_tick(void)
@@ -82,6 +89,27 @@ void target_tick(void)
     else
     {
         handle_actions();
+    }
+    // handle state
+    switch(target_status)
+    {
+        case NOT_CONNECTED:
+            break;
+
+        case CONNECTING:
+            break;
+
+        case CONNECTED_HALTED:
+            break;
+
+        case CONNECTED_RUNNING:
+            // check if still running
+            break;
+
+        default:
+            // should not happen
+            target_status = NOT_CONNECTED;
+            break;
     }
 }
 
@@ -177,6 +205,7 @@ void target_connect(void)
     {
         action_queue[action_write].action = SWD_CONNECT;
         action_write = next_idx;
+        target_status = CONNECTING;
     }
     else
     {

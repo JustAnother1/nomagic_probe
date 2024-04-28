@@ -88,6 +88,7 @@ Result handle_target_close_connection(action_data_typ* action, bool first_call)
         {
             debug_line("ERROR: failed to disconnect(%ld)!", action->walk->result);
         }
+        target_set_status(NOT_CONNECTED);
     }
     return action->walk->result;
 }
@@ -117,6 +118,7 @@ Result handle_target_connect(action_data_typ* action, bool first_call)
         {
             debug_line("ERROR: failed to connect!");
         }
+        target_set_status(CONNECTED_HALTED);  // TODO enable connect without halt
     }
     return action->walk->result;
 }
