@@ -13,9 +13,9 @@ LIB_SRC_FOLDER = target/src/
 
 LIB_CFLAGS  = -c -ggdb3
 
-# LIB_CFLAGS += -O3
+LIB_CFLAGS += -O3
 # sometimes helps with debugging:
-LIB_CFLAGS += -O0
+# LIB_CFLAGS += -O0
 # LIB_CFLAGS += -save-temps=obj
 
 LIB_CFLAGS += -std=c17
