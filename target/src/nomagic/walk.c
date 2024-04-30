@@ -39,7 +39,7 @@ static void handle_write_memory(walk_data_typ* data);
 
 #ifdef FEAT_DETECT
 static void handle_scan(walk_data_typ* data);
-static Result check_AP(uint32_t idr, bool first_call, uint32_t * phase);
+static Result check_AP(uint32_t idr, bool first_call, uint32_t * phase, walk_data_typ* data);
 #endif
 
 typedef void (*walk_handler)(walk_data_typ* data);
@@ -489,6 +489,7 @@ static void handle_scan(walk_data_typ* data)
                     debug_line("Done!");
                     data->result = RESULT_OK;
                     data->is_done = true;
+                    tres = RESULT_OK;
                 }
             }
             else

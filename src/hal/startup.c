@@ -469,7 +469,7 @@ void default_Handler(void)
 _Noreturn void error_state(void)
 {
     // make sure that all debug messages have been send
-    debug_uart_flush();
+    debug_flush();
     // TODO only break if debugger is attached
     __asm__ __volatile__ ("bkpt #0");
 

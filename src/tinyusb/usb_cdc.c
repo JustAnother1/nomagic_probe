@@ -42,8 +42,6 @@
 #include "hal/debug_uart.h"
 #include "tinyusb/usb.h"
 
-#define INTERFACE   0
-
 static uint8_t nextChar = 0;
 
 void usb_cdc_putc(void* p, char c)
