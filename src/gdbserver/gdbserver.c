@@ -22,7 +22,7 @@
 #include "probe_api/result.h"
 #include "commands.h"
 #include "util.h"
-#include "target_api/target_actions.h"
+#include "target_actions.h"
 
 // defines what we have received and have processed
 typedef enum parseState {

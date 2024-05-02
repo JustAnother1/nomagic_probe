@@ -19,7 +19,7 @@
 #include "hal/debug_uart.h"
 #include "probe_api/gdb_packets.h"
 #include "probe_api/hex.h"
-#include "target_api/target_info.h"
+#include "target_info.h"
 #include "util.h"
 #include "probe_api/debug_log.h"
 
