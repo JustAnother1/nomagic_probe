@@ -20,6 +20,7 @@
 #include <stdint.h>
 #include "result.h"
 #include "steps.h"
+#include "cfg/target_walk_walks.h"
 
 typedef enum {
     WALK_CONNECT = 0,
@@ -29,9 +30,7 @@ typedef enum {
     WALK_READ_MEMORY,
     WALK_WRITE_MEMORY,
     // new walks go here
-#ifdef FEAT_DETECT
-    WALK_SCAN,
-#endif
+    TARGET_ENUM_WALKS
     NUM_WALKS_DEFINED  // <- do not use other than array size !
 }walk_typ;
 

@@ -16,6 +16,7 @@
 #ifndef PROBE_API_RESULT_H_
 #define PROBE_API_RESULT_H_
 
+#include <stdint.h>
 
 #define RESULT_OK                   0
 // Errors:

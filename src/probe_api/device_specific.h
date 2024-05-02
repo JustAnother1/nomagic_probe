@@ -19,7 +19,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include "result.h"
-#include "nomagic/walk.h"
+#include "walk.h"
 #include "target_actions.h"
 
 typedef enum {

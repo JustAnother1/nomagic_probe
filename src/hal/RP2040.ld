@@ -2,7 +2,7 @@
 ENTRY(Reset_Handler)
 /* 2nd stage bootloader */
 TARGET(binary)
-INPUT("src/hal/2ndstage.bin")
+INPUT("nomagic_probe/src/hal/2ndstage.bin")
 OUTPUT_FORMAT(default)
 
 MEMORY
@@ -15,7 +15,7 @@ SECTIONS
 {
 /* second stage boot loader: (needed for ROM boot loader to work) */
     .text 0x10000000 : {
-        "src/hal/2ndstage.bin"
+        "nomagic_probe/src/hal/2ndstage.bin"
         KEEP (*(.vectors))
     } > FLASH
 

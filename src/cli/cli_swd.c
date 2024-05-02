@@ -19,7 +19,7 @@
 
 #include "probe_api/swd.h"
 #include "probe_api/debug_log.h"
-#include "target_api/target_actions.h"
+#include "target_actions.h"
 
 
 bool cmd_swd_connect(const uint32_t loop)

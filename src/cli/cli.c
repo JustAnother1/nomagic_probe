@@ -20,7 +20,7 @@
 #include <string.h>
 #include "hal/watchdog.h"
 #include "probe_api/debug_log.h"
-#include "../bin/version.h"
+#include "version.h"
 
 #define NUM_COMMANDS  (sizeof(commands)/sizeof(cmd_typ))
 

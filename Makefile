@@ -2,7 +2,7 @@
 # =======================================
 #
 # You can do a "make help" to see all the supported targets.
-# The target chip specif stuff is handeled in the included target.mk file.
+# The target chip specific stuff is handeled in the included target.mk file.
 
 PROJECT = nomagic_probe
 
@@ -93,7 +93,7 @@ DDEFS += -DTARGET=$(TARGET)
 ifeq ($(HAS_MSC), yes)
 	DDEFS += -DFEAT_USB_MSC
 endif
-# enable the command line interfae for testing
+# enable the command line interface for testing
 ifeq ($(HAS_DEBUG_UART), yes)
 	DDEFS += -DFEAT_DEBUG_UART
 endif
@@ -104,11 +104,6 @@ endif
 # enable the gdb-server
 ifeq ($(HAS_GDB_SERVER), yes)
 	DDEFS += -DFEAT_GDB_SERVER
-endif
-
-# enable the gdb-server
-ifeq ($(HAS_DETECT), yes)
-	DDEFS += -DFEAT_DETECT
 endif
 
 

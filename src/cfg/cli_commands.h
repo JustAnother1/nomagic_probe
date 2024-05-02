@@ -20,11 +20,7 @@
 #include "cli/cli_sys.h"
 #include "cli/cli_usb.h"
 #include "cli/cli_memory.h"
-#include "target_api/target_actions.h"
-
-#ifdef FEAT_DETECT
-bool cmd_swd_test(uint32_t loop);
-#endif
+#include "cfg/target_cli_commands.h"
 
 
 cmd_typ commands[] = {
@@ -46,11 +42,7 @@ cmd_typ commands[] = {
         {"xip_off",     "disable XIP on FLash", cmd_flash_disable_XIP},
         {"xip_on",      "enable XIP on FLash", cmd_flash_enable_XIP},
 #endif
-#ifdef FEAT_DETECT
-        {"swd_test",    "explore the SWD interface", cmd_swd_test},
-#else
         {"swd_open",    "open a connection on the SWD interface", cmd_swd_connect},
-#endif
         {"swd_rm",      "read target memory address <address>", cmd_swd_read_memory},
         {"swd_wm",      "write to target memory address <address> <value>", cmd_swd_write_memory},
         {"flash_reset", "reset the external QSPI flash", cmd_flash_reset},
@@ -59,6 +51,7 @@ cmd_typ commands[] = {
         {"ls",          "list all files in the file system", cmd_file_ls},
         {"fs_format",   "format the file system.", cmd_file_format},
 #endif
+        TARGET_CLI_COMMANDS
 };
 
 

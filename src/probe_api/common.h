@@ -35,5 +35,6 @@ void target_common_init(void);
 void send_part(char* part, uint32_t size, uint32_t offset, uint32_t length);
 void target_common_tick(void);
 void target_set_status(target_status_typ new_status);
+bool common_cmd_target_info(uint32_t loop);
 
 #endif /* COMMON_H_ */

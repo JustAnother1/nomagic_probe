@@ -21,21 +21,24 @@
 #include "result.h"
 #include "swd.h"
 #include "debug_log.h"
-#include "nomagic/walk.h"
+#include "walk.h"
 #include "time.h"
 #include "hex.h"
 #include "common.h"
+#include "gdb_packets.h"
 
 #define ACTION_QUEUE_LENGTH 5
 #define MAX_SAFE_COUNT    0xfffffff0  // comparing against < 0xffffffff is always true -> we want to avoid 0xffffffff as end time of timeout
 #define WALK_TIMEOUT_TIME_MS  300
 
 static void handle_actions(void);
+#ifdef FEAT_GDB_SERVER
 static Result handle_target_reply_questionmark(action_data_typ* action, bool first_call);
 static Result handle_target_reply_continue(action_data_typ* action, bool first_call);
 static Result handle_target_reply_read_memory(action_data_typ* action, bool first_call);
 static Result handle_target_reply_write_memory(action_data_typ* action, bool first_call);
 static Result handle_target_reply_step(action_data_typ* action, bool first_call);
+#endif
 
 
 static volatile uint32_t action_read;
@@ -45,6 +48,7 @@ static action_data_typ action_queue[ACTION_QUEUE_LENGTH];
 static const action_handler action_look_up[NUM_ACTIONS] = {
         handle_target_connect,
         handle_target_close_connection,
+#ifdef FEAT_GDB_SERVER
         handle_target_reply_g,
         handle_target_reply_questionmark,
         handle_target_reply_write_g,
@@ -52,6 +56,7 @@ static const action_handler action_look_up[NUM_ACTIONS] = {
         handle_target_reply_read_memory,
         handle_target_reply_write_memory,
         handle_target_reply_step,
+#endif
 };
 
 static uint32_t timeout_time;
@@ -113,7 +118,7 @@ void target_tick(void)
     }
 }
 
-bool cmd_target_info(uint32_t loop)
+bool common_cmd_target_info(uint32_t loop)
 {
     if(0 == loop)
     {
@@ -166,6 +171,7 @@ bool cmd_target_info(uint32_t loop)
     return false; // true == Done; false = call me again
 }
 
+#ifdef FEAT_GDB_SERVER
 void send_part(char* part, uint32_t size, uint32_t offset, uint32_t length)
 {
     reply_packet_prepare();
@@ -192,6 +198,7 @@ void send_part(char* part, uint32_t size, uint32_t offset, uint32_t length)
     reply_packet_add_max(&part[offset], length);
     reply_packet_send();
 }
+#endif
 
 void target_connect(void)
 {
@@ -236,6 +243,7 @@ void target_close_connection(void)
     }
 }
 
+#ifdef FEAT_GDB_SERVER
 void target_reply_g(void)
 {
     // TODO protect against concurrent access (action_write)
@@ -591,6 +599,7 @@ static Result handle_target_reply_step(action_data_typ* action, bool first_call)
     reply_packet_send();
     return RESULT_OK;
 }
+#endif
 
 static void handle_actions(void)
 {
