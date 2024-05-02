@@ -92,14 +92,14 @@ static const packet_handler packet_handler_look_up[NUM_PAKETS] = {
         dormant_to_swd_handler,
         swd_to_dormant_handler
 };
-volatile bool operational;
+static volatile bool operational;
 volatile uint32_t read_idx;
 volatile uint32_t write_idx;
-volatile uint32_t data_write_idx;
+static volatile uint32_t data_write_idx;
 packet_definition_typ packet_queue[PACKET_QUEUE_SIZE];
-uint32_t packet_result_data[PACKET_QUEUE_SIZE];
-bool result_data_available[PACKET_QUEUE_SIZE];
-bool result_data_error[PACKET_QUEUE_SIZE];
+static uint32_t packet_result_data[PACKET_QUEUE_SIZE];
+static bool result_data_available[PACKET_QUEUE_SIZE];
+static bool result_data_error[PACKET_QUEUE_SIZE];
 
 
 // ARM document defines this!

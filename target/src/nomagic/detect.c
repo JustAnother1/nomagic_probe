@@ -246,6 +246,8 @@ static bool test_swd_v1(void)
         debug_line(" ");
         debug_line("trying to connect using SWDv1 ....");
         walk_init();
+        debug_line("resetting error condition!");
+        swd_reset_error_condition();
         cur_walk.type = WALK_CONNECT;
         cur_walk.par_b_0 = false; // multi = SWDv2 -> false
         cur_walk.par_i_0 = 0;
@@ -292,6 +294,8 @@ static bool test_swd_v2(void)
             debug_line(" ");
             debug_line("trying to connect on location %ld/%d ....", location + 1, NUM_CONNECT_LOCATIONS);
             walk_init();
+            debug_line("resetting error condition!");
+            swd_reset_error_condition();
             cur_walk.type = WALK_CONNECT;
             cur_walk.par_b_0 = true; // multi = SWDv2 -> true
             cur_walk.par_i_0 = connect_parameter[location].target_id;

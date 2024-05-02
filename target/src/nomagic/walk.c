@@ -26,6 +26,7 @@
 
 static uint32_t val_DHCSR;
 static uint32_t val_DEMCR;
+static uint32_t ROM_Table_Adress;
 
 static uint32_t timeout_time;
 static bool wait_for_wrap_around;
@@ -157,6 +158,14 @@ static void handle_connect(walk_data_typ* data)
 {
     if(0 == data->phase)
     {
+        data->cur_step.type = STEP_DISCONNECT;
+        data->cur_step.phase = 0;
+        data->cur_step.result = RESULT_OK;
+        data->cur_step.is_done = false;
+        data->phase++;
+    }
+    else if(1 == data->phase)
+    {
         data->cur_step.type = STEP_CONNECT;
         data->cur_step.par_b_0 = data->par_b_0;
         data->cur_step.par_i_0 = data->par_i_0;
@@ -166,7 +175,7 @@ static void handle_connect(walk_data_typ* data)
         data->cur_step.is_done = false;
         data->phase++;
     }
-    else if(1 == data->phase)
+    else if(2 == data->phase)
     {
         // write DEBUGEN in DHCSR
         if(RESULT_OK == data->cur_step.result)
@@ -188,7 +197,7 @@ static void handle_connect(walk_data_typ* data)
             data->is_done = true;
         }
     }
-    else if(2 == data->phase)
+    else if(3 == data->phase)
     {
         // init DEMCR
         if(RESULT_OK == data->cur_step.result)
@@ -212,7 +221,7 @@ static void handle_connect(walk_data_typ* data)
             data->is_done = true;
         }
     }
-    else if(3 == data->phase)
+    else if(4 == data->phase)
     {
         if(RESULT_OK == data->cur_step.result)
         {
@@ -238,7 +247,7 @@ static void handle_connect(walk_data_typ* data)
             data->is_done = true;
         }
     }
-    else if(4 == data->phase)
+    else if(5 == data->phase)
     {
         data->phase++; // todo add more steps?
         data->result = RESULT_OK;
@@ -616,7 +625,8 @@ static Result check_AP(uint32_t idr, bool first_call, uint32_t * phase, walk_dat
             if(RESULT_OK == data->cur_step.result)
             {
                 debug_line("AP: BASE : 0x%08lx", data->cur_step.read_0);
-                debug_line("AP: ROM Table starts at 0x%08lx", data->cur_step.read_0 & 0xfffffffc); // lowest two bits are 0. (4 Byte = 32 bit alignment)
+                ROM_Table_Adress = data->cur_step.read_0 & 0xfffffffc; // lowest two bits of address must be  0. (4 Byte = 32 bit alignment)
+                debug_line("AP: ROM Table starts at 0x%08lx", ROM_Table_Adress);
                 data->cur_step.type = STEP_AP_REG_READ;
                 data->cur_step.par_i_0 = AP_BANK_CFG;
                 data->cur_step.par_i_1 = AP_REGISTER_CFG;
@@ -666,6 +676,7 @@ static Result check_AP(uint32_t idr, bool first_call, uint32_t * phase, walk_dat
                 data->cur_step.phase = 0;
                 data->cur_step.result = RESULT_OK;
                 data->cur_step.is_done = false;
+                data->intern_0 = 0;
                 *phase = 6;
                 return ERR_NOT_COMPLETED;
             }
@@ -682,8 +693,61 @@ static Result check_AP(uint32_t idr, bool first_call, uint32_t * phase, walk_dat
             if(RESULT_OK == data->cur_step.result)
             {
                 debug_line("AP: CFG1 : 0x%08lx", data->cur_step.read_0);
+                data->cur_step.type = STEP_AP_READ;
+                data->cur_step.par_i_0 = ROM_Table_Adress;
+                data->cur_step.phase = 0;
+                data->cur_step.result = RESULT_OK;
+                data->cur_step.is_done = false;
+                data->intern_0 = 0;
+                *phase = 7;
+                return ERR_NOT_COMPLETED;
+            }
+            else
+            {
+                // step failed
+                debug_line("Failed to read CFG1 (%ld) !", data->cur_step.result);
+                return data->cur_step.result;
+            }
+        }
 
-                // TODO read ROM Table
+        else if(7 == *phase)
+        {
+            if(RESULT_OK == data->cur_step.result)
+            {
+                if(0 == data->cur_step.read_0)
+                {
+                    // end of ROM Table found
+                    *phase = 8;
+                    return ERR_NOT_COMPLETED;
+                }
+                if(1 == (data->cur_step.read_0 &1))
+                {
+                    // valid entry
+                    int32_t address = (int32_t)(data->cur_step.read_0 & 0xfffff000);  // address offset is signed
+                    debug_line("ROM Table : found 0x%08lx", address);
+                    debug_line("ROM Table : address 0x%08lx", (int32_t)ROM_Table_Adress + address);
+                }
+                else
+                {
+                    debug_line("ROM Table : ignoring 0x%08lx", data->cur_step.read_0);
+                }
+                data->intern_0++;
+                if(1024 < data->intern_0)
+                {
+                    // max size
+                    *phase = 8;
+                    return ERR_NOT_COMPLETED;
+                }
+
+                // read next entry
+                debug_line("AP: CFG1 : 0x%08lx", data->cur_step.read_0);
+                data->cur_step.type = STEP_AP_READ;
+                data->cur_step.par_i_0 = ROM_Table_Adress + (data->intern_0 * 4);
+                data->cur_step.phase = 0;
+                data->cur_step.result = RESULT_OK;
+                data->cur_step.is_done = false;
+                return ERR_NOT_COMPLETED;
+
                 // ROM Table:
                 // ==========
                 // each 32bit Entry is defined as:
@@ -713,18 +777,17 @@ static Result check_AP(uint32_t idr, bool first_call, uint32_t * phase, walk_dat
                 // TODO read ROM Table from address pointed to by BASE Register (Architecture P 318)
                 // TODO check number of Break Points
                 // TODO check number of Watch points
-                *phase = 7;
-                return ERR_NOT_COMPLETED;
+
             }
             else
             {
                 // step failed
-                debug_line("Failed to read CFG1 (%ld) !", data->cur_step.result);
+                debug_line("Failed to read ROM Table (%ld) !", data->cur_step.result);
                 return data->cur_step.result;
             }
         }
 
-        else if(7 == *phase)
+        else if(8 == *phase)
         {
             debug_line("Done with this AP!");
             return RESULT_OK; // done with this AP

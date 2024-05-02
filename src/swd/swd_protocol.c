@@ -204,6 +204,7 @@ Result connect_handler(command_typ* cmd, bool first_call)
     {
         state.mem_ap.ap_sel = cmd->i_val_2;
         cmd->phase = 1;
+        swd_packet_bits_reset_error_condition();
     }
 
 // Phase 1 (multi(SWDv2) only - disconnect)
