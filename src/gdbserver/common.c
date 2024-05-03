@@ -122,9 +122,6 @@ bool common_cmd_target_info(uint32_t loop)
 {
     if(0 == loop)
     {
-    debug_line("Target Status");
-    debug_line("=============");
-    debug_line("target: RP2040");  // TODO target cfg
     // walk state
     if(true == cur_walk.is_done)
     {
