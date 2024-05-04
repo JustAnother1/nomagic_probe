@@ -43,7 +43,7 @@ TST_LD = cc
 
 BIN_FOLDER = bin/
 SRC_FOLDER = src/
-NOMAGIC_FOLDER = 
+NOMAGIC_FOLDER = nomagic_probe/
 
 
 HAS_MSC = yes
@@ -112,12 +112,8 @@ help:
 	@echo "available targets"
 	@echo "================="
 	@echo "make clean              delete all generated files"
-	@echo "make all TARGET=DETECT  compile firmware creates elf and uf2 file."
-	@echo "                        (no target support, no gdb-server, detect serial interface)"
-	@echo "make all TARGET=EXTERN  compile firmware creates elf and uf2 file."
-	@echo "                        (target configuration needed)"
 	@echo "make all                compile firmware creates elf and uf2 file."
-	@echo "                        (only support RP2040 target)"
+	@echo "                        (only support for any target)"
 	@echo "make flash              write firmware to flash of RP2040"
 	@echo "                        using openocd and CMSIS-DAP adapter(picoprobe)"
 	@echo "make doc                run doxygen"
@@ -150,14 +146,6 @@ $(BIN_FOLDER)$(PROJECT).elf: $(OBJS) $(LIBS)
 	@echo "==========="
 	$(DIS) $< $@ > $@
 
-#$(BIN_FOLDER)version.h:
-#	@echo ""
-#	@echo "create version.h"
-#	@echo "================"
-#	@echo -n "#define VERSION \"" > $(BIN_FOLDER)version.h
-#	@cat version.txt >> $(BIN_FOLDER)version.h
-#	@echo " $(GITREF)\"" >> $(BIN_FOLDER)version.h
-
 flash: $(BIN_FOLDER)$(PROJECT).elf
 	@echo ""
 	@echo "flashing"
@@ -175,12 +163,6 @@ all: $(BIN_FOLDER)$(PROJECT).uf2
 	@echo "size"
 	@echo "===="
 	$(SIZE) --format=GNU $(BIN_FOLDER)$(PROJECT).elf
-
-#$(BIN_FOLDER)$(SRC_FOLDER)cli/cli.o: $(SRC_FOLDER)cli/cli.c $(BIN_FOLDER)version.h
-#	@echo ""
-#	@echo "=== compiling $@"
-#	@$(MKDIR_P) $(@D)
-#	$(CC) $(CFLAGS) $(DDEFS) $(INCDIR) $< -o $@
 
 $(BIN_FOLDER)%o: %c
 	@echo ""
