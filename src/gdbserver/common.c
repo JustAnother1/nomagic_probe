@@ -28,7 +28,6 @@
 #include "gdb_packets.h"
 
 #define ACTION_QUEUE_LENGTH 5
-#define MAX_SAFE_COUNT    0xfffffff0  // comparing against < 0xffffffff is always true -> we want to avoid 0xffffffff as end time of timeout
 #define WALK_TIMEOUT_TIME_MS  300
 
 static void handle_actions(void);
@@ -59,8 +58,7 @@ static const action_handler action_look_up[NUM_ACTIONS] = {
 #endif
 };
 
-static uint32_t timeout_time;
-static bool wait_for_wrap_around;
+static timeout_typ to;
 static bool attached;
 static walk_data_typ cur_walk;
 static target_status_typ target_status;
@@ -608,28 +606,11 @@ static void handle_actions(void)
         if(action_read != action_write)
         {
             // new action available
-            uint32_t start_time = time_get_ms();
             action_queue[action_read].phase = 0;
             action_queue[action_read].walk = &cur_walk;
             cur_action = action_look_up[action_queue[action_read].action];
             first = true;
-            timeout_time = start_time + WALK_TIMEOUT_TIME_MS;
-            if(timeout_time > MAX_SAFE_COUNT)
-            {
-                // an end time of 0xffffffff would not work as all values are always < 0xffffffff
-                uint32_t remainder = 100 - (MAX_SAFE_COUNT - start_time);
-                timeout_time = 2 + remainder;
-                wait_for_wrap_around = true;
-            }
-            else if(timeout_time < start_time)
-            {
-                // wrap around
-                wait_for_wrap_around = true;
-            }
-            else
-            {
-                wait_for_wrap_around = false;
-            }
+            start_timeout(&to, WALK_TIMEOUT_TIME_MS);
         }
         else
         {
@@ -662,9 +643,7 @@ static void handle_actions(void)
     else
     {
         // order not done
-        uint32_t cur_time = time_get_ms();
-
-        if(cur_time > timeout_time)
+        if(true == timeout_expired(&to))
         {
             debug_line("ERROR: target: SWD: timeout in running %d order !", action_queue[action_read].action);
             // TODO can we do something better than to just skip this command?

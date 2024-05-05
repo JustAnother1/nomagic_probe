@@ -56,8 +56,8 @@ int32_t fake_boot_sector(const uint32_t offset, uint8_t* buffer, const uint32_t 
     memset(&buffer[some], 0, bufsize - some);
     if(512 == end)
     {
-        buffer[bufsize -1] = 0xaa;
-        buffer[bufsize -2 ] = 0x55;
+        buffer[bufsize - 1] = 0xaa;
+        buffer[bufsize - 2] = 0x55;
     }
     if(511 == end)
     {

@@ -218,7 +218,7 @@ int32_t file_system_write(const uint32_t offset, uint8_t* buffer, const uint32_t
             sector++;
             block = 0;
         }
-    }while(0 < bufsize);
+    }while(0 < bytes_to_go);
     return (int32_t)written;
 }
 

@@ -544,6 +544,7 @@ int32_t fake_favicon_ico_file(const uint32_t offset, uint8_t* buffer, const uint
 #ifdef FAVICON_16
     uint32_t some = 0;
     uint32_t block = offset / BLOCK_SIZE;
+    uint32_t start = offset % BLOCK_SIZE;
     if(0 == block)
     {
         if(offset < sizeof(favicon_ico_start))
@@ -559,32 +560,32 @@ int32_t fake_favicon_ico_file(const uint32_t offset, uint8_t* buffer, const uint
     }
     else if(2 == block)
     {
-        uint32_t end = offset + (uint32_t)bufsize -1;
+        uint32_t end = start + (uint32_t)bufsize -1;
         if(end < 67)
         {
             // all Zeros
             memset(buffer, 0, (size_t)bufsize);
             return (int32_t)bufsize;
         }
-        if(offset < 67)
+        if(start < 67)
         {
             // some zeros
-            some = 67 - offset; // some will be smaller than bufsize, as end is bufsize + offset
+            some = 67 - start; // some will be smaller than bufsize, as end is bufsize + offset
             memset(buffer, 0, some);
-            offset = 67;
+            start = 67;
         }
         if(bufsize - some > sizeof(favicon_ico_end))
         {
-            uint32_t len = sizeof(favicon_ico_end) - (offset - 67);
+            uint32_t len = sizeof(favicon_ico_end) - (start - 67);
             // copy all of favicon_ico_end
-            memcpy(&buffer[some], &favicon_ico_end[offset - 67], len);
+            memcpy(&buffer[some], &favicon_ico_end[start - 67], len);
             // add some zeros
             some = some + len;
             memset(&buffer[some], 0, bufsize - some);
         }
         else
         {
-            memcpy(&buffer[some], &favicon_ico_end[offset-67], bufsize - some);
+            memcpy(&buffer[some], &favicon_ico_end[start - 67], bufsize - some);
         }
     }
     else

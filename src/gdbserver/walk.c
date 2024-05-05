@@ -22,14 +22,11 @@
 #include "swd.h"
 #include "target_walk.h"
 
-#define MAX_SAFE_COUNT    0xfffffff0  // comparing against < 0xffffffff is always true -> we want to avoid 0xffffffff as end time of timeout
 #define WALK_TIMEOUT_TIME_MS  300
 
 static uint32_t val_DHCSR;
 static uint32_t val_DEMCR;
-
-static uint32_t timeout_time;
-static bool wait_for_wrap_around;
+static timeout_typ to;
 
 static void handle_connect(walk_data_typ* data);
 static void handle_disconnect(walk_data_typ* data);
@@ -68,48 +65,34 @@ void walk_execute(walk_data_typ* data)
     }
     if(false == data->cur_step.is_done)
     {
-        uint32_t cur_time = time_get_ms();
-        if(true == wait_for_wrap_around)
+        if(true == timeout_expired(&to))
         {
-            if(10 > cur_time)
-            {
-                // wrap around happened
-                wait_for_wrap_around = false;
-            }
-            // else continue waiting
-        }
-        else
-        {
-            if(cur_time > timeout_time)
-            {
-                // Timeout !!!
-                debug_line("ERROR: Target walk(%d): timeout in running step %ld !", data->type, data->phase );
-                // TODO can we do something better than to just skip this command?
-                debug_line("walk(pi0:0x%08lX, pi1:0x%08lX, p:%ld, r:%ld, i:%ld, t:%d, d:%d, pb:%d)",
-                           data->par_i_0,
-                           data->par_i_1,
-                           data->phase,
-                           data->result,
-                           data->intern_0,
-                           data->type,
-                           data->is_done,
-                           data->par_b_0);
-                debug_line("step(pi0:0x%08lX, pi1:0x%08lX, p:%ld, r:%ld, i:%ld, t:%d, d:%d, pb:%d)",
-                           data->cur_step.par_i_0,
-                           data->cur_step.par_i_1,
-                           data->cur_step.phase,
-                           data->cur_step.result,
-                           data->cur_step.intern_0,
-                           data->cur_step.type,
-                           data->cur_step.is_done,
-                           data->cur_step.par_b_0);
+            // Timeout !!!
+            debug_line("ERROR: Target walk(%d): timeout in running step %ld !", data->type, data->phase );
+            // TODO can we do something better than to just skip this command?
+            debug_line("walk(pi0:0x%08lX, pi1:0x%08lX, p:%ld, r:%ld, i:%ld, t:%d, d:%d, pb:%d)",
+                       data->par_i_0,
+                       data->par_i_1,
+                       data->phase,
+                       data->result,
+                       data->intern_0,
+                       data->type,
+                       data->is_done,
+                       data->par_b_0);
+            debug_line("step(pi0:0x%08lX, pi1:0x%08lX, p:%ld, r:%ld, i:%ld, t:%d, d:%d, pb:%d)",
+                       data->cur_step.par_i_0,
+                       data->cur_step.par_i_1,
+                       data->cur_step.phase,
+                       data->cur_step.result,
+                       data->cur_step.intern_0,
+                       data->cur_step.type,
+                       data->cur_step.is_done,
+                       data->cur_step.par_b_0);
 
-                // do not try anymore
-                data->result = ERR_TIMEOUT;
-                data->is_done = true;
-                data->cur_step.is_done = true;
-            }
-            // else not a timeout, yet.
+            // do not try anymore
+            data->result = ERR_TIMEOUT;
+            data->is_done = true;
+            data->cur_step.is_done = true;
         }
     }
     else
@@ -124,26 +107,8 @@ void walk_execute(walk_data_typ* data)
         if(false == data->is_done)
         {
             // take the next step on this walk
-            uint32_t start_time = time_get_ms();
-
+            start_timeout(&to, WALK_TIMEOUT_TIME_MS);
             (*walks_look_up[data->type])(data);
-            timeout_time = start_time + WALK_TIMEOUT_TIME_MS;
-            if(timeout_time > MAX_SAFE_COUNT)
-            {
-                // an end time of 0xffffffff would not work as all values are always < 0xffffffff
-                uint32_t remainder = 100 - (MAX_SAFE_COUNT - start_time);
-                timeout_time = 2 + remainder;
-                wait_for_wrap_around = true;
-            }
-            else if(timeout_time < start_time)
-            {
-                // wrap around
-                wait_for_wrap_around = true;
-            }
-            else
-            {
-                wait_for_wrap_around = false;
-            }
         }
     }
 }

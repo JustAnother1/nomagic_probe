@@ -36,7 +36,7 @@ typedef struct {
     step_typ steps[NUM_MAX_STEPS];
 }pattern_typ;
 
-const pattern_typ patterns[] = {
+static const pattern_typ patterns[] = {
         // 0 : Normal Operation
         {
                 2,

@@ -22,15 +22,13 @@
 #include "swd_packets.h"
 #include "hal/time_base.h"
 #include "swd_packet_bits.h"
+#include "probe_api/time.h"
 
 #define CMD_QUEUE_LENGTH       5
 // comparing against < 0xffffffff is always true -> we want to avoid 0xffffffff as end time of timeout
-#define MAX_SAFE_COUNT         0xfffffff0
 #define ORDER_TIMEOUT_TIME_MS  100
 
 static void handle_order(void);
-static void start_timeout(void);
-static bool check_timeout(void);
 static void finished_order(void);
 static uint32_t next_cmd_result_slot(void);
 
@@ -58,8 +56,7 @@ static const char* order_names[NUM_ORDERS] = {
 #endif
 
 static order_handler cur_order;
-static uint32_t timeout_time;
-static bool wait_for_wrap_around;
+static timeout_typ to;
 static bool has_error;
 
 void swd_init(void)
@@ -331,7 +328,7 @@ static void handle_order(void)
             // new command available
             // debug_line("swd: start order");
             cur_order = order_look_up[cmd_queue[cmdq_read].order];
-            start_timeout();
+            start_timeout(&to, ORDER_TIMEOUT_TIME_MS);
             first = true;
         }
         else
@@ -353,7 +350,7 @@ static void handle_order(void)
     if((ERR_NOT_COMPLETED == order_state) || (ERR_QUEUE_FULL_TRY_AGAIN == order_state))
     {
         // order not done
-        if(true == check_timeout())
+        if(true == timeout_expired(&to))
         {
             debug_line("ERROR: SWD: timeout in running %s order !", order_names[cmd_queue[cmdq_read].order]);
             // do not try anymore
@@ -400,51 +397,5 @@ static void finished_order(void)
     if(CMD_QUEUE_LENGTH == cmdq_read)
     {
         cmdq_read = 0;
-    }
-}
-
-static bool check_timeout(void)
-{
-    uint32_t cur_time = time_get_ms();
-    if(true == wait_for_wrap_around)
-    {
-        if(10 > cur_time)
-        {
-            // wrap around happened
-            wait_for_wrap_around = false;
-        }
-        // else continue waiting
-    }
-    else
-    {
-        if(cur_time > timeout_time)
-        {
-            // Timeout !!!
-            return true;
-        }
-        // else not a timeout, yet.
-    }
-    return false;
-}
-
-static void start_timeout(void)
-{
-    uint32_t start_time = time_get_ms();
-    timeout_time = start_time + ORDER_TIMEOUT_TIME_MS;
-    if(timeout_time > MAX_SAFE_COUNT)
-    {
-        // an end time of 0xffffffff would not work as all values are always < 0xffffffff
-        uint32_t remainder = ORDER_TIMEOUT_TIME_MS - (MAX_SAFE_COUNT - start_time);
-        timeout_time = 2 + remainder;
-        wait_for_wrap_around = true;
-    }
-    else if(timeout_time < start_time)
-    {
-        // wrap around
-        wait_for_wrap_around = true;
-    }
-    else
-    {
-        wait_for_wrap_around = false;
     }
 }
