@@ -1,6 +1,35 @@
 Documentation overview
 ======================
 
+== dictionary
+
+[cols="1,1"]
+|===
+| Word
+| description
+
+| gdb 
+| The GNU Debugger. A software running on the PC of the firmware developer.
+
+| gdb-server
+| A protocol that gdb uses to "speak" to the target through a probe.
+
+| JTAG
+| IEEE 1149.1 Standard that can be used for boundary scan and debug.
+
+
+| probe / debug probe
+| the device that connects the PC running gdb with the target that shall be debugged. / The microcontroller that runs the nomagic probe firmware.
+
+| SWD
+| Serial Wire Debug. A protocol created by ARM. All ARM Cortex-M microcontrollers implement this protocol.
+
+| target
+| the microcontroller that runs the user code that shall be debugged.
+
+|===
+
+
 == firmware architecture
 
 link:architecture.asciidoc[firmware architecture]
