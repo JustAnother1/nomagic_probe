@@ -13,11 +13,12 @@
  *
  */
 
-#ifndef SOURCE_CFG_TARGET_WALK_WALKS_H_
-#define SOURCE_CFG_TARGET_WALK_WALKS_H_
+#ifndef TARGET_PRIV_COMMON_H_
+#define TARGET_PRIV_COMMON_H_
 
-// no special Walks for this target, yet!
-#define TARGET_ENUM_WALKS
-#define TARGET_LOOKUP_HANDLERS
 
-#endif /* SOURCE_CFG_TARGET_WALK_WALKS_H_ */
+void target_init(void);
+void target_tick(void);
+
+
+#endif /* TARGET_PRIV_COMMON_H_ */

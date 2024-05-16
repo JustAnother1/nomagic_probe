@@ -32,7 +32,7 @@
 #include "gdbserver/gdbserver.h"
 #include "file/file_system.h"
 #include "swd/swd_engine.h"
-#include "target_actions.h"
+#include "target/priv_common.h"
 #ifdef FEAT_DEBUG_CDC
 #include "tinyusb/usb_cdc.h"
 #endif

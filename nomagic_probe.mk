@@ -80,12 +80,9 @@ SRC += $(NOMAGIC_SRC_FOLDER)gdbserver/cmd_qsupported.c
 SRC += $(NOMAGIC_SRC_FOLDER)gdbserver/cmd_qxfer.c
 SRC += $(NOMAGIC_SRC_FOLDER)gdbserver/commands.c
 SRC += $(NOMAGIC_SRC_FOLDER)gdbserver/gdbserver.c
+SRC += $(NOMAGIC_SRC_FOLDER)gdbserver/replies.c
 SRC += $(NOMAGIC_SRC_FOLDER)gdbserver/util.c
 endif
-SRC += $(NOMAGIC_SRC_FOLDER)gdbserver/common.c
-SRC += $(NOMAGIC_SRC_FOLDER)gdbserver/cortex-m.c
-SRC += $(NOMAGIC_SRC_FOLDER)gdbserver/steps.c
-SRC += $(NOMAGIC_SRC_FOLDER)gdbserver/walk.c
 
 # Hardware abstraction layer
 ifeq ($(HAS_DEBUG_UART), yes)
@@ -145,6 +142,11 @@ ifeq ($(HAS_MSC), yes)
 SRC += $(NOMAGIC_SRC_FOLDER)tinyusb/usb_msc.c
 SRC += $(NOMAGIC_SRC_FOLDER)tinyusb/src/class/msc/msc_device.c
 endif
+
+# target
+SRC += $(NOMAGIC_SRC_FOLDER)target/common.c
+SRC += $(NOMAGIC_SRC_FOLDER)target/common_actions.c
+SRC += $(NOMAGIC_SRC_FOLDER)target/cortex-m.c
 
 # user feedback
 SRC += $(NOMAGIC_SRC_FOLDER)led.c

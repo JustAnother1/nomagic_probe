@@ -17,13 +17,15 @@
 #include <stdbool.h>
 #include "util.h"
 #include "cfg/gdbserver_cfg.h"
-#include "target_actions.h"
 #include "probe_api/gdb_packets.h"
 #include "probe_api/hex.h"
 #include "probe_api/debug_log.h"
 // commands:
 #include "cmd_qsupported.h"
 #include "cmd_qxfer.h"
+// replies:
+#include "replies.h"
+
 
 typedef struct {
     bool extended_mode;
@@ -518,7 +520,7 @@ static bool parse_parameter(param_pattern_typ pattern, char* parameter)
 {
     // reset values
     parsed_parameter.has_address = false;
-    parsed_parameter.num_memeory_locations = 0;
+    parsed_parameter.num_memory_locations = 0;
     switch(pattern)
     {
     case PARAM_XX: // XX
@@ -618,7 +620,7 @@ static bool parse_memory(char* parameter)
         reply_packet_send();
         return false;
     }
-    parsed_parameter.num_memeory_locations = len/8;
+    parsed_parameter.num_memory_locations = len/8;
     for(i = 0; i < len/8; i++)
     {
         if(('x' == parameter[i*8]) || ('X' == parameter[i*8]))

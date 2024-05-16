@@ -18,6 +18,12 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include "result.h"
+#include "cfg/target_specific_actions.h"
+#include "gdbserver/replies.h"
+
+#define MAX_INTERN_VALUES     3
+#define MAX_PARAMETER_VALUES  3
 
 typedef enum {
     NOT_CONNECTED,     // No SWD communication, target MCU might not be present at all
@@ -30,11 +36,44 @@ typedef enum {
     NUM_TARGET_STATUS, // <- do not use other than array size !
 }target_status_typ;
 
+typedef enum {
+    SWD_CONNECT,
+    SWD_CLOSE_CONNECTION,
+    GDB_CMD_G,
+    GDB_CMD_QUESTIONMARK,
+    GDB_CMD_WRITE_G,
+    GDB_CMD_CONTINUE,
+    GDB_CMD_READ_MEMORY,
+    GDB_CMD_WRITE_MEMORY,
+    GDB_CMD_STEP,
+    TARGET_SPECIFIC_ACTIONS_ENUM
+    // new actions go here
+    NUM_ACTIONS,  // <- do not use other than array size !
+}action_typ;
 
-void target_common_init(void);
-void send_part(char* part, uint32_t size, uint32_t offset, uint32_t length);
-void target_common_tick(void);
+typedef struct{
+    uint32_t parameter[MAX_PARAMETER_VALUES];
+    parameter_typ* gdb_parameter;
+    uint32_t phase;
+    uint32_t sub_phase;
+    uint32_t intern[MAX_INTERN_VALUES];
+    Result result;
+    uint32_t read_0;
+    action_typ action;
+    bool can_run;
+    bool is_done;
+} action_data_typ;
+
+
+typedef Result (*action_handler)(action_data_typ * const action, bool first_call);
+
+action_data_typ * book_action_slot(void);
+Result add_target_action(action_data_typ * const action);
+void target_connect(void);
+void target_close_connection(void);
+
 void target_set_status(target_status_typ new_status);
 bool common_cmd_target_info(uint32_t loop);
+
 
 #endif /* COMMON_H_ */

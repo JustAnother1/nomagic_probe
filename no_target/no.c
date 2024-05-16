@@ -17,8 +17,8 @@
 #include <stdbool.h>
 #include "result.h"
 #include "debug_log.h"
-#include "device_specific.h"
 #include "common.h"
+#include "target.h"
 
 
 bool cmd_target_info(uint32_t loop)
@@ -36,37 +36,26 @@ bool cmd_target_info(uint32_t loop)
     return false; // true == Done; false = call me again
 }
 
-Result handle_target_close_connection(action_data_typ* action, bool first_call)
-{
-    (void)action;
-    (void)first_call;
-    return RESULT_OK;
-}
-
-Result handle_target_connect(action_data_typ* action, bool first_call)
-{
-    (void)action;
-    (void)first_call;
-    return RESULT_OK;
-}
-
-Result handle_target_reply_g(action_data_typ* action, bool first_call)
-{
-    (void)action;
-    (void)first_call;
-    return RESULT_OK;
-}
-
-Result handle_target_reply_write_g(action_data_typ* action, bool first_call)
-{
-    (void)action;
-    (void)first_call;
-    return RESULT_OK;
-}
-
 void target_send_file(char* filename, uint32_t offset, uint32_t len)
 {
     (void)filename;
     (void)offset;
     (void)len;
+}
+
+bool target_is_SWDv2(void)
+{
+    return false;
+}
+
+uint32_t target_get_SWD_core_id(uint32_t core_num)
+{
+    (void) core_num;
+    return 0;
+}
+
+uint32_t target_get_SWD_APSel(uint32_t core_num)
+{
+    (void) core_num;
+    return 0;
 }

@@ -12,12 +12,13 @@
  * with this program; if not, see <http://www.gnu.org/licenses/>
  *
  */
-#ifndef TARGET_TARGET_INFO_H_
-#define TARGET_TARGET_INFO_H_
 
-#include <stdint.h>
+#ifndef CFG_TARGET_SPECIFIC_ACTIONS_H_
+#define CFG_TARGET_SPECIFIC_ACTIONS_H_
 
-void target_send_file(char* filename, uint32_t offset, uint32_t len);
+#define TARGET_SPECIFIC_ACTIONS_ENUM
+
+#define TARGET_SPECIFIC_ACTION_HANDLERS
 
 
-#endif /* TARGET_TARGET_INFO_H_ */
+#endif /* CFG_TARGET_SPECIFIC_ACTIONS_H_ */
