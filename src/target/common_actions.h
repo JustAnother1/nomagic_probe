@@ -15,7 +15,7 @@
 #ifndef TARGET_COMMON_ACTIONS_H_
 #define TARGET_COMMON_ACTIONS_H_
 
-#include "common.h"
+#include "probe_api/common.h"
 
 Result handle_target_reply_g(action_data_typ* const action, bool first_call);
 Result handle_target_reply_write_g(action_data_typ* const action, bool first_call);

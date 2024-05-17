@@ -15,9 +15,9 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "result.h"
-#include "debug_log.h"
-#include "common.h"
+#include "probe_api/result.h"
+#include "probe_api/debug_log.h"
+#include "probe_api/common.h"
 #include "target.h"
 
 

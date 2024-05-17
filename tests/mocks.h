@@ -18,5 +18,6 @@ uint32_t get_num_bytes_in_recv_buffer(void);
 uint32_t get_num_bytes_in_send_buffer(void);
 void set_echo_enabled(bool val);
 void dump_buffer_ascii(char* buffer, uint32_t length);
+void dump_send_buffer(void);
 
 #endif /* TESTS_MOCKS_H_ */

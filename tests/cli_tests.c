@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "cli_tests.h"
 #include "mocks.h"
 #include "../src/probe_api/cli.h"
@@ -246,7 +247,7 @@ MunitResult test_cli_tick_cmd_invalid(const MunitParameter params[], void* user_
     munit_assert_uint32(88, ==, get_num_bytes_in_send_buffer());
     munit_assert_uint32(0, ==, get_num_bytes_in_recv_buffer());
     // printf("send_buf = %.*s",36,send_buf);
-    dump_buffer_ascii((char*)send_buf, 36);
+    // dump_buffer_ascii((char*)send_buf, 36);
     munit_assert_memory_equal(36, res_buf, send_buf);
     return MUNIT_OK;
 }
@@ -272,12 +273,13 @@ MunitResult test_cli_tick_cmd_help(const MunitParameter params[], void* user_dat
     cli_tick();
     cli_tick();
     cli_tick();
+    // printf("send_buf = %.*s",78,send_buf);
+    // dump_send_buffer();
     munit_assert_uint32(182, ==, get_num_bytes_in_send_buffer());
     munit_assert_uint32(0, ==, get_num_bytes_in_recv_buffer());
     // STRNCMP_EQUAL("\r\navailable commands :\r\ntime : time since power on\r\ntest : test command\r\n $ ", (const char*)send_buf, 82);
-    //printf("send_buf = %.*s",78,send_buf);
-    dump_buffer_ascii((char*)send_buf, 78);
-    munit_assert_memory_equal(78, res_buf, send_buf);
+    // dump_buffer_ascii((char*)send_buf, 78);
+    munit_assert_memory_equal(182, res_buf, send_buf);
     return MUNIT_OK;
 }
 

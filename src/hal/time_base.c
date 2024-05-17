@@ -17,7 +17,7 @@
 
 #include "hal/hw/PPB.h"
 #include "hal/time_base.h"
-#include "time.h"
+#include "probe_api/time.h"
 
 // comparing against < 0xffffffff is always true
 // -> we want to avoid 0xffffffff as end time of timeout

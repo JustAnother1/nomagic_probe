@@ -59,7 +59,6 @@ include nomagic_probe.mk
 # files specific to the chip that will be debugged:
 SRC += no_target/no.c
 
-INCDIRS +=src/probe_api/
 INCDIRS +=no_target/
 
 
@@ -76,6 +75,8 @@ TST_INCDIRS += tests/cfg/
 TST_INCDIRS += src/tinyusb/src/
 TST_INCDIRS += /usr/include/
 TST_INCDIRS += src/
+TST_INCDIRS +=tests/bin/
+TST_INCDIRS +=no_target/
 TST_INCDIR = $(patsubst %,-I%, $(TST_INCDIRS))
 
 # Files to compile for unit tests

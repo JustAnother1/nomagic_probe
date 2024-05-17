@@ -14,15 +14,12 @@
  */
 
 #include <stdint.h>
-#include "gdb_packets.h"
-#include "hex.h"
-#include "result.h"
-#include "swd.h"
-#include "debug_log.h"
-#include "cortex-m.h"
-
-// static Result write_specialRegisters(bool first_call, uint32_t regsel, uint32_t data);
-// static Result read_specialRegisters(bool first_call, uint32_t regsel, uint32_t* data);
+#include "probe_api/gdb_packets.h"
+#include "probe_api/hex.h"
+#include "probe_api/result.h"
+#include "probe_api/swd.h"
+#include "probe_api/debug_log.h"
+#include "probe_api/cortex-m.h"
 
 static uint32_t val_DHCSR;
 

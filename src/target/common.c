@@ -17,15 +17,15 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <string.h>
-#include "gdb_packets.h"
-#include "result.h"
-#include "swd.h"
-#include "debug_log.h"
-#include "time.h"
-#include "hex.h"
-#include "common.h"
-#include "gdb_packets.h"
-#include "actions.h"
+#include "probe_api/gdb_packets.h"
+#include "probe_api/result.h"
+#include "probe_api/swd.h"
+#include "probe_api/debug_log.h"
+#include "probe_api/time.h"
+#include "probe_api/hex.h"
+#include "probe_api/common.h"
+#include "probe_api/gdb_packets.h"
+#include "probe_api/actions.h"
 
 #define ACTION_QUEUE_LENGTH     5
 #define ACTION_TIMEOUT_TIME_MS  300

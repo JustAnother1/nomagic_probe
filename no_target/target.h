@@ -17,7 +17,7 @@
 #define TARGET_H_
 
 #include <stdint.h>
-#include "common.h"
+#include "probe_api/common.h"
 
 bool target_is_SWDv2(void);
 uint32_t target_get_SWD_core_id(uint32_t core_num); // only required for SWDv2 (TARGETSEL)

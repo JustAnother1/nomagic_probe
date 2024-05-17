@@ -1,6 +1,6 @@
 #include "mocks.h"
 #include "../src/probe_api/result.h"
-#include "../src/target_api/target_actions.h"
+#include "../src/gdbserver/replies.h"
 #include <stdio.h>
 
 uint8_t recv_buf[TST_RECEIVE_BUFFER_SIZE];
@@ -54,6 +54,22 @@ uint32_t get_num_bytes_in_recv_buffer(void)
     {
         return recv_write_pos + (TST_RECEIVE_BUFFER_SIZE - recv_read_pos);
     }
+}
+
+void dump_send_buffer(void)
+{
+    uint32_t pos = send_read_pos;
+    printf("send buffer: [");
+    while(send_write_pos != pos)
+    {
+        printf("%c", send_buf[pos]);
+        pos++;
+        if(TST_SEND_BUFFER_SIZE == pos)
+        {
+            pos = 0;
+        }
+    }
+    printf("]\r\n");
 }
 
 uint32_t get_num_bytes_in_send_buffer(void)
@@ -263,27 +279,27 @@ void target_reply_questionmark(void)
 
 void target_reply_write_g(parameter_typ* parsed_parameter)
 {
-    (void) parsed_parameter; // TODO
+    (void)parsed_parameter;
 }
 
 void target_reply_continue(parameter_typ* parsed_parameter)
 {
-    (void) parsed_parameter; // TODO
+    (void)parsed_parameter;
 }
 
 void target_reply_read_memory(parameter_typ* parsed_parameter)
 {
-    (void) parsed_parameter; // TODO
+    (void)parsed_parameter;
 }
 
 void target_reply_write_memory(parameter_typ* parsed_parameter)
 {
-    (void) parsed_parameter; // TODO
+    (void)parsed_parameter;
 }
 
 void target_reply_step(parameter_typ* parsed_parameter)
 {
-    (void) parsed_parameter; // TODO
+    (void)parsed_parameter;
 }
 
 void debug_line(const char *fmt, ...)

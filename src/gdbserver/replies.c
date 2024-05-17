@@ -15,10 +15,10 @@
 
 #include <stddef.h>
 #include "replies.h"
-#include "gdb_packets.h"
-#include "result.h"
-#include "common.h"
-#include "debug_log.h"
+#include "probe_api/gdb_packets.h"
+#include "probe_api/result.h"
+#include "probe_api/common.h"
+#include "probe_api/debug_log.h"
 
 
 
