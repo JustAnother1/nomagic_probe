@@ -37,7 +37,7 @@ static Result do_disconnect(action_data_typ* const action);
 static Result do_connect(action_data_typ* const action);
 
 
-
+#ifdef FEAT_GDB_SERVER
 Result handle_target_reply_g(action_data_typ* const action, bool first_call)
 {
     // ‘g’
@@ -304,6 +304,7 @@ Result handle_target_reply_write_g(action_data_typ* const action, bool first_cal
 
     return ERR_WRONG_STATE;
 }
+#endif
 
 Result handle_target_connect(action_data_typ* const action, bool first_call)
 {
@@ -461,6 +462,7 @@ Result handle_target_close_connection(action_data_typ* const action, bool first_
     return action->result;
 }
 
+#ifdef FEAT_GDB_SERVER
 Result handle_target_reply_questionmark(action_data_typ* const action, bool first_call)
 {
     (void)action;
@@ -617,7 +619,7 @@ Result handle_target_reply_step(action_data_typ* const action, bool first_call)
     send_unknown_command_reply();
     return RESULT_OK;
 }
-
+#endif
 
 // 1. write to DCRSR the REGSEL value and REGWnR = 0
 static Result do_write_ap(action_data_typ* const action, uint32_t address, uint32_t data)

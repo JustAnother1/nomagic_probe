@@ -19,7 +19,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include "result.h"
-#include "cfg/target_specific_actions.h"
+#include "cfg/target_action_def.h"
 #include "gdbserver/replies.h"
 
 #define MAX_INTERN_VALUES     3

@@ -18,21 +18,7 @@
 
 #include "common.h"
 #include "target/common_actions.h"
-#include "cfg/target_specific_actions.h"
-
-
-const action_handler action_look_up[NUM_ACTIONS] = {
-        handle_target_connect,
-        handle_target_close_connection,
-        handle_target_reply_g,
-        handle_target_reply_questionmark,
-        handle_target_reply_write_g,
-        handle_target_reply_continue,
-        handle_target_reply_read_memory,
-        handle_target_reply_write_memory,
-        handle_target_reply_step,
-        TARGET_SPECIFIC_ACTION_HANDLERS
-};
+#include "cfg/target_actions.h"
 
 
 #endif /* PROBE_API_ACTIONS_H_ */
