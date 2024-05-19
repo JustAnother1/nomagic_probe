@@ -255,6 +255,7 @@ static void handle_actions(void)
     if(ERR_NOT_COMPLETED != res)
     {
         // action has finished
+        action_queue[action_read].is_done = true;
         if(RESULT_OK > res)
         {
             // error

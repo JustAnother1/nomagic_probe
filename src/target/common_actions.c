@@ -22,19 +22,169 @@
 #include "probe_api/cortex-m.h"
 #include "probe_api/swd.h"
 #include "target.h"
+#include "steps.h"
 
 
-#define INTERN_TRANSACTION_ID   0
 #define INTERN_RETRY_COUNTER    1
 #define INTERN_REGISTER_IDX     2
 
 
-static Result do_read_ap(action_data_typ* const action, uint32_t address);
-static Result do_write_ap(action_data_typ* const action, uint32_t address, uint32_t data);
-static Result do_get_Result_OK(action_data_typ* const action);
-static Result do_get_Result_data(action_data_typ* const action);
-static Result do_disconnect(action_data_typ* const action);
-static Result do_connect(action_data_typ* const action);
+
+Result handle_target_connect(action_data_typ* const action, bool first_call)
+{
+    if(true == first_call)
+    {
+        debug_line("resetting error condition!");
+        swd_reset_error_condition();
+
+        action->parameter[0] = target_is_SWDv2();
+        action->parameter[1] = target_get_SWD_core_id(0);  // TODO multi core
+        action->parameter[2] = target_get_SWD_APSel(0);  // TODO multi core
+        action->phase = 0;
+    }
+
+    // disconnect (In case the Chips it is still connected to a previous session)
+    if(0 == action->phase)
+    {
+        return do_disconnect(action);
+    }
+
+    if(1 == action->phase)
+    {
+        return do_get_Result_OK(action);  // TODO do we really need this?
+    }
+
+    // connect
+    if(2 == action->phase)
+    {
+        return do_connect(action);
+    }
+
+    if(3 == action->phase)
+    {
+        return do_get_Result_OK(action);
+    }
+
+    // write DEBUGEN in DHCSR
+    // C_DEBUGEN = 1; C_HALT = b10;
+    if(4 == action->phase)
+    {
+        return do_write_ap(action, DHCSR, DBGKEY | (0xffff & 1) );
+    }
+
+    if(5 == action->phase)
+    {
+        return do_get_Result_OK(action);
+    }
+
+    // init DEMCR
+    if(6 == action->phase)
+    {
+        // bit 24: DWTENA:       0= DWT disabled;                 1= DWT enabled.
+        // bit 10: VC_HARDERR:   0= haling on HardFault disabled; 1= halting on HardFault enabled.
+        // bit 0:  VC_CORERESET: 0= Reset Vector Catch disabled;  1= Reset Vector Catch enabled.
+        return do_write_ap(action, DEMCR, (1 << 24) | (1 << 10) | 1 );
+    }
+
+    if(7 == action->phase)
+    {
+        return do_get_Result_OK(action);
+    }
+
+    // DHCSR
+    // bit 3: C_MASKINTS: 0= do not mask;                       1= Mask PendSV, SysTick and external configurable interrupts.
+    // bit 2: C_STEP:     0= single stepping disabled;          1= single stepping enabled.
+    // bit 1: C_HALT:     0= Request a halted processor to run; 1= Request a running processor to halt.
+    // bit 0: C_DEBUGEN:  0= Halting debug disabled;            1= Halting debug enabled.
+    if(8 == action->phase)
+    {
+        return do_write_ap(action, DHCSR, DBGKEY | (0xffff & 0xf) );
+    }
+
+    if(9 == action->phase)
+    {
+        return do_get_Result_OK(action);
+    }
+
+    // TODO add more steps?
+
+    if(10 == action->phase)
+    {
+        debug_line("connected!");
+        target_set_status(CONNECTED_HALTED);  // TODO enable connect without halt
+        return RESULT_OK;
+    }
+
+    return ERR_WRONG_STATE;
+}
+
+Result handle_target_close_connection(action_data_typ* const action, bool first_call)
+{
+    if(true == first_call)
+    {
+        debug_line("closing SWD connection !");
+        action->phase = 0;
+        action->is_done = false;
+
+        Result res = swd_disconnect();
+        if(RESULT_OK < res)
+        {
+            action->intern[0] = (uint32_t)res;
+            action->phase = 1;
+            action->result = ERR_NOT_COMPLETED;
+        }
+        else if(ERR_QUEUE_FULL_TRY_AGAIN == res)
+        {
+            // try again
+            action->result = ERR_NOT_COMPLETED;
+        }
+        else
+        {
+            // some error
+            action->result = res;
+            action->is_done = true;
+        }
+
+        return action->result;
+    }
+    else
+    {
+        uint32_t data;
+        Result res = swd_get_result((Result)action->intern[0], &data);
+        if(RESULT_OK == res)
+        {
+            if(RESULT_OK == data)
+            {
+                action->result = RESULT_OK;
+                action->is_done = true;
+                debug_line("Disconnected!");
+            }
+            else
+            {
+                debug_line("target: SWD disconnect failed ! (Res: %ld)", data);
+                action->result = ERR_WRONG_VALUE;
+                action->is_done = true;
+            }
+            target_set_status(NOT_CONNECTED);
+        }
+        else
+        {
+            if(ERR_QUEUE_FULL_TRY_AGAIN == res)
+            {
+                // try again
+                action->result = ERR_NOT_COMPLETED;
+            }
+            else
+            {
+                // some error
+                action->result = res;
+                action->is_done = true;
+                debug_line("target: SWD disconnect failed ! (%ld)", res);
+            }
+        }
+    }
+    return action->result;
+}
 
 
 #ifdef FEAT_GDB_SERVER
@@ -304,165 +454,7 @@ Result handle_target_reply_write_g(action_data_typ* const action, bool first_cal
 
     return ERR_WRONG_STATE;
 }
-#endif
 
-Result handle_target_connect(action_data_typ* const action, bool first_call)
-{
-    if(true == first_call)
-    {
-        debug_line("resetting error condition!");
-        swd_reset_error_condition();
-
-        action->parameter[0] = target_is_SWDv2();
-        action->parameter[1] = target_get_SWD_core_id(0);  // TODO multi core
-        action->parameter[2] = target_get_SWD_APSel(0);  // TODO multi core
-        action->phase = 0;
-    }
-
-    // disconnect (In case the Chips it is still connected to a previous session)
-    if(0 == action->phase)
-    {
-        return do_disconnect(action);
-    }
-
-    if(1 == action->phase)
-    {
-        return do_get_Result_OK(action);  // TODO do we really need this?
-    }
-
-    // connect
-    if(2 == action->phase)
-    {
-        return do_connect(action);
-    }
-
-    if(3 == action->phase)
-    {
-        return do_get_Result_OK(action);
-    }
-
-    // write DEBUGEN in DHCSR
-    // C_DEBUGEN = 1; C_HALT = b10;
-    if(4 == action->phase)
-    {
-        return do_write_ap(action, DHCSR, DBGKEY | (0xffff & 1) );
-    }
-
-    if(5 == action->phase)
-    {
-        return do_get_Result_OK(action);
-    }
-
-    // init DEMCR
-    if(6 == action->phase)
-    {
-        // bit 24: DWTENA:       0= DWT disabled;                 1= DWT enabled.
-        // bit 10: VC_HARDERR:   0= haling on HardFault disabled; 1= halting on HardFault enabled.
-        // bit 0:  VC_CORERESET: 0= Reset Vector Catch disabled;  1= Reset Vector Catch enabled.
-        return do_write_ap(action, DEMCR, (1 << 24) | (1 << 10) | 1 );
-    }
-
-    if(7 == action->phase)
-    {
-        return do_get_Result_OK(action);
-    }
-
-    // DHCSR
-    // bit 3: C_MASKINTS: 0= do not mask;                       1= Mask PendSV, SysTick and external configurable interrupts.
-    // bit 2: C_STEP:     0= single stepping disabled;          1= single stepping enabled.
-    // bit 1: C_HALT:     0= Request a halted processor to run; 1= Request a running processor to halt.
-    // bit 0: C_DEBUGEN:  0= Halting debug disabled;            1= Halting debug enabled.
-    if(8 == action->phase)
-    {
-        return do_write_ap(action, DHCSR, DBGKEY | (0xffff & 0xf) );
-    }
-
-    if(9 == action->phase)
-    {
-        return do_get_Result_OK(action);
-    }
-
-    // TODO add more steps?
-
-    if(10 == action->phase)
-    {
-        debug_line("connected!");
-        target_set_status(CONNECTED_HALTED);  // TODO enable connect without halt
-        return RESULT_OK;
-    }
-
-    return ERR_WRONG_STATE;
-}
-
-Result handle_target_close_connection(action_data_typ* const action, bool first_call)
-{
-    if(true == first_call)
-    {
-        debug_line("closing SWD connection !");
-        action->phase = 0;
-        action->is_done = false;
-
-        Result res = swd_disconnect();
-        if(RESULT_OK < res)
-        {
-            action->intern[0] = (uint32_t)res;
-            action->phase = 1;
-            action->result = ERR_NOT_COMPLETED;
-        }
-        else if(ERR_QUEUE_FULL_TRY_AGAIN == res)
-        {
-            // try again
-            action->result = ERR_NOT_COMPLETED;
-        }
-        else
-        {
-            // some error
-            action->result = res;
-            action->is_done = true;
-        }
-
-        return action->result;
-    }
-    else
-    {
-        uint32_t data;
-        Result res = swd_get_result((Result)action->intern[0], &data);
-        if(RESULT_OK == res)
-        {
-            if(RESULT_OK == data)
-            {
-                action->result = RESULT_OK;
-                action->is_done = true;
-                debug_line("Disconnected!");
-            }
-            else
-            {
-                debug_line("target: SWD disconnect failed ! (Res: %ld)", data);
-                action->result = ERR_WRONG_VALUE;
-                action->is_done = true;
-            }
-            target_set_status(NOT_CONNECTED);
-        }
-        else
-        {
-            if(ERR_QUEUE_FULL_TRY_AGAIN == res)
-            {
-                // try again
-                action->result = ERR_NOT_COMPLETED;
-            }
-            else
-            {
-                // some error
-                action->result = res;
-                action->is_done = true;
-                debug_line("target: SWD disconnect failed ! (%ld)", res);
-            }
-        }
-    }
-    return action->result;
-}
-
-#ifdef FEAT_GDB_SERVER
 Result handle_target_reply_questionmark(action_data_typ* const action, bool first_call)
 {
     (void)action;
@@ -621,158 +613,3 @@ Result handle_target_reply_step(action_data_typ* const action, bool first_call)
 }
 #endif
 
-// 1. write to DCRSR the REGSEL value and REGWnR = 0
-static Result do_write_ap(action_data_typ* const action, uint32_t address, uint32_t data)
-{
-    Result res = swd_write_ap(address, data);
-    if(RESULT_OK < res)
-    {
-        action->intern[INTERN_TRANSACTION_ID] = (uint32_t)res;
-        action->phase++;
-        return ERR_NOT_COMPLETED;
-    }
-    else if(ERR_QUEUE_FULL_TRY_AGAIN == res)
-    {
-        // try again
-        return ERR_NOT_COMPLETED;
-    }
-    else
-    {
-        // some error
-        action->result = res;
-        action->is_done = true;
-        return action->result;
-    }
-}
-
-static Result do_read_ap(action_data_typ* const action, uint32_t address)
-{
-    Result res = swd_read_ap(address);
-    if(RESULT_OK < res)
-    {
-        action->intern[INTERN_TRANSACTION_ID] = (uint32_t)res;
-        action->phase++;
-        return ERR_NOT_COMPLETED;
-    }
-    else if(ERR_QUEUE_FULL_TRY_AGAIN == res)
-    {
-        // try again
-        return ERR_NOT_COMPLETED;
-    }
-    else
-    {
-        // some error
-        action->result = res;
-        action->is_done = true;
-        return action->result;
-    }
-}
-
-static Result do_disconnect(action_data_typ* const action)
-{
-    Result res = swd_disconnect();
-    if(RESULT_OK < res)
-    {
-        action->intern[INTERN_TRANSACTION_ID] = (uint32_t)res;
-        action->phase++;
-        return ERR_NOT_COMPLETED;
-    }
-    else if(ERR_QUEUE_FULL_TRY_AGAIN == res)
-    {
-        // try again
-        return ERR_NOT_COMPLETED;
-    }
-    else
-    {
-        // some error
-        action->result = res;
-        action->is_done = true;
-        return action->result;
-    }
-}
-
-static Result do_connect(action_data_typ* const action)
-{
-    Result res = swd_connect((bool)action->parameter[0], action->parameter[1],action->parameter[2]);
-    if(RESULT_OK < res)
-    {
-        action->intern[INTERN_TRANSACTION_ID] = (uint32_t)res;
-        action->phase++;
-        return ERR_NOT_COMPLETED;
-    }
-    else if(ERR_QUEUE_FULL_TRY_AGAIN == res)
-    {
-        // try again
-        return ERR_NOT_COMPLETED;
-    }
-    else
-    {
-        // some error
-        action->result = res;
-        action->is_done = true;
-        return action->result;
-    }
-}
-
-static Result do_get_Result_OK(action_data_typ* const action)
-{
-    uint32_t data;
-    Result res = swd_get_result((Result)action->intern[INTERN_TRANSACTION_ID], &data);
-    if(RESULT_OK == res)
-    {
-        if(RESULT_OK == data)
-        {
-            action->phase++;
-            return ERR_NOT_COMPLETED;
-        }
-        else
-        {
-            debug_line("target: step %ld failed (%ld)", action->phase, data);
-            action->result = ERR_WRONG_VALUE;
-            action->is_done = true;
-            return action->result;
-        }
-    }
-    else
-    {
-        if(ERR_NOT_COMPLETED == res)
-        {
-            // try again
-            return ERR_NOT_COMPLETED;
-        }
-        else
-        {
-            // some error
-            action->result = res;
-            action->is_done = true;
-            return action->result;
-        }
-    }
-}
-
-static Result do_get_Result_data(action_data_typ* const action)
-{
-    uint32_t data;
-    Result res = swd_get_result((Result)action->intern[INTERN_TRANSACTION_ID], &data);
-    if(RESULT_OK == res)
-    {
-        action->read_0 = data;
-        action->phase++;
-        return ERR_NOT_COMPLETED;
-    }
-    else
-    {
-        if(ERR_NOT_COMPLETED == res)
-        {
-            // try again
-            return ERR_NOT_COMPLETED;
-        }
-        else
-        {
-            // some error
-            action->result = res;
-            action->is_done = true;
-            return action->result;
-        }
-    }
-}

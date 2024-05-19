@@ -1,0 +1,221 @@
+/*
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License version 2
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, see <http://www.gnu.org/licenses/>
+ *
+ */
+
+#include "probe_api/steps.h"
+#include "probe_api/swd.h"
+#include "probe_api/debug_log.h"
+
+
+Result do_read_ap_reg(action_data_typ* const action, uint32_t bank, uint32_t reg)
+{
+    Result res = swd_read_ap_reg(bank, reg);
+    if(RESULT_OK < res)
+    {
+        action->intern[INTERN_TRANSACTION_ID] = (uint32_t)res;
+        action->phase++;
+        return ERR_NOT_COMPLETED;
+    }
+    else if(ERR_QUEUE_FULL_TRY_AGAIN == res)
+    {
+        // try again
+        return ERR_NOT_COMPLETED;
+    }
+    else
+    {
+        // some error
+        action->result = res;
+        action->is_done = true;
+        return action->result;
+    }
+}
+
+Result do_write_ap_reg(action_data_typ* const action, uint32_t bank, uint32_t reg, uint32_t data)
+{
+    Result res = swd_write_ap_reg(bank, reg, data);
+    if(RESULT_OK < res)
+    {
+        action->intern[INTERN_TRANSACTION_ID] = (uint32_t)res;
+        action->phase++;
+        return ERR_NOT_COMPLETED;
+    }
+    else if(ERR_QUEUE_FULL_TRY_AGAIN == res)
+    {
+        // try again
+        return ERR_NOT_COMPLETED;
+    }
+    else
+    {
+        // some error
+        action->result = res;
+        action->is_done = true;
+        return action->result;
+    }
+}
+
+Result do_write_ap(action_data_typ* const action, uint32_t address, uint32_t data)
+{
+    Result res = swd_write_ap(address, data);
+    if(RESULT_OK < res)
+    {
+        action->intern[INTERN_TRANSACTION_ID] = (uint32_t)res;
+        action->phase++;
+        return ERR_NOT_COMPLETED;
+    }
+    else if(ERR_QUEUE_FULL_TRY_AGAIN == res)
+    {
+        // try again
+        return ERR_NOT_COMPLETED;
+    }
+    else
+    {
+        // some error
+        action->result = res;
+        action->is_done = true;
+        return action->result;
+    }
+}
+
+Result do_read_ap(action_data_typ* const action, uint32_t address)
+{
+    Result res = swd_read_ap(address);
+    if(RESULT_OK < res)
+    {
+        action->intern[INTERN_TRANSACTION_ID] = (uint32_t)res;
+        action->phase++;
+        return ERR_NOT_COMPLETED;
+    }
+    else if(ERR_QUEUE_FULL_TRY_AGAIN == res)
+    {
+        // try again
+        return ERR_NOT_COMPLETED;
+    }
+    else
+    {
+        // some error
+        action->result = res;
+        action->is_done = true;
+        return action->result;
+    }
+}
+
+Result do_disconnect(action_data_typ* const action)
+{
+    Result res = swd_disconnect();
+    if(RESULT_OK < res)
+    {
+        action->intern[INTERN_TRANSACTION_ID] = (uint32_t)res;
+        action->phase++;
+        return ERR_NOT_COMPLETED;
+    }
+    else if(ERR_QUEUE_FULL_TRY_AGAIN == res)
+    {
+        // try again
+        return ERR_NOT_COMPLETED;
+    }
+    else
+    {
+        // some error
+        action->result = res;
+        action->is_done = true;
+        return action->result;
+    }
+}
+
+Result do_connect(action_data_typ* const action)
+{
+    Result res = swd_connect((bool)action->parameter[0], action->parameter[1],action->parameter[2]);
+    if(RESULT_OK < res)
+    {
+        action->intern[INTERN_TRANSACTION_ID] = (uint32_t)res;
+        action->phase++;
+        return ERR_NOT_COMPLETED;
+    }
+    else if(ERR_QUEUE_FULL_TRY_AGAIN == res)
+    {
+        // try again
+        return ERR_NOT_COMPLETED;
+    }
+    else
+    {
+        // some error
+        action->result = res;
+        action->is_done = true;
+        return action->result;
+    }
+}
+
+Result do_get_Result_OK(action_data_typ* const action)
+{
+    uint32_t data;
+    Result res = swd_get_result((Result)action->intern[INTERN_TRANSACTION_ID], &data);
+    if(RESULT_OK == res)
+    {
+        if(RESULT_OK == data)
+        {
+            action->phase++;
+            return ERR_NOT_COMPLETED;
+        }
+        else
+        {
+            debug_line("target: step %ld failed (%ld)", action->phase, data);
+            action->result = ERR_WRONG_VALUE;
+            action->is_done = true;
+            return action->result;
+        }
+    }
+    else
+    {
+        if(ERR_NOT_COMPLETED == res)
+        {
+            // try again
+            return ERR_NOT_COMPLETED;
+        }
+        else
+        {
+            // some error
+            action->result = res;
+            action->is_done = true;
+            return action->result;
+        }
+    }
+}
+
+Result do_get_Result_data(action_data_typ* const action)
+{
+    uint32_t data;
+    Result res = swd_get_result((Result)action->intern[INTERN_TRANSACTION_ID], &data);
+    if(RESULT_OK == res)
+    {
+        action->read_0 = data;
+        action->phase++;
+        return ERR_NOT_COMPLETED;
+    }
+    else
+    {
+        if(ERR_NOT_COMPLETED == res)
+        {
+            // try again
+            return ERR_NOT_COMPLETED;
+        }
+        else
+        {
+            // some error
+            action->result = res;
+            action->is_done = true;
+            return action->result;
+        }
+    }
+}
+
