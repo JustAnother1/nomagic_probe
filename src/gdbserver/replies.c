@@ -21,21 +21,20 @@
 #include "probe_api/debug_log.h"
 
 
-
 void target_reply_questionmark(void)
 {
     Result res;
     action_data_typ* const action =  book_action_slot();
     if(NULL == action)
     {
-        debug_line("ERROR: could not connect to target ! Action queue full!");
+        debug_line("ERROR: could not start reply question mark ! Action queue full!");
         return;
     }
     action->action = GDB_CMD_QUESTIONMARK;
     res = add_target_action(action);
     if(RESULT_OK != res)
     {
-        debug_line("ERROR: could not execute gdb:'G'! adding action failed(%ld)!", res);
+        debug_line("ERROR: could not execute gdb:'?'! adding action failed(%ld)!", res);
         return;
     }
 }
@@ -49,14 +48,14 @@ void target_reply_step(parameter_typ* parsed_parameter)
     action_data_typ* const action =  book_action_slot();
     if(NULL == action)
     {
-        debug_line("ERROR: could not connect to target ! Action queue full!");
+        debug_line("ERROR: could not start reply step ! Action queue full!");
         return;
     }
     action->action = GDB_CMD_STEP;
     res = add_target_action(action);
     if(RESULT_OK != res)
     {
-        debug_line("ERROR: could not execute gdb:'G'! adding action failed(%ld)!", res);
+        debug_line("ERROR: could not execute gdb:'s'! adding action failed(%ld)!", res);
         return;
     }
 }
@@ -70,14 +69,14 @@ void target_reply_continue(parameter_typ* parsed_parameter)
     action_data_typ* const action =  book_action_slot();
     if(NULL == action)
     {
-        debug_line("ERROR: could not connect to target ! Action queue full!");
+        debug_line("ERROR: could not start reply continue ! Action queue full!");
         return;
     }
     action->action = GDB_CMD_CONTINUE;
     res = add_target_action(action);
     if(RESULT_OK != res)
     {
-        debug_line("ERROR: could not execute gdb:'G'! adding action failed(%ld)!", res);
+        debug_line("ERROR: could not execute gdb:'c'! adding action failed(%ld)!", res);
         return;
     }
 }
@@ -118,7 +117,7 @@ void target_reply_g(void)
     action_data_typ* const action =  book_action_slot();
     if(NULL == action)
     {
-        debug_line("ERROR: could not connect to target ! Action queue full!");
+        debug_line("ERROR: could not start reply g ! Action queue full!");
         return;
     }
     action->action = GDB_CMD_G;
@@ -172,7 +171,7 @@ void target_reply_write_g(parameter_typ* parsed_parameter)
     action_data_typ* const action =  book_action_slot();
     if(NULL == action)
     {
-        debug_line("ERROR: could not connect to target ! Action queue full!");
+        debug_line("ERROR: could not start reply G ! Action queue full!");
         return;
     }
     action->action = GDB_CMD_WRITE_G;
@@ -213,7 +212,7 @@ void target_reply_read_memory(parameter_typ* parsed_parameter)
     action_data_typ* const action =  book_action_slot();
     if(NULL == action)
     {
-        debug_line("ERROR: could not connect to target ! Action queue full!");
+        debug_line("ERROR: could not start reply read memory ! Action queue full!");
         return;
     }
     action->action = GDB_CMD_READ_MEMORY;
@@ -238,7 +237,6 @@ void target_reply_write_memory(parameter_typ* parsed_parameter)
     //         for an error (this includes the case where only part of the data
     // was written).
 
-
     // TODO
     (void)parsed_parameter;
 
@@ -246,14 +244,14 @@ void target_reply_write_memory(parameter_typ* parsed_parameter)
     action_data_typ* const action =  book_action_slot();
     if(NULL == action)
     {
-        debug_line("ERROR: could not connect to target ! Action queue full!");
+        debug_line("ERROR: could not start reply write memory ! Action queue full!");
         return;
     }
     action->action = GDB_CMD_WRITE_MEMORY;
     res = add_target_action(action);
     if(RESULT_OK != res)
     {
-        debug_line("ERROR: could not execute gdb:'m'! adding action failed(%ld)!", res);
+        debug_line("ERROR: could not execute gdb:'M'! adding action failed(%ld)!", res);
         return;
     }
 }

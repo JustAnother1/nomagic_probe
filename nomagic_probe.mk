@@ -146,6 +146,7 @@ endif
 # target
 SRC += $(NOMAGIC_SRC_FOLDER)target/common.c
 SRC += $(NOMAGIC_SRC_FOLDER)target/common_actions.c
+SRC += $(NOMAGIC_SRC_FOLDER)target/steps.c
 SRC += $(NOMAGIC_SRC_FOLDER)target/cortex-m.c
 
 # user feedback

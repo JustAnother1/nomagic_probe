@@ -19,10 +19,10 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include "result.h"
-#include "cfg/target_specific_actions.h"
+#include "cfg/target_action_def.h"
 #include "gdbserver/replies.h"
 
-#define MAX_INTERN_VALUES     3
+#define MAX_INTERN_VALUES     4
 #define MAX_PARAMETER_VALUES  3
 
 typedef enum {
@@ -39,6 +39,7 @@ typedef enum {
 typedef enum {
     SWD_CONNECT,
     SWD_CLOSE_CONNECTION,
+#ifdef FEAT_GDB_SERVER
     GDB_CMD_G,
     GDB_CMD_QUESTIONMARK,
     GDB_CMD_WRITE_G,
@@ -46,6 +47,7 @@ typedef enum {
     GDB_CMD_READ_MEMORY,
     GDB_CMD_WRITE_MEMORY,
     GDB_CMD_STEP,
+#endif
     TARGET_SPECIFIC_ACTIONS_ENUM
     // new actions go here
     NUM_ACTIONS,  // <- do not use other than array size !

@@ -17,15 +17,16 @@
 
 #include "probe_api/common.h"
 
-Result handle_target_reply_g(action_data_typ* const action, bool first_call);
-Result handle_target_reply_write_g(action_data_typ* const action, bool first_call);
 Result handle_target_connect(action_data_typ* const action, bool first_call);
 Result handle_target_close_connection(action_data_typ* const action, bool first_call);
+#ifdef FEAT_GDB_SERVER
+Result handle_target_reply_g(action_data_typ* const action, bool first_call);
+Result handle_target_reply_write_g(action_data_typ* const action, bool first_call);
 Result handle_target_reply_questionmark(action_data_typ* const action, bool first_call);
 Result handle_target_reply_continue(action_data_typ* const action, bool first_call);
 Result handle_target_reply_read_memory(action_data_typ* const action, bool first_call);
 Result handle_target_reply_write_memory(action_data_typ* const action, bool first_call);
 Result handle_target_reply_step(action_data_typ* const action, bool first_call);
-
+#endif
 
 #endif /* TARGET_COMMON_ACTIONS_H_ */

@@ -39,6 +39,21 @@ static volatile uint32_t action_write;
 static action_handler cur_action;
 static action_data_typ action_queue[ACTION_QUEUE_LENGTH];
 
+static const action_handler action_look_up[NUM_ACTIONS] = {
+        handle_target_connect,
+        handle_target_close_connection,
+#ifdef FEAT_GDB_SERVER
+        handle_target_reply_g,
+        handle_target_reply_questionmark,
+        handle_target_reply_write_g,
+        handle_target_reply_continue,
+        handle_target_reply_read_memory,
+        handle_target_reply_write_memory,
+        handle_target_reply_step,
+#endif
+        TARGET_SPECIFIC_ACTION_HANDLERS
+};
+
 
 static timeout_typ to;
 static bool attached;
@@ -240,6 +255,7 @@ static void handle_actions(void)
     if(ERR_NOT_COMPLETED != res)
     {
         // action has finished
+        action_queue[action_read].is_done = true;
         if(RESULT_OK > res)
         {
             // error
