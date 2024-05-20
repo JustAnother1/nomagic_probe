@@ -273,6 +273,8 @@ static void handle_actions(void)
         // order not done
         if(true == timeout_expired(&to))
         {
+            action_queue[action_read].is_done = true;
+            action_queue[action_read].result = ERR_TIMEOUT;
             debug_line("ERROR: target: SWD: timeout in running %d order !", action_queue[action_read].action);
             // TODO can we do something better than to just skip this command?
             // do not try anymore

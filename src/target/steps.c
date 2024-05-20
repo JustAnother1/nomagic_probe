@@ -169,7 +169,7 @@ Result do_get_Result_OK(action_data_typ* const action)
         }
         else
         {
-            debug_line("target: step %ld failed (%ld)", action->phase, data);
+            debug_line("target: step %ld failed (0x%08lx)", action->phase, data);
             action->result = ERR_WRONG_VALUE;
             action->is_done = true;
             return action->result;
