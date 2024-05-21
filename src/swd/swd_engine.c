@@ -140,6 +140,7 @@ Result swd_write_ap(uint32_t addr, uint32_t data)
         cmd_queue[cmdq_write].order = CMD_WRITE;
         cmd_queue[cmdq_write].address = addr;
         cmd_queue[cmdq_write].i_val = data;
+        cmd_queue[cmdq_write].transaction_id = 0;
         cmdq_write = next_idx;
         return RESULT_OK;
     }
@@ -225,6 +226,7 @@ Result swd_write_ap_reg(uint32_t bank, uint32_t reg, uint32_t data)
         cmd_queue[cmdq_write].i_val = bank;
         cmd_queue[cmdq_write].i_val_1 = reg;
         cmd_queue[cmdq_write].i_val_2 = data;
+        cmd_queue[cmdq_write].transaction_id = 0;
         cmdq_write = next_idx;
         return RESULT_OK;
     }
@@ -299,7 +301,6 @@ void swd_eingine_add_cmd_result(Result idx, uint32_t data)
     idx = idx -1;
     cmd_result_data[idx] = data;
     cmd_result_data_available[idx] = true;
-
 }
 
 static uint32_t next_cmd_result_slot(void)
@@ -357,7 +358,7 @@ static void handle_order(void)
             if(0 < cmd_queue[cmdq_read].transaction_id)
             {
                 // there is a transaction active for this packet, but we do not need that anymore
-                cmd_result_data[cmd_queue[cmdq_read].transaction_id] = (uint32_t)ERR_TIMEOUT;
+                swd_eingine_add_cmd_result(cmd_queue[cmdq_read].transaction_id, (uint32_t)ERR_TIMEOUT);
             }
             finished_order();
         }
@@ -369,9 +370,9 @@ static void handle_order(void)
         {
             // error
             debug_line("swd: error %ld on order %s", order_state, order_names[cmd_queue[cmdq_read].order]);
-            if(CMD_CONNECT == cmd_queue[cmdq_read].order)
+            if(0 < cmd_queue[cmdq_read].transaction_id)
             {
-                cmd_result_data[cmd_queue[cmdq_read].transaction_id] = (uint32_t)ERR_TARGET_ERROR;
+                swd_eingine_add_cmd_result(cmd_queue[cmdq_read].transaction_id, (uint32_t)ERR_TARGET_ERROR);
             }
             has_error = true;
         }

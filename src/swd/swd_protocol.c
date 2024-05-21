@@ -327,6 +327,10 @@ Result connect_handler(command_typ* cmd, bool first_call)
 // Phase 7 parse data from ID Register
     if(7 == cmd->phase)
     {
+        if(false == swd_packet_bits_is_operational())
+        {
+            return ERR_TARGET_ERROR;
+        }
         phase_result = swd_packet_get_result(cmd->sub_transaction_id, &(cmd->read_data));
         if(RESULT_OK == phase_result)
         {
@@ -410,6 +414,10 @@ Result connect_handler(command_typ* cmd, bool first_call)
 // Phase 11 parse data from CTRL/STAT Register
     if(11 == cmd->phase)
     {
+        if(false == swd_packet_bits_is_operational())
+        {
+            return ERR_TARGET_ERROR;
+        }
         phase_result = swd_packet_get_result(cmd->sub_transaction_id, &(cmd->read_data));
         if(RESULT_OK == phase_result)
         {
@@ -754,6 +762,10 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
 // Phase 3 receive data from AP register read
     if(3 == cmd->sub_phase)
     {
+        if(false == swd_packet_bits_is_operational())
+        {
+            return ERR_TARGET_ERROR;
+        }
         phase_result = swd_packet_get_result(cmd->sub_transaction_id, data);
         if(RESULT_OK == phase_result)
         {
@@ -791,6 +803,10 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
 // Phase 5 parse data from CTRL/STAT Register
     if(5 == cmd->sub_phase)
     {
+        if(false == swd_packet_bits_is_operational())
+        {
+            return ERR_TARGET_ERROR;
+        }
         phase_result = swd_packet_get_result(cmd->sub_transaction_id, &(state.reg_CTRL_STAT));
         if(RESULT_OK == phase_result)
         {
@@ -835,6 +851,10 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
 // Phase 7 parse data from RDBUFF Register
     if(7== cmd->sub_phase)
     {
+        if(false == swd_packet_bits_is_operational())
+        {
+            return ERR_TARGET_ERROR;
+        }
         phase_result = swd_packet_get_result(cmd->sub_transaction_id, data);
         if(ERR_NOT_COMPLETED == phase_result)
         {

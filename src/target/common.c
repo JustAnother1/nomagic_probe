@@ -252,30 +252,16 @@ static void handle_actions(void)
     // call handler
     res = (*cur_action)(&action_queue[action_read], first);
 
-    if(ERR_NOT_COMPLETED != res)
-    {
-        // action has finished
-        action_queue[action_read].is_done = true;
-        if(RESULT_OK > res)
-        {
-            // error
-            debug_line("target: error %ld on action %d", res, action_queue[action_read].action);
-        }
-        cur_action = NULL;
-        action_read++;
-        if(ACTION_QUEUE_LENGTH == action_read)
-        {
-            action_read = 0;
-        }
-    }
-    else
+    if(ERR_NOT_COMPLETED == res)
     {
         // order not done
         if(true == timeout_expired(&to))
         {
             action_queue[action_read].is_done = true;
             action_queue[action_read].result = ERR_TIMEOUT;
-            debug_line("ERROR: target: SWD: timeout in running %d order !", action_queue[action_read].action);
+            debug_line("ERROR: target: SWD: timeout in running %d.%ld order !",
+                       action_queue[action_read].action,
+                       action_queue[action_read].phase);
             // TODO can we do something better than to just skip this command?
             // do not try anymore
             cur_action = NULL;
@@ -284,6 +270,25 @@ static void handle_actions(void)
             {
                 action_read = 0;
             }
+        }
+    }
+    else
+    {
+        // action has finished
+        action_queue[action_read].is_done = true;
+        if(RESULT_OK > res)
+        {
+            // error
+            debug_line("target: error %ld on action %d.%ld",
+                       res,
+                       action_queue[action_read].action,
+                       action_queue[action_read].phase);
+        }
+        cur_action = NULL;
+        action_read++;
+        if(ACTION_QUEUE_LENGTH == action_read)
+        {
+            action_read = 0;
         }
     }
 }
