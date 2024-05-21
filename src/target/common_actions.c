@@ -40,45 +40,45 @@ Result handle_target_connect(action_data_typ* const action, bool first_call)
         action->parameter[0] = target_is_SWDv2();
         action->parameter[1] = target_get_SWD_core_id(0);  // TODO multi core
         action->parameter[2] = target_get_SWD_APSel(0);  // TODO multi core
-        action->phase = 0;
+        *(action->cur_phase) = 0;
     }
 
     // disconnect (In case the Chips it is still connected to a previous session)
-    if(0 == action->phase)
+    if(0 == *(action->cur_phase))
     {
         return do_disconnect(action);
     }
 
-    if(1 == action->phase)
+    if(1 == *(action->cur_phase))
     {
         return do_get_Result_OK(action);  // TODO do we really need this?
     }
 
     // connect
-    if(2 == action->phase)
+    if(2 == *(action->cur_phase))
     {
         return do_connect(action);
     }
 
-    if(3 == action->phase)
+    if(3 == *(action->cur_phase))
     {
         return do_get_Result_OK(action);
     }
 
     // write DEBUGEN in DHCSR
     // C_DEBUGEN = 1; C_HALT = b10;
-    if(4 == action->phase)
+    if(4 == *(action->cur_phase))
     {
         return do_write_ap(action, DHCSR, DBGKEY | (0xffff & 1) );
     }
 
-    if(5 == action->phase)
+    if(5 == *(action->cur_phase))
     {
         return do_get_Result_OK(action);
     }
 
     // init DEMCR
-    if(6 == action->phase)
+    if(6 == *(action->cur_phase))
     {
         // bit 24: DWTENA:       0= DWT disabled;                 1= DWT enabled.
         // bit 10: VC_HARDERR:   0= haling on HardFault disabled; 1= halting on HardFault enabled.
@@ -86,7 +86,7 @@ Result handle_target_connect(action_data_typ* const action, bool first_call)
         return do_write_ap(action, DEMCR, (1 << 24) | (1 << 10) | 1 );
     }
 
-    if(7 == action->phase)
+    if(7 == *(action->cur_phase))
     {
         return do_get_Result_OK(action);
     }
@@ -96,19 +96,19 @@ Result handle_target_connect(action_data_typ* const action, bool first_call)
     // bit 2: C_STEP:     0= single stepping disabled;          1= single stepping enabled.
     // bit 1: C_HALT:     0= Request a halted processor to run; 1= Request a running processor to halt.
     // bit 0: C_DEBUGEN:  0= Halting debug disabled;            1= Halting debug enabled.
-    if(8 == action->phase)
+    if(8 == *(action->cur_phase))
     {
         return do_write_ap(action, DHCSR, DBGKEY | (0xffff & 0xf) );
     }
 
-    if(9 == action->phase)
+    if(9 == *(action->cur_phase))
     {
         return do_get_Result_OK(action);
     }
 
     // TODO add more steps?
 
-    if(10 == action->phase)
+    if(10 == *(action->cur_phase))
     {
         debug_line("connected!");
         target_set_status(CONNECTED_HALTED);  // TODO enable connect without halt
@@ -123,14 +123,14 @@ Result handle_target_close_connection(action_data_typ* const action, bool first_
     if(true == first_call)
     {
         debug_line("closing SWD connection !");
-        action->phase = 0;
+        *(action->cur_phase) = 0;
         action->is_done = false;
 
         Result res = swd_disconnect();
         if(RESULT_OK < res)
         {
             action->intern[0] = (uint32_t)res;
-            action->phase = 1;
+            *(action->cur_phase) = 1;
             action->result = ERR_NOT_COMPLETED;
         }
         else if(ERR_QUEUE_FULL_TRY_AGAIN == res)
@@ -223,18 +223,18 @@ Result handle_target_reply_g(action_data_typ* const action, bool first_call)
     if(true == first_call)
     {
         reply_packet_prepare();
-        action->phase = 0;
+        *(action->cur_phase) = 0;
         action->intern[INTERN_REGISTER_IDX] = 0;
         action->intern[INTERN_RETRY_COUNTER] = 0;
     }
 
     // 1. write to DCRSR the REGSEL value and REGWnR = 0
-    if(0 == action->phase)
+    if(0 == *(action->cur_phase))
     {
         return do_write_ap(action, DCRSR, action->intern[INTERN_REGISTER_IDX]);
     }
 
-    if(1 == action->phase)
+    if(1 == *(action->cur_phase))
     {
         return do_get_Result_OK(action);
     }
@@ -245,12 +245,12 @@ Result handle_target_reply_g(action_data_typ* const action, bool first_call)
         return do_read_ap(action, DHCSR);
     }
 
-    if(3 == action->phase)
+    if(3 == *(action->cur_phase))
     {
         return do_get_Result_data(action);
     }
 
-    if(4 == action->phase)
+    if(4 == *(action->cur_phase))
     {
         if(0 == (action->read_0 & (1<<16)))
         {
@@ -258,7 +258,7 @@ Result handle_target_reply_g(action_data_typ* const action, bool first_call)
             if(100 < action->intern[INTERN_RETRY_COUNTER])
             {
                 // no data available -> read again
-                action->phase = 2;
+                *(action->cur_phase) = 2;
                 return ERR_NOT_COMPLETED;
             }
             else
@@ -273,22 +273,22 @@ Result handle_target_reply_g(action_data_typ* const action, bool first_call)
         else
         {
             // data available -> read data
-            action->phase++;
+            *(action->cur_phase) = *(action->cur_phase) +1;
         }
     }
 
     // 3. read data from DCRDR
-    if(5 == action->phase)
+    if(5 == *(action->cur_phase))
     {
         return do_read_ap(action, DCRDR);
     }
 
-    if(6 == action->phase)
+    if(6 == *(action->cur_phase))
     {
         return do_get_Result_data(action);
     }
 
-    if(7 == action->phase)
+    if(7 == *(action->cur_phase))
     {
         // this register done, next?
         char buf[9];
@@ -297,7 +297,7 @@ Result handle_target_reply_g(action_data_typ* const action, bool first_call)
         reply_packet_add(buf);
         debug_line("read 0x%08lx", action->read_0);
         action->intern[INTERN_REGISTER_IDX] ++;
-        action->phase = 0;
+        *(action->cur_phase) = 0;
         if(17 == action->intern[INTERN_REGISTER_IDX])
         {
             // finished
@@ -353,12 +353,12 @@ Result handle_target_reply_write_g(action_data_typ* const action, bool first_cal
     if(true == first_call)
     {
         reply_packet_prepare();
-        action->phase = 1;
+        *(action->cur_phase) = 1;
         action->intern[INTERN_RETRY_COUNTER] = 0;
         return ERR_NOT_COMPLETED;
     }
 
-    if(1 == action->phase)
+    if(1 == *(action->cur_phase))
     {
         uint32_t i;
         bool found = false;
@@ -383,28 +383,28 @@ Result handle_target_reply_write_g(action_data_typ* const action, bool first_cal
         // else
         action->parameter[0] = i;  // select the register to write
         action->parameter[1] = action->gdb_parameter->memory[i].value;
-        action->phase = 2;
+        *(action->cur_phase) = 2;
         return ERR_NOT_COMPLETED;
     }
 
     // 1. write value to DCRDR.
-    if(2 == action->phase)
+    if(2 == *(action->cur_phase))
     {
         return do_write_ap(action, DCRDR, action->parameter[1]);
     }
 
-    if(3 == action->phase)
+    if(3 == *(action->cur_phase))
     {
         return do_get_Result_OK(action);
     }
 
     // 2. write to DCRSR the REGSEL value and REGWnR = 1
-    if(4 == action->phase)
+    if(4 == *(action->cur_phase))
     {
         return do_write_ap(action, DCRSR, action->parameter[0] | (1<<16) ); //  REGWnR = 1
     }
 
-    if(5 == action->phase)
+    if(5 == *(action->cur_phase))
     {
         return do_get_Result_OK(action);
     }
@@ -415,12 +415,12 @@ Result handle_target_reply_write_g(action_data_typ* const action, bool first_cal
         return do_read_ap(action, DHCSR);
     }
 
-    if(7 == action->phase)
+    if(7 == *(action->cur_phase))
     {
         return do_get_Result_data(action);
     }
 
-    if(8 == action->phase)
+    if(8 == *(action->cur_phase))
     {
         if(0 == (action->read_0 & (1<<16)))
         {
@@ -429,7 +429,7 @@ Result handle_target_reply_write_g(action_data_typ* const action, bool first_cal
             if(100 < action->intern[INTERN_RETRY_COUNTER])
             {
                 // write not finished -> read again
-                action->phase = 6;
+                *(action->cur_phase) = 6;
                 return ERR_NOT_COMPLETED;
             }
             else
@@ -447,7 +447,7 @@ Result handle_target_reply_write_g(action_data_typ* const action, bool first_cal
         else
         {
             // write finished
-            action->phase = 1;
+            *(action->cur_phase) = 1;
             return ERR_NOT_COMPLETED;
         }
     }
@@ -497,7 +497,7 @@ Result handle_target_reply_read_memory(action_data_typ* const action, bool first
     if(true == first_call)
     {
         reply_packet_prepare();
-        action->phase = 0;
+        *(action->cur_phase) = 0;
         action->intern[INTERN_MEMORY_OFFSET] = 0;
     }
 
@@ -506,12 +506,12 @@ Result handle_target_reply_read_memory(action_data_typ* const action, bool first
         return do_read_ap(action, action->gdb_parameter->address + action->intern[INTERN_MEMORY_OFFSET]*4);
     }
 
-    if(1 == action->phase)
+    if(1 == *(action->cur_phase))
     {
         return do_get_Result_data(action);
     }
 
-    if(2 == action->phase)
+    if(2 == *(action->cur_phase))
     {
         char buf[9];
         buf[8] = 0;
@@ -519,7 +519,7 @@ Result handle_target_reply_read_memory(action_data_typ* const action, bool first
         reply_packet_add(buf);
         debug_line("read 0x%08lx", action->read_0);
         action->intern[INTERN_MEMORY_OFFSET]++;
-        action->phase = 1;
+        *(action->cur_phase) = 1;
         if(action->gdb_parameter->length == action->intern[INTERN_MEMORY_OFFSET])
         {
             // finished
@@ -553,11 +553,11 @@ Result handle_target_reply_write_memory(action_data_typ* const action, bool firs
     if(true == first_call)
     {
         reply_packet_prepare();
-        action->phase = 1;
+        *(action->cur_phase) = 1;
         action->intern[0] = action->gdb_parameter->length;
     }
 
-    if(1 == action->phase)
+    if(1 == *(action->cur_phase))
     {
         uint32_t i;
         bool found = false;
@@ -581,22 +581,22 @@ Result handle_target_reply_write_memory(action_data_typ* const action, bool firs
         // else
         action->parameter[0] = action->gdb_parameter->address + i*4;
         action->parameter[1] = action->gdb_parameter->memory[i].value;
-        action->phase++;
+        *(action->cur_phase) = *(action->cur_phase) + 1;
     }
 
-    if(2 == action->phase)
+    if(2 == *(action->cur_phase))
     {
         return do_write_ap(action, action->parameter[0], action->parameter[1]);
     }
 
-    if(3 == action->phase)
+    if(3 == *(action->cur_phase))
     {
         return do_get_Result_OK(action);
     }
 
-    if(4 == action->phase)
+    if(4 == *(action->cur_phase))
     {
-        action->phase = 1;
+        *(action->cur_phase) = 1;
         // continue with next register
         return ERR_NOT_COMPLETED;
     }

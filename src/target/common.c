@@ -28,7 +28,7 @@
 #include "probe_api/actions.h"
 
 #define ACTION_QUEUE_LENGTH     5
-#define ACTION_TIMEOUT_TIME_MS  300
+#define ACTION_TIMEOUT_TIME_MS  600
 
 static void handle_actions(void);
 
@@ -120,7 +120,7 @@ bool common_cmd_target_info(uint32_t loop)
     else if(1 == loop)
     {
         debug_line("action type: %d", action_queue[action_read].action);
-        debug_line("phase: %ld", action_queue[action_read].phase);
+        debug_line("main_phase: %ld", action_queue[action_read].main_phase);
         debug_line("sub-phase : %ld", action_queue[action_read].sub_phase);
         debug_line("action is done : %d", action_queue[action_read].is_done);
         debug_line("can run : %d", action_queue[action_read].can_run);
@@ -133,7 +133,7 @@ bool common_cmd_target_info(uint32_t loop)
         {
             debug_line("action_queue[%ld].action = %d", loop -2, action_queue[loop-2].action);
             debug_line(".phase = %ld, .intern[0] = %ld, .parameter[0] = %ld",
-                       action_queue[loop-2].phase,
+                       action_queue[loop-2].main_phase,
                        action_queue[loop-2].intern[0],
                        action_queue[loop-2].parameter[0]);
         }
@@ -225,8 +225,9 @@ static void handle_actions(void)
             if(true == action_queue[action_read].can_run)
             {
                 // new action available
-                action_queue[action_read].phase = 0;
+                action_queue[action_read].main_phase = 0;
                 cur_action = action_look_up[action_queue[action_read].action];
+                action_queue[action_read].cur_phase = &(action_queue[action_read].main_phase);
                 first = true;
                 start_timeout(&to, ACTION_TIMEOUT_TIME_MS);
             }
@@ -259,9 +260,10 @@ static void handle_actions(void)
         {
             action_queue[action_read].is_done = true;
             action_queue[action_read].result = ERR_TIMEOUT;
-            debug_line("ERROR: target: SWD: timeout in running %d.%ld order !",
+            debug_line("ERROR: target: SWD: timeout in running %d.%ld.%ld order !",
                        action_queue[action_read].action,
-                       action_queue[action_read].phase);
+                       action_queue[action_read].main_phase,
+                       action_queue[action_read].sub_phase);
             // TODO can we do something better than to just skip this command?
             // do not try anymore
             cur_action = NULL;
@@ -279,10 +281,11 @@ static void handle_actions(void)
         if(RESULT_OK > res)
         {
             // error
-            debug_line("target: error %ld on action %d.%ld",
+            debug_line("target: error %ld on action %d.%ld.%ld",
                        res,
                        action_queue[action_read].action,
-                       action_queue[action_read].phase);
+                       action_queue[action_read].main_phase,
+                       action_queue[action_read].sub_phase);
         }
         cur_action = NULL;
         action_read++;
