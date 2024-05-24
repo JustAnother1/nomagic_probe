@@ -23,7 +23,9 @@
 #include "probe_api/common.h"
 #include "commands.h"
 #include "util.h"
+#include "probe_api/time.h"
 
+#define GDB_BUSY_TIMEOUT_MS      1000
 
 // defines what we have received and have processed
 typedef enum parseState {
@@ -47,6 +49,7 @@ static bool connected;
 static bool connection_failed;
 static uint32_t retry_counter;
 static bool busy_processing_cmd;
+static timeout_typ busy_to;
 
 
 void gdbserver_init(void)
@@ -175,7 +178,7 @@ void reply_packet_send(void)
     reply_buffer[reply_length + 3]  = 0;
     debug_line("gdbs sending: %s", reply_buffer);
     GDBSERVER_SEND_BYTES(&(reply_buffer[reply_length]), 3);
-    gd_is_not_busy_anymore();
+    gdb_is_not_busy_anymore();
 }
 
 void send_error_packet(void)
@@ -224,9 +227,10 @@ void send_part(char* part, uint32_t size, uint32_t offset, uint32_t length)
 void gdb_is_now_busy(void)
 {
     busy_processing_cmd = true;
+    start_timeout(&busy_to, GDB_BUSY_TIMEOUT_MS);
 }
 
-void gd_is_not_busy_anymore(void)
+void gdb_is_not_busy_anymore(void)
 {
     busy_processing_cmd = false;
 }
@@ -240,6 +244,11 @@ static void communicate_with_gdb(void)
         // reading the next command does not make sense
         // there will probably be no next command yet
         // and if there were we would not be ready to work on it
+        if(true == timeout_expired(&busy_to))
+        {
+            debug_line("ERROR: timeout !");
+            gdb_is_not_busy_anymore();
+        }
         return;
     }
 
