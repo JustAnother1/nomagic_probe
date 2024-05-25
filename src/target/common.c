@@ -177,7 +177,7 @@ bool cmd_target_trace(uint32_t loop)
 {
     if(0 == loop)
     {
-        debug_line("action,   phase,   result (newest first)");
+        debug_line("action(newest first), phase,   result");
     }
     else // if(1 == loop)
     {
@@ -199,7 +199,7 @@ bool cmd_target_trace(uint32_t loop)
         if(0 != trace_buf[idx].action)
         {
             // print entry
-            debug_line("%s,    %ld,   %ld",
+            debug_line("%20s,     %ld,   %ld",
                        action_names[trace_buf[idx].action -1],
                        trace_buf[idx].main_phase,
                        trace_buf[idx].result);
