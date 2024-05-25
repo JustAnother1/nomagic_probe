@@ -21,25 +21,26 @@
 #include "probe_api/debug_log.h"
 
 
-void target_reply_questionmark(void)
+bool target_reply_questionmark(void)
 {
     Result res;
     action_data_typ* const action =  book_action_slot();
     if(NULL == action)
     {
         debug_line("ERROR: could not start reply question mark ! Action queue full!");
-        return;
+        return false;
     }
     action->action = GDB_CMD_QUESTIONMARK;
     res = add_target_action(action);
     if(RESULT_OK != res)
     {
         debug_line("ERROR: could not execute gdb:'?'! adding action failed(%ld)!", res);
-        return;
+        return false;
     }
+    return true;
 }
 
-void target_reply_step(parameter_typ* parsed_parameter)
+bool target_reply_step(parameter_typ* parsed_parameter)
 {
     // TODO
     (void)parsed_parameter;
@@ -49,18 +50,19 @@ void target_reply_step(parameter_typ* parsed_parameter)
     if(NULL == action)
     {
         debug_line("ERROR: could not start reply step ! Action queue full!");
-        return;
+        return false;
     }
     action->action = GDB_CMD_STEP;
     res = add_target_action(action);
     if(RESULT_OK != res)
     {
         debug_line("ERROR: could not execute gdb:'s'! adding action failed(%ld)!", res);
-        return;
+        return false;
     }
+    return true;
 }
 
-void target_reply_continue(parameter_typ* parsed_parameter)
+bool target_reply_continue(parameter_typ* parsed_parameter)
 {
     // TODO
     (void)parsed_parameter;
@@ -70,15 +72,16 @@ void target_reply_continue(parameter_typ* parsed_parameter)
     if(NULL == action)
     {
         debug_line("ERROR: could not start reply continue ! Action queue full!");
-        return;
+        return false;
     }
     action->action = GDB_CMD_CONTINUE;
     res = add_target_action(action);
     if(RESULT_OK != res)
     {
         debug_line("ERROR: could not execute gdb:'c'! adding action failed(%ld)!", res);
-        return;
+        return false;
     }
+    return true;
 }
 
 bool target_reply_g(void)
@@ -130,7 +133,7 @@ bool target_reply_g(void)
     return true;
 }
 
-void target_reply_write_g(parameter_typ* parsed_parameter)
+bool target_reply_write_g(parameter_typ* parsed_parameter)
 {
     // ‘G XX…’
     //     Write general registers. See read registers packet, for a description
@@ -173,19 +176,20 @@ void target_reply_write_g(parameter_typ* parsed_parameter)
     if(NULL == action)
     {
         debug_line("ERROR: could not start reply G ! Action queue full!");
-        return;
+        return false;
     }
     action->action = GDB_CMD_WRITE_G;
     res = add_target_action(action);
     if(RESULT_OK != res)
     {
         debug_line("ERROR: could not execute gdb:'G'! adding action failed(%ld)!", res);
-        return;
+        return false;
     }
+    return true;
 }
 
 
-void target_reply_read_memory(parameter_typ* parsed_parameter)
+bool target_reply_read_memory(parameter_typ* parsed_parameter)
 {
     // ‘m addr,length’
     //     Read length addressable memory units starting at address addr
@@ -214,18 +218,19 @@ void target_reply_read_memory(parameter_typ* parsed_parameter)
     if(NULL == action)
     {
         debug_line("ERROR: could not start reply read memory ! Action queue full!");
-        return;
+        return false;
     }
     action->action = GDB_CMD_READ_MEMORY;
     res = add_target_action(action);
     if(RESULT_OK != res)
     {
         debug_line("ERROR: could not execute gdb:'m'! adding action failed(%ld)!", res);
-        return;
+        return false;
     }
+    return true;
 }
 
-void target_reply_write_memory(parameter_typ* parsed_parameter)
+bool target_reply_write_memory(parameter_typ* parsed_parameter)
 {
     // ‘M addr,length:XX…’
     //     Write length addressable memory units starting at address addr (see
@@ -246,13 +251,14 @@ void target_reply_write_memory(parameter_typ* parsed_parameter)
     if(NULL == action)
     {
         debug_line("ERROR: could not start reply write memory ! Action queue full!");
-        return;
+        return false;
     }
     action->action = GDB_CMD_WRITE_MEMORY;
     res = add_target_action(action);
     if(RESULT_OK != res)
     {
         debug_line("ERROR: could not execute gdb:'M'! adding action failed(%ld)!", res);
-        return;
+        return false;
     }
+    return true;
 }

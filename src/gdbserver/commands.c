@@ -111,7 +111,12 @@ void commands_execute(char* received, uint32_t length, char* checksum)
 
         case '?':  // Report why the target halted
             gdb_is_now_busy();
-            target_reply_questionmark();
+            if(false == target_reply_questionmark())
+            {
+                // failed to add command
+                send_unknown_command_reply();
+            }
+            // else OK. Reply packet ends busy state.
             break;
 
         case 'c':  // continue
@@ -119,7 +124,12 @@ void commands_execute(char* received, uint32_t length, char* checksum)
             // TODO
             gdb_is_now_busy();
             // TODO  parameter_typ* parsed_parameter  !!!
-            target_reply_continue(&parsed_parameter);
+            if(false == target_reply_continue(&parsed_parameter))
+            {
+                // failed to add command
+                send_unknown_command_reply();
+            }
+            // else OK. Reply packet ends busy state.
             break;
 
         case 'D':  // Detach from client
@@ -144,7 +154,12 @@ void commands_execute(char* received, uint32_t length, char* checksum)
             if(true == parse_parameter(PARAM_XX, received))
             {
                 gdb_is_now_busy();
-                target_reply_write_g(&parsed_parameter);
+                if(false == target_reply_write_g(&parsed_parameter))
+                {
+                    // failed to add command
+                    send_unknown_command_reply();
+                }
+                // else OK. Reply packet ends busy state.
             }
             break;
 
@@ -160,7 +175,12 @@ void commands_execute(char* received, uint32_t length, char* checksum)
             if(true == parse_parameter(PARAM_ADDR_LENGTH_XX, received))
             {
                 gdb_is_now_busy();
-                target_reply_write_memory(&parsed_parameter);
+                if(false == target_reply_write_memory(&parsed_parameter))
+                {
+                    // failed to add command
+                    send_unknown_command_reply();
+                }
+                // else OK. Reply packet ends busy state.
             }
             break;
 
@@ -169,7 +189,12 @@ void commands_execute(char* received, uint32_t length, char* checksum)
             if(true == parse_parameter(PARAM_ADDR_LENGTH, received))
             {
                 gdb_is_now_busy();
-                target_reply_read_memory(&parsed_parameter);
+                if(false == target_reply_read_memory(&parsed_parameter))
+                {
+                    // failed to add command
+                    send_unknown_command_reply();
+                }
+                // else OK. Reply packet ends busy state.
             }
             break;
 
@@ -208,7 +233,12 @@ void commands_execute(char* received, uint32_t length, char* checksum)
             if(true == parse_parameter(PARAM_OPT_ADDR, received))
             {
                 gdb_is_now_busy();
-                target_reply_step(&parsed_parameter);
+                if(false == target_reply_step(&parsed_parameter))
+                {
+                    // failed to add command
+                    send_unknown_command_reply();
+                }
+                // else OK. Reply packet ends busy state.
             }
             break;
 

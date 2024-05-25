@@ -38,12 +38,12 @@ typedef struct {
 
 
 bool target_reply_g(void);
-void target_reply_questionmark(void);
-void target_reply_write_g(parameter_typ* parsed_parameter);
-void target_reply_continue(parameter_typ* parsed_parameter);
-void target_reply_read_memory(parameter_typ* parsed_parameter);
-void target_reply_write_memory(parameter_typ* parsed_parameter);
-void target_reply_step(parameter_typ* parsed_parameter);
+bool target_reply_questionmark(void);
+bool target_reply_write_g(parameter_typ* parsed_parameter);
+bool target_reply_continue(parameter_typ* parsed_parameter);
+bool target_reply_read_memory(parameter_typ* parsed_parameter);
+bool target_reply_write_memory(parameter_typ* parsed_parameter);
+bool target_reply_step(parameter_typ* parsed_parameter);
 
 
 
