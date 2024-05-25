@@ -131,7 +131,12 @@ void commands_execute(char* received, uint32_t length, char* checksum)
 
         case 'g':  // read general Registers
             gdb_is_now_busy();
-            target_reply_g();
+            if(false == target_reply_g())
+            {
+                // failed to add command
+                send_unknown_command_reply();
+            }
+            // else OK. Reply packet ends busy state.
             break;
 
         case 'G':  // write general Registers

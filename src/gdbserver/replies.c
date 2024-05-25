@@ -81,7 +81,7 @@ void target_reply_continue(parameter_typ* parsed_parameter)
     }
 }
 
-void target_reply_g(void)
+bool target_reply_g(void)
 {
     // ‘g’
     //    Read general registers.
@@ -118,15 +118,16 @@ void target_reply_g(void)
     if(NULL == action)
     {
         debug_line("ERROR: could not start reply g ! Action queue full!");
-        return;
+        return false;
     }
     action->action = GDB_CMD_G;
     res = add_target_action(action);
     if(RESULT_OK != res)
     {
         debug_line("ERROR: could not execute gdb:'g'! adding action failed(%ld)!", res);
-        return;
+        return false;
     }
+    return true;
 }
 
 void target_reply_write_g(parameter_typ* parsed_parameter)

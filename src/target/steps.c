@@ -46,7 +46,7 @@ Result do_write_ap_reg(action_data_typ* const action, uint32_t bank, uint32_t re
     Result res = swd_write_ap_reg(bank, reg, data);
     if(RESULT_OK == res)
     {
-        action->intern[INTERN_TRANSACTION_ID] = (uint32_t)res;
+        action->intern[INTERN_TRANSACTION_ID] = 0;
         *(action->cur_phase) = *(action->cur_phase) + 1;
         return ERR_NOT_COMPLETED;
     }
@@ -67,9 +67,9 @@ Result do_write_ap_reg(action_data_typ* const action, uint32_t bank, uint32_t re
 Result do_write_ap(action_data_typ* const action, uint32_t address, uint32_t data)
 {
     Result res = swd_write_ap(address, data);
-    if(RESULT_OK < res)
+    if(RESULT_OK == res)
     {
-        action->intern[INTERN_TRANSACTION_ID] = (uint32_t)res;
+        action->intern[INTERN_TRANSACTION_ID] = 0;
         *(action->cur_phase) = *(action->cur_phase) + 1;
         return ERR_NOT_COMPLETED;
     }

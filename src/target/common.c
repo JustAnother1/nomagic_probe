@@ -27,8 +27,16 @@
 #include "probe_api/gdb_packets.h"
 #include "probe_api/actions.h"
 
+#define ACTION_TRACE_LENGTH     10
 #define ACTION_QUEUE_LENGTH     5
 #define ACTION_TIMEOUT_TIME_MS  600
+
+typedef struct{
+    uint32_t action;
+    uint32_t main_phase;
+    Result result;
+} action_trace_typ;
+
 
 static void handle_actions(void);
 
@@ -54,10 +62,27 @@ static const action_handler action_look_up[NUM_ACTIONS] = {
         TARGET_SPECIFIC_ACTION_HANDLERS
 };
 
+static const char* action_names[NUM_ACTIONS] = {
+        "connect",
+        "close_connection",
+#ifdef FEAT_GDB_SERVER
+        "reply_g",
+        "reply_questionmark",
+        "reply_write_G",
+        "reply_continue",
+        "reply_read_memory",
+        "reply_write_memory",
+        "reply_step",
+#endif
+        TARGET_SPECIFIC_ACTION_NAMES
+};
+
 
 static timeout_typ to;
 static bool attached;
 static target_status_typ target_status;
+static action_trace_typ trace_buf[ACTION_TRACE_LENGTH];
+static uint32_t trace_end;
 
 void target_init(void)
 {
@@ -65,7 +90,9 @@ void target_init(void)
     action_write = 0;
     cur_action = NULL;
     attached = false;
+    trace_end = 0;
     memset(&action_queue, 0, sizeof(action_queue));
+    memset(&trace_buf, 0, sizeof(trace_buf));
     target_status = NOT_CONNECTED;
     swd_init();
 }
@@ -106,16 +133,16 @@ bool common_cmd_target_info(uint32_t loop)
 {
     if(0 == loop)
     {
-    // walk state
-    if(NULL == cur_action)
-    {
-        debug_line("SWD state: idle");
-        return true; // true == Done; false = call me again
-    }
-    else
-    {
-        debug_line("SWD state: active");
-    }
+        // walk state
+        if(NULL == cur_action)
+        {
+            debug_line("SWD state: idle");
+            return true; // true == Done; false = call me again
+        }
+        else
+        {
+            debug_line("SWD state: active");
+        }
     }
     else if(1 == loop)
     {
@@ -132,7 +159,7 @@ bool common_cmd_target_info(uint32_t loop)
         if(loop -2 < ACTION_QUEUE_LENGTH)
         {
             debug_line("action_queue[%ld].action = %d", loop -2, action_queue[loop-2].action);
-            debug_line(".phase = %ld, .intern[0] = %ld, .parameter[0] = %ld",
+            debug_line(".main_phase = %ld, .intern[0] = %ld, .parameter[0] = %ld",
                        action_queue[loop-2].main_phase,
                        action_queue[loop-2].intern[0],
                        action_queue[loop-2].parameter[0]);
@@ -143,6 +170,46 @@ bool common_cmd_target_info(uint32_t loop)
         }
     }
 
+    return false; // true == Done; false = call me again
+}
+
+bool cmd_target_trace(uint32_t loop)
+{
+    if(0 == loop)
+    {
+        debug_line("action,   phase,   result (newest first)");
+    }
+    else // if(1 == loop)
+    {
+        uint32_t idx;
+        if(loop > ACTION_TRACE_LENGTH)
+        {
+            // printed complete trace buffer
+            return true;
+        }
+        if(loop -1 > trace_end)
+        {
+            idx = (ACTION_TRACE_LENGTH + trace_end) - (loop -1);
+        }
+        else
+        {
+            idx = trace_end - (loop -1);
+        }
+
+        if(0 != trace_buf[idx].action)
+        {
+            // print entry
+            debug_line("%s,    %ld,   %ld",
+                       action_names[trace_buf[idx].action -1],
+                       trace_buf[idx].main_phase,
+                       trace_buf[idx].result);
+        }
+        else
+        {
+            // no more entries
+            return true;
+        }
+    }
     return false; // true == Done; false = call me again
 }
 
@@ -252,6 +319,27 @@ static void handle_actions(void)
     // we now have an action
     // call handler
     res = (*cur_action)(&action_queue[action_read], first);
+
+    // trace call
+    if(false == first)
+    {
+        // another call to the same action
+        // trace_buf[trace_end].action = action_queue[action_read].action + 1;
+        trace_buf[trace_end].main_phase = action_queue[action_read].main_phase;
+        trace_buf[trace_end].result = res;
+    }
+    else
+    {
+        // new action
+        trace_end ++;
+        if(trace_end == ACTION_TRACE_LENGTH)
+        {
+            trace_end = 0;
+        }
+        trace_buf[trace_end].action = action_queue[action_read].action + 1;  // 0 is a valid action
+        trace_buf[trace_end].main_phase = action_queue[action_read].main_phase;
+        trace_buf[trace_end].result = res;
+    }
 
     if(ERR_NOT_COMPLETED == res)
     {

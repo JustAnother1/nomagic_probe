@@ -72,13 +72,8 @@ Result handle_target_connect(action_data_typ* const action, bool first_call)
         return do_write_ap(action, DHCSR, DBGKEY | (0xffff & 1) );
     }
 
-    if(5 == *(action->cur_phase))
-    {
-        return do_get_Result_OK(action);
-    }
-
     // init DEMCR
-    if(6 == *(action->cur_phase))
+    if(5 == *(action->cur_phase))
     {
         // bit 24: DWTENA:       0= DWT disabled;                 1= DWT enabled.
         // bit 10: VC_HARDERR:   0= haling on HardFault disabled; 1= halting on HardFault enabled.
@@ -86,29 +81,19 @@ Result handle_target_connect(action_data_typ* const action, bool first_call)
         return do_write_ap(action, DEMCR, (1 << 24) | (1 << 10) | 1 );
     }
 
-    if(7 == *(action->cur_phase))
-    {
-        return do_get_Result_OK(action);
-    }
-
     // DHCSR
     // bit 3: C_MASKINTS: 0= do not mask;                       1= Mask PendSV, SysTick and external configurable interrupts.
     // bit 2: C_STEP:     0= single stepping disabled;          1= single stepping enabled.
     // bit 1: C_HALT:     0= Request a halted processor to run; 1= Request a running processor to halt.
     // bit 0: C_DEBUGEN:  0= Halting debug disabled;            1= Halting debug enabled.
-    if(8 == *(action->cur_phase))
+    if(6 == *(action->cur_phase))
     {
         return do_write_ap(action, DHCSR, DBGKEY | (0xffff & 0xf) );
     }
 
-    if(9 == *(action->cur_phase))
-    {
-        return do_get_Result_OK(action);
-    }
-
     // TODO add more steps?
 
-    if(10 == *(action->cur_phase))
+    if(7 == *(action->cur_phase))
     {
         debug_line("connected!");
         target_set_status(CONNECTED_HALTED);  // TODO enable connect without halt
@@ -234,31 +219,26 @@ Result handle_target_reply_g(action_data_typ* const action, bool first_call)
         return do_write_ap(action, DCRSR, action->intern[INTERN_REGISTER_IDX]);
     }
 
-    if(1 == *(action->cur_phase))
-    {
-        return do_get_Result_OK(action);
-    }
-
     // 2. read DHCSR until S_REGRDY is 1
-    if(2 == action->sub_phase)
+    if(1 == *(action->cur_phase))
     {
         return do_read_ap(action, DHCSR);
     }
 
-    if(3 == *(action->cur_phase))
+    if(2 == *(action->cur_phase))
     {
         return do_get_Result_data(action);
     }
 
-    if(4 == *(action->cur_phase))
+    if(3 == *(action->cur_phase))
     {
         if(0 == (action->read_0 & (1<<16)))
         {
             action->intern[INTERN_RETRY_COUNTER]++;
-            if(100 < action->intern[INTERN_RETRY_COUNTER])
+            if(10 < action->intern[INTERN_RETRY_COUNTER])
             {
                 // no data available -> read again
-                *(action->cur_phase) = 2;
+                *(action->cur_phase) = 1;
                 return ERR_NOT_COMPLETED;
             }
             else
@@ -267,28 +247,30 @@ Result handle_target_reply_g(action_data_typ* const action, bool first_call)
                 debug_line("ERROR: too many retries !");
                 action->result = ERR_TIMEOUT;
                 action->is_done = true;
+                reply_packet_send();
                 return action->result;
             }
         }
         else
         {
             // data available -> read data
-            *(action->cur_phase) = *(action->cur_phase) +1;
+            *(action->cur_phase) = *(action->cur_phase) + 1;
+            action->intern[INTERN_RETRY_COUNTER] = 0;
         }
     }
 
     // 3. read data from DCRDR
-    if(5 == *(action->cur_phase))
+    if(4 == *(action->cur_phase))
     {
         return do_read_ap(action, DCRDR);
     }
 
-    if(6 == *(action->cur_phase))
+    if(5 == *(action->cur_phase))
     {
         return do_get_Result_data(action);
     }
 
-    if(7 == *(action->cur_phase))
+    if(6 == *(action->cur_phase))
     {
         // this register done, next?
         char buf[9];
@@ -393,34 +375,24 @@ Result handle_target_reply_write_g(action_data_typ* const action, bool first_cal
         return do_write_ap(action, DCRDR, action->parameter[1]);
     }
 
-    if(3 == *(action->cur_phase))
-    {
-        return do_get_Result_OK(action);
-    }
-
     // 2. write to DCRSR the REGSEL value and REGWnR = 1
-    if(4 == *(action->cur_phase))
+    if(3 == *(action->cur_phase))
     {
         return do_write_ap(action, DCRSR, action->parameter[0] | (1<<16) ); //  REGWnR = 1
     }
 
-    if(5 == *(action->cur_phase))
-    {
-        return do_get_Result_OK(action);
-    }
-
     // 2. read DHCSR until S_REGRDY is 1
-    if(6 == action->sub_phase)
+    if(4 == *(action->cur_phase))
     {
         return do_read_ap(action, DHCSR);
     }
 
-    if(7 == *(action->cur_phase))
+    if(5 == *(action->cur_phase))
     {
         return do_get_Result_data(action);
     }
 
-    if(8 == *(action->cur_phase))
+    if(6 == *(action->cur_phase))
     {
         if(0 == (action->read_0 & (1<<16)))
         {
@@ -429,7 +401,7 @@ Result handle_target_reply_write_g(action_data_typ* const action, bool first_cal
             if(100 < action->intern[INTERN_RETRY_COUNTER])
             {
                 // write not finished -> read again
-                *(action->cur_phase) = 6;
+                *(action->cur_phase) = 4;
                 return ERR_NOT_COMPLETED;
             }
             else
@@ -501,7 +473,7 @@ Result handle_target_reply_read_memory(action_data_typ* const action, bool first
         action->intern[INTERN_MEMORY_OFFSET] = 0;
     }
 
-    if(0 == action->sub_phase)
+    if(0 == action->cur_phase)
     {
         return do_read_ap(action, action->gdb_parameter->address + action->intern[INTERN_MEMORY_OFFSET]*4);
     }
@@ -590,11 +562,6 @@ Result handle_target_reply_write_memory(action_data_typ* const action, bool firs
     }
 
     if(3 == *(action->cur_phase))
-    {
-        return do_get_Result_OK(action);
-    }
-
-    if(4 == *(action->cur_phase))
     {
         *(action->cur_phase) = 1;
         // continue with next register

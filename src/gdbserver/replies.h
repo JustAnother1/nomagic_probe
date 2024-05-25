@@ -37,7 +37,7 @@ typedef struct {
 } parameter_typ;
 
 
-void target_reply_g(void);
+bool target_reply_g(void);
 void target_reply_questionmark(void);
 void target_reply_write_g(parameter_typ* parsed_parameter);
 void target_reply_continue(parameter_typ* parsed_parameter);
