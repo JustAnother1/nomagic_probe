@@ -64,9 +64,9 @@ Result do_write_ap_reg(action_data_typ* const action, uint32_t bank, uint32_t re
     }
 }
 
-Result do_write_ap(action_data_typ* const action, uint32_t address, uint32_t data)
+Result do_write_ap(action_data_typ* const action, uint32_t* address, uint32_t data)
 {
-    Result res = swd_write_ap(address, data);
+    Result res = swd_write_ap((uint32_t)address, data);
     if(RESULT_OK == res)
     {
         action->intern[INTERN_TRANSACTION_ID] = 0;
@@ -87,9 +87,9 @@ Result do_write_ap(action_data_typ* const action, uint32_t address, uint32_t dat
     }
 }
 
-Result do_read_ap(action_data_typ* const action, uint32_t address)
+Result do_read_ap(action_data_typ* const action, uint32_t* address)
 {
-    Result res = swd_read_ap(address);
+    Result res = swd_read_ap((uint32_t)address);
     if(RESULT_OK < res)
     {
         action->intern[INTERN_TRANSACTION_ID] = (uint32_t)res;

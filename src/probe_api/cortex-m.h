@@ -23,7 +23,11 @@
  *
  * bit 15 : SVCALLPENDED: 0= SVCall is not pending; 1= SVCall is pending.
  */
-#define SHCSR 0xe000ed24
+
+#define SHCSR_SVCALLPENDED_MASK   0x8000
+#define SHCSR_SVCALLPENDED_OFFSET 15
+
+#define SHCSR                     ((uint32_t *) 0xe000ed24)
 
 /** Debug Fault Status Register
  * Provides the top level reason why a debug event has occurred
@@ -35,7 +39,23 @@
  * bit 0: HALTED:   1= halt request (Halt or Step)
  *
  */
-#define DFSR 0xe000ed30
+
+#define DFSR_EXTERNAL_MASK        0x10
+#define DFSR_EXTERNAL_OFFSET      4
+
+#define DFSR_VCATCH_MASK          8
+#define DFSR_VCATCH_OFFSET        3
+
+#define DFSR_DWTRAP_MASK          4
+#define DFSR_DWTRAP_OFFSET        2
+
+#define DFSR_BKPT_MASK            2
+#define DFSR_BKPT_OFFSET          1
+
+#define DFSR_HALTED_MASK          1
+#define DFSR_HALTED_OFFSET        0
+
+#define DFSR                      ((uint32_t *) 0xe000ed30)
 
 /** Debug Halting Control and Status Register
  * Controls halting debug.
@@ -58,8 +78,40 @@
  * bit 0: C_DEBUGEN:  0= Halting debug disabled;            1= Halting debug enabled.
  *
  */
-#define DHCSR 0xe000edf0
-#define DBGKEY 0xa05f0000
+
+#define DHCSR_S_RESET_ST_MASK     0x2000000
+#define DHCSR_S_RESET_ST_OFFSET   25
+
+#define DHCSR_S_RETIRE_ST_MASK    0x1000000
+#define DHCSR_S_RETIRE_ST_OFFSET  24
+
+#define DHCSR_S_LOCKUP_MASK       0x80000
+#define DHCSR_S_LOCKUP_OFFSET     19
+
+#define DHCSR_S_SLEEP_MASK        0x40000
+#define DHCSR_S_SLEEP_OFFSET      18
+
+#define DHCSR_S_HALT_MASK         0x20000
+#define DHCSR_S_HALT_OFFSET       17
+
+#define DHCSR_S_REGRDY_MASK       0x10000
+#define DHCSR_S_REGRDY_OFFSET     16
+
+#define DHCSR_C_MASKINTS_MASK     8
+#define DHCSR_C_MASKINTS_OFFSET   3
+
+#define DHCSR_C_STEP_MASK         4
+#define DHCSR_C_STEP_OFFSET       2
+
+#define DHCSR_C_HALT_MASK         2
+#define DHCSR_C_HALT_OFFSET       1
+
+#define DHCSR_C_DEBUGEN_MASK      1
+#define DHCSR_C_DEBUGEN_OFFSET    0
+
+#define DHCSR                     ((uint32_t *) 0xe000edf0)
+
+#define DBGKEY                    0xa05f0000
 
 /** Debug Core Register Selector Register
  *  bits 31..17 = reserved
@@ -92,12 +144,40 @@
  *   . . . .   : reserved
  *  1 1 1 1 1  : reserved
  */
-#define DCRSR 0xe000edf4
+
+#define DCRSR_REGWNR_MASK         0x10000
+#define DCRSR_REGWNR_OFFSET       16
+
+#define DCRSR_REGSEL_MASK         0x1f
+#define DCRSR_REGSEL_OFFSET       0
+
+#define DCRSR_REGSEL_R0           0
+#define DCRSR_REGSEL_R1           1
+#define DCRSR_REGSEL_R2           2
+#define DCRSR_REGSEL_R3           3
+#define DCRSR_REGSEL_R4           4
+#define DCRSR_REGSEL_R5           5
+#define DCRSR_REGSEL_R6           6
+#define DCRSR_REGSEL_R7           7
+#define DCRSR_REGSEL_R8           8
+#define DCRSR_REGSEL_R9           9
+#define DCRSR_REGSEL_R10          10
+#define DCRSR_REGSEL_R11          11
+#define DCRSR_REGSEL_R12          12
+#define DCRSR_REGSEL_SP           13
+#define DCRSR_REGSEL_LR           14
+#define DCRSR_REGSEL_DRA          15
+#define DCRSR_REGSEL_XPSR         16
+#define DCRSR_REGSEL_MSP          17
+#define DCRSR_REGSEL_PSP          18
+#define DCRSR_REGSEL_PRIMASK      20
+
+#define DCRSR                     ((uint32_t *) 0xe000edf4)
 
 /** Debug Core Register Data Register
  *
  */
-#define DCRDR 0xe000edf8
+#define DCRDR                     ((uint32_t *) 0xe000edf8)
 
 /** Debug Exception and Monitor Control Register
  * Manages vector catch behavior and enables the DWT.
@@ -106,8 +186,14 @@
  * bit 10: VC_HARDERR:   0= haling on HardFault disabled; 1= halting on HardFault enabled.
  * bit 0:  VC_CORERESET: 0= Reset Vector Catch disabled;  1= Reset Vector Catch enabled.
  */
-#define DEMCR 0xe000edfc
 
+#define DEMCR_DWTENA_MASK         0x1000000
+#define DEMCR_DWTENA_OFFSET       24
+#define DEMCR_VC_HARDERR_MASK     0x400
+#define DEMCR_VC_HARDERR_OFFSET   10
+#define DEMCR_VC_CORERESET_MASK   0x1f
+#define DEMCR_VC_CORERESET_OFFSET 0
+#define DEMCR                     ((uint32_t *) 0xe000edfc)
 
 #define TARGET_XML_CONTENT  \
 "<?xml version=\"1.0\"?>\r\n" \
@@ -148,9 +234,5 @@
 "<?xml version=\"1.0\"?>\r\n" \
 "<threads>\r\n" \
 "</threads>\r\n"
-
-
-// Result cortex_m_add_general_registers(bool first_call);
-Result cortex_m_halt_cpu(bool first_call);
 
 #endif /* ARM_CORTEX_M_H_ */

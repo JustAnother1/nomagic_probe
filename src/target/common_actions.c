@@ -475,7 +475,7 @@ Result handle_target_reply_read_memory(action_data_typ* const action, bool first
 
     if(0 == action->cur_phase)
     {
-        return do_read_ap(action, action->gdb_parameter->address + action->intern[INTERN_MEMORY_OFFSET]*4);
+        return do_read_ap(action, (uint32_t*)(action->gdb_parameter->address + action->intern[INTERN_MEMORY_OFFSET]*4));
     }
 
     if(1 == *(action->cur_phase))
@@ -558,7 +558,7 @@ Result handle_target_reply_write_memory(action_data_typ* const action, bool firs
 
     if(2 == *(action->cur_phase))
     {
-        return do_write_ap(action, action->parameter[0], action->parameter[1]);
+        return do_write_ap(action, (uint32_t *)action->parameter[0], action->parameter[1]);
     }
 
     if(3 == *(action->cur_phase))
