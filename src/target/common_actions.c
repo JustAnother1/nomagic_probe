@@ -69,7 +69,7 @@ Result handle_target_connect(action_data_typ* const action, bool first_call)
     // C_DEBUGEN = 1; C_HALT = b10;
     if(4 == *(action->cur_phase))
     {
-        return do_write_ap(action, DHCSR, DBGKEY | (0xffff & 1) );
+        return do_write_ap(action, DHCSR, DBGKEY | (1 << DHCSR_C_DEBUGEN_OFFSET) );
     }
 
     // init DEMCR
@@ -88,7 +88,11 @@ Result handle_target_connect(action_data_typ* const action, bool first_call)
     // bit 0: C_DEBUGEN:  0= Halting debug disabled;            1= Halting debug enabled.
     if(6 == *(action->cur_phase))
     {
-        return do_write_ap(action, DHCSR, DBGKEY | (0xffff & 0xf) );
+        return do_write_ap(action, DHCSR, DBGKEY
+                           | (1 << DHCSR_C_MASKINTS_OFFSET)   // TODO configure ?
+                           // | (1 << DHCSR_C_STEP_OFFSET)
+                           | (1 << DHCSR_C_HALT_OFFSET)
+                           | (1 << DHCSR_C_DEBUGEN_OFFSET) );
     }
 
     // TODO add more steps?
@@ -232,8 +236,9 @@ Result handle_target_reply_g(action_data_typ* const action, bool first_call)
 
     if(3 == *(action->cur_phase))
     {
-        if(0 == (action->read_0 & (1<<16)))
+        if(0 == (action->read_0 & (1<<DHCSR_S_REGRDY_OFFSET)))
         {
+            // Register not ready
             action->intern[INTERN_RETRY_COUNTER]++;
             if(10 < action->intern[INTERN_RETRY_COUNTER])
             {
@@ -394,7 +399,7 @@ Result handle_target_reply_write_g(action_data_typ* const action, bool first_cal
 
     if(6 == *(action->cur_phase))
     {
-        if(0 == (action->read_0 & (1<<16)))
+        if(0 == (action->read_0 & (1<<DHCSR_S_REGRDY_OFFSET)))
         {
             // write not finished
             action->intern[INTERN_RETRY_COUNTER] ++;
