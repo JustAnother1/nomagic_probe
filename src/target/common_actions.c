@@ -28,7 +28,7 @@
 #define INTERN_RETRY_COUNTER    1
 #define INTERN_REGISTER_IDX     2
 
-
+static void send_stopped_reply(void);
 
 Result handle_target_connect(action_data_typ* const action, bool first_call)
 {
@@ -100,7 +100,7 @@ Result handle_target_connect(action_data_typ* const action, bool first_call)
     if(7 == *(action->cur_phase))
     {
         debug_line("connected!");
-        target_set_status(CONNECTED_HALTED);  // TODO enable connect without halt
+        target_set_status(CONNECTED_HALTED);  // TODO enable connect without halt (configuration)
         return RESULT_OK;
     }
 
@@ -383,7 +383,7 @@ Result handle_target_reply_write_g(action_data_typ* const action, bool first_cal
     // 2. write to DCRSR the REGSEL value and REGWnR = 1
     if(3 == *(action->cur_phase))
     {
-        return do_write_ap(action, DCRSR, action->parameter[0] | (1<<16) ); //  REGWnR = 1
+        return do_write_ap(action, DCRSR, action->parameter[0] | (1 << DCRSR_REGWNR_OFFSET) );
     }
 
     // 2. read DHCSR until S_REGRDY is 1
@@ -436,18 +436,65 @@ Result handle_target_reply_questionmark(action_data_typ* const action, bool firs
 {
     (void)action;
     (void)first_call;
-    reply_packet_prepare();
-    reply_packet_add("S05");
-    reply_packet_send();
+    send_stopped_reply();
     return RESULT_OK;
 }
 
 Result handle_target_reply_continue(action_data_typ* const action, bool first_call)
 {
-    (void)action;
-    (void)first_call;
-    send_unknown_command_reply();
-    return RESULT_OK;
+    if(true == first_call)
+    {
+        reply_packet_prepare();
+        *(action->cur_phase) = 1;
+        action->intern[INTERN_RETRY_COUNTER] = 0;
+        return ERR_NOT_COMPLETED;
+    }
+
+    if(1 == *(action->cur_phase))
+    {
+        return do_write_ap(action, DHCSR,  DBGKEY | (1 << DHCSR_C_DEBUGEN_OFFSET) );
+    }
+
+    if(2 == *(action->cur_phase))
+    {
+        return do_read_ap(action, DHCSR);
+    }
+
+    if(3 == *(action->cur_phase))
+    {
+        return do_get_Result_data(action);
+    }
+
+    if(4 == *(action->cur_phase))
+    {
+        if(0 == (action->read_0 & (1<<DHCSR_S_HALT_OFFSET)))
+        {
+            // Halt -> Run
+            *(action->cur_phase) = 5;
+        }
+        else
+        {
+            // Still in Halt
+            *(action->cur_phase) = 2;
+            action->intern[INTERN_RETRY_COUNTER] = action->intern[INTERN_RETRY_COUNTER] + 1;
+            if(10 > action->intern[INTERN_RETRY_COUNTER])
+            {
+                // *(action->cur_phase) = 1;
+                action->intern[INTERN_RETRY_COUNTER] = 0;
+                debug_line("ERROR: releasing Halt did not work !");
+                return ERR_TARGET_ERROR;
+            }
+        }
+    }
+
+    if(5 == *(action->cur_phase))
+    {
+        target_set_status(CONNECTED_RUNNING);
+        gdb_is_not_busy_anymore();
+        return RESULT_OK;
+    }
+
+    return ERR_WRONG_STATE;
 }
 
 Result handle_target_reply_read_memory(action_data_typ* const action, bool first_call)
@@ -583,5 +630,51 @@ Result handle_target_reply_step(action_data_typ* const action, bool first_call)
     send_unknown_command_reply();
     return RESULT_OK;
 }
+
+Result handle_check_target_running(action_data_typ* const action, bool first_call)
+{
+    if(true == first_call)
+    {
+        reply_packet_prepare();
+        *(action->cur_phase) = 0;
+        action->intern[INTERN_RETRY_COUNTER] = 0;
+        return ERR_NOT_COMPLETED;
+    }
+
+    if(0 == *(action->cur_phase))
+    {
+        return do_read_ap(action, DHCSR);
+    }
+
+    if(1 == *(action->cur_phase))
+    {
+        return do_get_Result_data(action);
+    }
+
+    if(2 == *(action->cur_phase))
+    {
+        if(0 == (action->read_0 & (1<<DHCSR_S_HALT_OFFSET)))
+        {
+            // running
+            return RESULT_OK;
+        }
+        else
+        {
+            // Halted
+            target_set_status(CONNECTED_HALTED);
+            send_stopped_reply();
+        }
+    }
+
+    return ERR_WRONG_STATE;
+}
+
+static void send_stopped_reply(void)
+{
+    reply_packet_prepare();
+    reply_packet_add("S05");  // TODO send real stop reply
+    reply_packet_send();
+}
+
 #endif
 

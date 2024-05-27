@@ -39,6 +39,7 @@ typedef struct{
 
 
 static void handle_actions(void);
+static void check_if_still_running(void);
 
 
 
@@ -58,6 +59,7 @@ static const action_handler action_look_up[NUM_ACTIONS] = {
         handle_target_reply_read_memory,
         handle_target_reply_write_memory,
         handle_target_reply_step,
+        handle_check_target_running,
 #endif
         TARGET_SPECIFIC_ACTION_HANDLERS
 };
@@ -119,7 +121,7 @@ void target_tick(void)
             break;
 
         case CONNECTED_RUNNING:
-            // check if still running
+            check_if_still_running();
             break;
 
         default:
@@ -279,6 +281,27 @@ void target_close_connection(void)
     }
 }
 
+static void check_if_still_running(void)
+{
+    if((NULL == cur_action) && (action_read != action_write))
+    {
+        Result res;
+        action_data_typ* const action =  book_action_slot();
+        if(NULL == action)
+        {
+            debug_line("ERROR: could not start reply continue ! Action queue full!");
+            return;
+        }
+        action->action = CHECK_RUNNING;
+        res = add_target_action(action);
+        if(RESULT_OK != res)
+        {
+            debug_line("ERROR: could not check if target is still running! adding action failed(%ld)!", res);
+            return;
+        }
+    }
+    // else wait until all queued actions have finished.
+}
 
 static void handle_actions(void)
 {
@@ -369,9 +392,9 @@ static void handle_actions(void)
         if(RESULT_OK > res)
         {
             // error
-            debug_line("target: error %ld on action %d.%ld.%ld",
+            debug_line("target: error %ld on action %s.%ld.%ld",
                        res,
-                       action_queue[action_read].action,
+                       action_names[action_queue[action_read].action],
                        action_queue[action_read].main_phase,
                        action_queue[action_read].sub_phase);
         }

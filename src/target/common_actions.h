@@ -27,6 +27,7 @@ Result handle_target_reply_continue(action_data_typ* const action, bool first_ca
 Result handle_target_reply_read_memory(action_data_typ* const action, bool first_call);
 Result handle_target_reply_write_memory(action_data_typ* const action, bool first_call);
 Result handle_target_reply_step(action_data_typ* const action, bool first_call);
+Result handle_check_target_running(action_data_typ* const action, bool first_call);
 #endif
 
 #endif /* TARGET_COMMON_ACTIONS_H_ */

@@ -274,7 +274,7 @@ static void communicate_with_gdb(void)
                     {
                         // notification from Host
                         // -> ignore
-                        debug_line("ERROR: not implemented !");
+                        debug_line("ERROR: notification not implemented !");
                         // TODO Notification is "% data # checksum"
                     }
                     else if('+' == data)
@@ -299,8 +299,8 @@ static void communicate_with_gdb(void)
                     else if(0x03 == data)
                     {
                         // BREAK
-                        // TODO
-                        debug_line("ERROR: not implemented !");
+                        // is optional. Application is the GDB user pressed CTRL-C.
+                        debug_line("INFO: break not implemented !");
                     }
                     else
                     {

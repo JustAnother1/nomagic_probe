@@ -47,6 +47,7 @@ typedef enum {
     GDB_CMD_READ_MEMORY,
     GDB_CMD_WRITE_MEMORY,
     GDB_CMD_STEP,
+    CHECK_RUNNING,
 #endif
     TARGET_SPECIFIC_ACTIONS_ENUM
     // new actions go here
