@@ -29,6 +29,9 @@
 #include "hal/time_base.h"
 #include "probe_api/debug_log.h"
 
+#define DHCSR_C_DEBUGEN_MASK  1
+#define DHCSR ((uint32_t *) 0xe000edf0)
+
 typedef void (*VECTOR_FUNCTION_Type)(void);
 
 void default_Handler(void)    __attribute__ ((weak, interrupt ("IRQ")));
@@ -228,20 +231,20 @@ uint32_t file_system_start;
 
 _Noreturn void Int_Handler(void)
 {
-    // No Interrupts during 3rd stage boot loader !!!
-    __asm__ __volatile__ ("bkpt #0");
+    if(0 != (*DHCSR & DHCSR_C_DEBUGEN_MASK))
+    {
+        // only break if debugger is attached
+        __asm__ __volatile__ ("bkpt #0");
+    }
+
 
     for (;;)
     {
-        /*
-        // uint8_t data = 23;
+        // error blink
         SIO->GPIO_OUT_SET = 1 << 25;
-        // Delay
         delay_us(10 * 1000);
         SIO->GPIO_OUT_CLR = 1 << 25;
-        // Delay
         delay_us(190 * 1000);
-        */
     }
 }
 
@@ -470,8 +473,11 @@ _Noreturn void error_state(void)
 {
     // make sure that all debug messages have been send
     debug_flush();
-    // TODO only break if debugger is attached
-    __asm__ __volatile__ ("bkpt #0");
+    if(0 != (*DHCSR & DHCSR_C_DEBUGEN_MASK))
+    {
+        // only break if debugger is attached
+        __asm__ __volatile__ ("bkpt #0");
+    }
 
     for (;;)
     {
