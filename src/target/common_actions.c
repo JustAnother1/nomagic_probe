@@ -490,7 +490,9 @@ Result handle_target_reply_continue(action_data_typ* const action, bool first_ca
     if(5 == *(action->cur_phase))
     {
         target_set_status(CONNECTED_RUNNING);
-        gdb_is_not_busy_anymore();
+        // gdb_is_not_busy_anymore();
+        reply_packet_add("O");  // No Output
+        reply_packet_send();
         return RESULT_OK;
     }
 

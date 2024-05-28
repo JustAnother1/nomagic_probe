@@ -27,9 +27,10 @@
 #include "probe_api/gdb_packets.h"
 #include "probe_api/actions.h"
 
-#define ACTION_TRACE_LENGTH     10
-#define ACTION_QUEUE_LENGTH     5
-#define ACTION_TIMEOUT_TIME_MS  600
+#define ACTION_TRACE_LENGTH           10
+#define ACTION_QUEUE_LENGTH           5
+#define ACTION_TIMEOUT_TIME_MS        600
+#define GDB_RUNNING_REPORT_TIMEOUT_MS 500
 
 typedef struct{
     uint32_t action;
@@ -40,6 +41,7 @@ typedef struct{
 
 static void handle_actions(void);
 static void check_if_still_running(void);
+static void report_to_gdb(void);
 
 
 
@@ -80,11 +82,12 @@ static const char* action_names[NUM_ACTIONS] = {
 };
 
 
-static timeout_typ to;
+static timeout_typ action_to;
 static bool attached;
 static target_status_typ target_status;
 static action_trace_typ trace_buf[ACTION_TRACE_LENGTH];
 static uint32_t trace_end;
+static timeout_typ report_to;
 
 void target_init(void)
 {
@@ -101,7 +104,16 @@ void target_init(void)
 
 void target_set_status(target_status_typ new_status)
 {
-    target_status = new_status;
+    if(new_status != target_status)
+    {
+        if(CONNECTED_RUNNING == new_status)
+        {
+            start_timeout(&report_to, GDB_RUNNING_REPORT_TIMEOUT_MS);
+        }
+
+        target_status = new_status;
+    }
+    // else no change
 }
 
 void target_tick(void)
@@ -122,6 +134,7 @@ void target_tick(void)
 
         case CONNECTED_RUNNING:
             check_if_still_running();
+            report_to_gdb();
             break;
 
         default:
@@ -319,7 +332,7 @@ static void handle_actions(void)
                 cur_action = action_look_up[action_queue[action_read].action];
                 action_queue[action_read].cur_phase = &(action_queue[action_read].main_phase);
                 first = true;
-                start_timeout(&to, ACTION_TIMEOUT_TIME_MS);
+                start_timeout(&action_to, ACTION_TIMEOUT_TIME_MS);
             }
             else
             {
@@ -367,7 +380,7 @@ static void handle_actions(void)
     if(ERR_NOT_COMPLETED == res)
     {
         // order not done
-        if(true == timeout_expired(&to))
+        if(true == timeout_expired(&action_to))
         {
             action_queue[action_read].is_done = true;
             action_queue[action_read].result = ERR_TIMEOUT;
@@ -405,4 +418,16 @@ static void handle_actions(void)
             action_read = 0;
         }
     }
+}
+
+static void report_to_gdb(void)
+{
+    if(true == timeout_expired(&report_to))
+    {
+        reply_packet_prepare();
+        reply_packet_add("O");  // No Output
+        reply_packet_send();
+        start_timeout(&report_to, GDB_RUNNING_REPORT_TIMEOUT_MS);
+    }
+    // else  wait
 }
