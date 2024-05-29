@@ -260,10 +260,10 @@ static void dcd_rp2040_irq(void);
 static void hw_endpoint_reset_transfer(hw_endpoint_t* ep);
 static uint32_t prepare_ep_buffer(hw_endpoint_t* ep, uint8_t buf_id);
 TU_ATTR_ALWAYS_INLINE static inline void _hw_endpoint_buffer_control_clear_mask32 (hw_endpoint_t* ep, uint32_t value);
-static void usb_init(void);
+static void usb_peripheral_init(void);
 
 //! initialize the USB peripheral
-static void usb_init(void)
+static void usb_peripheral_init(void)
 {
     RESETS->RESET = RESETS->RESET & ~0x1002000ul; // take USB_CTRL, PLL_USB out of Reset
     // configure GPIO Pins
@@ -312,6 +312,11 @@ static void usb_init(void)
 #endif
 
     NVIC_EnableIRQ(USBCTRL_IRQ_NUMBER, USBCTRL_IRQ_PRIORITY);
+}
+
+void usb_init(void)
+{
+    tusb_init(); // initialize TinyUSB stack (requires logging to be set up)
 }
 
 //! USB "Task"
@@ -1089,7 +1094,7 @@ void dcd_init(uint8_t rhport)
     (void) rhport;
 
     // Reset hardware to default state
-    usb_init();
+    usb_peripheral_init();
 
     #if FORCE_VBUS_DETECT
     // Force VBUS detect so the device thinks it is plugged into a host

@@ -39,6 +39,7 @@
 #ifndef SRC_TINYUSB_USB_H_
 #define SRC_TINYUSB_USB_H_
 
+void usb_init(void);
 void usb_tick(void);
 
 

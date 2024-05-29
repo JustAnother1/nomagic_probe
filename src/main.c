@@ -67,7 +67,7 @@ static void init_0(void)
     init_printf(NULL, usb_cdc_putc);
 #endif
 
-    tusb_init(); // initialize TinyUSB stack (requires logging to be set up)
+    usb_init();
 
 #ifdef FEAT_USB_MSC
     file_system_init();
