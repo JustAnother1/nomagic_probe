@@ -282,9 +282,8 @@ void target_reply_write_g(parameter_typ* parsed_parameter)
     (void)parsed_parameter;
 }
 
-void target_reply_continue(parameter_typ* parsed_parameter)
+void target_reply_continue(void)
 {
-    (void)parsed_parameter;
 }
 
 void target_reply_read_memory(parameter_typ* parsed_parameter)

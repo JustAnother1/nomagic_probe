@@ -93,7 +93,7 @@ void commands_execute(char* received, uint32_t length, char* checksum)
         send_ack_packet();  // ack the received packet
     }
 
-    switch(*received)
+    switch(*received)  // this only looks at the first character of the received string
     {
         case '!': // enable extended mode
             if(1 == length)
@@ -121,10 +121,9 @@ void commands_execute(char* received, uint32_t length, char* checksum)
 
         case 'c':  // continue
         case 'C':  // continue
-            // TODO
             gdb_is_now_busy();
-            // TODO  parameter_typ* parsed_parameter  !!!
-            if(false == target_reply_continue(&parsed_parameter))
+            // TODO continue at address ? if(true == parse_parameter(PARAM_XX, received))
+            if(false == target_reply_continue())
             {
                 // failed to add command
                 send_unknown_command_reply();
@@ -301,6 +300,11 @@ static uint32_t cmd_length(char* received, uint32_t length)
             // end of command
             return i;
         }
+        if(';' == *received)
+        {
+            // end of command
+            return i;
+        }
         if('#' == *received)
         {
             // end of command
@@ -344,8 +348,15 @@ static void handle_vee(char* received, uint32_t length)
         {
             found_cmd = true;
             // specify step or continue actions specific to one or more threads
-            // TODO
-            send_unknown_command_reply();
+            if('c' == received[6])
+            {
+                // vCont;c  -> continue
+                if(true == target_reply_continue())
+                {
+                    found_cmd = true;
+                }
+            }
+            // TODO else if(....)
         }
     }
     else if(6 == cmd_len)
@@ -353,8 +364,10 @@ static void handle_vee(char* received, uint32_t length)
         if(0 == strncmp(received, "vCont?", 6))
         {
             // report the supported vCont actions
-            // TODO
-            send_unknown_command_reply();
+            reply_packet_prepare();
+            reply_packet_add("vCont;c;C;s;S");
+            reply_packet_send();
+            found_cmd = true;
         }
     }
     else if(7 == cmd_len)

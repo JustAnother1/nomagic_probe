@@ -69,6 +69,6 @@ void handle_cmd_qSupported(char* parameter, uint32_t length)
     reply_packet_add(";qXfer:features:read+");
     reply_packet_add(";hwbreak+");
     reply_packet_add(";QStartNoAckMode+");
-    // reply_packet_add(";vContSupported+");  // only multi-threading
+    reply_packet_add(";vContSupported+");
     reply_packet_send();
 }

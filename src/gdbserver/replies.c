@@ -62,11 +62,8 @@ bool target_reply_step(parameter_typ* parsed_parameter)
     return true;
 }
 
-bool target_reply_continue(parameter_typ* parsed_parameter)
+bool target_reply_continue(void)
 {
-    // TODO
-    (void)parsed_parameter;
-
     Result res;
     action_data_typ* const action =  book_action_slot();
     if(NULL == action)
