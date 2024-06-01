@@ -48,7 +48,7 @@ void usb_cdc_putc(void* p, char c)
 {
     uint32_t res;
     (void) p; // not used
-    if(true == tud_cdc_connected())
+    if(true == tud_cdc_n_connected(INTERFACE))
     {
         for(;;)
         {

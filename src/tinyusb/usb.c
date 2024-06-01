@@ -47,6 +47,8 @@
 #include "hal/startup.h"
 #include "usb_cdc.h"
 #include "cli/cli_priv.h"
+#include "usb_ncm.h"
+#include "usb_descriptors.h"
 
 // TinyUSB:
 #include "tusb.h"
@@ -316,6 +318,10 @@ static void usb_peripheral_init(void)
 
 void usb_init(void)
 {
+#ifdef FEAT_USB_NCM
+    usb_ncm_init();
+    update_descriptors();
+#endif
     tusb_init(); // initialize TinyUSB stack (requires logging to be set up)
 }
 
@@ -334,6 +340,9 @@ void usb_tick(void)
         }
         // else the cdc connection just closed
     }
+#endif
+#ifdef FEAT_USB_NCM
+    usb_ncm_tick();
 #endif
     tud_task(); // device task
 }

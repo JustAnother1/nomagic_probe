@@ -27,6 +27,15 @@ Documentation overview
 | target
 | the microcontroller that runs the user code that shall be debugged.
 
+| USB-CDC
+| Communication Device Class - Seriel Interface
+
+| USB-MSC
+| Mass Storage Class - Thumb Drive
+
+| USB-NCM
+| Network Control Model - Ethernet Interface
+
 |===
 
 

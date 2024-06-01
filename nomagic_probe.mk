@@ -29,6 +29,10 @@ endif
 ifeq ($(HAS_GDB_SERVER), yes)
 	DDEFS += -DFEAT_GDB_SERVER
 endif
+# enable the USB network interface
+ifeq ($(HAS_NCM), yes)
+	DDEFS += -DFEAT_USB_NCM
+endif
 
 CFLAGS  = -c -ggdb3 -MMD -MP
 CFLAGS += -O3
@@ -141,6 +145,12 @@ SRC += $(NOMAGIC_SRC_FOLDER)tinyusb/src/class/cdc/cdc_device.c
 ifeq ($(HAS_MSC), yes)
 SRC += $(NOMAGIC_SRC_FOLDER)tinyusb/usb_msc.c
 SRC += $(NOMAGIC_SRC_FOLDER)tinyusb/src/class/msc/msc_device.c
+endif
+
+# USB Network interface (NCM)
+ifeq ($(HAS_NCM), yes)
+SRC += $(NOMAGIC_SRC_FOLDER)tinyusb/usb_ncm.c
+SRC += $(NOMAGIC_SRC_FOLDER)tinyusb/src/class/net/ncm_device.c
 endif
 
 # target

@@ -12,10 +12,13 @@
  * with this program; if not, see <http://www.gnu.org/licenses/>
  *
  */
+
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019 Ha Thach (tinyusb.org)
+ * Copyright (c) 2020 Peter Lawrence
+ *
+ * influenced by lrndis https://github.com/fetisov/lrndis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,14 +39,16 @@
  * THE SOFTWARE.
  *
  */
-#ifndef SRC_TINYUSB_USB_DESCRIPTORS_H_
-#define SRC_TINYUSB_USB_DESCRIPTORS_H_
 
-#include <stdint.h>
+#ifndef NOMAGIC_PROBE_SRC_TINYUSB_USB_NCM_H_
+#define NOMAGIC_PROBE_SRC_TINYUSB_USB_NCM_H_
 
-uint16_t const* tud_descriptor_string_cb(uint8_t index, uint16_t langid);
-uint8_t const * tud_descriptor_configuration_cb(uint8_t index);
-uint8_t const * tud_descriptor_device_cb(void);
-void update_descriptors(void);
+#include <stdbool.h>
 
-#endif /* SRC_TINYUSB_USB_DESCRIPTORS_H_ */
+void usb_ncm_init(void);
+void usb_ncm_tick(void);
+bool is_network_enabled(void);
+
+
+
+#endif /* NOMAGIC_PROBE_SRC_TINYUSB_USB_NCM_H_ */

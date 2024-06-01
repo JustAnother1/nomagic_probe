@@ -41,6 +41,9 @@
 #ifdef FEAT_USB_MSC
 #define CFG_TUD_MSC               1
 #endif
+#ifdef FEAT_USB_NCM
+#define CFG_TUD_NCM               1
+#endif
 
 #define CFG_TUD_CDC_RX_BUFSIZE    64
 #define CFG_TUD_CDC_TX_BUFSIZE    64
