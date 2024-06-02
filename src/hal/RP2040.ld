@@ -37,6 +37,7 @@ SECTIONS
         
         *(.text)
         *(.text.*)
+        *(.time_critical.*)
         
         . = ALIGN(4);
         __code_end = .;
