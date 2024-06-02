@@ -53,11 +53,7 @@ static char hex(uint32_t value);
 #define DESC_STR_MAX       20
 #define USBD_MAX_POWER_MA  250
 #define USBD_DESC_LEN      (TUD_CONFIG_DESC_LEN + TUD_CDC_DESC_LEN * CFG_TUD_CDC + TUD_MSC_DESC_LEN * CFG_TUD_MSC)
-#ifdef FEAT_USB_NCM
 #define USBD_DESC_MAX_LEN  (TUD_CONFIG_DESC_LEN + TUD_CDC_DESC_LEN * CFG_TUD_CDC + TUD_MSC_DESC_LEN * CFG_TUD_MSC + TUD_CDC_NCM_DESC_LEN * CFG_TUD_NCM)
-#else
-#define USBD_DESC_MAX_LEN  (TUD_CONFIG_DESC_LEN + TUD_CDC_DESC_LEN * CFG_TUD_CDC + TUD_MSC_DESC_LEN * CFG_TUD_MSC)
-#endif
 
 #define USBD_VID           0x2E8A // Raspberry Pi
 #define USB_BCD            0x0200 // supported USB Version in BCD : 0x0200 = USB 2.00
