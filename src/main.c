@@ -36,6 +36,9 @@
 #ifdef FEAT_DEBUG_CDC
 #include "tinyusb/usb_cdc.h"
 #endif
+#ifdef FEAT_USB_NCM
+#include "lwip.h"
+#endif
 
 #define TASK_LOOP_0           0x1ul
 #define TASK_LOOP_1           0x2ul
@@ -79,6 +82,10 @@ static void init_0(void)
     gdbserver_init();
 #endif
 
+#ifdef FEAT_USB_NCM
+    lwip_init();
+#endif
+
 #if (defined FEAT_DEBUG_UART) || (defined FEAT_DEBUG_CDC)
     cli_init(); // should be last
 #endif
@@ -114,6 +121,12 @@ static void loop_0(void)
     watchdog_enter_section(SECTION_GDBSERVER);
     gdbserver_tick();
     watchdog_leave_section(SECTION_GDBSERVER);
+#endif
+
+#ifdef FEAT_USB_NCM
+    watchdog_enter_section(SECTION_LWIP);
+    lwip_tick();
+    watchdog_leave_section(SECTION_LWIP);
 #endif
 }
 

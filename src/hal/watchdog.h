@@ -61,6 +61,7 @@
 #define SECTION_GDBSERVER                        0x20
 #define SECTION_SWD                              0x40
 #define SECTION_TARGET                           0x80
+#define SECTION_LWIP                            0x100
 
 void watchdog_disable(void);
 void watchdog_enable(void);

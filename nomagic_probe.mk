@@ -32,6 +32,7 @@ endif
 # enable the USB network interface
 ifeq ($(HAS_NCM), yes)
 	DDEFS += -DFEAT_USB_NCM
+	LWIP_DIR = $(NOMAGIC_SRC_FOLDER)lwip/
 endif
 
 CFLAGS  = -c -ggdb3 -MMD -MP
@@ -147,8 +148,15 @@ SRC += $(NOMAGIC_SRC_FOLDER)tinyusb/usb_msc.c
 SRC += $(NOMAGIC_SRC_FOLDER)tinyusb/src/class/msc/msc_device.c
 endif
 
-# USB Network interface (NCM)
+# lwip + USB Network interface (NCM)
 ifeq ($(HAS_NCM), yes)
+include $(NOMAGIC_SRC_FOLDER)lwip/src/Filelists.mk
+SRC += $(NOMAGIC_SRC_FOLDER)lwip/lwip.c
+SRC += $(patsubst %,$(NOMAGIC_SRC_FOLDER)lwip/src%, $(COREFILES))
+SRC += $(patsubst %,$(NOMAGIC_SRC_FOLDER)lwip/src%, $(COREFILES))
+SRC += $(patsubst %,$(NOMAGIC_SRC_FOLDER)lwip/src%, $(CORE4FILES))
+SRC += $(patsubst %,$(NOMAGIC_SRC_FOLDER)lwip/src%, $(APIFILES))
+SRC += $(patsubst %,$(NOMAGIC_SRC_FOLDER)lwip/src%, $(NETIFFILES))
 SRC += $(NOMAGIC_SRC_FOLDER)tinyusb/usb_ncm.c
 SRC += $(NOMAGIC_SRC_FOLDER)tinyusb/src/class/net/ncm_device.c
 endif
@@ -171,6 +179,13 @@ INCDIRS +=$(BIN_FOLDER)
 INCDIRS +=$(NOMAGIC_SRC_FOLDER)cfg/
 INCDIRS +=$(NOMAGIC_SRC_FOLDER)lib/
 INCDIRS +=$(NOMAGIC_SRC_FOLDER)tinyusb/src/
+ifeq ($(HAS_NCM), yes)
+INCDIRS +=$(NOMAGIC_SRC_FOLDER)lwip/
+#LWIP_INCLUDE_DIRS
+INCDIRS +=$(NOMAGIC_SRC_FOLDER)lwip/src/include/
+INCDIRS +=$(NOMAGIC_SRC_FOLDER)lwip/contrib/
+endif
+
 INCDIR = $(patsubst %,-I%, $(INCDIRS))
 
 
