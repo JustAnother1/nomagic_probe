@@ -665,7 +665,7 @@ _Noreturn void Reset_Handler(void)
     // wait for the clock generator to restart (2 clock cycles of clock source)
 
     // power down ROSC
-    ROSC->CTRL = 0x00d1efa4;
+    // ROSC->CTRL = 0x00d1efa4;  // ROSC still needed as source of randomness
     // ROSC = off; XOSC = 12 MHz; PLL_SYS = 125 MHz
     // clk_ref = 12 MHz; clk_sys = 125 MHz; clk_peri = 125 MHz
 

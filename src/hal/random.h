@@ -13,12 +13,12 @@
  *
  */
 
-#ifndef NOMAGIC_PROBE_SRC_LWIP_LWIP_H_
-#define NOMAGIC_PROBE_SRC_LWIP_LWIP_H_
+#ifndef NOMAGIC_PROBE_SRC_HAL_RANDOM_H_
+#define NOMAGIC_PROBE_SRC_HAL_RANDOM_H_
 
+#include <stdint.h>
 
-void network_stack_init(void);
-void network_stack_tick(void);
+// This is very very bad randomness !
+uint32_t rosc_rand(void);
 
-
-#endif /* NOMAGIC_PROBE_SRC_LWIP_LWIP_H_ */
+#endif /* NOMAGIC_PROBE_SRC_HAL_RANDOM_H_ */

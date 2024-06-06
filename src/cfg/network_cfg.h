@@ -13,12 +13,21 @@
  *
  */
 
-#ifndef NOMAGIC_PROBE_SRC_LWIP_LWIP_H_
-#define NOMAGIC_PROBE_SRC_LWIP_LWIP_H_
+#ifndef NOMAGIC_PROBE_SRC_CFG_NETWORK_CFG_H_
+#define NOMAGIC_PROBE_SRC_CFG_NETWORK_CFG_H_
 
+#include <stdbool.h>
+#include "lwip/src/include/lwip/ip4_addr.h"
 
-void network_stack_init(void);
-void network_stack_tick(void);
+typedef struct {
+    ip4_addr_t ip;
+    ip4_addr_t netmask;
+    ip4_addr_t gateway;
+} network_cfg_typ;
 
+extern network_cfg_typ net_cfg;
 
-#endif /* NOMAGIC_PROBE_SRC_LWIP_LWIP_H_ */
+void network_cfg_load(void);
+bool network_cfg_is_network_enabled(void);
+
+#endif /* NOMAGIC_PROBE_SRC_CFG_NETWORK_CFG_H_ */

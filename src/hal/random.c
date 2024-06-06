@@ -13,12 +13,17 @@
  *
  */
 
-#ifndef NOMAGIC_PROBE_SRC_LWIP_LWIP_H_
-#define NOMAGIC_PROBE_SRC_LWIP_LWIP_H_
+#include "random.h"
+#include "hw/ROSC.h"
 
 
-void network_stack_init(void);
-void network_stack_tick(void);
-
-
-#endif /* NOMAGIC_PROBE_SRC_LWIP_LWIP_H_ */
+uint32_t rosc_rand(void)
+{
+    uint32_t random = 0;
+    for(int i = 0; i < 32; i++)
+    {
+        uint32_t random_bit = 0x1 & ROSC->RANDOMBIT;
+        random = random << 1 | random_bit;
+    }
+    return random;
+}

@@ -17,6 +17,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 // The Interrupt with the lowest Priority Number is the most important
 #define TIMER_IRQ_0_PRIORITY         3
@@ -118,5 +119,6 @@ static inline void NVIC_DisableIRQ(const int32_t IRQn)
 }
 
 bool startup_report(const uint32_t loop);
+_Noreturn void error_state(void);
 
 #endif // HAL_STARTUP_H

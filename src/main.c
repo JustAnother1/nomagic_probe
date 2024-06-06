@@ -38,6 +38,7 @@
 #endif
 #ifdef FEAT_USB_NCM
 #include "lwip.h"
+#include "cfg/network_cfg.h"
 #endif
 
 #define TASK_LOOP_0           0x1ul
@@ -70,8 +71,6 @@ static void init_0(void)
     init_printf(NULL, usb_cdc_putc);
 #endif
 
-    usb_init();
-
 #ifdef FEAT_USB_MSC
     file_system_init();
 #endif
@@ -83,8 +82,11 @@ static void init_0(void)
 #endif
 
 #ifdef FEAT_USB_NCM
-    lwip_init();
+    network_cfg_load();
+    network_stack_init();
 #endif
+
+    usb_init();
 
 #if (defined FEAT_DEBUG_UART) || (defined FEAT_DEBUG_CDC)
     cli_init(); // should be last
@@ -124,9 +126,13 @@ static void loop_0(void)
 #endif
 
 #ifdef FEAT_USB_NCM
-    watchdog_enter_section(SECTION_LWIP);
-    lwip_tick();
-    watchdog_leave_section(SECTION_LWIP);
+    if(true == network_cfg_is_network_enabled())
+    {
+        watchdog_enter_section(SECTION_LWIP);
+        network_stack_tick();
+        watchdog_leave_section(SECTION_LWIP);
+    }
+    // else no network
 #endif
 }
 

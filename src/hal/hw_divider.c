@@ -42,7 +42,7 @@ static inline void waitForDivisor(void)
     __asm__ __volatile__ ("nop");
     __asm__ __volatile__ ("nop");
 }
-
+/* TODO
 int32_t __aeabi_idiv(int32_t numerator, int32_t denominator)
 {
     int32_t div;
@@ -65,8 +65,7 @@ int32_t __aeabi_idiv(int32_t numerator, int32_t denominator)
     (void)rem;
     return div;
 }
-
-
+*/
 uint32_t __aeabi_uidiv(uint32_t numerator, uint32_t denominator)
 {
     uint32_t div;

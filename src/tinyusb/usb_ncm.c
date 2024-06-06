@@ -45,11 +45,12 @@
 #include <stdint.h>
 #include "usb_ncm.h"
 #include "tusb.h"
+#include "cfg/network_cfg.h"
 
 // shared between tud_network_recv_cb() and service_traffic()
 // static struct pbuf *received_frame;
 
-static bool network_enabled;
+
 
 static void service_traffic(void);
 
@@ -60,18 +61,18 @@ uint8_t tud_network_mac_address[6] = {0x02, 0x02, 0x84, 0x6A, 0x96, 0x00};
 
 void usb_ncm_init(void)
 {
-    network_enabled = false;
-    // TODO check if we want to have the network interface active or not
+    if(true == network_cfg_is_network_enabled())
+    {
+        // TODO
+    }
 }
 
 void usb_ncm_tick(void)
 {
-    service_traffic();
-}
-
-bool is_network_enabled(void)
-{
-    return network_enabled;
+    if(true == network_cfg_is_network_enabled())
+    {
+        service_traffic();
+    }
 }
 
 void tud_network_init_cb(void)

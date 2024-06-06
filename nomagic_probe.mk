@@ -39,7 +39,7 @@ CFLAGS  = -c -ggdb3 -MMD -MP
 CFLAGS += -O3
 # sometimes helps with debugging:
 # CFLAGS += -O0
-# CFLAGS += -save-temps=obj
+CFLAGS += -save-temps=obj
 
 CFLAGS += -std=c17
 CFLAGS += -mcpu=cortex-m0plus -mthumb
@@ -55,10 +55,10 @@ LFLAGS  = -ffreestanding -nostartfiles
 # disabled the following due to this issue:
 #  undefined reference to `__gnu_thumb1_case_si'
 # LFLAGS += -nostdlib -nolibc -nodefaultlibs 
-# LFLAGS += -specs=nosys.specs
+LFLAGS += -specs=nosys.specs
 # LFLAGS += -fno-builtin -fno-builtin-function
 # https://wiki.osdev.org/Libgcc : All code compiled with GCC must be linked with libgcc. 
-LFLAGS += -lgcc
+# LFLAGS += -lgcc
 LFLAGS += -Wl,--gc-sections,-Map=$(BIN_FOLDER)$(PROJECT).map -g
 LFLAGS += -fno-common -T$(LKR_SCRIPT)
 
@@ -100,6 +100,7 @@ SRC += $(NOMAGIC_SRC_FOLDER)hal/boot_rom.c
 SRC += $(NOMAGIC_SRC_FOLDER)hal/flash.c
 SRC += $(NOMAGIC_SRC_FOLDER)hal/qspi.c
 SRC += $(NOMAGIC_SRC_FOLDER)hal/time_base.c
+SRC += $(NOMAGIC_SRC_FOLDER)hal/random.c
 
 # command line interface (debug - UART0 / USB-CDC)
 ifeq ($(HAS_CLI), yes)
@@ -120,6 +121,9 @@ SRC += $(NOMAGIC_SRC_FOLDER)lib/printf.c
 SRC += $(NOMAGIC_SRC_FOLDER)lib/strchr.c
 SRC += $(NOMAGIC_SRC_FOLDER)lib/strlen.c
 SRC += $(NOMAGIC_SRC_FOLDER)lib/strncmp.c
+
+# configuration
+SRC += $(NOMAGIC_SRC_FOLDER)cfg/network_cfg.c
 
 # SWD
 SRC += $(NOMAGIC_SRC_FOLDER)swd/swd_engine.c
@@ -153,9 +157,7 @@ ifeq ($(HAS_NCM), yes)
 include $(NOMAGIC_SRC_FOLDER)lwip/src/Filelists.mk
 SRC += $(NOMAGIC_SRC_FOLDER)lwip/lwip.c
 SRC += $(patsubst %,$(NOMAGIC_SRC_FOLDER)lwip/src%, $(COREFILES))
-SRC += $(patsubst %,$(NOMAGIC_SRC_FOLDER)lwip/src%, $(COREFILES))
 SRC += $(patsubst %,$(NOMAGIC_SRC_FOLDER)lwip/src%, $(CORE4FILES))
-SRC += $(patsubst %,$(NOMAGIC_SRC_FOLDER)lwip/src%, $(APIFILES))
 SRC += $(patsubst %,$(NOMAGIC_SRC_FOLDER)lwip/src%, $(NETIFFILES))
 SRC += $(NOMAGIC_SRC_FOLDER)tinyusb/usb_ncm.c
 SRC += $(NOMAGIC_SRC_FOLDER)tinyusb/src/class/net/ncm_device.c

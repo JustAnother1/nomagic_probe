@@ -39,6 +39,7 @@
 
 #include "usb_descriptors.h"
 #include "usb_ncm.h"
+#include "cfg/network_cfg.h"
 
 // TinyUSB:
 #include "tinyusb/src/tusb.h"
@@ -235,8 +236,8 @@ uint8_t const * tud_descriptor_device_cb(void)
 }
 
 void update_descriptors(void)
-{/*
-    if(true == is_network_enabled())
+{
+    if(true == network_cfg_is_network_enabled())
     {
         uint32_t help;
 // TUD_CONFIG_DESCRIPTOR = 9 bytes
@@ -259,14 +260,13 @@ void update_descriptors(void)
         // interface count = idx 4
         usbd_desc_cfg[4] = USBD_ITF_MAX;
         // total length =  idx 2(low)+3(high)
-        help = USBD_DESC_LEN + TUD_CDC_NCM_DESC_LEN;
+        help = USBD_DESC_LEN;
         usbd_desc_cfg[2] = (help&0xff);
         usbd_desc_cfg[3]= ((help<<8)&0xff);
 // TUD_CDC_DESCRIPTOR = 66 bytes (TUD_CDC_DESC_LEN)
 // TUD_MSC_DESCRIPTOR = 23 bytes (TUD_MSC_DESC_LEN)
 // TUD_CDC_NCM_DESCRIPTOR = 85 bytes (TUD_CDC_NCM_DESC_LEN)
     }
-    */
 }
 
 #ifdef FEAT_USB_NCM
