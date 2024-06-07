@@ -38,7 +38,6 @@
  */
 
 #include "usb_descriptors.h"
-#include "usb_ncm.h"
 #include "cfg/network_cfg.h"
 
 // TinyUSB:

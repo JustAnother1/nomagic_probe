@@ -39,7 +39,7 @@ CFLAGS  = -c -ggdb3 -MMD -MP
 CFLAGS += -O3
 # sometimes helps with debugging:
 # CFLAGS += -O0
-CFLAGS += -save-temps=obj
+# CFLAGS += -save-temps=obj
 
 CFLAGS += -std=c17
 CFLAGS += -mcpu=cortex-m0plus -mthumb
@@ -154,12 +154,44 @@ endif
 
 # lwip + USB Network interface (NCM)
 ifeq ($(HAS_NCM), yes)
-include $(NOMAGIC_SRC_FOLDER)lwip/src/Filelists.mk
+#include $(NOMAGIC_SRC_FOLDER)lwip/src/Filelists.mk
 SRC += $(NOMAGIC_SRC_FOLDER)lwip/lwip.c
-SRC += $(patsubst %,$(NOMAGIC_SRC_FOLDER)lwip/src%, $(COREFILES))
-SRC += $(patsubst %,$(NOMAGIC_SRC_FOLDER)lwip/src%, $(CORE4FILES))
-SRC += $(patsubst %,$(NOMAGIC_SRC_FOLDER)lwip/src%, $(NETIFFILES))
-SRC += $(NOMAGIC_SRC_FOLDER)tinyusb/usb_ncm.c
+#SRC += $(patsubst %,$(NOMAGIC_SRC_FOLDER)lwip/src%, $(COREFILES))
+#COREFILES
+SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/init.c
+SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/def.c
+#SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/dns.c
+SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/inet_chksum.c
+SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/ip.c
+SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/mem.c
+SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/memp.c
+SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/netif.c
+SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/pbuf.c
+SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/raw.c
+SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/stats.c
+SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/sys.c
+SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/altcp.c
+SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/altcp_alloc.c
+SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/altcp_tcp.c
+SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/tcp.c
+SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/tcp_in.c
+SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/tcp_out.c
+SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/timeouts.c
+SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/udp.c
+
+#SRC += $(patsubst %,$(NOMAGIC_SRC_FOLDER)lwip/src%, $(CORE4FILES))
+#CORE4FILES
+#SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/ipv4/acd.c
+#SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/ipv4/autoip.c
+#SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/ipv4/dhcp.c
+SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/ipv4/etharp.c
+SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/ipv4/icmp.c
+SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/ipv4/igmp.c
+SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/ipv4/ip4_frag.c
+SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/ipv4/ip4.c
+SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/ipv4/ip4_addr.c
+#NETIFFILES
+SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/netif/ethernet.c 
 SRC += $(NOMAGIC_SRC_FOLDER)tinyusb/src/class/net/ncm_device.c
 endif
 
@@ -198,9 +230,16 @@ $(BIN_FOLDER)version.h:
 	@echo -n "#define VERSION \"" > $(BIN_FOLDER)version.h
 	@cat $(NOMAGIC_FOLDER)version.txt >> $(BIN_FOLDER)version.h
 	@echo " $(GITREF)\"" >> $(BIN_FOLDER)version.h
+	@cat $(BIN_FOLDER)version.h
 
 $(BIN_FOLDER)$(NOMAGIC_SRC_FOLDER)cli/cli.o: $(NOMAGIC_SRC_FOLDER)cli/cli.c $(BIN_FOLDER)version.h
 	@echo ""
-	@echo "=== compiling $@"
+	@echo "=== compiling (cli) $@"
 	@$(MKDIR_P) $(@D)
 	$(CC) $(CFLAGS) $(DDEFS) $(INCDIR) $< -o $@
+
+$(BIN_FOLDER)$(NOMAGIC_SRC_FOLDER)lwip/src/%o: $(NOMAGIC_SRC_FOLDER)lwip/src/%c
+	@echo ""
+	@echo "=== compiling (lwip) $@"
+	@$(MKDIR_P) $(@D)
+	$(CC) $(CFLAGS) -Wno-address -Wno-conversion $(DDEFS) $(INCDIR) $< -o $@
