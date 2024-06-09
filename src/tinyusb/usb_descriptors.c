@@ -150,10 +150,10 @@ static uint8_t usbd_desc_cfg[USBD_DESC_MAX_LEN] = {
     TUD_CDC_NCM_DESCRIPTOR(USBD_ITF_NCM,              // Interface number
                            USBD_STR_INTERFACE,        // description string index
                            USBD_STR_MAC,              // MAC address string index
-                           0,                         // EP notification address (in)
+                           EPNUM_NCM_NOTIFY,          // EP notification address (in)
                            64,                        // EP notification size (bytes)
                            EPNUM_NCM_OUT,             // EP data address (out)
-                           0,                         // EP data address (in)
+                           EPNUM_NCM_IN,              // EP data address (in)
                            CFG_TUD_NET_ENDPOINT_SIZE, // EP data size (bytes)
                            CFG_TUD_NET_MTU),          // max segment size (bytes)
 #endif
@@ -192,10 +192,10 @@ uint16_t const* tud_descriptor_string_cb(uint8_t index, uint16_t langid)
     {
         for(uint32_t i = 0; i < sizeof(tud_network_mac_address); i++)
         {
-            desc_str[2*i] = hex(tud_network_mac_address[i] >> 4);
-            desc_str[(2*i) + 1] = hex(tud_network_mac_address[i]);
+            desc_str[2*i + 1] = hex(tud_network_mac_address[i] >> 4);
+            desc_str[(2*i) + 2] = hex(tud_network_mac_address[i]);
         }
-        len = 2*sizeof(tud_network_mac_address);
+        len = 2 * sizeof(tud_network_mac_address);
     }
 #endif
     else
@@ -241,8 +241,8 @@ void update_descriptors(void)
         uint32_t help;
 // TUD_CONFIG_DESCRIPTOR = 9 bytes
         // adjust size + add end points of Network
-        // interface count = idx 4
-        usbd_desc_cfg[4] = USBD_ITF_MAX + 1;
+        // interface count = idx 5
+        usbd_desc_cfg[4] = USBD_ITF_MAX + 2;
         // total length =  idx 2(low)+3(high)
         help = USBD_DESC_LEN + TUD_CDC_NCM_DESC_LEN;
         usbd_desc_cfg[2] = (help&0xff);
