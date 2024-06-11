@@ -22,6 +22,26 @@
 #define LWIP_NO_CTYPE_H  1
 #define LWIP_ERR_T       int32_t
 
+// printf("foo = %" + ...
+
+// hex 8 bit
+#define X8_F  "02x"
+// decimal 16 bit unsigned
+#define U16_F "d"
+// decimal 16 bit signed
+#define S16_F "d"
+// hex 16 bit
+#define X16_F "04x"
+// decimal 32 bit unsigned
+#define U32_F "ld"
+// decimal 32 bit signed
+#define S32_F "ld"
+// hex 32 bit
+#define X32_F "08lx"
+// size_t
+#define SZT_F "08x"
+
+
 // TODO
 
 #define LWIP_CONST_CAST(target_type, val) ((target_type)val)

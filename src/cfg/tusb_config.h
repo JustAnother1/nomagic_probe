@@ -59,4 +59,8 @@
 
 #define CFG_TUD_TASK_QUEUE_SZ   32
 
+// NCM performance tuning (more buffered frames)
+#define CFG_TUD_NCM_OUT_NTB_N 2
+#define CFG_TUD_NCM_IN_NTB_N  3
+
 #endif /* SRC_CFG_TUSB_CONFIG_H_ */

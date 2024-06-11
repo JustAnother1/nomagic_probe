@@ -12,7 +12,7 @@ DDEFS += -DDISABLE_WATCHDOG_FOR_DEBUG=0
 #DDEFS += -DENABLE_CORE_1=1
 # use BOOT ROM (for flash functions,...)
 DDEFS += -DBOOT_ROM_ENABLED=1
-
+DDEFS += -DLWIP_DEBUG=1
 # enable USB Mass Storage (Thumb Drive)
 ifeq ($(HAS_MSC), yes)
 	DDEFS += -DFEAT_USB_MSC
@@ -54,11 +54,11 @@ LKR_SCRIPT = $(NOMAGIC_SRC_FOLDER)hal/RP2040.ld
 LFLAGS  = -ffreestanding -nostartfiles
 # disabled the following due to this issue:
 #  undefined reference to `__gnu_thumb1_case_si'
-# LFLAGS += -nostdlib -nolibc -nodefaultlibs 
+LFLAGS += -nostdlib -nolibc -nodefaultlibs 
 LFLAGS += -specs=nosys.specs
-# LFLAGS += -fno-builtin -fno-builtin-function
+LFLAGS += -fno-builtin -fno-builtin-function
 # https://wiki.osdev.org/Libgcc : All code compiled with GCC must be linked with libgcc. 
-# LFLAGS += -lgcc
+#LFLAGS += -lgcc
 LFLAGS += -Wl,--gc-sections,-Map=$(BIN_FOLDER)$(PROJECT).map -g
 LFLAGS += -fno-common -T$(LKR_SCRIPT)
 
@@ -114,6 +114,7 @@ endif
 # functions usually available from standard libraries
 SRC += $(NOMAGIC_SRC_FOLDER)lib/ctype.c
 SRC += $(NOMAGIC_SRC_FOLDER)lib/atoi.c
+SRC += $(NOMAGIC_SRC_FOLDER)lib/memcmp.c
 SRC += $(NOMAGIC_SRC_FOLDER)lib/memcpy.c
 SRC += $(NOMAGIC_SRC_FOLDER)lib/memmove.c
 SRC += $(NOMAGIC_SRC_FOLDER)lib/memset.c
@@ -154,10 +155,8 @@ endif
 
 # lwip + USB Network interface (NCM)
 ifeq ($(HAS_NCM), yes)
-#include $(NOMAGIC_SRC_FOLDER)lwip/src/Filelists.mk
+SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/api/err.c
 SRC += $(NOMAGIC_SRC_FOLDER)lwip/lwip.c
-#SRC += $(patsubst %,$(NOMAGIC_SRC_FOLDER)lwip/src%, $(COREFILES))
-#COREFILES
 SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/init.c
 SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/def.c
 #SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/dns.c
@@ -167,8 +166,8 @@ SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/mem.c
 SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/memp.c
 SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/netif.c
 SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/pbuf.c
-SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/raw.c
-SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/stats.c
+#SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/raw.c
+#SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/stats.c
 SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/sys.c
 SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/altcp.c
 SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/altcp_alloc.c
@@ -178,19 +177,15 @@ SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/tcp_in.c
 SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/tcp_out.c
 SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/timeouts.c
 SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/udp.c
-
-#SRC += $(patsubst %,$(NOMAGIC_SRC_FOLDER)lwip/src%, $(CORE4FILES))
-#CORE4FILES
 #SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/ipv4/acd.c
 #SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/ipv4/autoip.c
 #SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/ipv4/dhcp.c
 SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/ipv4/etharp.c
 SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/ipv4/icmp.c
-SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/ipv4/igmp.c
+#SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/ipv4/igmp.c
 SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/ipv4/ip4_frag.c
 SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/ipv4/ip4.c
 SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/ipv4/ip4_addr.c
-#NETIFFILES
 SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/netif/ethernet.c 
 SRC += $(NOMAGIC_SRC_FOLDER)tinyusb/src/class/net/ncm_device.c
 endif

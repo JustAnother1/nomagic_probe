@@ -14,9 +14,12 @@
  */
 #include <stdbool.h>
 #include "network_cfg.h"
+#include "lwip/src/include/lwip/ip_addr.h"
+
+network_cfg_typ net_cfg;
 
 static bool network_enabled;
-network_cfg_typ net_cfg;
+
 
 void network_cfg_load(void)
 {
@@ -24,10 +27,18 @@ void network_cfg_load(void)
     network_enabled = true;
     // 192 = 0xC0
     // 168 = 0xA8
-    // 66 = 0x42
-    net_cfg.ip.addr =      0xC0A84201; // 192.168.66.1
-    net_cfg.netmask.addr = 0xffffff00; // 255.255.255.0
-    net_cfg.gateway.addr = 0xC0A84201; // 192.168.66.1
+    //  66 = 0x42
+    // net_cfg.ip.addr =      0xC0A84201; // 192.168.66.1
+    // net_cfg.netmask.addr = 0xffffff00; // 255.255.255.0
+    // net_cfg.gateway.addr = 0xC0A84201; // 192.168.66.1
+
+    net_cfg.ip.addr =      0x0142A8C0; // 192.168.66.1
+    net_cfg.netmask.addr = 0x00ffffff; // 255.255.255.0
+    net_cfg.gateway.addr = 0x0142a8c0; // 192.168.66.1
+
+    // net_cfg.ip.addr =      IPADDR4_INIT_BYTES(192, 168, 66,  1);
+    // net_cfg.netmask.addr = IPADDR4_INIT_BYTES(255, 255, 255, 0);
+    // net_cfg.gateway.addr = IPADDR4_INIT_BYTES(192, 168, 66,  1);
 }
 
 bool network_cfg_is_network_enabled(void)
