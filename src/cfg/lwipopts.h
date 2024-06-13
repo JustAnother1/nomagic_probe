@@ -31,6 +31,7 @@
 #define LWIP_DNS                        0
 #define LWIP_IGMP                       0
 #define LWIP_DHCP                       0
+#define LWIP_IPV6                       0
 
 // active needed features
 #define LWIP_SINGLE_NETIF               1
@@ -40,6 +41,10 @@
 #define LWIP_UDP                        1
 #define LWIP_ICMP                       1
 
+#define LWIP_IP_ACCEPT_UDP_PORT(dst_port) (((dst_port) == PP_NTOHS(67)) || ((dst_port) == PP_NTOHS(68)))
+
+
+// DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG
 
 // LWIP_DBG_OFF
 // LWIP_DBG_LEVEL_ALL
@@ -189,9 +194,5 @@
  * DHCP6_DEBUG: Enable debugging in dhcp6.c.
  */
 #define DHCP6_DEBUG                     LWIP_DBG_OFF
-
-
-
-
 
 #endif /* NOMAGIC_PROBE_SRC_CFG_LWIPOPTS_H_ */

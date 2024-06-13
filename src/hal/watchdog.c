@@ -166,7 +166,9 @@ bool watchdog_report(const uint32_t loop)
 
 void watchdog_report_issue(const uint32_t issue)
 {
+    debug_line(" ");
     WATCHDOG->SCRATCH7 = WATCHDOG->SCRATCH7 | issue;
+    debug_line("watch dog : reported issues 0x%08lx", WATCHDOG->SCRATCH7);
 }
 
 void watchdog_enter_section(const uint32_t section)
@@ -194,5 +196,6 @@ void watchdog_leave_section(const uint32_t section)
 
 void watchdog_report_value(const uint32_t value)
 {
+    debug_line("watch dog : reported value 0x%08lx", value);
     WATCHDOG->SCRATCH4 = value;
 }

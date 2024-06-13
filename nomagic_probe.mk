@@ -155,8 +155,9 @@ endif
 
 # lwip + USB Network interface (NCM)
 ifeq ($(HAS_NCM), yes)
-SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/api/err.c
 SRC += $(NOMAGIC_SRC_FOLDER)lwip/lwip.c
+SRC += $(NOMAGIC_SRC_FOLDER)lwip/dhcp_server.c
+SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/api/err.c
 SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/init.c
 SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/def.c
 #SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/dns.c
@@ -186,6 +187,15 @@ SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/ipv4/icmp.c
 SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/ipv4/ip4_frag.c
 SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/ipv4/ip4.c
 SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/ipv4/ip4_addr.c
+#SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/ipv6/dhcp6.c 
+#SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/ipv6/ethip6.c 
+#SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/ipv6/icmp6.c 
+#SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/ipv6/inet6.c 
+#SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/ipv6/ip6.c 
+#SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/ipv6/ip6_addr.c 
+#SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/ipv6/ip6_frag.c 
+#SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/ipv6/mld6.c 
+#SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/ipv6/nd6.c
 SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/netif/ethernet.c 
 SRC += $(NOMAGIC_SRC_FOLDER)tinyusb/src/class/net/ncm_device.c
 endif

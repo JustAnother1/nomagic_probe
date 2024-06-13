@@ -75,6 +75,7 @@ In mainloop mode, only "raw" APIs can be used. The user has two possibilities to
 #include "cfg/network_cfg.h"
 #include "hal/time_base.h"
 #include "probe_api/debug_log.h"
+#include "dhcp_server.h"
 // lwip
 #include "lwip/src/include/lwip/init.h"
 #include "lwip/src/include/lwip/netif.h"
@@ -102,12 +103,6 @@ static uint8_t  xmt_buff[CFG_TUD_NET_MTU + 10];    // MTU plus some margin
 static volatile uint16_t xmt_buff_len = 0;
 
 
-/* this is used by this code, ./class/net/net_driver.c, and usb_descriptors.c */
-/* ideally speaking, this should be generated from the hardware's unique ID (if available) */
-/* it is suggested that the first byte is 0x02 to indicate a link-local address */
-uint8_t tud_network_mac_address[6] = {0x02, 0x02, 0x84, 0x6A, 0x96, 0x00};
-
-
 void network_stack_init(void)
 {
     received_frame = NULL;
@@ -116,7 +111,7 @@ void network_stack_init(void)
         lwip_init();
 
         netif_add(&ncm_netif, // struct netif *netif
-                  &net_cfg.ip,
+                  &net_cfg.probe_ip,
                   &net_cfg.netmask,
                   &net_cfg.gateway,
                   NULL, // void *state
@@ -124,7 +119,10 @@ void network_stack_init(void)
                   ethernet_input// netif_input_function // netif_input_fn input
                   );
         netif_set_default(&ncm_netif);
-        netif_set_up(&ncm_netif);
+        netif_set_up(&ncm_netif);  // TODO only set(_link)_up if the USB side is connected to the PC. set(_link)_down if the USB disconnects.
+        dhcp_server_init();
+        etharp_gratuitous(&ncm_netif);
+        // TODO can we add the already known IP and MAC of the host pc into the ARP Cache? (lwIP seems to not support static entries in the ARP cache :-( )
     }
     // else no network
 }
@@ -134,8 +132,8 @@ void network_stack_tick(void)
     if(NULL != received_frame)
     {
         // handle any packet received from USB ( tud_network_recv_cb() )
-        // debug_msg("received packet with size %d / %d !", received_frame->len, received_frame->tot_len);
-        // debug_msg("buffer @ 0x%08lx", (uint32_t)(received_frame->payload));
+        // debug_line("received packet with size %d / %d !", received_frame->len, received_frame->tot_len);
+        // debug_line("buffer @ 0x%08lx", (uint32_t)(received_frame->payload));
         ethernet_input(received_frame, &ncm_netif);
         // pbuf_free(received_frame);
         received_frame = NULL;
@@ -175,16 +173,11 @@ static err_t netif_init_function(struct netif *netif)
     netif->linkoutput = linkoutput_fn;
     netif->output = etharp_output;
     // netif->state = // void*  // TODO not yet needed
-    /* the lwip virtual MAC address must be different from the host's; to ensure this, we toggle the LSbit */
     netif->hwaddr_len = sizeof(tud_network_mac_address);
     memcpy(netif->hwaddr, tud_network_mac_address, sizeof(tud_network_mac_address));
-    netif->hwaddr[5] ^= 0x01;     // don't know what for, but everybody is doing it...
-    netif->hwaddr_len = 6;
-    memcpy(netif->hwaddr, tud_network_mac_address, 6);
+    // the lwip virtual MAC address must be different from the host's; to ensure this, we toggle the LSbit
+    netif->hwaddr[5] ^= 0x01;
     netif->num = 0;
-#if LWIP_IPV6
-    netif->output_ip6 = ip6_output_fn;
-#endif
 
     // if the network is re-initializing and we have a leftover packet, we must do a cleanup
     if(NULL != received_frame)
@@ -249,7 +242,7 @@ bool tud_network_recv_cb(const uint8_t *src, uint16_t size)
         {
             if(NULL == p->payload)
             {
-                debug_msg("no payload buffer !");
+                debug_line("ERROR: no payload buffer !");
                 return false;
             }
             // pbuf_alloc() has already initialized struct; all we need to do is copy the data

@@ -13,25 +13,11 @@
  *
  */
 
-#ifndef NOMAGIC_PROBE_SRC_CFG_NETWORK_CFG_H_
-#define NOMAGIC_PROBE_SRC_CFG_NETWORK_CFG_H_
+#ifndef NOMAGIC_PROBE_SRC_LWIP_DHCP_SERVER_H_
+#define NOMAGIC_PROBE_SRC_LWIP_DHCP_SERVER_H_
 
 #include <stdbool.h>
-#include "lwip/src/include/lwip/ip4_addr.h"
 
-typedef struct {
-    ip4_addr_t probe_ip;
-    ip4_addr_t host_pc_ip;
-    ip4_addr_t netmask;
-    ip4_addr_t gateway;
-} network_cfg_typ;
+bool dhcp_server_init(void);
 
-extern network_cfg_typ net_cfg;
-
-extern uint8_t tud_network_mac_address[6];
-
-
-void network_cfg_load(void);
-bool network_cfg_is_network_enabled(void);
-
-#endif /* NOMAGIC_PROBE_SRC_CFG_NETWORK_CFG_H_ */
+#endif /* NOMAGIC_PROBE_SRC_LWIP_DHCP_SERVER_H_ */
