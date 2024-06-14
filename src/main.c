@@ -40,6 +40,7 @@
 #include "lwip.h"
 #include "cfg/network_cfg.h"
 #endif
+#include "cfg/serial_cfg.h"
 
 #define TASK_LOOP_0           0x1ul
 #define TASK_LOOP_1           0x2ul
@@ -75,11 +76,7 @@ static void init_0(void)
     file_system_init();
 #endif
 
-    target_init();
-
-#ifdef FEAT_GDB_SERVER
-    gdbserver_init();
-#endif
+    serial_cfg_load();
 
 #ifdef FEAT_USB_NCM
     network_cfg_load();
@@ -88,8 +85,14 @@ static void init_0(void)
 
     usb_init();
 
+    target_init();
+
+#ifdef FEAT_GDB_SERVER
+    gdbserver_init();
+#endif
+
 #if (defined FEAT_DEBUG_UART) || (defined FEAT_DEBUG_CDC)
-    cli_init(); // should be last
+    cli_init(); // should be last to signal that initialization is complete.
 #endif
 }
 
