@@ -16,7 +16,7 @@
 #include "cmd_qsupported.h"
 #include "hal/debug_uart.h"
 #include "probe_api/gdb_packets.h"
-#include "cfg/gdbserver_cfg.h"
+#include "cfg/serial_cfg.h"
 
 // openocd:
 // --------

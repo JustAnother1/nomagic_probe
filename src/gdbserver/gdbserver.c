@@ -15,7 +15,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "gdbserver.h"
-#include "cfg/gdbserver_cfg.h"
+#include "cfg/serial_cfg.h"
 #include "probe_api/gdb_packets.h"
 #include "probe_api/hex.h"
 #include "probe_api/debug_log.h"
@@ -67,7 +67,7 @@ void gdbserver_init(void)
 
 void gdbserver_tick(void)
 {
-    if(GDBSERVER_IS_CONNECTED)
+    if(true == serial_gdb_is_connected())
     {
         if(false == connected)
         {
@@ -91,7 +91,7 @@ void reply_packet_prepare(void)
     reply_buffer[0] = '$';
     reply_length = 1;
     sum = 0;  // checksum does not include the '$'
-    GDBSERVER_SEND_BYTES(reply_buffer, 1);
+    serial_gdb_send_bytes(reply_buffer, 1);
 }
 
 void reply_packet_add(char* data)
@@ -104,7 +104,7 @@ void reply_packet_add(char* data)
         length++;
         data++;
     }
-    GDBSERVER_SEND_BYTES(&(reply_buffer[reply_length]), length);
+    serial_gdb_send_bytes(&(reply_buffer[reply_length]), length);
     reply_length = reply_length + length;
 }
 
@@ -112,7 +112,7 @@ void reply_packet_add_max(char* data, uint32_t length)
 {
     uint32_t i;
     memcpy(&(reply_buffer[reply_length]), data, length);
-    GDBSERVER_SEND_BYTES(&(reply_buffer[reply_length]), length);
+    serial_gdb_send_bytes(&(reply_buffer[reply_length]), length);
     for(i = 0; i < length; i++)
     {
         sum = sum + (uint8_t)(*data);
@@ -155,7 +155,7 @@ void reply_packet_add_hex(uint32_t data, uint32_t digits)
     {
         reply_buffer[reply_length + i] = (uint8_t)(buf[(report - 1) -i]);
         sum = sum + (uint8_t)(buf[(report - 1) -i]);
-        GDBSERVER_SEND_BYTES(&(reply_buffer[reply_length + i]), 1);
+        serial_gdb_send_bytes(&(reply_buffer[reply_length + i]), 1);
     }
     reply_length = reply_length + report;
 }
@@ -177,18 +177,18 @@ void reply_packet_send(void)
     reply_buffer[reply_length + 2] = (uint8_t)reply_checksum[0]; // low nibble
     reply_buffer[reply_length + 3]  = 0;
     debug_line("gdbs sending: %s", reply_buffer);
-    GDBSERVER_SEND_BYTES(&(reply_buffer[reply_length]), 3);
+    serial_gdb_send_bytes(&(reply_buffer[reply_length]), 3);
     gdb_is_not_busy_anymore();
 }
 
 void send_error_packet(void)
 {
-    GDBSERVER_SEND_STRING("-");
+    serial_gdb_send_string("-");
 }
 
 void send_ack_packet(void)
 {
-    GDBSERVER_SEND_STRING("+");
+    serial_gdb_send_string("+");
 }
 
 void send_unknown_command_reply(void)
@@ -252,14 +252,14 @@ static void communicate_with_gdb(void)
         return;
     }
 
-    num_bytes_received = GDBSERVER_NUM_RECEIVED_BYTES();
+    num_bytes_received = serial_gdb_get_num_received_bytes();
 
     while(0 < num_bytes_received)
     {
         uint32_t i;
         for(i = 0; i < num_bytes_received; i++)
         {
-            uint8_t data = GDBSERVER_GET_NEXT_RECEIVED_BYTE();
+            uint8_t data = serial_gdb_get_next_received_byte();
             switch(state)
             {
                 case CHECKSUM_LOW:
@@ -293,7 +293,7 @@ static void communicate_with_gdb(void)
                         // Transmit error
                         // -> Resent last message
                         debug_line("resending: %s", reply_buffer);
-                        GDBSERVER_SEND_BYTES(reply_buffer, reply_length);
+                        serial_gdb_send_bytes(reply_buffer, reply_length);
                         */
                     }
                     else if(0x03 == data)
@@ -352,7 +352,7 @@ static void communicate_with_gdb(void)
                     break;
             }
         }
-        num_bytes_received = GDBSERVER_NUM_RECEIVED_BYTES();
+        num_bytes_received = serial_gdb_get_num_received_bytes();
     }
     // else no new bytes -> nothing to do
 }

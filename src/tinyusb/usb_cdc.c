@@ -86,7 +86,7 @@ void usb_cdc_send_string(char* str)
     tud_cdc_n_write_flush(INTERFACE);
 }
 
-uint32_t usb_cdc_send_bytes(uint8_t *data, uint32_t length)
+uint32_t usb_cdc_send_bytes(const uint8_t *data, const uint32_t length)
 {
     // the buffer is 64 bytes long, so most of the time a single call will be enough, therefore we have this first case separate and not part of the loop.
     uint32_t bytesSend = tud_cdc_n_write(INTERFACE, data, length);

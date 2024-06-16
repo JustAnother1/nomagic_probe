@@ -17,8 +17,35 @@
 #define NOMAGIC_PROBE_SRC_CFG_SERIAL_CFG_H_
 
 #include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include "tinyusb/usb_cdc.h"
+#include "tinyusb/src/class/cdc/cdc_device.h"
 
+// DEBUG CLI interface
+void serial_debug_send_string(char * str);
+uint32_t serial_debug_send_bytes(const uint8_t * data, const uint32_t length);
+uint32_t serial_debug_get_num_received_bytes(void);
+uint8_t serial_debug_get_next_received_byte(void);
+void serial_debug_putc(void* p, char c);
+
+// GDB Interface
+#define MAX_COMMAND_LENGTH    1025
+#define MAX_REPLY_LENGTH      2000
+
+void serial_gdb_send_string(char * str);
+uint32_t serial_gdb_send_bytes(const uint8_t * data, const uint32_t length);
+uint32_t serial_gdb_get_num_received_bytes(void);
+uint8_t serial_gdb_get_next_received_byte(void);
+void serial_gdb_putc(void* p, char c);
+bool serial_gdb_is_connected(void);
+
+
+// load configuration
 void serial_cfg_load(void);
 bool serial_cfg_is_USB_CDC_enabled(void);
+
 
 #endif /* NOMAGIC_PROBE_SRC_CFG_SERIAL_CFG_H_ */

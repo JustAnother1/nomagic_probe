@@ -16,7 +16,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "util.h"
-#include "cfg/gdbserver_cfg.h"
+#include "cfg/serial_cfg.h"
 #include "probe_api/gdb_packets.h"
 #include "probe_api/hex.h"
 #include "probe_api/debug_log.h"

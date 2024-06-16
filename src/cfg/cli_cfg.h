@@ -33,21 +33,6 @@ typedef struct {
     cmd_func_typ func;
 }cmd_typ;
 
-#ifdef FEAT_DEBUG_UART
-#define SERIAL_SEND_BYTES             debug_uart_send_bytes
-#define SERIAL_NUM_RECEIVED_BYTES     debug_uart_get_num_received_bytes
-#define SERIAL_GET_NEXT_RECEIVED_BYTE debug_uart_get_next_received_byte
-#define SERIAL_TICK                   debug_uart_tick();
-#endif
-
-#ifdef FEAT_DEBUG_CDC
-#define SERIAL_SEND_BYTES             usb_cdc_send_bytes
-#define SERIAL_NUM_RECEIVED_BYTES     usb_cdc_get_num_received_bytes
-#define SERIAL_GET_NEXT_RECEIVED_BYTE usb_cdc_get_next_received_byte
-#define SERIAL_TICK
-// CDC is driven from the USB task, therefore no tick necessary.
-#endif
-
 
 #define MAX_LINE_LENGTH   100
 #define MAX_PARAMETERS    10

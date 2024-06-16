@@ -176,7 +176,7 @@ uint32_t debug_uart_send_bytes(const uint8_t* data, const uint32_t length)
     return i;
 }
 
-void debug_uart_send_String(const char* str)
+void debug_uart_send_String(char* str)
 {
     while(*str != 0)
     {

@@ -45,6 +45,7 @@ void network_cfg_load(void)
     // net_cfg.ip.addr =      IPADDR4_INIT_BYTES(192, 168, 66,  1);
     // net_cfg.netmask.addr = IPADDR4_INIT_BYTES(255, 255, 255, 0);
     // net_cfg.gateway.addr = IPADDR4_INIT_BYTES(192, 168, 66,  1);
+    net_cfg.gdb_port = 3333;
 }
 
 bool network_cfg_is_network_enabled(void)

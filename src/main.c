@@ -66,24 +66,25 @@ static void init_0(void)
 
 #ifdef FEAT_DEBUG_UART
     debug_uart_initialize();
-    init_printf(NULL, debug_putc);
 #endif
-#ifdef FEAT_DEBUG_CDC
-    init_printf(NULL, usb_cdc_putc);
-#endif
+
+init_printf(NULL, serial_debug_putc);
 
 #ifdef FEAT_USB_MSC
     file_system_init();
 #endif
 
-    serial_cfg_load();
-
 #ifdef FEAT_USB_NCM
     network_cfg_load();
-    network_stack_init();
 #endif
 
+    serial_cfg_load();
+
     usb_init();
+
+#ifdef FEAT_USB_NCM
+    network_stack_init();
+#endif
 
     target_init();
 
@@ -114,6 +115,9 @@ static void loop_0(void)
 
 #if (defined FEAT_DEBUG_UART) || (defined FEAT_DEBUG_CDC)
     watchdog_enter_section(SECTION_CLI);
+#if (defined FEAT_DEBUG_UART)
+    debug_uart_tick();
+#endif
     cli_tick();
     watchdog_leave_section(SECTION_CLI);
 #endif

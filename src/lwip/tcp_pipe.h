@@ -13,21 +13,18 @@
  *
  */
 
-#ifndef NOMAGIC_PROBE_SRC_LWIP_LWIP_H_
-#define NOMAGIC_PROBE_SRC_LWIP_LWIP_H_
+#ifndef NOMAGIC_PROBE_SRC_LWIP_TCP_PIPE_H_
+#define NOMAGIC_PROBE_SRC_LWIP_TCP_PIPE_H_
 
 #include <stdbool.h>
 #include <stdint.h>
 
-void network_stack_init(void);
-void network_stack_tick(void);
+typedef struct {
+    struct tcp_pcb * pcb;
+    uint16_t port;
+    bool is_connected;
+} tcp_pipe_def;
 
-// GDB server interface
-void network_gdb_send_string(char * str);
-uint32_t network_gdb_send_bytes(const uint8_t * data, const uint32_t length);
-uint32_t network_gdb_get_num_received_bytes(void);
-uint8_t network_gdb_get_next_received_byte(void);
-void network_gdb_putc(void* p, char c);
-bool network_gdb_is_connected(void);
+bool tcp_pipe_activate(tcp_pipe_def* pipe);
 
-#endif /* NOMAGIC_PROBE_SRC_LWIP_LWIP_H_ */
+#endif /* NOMAGIC_PROBE_SRC_LWIP_TCP_PIPE_H_ */

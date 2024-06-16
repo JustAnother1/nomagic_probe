@@ -158,6 +158,7 @@ endif
 ifeq ($(HAS_NCM), yes)
 SRC += $(NOMAGIC_SRC_FOLDER)lwip/lwip.c
 SRC += $(NOMAGIC_SRC_FOLDER)lwip/dhcp_server.c
+SRC += $(NOMAGIC_SRC_FOLDER)lwip/tcp_pipe.c
 SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/api/err.c
 SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/init.c
 SRC += $(NOMAGIC_SRC_FOLDER)lwip/src/core/def.c

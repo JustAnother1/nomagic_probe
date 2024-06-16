@@ -16,12 +16,6 @@ uint32_t mock_get_num_received_bytes(void);
 bool mock_get_received_bytes(uint8_t *buf, uint32_t length);
 uint8_t mock_get_next_received_byte(void);
 
-#define SERIAL_SEND_BYTES             mock_send_bytes
-#define SERIAL_SEND_STRING            mock_send_String
-#define SERIAL_NUM_RECEIVED_BYTES     mock_get_num_received_bytes
-#define SERIAL_GET_NEXT_RECEIVED_BYTE mock_get_next_received_byte
-#define SERIAL_TICK                   mock_tick();
-
 #define MAX_LINE_LENGTH   100
 #define MAX_PARAMETERS    10
 #define ECHO_ENABLED      mock_echo()

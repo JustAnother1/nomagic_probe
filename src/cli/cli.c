@@ -12,12 +12,14 @@
  * with this program; if not, see <http://www.gnu.org/licenses/>
  *
  */
+
+#include <stdint.h>
+#include <string.h>
 #include "probe_api/cli.h"
 #include "cli_priv.h"
 #include "cfg/cli_cfg.h"
 #include "cfg/cli_commands.h"
-#include <stdint.h>
-#include <string.h>
+#include "cfg/serial_cfg.h"
 #include "hal/watchdog.h"
 #include "probe_api/debug_log.h"
 #include "version.h"
@@ -72,7 +74,7 @@ void cli_welcome(void)
 void cli_tick(void)
 {
     uint32_t num_bytes_received;
-    SERIAL_TICK
+
     // if a command is still executing then do that
     if(true == still_executing)
     {
@@ -103,7 +105,8 @@ void cli_tick(void)
     }
 
     // now we can check if new data arrived
-    num_bytes_received = SERIAL_NUM_RECEIVED_BYTES();
+
+    num_bytes_received = serial_debug_get_num_received_bytes();
     if(0 < num_bytes_received)
     {
         uint32_t i;
@@ -111,10 +114,10 @@ void cli_tick(void)
         {
             if(line_pos < MAX_LINE_LENGTH)
             {
-                uint8_t data = SERIAL_GET_NEXT_RECEIVED_BYTE();
+                uint8_t data = serial_debug_get_next_received_byte();
                 if(ECHO_ENABLED)
                 {
-                    SERIAL_SEND_BYTES(&data, 1);
+                    serial_debug_send_bytes(&data, 1);
                 }
                 // TODO filter out more stuff:
                 // up arrow = 0x1B 0x5B 0x41

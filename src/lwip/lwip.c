@@ -76,6 +76,7 @@ In mainloop mode, only "raw" APIs can be used. The user has two possibilities to
 #include "hal/time_base.h"
 #include "probe_api/debug_log.h"
 #include "dhcp_server.h"
+#include "tcp_pipe.h"
 // lwip
 #include "lwip/src/include/lwip/init.h"
 #include "lwip/src/include/lwip/netif.h"
@@ -102,6 +103,8 @@ static struct pbuf *received_frame;
 static uint8_t  xmt_buff[CFG_TUD_NET_MTU + 10];    // MTU plus some margin
 static volatile uint16_t xmt_buff_len = 0;
 
+// GDB server TCP port
+static tcp_pipe_def gdb_def;
 
 void network_stack_init(void)
 {
@@ -120,9 +123,15 @@ void network_stack_init(void)
                   );
         netif_set_default(&ncm_netif);
         netif_set_up(&ncm_netif);  // TODO only set(_link)_up if the USB side is connected to the PC. set(_link)_down if the USB disconnects.
+        etharp_gratuitous(&ncm_netif); // sending the host the ARP info of the probe might help speed up the connection process.
         dhcp_server_init();
-        etharp_gratuitous(&ncm_netif);
-        // TODO can we add the already known IP and MAC of the host pc into the ARP Cache? (lwIP seems to not support static entries in the ARP cache :-( )
+        if(0 != net_cfg.gdb_port)
+        {
+            // bring up the gdb server port
+            gdb_def.port = net_cfg.gdb_port;
+            tcp_pipe_activate(&gdb_def);
+        }
+
     }
     // else no network
 }
@@ -270,3 +279,49 @@ bool tud_network_recv_cb(const uint8_t *src, uint16_t size)
     return true;
 }
 
+/*
+ *  The following part connects the gdb server to the TCP port.
+ */
+
+// GDB
+
+void network_gdb_send_string(char * str)
+{
+    // send "str" over the network to the host
+    // TODO
+}
+
+uint32_t network_gdb_send_bytes(const uint8_t * data, const uint32_t length)
+{
+    // send "data" bytes over the network to the host
+    // TODO
+    return length;
+}
+
+uint32_t network_gdb_get_num_received_bytes(void)
+{
+    // report the number of bytes received from the host
+    // TODO
+    return 0;
+}
+
+uint8_t network_gdb_get_next_received_byte(void)
+{
+    // return the next byte received from the host
+    // TODO
+    return 0;
+}
+
+void network_gdb_putc(void* p, char c)
+{
+    // write a byte to the host
+    // TODO
+}
+
+bool network_gdb_is_connected(void)
+{
+    // report if a host is connected or not
+    return gdb_def.is_connected;
+}
+
+// gdb_def

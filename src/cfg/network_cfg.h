@@ -24,6 +24,7 @@ typedef struct {
     ip4_addr_t host_pc_ip;
     ip4_addr_t netmask;
     ip4_addr_t gateway;
+    uint16_t   gdb_port;
 } network_cfg_typ;
 
 extern network_cfg_typ net_cfg;
