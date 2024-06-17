@@ -30,7 +30,7 @@ void debug_uart_tick(void);
 void debug_uart_flush(void);
 
 // send data:
-uint32_t debug_uart_send_bytes(const uint8_t *data, const uint32_t length);
+void debug_uart_send_bytes(const uint8_t *data, const uint32_t length);
 void debug_uart_send_String(char* str);
 void debug_putc(void* p, char c);
 

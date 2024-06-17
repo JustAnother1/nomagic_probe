@@ -178,6 +178,7 @@ void reply_packet_send(void)
     reply_buffer[reply_length + 3]  = 0;
     debug_line("gdbs sending: %s", reply_buffer);
     serial_gdb_send_bytes(&(reply_buffer[reply_length]), 3);
+    serial_gdb_flush();
     gdb_is_not_busy_anymore();
 }
 
@@ -294,6 +295,7 @@ static void communicate_with_gdb(void)
                         // -> Resent last message
                         debug_line("resending: %s", reply_buffer);
                         serial_gdb_send_bytes(reply_buffer, reply_length);
+                        serial_gdb_flush();
                         */
                     }
                     else if(0x03 == data)

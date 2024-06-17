@@ -47,16 +47,30 @@ Multiple Execution Contexts in lwIP code
 
 The most common source of lwIP problems is to have multiple execution contexts inside the lwIP code.
 
-lwIP can be used in two basic modes: Mainloop mode ("NO_SYS") (no OS/RTOS running on target system) or OS mode (TCPIP thread) (there is an OS running on the target system).
+lwIP can be used in two basic modes:
+    Mainloop mode ("NO_SYS") (no OS/RTOS running on target system)
+    or
+    OS mode (TCPIP thread) (there is an OS running on the target system).
 
 See also: Multithreading (especially the part about LWIP_ASSERT_CORE_LOCKED()!)
 Mainloop Mode
 
-In mainloop mode, only "raw" APIs can be used. The user has two possibilities to ensure there is only one exection context at a time in lwIP:
+In mainloop mode, only "raw" APIs can be used. The user has two possibilities to
+ensure there is only one exection context at a time in lwIP:
 
-1) Deliver RX ethernet packets directly in interrupt context to lwIP by calling netif->input directly in interrupt. This implies all lwIP callback functions are called in IRQ context, which may cause further problems in application code: IRQ is blocked for a long time, multiple execution contexts in application code etc. When the application wants to call lwIP, it only needs to disable interrupts during the call. If timers are involved, even more locking code is needed to lock out timer IRQ and ethernet IRQ from each other, assuming these may be nested.
+1) Deliver RX ethernet packets directly in interrupt context to lwIP by calling
+netif->input directly in interrupt. This implies all lwIP callback functions are
+called in IRQ context, which may cause further problems in application code:
+IRQ is blocked for a long time, multiple execution contexts in application code
+etc. When the application wants to call lwIP, it only needs to disable interrupts
+during the call. If timers are involved, even more locking code is needed to lock
+out timer IRQ and ethernet IRQ from each other, assuming these may be nested.
 
-2) Run lwIP in a mainloop. There is example code here: Mainloop mode ("NO_SYS"). lwIP is ONLY called from mainloop callstacks here. The ethernet IRQ has to put received telegrams into a queue which is polled in the mainloop. Ensure lwIP is NEVER called from an interrupt, e.g. some SPI IRQ wants to forward data to udp_send() or tcp_write()!
+2) Run lwIP in a mainloop. There is example code here: Mainloop mode ("NO_SYS").
+lwIP is ONLY called from mainloop callstacks here. The ethernet IRQ has to put
+received telegrams into a queue which is polled in the mainloop. Ensure lwIP is
+NEVER called from an interrupt, e.g. some SPI IRQ wants to forward data to
+udp_send() or tcp_write()!
 
  */
 
@@ -86,9 +100,9 @@ In mainloop mode, only "raw" APIs can be used. The user has two possibilities to
 #include "lwip/src/include/lwip/etharp.h"
 #include "lwip/src/include/lwip/ip.h"
 #include "lwip/src/include/netif/ethernet.h"
+#include "lwip/src/include/lwip/tcp.h"
 // tinyusb
 #include "tusb.h"
-
 
 static err_t netif_init_function(struct netif *netif);
 // static err_t netif_input_function(struct pbuf *p, struct netif *inp);
@@ -105,6 +119,7 @@ static volatile uint16_t xmt_buff_len = 0;
 
 // GDB server TCP port
 static tcp_pipe_def gdb_def;
+
 
 void network_stack_init(void)
 {
@@ -128,6 +143,7 @@ void network_stack_init(void)
         if(0 != net_cfg.gdb_port)
         {
             // bring up the gdb server port
+            memset(&gdb_def, 0, sizeof(gdb_def));
             gdb_def.port = net_cfg.gdb_port;
             tcp_pipe_activate(&gdb_def);
         }
@@ -138,6 +154,7 @@ void network_stack_init(void)
 
 void network_stack_tick(void)
 {
+    // feed data received from USB into lwIP
     if(NULL != received_frame)
     {
         // handle any packet received from USB ( tud_network_recv_cb() )
@@ -149,6 +166,7 @@ void network_stack_tick(void)
         tud_network_recv_renew();
     }
 
+    // feed data received from lwIP to USB (to then go to the host PC)
     if(0 != xmt_buff_len)
     {
         if(true == tud_network_can_xmit(xmt_buff_len))
@@ -288,34 +306,66 @@ bool tud_network_recv_cb(const uint8_t *src, uint16_t size)
 void network_gdb_send_string(char * str)
 {
     // send "str" over the network to the host
-    // TODO
+    while(*str != 0)
+    {
+        network_gdb_send_bytes((uint8_t *) str, 1);
+        str++;
+    }
 }
 
-uint32_t network_gdb_send_bytes(const uint8_t * data, const uint32_t length)
+void network_gdb_send_bytes(const uint8_t * data, const uint32_t length)
 {
     // send "data" bytes over the network to the host
-    // TODO
-    return length;
+    uint32_t bytes_send = 0;
+
+    if((NULL == gdb_def.connection_pcb) || (false == gdb_def.is_connected))
+    {
+        // not connected
+        debug_line("LWIP: could not send bytes as connection is closed!");
+        return;
+    }
+
+    do {
+        const uint8_t * pos =  data + bytes_send;
+        bytes_send = bytes_send + tcp_pipe_write(&gdb_def, pos, (uint16_t)(length - bytes_send));
+        if(bytes_send < length)
+        {
+            // wait for buffers to clear up
+            network_stack_tick();
+        }
+    } while((bytes_send < length) && (gdb_def.connection_pcb->state != CLOSED));
+    if(gdb_def.connection_pcb->state == CLOSED)
+    {
+        gdb_def.is_connected = false;
+        gdb_def.connection_pcb = NULL;
+    }
+}
+
+void network_gdb_flush(void)
+{
+    if(NULL != gdb_def.connection_pcb)
+    {
+        tcp_output(gdb_def.connection_pcb);
+    }
 }
 
 uint32_t network_gdb_get_num_received_bytes(void)
 {
     // report the number of bytes received from the host
-    // TODO
-    return 0;
+    return tcp_pipe_get_num_received_bytes(&gdb_def);
 }
 
 uint8_t network_gdb_get_next_received_byte(void)
 {
     // return the next byte received from the host
-    // TODO
-    return 0;
+    return tcp_pipe_get_next_received_byte(&gdb_def);
 }
 
 void network_gdb_putc(void* p, char c)
 {
     // write a byte to the host
-    // TODO
+    (void) p;
+    network_gdb_send_bytes((uint8_t *) &c, 1);
 }
 
 bool network_gdb_is_connected(void)

@@ -22,6 +22,7 @@
 //    4 byte alignment -> \#define MEM_ALIGNMENT 4
 #define MEM_ALIGNMENT                   4
 #define ETH_PAD_SIZE                    0
+#define ARP_TABLE_SIZE                  4
 // disable unused features:
 #define LWIP_SOCKET                     0
 #define LWIP_NETCONN                    0
@@ -43,6 +44,14 @@
 
 #define LWIP_IP_ACCEPT_UDP_PORT(dst_port) (((dst_port) == PP_NTOHS(67)) || ((dst_port) == PP_NTOHS(68)))
 
+// performance tuning (do not change without extensive testing, optimized for ECM/NCM)
+#define TCP_MSS                                (1500 - 20 - 20)    // MTU minus header sizes (best value until now)
+#define TCP_SND_BUF                            (8 * TCP_MSS)       //   good tuning
+#define TCP_SND_QUEUELEN                       16
+#define TCP_SNDQUEUELOWAT                      (TCP_SND_QUEUELEN / 2)
+#define MEMP_NUM_TCP_SEG                       32
+
+#define MEM_SIZE                               20000
 
 // DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG
 

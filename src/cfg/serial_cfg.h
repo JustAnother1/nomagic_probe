@@ -26,7 +26,7 @@
 
 // DEBUG CLI interface
 void serial_debug_send_string(char * str);
-uint32_t serial_debug_send_bytes(const uint8_t * data, const uint32_t length);
+void serial_debug_send_bytes(const uint8_t * data, const uint32_t length);
 uint32_t serial_debug_get_num_received_bytes(void);
 uint8_t serial_debug_get_next_received_byte(void);
 void serial_debug_putc(void* p, char c);
@@ -36,11 +36,12 @@ void serial_debug_putc(void* p, char c);
 #define MAX_REPLY_LENGTH      2000
 
 void serial_gdb_send_string(char * str);
-uint32_t serial_gdb_send_bytes(const uint8_t * data, const uint32_t length);
+void serial_gdb_send_bytes(const uint8_t * data, const uint32_t length);
 uint32_t serial_gdb_get_num_received_bytes(void);
 uint8_t serial_gdb_get_next_received_byte(void);
 void serial_gdb_putc(void* p, char c);
 bool serial_gdb_is_connected(void);
+void serial_gdb_flush(void);
 
 
 // load configuration

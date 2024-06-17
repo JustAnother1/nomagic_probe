@@ -153,7 +153,7 @@ void debug_uart_flush(void)
 }
 
 // send data:
-uint32_t debug_uart_send_bytes(const uint8_t* data, const uint32_t length)
+void debug_uart_send_bytes(const uint8_t* data, const uint32_t length)
 {
     uint32_t i;
     for (i = 0; i < length; i++)
@@ -173,7 +173,6 @@ uint32_t debug_uart_send_bytes(const uint8_t* data, const uint32_t length)
         send_buf[send_write_pos] = data[i];
         send_write_pos = next_write;
     }
-    return i;
 }
 
 void debug_uart_send_String(char* str)

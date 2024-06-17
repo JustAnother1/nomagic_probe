@@ -24,7 +24,8 @@ void network_stack_tick(void);
 
 // GDB server interface
 void network_gdb_send_string(char * str);
-uint32_t network_gdb_send_bytes(const uint8_t * data, const uint32_t length);
+void network_gdb_send_bytes(const uint8_t * data, const uint32_t length);
+void network_gdb_flush(void);
 uint32_t network_gdb_get_num_received_bytes(void);
 uint8_t network_gdb_get_next_received_byte(void);
 void network_gdb_putc(void* p, char c);

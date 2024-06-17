@@ -23,18 +23,21 @@
 static bool is_USB_CDC_enabled;
 
 typedef void (* send_string_function)(char * str);
-typedef uint32_t (* send_bytes_function)(const uint8_t * data, const uint32_t length);
+typedef void (* send_bytes_function)(const uint8_t * data, const uint32_t length);
 typedef uint32_t (* get_num_received_bytes_function)(void);
 typedef uint8_t (* get_next_received_byte_function)(void);
 typedef void (* putc_function)(void* p, char c);
 typedef bool (* is_connected_function)(void);
+typedef void (* flush_function)(void);
 
 static void null_send_string_function(char * str);
-static uint32_t null_send_bytes_function(const uint8_t * data, const uint32_t length);
+static void null_send_bytes_function(const uint8_t * data, const uint32_t length);
 static uint32_t null_get_num_received_bytes_function(void);
 static uint8_t null_get_next_received_byte_function(void);
 static void null_putc_function(void* p, char c);
 static bool null_is_connected_function(void);
+static void null_flush_function(void);
+
 
 static send_string_function send_string_fct;
 static send_bytes_function send_bytes_fct;
@@ -42,12 +45,14 @@ static get_num_received_bytes_function get_num_received_bytes_fct;
 static get_next_received_byte_function get_next_received_byte_fct;
 static putc_function putc_fct;
 static is_connected_function is_connected_fct;
+static flush_function flush_fct;
 
 void serial_cfg_load(void)
 {
-    // TODO
+    // TODO read from configuration file
     is_USB_CDC_enabled = false;
 
+    // GDB Server interface
     if(true == is_USB_CDC_enabled)
     {
         send_string_fct = usb_cdc_send_string;
@@ -56,6 +61,7 @@ void serial_cfg_load(void)
         get_next_received_byte_fct = usb_cdc_get_next_received_byte;
         putc_fct = usb_cdc_putc;
         is_connected_fct = tud_cdc_connected;
+        flush_fct = usb_cdc_flush;
     }
     else if(0 != net_cfg.gdb_port)
     {
@@ -65,6 +71,7 @@ void serial_cfg_load(void)
         get_next_received_byte_fct =network_gdb_get_next_received_byte;
         putc_fct = network_gdb_putc;
         is_connected_fct = network_gdb_is_connected;
+        flush_fct = network_gdb_flush;
     }
     else
     {
@@ -75,8 +82,10 @@ void serial_cfg_load(void)
         get_next_received_byte_fct = null_get_next_received_byte_function;
         putc_fct = null_putc_function;
         is_connected_fct = null_is_connected_function;
+        flush_fct = null_flush_function;
     }
 
+    // Debug interface is handled by compiler switches (ifdef)
 }
 
 bool serial_cfg_is_USB_CDC_enabled(void)
@@ -92,10 +101,10 @@ static void null_send_string_function(char * str)
     // Done !
 }
 
-static uint32_t null_send_bytes_function(const uint8_t * data, const uint32_t length)
+static void null_send_bytes_function(const uint8_t * data, const uint32_t length)
 {
     (void) data;
-    return length;
+    (void) length;
 }
 
 static uint32_t null_get_num_received_bytes_function(void)
@@ -120,6 +129,11 @@ static bool null_is_connected_function(void)
     return false;
 }
 
+static void null_flush_function(void)
+{
+    // Done !
+}
+
 // DEBUG CLI interface
 // ===================
 void serial_debug_send_string(char * str)
@@ -131,13 +145,13 @@ void serial_debug_send_string(char * str)
         usb_cdc_send_string(str);
 #endif
 }
-uint32_t serial_debug_send_bytes(const uint8_t * data, const uint32_t length)
+void serial_debug_send_bytes(const uint8_t * data, const uint32_t length)
 {
 #ifdef FEAT_DEBUG_UART
-    return debug_uart_send_bytes(data, length);
+    debug_uart_send_bytes(data, length);
 #endif
 #ifdef FEAT_DEBUG_CDC
-    return usb_cdc_send_bytes(data, length);
+    usb_cdc_send_bytes(data, length);
 #endif
 }
 
@@ -177,9 +191,10 @@ void serial_gdb_send_string(char * str)
 {
     (* send_string_fct)(str);
 }
-uint32_t serial_gdb_send_bytes(const uint8_t * data, const uint32_t length)
+
+void serial_gdb_send_bytes(const uint8_t * data, const uint32_t length)
 {
-    return (* send_bytes_fct)(data, length);
+    (* send_bytes_fct)(data, length);
 }
 
 uint32_t serial_gdb_get_num_received_bytes(void)
@@ -200,6 +215,11 @@ void serial_gdb_putc(void* p, char c)
 bool serial_gdb_is_connected(void)
 {
     return (* is_connected_fct)();
+}
+
+void serial_gdb_flush(void)
+{
+    (* flush_fct)();
 }
 
 // new interfaces:
