@@ -173,7 +173,6 @@ static err_t pipe_recv(void *arg, struct tcp_pcb *tpcb, struct pbuf *p, err_t er
         // host closed the connection
         pipe->is_connected = false;
         pipe->connection_pcb = NULL;
-        pbuf_free(p);
         tcp_close(tpcb);
         return ERR_OK;
     }
