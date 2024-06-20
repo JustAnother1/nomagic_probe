@@ -19,8 +19,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include "result.h"
-#include "cfg/target_action_def.h"
 #include "gdbserver/replies.h"
+#include "cfg/target_specific_actions.h"
 
 #define MAX_INTERN_VALUES     4
 #define MAX_PARAMETER_VALUES  3

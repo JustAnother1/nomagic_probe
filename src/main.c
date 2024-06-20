@@ -40,7 +40,9 @@
 #include "lwip.h"
 #include "cfg/network_cfg.h"
 #endif
+#include "config_file_reader.h"
 #include "cfg/serial_cfg.h"
+
 
 #define TASK_LOOP_0           0x1ul
 #define TASK_LOOP_1           0x2ul
@@ -74,11 +76,7 @@ init_printf(NULL, serial_debug_putc);
     file_system_init();
 #endif
 
-#ifdef FEAT_USB_NCM
-    network_cfg_load();
-#endif
-
-    serial_cfg_load();
+    read_config_file();
 
     usb_init();
 

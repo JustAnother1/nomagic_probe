@@ -13,8 +13,11 @@
  *
  */
 #include <stdbool.h>
+#include <string.h>
 #include "network_cfg.h"
 #include "lwip/src/include/lwip/ip_addr.h"
+#include "read_ini.h"
+#include "probe_api/debug_log.h"
 
 network_cfg_typ net_cfg;
 
@@ -29,10 +32,10 @@ uint8_t tud_network_mac_address[6] = {0x02, 0x12, 0x34, 0x56, 0x78, 0x90};
 static bool network_enabled;
 
 
-void network_cfg_load(void)
+// load configuration
+void network_cfg_reset_to_default(void)
 {
-    // TODO read this from a configuration file stored in the flash
-    network_enabled = true;
+    network_enabled = false;
     // 192 = 0xC0
     // 168 = 0xA8
     //  66 = 0x42
@@ -46,6 +49,29 @@ void network_cfg_load(void)
     // net_cfg.netmask.addr = IPADDR4_INIT_BYTES(255, 255, 255, 0);
     // net_cfg.gateway.addr = IPADDR4_INIT_BYTES(192, 168, 66,  1);
     net_cfg.gdb_port = 3333;
+}
+
+void network_cfg_set(char * setting, char * value)
+{
+    // debug_line("network cfg: %s = %s !", setting, value);
+    if(0 == strncmp(setting, NCM_ENABLED_SETTING, sizeof(NCM_ENABLED_SETTING)))
+    {
+        network_enabled = read_ini_bool(value);
+    }
+    // TODO
+}
+
+void network_cfg_apply(void)
+{
+    // nothing to do here
+    if(true == network_enabled)
+    {
+        debug_line("Network: enabled !");
+    }
+    else
+    {
+        debug_line("Network: disabled !");
+    }
 }
 
 bool network_cfg_is_network_enabled(void)

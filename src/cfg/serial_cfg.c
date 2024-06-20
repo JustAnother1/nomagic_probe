@@ -14,11 +14,14 @@
  */
 
 #include <stddef.h>
+#include <string.h>
 #include "serial_cfg.h"
 #include "tinyusb/usb_cdc.h"
 #include "hal/debug_uart.h"
 #include "lwip/lwip.h"
 #include "cfg/network_cfg.h"
+#include "read_ini.h"
+#include "probe_api/debug_log.h"
 
 static bool is_USB_CDC_enabled;
 
@@ -47,14 +50,27 @@ static putc_function putc_fct;
 static is_connected_function is_connected_fct;
 static flush_function flush_fct;
 
-void serial_cfg_load(void)
+void serial_cfg_reset_to_default(void)
 {
-    // TODO read from configuration file
-    is_USB_CDC_enabled = false;
+    is_USB_CDC_enabled = true;
+}
 
+void serial_cfg_set(char * setting, char * value)
+{
+    // debug_line("serial cfg: %s = %s !", setting, value);
+    if(0 == strncmp(setting, CDC_ENABLED_SETTING, sizeof(CDC_ENABLED_SETTING)))
+    {
+        is_USB_CDC_enabled = read_ini_bool(value);
+    }
+}
+
+
+void serial_cfg_apply(void)
+{
     // GDB Server interface
     if(true == is_USB_CDC_enabled)
     {
+        debug_line("GDB on CDC !");
         send_string_fct = usb_cdc_send_string;
         send_bytes_fct = usb_cdc_send_bytes;
         get_num_received_bytes_fct = usb_cdc_get_num_received_bytes;
@@ -65,6 +81,7 @@ void serial_cfg_load(void)
     }
     else if(0 != net_cfg.gdb_port)
     {
+        debug_line("GDB on Ethernet !");
         send_string_fct = network_gdb_send_string;
         send_bytes_fct = network_gdb_send_bytes;
         get_num_received_bytes_fct = network_gdb_get_num_received_bytes;
@@ -75,6 +92,7 @@ void serial_cfg_load(void)
     }
     else
     {
+        debug_line("GDB not available !");
         // avoid null pointers in function pointers
         send_string_fct = null_send_string_function;
         send_bytes_fct = null_send_bytes_function;

@@ -19,6 +19,8 @@
 #include <stdbool.h>
 #include "lwip/src/include/lwip/ip4_addr.h"
 
+#define NCM_ENABLED_SETTING  "ncm"
+
 typedef struct {
     ip4_addr_t probe_ip;
     ip4_addr_t host_pc_ip;
@@ -32,7 +34,10 @@ extern network_cfg_typ net_cfg;
 extern uint8_t tud_network_mac_address[6];
 
 
-void network_cfg_load(void);
+// load configuration
+void network_cfg_reset_to_default(void);
+void network_cfg_set(char * setting, char * value);
+void network_cfg_apply(void);
 bool network_cfg_is_network_enabled(void);
 
 #endif /* NOMAGIC_PROBE_SRC_CFG_NETWORK_CFG_H_ */

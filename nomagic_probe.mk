@@ -126,6 +126,8 @@ SRC += $(NOMAGIC_SRC_FOLDER)lib/strncmp.c
 # configuration
 SRC += $(NOMAGIC_SRC_FOLDER)cfg/network_cfg.c
 SRC += $(NOMAGIC_SRC_FOLDER)cfg/serial_cfg.c
+SRC += $(NOMAGIC_SRC_FOLDER)cfg/config_file_reader.c
+SRC += $(NOMAGIC_SRC_FOLDER)cfg/read_ini.c
 
 # SWD
 SRC += $(NOMAGIC_SRC_FOLDER)swd/swd_engine.c

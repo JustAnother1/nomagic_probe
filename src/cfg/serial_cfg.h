@@ -24,6 +24,9 @@
 #include "tinyusb/usb_cdc.h"
 #include "tinyusb/src/class/cdc/cdc_device.h"
 
+// configuration settings
+#define CDC_ENABLED_SETTING "cdc"
+
 // DEBUG CLI interface
 void serial_debug_send_string(char * str);
 void serial_debug_send_bytes(const uint8_t * data, const uint32_t length);
@@ -45,7 +48,9 @@ void serial_gdb_flush(void);
 
 
 // load configuration
-void serial_cfg_load(void);
+void serial_cfg_reset_to_default(void);
+void serial_cfg_set(char * setting, char * value);
+void serial_cfg_apply(void);
 bool serial_cfg_is_USB_CDC_enabled(void);
 
 
