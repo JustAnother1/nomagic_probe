@@ -9,11 +9,6 @@
 #define MAX_COMMAND_LENGTH    500
 #define MAX_REPLY_LENGTH      1000
 
-#define GDBSERVER_SEND_STRING            mock_send_String
-#define GDBSERVER_SEND_BYTES             mock_send_bytes
-#define GDBSERVER_NUM_RECEIVED_BYTES     mock_get_num_received_bytes
-#define GDBSERVER_GET_NEXT_RECEIVED_BYTE mock_get_next_received_byte
-#define GDBSERVER_IS_CONNECTED           mock_is_connected()
 
 bool mock_is_connected(void);
 

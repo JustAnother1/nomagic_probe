@@ -3,13 +3,14 @@
 #include "mocks.h"
 #include "../src/probe_api/cli.h"
 #include "../src/lib/printf.h"
+#include "mock/serial_debug.h"
 
 extern uint8_t send_buf[TST_SEND_BUFFER_SIZE];
 
 void* cli_setup(const MunitParameter params[], void* user_data) {
     (void)params;
     (void)user_data;
-    init_printf(NULL, debug_putc);
+    init_printf(NULL, serial_debug_putc);
     reset_send_receive_buffers();
     set_echo_enabled(false);
     cli_init();

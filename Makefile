@@ -100,7 +100,8 @@ TST_OBJS += tests/bin/tests/gdbserver_util_tests.o
 TST_OBJS += tests/bin/tests/gdbserver_gdbserver_tests.o
 TST_OBJS += tests/bin/tests/munit.o
 TST_OBJS += tests/bin/tests/allTests.o
-
+TST_OBJS += tests/bin/tests/mock/serial_debug.o
+TST_OBJS += tests/bin/tests/mock/serial_gdb.o
 
 # make config
 # remove ?  VPATH = $(SOURCE_DIR)
