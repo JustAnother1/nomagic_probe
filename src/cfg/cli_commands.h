@@ -49,7 +49,7 @@ cmd_typ commands[] = {
         {"swd_wm",      "write to target memory address <address> <value>", cmd_swd_write_memory},
         {"flash_reset", "reset the external QSPI flash", cmd_flash_reset},
 #ifdef FEAT_USB_MSC
-        {"dump_file",   "dump the content of the file <filename>", cmd_file_dump},
+        {"cat",         "dump the content of the file <filename>", cmd_file_dump},
         {"ls",          "list all files in the file system", cmd_file_ls},
         {"fs_format",   "format the file system.", cmd_file_format},
 #endif

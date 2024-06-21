@@ -27,6 +27,10 @@
 uint32_t buf_offset = INVALID_OFFSET;
 fat_entry buf[NUM_ENTRIES_PER_BLOCK];  // 256 Bytes -> Flash Block size
 
+char to_Lower_buf[10];
+
+static char * to_lower_case(char * str);
+static void to_lower_case_in_place(char * str);
 
 // Root directory
 const uint8_t root_directory[] = {
@@ -201,6 +205,9 @@ fat_entry* fake_root_get_entry_of_file_named(const char* filename)
     // skip the dot
     dot_idx++;
     // extension
+    ext[0] = 0;
+    ext[1] = 0;
+    ext[2] = 0;
     for(i = 0; i < 3; i++)
     {
         if(0 == filename[dot_idx + i])
@@ -212,6 +219,9 @@ fat_entry* fake_root_get_entry_of_file_named(const char* filename)
             ext[i] = filename[dot_idx + i];
         }
     }
+
+    to_lower_case_in_place(ext);
+    to_lower_case_in_place(name);
 
     // read a block
     uint32_t offset = 0;
@@ -239,12 +249,12 @@ fat_entry* fake_root_get_entry_of_file_named(const char* filename)
                 // reached end of table
                 return NULL;
             }
-            else if(0 == strncmp(buf[i].name, name, 8))
+            else if(0 == strncmp(to_lower_case(buf[i].extension), ext, 3))
             {
-                // name is equal
-                if(0 == strncmp(buf[i].extension, ext, 3))
+                // extension is equal
+                if(0 == strncmp(to_lower_case(buf[i].name), name, 8))
                 {
-                    // extension is equal
+                    // name is equal
                     // -> we found the file
                     return &(buf[i]);
                 }
@@ -255,4 +265,36 @@ fat_entry* fake_root_get_entry_of_file_named(const char* filename)
     }
     // file not found
     return NULL;
+}
+
+static char * to_lower_case(char * str)
+{
+    uint32_t i = 0;
+    while(0 != str[i])
+    {
+        if((str[i] >= 'A') && (str[i] <= 'Z'))
+        {
+            to_Lower_buf[i] = str[i] + ('a' - 'A');
+        }
+        else
+        {
+            // not an upper case letter
+            to_Lower_buf[i] = str[i];
+        }
+        i++;
+    }
+    to_Lower_buf[i] = 0;
+    return to_Lower_buf;
+}
+static void to_lower_case_in_place(char * str)
+{
+    while(0 != *str)
+    {
+        if((*str >= 'A') && (*str <= 'Z'))
+        {
+            *str = *str + ('a' - 'A');
+        }
+        // else -> not an upper case letter -> ignore
+        str++;
+    }
 }
