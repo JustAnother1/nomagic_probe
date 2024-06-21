@@ -29,5 +29,7 @@ typedef char * (* get_next_char)(void);
 
 void read_ini_read(get_next_char stream, get_section_setter section_cb);
 bool read_ini_bool(char * value);
+uint32_t read_int_address(char * val);
+uint32_t read_ipv4_address(char * val);
 
 #endif /* NOMAGIC_PROBE_SRC_CFG_READ_INI_H_ */

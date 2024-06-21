@@ -185,6 +185,79 @@ bool read_ini_bool(char * val)
     return false;
 }
 
+uint32_t read_int_address(char * val)
+{
+    uint32_t ival = 0;
+    for(;;)
+    {
+        char c = *val;
+        if(0 == c)
+        {
+            // end of string
+            return ival;
+        }
+        else if(('0'<= c) && ('9' >= c))
+        {
+            // a number
+            ival = ival * 10;
+            ival = ival + (c - '0');
+        }
+        else
+        {
+            // invalid char
+            return 0;
+        }
+        val++;
+    }
+    // should not happen
+    return 0;
+}
+
+// "192.168.66.1", "255.255.255.0", "127.0.0.1"
+uint32_t read_ipv4_address(char * val)
+{
+    uint32_t groups_found = 0;
+    uint32_t ip = 0;
+    uint32_t cur_group = 0;
+    for(;;)
+    {
+        char c = *val;
+        if(0 == c)
+        {
+            // end of string
+            if(3 != groups_found)
+            {
+                return 0;
+            }
+            cur_group = (cur_group << 24);
+            ip = ip | cur_group;
+            return ip;
+        }
+        else if('.' == c)
+        {
+            // a dot
+            cur_group = (cur_group << (groups_found * 8));
+            ip = ip | cur_group;
+            cur_group = 0;
+            groups_found ++;
+        }
+        else if(('0'<= c) && ('9' >= c))
+        {
+            // a number
+            cur_group = cur_group *10;
+            cur_group = cur_group + (c - '0');
+        }
+        else
+        {
+            // invalid char
+            return 0;
+        }
+        val++;
+    }
+    // should not happen
+    return 0;
+}
+
 // Static functions
 
 static void skip_until_end_of_line(get_next_char stream)
@@ -192,7 +265,7 @@ static void skip_until_end_of_line(get_next_char stream)
     for(;;)
     {
         cp =  stream();
-        if(('\r' == *cp) ||('\n' == *cp))
+        if(('\r' == *cp) || ('\n' == *cp) || (0 == *cp))
         {
             break;
         }

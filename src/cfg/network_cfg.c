@@ -58,6 +58,52 @@ void network_cfg_set(char * setting, char * value)
     {
         network_enabled = read_ini_bool(value);
     }
+
+    if(0 == strncmp(setting, PROBE_IP_SETTING, sizeof(PROBE_IP_SETTING)))
+    {
+        uint32_t ip = read_ipv4_address(value);
+        if(0 != ip)
+        {
+            net_cfg.probe_ip.addr = ip;
+        }
+    }
+
+    if(0 == strncmp(setting, HOST_IP_SETTING, sizeof(HOST_IP_SETTING)))
+    {
+        uint32_t ip = read_ipv4_address(value);
+        if(0 != ip)
+        {
+            net_cfg.host_pc_ip.addr = ip;
+        }
+    }
+
+    if(0 == strncmp(setting, NETMASK_SETTING, sizeof(NETMASK_SETTING)))
+    {
+        uint32_t ip = read_ipv4_address(value);
+        if(0 != ip)
+        {
+            net_cfg.netmask.addr = ip;
+        }
+    }
+
+    if(0 == strncmp(setting, GATEWAY_IP_SETTING, sizeof(GATEWAY_IP_SETTING)))
+    {
+        uint32_t ip = read_ipv4_address(value);
+        if(0 != ip)
+        {
+            net_cfg.gateway.addr = ip;
+        }
+    }
+
+    if(0 == strncmp(setting, GDB_TCP_PORT_SETTING, sizeof(GDB_TCP_PORT_SETTING)))
+    {
+        uint32_t port = read_int_address(value);
+        if(0 != port)
+        {
+            net_cfg.gdb_port = (uint16_t)(port & 0xffff);
+        }
+    }
+
     // TODO
 }
 
