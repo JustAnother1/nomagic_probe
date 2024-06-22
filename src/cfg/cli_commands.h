@@ -18,7 +18,6 @@
 #include "cli_cfg.h"
 #include "cli/cli_swd.h"
 #include "cli/cli_sys.h"
-#include "cli/cli_usb.h"
 #include "cli/cli_memory.h"
 #include "cli/cli_common_target.h"
 #include "cfg/target_cli_commands.h"
@@ -30,7 +29,6 @@ cmd_typ commands[] = {
         {"help",        "list all available commands", cmd_help},
         {"time",        "time since power on", cmd_time},
         {"param_dump",  "prints the parameters as hex", cmd_parameter_raw},
-        {"usb_info",    "display USB status information", cmd_usb_info},
         {"target_info", "display target specific status information", cmd_target_info},
         {"at",          "show action trace", cmd_target_trace},
         {"md",          "display memory", cmd_memory_dump},

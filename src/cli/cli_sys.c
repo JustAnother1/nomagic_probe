@@ -14,6 +14,7 @@
  */
 #include <stdlib.h>
 #include "cli_sys.h"
+#include "cli_usb.h"
 #include "cfg/cli_cfg.h"
 #include "hal/startup.h"
 #include "hal/hw_divider.h"
@@ -172,6 +173,7 @@ bool cmd_info_overview(const uint32_t loop)
         case 4: debug_line("4: QSPI"); break;
         case 5: debug_line("5: file system"); break;
         case 6: debug_line("6: SWD"); break;
+        case 7: debug_line("7: USB"); break;
         default: debug_line("Done"); return true;  // we are done
     }
     return false;
@@ -204,6 +206,7 @@ bool cmd_info(const uint32_t loop)
         case 5: debug_line("no file system! target = fixed single"); return true;
 #endif
         case 6: return swd_info(loop);
+        case 7: return cmd_usb_info(loop);
         default: return true;
     }
     return false;
