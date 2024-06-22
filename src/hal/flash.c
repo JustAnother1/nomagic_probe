@@ -14,6 +14,7 @@
  */
 
 #include "hal/time_base.h"
+#include "hal/debug_uart.h"
 #include "flash.h"
 #include "cfg/cli_cfg.h"
 #include "cfg/cli_cfg.h"
@@ -206,10 +207,12 @@ void flash_write_block(uint32_t start_address, uint8_t* data, uint32_t length)
             // debug_line("Flash: writing 256 bytes @0x%08lx !", start_address);
             while(0 != (1& XIP_SSI->SR))
             {
-                ;
+                debug_uart_tick(); // to keep the UART alive if this takes some time
             }
             flash_funcs->flash_range_program(start_address, data, length);
+            debug_uart_tick(); // to keep the UART alive if this takes some time
             flash_funcs->_flash_flush_cache();
+            debug_uart_tick(); // to keep the UART alive if this takes some time
         }
         else
         {
@@ -268,10 +271,12 @@ void flash_erase_page(uint32_t number)
     {
         while(0 != (1& XIP_SSI->SR))
         {
-            ;
+            debug_uart_tick(); // to keep the UART alive if this takes some time
         }
         flash_funcs->_flash_range_erase(number*4096, 4096, 0, 0);
+        debug_uart_tick(); // to keep the UART alive if this takes some time
         flash_funcs->_flash_flush_cache();
+        debug_uart_tick(); // to keep the UART alive if this takes some time
     }
     else
     {
@@ -294,10 +299,12 @@ void flash_read(uint32_t start_address, uint8_t* data, uint32_t length)
     {
         while(0 != (1& XIP_SSI->SR))
         {
-            ;
+            debug_uart_tick(); // to keep the UART alive if this takes some time
         }
         flash_funcs->_flash_flush_cache();
+        debug_uart_tick(); // to keep the UART alive if this takes some time
         flash_funcs->_flash_enter_cmd_xip();
+        debug_uart_tick(); // to keep the UART alive if this takes some time
     }
     else
     {
@@ -309,10 +316,12 @@ void flash_read(uint32_t start_address, uint8_t* data, uint32_t length)
     {
         while(0 != (1& XIP_SSI->SR))
         {
-            ;
+            debug_uart_tick(); // to keep the UART alive if this takes some time
         }
         flash_funcs->_connect_internal_flash();
+        debug_uart_tick(); // to keep the UART alive if this takes some time
         flash_funcs->_flash_exit_xip();
+        debug_uart_tick(); // to keep the UART alive if this takes some time
     }
     else
     {
@@ -357,10 +366,12 @@ void flash_reset(void)
     {
         while(0 != (1& XIP_SSI->SR))
         {
-            ;
+            debug_uart_tick(); // to keep the UART alive if this takes some time
         }
         flash_funcs->_connect_internal_flash();
+        debug_uart_tick(); // to keep the UART alive if this takes some time
         flash_funcs->_flash_exit_xip();
+        debug_uart_tick(); // to keep the UART alive if this takes some time
     }
     else
     {
