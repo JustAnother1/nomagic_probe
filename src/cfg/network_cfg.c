@@ -124,3 +124,9 @@ bool network_cfg_is_network_enabled(void)
 {
     return network_enabled;
 }
+
+void network_cfg_debug_print_ip_address(uint32_t addr)
+{
+    debug_msg("%ld.%ld.%ld.%ld",
+              addr & 0xff, (addr>>8) &0xff, (addr>>16) &0xff, (addr>>24) &0xff);
+}

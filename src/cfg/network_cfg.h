@@ -44,5 +44,6 @@ void network_cfg_reset_to_default(void);
 void network_cfg_set(char * setting, char * value);
 void network_cfg_apply(void);
 bool network_cfg_is_network_enabled(void);
+void network_cfg_debug_print_ip_address(uint32_t addr);
 
 #endif /* NOMAGIC_PROBE_SRC_CFG_NETWORK_CFG_H_ */
