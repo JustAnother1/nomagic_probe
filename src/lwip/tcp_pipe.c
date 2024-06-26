@@ -42,6 +42,7 @@ bool tcp_pipe_activate(tcp_pipe_def* pipe)
         return false;
     }
 
+    debug_line("NCM: binding to TCP port %d !", pipe->port);
     if(ERR_OK != tcp_bind(my_pcb, IP_ADDR_ANY, pipe->port))
     {
         debug_line("ERROR: could not bind TCP Pipe to port %d (port in use?) !", pipe->port);

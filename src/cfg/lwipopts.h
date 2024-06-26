@@ -162,7 +162,7 @@
 /**
  * TCP_RST_DEBUG: Enable debugging for TCP with the RST message.
  */
-#define TCP_RST_DEBUG                   LWIP_DBG_OFF
+#define TCP_RST_DEBUG                   LWIP_DBG_ON
 /**
  * TCP_QLEN_DEBUG: Enable debugging for TCP queue lengths.
  */
