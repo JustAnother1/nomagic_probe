@@ -26,6 +26,7 @@
 #include "probe_api/time.h"
 
 #define GDB_BUSY_TIMEOUT_MS      1000
+#define CLEAN_END_LENGTH         10
 
 // defines what we have received and have processed
 typedef enum parseState {
@@ -37,6 +38,7 @@ typedef enum parseState {
 } state_typ;
 
 static void communicate_with_gdb(void);
+static void add_clean_end(void);
 
 static uint8_t line_buffer[MAX_COMMAND_LENGTH];
 static uint32_t line_pos;
@@ -288,7 +290,7 @@ static void communicate_with_gdb(void)
                     {
                         // host is not happy with what we send -> probably some error on our side
                         // data from last command is still valid -> retry doing it
-                        line_buffer[line_pos] = '\0';
+                        add_clean_end();
                         commands_execute((char*)line_buffer, line_pos, (char*)checksum);
                         /*
                         // Transmit error
@@ -349,7 +351,7 @@ static void communicate_with_gdb(void)
                 case CHECKSUM_HIGH:
                     checksum[1] = data;
                     state = CHECKSUM_LOW;
-                    line_buffer[line_pos] = 0;
+                    add_clean_end();
                     commands_execute((char*)line_buffer, line_pos, (char*)checksum);
                     break;
             }
@@ -357,4 +359,20 @@ static void communicate_with_gdb(void)
         num_bytes_received = serial_gdb_get_num_received_bytes();
     }
     // else no new bytes -> nothing to do
+}
+
+static void add_clean_end(void)
+{
+    // line_buffer[line_pos] = 0;    <- single 0 might not be enough if skipped in parsing
+    uint32_t i;
+    uint32_t len = CLEAN_END_LENGTH;
+    if(line_pos + CLEAN_END_LENGTH >= MAX_COMMAND_LENGTH)
+    {
+        len = MAX_COMMAND_LENGTH - line_pos;
+    }
+
+    for(i = 0; i < len; i++)
+    {
+        line_buffer[line_pos + i] = 0;
+    }
 }
