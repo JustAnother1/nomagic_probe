@@ -78,6 +78,7 @@ void commands_init(void)
 // The printable characters ‘#’ and ‘$’ or with a numeric value greater than 126 must not be used.
 // Runs of six repeats (‘#’) or seven repeats (‘$’) can be expanded using a repeat count of only five (‘"’). For example, ‘00000000’ can be encoded as ‘0*"00’.
 
+// received is guaranteed to end with zeros
 void commands_execute(char* received, uint32_t length, char* checksum)
 {
     debug_line("gdbs received: %s", received);
@@ -332,48 +333,61 @@ static void handle_vee(char* received, uint32_t length)
             reply_packet_send();
         }
     }
-    else if(4 == cmd_len)
+    else
     {
-        if(0 == strncmp(received, "vRun", 4))
+        if(0 == strncmp(received, "vCont", 5))
         {
+            // command start with "vCont"
+            if('?' == received[5])
+            {
+                // "vCont?"
+                // report the supported vCont actions
+                found_cmd = true;
+                reply_packet_prepare();
+                reply_packet_add("vCont;c;C;s;S");
+                reply_packet_send();
+                found_cmd = true;
+            }
+            else if(';' == received[5])
+            {
+                // specify step or continue actions specific to one or more threads
+                if(('c' == received[6]) || ('C' == received[6]))
+                {
+                    // vCont;c  -> continue
+                    found_cmd = true;
+                    if(true == target_reply_continue())
+                    {
+                        found_cmd = true;
+                    }
+                }
+                else if(('s' == received[6]) || ('S' == received[6]))
+                {
+                    // vCont;s -> single step
+                    found_cmd = true;
+                    if(true == parse_parameter(PARAM_OPT_ADDR, &(received[7])))
+                    {
+                        gdb_is_now_busy();
+                        if(false == target_reply_step(&parsed_parameter))
+                        {
+                            // failed to add command
+                            send_unknown_command_reply();
+                        }
+                        // else OK. Reply packet ends busy state.
+                    }
+                }
+            }
+        }
+        else if(0 == strncmp(received, "vRun", 4))
+        {
+            // command start with "vRun"
             found_cmd = true;
             // run program
             // TODO
             send_unknown_command_reply();
         }
-    }
-    else if(5 == cmd_len)
-    {
-        if(0 == strncmp(received, "vCont", 5))
-        {
-            found_cmd = true;
-            // specify step or continue actions specific to one or more threads
-            if('c' == received[6])
-            {
-                // vCont;c  -> continue
-                if(true == target_reply_continue())
-                {
-                    found_cmd = true;
-                }
-            }
-            // TODO else if(....)
-        }
-    }
-    else if(6 == cmd_len)
-    {
-        if(0 == strncmp(received, "vCont?", 6))
-        {
-            // report the supported vCont actions
-            reply_packet_prepare();
-            reply_packet_add("vCont;c;C;s;S");
-            reply_packet_send();
-            found_cmd = true;
-        }
-    }
-    else if(7 == cmd_len)
-    {
         if(0 == strncmp(received, "vAttach", 7))
         {
+            // command start with "vAttach"
             found_cmd = true;
             // Attach to (new) process
             // TODO
