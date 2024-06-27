@@ -311,6 +311,11 @@ static uint32_t cmd_length(char* received, uint32_t length)
             // end of command
             return i;
         }
+        if(',' == *received)  // used in qRcmd
+        {
+            // end of command
+            return i;
+        }
         received++;
     }
     return length;
@@ -464,6 +469,27 @@ static void handle_general_query(char* received, uint32_t length)
             found_cmd = true;
             // qXfer:features:read:target.xml:0,3fb
             handle_cmd_qXfer(received +5, length - 5);
+        }
+        else if(0 == strncmp(received, "qRcmd", 5))
+        {
+            found_cmd = true;
+            char buf[100];
+            reply_packet_prepare();
+            reply_packet_add("O"); // packet is $ big oh, hex string# checksum
+            // command is encoded in hex
+            decode_hex_string_to_text(&(received[6]), sizeof(buf), buf);
+            // execute command in buf
+            if(false)
+            {
+                // TODO implement commands (reset init, halt,...)
+            }
+            else
+            {
+                // invalid command
+                encode_text_to_hex_string("ERROR: invalid command !", sizeof(buf), buf);
+                reply_packet_add(buf);
+            }
+            reply_packet_send();
         }
     }
     else if(7 == cmd_len)

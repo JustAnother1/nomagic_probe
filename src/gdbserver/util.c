@@ -104,4 +104,94 @@ void int_to_hex(char* hex, uint32_t value, uint32_t num_digits)
     }
 }
 
+void decode_hex_string_to_text(char * hex, uint32_t buf_length, char * buf)
+{
+    char c = 0;
+    bool first = true;
+    uint32_t pos = 0;
 
+    if(NULL == buf)
+    {
+        return;
+    }
+    if(NULL == hex)
+    {
+        *buf = 0;
+        return;
+    }
+
+    while(pos < buf_length)
+    {
+        switch(*hex)
+        {
+        case '0': if(true == first) {                    first = false;} else {             buf[pos] = c; pos++;  c = 0; first = true;} break;
+        case '1': if(true == first) { c = c + ( 1 * 16); first = false;} else { c = c +  1; buf[pos] = c; pos++;  c = 0; first = true;} break;
+        case '2': if(true == first) { c = c + ( 2 * 16); first = false;} else { c = c +  2; buf[pos] = c; pos++;  c = 0; first = true;} break;
+        case '3': if(true == first) { c = c + ( 3 * 16); first = false;} else { c = c +  3; buf[pos] = c; pos++;  c = 0; first = true;} break;
+        case '4': if(true == first) { c = c + ( 4 * 16); first = false;} else { c = c +  4; buf[pos] = c; pos++;  c = 0; first = true;} break;
+        case '5': if(true == first) { c = c + ( 5 * 16); first = false;} else { c = c +  5; buf[pos] = c; pos++;  c = 0; first = true;} break;
+        case '6': if(true == first) { c = c + ( 6 * 16); first = false;} else { c = c +  6; buf[pos] = c; pos++;  c = 0; first = true;} break;
+        case '7': if(true == first) { c = c + ( 7 * 16); first = false;} else { c = c +  7; buf[pos] = c; pos++;  c = 0; first = true;} break;
+        case '8': if(true == first) { c = c + ( 8 * 16); first = false;} else { c = c +  8; buf[pos] = c; pos++;  c = 0; first = true;} break;
+        case '9': if(true == first) { c = c + ( 9 * 16); first = false;} else { c = c +  9; buf[pos] = c; pos++;  c = 0; first = true;} break;
+        case 'a':
+        case 'A': if(true == first) { c = c + (10 * 16); first = false;} else { c = c + 10; buf[pos] = c; pos++;  c = 0; first = true;} break;
+        case 'b':
+        case 'B': if(true == first) { c = c + (11 * 16); first = false;} else { c = c + 11; buf[pos] = c; pos++;  c = 0; first = true;} break;
+        case 'c':
+        case 'C': if(true == first) { c = c + (12 * 16); first = false;} else { c = c + 12; buf[pos] = c; pos++;  c = 0; first = true;} break;
+        case 'd':
+        case 'D': if(true == first) { c = c + (13 * 16); first = false;} else { c = c + 13; buf[pos] = c; pos++;  c = 0; first = true;} break;
+        case 'e':
+        case 'E': if(true == first) { c = c + (14 * 16); first = false;} else { c = c + 14; buf[pos] = c; pos++;  c = 0; first = true;} break;
+        case 'f':
+        case 'F': if(true == first) { c = c + (15 * 16); first = false;} else { c = c + 15; buf[pos] = c; pos++;  c = 0; first = true;} break;
+        case 0:
+            buf[pos] = c;
+            pos++;
+            if(pos < buf_length)
+            {
+                buf[pos] = 0;
+            }
+            return;
+
+        default:
+            debug_line("gdbs: invalid hex char %d / 0x%02x !", *hex, *hex);
+            buf[pos] = 0;
+            return;
+        }
+    }
+    buf[pos] = 0;
+}
+
+void encode_text_to_hex_string(char * text, uint32_t buf_length, char * buf)
+{
+    uint32_t pos = 0;
+
+    if(NULL == buf)
+    {
+        return;
+    }
+    if(NULL == text)
+    {
+        *buf = 0;
+        return;
+    }
+
+    while(pos < (buf_length - 2))
+    {
+        uint8_t val = (uint8_t)(*text);
+        if(0 == val)
+        {
+            // end of text reached
+            buf[pos] = 0;
+            return;
+        }
+        else
+        {
+            int_to_hex(&(buf[pos]), val, 2);
+            pos = pos + 2;
+        }
+    }
+    buf[pos] = 0;
+}
