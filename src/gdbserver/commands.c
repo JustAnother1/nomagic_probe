@@ -34,6 +34,7 @@ typedef struct {
 
 typedef enum parameter_pattern {
     PARAM_XX,
+    PARAM_ADDR_XX,
     PARAM_ADDR_LENGTH_XX,
     PARAM_ADDR_LENGTH,
     PARAM_OPT_ADDR,
@@ -390,7 +391,7 @@ static void handle_vee(char* received, uint32_t length)
             // TODO
             send_unknown_command_reply();
         }
-        if(0 == strncmp(received, "vAttach", 7))
+        else if(0 == strncmp(received, "vAttach", 7))
         {
             // command start with "vAttach"
             found_cmd = true;
@@ -398,6 +399,49 @@ static void handle_vee(char* received, uint32_t length)
             // TODO
             send_unknown_command_reply();
         }
+        else if(0 == strncmp(received, "vFlashDone", 10))
+        {
+            // command start with "vFlashDone"
+            found_cmd = true;
+            gdb_is_now_busy();
+            if(false == target_reply_flash_done())
+            {
+                // failed to add command
+                send_unknown_command_reply();
+            }
+            // else OK. target reply packet ends busy state.
+        }
+        else if(0 == strncmp(received, "vFlashErase", 11))
+        {
+            // command start with "vFlashErase"
+            found_cmd = true;
+            if(true == parse_parameter(PARAM_ADDR_LENGTH, received))
+            {
+                gdb_is_now_busy();
+                if(false == target_reply_flash_erase(&parsed_parameter))
+                {
+                    // failed to add command
+                    send_unknown_command_reply();
+                }
+                // else OK. Reply packet ends busy state.
+            }
+        }
+        else if(0 == strncmp(received, "vFlashWrite", 11))
+        {
+            // command start with "vFlashWrite"
+            found_cmd = true;
+            if(true == parse_parameter(PARAM_ADDR_XX, received))
+            {
+                gdb_is_now_busy();
+                if(false == target_reply_flash_write(&parsed_parameter))
+                {
+                    // failed to add command
+                    send_unknown_command_reply();
+                }
+                // else OK. Reply packet ends busy state.
+            }
+        }
+
     }
 
     if(false == found_cmd)
@@ -613,6 +657,27 @@ static bool parse_parameter(param_pattern_typ pattern, char* parameter)
     {
     case PARAM_XX: // XX
         return parse_memory(parameter);
+
+    case PARAM_ADDR_XX: // addr:XX
+    {
+        char* mem_start;
+        mem_start = strchr(parameter, ':');
+        if(NULL == mem_start)
+        {
+            // pattern needs to have a ":"
+            reply_packet_prepare();
+            reply_packet_add("E 04");
+            reply_packet_send();
+            return false;
+        }
+        *mem_start = '\0';
+        mem_start++;
+        parsed_parameter.address = hex_to_int(parameter, 0);
+        parsed_parameter.has_address = true;
+        // XX is now in mem_start
+        return parse_memory(mem_start);
+    }
+
 
     case PARAM_ADDR_LENGTH_XX: // addr,length:XX
     {

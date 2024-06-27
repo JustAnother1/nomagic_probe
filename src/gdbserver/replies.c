@@ -259,3 +259,65 @@ bool target_reply_write_memory(parameter_typ* parsed_parameter)
     }
     return true;
 }
+
+bool target_reply_flash_done(void)
+{
+    Result res;
+    action_data_typ* const action =  book_action_slot();
+    if(NULL == action)
+    {
+        debug_line("ERROR: could not start reply flash done ! Action queue full!");
+        return false;
+    }
+    action->action = GDB_CMD_VFLASH_DONE;
+    res = add_target_action(action);
+    if(RESULT_OK != res)
+    {
+        debug_line("ERROR: could not execute gdb:'vFlashDone'! adding action failed(%ld)!", res);
+        return false;
+    }
+    return true;
+}
+bool target_reply_flash_erase(parameter_typ* parsed_parameter)
+{
+    // TODO
+    (void)parsed_parameter;
+
+    Result res;
+    action_data_typ* const action =  book_action_slot();
+    if(NULL == action)
+    {
+        debug_line("ERROR: could not start reply flash erase ! Action queue full!");
+        return false;
+    }
+    action->action = GDB_CMD_VFLASH_ERASE;
+    res = add_target_action(action);
+    if(RESULT_OK != res)
+    {
+        debug_line("ERROR: could not execute gdb:'vFlashErase'! adding action failed(%ld)!", res);
+        return false;
+    }
+    return true;
+}
+
+bool target_reply_flash_write(parameter_typ* parsed_parameter)
+{
+    // TODO
+    (void)parsed_parameter;
+
+    Result res;
+    action_data_typ* const action =  book_action_slot();
+    if(NULL == action)
+    {
+        debug_line("ERROR: could not start reply flash write ! Action queue full!");
+        return false;
+    }
+    action->action = GDB_CMD_VFLASH_WRITE;
+    res = add_target_action(action);
+    if(RESULT_OK != res)
+    {
+        debug_line("ERROR: could not execute gdb:'vFlashWrite'! adding action failed(%ld)!", res);
+        return false;
+    }
+    return true;
+}

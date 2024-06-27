@@ -44,7 +44,9 @@ bool target_reply_continue(void);
 bool target_reply_read_memory(parameter_typ* parsed_parameter);
 bool target_reply_write_memory(parameter_typ* parsed_parameter);
 bool target_reply_step(parameter_typ* parsed_parameter);
-
+bool target_reply_flash_done(void);
+bool target_reply_flash_erase(parameter_typ* parsed_parameter);
+bool target_reply_flash_write(parameter_typ* parsed_parameter);
 
 
 #endif /* GDBSERVER_REPLIES_H_ */

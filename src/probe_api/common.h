@@ -48,6 +48,9 @@ typedef enum {
     GDB_CMD_WRITE_MEMORY,
     GDB_CMD_STEP,
     CHECK_RUNNING,
+    GDB_CMD_VFLASH_DONE,
+    GDB_CMD_VFLASH_ERASE,
+    GDB_CMD_VFLASH_WRITE,
 #endif
     TARGET_SPECIFIC_ACTIONS_ENUM
     // new actions go here

@@ -59,3 +59,25 @@ uint32_t target_get_SWD_APSel(uint32_t core_num)
     (void) core_num;
     return 0;
 }
+
+Result handle_target_reply_vFlashDone(action_data_typ* const action, bool first_call)
+{
+    (void) action;
+    (void) first_call;
+    return RESULT_OK;
+}
+
+Result handle_target_reply_vFlashErase(action_data_typ* const action, bool first_call)
+{
+    (void) action;
+    (void) first_call;
+    return RESULT_OK;
+}
+
+Result handle_target_reply_vFlashWrite(action_data_typ* const action, bool first_call)
+{
+    (void) action;
+    (void) first_call;
+    return RESULT_OK;
+}
+

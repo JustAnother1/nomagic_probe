@@ -62,6 +62,9 @@ static const action_handler action_look_up[NUM_ACTIONS] = {
         handle_target_reply_write_memory,
         handle_target_reply_step,
         handle_check_target_running,
+        handle_target_reply_vFlashDone,
+        handle_target_reply_vFlashErase,
+        handle_target_reply_vFlashWrite,
 #endif
         TARGET_SPECIFIC_ACTION_HANDLERS
 };
@@ -77,6 +80,10 @@ static const char* action_names[NUM_ACTIONS] = {
         "reply_read_memory",
         "reply_write_memory",
         "reply_step",
+        "check running",
+        "flash done",
+        "flash erase",
+        "flash write",
 #endif
         TARGET_SPECIFIC_ACTION_NAMES
 };
