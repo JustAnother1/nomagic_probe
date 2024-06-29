@@ -147,7 +147,7 @@ void debug_uart_flush(void)
 {
     while(send_read_pos != send_write_pos)
     {
-        UART0_IRQ();
+        UART0_IRQ(); // we might be in an interrupt that blocks the UART interrupt
         debug_uart_tick();
     }
 }
@@ -168,6 +168,7 @@ void debug_uart_send_bytes(const uint8_t* data, const uint32_t length)
         {
             // buffer is full
             // -> wait for space to become available
+            UART0_IRQ();// we might be in an interrupt that blocks the UART interrupt
             debug_uart_tick();
         }
         send_buf[send_write_pos] = data[i];
@@ -189,6 +190,7 @@ void debug_uart_send_String(char* str)
         {
             // buffer is full
             // -> wait for space to become available
+            UART0_IRQ();// we might be in an interrupt that blocks the UART interrupt
             debug_uart_tick();
         }
         send_buf[send_write_pos] = *str;

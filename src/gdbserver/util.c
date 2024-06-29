@@ -75,10 +75,10 @@ uint32_t hex_to_int(char* hex, uint32_t num_digits)
     return res;
 }
 
-void int_to_hex(char* hex, uint32_t value, uint32_t num_digits)
+void byte_to_hex(char* hex, uint32_t value)
 {
     uint32_t i;
-    for(i = 0; i < num_digits; i++)
+    for(i = 0; i < 2; i++)
     {
         switch(value&0xf)
         {
@@ -102,6 +102,46 @@ void int_to_hex(char* hex, uint32_t value, uint32_t num_digits)
         value = (value>>4);
         hex++;
     }
+}
+
+void int_to_hex(char* hex, uint32_t value, uint32_t num_digits)
+{
+    // -> little-endian
+    if(0 == num_digits)
+    {
+        if(0xff < value)
+        {
+            num_digits = 4;
+        }
+        if(0xffff < value)
+        {
+            num_digits = 6;
+        }
+        if(0xffffff < value)
+        {
+            num_digits = 8;
+        }
+    }
+    // the value is uint32_t so num_digits can not be more than 8
+    if(num_digits > 6)
+    {
+        byte_to_hex(hex, (value>>24) & 0xff);
+        hex = hex + 2;
+    }
+    if(num_digits > 4)
+    {
+        byte_to_hex(hex, (value>>16) & 0xff);
+        hex = hex + 2;
+        byte_to_hex(hex, (value>>8)  & 0xff);
+        hex = hex + 2;
+        byte_to_hex(hex, (value)     & 0xff);
+    }
+    if(num_digits > 2)
+    {
+        byte_to_hex(hex, (value>>8)  & 0xff);
+        hex = hex + 2;
+    }
+    byte_to_hex(hex, (value)     & 0xff);
 }
 
 void decode_hex_string_to_text(char * hex, uint32_t buf_length, char * buf)
@@ -189,7 +229,7 @@ void encode_text_to_hex_string(char * text, uint32_t buf_length, char * buf)
         }
         else
         {
-            int_to_hex(&(buf[pos]), val, 2);
+            byte_to_hex(&(buf[pos]), val);
             pos = pos + 2;
         }
     }

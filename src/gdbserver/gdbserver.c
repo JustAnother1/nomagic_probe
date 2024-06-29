@@ -133,7 +133,19 @@ void reply_packet_add_hex(uint32_t data, uint32_t digits)
     if((1 > digits) || (8 < digits))
     {
         // invalid digits value or shorten mode request
-        digits = 8;
+        digits = 2;
+        if(0xff < data)
+        {
+            digits = 4;
+        }
+        if(0xffff < data)
+        {
+            digits = 6;
+        }
+        if(0xffffff < data)
+        {
+            digits = 8;
+        }
         shorten = true;
     }
     int_to_hex(buf, data, digits);  // returns value in lsb sequence
@@ -167,7 +179,7 @@ void reply_packet_send(void)
     char reply_checksum[2];
     // sum = calculateChecksum((char*)&reply_buffer[1], reply_length -1);  // checksum does not include the '$'
     sum = sum & 0xff;
-    int_to_hex(reply_checksum, sum, 2);
+    byte_to_hex(reply_checksum, sum);
     if(reply_length + 4 > MAX_REPLY_LENGTH)
     {
         // should never happen -> if it happens increase the MAX_REPLY_LENGTH

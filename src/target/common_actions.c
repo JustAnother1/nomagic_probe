@@ -278,11 +278,8 @@ Result handle_target_reply_g(action_data_typ* const action, bool first_call)
     if(6 == *(action->cur_phase))
     {
         // this register done, next?
-        char buf[9];
-        buf[8] = 0;
-        int_to_hex(buf, action->read_0, 8);
-        reply_packet_add(buf);
-        // debug_line("read 0x%08lx", action->read_0);
+        reply_packet_add_hex(action->read_0, 8);
+        debug_line("read 0x%08lx", action->read_0);
         action->intern[INTERN_REGISTER_IDX] ++;
         *(action->cur_phase) = 0;
         if(17 == action->intern[INTERN_REGISTER_IDX])
@@ -674,6 +671,7 @@ Result handle_check_target_running(action_data_typ* const action, bool first_cal
 static void send_stopped_reply(void)
 {
     reply_packet_prepare();
+    // S = Signal; 05 = SIGTRAP
     reply_packet_add("S05");  // TODO send real stop reply
     reply_packet_send();
 }
