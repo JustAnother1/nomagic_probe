@@ -92,6 +92,6 @@ void handle_qC_command(char* command)
 {
     (void) command;
     reply_packet_prepare();
-    reply_packet_add("1");
+    reply_packet_add("QC1");
     reply_packet_send();
 }
