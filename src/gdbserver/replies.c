@@ -42,9 +42,6 @@ bool target_reply_questionmark(void)
 
 bool target_reply_step(parameter_typ* parsed_parameter)
 {
-    // TODO
-    (void)parsed_parameter;
-
     Result res;
     action_data_typ* const action =  book_action_slot();
     if(NULL == action)
@@ -53,6 +50,7 @@ bool target_reply_step(parameter_typ* parsed_parameter)
         return false;
     }
     action->action = GDB_CMD_STEP;
+    action->gdb_parameter = parsed_parameter;
     res = add_target_action(action);
     if(RESULT_OK != res)
     {
@@ -165,9 +163,6 @@ bool target_reply_write_g(parameter_typ* parsed_parameter)
     //     ‘E NN’
     //         for an error
 
-    // TODO
-    (void)parsed_parameter;
-
     Result res;
     action_data_typ* const action =  book_action_slot();
     if(NULL == action)
@@ -176,6 +171,7 @@ bool target_reply_write_g(parameter_typ* parsed_parameter)
         return false;
     }
     action->action = GDB_CMD_WRITE_G;
+    action->gdb_parameter = parsed_parameter;
     res = add_target_action(action);
     if(RESULT_OK != res)
     {
@@ -206,10 +202,6 @@ bool target_reply_read_memory(parameter_typ* parsed_parameter)
     //     ‘E NN’
     //         NN is errno
 
-
-    // TODO
-    (void)parsed_parameter;
-
     Result res;
     action_data_typ* const action =  book_action_slot();
     if(NULL == action)
@@ -218,6 +210,7 @@ bool target_reply_read_memory(parameter_typ* parsed_parameter)
         return false;
     }
     action->action = GDB_CMD_READ_MEMORY;
+    action->gdb_parameter = parsed_parameter;
     res = add_target_action(action);
     if(RESULT_OK != res)
     {
@@ -240,9 +233,6 @@ bool target_reply_write_memory(parameter_typ* parsed_parameter)
     //         for an error (this includes the case where only part of the data
     // was written).
 
-    // TODO
-    (void)parsed_parameter;
-
     Result res;
     action_data_typ* const action =  book_action_slot();
     if(NULL == action)
@@ -251,6 +241,7 @@ bool target_reply_write_memory(parameter_typ* parsed_parameter)
         return false;
     }
     action->action = GDB_CMD_WRITE_MEMORY;
+    action->gdb_parameter = parsed_parameter;
     res = add_target_action(action);
     if(RESULT_OK != res)
     {
@@ -280,9 +271,6 @@ bool target_reply_flash_done(void)
 }
 bool target_reply_flash_erase(parameter_typ* parsed_parameter)
 {
-    // TODO
-    (void)parsed_parameter;
-
     Result res;
     action_data_typ* const action =  book_action_slot();
     if(NULL == action)
@@ -291,6 +279,7 @@ bool target_reply_flash_erase(parameter_typ* parsed_parameter)
         return false;
     }
     action->action = GDB_CMD_VFLASH_ERASE;
+    action->gdb_parameter = parsed_parameter;
     res = add_target_action(action);
     if(RESULT_OK != res)
     {
@@ -302,9 +291,6 @@ bool target_reply_flash_erase(parameter_typ* parsed_parameter)
 
 bool target_reply_flash_write(parameter_typ* parsed_parameter)
 {
-    // TODO
-    (void)parsed_parameter;
-
     Result res;
     action_data_typ* const action =  book_action_slot();
     if(NULL == action)
@@ -313,6 +299,7 @@ bool target_reply_flash_write(parameter_typ* parsed_parameter)
         return false;
     }
     action->action = GDB_CMD_VFLASH_WRITE;
+    action->gdb_parameter = parsed_parameter;
     res = add_target_action(action);
     if(RESULT_OK != res)
     {

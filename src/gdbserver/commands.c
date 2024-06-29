@@ -25,6 +25,7 @@
 #include "cmd_qxfer.h"
 // replies:
 #include "replies.h"
+#include "threads.h"
 
 
 typedef struct {
@@ -38,6 +39,7 @@ typedef enum parameter_pattern {
     PARAM_ADDR_LENGTH_XX,
     PARAM_ADDR_LENGTH,
     PARAM_OPT_ADDR,
+    PARAM_ADDR_BINARY,
 } param_pattern_typ;
 
 
@@ -53,11 +55,13 @@ static void handle_vee(char* received, uint32_t length);
 static void handle_tee(char* received, uint32_t length);
 static bool parse_parameter(param_pattern_typ pattern, char* parameter);
 static bool parse_memory(char* parameter);
+static bool parse_binary(char* parameter);
 
 void commands_init(void)
 {
     cfg.extended_mode = false;
     cfg.noAckMode = false;
+    threads_init();
 }
 
 
@@ -165,7 +169,9 @@ void commands_execute(char* received, uint32_t length, char* checksum)
             break;
 
         case 'H':  // report the current tread
-            // Hc ?
+            handle_H_command(received);
+            break;
+
         case 'k':  // kill the target
             // TODO
             send_unknown_command_reply();
@@ -415,7 +421,7 @@ static void handle_vee(char* received, uint32_t length)
         {
             // command start with "vFlashErase"
             found_cmd = true;
-            if(true == parse_parameter(PARAM_ADDR_LENGTH, received))
+            if(true == parse_parameter(PARAM_ADDR_LENGTH, &(received[12])))
             {
                 gdb_is_now_busy();
                 if(false == target_reply_flash_erase(&parsed_parameter))
@@ -430,7 +436,7 @@ static void handle_vee(char* received, uint32_t length)
         {
             // command start with "vFlashWrite"
             found_cmd = true;
-            if(true == parse_parameter(PARAM_ADDR_XX, received))
+            if(true == parse_parameter(PARAM_ADDR_BINARY, &(received[12])))
             {
                 gdb_is_now_busy();
                 if(false == target_reply_flash_write(&parsed_parameter))
@@ -493,9 +499,7 @@ static void handle_general_query(char* received, uint32_t length)
         {
             found_cmd = true;
             // report the current tread
-            reply_packet_prepare();
-            reply_packet_add("0");
-            reply_packet_send();
+            handle_qC_command(received);
         }
         else if(0 == strncmp(received, "qL", 2))
         {
@@ -543,7 +547,9 @@ static void handle_general_query(char* received, uint32_t length)
             found_cmd = true;
             // request any symbol data
             // TODO
-            send_unknown_command_reply();
+            reply_packet_prepare();
+            reply_packet_add("OK"); // we do not need to resolve any more Symbols
+            reply_packet_send();
         }
     }
     else if(8 == cmd_len)
@@ -594,17 +600,13 @@ static void handle_general_query(char* received, uint32_t length)
         {
             found_cmd = true;
             // report the current tread
-            reply_packet_prepare();
-            reply_packet_add("l"); // l = end of list
-            reply_packet_send();
+            handle_qfThreadInfo_command(received);
         }
         else if(0 == strncmp(received, "qsThreadInfo", 12))
         {
             found_cmd = true;
             // report the current tread
-            reply_packet_prepare();
-            reply_packet_add("l"); // l = end of list
-            reply_packet_send();
+            handle_qsThreadInfo_command(received);
         }
     }
     else if(16 == cmd_len)
@@ -742,6 +744,26 @@ static bool parse_parameter(param_pattern_typ pattern, char* parameter)
         }
         break;
 
+    case PARAM_ADDR_BINARY:  // address followed by binary data
+    {
+        char* mem_start;
+        mem_start = strchr(parameter, ':');
+        if(NULL == mem_start)
+        {
+            // pattern needs to have a ":"
+            reply_packet_prepare();
+            reply_packet_add("E 04");
+            reply_packet_send();
+            return false;
+        }
+        *mem_start = '\0';
+        mem_start++;
+        parsed_parameter.address = hex_to_int(parameter, 0);
+        parsed_parameter.has_address = true;
+        // XX is now in mem_start
+        return parse_binary(mem_start);
+    }
+
     default:
         // invalid pattern
         reply_packet_prepare();
@@ -749,6 +771,20 @@ static bool parse_parameter(param_pattern_typ pattern, char* parameter)
         reply_packet_send();
         return false;
     }
+    return true;
+}
+
+static bool parse_binary(char* parameter)
+{
+    if(NULL == parameter)
+    {
+        return false;
+    }
+    if(0 == *parameter)
+    {
+        return false;
+    }
+    // TODO
     return true;
 }
 

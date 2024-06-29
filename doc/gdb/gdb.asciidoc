@@ -10,17 +10,6 @@ empty response is "$#00"
 
 == commands
 
-=== minimal required
-At a minimum, a stub is required to support the ‘?’ command to tell GDB the reason for halting, 
-‘g’ and ‘G’ commands for register access, and the ‘m’ and ‘M’ commands for memory access. 
-
-Stubs that only control single-threaded targets can implement run control with the ‘c’ (continue) command, 
-and if the target architecture supports hardware-assisted single-stepping, the ‘s’ (step) command. 
-
-Stubs that support multi-threading targets should support the ‘vCont’ command. 
-
-All other commands are optional. 
-
 === Thread id
 
 [cols="1,1"]
@@ -67,5 +56,11 @@ There are some GDB specific words used that only make sense in the GDB contet. T
 
 | stub
 | the JTAG/SWD probe
+
+| process
+| processes can have one or more threads. Each proces has a seperate memory and can not access the memory of another process.
+
+| thread
+| A code execution path. Threads can access the memory of other threads in the same process. (Embeedde context: in bare metal we have one thread per CPU core. If the firmware uses an OS then we can be "aware" of the threads of the OS.
 
 |===

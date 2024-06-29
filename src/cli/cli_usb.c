@@ -60,16 +60,16 @@ bool cmd_usb_info(const uint32_t loop)
             debug_line("NCM (network)   : active");
             debug_msg("probe IP        : ");
             network_cfg_debug_print_ip_address(net_cfg.probe_ip.addr);
-            debug_line("");
+            debug_line(" ");
             debug_msg("probe net mask  : ");
             network_cfg_debug_print_ip_address(net_cfg.netmask.addr);
-            debug_line("");
+            debug_line(" ");
             debug_msg("DHCP IP         : ");
             network_cfg_debug_print_ip_address(net_cfg.host_pc_ip.addr);
-            debug_line("");
+            debug_line(" ");
             debug_msg("gateway IP      : ");
             network_cfg_debug_print_ip_address(net_cfg.gateway.addr);
-            debug_line("");
+            debug_line(" ");
             debug_line("gdb-server port : TCP:%d", net_cfg.gdb_port);
         }
         else

@@ -31,6 +31,25 @@
 // GDB_MAX_PACKET_SIZE);
 // #define GDB_QSUPPORTED_NOACKMODE ";QStartNoAckMode+"
 // GDB_MAX_PACKET_SIZE = 1024
+/*
+Feature                openocd   picoprobe   black magic probe
+-------                -------   ---------   -----------------
+exec-events+             x
+fork-events+             x
+hwbreak+                 x
+multiprocess+            x
+no-resumed+              x
+qRelocInsn+              x
+QStartNoAckMode+                   x           x
+QThreadEvents+           x
+qXfer:features:read+               x           x
+qXfer:memory-map:read+             x           x
+qXfer:threads:read+                x
+swbreak+                 x
+vfork-events+            x
+vContSupported+          x         x           x
+*/
+
 
 void handle_cmd_qSupported(char* parameter, uint32_t length)
 {
@@ -65,10 +84,13 @@ void handle_cmd_qSupported(char* parameter, uint32_t length)
     reply_packet_prepare();
     reply_packet_add("PacketSize=");
     reply_packet_add_hex(MAX_COMMAND_LENGTH -1, 0); // GDB does not send a 0 at the end, so we need to have space for an additional 0
-    reply_packet_add(";qXfer:memory-map:read+");
-    reply_packet_add(";qXfer:features:read+");
     reply_packet_add(";hwbreak+");
+    // reply_packet_add(";multiprocess+");  // TODO might make sense for multi core ?
     reply_packet_add(";QStartNoAckMode+");
+    reply_packet_add(";qXfer:features:read+");
+    reply_packet_add(";qXfer:memory-map:read+");
+    reply_packet_add(";qXfer:threads:read+");
     reply_packet_add(";vContSupported+");
+
     reply_packet_send();
 }

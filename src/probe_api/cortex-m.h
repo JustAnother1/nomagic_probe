@@ -233,6 +233,9 @@
 #define THREADS_CONTENT  \
 "<?xml version=\"1.0\"?>\r\n" \
 "<threads>\r\n" \
+    "<thread id=\"1\" core=\"0\" name=\"main\">\r\n" \
+        "main thread\r\n" \
+    "</thread>\r\n" \
 "</threads>\r\n"
 
 #endif /* ARM_CORTEX_M_H_ */

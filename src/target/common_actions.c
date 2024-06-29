@@ -282,7 +282,7 @@ Result handle_target_reply_g(action_data_typ* const action, bool first_call)
         buf[8] = 0;
         int_to_hex(buf, action->read_0, 8);
         reply_packet_add(buf);
-        debug_line("read 0x%08lx", action->read_0);
+        // debug_line("read 0x%08lx", action->read_0);
         action->intern[INTERN_REGISTER_IDX] ++;
         *(action->cur_phase) = 0;
         if(17 == action->intern[INTERN_REGISTER_IDX])
@@ -543,7 +543,7 @@ Result handle_target_reply_read_memory(action_data_typ* const action, bool first
         buf[8] = 0;
         int_to_hex(buf, action->read_0, 8);
         reply_packet_add(buf);
-        debug_line("read 0x%08lx", action->read_0);
+        // debug_line("read 0x%08lx", action->read_0);
         action->intern[INTERN_MEMORY_OFFSET]++;
         *(action->cur_phase) = 1;
         if(action->gdb_parameter->length == action->intern[INTERN_MEMORY_OFFSET])

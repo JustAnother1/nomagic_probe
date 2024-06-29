@@ -86,6 +86,7 @@ SRC += $(NOMAGIC_SRC_FOLDER)gdbserver/cmd_qxfer.c
 SRC += $(NOMAGIC_SRC_FOLDER)gdbserver/commands.c
 SRC += $(NOMAGIC_SRC_FOLDER)gdbserver/gdbserver.c
 SRC += $(NOMAGIC_SRC_FOLDER)gdbserver/replies.c
+SRC += $(NOMAGIC_SRC_FOLDER)gdbserver/threads.c
 SRC += $(NOMAGIC_SRC_FOLDER)gdbserver/util.c
 endif
 
