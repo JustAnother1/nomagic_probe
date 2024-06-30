@@ -8,9 +8,17 @@ notification packets: "% data # checksum" ( Example : %Stop:...)
 
 empty response is "$#00"
 
-== commands
+== testing
 
-=== Thread id
+[source,bash]
+----
+$ arm-none-eabi-gdb --nh --nx build/application.elf
+(gdb) set debug remote 1
+(gdb) target remote 192.168.42.1:54321
+(gdb) i r
+----
+
+== Thread id
 
 [cols="1,1"]
 |===
@@ -43,7 +51,14 @@ https://ftp.gnu.org/old-gnu/Manuals/gdb/html_chapter/gdb_15.html
 
 https://sourceware.org/gdb/onlinedocs/gdb/Remote-Protocol.html#Remote-Protocol[gdbserver protocol]
 
+https://sourceware.org/gdb/current/onlinedocs/gdb/Remote-Protocol.html
+
+
 https://black-magic.org/[Black Magic Firmware]
+
+https://github.com/llvm/llvm-project/blob/master/lldb/docs/lldb-gdb-remote.txt
+
+
 
 == Dictionary
 

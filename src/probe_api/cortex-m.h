@@ -27,7 +27,7 @@
 #define SHCSR_SVCALLPENDED_MASK   0x8000
 #define SHCSR_SVCALLPENDED_OFFSET 15
 
-#define SHCSR                     ((uint32_t *) 0xe000ed24)
+#define SHCSR                     0xe000ed24
 
 /** Debug Fault Status Register
  * Provides the top level reason why a debug event has occurred
@@ -55,7 +55,7 @@
 #define DFSR_HALTED_MASK          1
 #define DFSR_HALTED_OFFSET        0
 
-#define DFSR                      ((uint32_t *) 0xe000ed30)
+#define DFSR                      0xe000ed30
 
 /** Debug Halting Control and Status Register
  * Controls halting debug.
@@ -109,7 +109,7 @@
 #define DHCSR_C_DEBUGEN_MASK      1
 #define DHCSR_C_DEBUGEN_OFFSET    0
 
-#define DHCSR                     ((uint32_t *) 0xe000edf0)
+#define DHCSR                     0xe000edf0
 
 #define DBGKEY                    0xa05f0000
 
@@ -172,12 +172,12 @@
 #define DCRSR_REGSEL_PSP          18
 #define DCRSR_REGSEL_PRIMASK      20
 
-#define DCRSR                     ((uint32_t *) 0xe000edf4)
+#define DCRSR                     0xe000edf4
 
 /** Debug Core Register Data Register
  *
  */
-#define DCRDR                     ((uint32_t *) 0xe000edf8)
+#define DCRDR                     0xe000edf8
 
 /** Debug Exception and Monitor Control Register
  * Manages vector catch behavior and enables the DWT.
@@ -193,7 +193,7 @@
 #define DEMCR_VC_HARDERR_OFFSET   10
 #define DEMCR_VC_CORERESET_MASK   0x1f
 #define DEMCR_VC_CORERESET_OFFSET 0
-#define DEMCR                     ((uint32_t *) 0xe000edfc)
+#define DEMCR                     0xe000edfc
 
 #define TARGET_XML_CONTENT  \
 "<?xml version=\"1.0\"?>\r\n" \

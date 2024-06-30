@@ -26,8 +26,8 @@ Result do_connect(action_data_typ* const action);
 Result do_disconnect(action_data_typ* const action);
 Result do_read_ap_reg(action_data_typ* const action, uint32_t bank, uint32_t reg);
 Result do_write_ap_reg(action_data_typ* const action, uint32_t bank, uint32_t reg, uint32_t data);
-Result do_read_ap(action_data_typ* const action, uint32_t* address);
-Result do_write_ap(action_data_typ* const action, uint32_t* address, uint32_t data);
+Result do_read_ap(action_data_typ* const action, uint32_t address);
+Result do_write_ap(action_data_typ* const action, uint32_t address, uint32_t data);
 Result do_get_Result_OK(action_data_typ* const action);
 Result do_get_Result_data(action_data_typ* const action);
 

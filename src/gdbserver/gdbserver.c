@@ -84,6 +84,8 @@ void gdbserver_tick(void)
         {
             target_close_connection();
             connected = false;
+            // reset settings from this session so that next session is the same as the first session
+            commands_init();
         }
     }
 }
@@ -250,6 +252,11 @@ void gdb_is_not_busy_anymore(void)
     busy_processing_cmd = false;
 }
 
+bool is_gdb_busy(void)
+{
+    return busy_processing_cmd;
+}
+
 static void communicate_with_gdb(void)
 {
     uint32_t num_bytes_received;
@@ -261,7 +268,7 @@ static void communicate_with_gdb(void)
         // and if there were we would not be ready to work on it
         if(true == timeout_expired(&busy_to))
         {
-            debug_line("ERROR: timeout !");
+            debug_line("ERROR: gdb-server command timeout !");
             gdb_is_not_busy_anymore();
         }
         return;

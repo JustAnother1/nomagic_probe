@@ -16,6 +16,7 @@
 #define PROBE_API_GDB_PACKETS_H_
 
 #include <stdint.h>
+#include <stdbool.h>
 
 void reply_packet_prepare(void);
 void reply_packet_add(char* data);  // adds string
@@ -27,6 +28,7 @@ void send_ack_packet(void);
 void send_unknown_command_reply(void);
 void gdb_is_now_busy(void);
 void gdb_is_not_busy_anymore(void);
+bool is_gdb_busy(void);
 void send_part(char* part, uint32_t size, uint32_t offset, uint32_t length);
 
 #endif /* PROBE_API_GDB_PACKETS_H_ */

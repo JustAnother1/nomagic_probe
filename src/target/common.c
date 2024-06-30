@@ -417,6 +417,11 @@ static void handle_actions(void)
                        action_names[action_queue[action_read].action],
                        action_queue[action_read].main_phase,
                        action_queue[action_read].sub_phase);
+            if(true == is_gdb_busy())
+            {
+                reply_packet_send();
+                gdb_is_not_busy_anymore();
+            }
         }
         cur_action = NULL;
         action_read++;
