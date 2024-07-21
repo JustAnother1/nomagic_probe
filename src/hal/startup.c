@@ -256,6 +256,7 @@ void NMI_Handler(void)
 
 void Hard_Fault_Handler(void)
 {
+#define CFSR_ADDR 0xE000ED28
     // Configurable Fault Status Registers (CFSR) - 0xE000ED28
     // Bit   |  Name       | reason to be set
     // 31-26 | reserved    |
@@ -283,7 +284,7 @@ void Hard_Fault_Handler(void)
     //  1    | DACCVIOL    | data access triggered the MemManage fault
     //  0    | IACCVIOL    | attempt to execute an instruction triggered an MPU or Execute Never (XN) fault
 
-    uint32_t reason = *((uint32_t *) 0xE000ED28);
+    uint32_t reason = *((uint32_t *) CFSR_ADDR);
     watchdog_report_issue(ISSUE_UNEXPECTED_HANDLER_CALLED_HARD_FAULT);
     watchdog_report_value(reason);
     error_state();

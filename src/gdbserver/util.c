@@ -104,6 +104,36 @@ void byte_to_hex(char* hex, uint32_t value)
     }
 }
 
+void byte_to_hex_endian(char* hex, uint32_t value)
+{
+    uint32_t i;
+    hex++;
+    for(i = 0; i < 2; i++)
+    {
+        switch(value&0xf)
+        {
+        case  0: *hex = '0'; break;
+        case  1: *hex = '1'; break;
+        case  2: *hex = '2'; break;
+        case  3: *hex = '3'; break;
+        case  4: *hex = '4'; break;
+        case  5: *hex = '5'; break;
+        case  6: *hex = '6'; break;
+        case  7: *hex = '7'; break;
+        case  8: *hex = '8'; break;
+        case  9: *hex = '9'; break;
+        case 10: *hex = 'a'; break;
+        case 11: *hex = 'b'; break;
+        case 12: *hex = 'c'; break;
+        case 13: *hex = 'd'; break;
+        case 14: *hex = 'e'; break;
+        case 15: *hex = 'f'; break;
+        }
+        value = (value>>4);
+        hex--;
+    }
+}
+
 void int_to_hex(char* hex, uint32_t value, uint32_t num_digits)
 {
     // -> little-endian
@@ -200,6 +230,7 @@ void decode_hex_string_to_text(char * hex, uint32_t buf_length, char * buf)
             buf[pos] = 0;
             return;
         }
+        hex++;
     }
     buf[pos] = 0;
 }
@@ -229,9 +260,10 @@ void encode_text_to_hex_string(char * text, uint32_t buf_length, char * buf)
         }
         else
         {
-            byte_to_hex(&(buf[pos]), val);
+            byte_to_hex_endian(&(buf[pos]), val);
             pos = pos + 2;
         }
+        text++;
     }
     buf[pos] = 0;
 }

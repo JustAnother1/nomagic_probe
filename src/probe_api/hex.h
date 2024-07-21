@@ -21,6 +21,6 @@
 uint32_t hex_to_int(char* hex, uint32_t num_digits);
 void int_to_hex(char* hex, uint32_t value, uint32_t num_digits);
 void byte_to_hex(char* hex, uint32_t value);
-
+void byte_to_hex_endian(char* hex, uint32_t value);
 
 #endif /* PROBE_API_HEX_H_ */

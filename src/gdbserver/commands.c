@@ -527,6 +527,7 @@ static void handle_general_query(char* received, uint32_t length)
             // command is encoded in hex
             decode_hex_string_to_text(&(received[6]), sizeof(buf), buf);
             // execute command in buf
+            debug_line("received command: %s!", buf);
             if(false)
             {
                 // TODO implement commands (reset init, halt,...)
@@ -534,7 +535,7 @@ static void handle_general_query(char* received, uint32_t length)
             else
             {
                 // invalid command
-                encode_text_to_hex_string("ERROR: invalid command !", sizeof(buf), buf);
+                encode_text_to_hex_string("ERROR: invalid command !\r\n", sizeof(buf), buf);
                 reply_packet_add(buf);
             }
             reply_packet_send();
