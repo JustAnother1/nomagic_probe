@@ -24,6 +24,7 @@ uint32_t target_get_SWD_core_id(uint32_t core_num); // only required for SWDv2 (
 uint32_t target_get_SWD_APSel(uint32_t core_num);
 #ifdef FEAT_GDB_SERVER
 void target_send_file(char* filename, uint32_t offset, uint32_t len);
+void target_monitor_command(char* command);
 #endif
 
 #endif /* TARGET_H_ */

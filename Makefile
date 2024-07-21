@@ -5,6 +5,7 @@
 # The target chip specific stuff is handeled in the included target.mk file.
 
 PROJECT = nomagic_probe
+PROBE_NAME = "no target "
 
 # tools
 # =====

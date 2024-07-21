@@ -237,7 +237,7 @@ $(BIN_FOLDER)version.h:
 	@echo ""
 	@echo "create version.h"
 	@echo "================"
-	@echo -n "#define VERSION \"" > $(BIN_FOLDER)version.h
+	@echo -n "#define VERSION \"$(PROBE_NAME)" > $(BIN_FOLDER)version.h
 	@cat $(NOMAGIC_FOLDER)version.txt >> $(BIN_FOLDER)version.h
 	@echo " $(GITREF)\"" >> $(BIN_FOLDER)version.h
 	@cat $(BIN_FOLDER)version.h

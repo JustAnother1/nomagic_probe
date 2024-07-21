@@ -14,16 +14,17 @@
  */
 #include <stdint.h>
 #include <stdbool.h>
-#include "gdbserver.h"
 #include "cfg/serial_cfg.h"
+#include "commands.h"
+#include "gdbserver.h"
+#include "probe_api/common.h"
+#include "probe_api/debug_log.h"
 #include "probe_api/gdb_packets.h"
 #include "probe_api/hex.h"
-#include "probe_api/debug_log.h"
 #include "probe_api/result.h"
-#include "probe_api/common.h"
-#include "commands.h"
-#include "util.h"
 #include "probe_api/time.h"
+#include "probe_api/util.h"
+
 
 #define GDB_BUSY_TIMEOUT_MS      1000
 #define CLEAN_END_LENGTH         10

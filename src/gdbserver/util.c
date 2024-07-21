@@ -12,10 +12,12 @@
  * with this program; if not, see <http://www.gnu.org/licenses/>
  *
  */
-#include "util.h"
-#include "probe_api/hex.h"
+
 #include "cfg/serial_cfg.h"
 #include "probe_api/debug_log.h"
+#include "probe_api/hex.h"
+#include "probe_api/util.h"
+
 
 uint32_t calculateChecksum(char* data, uint32_t length)
 {

@@ -15,11 +15,12 @@
 #include "commands.h"
 #include <stdint.h>
 #include <stdbool.h>
-#include "util.h"
 #include "cfg/serial_cfg.h"
 #include "probe_api/gdb_packets.h"
 #include "probe_api/hex.h"
 #include "probe_api/debug_log.h"
+#include "probe_api/util.h"
+#include "target.h"
 // commands:
 #include "cmd_qsupported.h"
 #include "cmd_qxfer.h"
@@ -528,9 +529,10 @@ static void handle_general_query(char* received, uint32_t length)
             decode_hex_string_to_text(&(received[6]), sizeof(buf), buf);
             // execute command in buf
             debug_line("received command: %s!", buf);
+            // Target implements monitor commands (reset init, halt,...)
+            target_monitor_command(buf);
             if(false)
             {
-                // TODO implement commands (reset init, halt,...)
             }
             else
             {

@@ -15,9 +15,11 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "probe_api/result.h"
-#include "probe_api/debug_log.h"
 #include "probe_api/common.h"
+#include "probe_api/debug_log.h"
+#include "probe_api/gdb_packets.h"
+#include "probe_api/result.h"
+#include "probe_api/util.h"
 #include "target.h"
 
 
@@ -41,6 +43,14 @@ void target_send_file(char* filename, uint32_t offset, uint32_t len)
     (void)filename;
     (void)offset;
     (void)len;
+}
+
+void target_monitor_command(char* command)
+{
+    char buf[100];
+    encode_text_to_hex_string("ERROR: invalid command !\r\n", sizeof(buf), buf);
+    reply_packet_add(buf);
+    reply_packet_send();
 }
 
 bool target_is_SWDv2(void)

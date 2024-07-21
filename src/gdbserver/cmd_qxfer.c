@@ -21,8 +21,8 @@
 #include "probe_api/debug_log.h"
 #include "probe_api/gdb_packets.h"
 #include "probe_api/hex.h"
+#include "probe_api/util.h"
 #include "target.h"
-#include "util.h"
 
 #define OBJECT_PART      0
 #define READ_PART        1

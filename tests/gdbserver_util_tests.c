@@ -14,7 +14,7 @@
  */
 
 #include "gdbserver_util_tests.h"
-#include "../src/gdbserver/util.h"
+#include "../src/probe_api/util.h"
 
 void* gdbserver_util_setup(const MunitParameter params[], void* user_data) {
     (void)params;
