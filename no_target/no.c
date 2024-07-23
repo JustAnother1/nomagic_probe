@@ -87,6 +87,7 @@ void target_monitor_command(uint32_t which, char* command)
 {
     char buf[100];
     (void)command;
+    (void)which;
     reply_packet_prepare();
     reply_packet_add("O"); // packet is $ big oh, hex string# checksum
     encode_text_to_hex_string("ERROR: invalid command !\r\n", sizeof(buf), buf);

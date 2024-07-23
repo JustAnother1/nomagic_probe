@@ -13,16 +13,9 @@
  *
  */
 
-#ifndef NOMAGIC_PROBE_SRC_PROBE_API_GDB_MONITOR_DEFS_H_
-#define NOMAGIC_PROBE_SRC_PROBE_API_GDB_MONITOR_DEFS_H_
+#ifndef NOMAGIC_PROBE_SRC_PROBE_API_GDB_MONITOR_COMMANDS_H_
+#define NOMAGIC_PROBE_SRC_PROBE_API_GDB_MONITOR_COMMANDS_H_
 
-#include <stdbool.h>
+void mon_cmd_help(void);
 
-typedef bool (*mon_func_typ)(const char* cmd);
-
-typedef struct {
-    char name[25];
-    char help[60];
-}mon_cmd_typ;
-
-#endif /* NOMAGIC_PROBE_SRC_PROBE_API_GDB_MONITOR_DEFS_H_ */
+#endif /* NOMAGIC_PROBE_SRC_PROBE_API_GDB_MONITOR_COMMANDS_H_ */

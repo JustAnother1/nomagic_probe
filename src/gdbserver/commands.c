@@ -278,27 +278,6 @@ void commands_execute(char* received, uint32_t length, char* checksum)
     }
 }
 
-void mon_cmd_help(const char* cmd)
-{
-    // TODO split this up ?
-    // help command
-    char buf[100];
-    char hex_buf[200];
-    (void)cmd;
-    uint32_t loop;
-    reply_packet_prepare();
-    reply_packet_add("O"); // packet is $ big oh, hex string# checksum
-    for(loop = 0; loop < NUM_MON_COMMANDS; loop++)
-    {
-        snprintf(buf, 100, "%15s : %s", mon_commands[loop].name, mon_commands[loop].help);
-        encode_text_to_hex_string(buf, sizeof(hex_buf), hex_buf);
-        reply_packet_add(buf);
-    }
-    reply_packet_send();
-    gdb_is_not_busy_anymore();
-}
-
-
 static bool checksumOK(char* received, uint32_t length, char* checksum)
 {
     uint32_t calculated_sum = 0;
