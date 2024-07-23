@@ -16,6 +16,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "cfg/serial_cfg.h"
+#include "probe_api/gdb_monitor_defs.h"
 #include "probe_api/gdb_packets.h"
 #include "probe_api/hex.h"
 #include "probe_api/debug_log.h"
@@ -28,6 +29,8 @@
 #include "replies.h"
 #include "threads.h"
 
+
+#define NUM_MON_COMMANDS  (sizeof(mon_commands)/sizeof(mon_cmd_typ))
 
 typedef struct {
     bool extended_mode;
@@ -274,6 +277,27 @@ void commands_execute(char* received, uint32_t length, char* checksum)
             break;
     }
 }
+
+void mon_cmd_help(const char* cmd)
+{
+    // TODO split this up ?
+    // help command
+    char buf[100];
+    char hex_buf[200];
+    (void)cmd;
+    uint32_t loop;
+    reply_packet_prepare();
+    reply_packet_add("O"); // packet is $ big oh, hex string# checksum
+    for(loop = 0; loop < NUM_MON_COMMANDS; loop++)
+    {
+        snprintf(buf, 100, "%15s : %s", mon_commands[loop].name, mon_commands[loop].help);
+        encode_text_to_hex_string(buf, sizeof(hex_buf), hex_buf);
+        reply_packet_add(buf);
+    }
+    reply_packet_send();
+    gdb_is_not_busy_anymore();
+}
+
 
 static bool checksumOK(char* received, uint32_t length, char* checksum)
 {
@@ -523,24 +547,44 @@ static void handle_general_query(char* received, uint32_t length)
         {
             found_cmd = true;
             char buf[100];
-            reply_packet_prepare();
-            reply_packet_add("O"); // packet is $ big oh, hex string# checksum
+            size_t len;
+            uint32_t i;
+            bool found;
             // command is encoded in hex
             decode_hex_string_to_text(&(received[6]), sizeof(buf), buf);
             // execute command in buf
             debug_line("received command: %s!", buf);
             // Target implements monitor commands (reset init, halt,...)
-            target_monitor_command(buf);
-            if(false)
+            len = strlen(buf);
+            found = false;
+            for(i = 0; i < NUM_MON_COMMANDS; i++)
             {
+                if(len >= strlen(mon_commands[i].name))
+                {
+                    if(0 == strncmp(mon_commands[i].name, buf, len))
+                    {
+                        found = true;
+                        break;
+                    }
+                    // else continue searching
+                }
+                // else input to short to be this command
+            }
+            if((false == found) || (i >= NUM_MON_COMMANDS))
+            {
+                // invalid command
+                reply_packet_prepare();
+                reply_packet_add("O"); // packet is $ big oh, hex string# checksum
+                encode_text_to_hex_string("ERROR: invalid command !\r\n", sizeof(buf), buf);
+                reply_packet_add(buf);
+                reply_packet_send();
             }
             else
             {
-                // invalid command
-                encode_text_to_hex_string("ERROR: invalid command !\r\n", sizeof(buf), buf);
-                reply_packet_add(buf);
+                // found the command
+                gdb_is_now_busy();
+                target_monitor_command(i, buf);
             }
-            reply_packet_send();
         }
     }
     else if(7 == cmd_len)

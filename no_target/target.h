@@ -18,13 +18,20 @@
 
 #include <stdint.h>
 #include "probe_api/common.h"
+#include "probe_api/gdb_monitor_defs.h"
+
+static const mon_cmd_typ mon_commands[] = {
+        //         11             1         2         3         4         5         6
+        //12345678901    123456789012345678901234567890123456789012345678901234567890
+        {"help",        "list all available commands"}
+};
 
 bool target_is_SWDv2(void);
 uint32_t target_get_SWD_core_id(uint32_t core_num); // only required for SWDv2 (TARGETSEL)
 uint32_t target_get_SWD_APSel(uint32_t core_num);
 #ifdef FEAT_GDB_SERVER
 void target_send_file(char* filename, uint32_t offset, uint32_t len);
-void target_monitor_command(char* command);
+void target_monitor_command(uint32_t which, char* command);
 #endif
 
 #endif /* TARGET_H_ */

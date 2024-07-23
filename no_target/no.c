@@ -45,14 +45,6 @@ void target_send_file(char* filename, uint32_t offset, uint32_t len)
     (void)len;
 }
 
-void target_monitor_command(char* command)
-{
-    char buf[100];
-    encode_text_to_hex_string("ERROR: invalid command !\r\n", sizeof(buf), buf);
-    reply_packet_add(buf);
-    reply_packet_send();
-}
-
 bool target_is_SWDv2(void)
 {
     return false;
@@ -89,5 +81,17 @@ Result handle_target_reply_vFlashWrite(action_data_typ* const action, bool first
     (void) action;
     (void) first_call;
     return RESULT_OK;
+}
+
+void target_monitor_command(uint32_t which, char* command)
+{
+    char buf[100];
+    (void)command;
+    reply_packet_prepare();
+    reply_packet_add("O"); // packet is $ big oh, hex string# checksum
+    encode_text_to_hex_string("ERROR: invalid command !\r\n", sizeof(buf), buf);
+    reply_packet_add(buf);
+    reply_packet_send();
+    gdb_is_not_busy_anymore();
 }
 

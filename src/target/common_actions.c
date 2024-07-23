@@ -14,15 +14,16 @@
  */
 
 #include <stdbool.h>
-#include "probe_api/result.h"
-#include "target/common_actions.h"
+
+#include "probe_api/cortex-m.h"
+#include "probe_api/debug_log.h"
 #include "probe_api/gdb_packets.h"
 #include "probe_api/hex.h"
-#include "probe_api/debug_log.h"
-#include "probe_api/cortex-m.h"
+#include "probe_api/result.h"
+#include "probe_api/steps.h"
 #include "probe_api/swd.h"
+#include "target/common_actions.h"
 #include "target.h"
-#include "steps.h"
 
 
 #define INTERN_RETRY_COUNTER    1
