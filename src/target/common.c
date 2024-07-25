@@ -409,6 +409,7 @@ static void handle_actions(void)
     {
         // action has finished
         action_queue[action_read].is_done = true;
+        gdb_is_not_busy_anymore();
         if(RESULT_OK > res)
         {
             // error

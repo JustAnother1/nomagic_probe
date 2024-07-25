@@ -93,6 +93,11 @@ void target_monitor_command(uint32_t which, char* command)
     encode_text_to_hex_string("ERROR: invalid command !\r\n", sizeof(buf), buf);
     reply_packet_add(buf);
     reply_packet_send();
+
+    reply_packet_prepare();
+    reply_packet_add("OK");
+    reply_packet_send();
+
     gdb_is_not_busy_anymore();
 }
 

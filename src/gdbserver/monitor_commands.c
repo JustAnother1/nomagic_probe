@@ -29,15 +29,21 @@ void mon_cmd_help(void)
     char buf[100];
     char hex_buf[200];
     uint32_t loop;
-    reply_packet_prepare();
-    reply_packet_add("O"); // packet is $ big oh, hex string# checksum
     for(loop = 0; loop < NUM_MON_COMMANDS; loop++)
     {
-        snprintf(buf, 100, "%15s : %s", mon_commands[loop].name, mon_commands[loop].help);
+        reply_packet_prepare();
+        reply_packet_add("O"); // packet is $ big oh, hex string# checksum
+        snprintf(buf, 100, "%25s : %s\r\n", mon_commands[loop].name, mon_commands[loop].help);
         encode_text_to_hex_string(buf, sizeof(hex_buf), hex_buf);
-        reply_packet_add(buf);
+        reply_packet_add(hex_buf);
+        reply_packet_send();
     }
+
+    // end of output
+    reply_packet_prepare();
+    reply_packet_add("OK");
     reply_packet_send();
+
     gdb_is_not_busy_anymore();
 }
 

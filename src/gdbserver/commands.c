@@ -551,11 +551,21 @@ static void handle_general_query(char* received, uint32_t length)
             }
             if((false == found) || (i >= NUM_MON_COMMANDS))
             {
+                char err_buf[100];
                 // invalid command
                 reply_packet_prepare();
                 reply_packet_add("O"); // packet is $ big oh, hex string# checksum
-                encode_text_to_hex_string("ERROR: invalid command !\r\n", sizeof(buf), buf);
-                reply_packet_add(buf);
+                encode_text_to_hex_string("ERROR: invalid command (", sizeof(err_buf), err_buf);
+                reply_packet_add(err_buf);
+                encode_text_to_hex_string(buf, sizeof(err_buf), err_buf);
+                reply_packet_add(err_buf);
+                encode_text_to_hex_string(") !\r\n", sizeof(err_buf), err_buf);
+                reply_packet_add(err_buf);
+                reply_packet_send();
+
+                // end of output
+                reply_packet_prepare();
+                reply_packet_add("OK");
                 reply_packet_send();
             }
             else

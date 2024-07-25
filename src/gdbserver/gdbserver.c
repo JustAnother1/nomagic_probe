@@ -196,7 +196,6 @@ void reply_packet_send(void)
     debug_line("gdbs sending: %s", reply_buffer);
     serial_gdb_send_bytes(&(reply_buffer[reply_length]), 3);
     serial_gdb_flush();
-    gdb_is_not_busy_anymore();
 }
 
 void send_error_packet(void)
