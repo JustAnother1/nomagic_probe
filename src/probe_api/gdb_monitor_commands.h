@@ -17,5 +17,6 @@
 #define NOMAGIC_PROBE_SRC_PROBE_API_GDB_MONITOR_COMMANDS_H_
 
 void mon_cmd_help(void);
+void mon_cmd_version(void);
 
 #endif /* NOMAGIC_PROBE_SRC_PROBE_API_GDB_MONITOR_COMMANDS_H_ */

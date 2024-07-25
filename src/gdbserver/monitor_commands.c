@@ -19,6 +19,7 @@
 #include "probe_api/gdb_packets.h"
 #include "probe_api/util.h"
 #include "target.h"
+#include "version.h"
 
 #define NUM_MON_COMMANDS  (sizeof(mon_commands)/sizeof(mon_cmd_typ))
 
@@ -47,3 +48,22 @@ void mon_cmd_help(void)
     gdb_is_not_busy_anymore();
 }
 
+void mon_cmd_version(void)
+{
+    char hex_buf[200];
+
+    reply_packet_prepare();
+    reply_packet_add("O"); // packet is $ big oh, hex string# checksum
+    encode_text_to_hex_string(VERSION, sizeof(hex_buf), hex_buf);
+    reply_packet_add(hex_buf);
+    encode_text_to_hex_string("\r\n", sizeof(hex_buf), hex_buf);
+    reply_packet_add(hex_buf);
+    reply_packet_send();
+
+    // end of output
+    reply_packet_prepare();
+    reply_packet_add("OK");
+    reply_packet_send();
+
+    gdb_is_not_busy_anymore();
+}
