@@ -245,7 +245,13 @@ $(BIN_FOLDER)version.h:
 
 $(BIN_FOLDER)$(NOMAGIC_SRC_FOLDER)cli/cli.o: $(NOMAGIC_SRC_FOLDER)cli/cli.c $(BIN_FOLDER)version.h
 	@echo ""
-	@echo "=== compiling (cli) $@"
+	@echo "=== compiling $@"
+	@$(MKDIR_P) $(@D)
+	$(CC) $(CFLAGS) $(DDEFS) $(INCDIR) $< -o $@
+	
+$(BIN_FOLDER)$(NOMAGIC_SRC_FOLDER)gdbserver/monitor_commands.o: $(NOMAGIC_SRC_FOLDER)gdbserver/monitor_commands.c $(BIN_FOLDER)version.h
+	@echo ""
+	@echo "=== compiling $@"
 	@$(MKDIR_P) $(@D)
 	$(CC) $(CFLAGS) $(DDEFS) $(INCDIR) $< -o $@
 
