@@ -565,7 +565,8 @@ static void handle_general_query(char* received, uint32_t length)
 
                 // end of output
                 reply_packet_prepare();
-                reply_packet_add("OK");
+                // reply_packet_add("OK");
+                reply_packet_add("E01");
                 reply_packet_send();
             }
             else
