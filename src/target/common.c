@@ -26,6 +26,7 @@
 #include "probe_api/common.h"
 #include "probe_api/gdb_packets.h"
 #include "probe_api/actions.h"
+#include "target.h"
 
 #define ACTION_TRACE_LENGTH           10
 #define ACTION_QUEUE_LENGTH           5
