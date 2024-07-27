@@ -23,60 +23,17 @@
 
 bool target_reply_questionmark(void)
 {
-    Result res;
-    action_data_typ* const action =  book_action_slot();
-    if(NULL == action)
-    {
-        debug_line("ERROR: could not start reply question mark ! Action queue full!");
-        return false;
-    }
-    action->action = GDB_CMD_QUESTIONMARK;
-    res = add_target_action(action);
-    if(RESULT_OK != res)
-    {
-        debug_line("ERROR: could not execute gdb:'?'! adding action failed(%ld)!", res);
-        return false;
-    }
-    return true;
+    return add_action(GDB_CMD_QUESTIONMARK);
 }
 
 bool target_reply_step(parameter_typ* parsed_parameter)
 {
-    Result res;
-    action_data_typ* const action =  book_action_slot();
-    if(NULL == action)
-    {
-        debug_line("ERROR: could not start reply step ! Action queue full!");
-        return false;
-    }
-    action->action = GDB_CMD_STEP;
-    action->gdb_parameter = parsed_parameter;
-    res = add_target_action(action);
-    if(RESULT_OK != res)
-    {
-        debug_line("ERROR: could not execute gdb:'s'! adding action failed(%ld)!", res);
-        return false;
-    }
-    return true;
+    return add_action_with_parameter(GDB_CMD_STEP, parsed_parameter);
 }
 
 bool target_reply_continue(void)
 {
-    Result res;
-    action_data_typ* const action =  book_action_slot();
-    if(NULL == action)
-    {
-        debug_line("ERROR: could not start reply continue ! Action queue full!");
-        return false;
-    }
-    action->action = GDB_CMD_CONTINUE;
-    res = add_target_action(action);
-    if(RESULT_OK != res)
-    {
-        debug_line("ERROR: could not execute gdb:'c'! adding action failed(%ld)!", res);
-        return false;
-    }
-    return true;
+    return add_action(GDB_CMD_CONTINUE);
 }
 
 bool target_reply_g(void)
@@ -110,22 +67,7 @@ bool target_reply_g(void)
     //        <- xxxxxxxx00000000xxxxxxxx00000000
     //    ‘E NN’
     //        for an error.
-
-    Result res;
-    action_data_typ* const action =  book_action_slot();
-    if(NULL == action)
-    {
-        debug_line("ERROR: could not start reply g ! Action queue full!");
-        return false;
-    }
-    action->action = GDB_CMD_G;
-    res = add_target_action(action);
-    if(RESULT_OK != res)
-    {
-        debug_line("ERROR: could not execute gdb:'g'! adding action failed(%ld)!", res);
-        return false;
-    }
-    return true;
+    return add_action(GDB_CMD_G);
 }
 
 bool target_reply_write_g(parameter_typ* parsed_parameter)
@@ -162,23 +104,7 @@ bool target_reply_write_g(parameter_typ* parsed_parameter)
     //         for success
     //     ‘E NN’
     //         for an error
-
-    Result res;
-    action_data_typ* const action =  book_action_slot();
-    if(NULL == action)
-    {
-        debug_line("ERROR: could not start reply G ! Action queue full!");
-        return false;
-    }
-    action->action = GDB_CMD_WRITE_G;
-    action->gdb_parameter = parsed_parameter;
-    res = add_target_action(action);
-    if(RESULT_OK != res)
-    {
-        debug_line("ERROR: could not execute gdb:'G'! adding action failed(%ld)!", res);
-        return false;
-    }
-    return true;
+    return add_action_with_parameter(GDB_CMD_WRITE_G, parsed_parameter);
 }
 
 
@@ -201,23 +127,7 @@ bool target_reply_read_memory(parameter_typ* parsed_parameter)
     // memory.
     //     ‘E NN’
     //         NN is errno
-
-    Result res;
-    action_data_typ* const action =  book_action_slot();
-    if(NULL == action)
-    {
-        debug_line("ERROR: could not start reply read memory ! Action queue full!");
-        return false;
-    }
-    action->action = GDB_CMD_READ_MEMORY;
-    action->gdb_parameter = parsed_parameter;
-    res = add_target_action(action);
-    if(RESULT_OK != res)
-    {
-        debug_line("ERROR: could not execute gdb:'m'! adding action failed(%ld)!", res);
-        return false;
-    }
-    return true;
+    return add_action_with_parameter(GDB_CMD_READ_MEMORY, parsed_parameter);
 }
 
 bool target_reply_write_memory(parameter_typ* parsed_parameter)
@@ -232,79 +142,19 @@ bool target_reply_write_memory(parameter_typ* parsed_parameter)
     //     ‘E NN’
     //         for an error (this includes the case where only part of the data
     // was written).
-
-    Result res;
-    action_data_typ* const action =  book_action_slot();
-    if(NULL == action)
-    {
-        debug_line("ERROR: could not start reply write memory ! Action queue full!");
-        return false;
-    }
-    action->action = GDB_CMD_WRITE_MEMORY;
-    action->gdb_parameter = parsed_parameter;
-    res = add_target_action(action);
-    if(RESULT_OK != res)
-    {
-        debug_line("ERROR: could not execute gdb:'M'! adding action failed(%ld)!", res);
-        return false;
-    }
-    return true;
+    return add_action_with_parameter(GDB_CMD_WRITE_MEMORY, parsed_parameter);
 }
 
 bool target_reply_flash_done(void)
 {
-    Result res;
-    action_data_typ* const action =  book_action_slot();
-    if(NULL == action)
-    {
-        debug_line("ERROR: could not start reply flash done ! Action queue full!");
-        return false;
-    }
-    action->action = GDB_CMD_VFLASH_DONE;
-    res = add_target_action(action);
-    if(RESULT_OK != res)
-    {
-        debug_line("ERROR: could not execute gdb:'vFlashDone'! adding action failed(%ld)!", res);
-        return false;
-    }
-    return true;
+    return add_action(GDB_CMD_VFLASH_DONE);
 }
 bool target_reply_flash_erase(parameter_typ* parsed_parameter)
 {
-    Result res;
-    action_data_typ* const action =  book_action_slot();
-    if(NULL == action)
-    {
-        debug_line("ERROR: could not start reply flash erase ! Action queue full!");
-        return false;
-    }
-    action->action = GDB_CMD_VFLASH_ERASE;
-    action->gdb_parameter = parsed_parameter;
-    res = add_target_action(action);
-    if(RESULT_OK != res)
-    {
-        debug_line("ERROR: could not execute gdb:'vFlashErase'! adding action failed(%ld)!", res);
-        return false;
-    }
-    return true;
+    return add_action_with_parameter(GDB_CMD_VFLASH_ERASE, parsed_parameter);
 }
 
 bool target_reply_flash_write(parameter_typ* parsed_parameter)
 {
-    Result res;
-    action_data_typ* const action =  book_action_slot();
-    if(NULL == action)
-    {
-        debug_line("ERROR: could not start reply flash write ! Action queue full!");
-        return false;
-    }
-    action->action = GDB_CMD_VFLASH_WRITE;
-    action->gdb_parameter = parsed_parameter;
-    res = add_target_action(action);
-    if(RESULT_OK != res)
-    {
-        debug_line("ERROR: could not execute gdb:'vFlashWrite'! adding action failed(%ld)!", res);
-        return false;
-    }
-    return true;
+    return add_action_with_parameter(GDB_CMD_VFLASH_WRITE, parsed_parameter);
 }

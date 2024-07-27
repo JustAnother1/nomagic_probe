@@ -76,6 +76,8 @@ typedef Result (*action_handler)(action_data_typ * const action, bool first_call
 
 action_data_typ * book_action_slot(void);
 Result add_target_action(action_data_typ * const action);
+bool add_action(action_typ act);
+bool add_action_with_parameter(action_typ act, parameter_typ* parsed_parameter);
 void target_connect(void);
 void target_close_connection(void);
 

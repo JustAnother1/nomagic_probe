@@ -265,60 +265,61 @@ Result add_target_action(action_data_typ * const action)
     return RESULT_OK;
 }
 
-void target_connect(void)
+bool add_action(action_typ act)
 {
     Result res;
     action_data_typ* const action =  book_action_slot();
     if(NULL == action)
     {
-        debug_line("ERROR: could not connect to target ! Action queue full!");
-        return;
+        debug_line("ERROR: could not add %s ! Action queue full!", action_names[act]);
+        return false;
     }
-    action->action = SWD_CONNECT;
+    action->action = act;
     res = add_target_action(action);
     if(RESULT_OK != res)
     {
-        debug_line("ERROR: could not connect to target ! adding action failed(%ld)!", res);
-        return;
+        debug_line("ERROR: could not add %s ! adding action failed(%ld)!", action_names[act], res);
+        return false;
     }
+    return true;
+}
+
+bool add_action_with_parameter(action_typ act, parameter_typ* parsed_parameter)
+{
+    Result res;
+    action_data_typ* const action =  book_action_slot();
+    if(NULL == action)
+    {
+        debug_line("ERROR: could not add %s ! Action queue full!", action_names[act]);
+        return false;
+    }
+    action->action = act;
+    action->gdb_parameter = parsed_parameter;
+    res = add_target_action(action);
+    if(RESULT_OK != res)
+    {
+        debug_line("ERROR: could not add %s ! adding action failed(%ld)!", action_names[act], res);
+        return false;
+    }
+    return true;
+}
+
+
+void target_connect(void)
+{
+    add_action(SWD_CONNECT);
 }
 
 void target_close_connection(void)
 {
-    Result res;
-    action_data_typ* const action =  book_action_slot();
-    if(NULL == action)
-    {
-        debug_line("ERROR: could not disconnect from target ! Action queue full!");
-        return;
-    }
-    action->action = SWD_CLOSE_CONNECTION;
-    res = add_target_action(action);
-    if(RESULT_OK != res)
-    {
-        debug_line("ERROR: could not disconnect from target ! adding action failed(%ld)!", res);
-        return;
-    }
+    add_action(SWD_CLOSE_CONNECTION);
 }
 
 static void check_if_still_running(void)
 {
     if((NULL == cur_action) && (action_read != action_write))
     {
-        Result res;
-        action_data_typ* const action =  book_action_slot();
-        if(NULL == action)
-        {
-            debug_line("ERROR: could not start reply continue ! Action queue full!");
-            return;
-        }
-        action->action = CHECK_RUNNING;
-        res = add_target_action(action);
-        if(RESULT_OK != res)
-        {
-            debug_line("ERROR: could not check if target is still running! adding action failed(%ld)!", res);
-            return;
-        }
+        add_action(CHECK_RUNNING);
     }
     // else wait until all queued actions have finished.
 }
