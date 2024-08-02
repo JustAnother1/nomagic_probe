@@ -52,20 +52,20 @@ static action_handler cur_action;
 static action_data_typ action_queue[ACTION_QUEUE_LENGTH];
 
 static const action_handler action_look_up[NUM_ACTIONS] = {
-        handle_target_connect,
-        handle_target_close_connection,
+        handle_target_connect,                // SWD_CONNECT
+        handle_target_close_connection,       // SWD_CLOSE_CONNECTION
 #ifdef FEAT_GDB_SERVER
-        handle_target_reply_g,
-        handle_target_reply_questionmark,
-        handle_target_reply_write_g,
-        handle_target_reply_continue,
-        handle_target_reply_read_memory,
-        handle_target_reply_write_memory,
-        handle_target_reply_step,
-        handle_check_target_running,
-        handle_target_reply_vFlashDone,
-        handle_target_reply_vFlashErase,
-        handle_target_reply_vFlashWrite,
+        handle_target_reply_g,                // GDB_CMD_G
+        handle_target_reply_questionmark,     // GDB_CMD_QUESTIONMARK
+        handle_target_reply_write_g,          // GDB_CMD_WRITE_G
+        handle_target_reply_continue,         // GDB_CMD_CONTINUE
+        handle_target_reply_read_memory,      // GDB_CMD_READ_MEMORY
+        handle_target_reply_write_memory,     // GDB_CMD_WRITE_MEMORY
+        handle_target_reply_step,             // GDB_CMD_STEP
+        handle_check_target_running,          // CHECK_RUNNING
+        handle_target_reply_vFlashDone,       // GDB_CMD_VFLASH_DONE
+        handle_target_reply_vFlashErase,      // GDB_CMD_VFLASH_ERASE
+        handle_target_reply_vFlashWrite,      // GDB_CMD_VFLASH_WRITE
 #endif
         TARGET_SPECIFIC_ACTION_HANDLERS
 };

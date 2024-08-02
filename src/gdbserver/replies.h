@@ -18,24 +18,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-
-#define MAX_MEMORY_POSITIONS   20
-
-typedef struct {
-    uint32_t value;
-    bool has_value;
-    uint8_t padding[3];
-} mem_val_typ;
-
-typedef struct {
-    uint32_t address;
-    uint32_t length;
-    uint32_t num_memory_locations;
-    mem_val_typ memory[MAX_MEMORY_POSITIONS];
-    bool has_address;
-    uint8_t padding[3];
-} parameter_typ;
-
+#include "probe_api/common.h"
 
 bool target_reply_g(void);
 bool target_reply_questionmark(void);

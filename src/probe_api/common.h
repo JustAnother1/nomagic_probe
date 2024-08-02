@@ -19,11 +19,28 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include "result.h"
-#include "gdbserver/replies.h"
 #include "cfg/target_specific_actions.h"
 
-#define MAX_INTERN_VALUES     4
-#define MAX_PARAMETER_VALUES  3
+#define MAX_INTERN_VALUES      4
+#define MAX_PARAMETER_VALUES   3
+#define MAX_MEMORY_POSITIONS   20
+
+typedef struct {
+    uint32_t value;
+    bool has_value;
+    uint8_t padding[3];
+} mem_val_typ;
+
+typedef struct {
+    uint32_t index;
+    uint32_t address;
+    uint32_t length;
+    uint32_t num_memory_locations;
+    mem_val_typ memory[MAX_MEMORY_POSITIONS];
+    bool has_address;
+    bool has_index;
+    uint8_t padding[3];
+} parameter_typ;
 
 typedef enum {
     NOT_CONNECTED,     // No SWD communication, target MCU might not be present at all

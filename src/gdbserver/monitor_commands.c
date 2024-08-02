@@ -28,6 +28,8 @@ void mon_cmd_help(void)
 {
     // TODO split this up ?
     // help command
+    // TODO no parameter print everything, with command as parameter only print
+    // help for that parameter.
     char buf[100];
     char hex_buf[200];
     uint32_t loop;
