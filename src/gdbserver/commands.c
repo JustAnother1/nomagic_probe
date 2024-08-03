@@ -526,7 +526,8 @@ static void handle_general_query(char* received, uint32_t length)
         {
             found_cmd = true;
             char buf[100];
-            size_t len;
+            size_t length_received;
+            size_t length_command;
             uint32_t i;
             bool found;
             // command is encoded in hex
@@ -534,13 +535,14 @@ static void handle_general_query(char* received, uint32_t length)
             // execute command in buf
             debug_line("received command: %s!", buf);
             // Target implements monitor commands (reset init, halt,...)
-            len = strlen(buf);
+            length_received = strlen(buf);
             found = false;
             for(i = 0; i < NUM_MON_COMMANDS; i++)
             {
-                if(len >= strlen(mon_commands[i].name))
+                length_command = strlen(mon_commands[i].name);
+                if(length_received >= length_command)
                 {
-                    if(0 == strncmp(mon_commands[i].name, buf, len))
+                    if(0 == strncmp(mon_commands[i].name, buf, length_command))
                     {
                         found = true;
                         break;
