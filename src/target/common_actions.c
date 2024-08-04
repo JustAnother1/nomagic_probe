@@ -283,7 +283,12 @@ Result handle_target_reply_g(action_data_typ* const action, bool first_call)
         debug_line("read 0x%08lx", action->read_0);
         action->intern[INTERN_REGISTER_IDX] ++;
         *(action->cur_phase) = 0;
-        if(17 == action->intern[INTERN_REGISTER_IDX])
+        if(19 == action->intern[INTERN_REGISTER_IDX])
+        {
+            // skip
+            action->intern[INTERN_REGISTER_IDX] ++;
+        }
+        if(21 == action->intern[INTERN_REGISTER_IDX])
         {
             // finished
             reply_packet_send();
@@ -367,6 +372,11 @@ Result handle_target_reply_write_g(action_data_typ* const action, bool first_cal
         }
         // else
         action->parameter[0] = i;  // select the register to write
+        if(18 < action->parameter[0])
+        {
+            // skip reserved 19
+            action->parameter[0] ++;
+        }
         action->parameter[1] = action->gdb_parameter->memory[i].value;
         *(action->cur_phase) = 2;
         return ERR_NOT_COMPLETED;
