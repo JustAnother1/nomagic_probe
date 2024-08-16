@@ -73,6 +73,7 @@ TST_LFLAGS = -lgcov --coverage
 TST_CFLAGS =  -c -Wall -Wextra -g3 -fprofile-arcs -ftest-coverage -Wno-int-to-pointer-cast -Wno-implicit-function-declaration -Wno-format
 TST_DDEFS = -DUNIT_TEST=1
 TST_DDEFS += -DFEAT_DEBUG_UART
+TST_DDEFS += -DFEAT_GDB_SERVER
 TST_INCDIRS = tests/
 TST_INCDIRS += tests/cfg/
 TST_INCDIRS += src/tinyusb/src/
@@ -92,6 +93,7 @@ TST_OBJS += tests/bin/src/gdbserver/cmd_qsupported.o
 TST_OBJS += tests/bin/src/gdbserver/cmd_qxfer.o
 TST_OBJS += tests/bin/src/gdbserver/commands.o
 TST_OBJS += tests/bin/src/gdbserver/gdbserver.o
+TST_OBJS += tests/bin/src/gdbserver/threads.o
 TST_OBJS += tests/bin/src/gdbserver/util.o
 TST_OBJS += tests/bin/tests/cli_tests.o
 TST_OBJS += tests/bin/tests/mocks.o

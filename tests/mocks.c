@@ -153,3 +153,26 @@ bool timeout_expired(timeout_typ* to)
     (void) to;
     return false;
 }
+
+bool target_reply_flash_done(void)
+{
+    return false;
+}
+
+bool target_reply_flash_erase(parameter_typ* parsed_parameter)
+{
+    (void)parsed_parameter;
+    return false;
+}
+
+bool target_reply_flash_write(parameter_typ* parsed_parameter)
+{
+    (void)parsed_parameter;
+    return false;
+}
+
+void target_monitor_command(uint32_t which, char* command)
+{
+    (void)command;
+    (void)which;
+}

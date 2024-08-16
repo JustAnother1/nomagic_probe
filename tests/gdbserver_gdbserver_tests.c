@@ -47,7 +47,7 @@ MunitResult test_gdbserver_empty_packet(const MunitParameter params[], void* use
 
     munit_assert_uint32(4, ==, gdb_get_num_bytes_in_send_buffer());
     munit_assert_uint32(0, ==, gdb_get_num_bytes_in_recv_buffer());
-    // printf("\n%s\n", send_buf);
+    // printf("\n%s\n", gdb_send_buf);
     munit_assert_uint32(gdb_send_buf[0], ==, '$');
     munit_assert_uint32(gdb_send_buf[1], ==, '#');
     munit_assert_uint32(gdb_send_buf[2], ==, '0');
@@ -68,7 +68,7 @@ MunitResult test_gdbserver_hex(const MunitParameter params[], void* user_data)
     reply_packet_add_hex(42, 2); // adds "2a"
     reply_packet_send();   // adds "#xx
 
-    // printf("\n%s\n", send_buf);
+    // printf("\n%s\n", gdb_send_buf);
     munit_assert_uint32(6, ==, gdb_get_num_bytes_in_send_buffer());
     munit_assert_uint32(0, ==, gdb_get_num_bytes_in_recv_buffer());
     munit_assert_uint32(gdb_send_buf[0], ==, '$');
@@ -92,16 +92,17 @@ MunitResult test_gdbserver_hex_sqish(const MunitParameter params[], void* user_d
     reply_packet_add_hex(500, 0); // adds "1f4"
     reply_packet_send();   // adds "#xx
 
-    // printf("\n%s\n", send_buf);
-    munit_assert_uint32(7, ==, gdb_get_num_bytes_in_send_buffer());
+    // printf("\n%s\n", gdb_send_buf);
+    munit_assert_uint32(8, ==, gdb_get_num_bytes_in_send_buffer());
     munit_assert_uint32(0, ==, gdb_get_num_bytes_in_recv_buffer());
     munit_assert_uint32(gdb_send_buf[0], ==, '$');
-    munit_assert_uint32(gdb_send_buf[1], ==, '1');
-    munit_assert_uint32(gdb_send_buf[2], ==, 'f');
-    munit_assert_uint32(gdb_send_buf[3], ==, '4');
-    munit_assert_uint32(gdb_send_buf[4], ==, '#');
-    munit_assert_uint32(gdb_send_buf[5], ==, 'c');
-    munit_assert_uint32(gdb_send_buf[6], ==, 'b');
+    munit_assert_uint32(gdb_send_buf[1], ==, 'f');
+    munit_assert_uint32(gdb_send_buf[2], ==, '4');
+    munit_assert_uint32(gdb_send_buf[3], ==, '0');
+    munit_assert_uint32(gdb_send_buf[4], ==, '1');
+    munit_assert_uint32(gdb_send_buf[5], ==, '#');
+    munit_assert_uint32(gdb_send_buf[6], ==, 'f');
+    munit_assert_uint32(gdb_send_buf[7], ==, 'b');
 
     return MUNIT_OK;
 }
