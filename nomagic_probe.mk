@@ -126,8 +126,11 @@ SRC += $(NOMAGIC_SRC_FOLDER)lib/strlen.c
 SRC += $(NOMAGIC_SRC_FOLDER)lib/strncmp.c
 
 # configuration
+ifeq ($(HAS_NCM), yes)
 SRC += $(NOMAGIC_SRC_FOLDER)cfg/network_cfg.c
+endif
 SRC += $(NOMAGIC_SRC_FOLDER)cfg/serial_cfg.c
+SRC += $(NOMAGIC_SRC_FOLDER)cfg/swd_cfg.c
 SRC += $(NOMAGIC_SRC_FOLDER)cfg/config_file_reader.c
 SRC += $(NOMAGIC_SRC_FOLDER)cfg/read_ini.c
 

@@ -20,12 +20,14 @@
 #include "cfg/network_cfg.h"
 #endif
 #include "cfg/serial_cfg.h"
+#include "cfg/swd_cfg.h"
 #include "file/fake_fs.h"
 #include "file/fake_root_folder.h"
 #include "probe_api/debug_log.h"
 
 #define SERIAL_SECTION_NAME  "serial"
 #define NETWORK_SECTION_NAME "network"
+#define SWD_SECTION_NAME     "swd"
 
 static uint32_t file_pos;
 static uint32_t file_read_upto;
@@ -43,6 +45,7 @@ void read_config_file(void)
 
     // all configs reset to default
     serial_cfg_reset_to_default();
+    swd_cfg_reset_to_default();
 #ifdef FEAT_USB_NCM
     network_cfg_reset_to_default();
 #endif
@@ -65,6 +68,7 @@ void read_config_file(void)
 
     // apply all configurations
     serial_cfg_apply();
+    swd_cfg_apply();
 #ifdef FEAT_USB_NCM
     network_cfg_apply();
 #endif
@@ -82,6 +86,11 @@ static configuration_setter get_section_handler(char * section)
         return network_cfg_set;
     }
 #endif
+    if(0 == strncmp(section, SWD_SECTION_NAME, sizeof(SWD_SECTION_NAME)))
+    {
+        return swd_cfg_set;
+    }
+
     return NULL; // not interested in that section
 }
 
