@@ -14,6 +14,7 @@
  */
 
 #include <stdbool.h>
+#include <string.h>
 
 #include "probe_api/cortex-m.h"
 #include "probe_api/debug_log.h"
@@ -22,12 +23,20 @@
 #include "probe_api/result.h"
 #include "probe_api/steps.h"
 #include "probe_api/swd.h"
+#include "probe_api/util.h"
 #include "target/common_actions.h"
 #include "target.h"
 
 
 #define INTERN_RETRY_COUNTER    1
 #define INTERN_REGISTER_IDX     2
+
+#ifdef FEAT_GDB_SERVER
+
+#define MAX_MONITOR_LINE_LENGTH         50
+static char msg_buf[MAX_MONITOR_LINE_LENGTH];
+
+#endif
 
 static void send_stopped_reply(void);
 
@@ -178,6 +187,7 @@ Result handle_target_close_connection(action_data_typ* const action, bool first_
 
 
 #ifdef FEAT_GDB_SERVER
+
 Result handle_target_reply_g(action_data_typ* const action, bool first_call)
 {
     // ‘g’
@@ -687,5 +697,389 @@ static void send_stopped_reply(void)
     reply_packet_send();
 }
 
-#endif
+
+Result handle_monitor_reg(action_data_typ* const action, bool first_call)
+{
+
+    if(true == first_call)
+    {
+        *(action->cur_phase) = 0;
+        if(true == action->gdb_parameter->has_index)
+        {
+            // not all registers but just one
+            action->intern[INTERN_REGISTER_IDX] = action->gdb_parameter->index;
+        }
+        else
+        {
+            // all registers
+            action->intern[INTERN_REGISTER_IDX] = 0;
+        }
+        action->intern[INTERN_RETRY_COUNTER] = 0;
+    }
+
+    // 1. write to DCRSR the REGSEL value and REGWnR = 0
+    if(0 == *(action->cur_phase))
+    {
+        return do_write_ap(action, DCRSR, action->intern[INTERN_REGISTER_IDX]);
+    }
+
+    // 2. read DHCSR until S_REGRDY is 1
+    if(1 == *(action->cur_phase))
+    {
+        reply_packet_prepare();
+        reply_packet_add("O"); // packet is $ big oh, hex string# checksum
+        return do_read_ap(action, DHCSR);
+    }
+
+    if(2 == *(action->cur_phase))
+    {
+        return do_get_Result_data(action);
+    }
+
+    if(3 == *(action->cur_phase))
+    {
+        if(0 == (action->read_0 & (1<<DHCSR_S_REGRDY_OFFSET)))
+        {
+            // Register not ready
+            action->intern[INTERN_RETRY_COUNTER]++;
+            if(10 < action->intern[INTERN_RETRY_COUNTER])
+            {
+                // no data available -> read again
+                *(action->cur_phase) = 1;
+                return ERR_NOT_COMPLETED;
+            }
+            else
+            {
+                // too many retries
+                debug_line("ERROR: too many retries !");
+                action->result = ERR_TIMEOUT;
+                action->is_done = true;
+                reply_packet_send();
+                return action->result;
+            }
+        }
+        else
+        {
+            // data available -> read data
+            *(action->cur_phase) = *(action->cur_phase) + 1;
+            action->intern[INTERN_RETRY_COUNTER] = 0;
+        }
+    }
+
+    // 3. read data from DCRDR
+    if(4 == *(action->cur_phase))
+    {
+        return do_read_ap(action, DCRDR);
+    }
+
+    if(5 == *(action->cur_phase))
+    {
+        return do_get_Result_data(action);
+    }
+
+    if(6 == *(action->cur_phase))
+    {
+        // clear buffer
+        char buf[100];
+        memset(&msg_buf, 0, sizeof(msg_buf));
+
+        if(true == action->gdb_parameter->has_index)
+        {
+            switch(action->intern[INTERN_REGISTER_IDX])
+            {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+            case 9:
+            case 10:
+            case 11:
+            case 12:
+                snprintf(msg_buf, sizeof(msg_buf), "r%ld (/32): 0x%08lx\r\n", action->intern[INTERN_REGISTER_IDX], action->read_0);
+                encode_text_to_hex_string(msg_buf, sizeof(buf), buf);
+                reply_packet_add(buf);
+                break;
+
+            case 13: // sp
+                snprintf(msg_buf, sizeof(msg_buf), "sp (/32): 0x%08lx\r\n", action->read_0);
+                encode_text_to_hex_string(msg_buf, sizeof(buf), buf);
+                reply_packet_add(buf);
+                break;
+
+            case 14: // LR
+                snprintf(msg_buf, sizeof(msg_buf), "lr (/32): 0x%08lx\r\n", action->read_0);
+                encode_text_to_hex_string(msg_buf, sizeof(buf), buf);
+                reply_packet_add(buf);
+                break;
+
+            case 15: // PC
+                snprintf(msg_buf, sizeof(msg_buf), "pc (/32): 0x%08lx\r\n", action->read_0);
+                encode_text_to_hex_string(msg_buf, sizeof(buf), buf);
+                reply_packet_add(buf);
+                break;
+
+            case 16: // xPSR
+                snprintf(msg_buf, sizeof(msg_buf), "xPSR (/32): 0x%08lx\r\n", action->read_0);
+                encode_text_to_hex_string(msg_buf, sizeof(buf), buf);
+                reply_packet_add(buf);
+                break;
+
+            case 17: // MSP
+                snprintf(msg_buf, sizeof(msg_buf), "msp (/32): 0x%08lx\r\n", action->read_0);
+                encode_text_to_hex_string(msg_buf, sizeof(buf), buf);
+                reply_packet_add(buf);
+                break;
+
+            case 18: // PSP
+                snprintf(msg_buf, sizeof(msg_buf), "psp (/32): 0x%08lx\r\n", action->read_0);
+                encode_text_to_hex_string(msg_buf, sizeof(buf), buf);
+                reply_packet_add(buf);
+                break;
+
+            case 20: // CONROL / PRIMASK
+                snprintf(msg_buf, sizeof(msg_buf), "control/primask (/32): 0x%08lx\r\n", action->read_0);
+                encode_text_to_hex_string(msg_buf, sizeof(buf), buf);
+                reply_packet_add(buf);
+                break;
+            }
+        }
+        else
+        {
+            switch(action->intern[INTERN_REGISTER_IDX])
+            {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+            case 9:
+            case 10:
+            case 11:
+            case 12:
+                snprintf(msg_buf, sizeof(msg_buf), "(%ld) r%ld (/32): 0x%08lx\r\n",
+                         action->intern[INTERN_REGISTER_IDX],
+                         action->intern[INTERN_REGISTER_IDX],
+                         action->read_0);
+                encode_text_to_hex_string(msg_buf, sizeof(buf), buf);
+                reply_packet_add(buf);
+                break;
+
+            case 13: // sp
+                snprintf(msg_buf, sizeof(msg_buf), "(%ld) sp (/32): 0x%08lx\r\n", action->intern[INTERN_REGISTER_IDX], action->read_0);
+                encode_text_to_hex_string(msg_buf, sizeof(buf), buf);
+                reply_packet_add(buf);
+                break;
+
+            case 14: // LR
+                snprintf(msg_buf, sizeof(msg_buf), "(%ld) lr (/32): 0x%08lx\r\n", action->intern[INTERN_REGISTER_IDX], action->read_0);
+                encode_text_to_hex_string(msg_buf, sizeof(buf), buf);
+                reply_packet_add(buf);
+                break;
+
+            case 15: // PC
+                snprintf(msg_buf, sizeof(msg_buf), "(%ld) pc (/32): 0x%08lx\r\n", action->intern[INTERN_REGISTER_IDX], action->read_0);
+                encode_text_to_hex_string(msg_buf, sizeof(buf), buf);
+                reply_packet_add(buf);
+                break;
+
+            case 16: // xPSR
+                snprintf(msg_buf, sizeof(msg_buf), "(%ld) xPSR (/32): 0x%08lx\r\n", action->intern[INTERN_REGISTER_IDX], action->read_0);
+                encode_text_to_hex_string(msg_buf, sizeof(buf), buf);
+                reply_packet_add(buf);
+                break;
+
+            case 17: // MSP
+                snprintf(msg_buf, sizeof(msg_buf), "(%ld) msp (/32): 0x%08lx\r\n", action->intern[INTERN_REGISTER_IDX], action->read_0);
+                encode_text_to_hex_string(msg_buf, sizeof(buf), buf);
+                reply_packet_add(buf);
+                break;
+
+            case 18: // PSP
+                snprintf(msg_buf, sizeof(msg_buf), "(%ld) psp (/32): 0x%08lx\r\n", action->intern[INTERN_REGISTER_IDX], action->read_0);
+                encode_text_to_hex_string(msg_buf, sizeof(buf), buf);
+                reply_packet_add(buf);
+                break;
+
+            case 20: // CONROL / PRIMASK
+                snprintf(msg_buf, sizeof(msg_buf), "(%ld) control/primask (/32): 0x%08lx\r\n", action->intern[INTERN_REGISTER_IDX], action->read_0);
+                encode_text_to_hex_string(msg_buf, sizeof(buf), buf);
+                reply_packet_add(buf);
+                break;
+            }
+        }
+        reply_packet_send();
+
+        // this register done, next?
+        action->intern[INTERN_REGISTER_IDX] ++;
+        *(action->cur_phase) = 0;
+
+        if(   (true == action->gdb_parameter->has_index)
+           || (21 == action->intern[INTERN_REGISTER_IDX]) )
+        {
+            // finished
+            // end of output
+            reply_packet_prepare();
+            reply_packet_add("OK");
+            reply_packet_send();
+
+            gdb_is_not_busy_anymore();
+            return RESULT_OK;
+        }
+        else
+        {
+            // continue with next register
+            return ERR_NOT_COMPLETED;
+        }
+    }
+
+    return ERR_WRONG_STATE;
+}
+
+Result handle_monitor_halt(action_data_typ* const action, bool first_call)
+{
+    // DHCSR.C_HALT == 1
+    // then DHCSR.C_MASKINTS = 1 if ignore interrupt is enabled
+    (void)action; // TODO
+    if(true == first_call)
+    {
+        return ERR_NOT_COMPLETED;
+    }
+    return ERR_NOT_COMPLETED;
+}
+
+Result handle_monitor_reset_init(action_data_typ* const action, bool first_call)
+{
+    (void)action; // TODO
+    if(true == first_call)
+    {
+        return ERR_NOT_COMPLETED;
+    }
+    return ERR_NOT_COMPLETED;
+}
+
+
+
+
+
+/*
+#include <stdint.h>
+#include <string.h>
+#include "probe_api/gdb_packets.h"
+#include "probe_api/hex.h"
+#include "probe_api/result.h"
+#include "probe_api/swd.h"
+#include "probe_api/debug_log.h"
+#include "probe_api/cortex-m.h"
+
+static uint32_t val_DHCSR;
+
+Result cortex_m_halt_cpu(bool first_call)
+{
+    // halt target DHCSR.C_HALT = 1 + check that DHCSR.S_HALT is 1
+    static Result phase = 0;
+    static Result transaction_id = 0;
+    static uint32_t retries = 0;
+    Result res;
+    if(true == first_call)
+    {
+        phase = 1;
+        retries = 0;
+    }
+
+    // write the halt command
+    if(1 == phase)
+    {
+        uint32_t new_val = val_DHCSR | (1 <<1);
+        if(new_val != val_DHCSR)
+        {
+            res = swd_write_ap(DHCSR, DBGKEY | (0xffff & val_DHCSR));
+            if(RESULT_OK == res)
+            {
+                phase = 2;
+            }
+            else
+            {
+                return res;
+            }
+        }
+        else
+        {
+            // already commanded to halt
+            phase = 2;
+        }
+    }
+
+    // read the status register
+    if(2 == phase)
+    {
+        res = swd_read_ap(DHCSR);
+        if(RESULT_OK < res)
+        {
+            transaction_id = res;
+            phase = 3;
+        }
+        else
+        {
+            return res;
+        }
+    }
+
+    // check if Halt status bit is set.
+    if(3 == phase)
+    {
+        uint32_t data;
+        res = swd_get_result(transaction_id, &data);
+        if(RESULT_OK == res)
+        {
+            if(0 == (data & (1<<17)))
+            {
+                if(100 > retries)
+                {
+                    debug_line("TIMEOUT: when setting halt bit!");
+                    return ERR_TIMEOUT;
+                }
+                else
+                {
+                    // not yet halted -> read again
+                    phase = 2;
+                    retries++;
+                    return ERR_NOT_COMPLETED;
+                }
+            }
+            else
+            {
+                // halted !
+                phase = 4;
+            }
+        }
+        else
+        {
+            return res;
+        }
+    }
+
+    if(4 == phase)
+    {
+        return RESULT_OK;
+    }
+
+    debug_line("halt cpu: invalid phase (%ld)!", phase);
+    return ERR_WRONG_STATE;
+}
+*/
+
+
+
+
+
+#endif /* FEAT_GDB_SERVER */
 

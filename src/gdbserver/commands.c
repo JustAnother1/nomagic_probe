@@ -16,6 +16,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "cfg/serial_cfg.h"
+#include "probe_api/gdb_monitor_commands.h"
 #include "probe_api/gdb_monitor_defs.h"
 #include "probe_api/gdb_packets.h"
 #include "probe_api/hex.h"
@@ -28,9 +29,6 @@
 // replies:
 #include "replies.h"
 #include "threads.h"
-
-
-#define NUM_MON_COMMANDS  (sizeof(mon_commands)/sizeof(mon_cmd_typ))
 
 typedef struct {
     bool extended_mode;

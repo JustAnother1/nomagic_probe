@@ -16,7 +16,15 @@
 #ifndef NOMAGIC_PROBE_SRC_PROBE_API_GDB_MONITOR_COMMANDS_H_
 #define NOMAGIC_PROBE_SRC_PROBE_API_GDB_MONITOR_COMMANDS_H_
 
+#include "target.h"
+
+#define NUM_MON_COMMANDS  (sizeof(mon_commands)/sizeof(mon_cmd_typ))
+
+void target_monitor_command(uint32_t which, char* command);
 void mon_cmd_help(char* command);
 void mon_cmd_version(void);
+void mon_cmd_halt(void);
+void mon_cmd_reset(char* command);
+void mon_cmd_reg(char* command);
 
 #endif /* NOMAGIC_PROBE_SRC_PROBE_API_GDB_MONITOR_COMMANDS_H_ */

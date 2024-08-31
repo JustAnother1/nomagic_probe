@@ -28,6 +28,9 @@ Result handle_target_reply_read_memory(action_data_typ* const action, bool first
 Result handle_target_reply_write_memory(action_data_typ* const action, bool first_call);
 Result handle_target_reply_step(action_data_typ* const action, bool first_call);
 Result handle_check_target_running(action_data_typ* const action, bool first_call);
+Result handle_monitor_halt(action_data_typ* const action, bool first_call);
+Result handle_monitor_reset_init(action_data_typ* const action, bool first_call);
+Result handle_monitor_reg(action_data_typ* const action, bool first_call);
 #endif
 
 #endif /* TARGET_COMMON_ACTIONS_H_ */
