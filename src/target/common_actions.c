@@ -36,9 +36,9 @@
 #define MAX_MONITOR_LINE_LENGTH         50
 static char msg_buf[MAX_MONITOR_LINE_LENGTH];
 
-#endif
-
 static void send_stopped_reply(void);
+
+#endif
 
 Result handle_target_connect(action_data_typ* const action, bool first_call)
 {

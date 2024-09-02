@@ -38,7 +38,9 @@
  */
 
 #include "usb_descriptors.h"
+#ifdef FEAT_USB_NCM
 #include "cfg/network_cfg.h"
+#endif
 #include "cfg/serial_cfg.h"
 
 // TinyUSB:
@@ -259,6 +261,7 @@ void update_descriptors(void)
         has_cdc = false;
     }
 
+#ifdef FEAT_USB_NCM
     if(true == network_cfg_is_network_enabled())
     {
         interface_count += 2;
@@ -268,6 +271,7 @@ void update_descriptors(void)
     {
         // no change
     }
+#endif
 
     // apply changes:
     // ==============
@@ -281,6 +285,8 @@ void update_descriptors(void)
     usbd_desc_cfg[3]= ((descriptor_length>>8) & 0xff);
     // TUD_MSC_DESCRIPTOR = 23 bytes (TUD_MSC_DESC_LEN)
     // TUD_CDC_DESCRIPTOR = 66 bytes (TUD_CDC_DESC_LEN)
+
+#ifdef FEAT_USB_NCM
     // TUD_CDC_NCM_DESCRIPTOR = 85 bytes (TUD_CDC_NCM_DESC_LEN)
     usbd_desc_cfg[98 + 2]  = interface_number_ncm;
     usbd_desc_cfg[98 + 10] = interface_number_ncm;
@@ -288,15 +294,24 @@ void update_descriptors(void)
     usbd_desc_cfg[98 + 26] = interface_number_ncm + 1;
     usbd_desc_cfg[98 + 55] = interface_number_ncm + 1;
     usbd_desc_cfg[98 + 64] = interface_number_ncm + 1;
+#endif
 
     // remove unused descriptors
     if(false == has_cdc)
     {
+#ifdef FEAT_USB_MSC
         // overwrite CDC descriptor with the following descriptors
         memcpy(&(usbd_desc_cfg[32]), // to the start of the CDC descriptor copy
                &(usbd_desc_cfg[32 + TUD_CDC_DESC_LEN]), // whatever comes after it
                descriptor_length -32); // and as many bytes come after the CDC
                //(length of CDC is already subtracted from descriptor_length)
+#else
+        // overwrite CDC descriptor with the following descriptors
+        memcpy(&(usbd_desc_cfg[9]), // to the start of the CDC descriptor copy
+               &(usbd_desc_cfg[9 + TUD_CDC_DESC_LEN]), // whatever comes after it
+               descriptor_length -9); // and as many bytes come after the CDC
+               //(length of CDC is already subtracted from descriptor_length)
+#endif
     }
 }
 

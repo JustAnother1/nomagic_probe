@@ -18,8 +18,10 @@
 #include "serial_cfg.h"
 #include "tinyusb/usb_cdc.h"
 #include "hal/debug_uart.h"
+#ifdef FEAT_USB_NCM
 #include "lwip/lwip.h"
 #include "cfg/network_cfg.h"
+#endif
 #include "read_ini.h"
 #include "probe_api/debug_log.h"
 
@@ -79,6 +81,7 @@ void serial_cfg_apply(void)
         is_connected_fct = tud_cdc_connected;
         flush_fct = usb_cdc_flush;
     }
+#ifdef FEAT_USB_NCM
     else if(0 != net_cfg.gdb_port)
     {
         debug_line("GDB on Ethernet !");
@@ -90,6 +93,7 @@ void serial_cfg_apply(void)
         is_connected_fct = network_gdb_is_connected;
         flush_fct = network_gdb_flush;
     }
+#endif
     else
     {
         debug_line("GDB not available !");
@@ -175,21 +179,24 @@ void serial_debug_send_bytes(const uint8_t * data, const uint32_t length)
 
 uint32_t serial_debug_get_num_received_bytes(void)
 {
-#ifdef FEAT_DEBUG_UART
+#if defined(FEAT_DEBUG_UART)
     return debug_uart_get_num_received_bytes();
-#endif
-#ifdef FEAT_DEBUG_CDC
+#elif defined(FEAT_DEBUG_CDC)
     return usb_cdc_get_num_received_bytes();
+#else
+    return 0;
 #endif
+
 }
 
 uint8_t serial_debug_get_next_received_byte(void)
 {
-#ifdef FEAT_DEBUG_UART
+#if defined(FEAT_DEBUG_UART)
     return debug_uart_get_next_received_byte();
-#endif
-#ifdef FEAT_DEBUG_CDC
+#elif defined(FEAT_DEBUG_CDC)
     return usb_cdc_get_next_received_byte();
+#else
+    return 0;
 #endif
 }
 

@@ -45,7 +45,6 @@ static void check_if_still_running(void);
 static void report_to_gdb(void);
 
 
-
 static volatile uint32_t action_read;
 static volatile uint32_t action_write;
 static action_handler cur_action;
@@ -318,11 +317,13 @@ void target_close_connection(void)
 
 static void check_if_still_running(void)
 {
+#ifdef FEAT_GDB_SERVER
     if((NULL == cur_action) && (action_read != action_write))
     {
         add_action(CHECK_RUNNING);
     }
     // else wait until all queued actions have finished.
+#endif
 }
 
 static void handle_actions(void)
@@ -411,7 +412,9 @@ static void handle_actions(void)
     {
         // action has finished
         action_queue[action_read].is_done = true;
+#ifdef FEAT_GDB_SERVER
         gdb_is_not_busy_anymore();
+#endif
         if(RESULT_OK > res)
         {
             // error
@@ -420,11 +423,13 @@ static void handle_actions(void)
                        action_names[action_queue[action_read].action],
                        action_queue[action_read].main_phase,
                        action_queue[action_read].sub_phase);
+#ifdef FEAT_GDB_SERVER
             if(true == is_gdb_busy())
             {
                 reply_packet_send();
                 gdb_is_not_busy_anymore();
             }
+#endif
         }
         cur_action = NULL;
         action_read++;
@@ -435,8 +440,10 @@ static void handle_actions(void)
     }
 }
 
+
 static void report_to_gdb(void)
 {
+#ifdef FEAT_GDB_SERVER
     if(true == timeout_expired(&report_to))
     {
         reply_packet_prepare();
@@ -445,4 +452,6 @@ static void report_to_gdb(void)
         start_timeout(&report_to, GDB_RUNNING_REPORT_TIMEOUT_MS);
     }
     // else  wait
+#endif
 }
+
