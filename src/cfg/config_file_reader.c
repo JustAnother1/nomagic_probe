@@ -29,6 +29,7 @@
 #define NETWORK_SECTION_NAME "network"
 #define SWD_SECTION_NAME     "swd"
 
+#ifdef FEAT_USB_MSC
 static uint32_t file_pos;
 static uint32_t file_read_upto;
 static uint32_t block_offset;
@@ -38,10 +39,13 @@ static uint32_t file_size;
 
 static configuration_setter get_section_handler(char * section);
 static char * next_char(void);
+#endif
 
 void read_config_file(void)
 {
+#ifdef FEAT_USB_MSC
     fat_entry* entry;
+#endif
 
     // all configs reset to default
     serial_cfg_reset_to_default();
@@ -50,6 +54,7 @@ void read_config_file(void)
     network_cfg_reset_to_default();
 #endif
 
+#ifdef FEAT_USB_MSC
     entry = fake_root_get_entry_of_file_named(CONFIGURATION_INI_FILE_NAME);
     if(NULL != entry)
     {
@@ -61,6 +66,7 @@ void read_config_file(void)
         read_ini_read(next_char, get_section_handler);
     }
     else
+#endif
     {
         // file not found
         debug_line("CFG: no configuration INI file found!");
@@ -74,6 +80,7 @@ void read_config_file(void)
 #endif
 }
 
+#ifdef FEAT_USB_MSC
 static configuration_setter get_section_handler(char * section)
 {
     if(0 == strncmp(section, SERIAL_SECTION_NAME, sizeof(SERIAL_SECTION_NAME)))
@@ -123,4 +130,5 @@ static char * next_char(void)
     file_pos++;
     return data;
 }
+#endif
 
