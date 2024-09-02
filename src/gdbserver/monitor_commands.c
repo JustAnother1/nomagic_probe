@@ -16,6 +16,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "gdb_error_codes.h"
 #include "probe_api/debug_log.h"
 #include "probe_api/gdb_monitor_commands.h"
 #include "probe_api/gdb_monitor_defs.h"
@@ -63,7 +64,7 @@ void target_monitor_command(uint32_t which, char* command)
         reply_packet_send();
 
         reply_packet_prepare();
-        reply_packet_add("E00");
+        reply_packet_add(ERROR_CODE_INVALID_MONITOR_COMMAND);
         reply_packet_send();
 
         gdb_is_not_busy_anymore();
@@ -337,7 +338,7 @@ void mon_cmd_reg(char* command)
         reply_packet_send();
 
         reply_packet_prepare();
-        reply_packet_add("E01");
+        reply_packet_add(ERROR_CODE_INVALID_PARAMETER_VALUE);
         reply_packet_send();
 
         gdb_is_not_busy_anymore();

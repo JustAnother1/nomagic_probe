@@ -29,6 +29,7 @@
 // replies:
 #include "replies.h"
 #include "threads.h"
+#include "gdb_error_codes.h"
 
 typedef struct {
     bool extended_mode;
@@ -175,7 +176,7 @@ void commands_execute(char* received, uint32_t length, char* checksum)
             break;
 
         case 'k':  // kill the target
-            // TODO
+            // TODO implement
             send_unknown_command_reply();
             break;
 
@@ -209,7 +210,7 @@ void commands_execute(char* received, uint32_t length, char* checksum)
 
         case 'P':  // read  or write specific Register
         case 'p':  // read  or write specific Register
-            // TODO
+            // TODO implement
             send_unknown_command_reply();
             break;
 
@@ -252,7 +253,7 @@ void commands_execute(char* received, uint32_t length, char* checksum)
             break;
 
         case 'T':  // report if a particular Thread is alive
-            // TODO
+            // TODO implement
             send_unknown_command_reply();
             break;
 
@@ -266,7 +267,7 @@ void commands_execute(char* received, uint32_t length, char* checksum)
 
         case 'X':  // load binary data
         case 'Z':  // clear or set breakpoints or watch points
-            // TODO
+            // TODO implement
             send_unknown_command_reply();
             break;
 
@@ -396,7 +397,7 @@ static void handle_vee(char* received, uint32_t length)
             // command start with "vRun"
             found_cmd = true;
             // run program
-            // TODO
+            // TODO implement
             send_unknown_command_reply();
         }
         else if(0 == strncmp(received, "vAttach", 7))
@@ -404,7 +405,7 @@ static void handle_vee(char* received, uint32_t length)
             // command start with "vAttach"
             found_cmd = true;
             // Attach to (new) process
-            // TODO
+            // TODO implement
             send_unknown_command_reply();
         }
         else if(0 == strncmp(received, "vFlashDone", 10))
@@ -469,7 +470,7 @@ static void handle_tee(char* received, uint32_t length)
         {
             found_cmd = true;
             // debug with other core running
-            // TODO
+            // TODO implement
             send_unknown_command_reply();
         }
     }
@@ -479,7 +480,7 @@ static void handle_tee(char* received, uint32_t length)
         {
             found_cmd = true;
             // debug with other core running
-            // TODO
+            // TODO implement
             send_unknown_command_reply();
         }
     }
@@ -565,8 +566,7 @@ static void handle_general_query(char* received, uint32_t length)
 
                 // end of output
                 reply_packet_prepare();
-                // reply_packet_add("OK");
-                reply_packet_add("E01");
+                reply_packet_add(ERROR_CODE_INVALID_MONITOR_COMMAND);
                 reply_packet_send();
             }
             else
@@ -705,7 +705,7 @@ static bool parse_parameter(param_pattern_typ pattern, char* parameter)
         {
             // pattern needs to have a ":"
             reply_packet_prepare();
-            reply_packet_add("E 04");
+            reply_packet_add(ERROR_CODE_INVALID_PARAMETER_FORMAT_COLON);
             reply_packet_send();
             return false;
         }
@@ -726,7 +726,7 @@ static bool parse_parameter(param_pattern_typ pattern, char* parameter)
         {
             // pattern needs to have a ","
             reply_packet_prepare();
-            reply_packet_add("E 03");
+            reply_packet_add(ERROR_CODE_INVALID_PARAMETER_FORMAT_COMMA);
             reply_packet_send();
             return false;
         }
@@ -737,7 +737,7 @@ static bool parse_parameter(param_pattern_typ pattern, char* parameter)
         {
             // pattern needs to have a ":"
             reply_packet_prepare();
-            reply_packet_add("E 04");
+            reply_packet_add(ERROR_CODE_INVALID_PARAMETER_FORMAT_COLON);
             reply_packet_send();
             return false;
         }
@@ -757,7 +757,7 @@ static bool parse_parameter(param_pattern_typ pattern, char* parameter)
         {
             // pattern needs to have a ","
             reply_packet_prepare();
-            reply_packet_add("E 03");
+            reply_packet_add(ERROR_CODE_INVALID_PARAMETER_FORMAT_COMMA);
             reply_packet_send();
             return false;
         }
@@ -789,7 +789,7 @@ static bool parse_parameter(param_pattern_typ pattern, char* parameter)
         {
             // pattern needs to have a ":"
             reply_packet_prepare();
-            reply_packet_add("E 04");
+            reply_packet_add(ERROR_CODE_INVALID_PARAMETER_FORMAT_COLON);
             reply_packet_send();
             return false;
         }
@@ -804,7 +804,7 @@ static bool parse_parameter(param_pattern_typ pattern, char* parameter)
     default:
         // invalid pattern
         reply_packet_prepare();
-        reply_packet_add("E 02");
+        reply_packet_add(ERROR_CODE_INVALID_PARAMETER_FORMAT_TYPE);
         reply_packet_send();
         return false;
     }
@@ -821,7 +821,7 @@ static bool parse_binary(char* parameter)
     {
         return false;
     }
-    // TODO
+    // TODO implement
     return true;
 }
 
@@ -834,7 +834,7 @@ static bool parse_memory(char* parameter)
     {
         // we need at least one 32bit value
         reply_packet_prepare();
-        reply_packet_add("E 05");
+        reply_packet_add(ERROR_CODE_INVALID_PARAMETER_VALUE_TOO_SMALL);
         reply_packet_send();
         return false;
     }
@@ -842,7 +842,7 @@ static bool parse_memory(char* parameter)
     {
         // we are doing 32bit values only
         reply_packet_prepare();
-        reply_packet_add("E 06");
+        reply_packet_add(ERROR_CODE_INVALID_PARAMETER_VALUE);
         reply_packet_send();
         return false;
     }

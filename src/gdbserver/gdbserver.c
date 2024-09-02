@@ -17,6 +17,7 @@
 #include "cfg/serial_cfg.h"
 #include "commands.h"
 #include "gdbserver.h"
+#include "gdb_error_codes.h"
 #include "probe_api/common.h"
 #include "probe_api/debug_log.h"
 #include "probe_api/gdb_packets.h"
@@ -229,7 +230,7 @@ void send_part(char* part, uint32_t size, uint32_t offset, uint32_t length)
     {
         // offset invalid
         reply_packet_prepare();
-        reply_packet_add("E 01");
+        reply_packet_add(ERROR_CODE_WRONG_OFFSET);
         reply_packet_send();
         return;
     }

@@ -16,6 +16,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include "gdb_error_codes.h"
 #include "threads.h"
 #include "probe_api/gdb_packets.h"
 
@@ -63,7 +64,7 @@ void handle_H_command(char* command)
     case 'm': active_thread_for_operation[LC_M] = atoi(thread_id_str); break;
     case 'M': active_thread_for_operation[UC_M] = atoi(thread_id_str); break;
     default: // error
-        reply_packet_add("E 05");  // TODO organize Error codes
+        reply_packet_add(ERROR_CODE_INVALID_THREAD_OPERATION);
         reply_packet_send();
         break;
     }

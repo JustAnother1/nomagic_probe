@@ -17,6 +17,7 @@
 #include <stdbool.h>
 
 #include "cmd_qxfer.h"
+#include "gdb_error_codes.h"
 #include "hal/debug_uart.h"
 #include "probe_api/debug_log.h"
 #include "probe_api/gdb_packets.h"
@@ -79,7 +80,7 @@ void handle_cmd_qXfer(char* parameter, uint32_t length)
     debug_line("xfer:invalid");
     // if we reach this, then the request was invalid
     reply_packet_prepare();
-    reply_packet_add("E00");
+    reply_packet_add(ERROR_CODE_INVALID_TRANSFERE_REQUEST);
     reply_packet_send();
 }
 

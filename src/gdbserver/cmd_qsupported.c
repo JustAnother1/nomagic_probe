@@ -87,7 +87,6 @@ void handle_cmd_qSupported(char* parameter, uint32_t length)
     snprintf(buf, 9, "%x", MAX_COMMAND_LENGTH -1); // GDB does not send a 0 at the end, so we need to have space for an additional 0
     reply_packet_add(buf);
     reply_packet_add(";hwbreak+");
-    // reply_packet_add(";multiprocess+");  // TODO might make sense for multi core ?
     reply_packet_add(";QStartNoAckMode+");
     reply_packet_add(";qXfer:features:read+");
     reply_packet_add(";qXfer:memory-map:read+");

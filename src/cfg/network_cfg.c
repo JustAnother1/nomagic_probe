@@ -104,7 +104,6 @@ void network_cfg_set(char * setting, char * value)
         }
     }
 
-    // TODO
 }
 
 void network_cfg_apply(void)
