@@ -907,6 +907,8 @@ Result handle_monitor_reg(action_data_typ* const action, bool first_call)
                 snprintf(msg_buf, sizeof(msg_buf), "(%ld) psp (/32): 0x%08lx\r\n", action->intern[INTERN_REGISTER_IDX], action->read_0);
                 encode_text_to_hex_string(msg_buf, sizeof(buf), buf);
                 reply_packet_add(buf);
+                // no 19
+                action->intern[INTERN_REGISTER_IDX] ++;
                 break;
 
             case 20: // CONROL / PRIMASK

@@ -17,6 +17,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <string.h>
+#include "cfg/serial_cfg.h"
 #include "probe_api/gdb_packets.h"
 #include "probe_api/result.h"
 #include "probe_api/swd.h"
@@ -330,6 +331,13 @@ static void handle_actions(void)
 {
     Result res;
     bool first;
+
+    if(true == serial_gdb_is_buffer_full())
+    {
+    	// give the buffer time to drain -> try again next time
+    	return;
+    }
+
     if(NULL == cur_action)
     {
         // no action in processing -> try to process next action

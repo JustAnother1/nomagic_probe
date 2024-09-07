@@ -34,6 +34,7 @@ typedef uint8_t (* get_next_received_byte_function)(void);
 typedef void (* putc_function)(void* p, char c);
 typedef bool (* is_connected_function)(void);
 typedef void (* flush_function)(void);
+typedef bool (* is_buffer_full_function)(void);
 
 static void null_send_string_function(char * str);
 static void null_send_bytes_function(const uint8_t * data, const uint32_t length);
@@ -42,6 +43,7 @@ static uint8_t null_get_next_received_byte_function(void);
 static void null_putc_function(void* p, char c);
 static bool null_is_connected_function(void);
 static void null_flush_function(void);
+static bool null_is_buffer_full_function(void);
 
 
 static send_string_function send_string_fct;
@@ -51,6 +53,7 @@ static get_next_received_byte_function get_next_received_byte_fct;
 static putc_function putc_fct;
 static is_connected_function is_connected_fct;
 static flush_function flush_fct;
+static is_buffer_full_function is_buffer_full_fct;
 
 void serial_cfg_reset_to_default(void)
 {
@@ -73,38 +76,41 @@ void serial_cfg_apply(void)
     if(true == is_USB_CDC_enabled)
     {
         debug_line("GDB on CDC !");
-        send_string_fct = usb_cdc_send_string;
-        send_bytes_fct = usb_cdc_send_bytes;
+        send_string_fct            = usb_cdc_send_string;
+        send_bytes_fct             = usb_cdc_send_bytes;
         get_num_received_bytes_fct = usb_cdc_get_num_received_bytes;
         get_next_received_byte_fct = usb_cdc_get_next_received_byte;
-        putc_fct = usb_cdc_putc;
-        is_connected_fct = tud_cdc_connected;
-        flush_fct = usb_cdc_flush;
+        putc_fct                   = usb_cdc_putc;
+        is_connected_fct           = tud_cdc_connected;
+        flush_fct                  = usb_cdc_flush;
+        is_buffer_full_fct         = null_is_buffer_full_function;
     }
 #ifdef FEAT_USB_NCM
     else if(0 != net_cfg.gdb_port)
     {
         debug_line("GDB on Ethernet !");
-        send_string_fct = network_gdb_send_string;
-        send_bytes_fct = network_gdb_send_bytes;
+        send_string_fct            = network_gdb_send_string;
+        send_bytes_fct             = network_gdb_send_bytes;
         get_num_received_bytes_fct = network_gdb_get_num_received_bytes;
-        get_next_received_byte_fct =network_gdb_get_next_received_byte;
-        putc_fct = network_gdb_putc;
-        is_connected_fct = network_gdb_is_connected;
-        flush_fct = network_gdb_flush;
+        get_next_received_byte_fct = network_gdb_get_next_received_byte;
+        putc_fct                   = network_gdb_putc;
+        is_connected_fct           = network_gdb_is_connected;
+        flush_fct                  = network_gdb_flush;
+        is_buffer_full_fct         = network_gdb_is_buffer_full;
     }
 #endif
     else
     {
         debug_line("GDB not available !");
         // avoid null pointers in function pointers
-        send_string_fct = null_send_string_function;
-        send_bytes_fct = null_send_bytes_function;
+        send_string_fct            = null_send_string_function;
+        send_bytes_fct             = null_send_bytes_function;
         get_num_received_bytes_fct = null_get_num_received_bytes_function;
         get_next_received_byte_fct = null_get_next_received_byte_function;
-        putc_fct = null_putc_function;
-        is_connected_fct = null_is_connected_function;
-        flush_fct = null_flush_function;
+        putc_fct                   = null_putc_function;
+        is_connected_fct           = null_is_connected_function;
+        flush_fct                  = null_flush_function;
+        is_buffer_full_fct         = null_is_buffer_full_function;
     }
 
     // Debug interface is handled by compiler switches (ifdef)
@@ -154,6 +160,12 @@ static bool null_is_connected_function(void)
 static void null_flush_function(void)
 {
     // Done !
+}
+
+static bool null_is_buffer_full_function(void)
+{
+	// buffer is never full
+	return false;
 }
 
 // DEBUG CLI interface
@@ -245,6 +257,11 @@ bool serial_gdb_is_connected(void)
 void serial_gdb_flush(void)
 {
     (* flush_fct)();
+}
+
+bool serial_gdb_is_buffer_full(void)
+{
+	return (* is_buffer_full_fct)();
 }
 
 // new interfaces:

@@ -45,6 +45,7 @@ uint8_t serial_gdb_get_next_received_byte(void);
 void serial_gdb_putc(void* p, char c);
 bool serial_gdb_is_connected(void);
 void serial_gdb_flush(void);
+bool serial_gdb_is_buffer_full(void);
 
 
 // load configuration
