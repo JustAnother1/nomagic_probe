@@ -69,27 +69,35 @@ bool tcp_pipe_activate(tcp_pipe_def* pipe)
 uint32_t tcp_pipe_write(tcp_pipe_def* pipe, const uint8_t * data, const uint16_t length)
 {
     err_t res;
+    uint16_t available;  // number of bytes the stack can send out (free space in buffer)
+    uint16_t bytes_to_send = length;
     if(NULL == pipe->connection_pcb)
     {
         // connection might have been closed just now, so sending this makes no sense anymore.
         return length;
     }
-    uint16_t available = tcp_sndbuf(pipe->connection_pcb);
+    available = tcp_sndbuf(pipe->connection_pcb);
     if(0 == available)
     {
+    	// buffer is full we can currently not send anything
         return 0;
     }
-    if(length < available)
+    if(length > available)
     {
-        available = length;
+    	// we can not send the complete data all at once, so only send as much as we can.
+    	bytes_to_send = available;
     }
-    res = tcp_write(pipe->connection_pcb, (void *)data, available, TCP_WRITE_FLAG_COPY);  // TODO copy = 0 ???
+    // TCP_WRITE_FLAG_COPY : We want the stack to copy the data into his buffer.
+    // This way we do not need to keep the data in the callers buffer.
+    res = tcp_write(pipe->connection_pcb, (void *)data, bytes_to_send, TCP_WRITE_FLAG_COPY);
     if(ERR_OK == res)
     {
-        return available;
+    	// we send the data
+        return bytes_to_send;
     }
     else
     {
+    	// sending failed
         return 0;
     }
 }
