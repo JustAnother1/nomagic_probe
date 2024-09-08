@@ -249,6 +249,7 @@ action_data_typ * book_action_slot(void)
     {
         // we have a free slot!
         action_write = next_idx;
+        memset(&action_queue[slot_index], 0, sizeof(action_data_typ));
         action_queue[slot_index].can_run = false;
         return &action_queue[slot_index];
     }
@@ -295,7 +296,7 @@ bool add_action_with_parameter(action_typ act, parameter_typ* parsed_parameter)
         return false;
     }
     action->action = act;
-    action->gdb_parameter = parsed_parameter;
+    action->gdb_parameter = *parsed_parameter;
     res = add_target_action(action);
     if(RESULT_OK != res)
     {

@@ -362,13 +362,13 @@ Result handle_target_reply_write_g(action_data_typ* const action, bool first_cal
     {
         uint32_t i;
         bool found = false;
-        for(i = 0; i < action->gdb_parameter->num_memory_locations; i++)
+        for(i = 0; i < action->gdb_parameter.num_memory_locations; i++)
         {
-            if(true == action->gdb_parameter->memory[i].has_value)
+            if(true == action->gdb_parameter.memory[i].has_value)
             {
                 // write that value
                 found = true;
-                action->gdb_parameter->memory[i].has_value = false;
+                action->gdb_parameter.memory[i].has_value = false;
                 break;
             }
             // else skip that value, or already done
@@ -387,7 +387,7 @@ Result handle_target_reply_write_g(action_data_typ* const action, bool first_cal
             // skip reserved 19
             action->parameter[0] ++;
         }
-        action->parameter[1] = action->gdb_parameter->memory[i].value;
+        action->parameter[1] = action->gdb_parameter.memory[i].value;
         *(action->cur_phase) = 2;
         return ERR_NOT_COMPLETED;
     }
@@ -547,7 +547,7 @@ Result handle_target_reply_read_memory(action_data_typ* const action, bool first
 
     if(0 == *(action->cur_phase))
     {
-        return do_read_ap(action, (action->gdb_parameter->address + action->intern[INTERN_MEMORY_OFFSET] * 4));
+        return do_read_ap(action, (action->gdb_parameter.address + action->intern[INTERN_MEMORY_OFFSET] * 4));
     }
 
     if(1 == *(action->cur_phase))
@@ -564,7 +564,7 @@ Result handle_target_reply_read_memory(action_data_typ* const action, bool first
         // debug_line("read 0x%08lx", action->read_0);
         action->intern[INTERN_MEMORY_OFFSET]++;
         *(action->cur_phase) = 1;
-        if(action->gdb_parameter->length == action->intern[INTERN_MEMORY_OFFSET])
+        if(action->gdb_parameter.length == action->intern[INTERN_MEMORY_OFFSET])
         {
             // finished
             reply_packet_send();
@@ -598,16 +598,16 @@ Result handle_target_reply_write_memory(action_data_typ* const action, bool firs
     {
         reply_packet_prepare();
         *(action->cur_phase) = 1;
-        action->intern[0] = action->gdb_parameter->length;
+        action->intern[0] = action->gdb_parameter.length;
     }
 
     if(1 == *(action->cur_phase))
     {
         uint32_t i;
         bool found = false;
-        for(i = 0; i < action->gdb_parameter->num_memory_locations; i++)
+        for(i = 0; i < action->gdb_parameter.num_memory_locations; i++)
         {
-            if(true == action->gdb_parameter->memory[i].has_value)
+            if(true == action->gdb_parameter.memory[i].has_value)
             {
                 // write that value
                 found = true;
@@ -623,8 +623,8 @@ Result handle_target_reply_write_memory(action_data_typ* const action, bool firs
             return RESULT_OK;
         }
         // else
-        action->parameter[0] = action->gdb_parameter->address + i*4;
-        action->parameter[1] = action->gdb_parameter->memory[i].value;
+        action->parameter[0] = action->gdb_parameter.address + i*4;
+        action->parameter[1] = action->gdb_parameter.memory[i].value;
         *(action->cur_phase) = *(action->cur_phase) + 1;
     }
 
@@ -704,10 +704,10 @@ Result handle_monitor_reg(action_data_typ* const action, bool first_call)
     if(true == first_call)
     {
         *(action->cur_phase) = 0;
-        if(true == action->gdb_parameter->has_index)
+        if(true == action->gdb_parameter.has_index)
         {
             // not all registers but just one
-            action->intern[INTERN_REGISTER_IDX] = action->gdb_parameter->index;
+            action->intern[INTERN_REGISTER_IDX] = action->gdb_parameter.index;
         }
         else
         {
@@ -783,7 +783,7 @@ Result handle_monitor_reg(action_data_typ* const action, bool first_call)
         char buf[100];
         memset(&msg_buf, 0, sizeof(msg_buf));
 
-        if(true == action->gdb_parameter->has_index)
+        if(true == action->gdb_parameter.has_index)
         {
             switch(action->intern[INTERN_REGISTER_IDX])
             {
@@ -924,7 +924,7 @@ Result handle_monitor_reg(action_data_typ* const action, bool first_call)
         action->intern[INTERN_REGISTER_IDX] ++;
         *(action->cur_phase) = 0;
 
-        if(   (true == action->gdb_parameter->has_index)
+        if(   (true == action->gdb_parameter.has_index)
            || (21 == action->intern[INTERN_REGISTER_IDX]) )
         {
             // finished

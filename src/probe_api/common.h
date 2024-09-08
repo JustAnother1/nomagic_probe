@@ -76,7 +76,7 @@ typedef enum {
 
 typedef struct{
     uint32_t parameter[MAX_PARAMETER_VALUES];
-    parameter_typ* gdb_parameter;
+    parameter_typ gdb_parameter;
     uint32_t* cur_phase;
     uint32_t main_phase;
     uint32_t sub_phase;
