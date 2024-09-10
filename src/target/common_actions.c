@@ -18,6 +18,7 @@
 
 #include "probe_api/cortex-m.h"
 #include "probe_api/debug_log.h"
+#include "probe_api/gdb_error_codes.h"
 #include "probe_api/gdb_packets.h"
 #include "probe_api/hex.h"
 #include "probe_api/result.h"
@@ -314,7 +315,7 @@ Result handle_target_reply_g(action_data_typ* const action, bool first_call)
     return ERR_WRONG_STATE;
 }
 
-
+// GDB_CMD_WRITE_G
 Result handle_target_reply_write_g(action_data_typ* const action, bool first_call)
 {
     // ‘G XX…’
@@ -353,22 +354,35 @@ Result handle_target_reply_write_g(action_data_typ* const action, bool first_cal
     if(true == first_call)
     {
         reply_packet_prepare();
-        *(action->cur_phase) = 1;
-        action->intern[INTERN_RETRY_COUNTER] = 0;
-        return ERR_NOT_COMPLETED;
+        if(MEMORY != action->gdb_parameter.type)
+        {
+            // wrong parameter type
+            debug_line("ERROR: wrong parameter type !");
+            action->result = ERR_WRONG_VALUE;
+            action->is_done = true;
+            reply_packet_prepare();
+            reply_packet_add(ERROR_CODE_INVALID_PARAMETER_FORMAT_TYPE);
+            reply_packet_send();
+            return ERR_WRONG_VALUE;
+        }
+        else
+        {
+            *(action->cur_phase) = 1;
+            action->intern[INTERN_RETRY_COUNTER] = 0;
+        }
     }
 
     if(1 == *(action->cur_phase))
     {
         uint32_t i;
         bool found = false;
-        for(i = 0; i < action->gdb_parameter.num_memory_locations; i++)
+        for(i = 0; i < MAX_MEMORY_POSITIONS; i++)
         {
-            if(true == action->gdb_parameter.memory[i].has_value)
+            if(true == action->gdb_parameter.memory.memory[i].has_value)
             {
                 // write that value
                 found = true;
-                action->gdb_parameter.memory[i].has_value = false;
+                action->gdb_parameter.memory.memory[i].has_value = false;
                 break;
             }
             // else skip that value, or already done
@@ -387,7 +401,7 @@ Result handle_target_reply_write_g(action_data_typ* const action, bool first_cal
             // skip reserved 19
             action->parameter[0] ++;
         }
-        action->parameter[1] = action->gdb_parameter.memory[i].value;
+        action->parameter[1] = action->gdb_parameter.memory.memory[i].value;
         *(action->cur_phase) = 2;
         return ERR_NOT_COMPLETED;
     }
@@ -517,6 +531,7 @@ Result handle_target_reply_continue(action_data_typ* const action, bool first_ca
     return ERR_WRONG_STATE;
 }
 
+// GDB_CMD_READ_MEMORY
 Result handle_target_reply_read_memory(action_data_typ* const action, bool first_call)
 {
     // ‘m addr,length’
@@ -541,13 +556,27 @@ Result handle_target_reply_read_memory(action_data_typ* const action, bool first
     if(true == first_call)
     {
         reply_packet_prepare();
-        *(action->cur_phase) = 0;
-        action->intern[INTERN_MEMORY_OFFSET] = 0;
+        if(ADDRESS_LENGTH != action->gdb_parameter.type)
+        {
+            // wrong parameter type
+            debug_line("ERROR: wrong parameter type !");
+            action->result = ERR_WRONG_VALUE;
+            action->is_done = true;
+            reply_packet_prepare();
+            reply_packet_add(ERROR_CODE_INVALID_PARAMETER_FORMAT_TYPE);
+            reply_packet_send();
+            return ERR_WRONG_VALUE;
+        }
+        else
+        {
+            *(action->cur_phase) = 0;
+            action->intern[INTERN_MEMORY_OFFSET] = 0;
+        }
     }
 
     if(0 == *(action->cur_phase))
     {
-        return do_read_ap(action, (action->gdb_parameter.address + action->intern[INTERN_MEMORY_OFFSET] * 4));
+        return do_read_ap(action, (action->gdb_parameter.address_length.address + action->intern[INTERN_MEMORY_OFFSET] * 4));
     }
 
     if(1 == *(action->cur_phase))
@@ -564,7 +593,7 @@ Result handle_target_reply_read_memory(action_data_typ* const action, bool first
         // debug_line("read 0x%08lx", action->read_0);
         action->intern[INTERN_MEMORY_OFFSET]++;
         *(action->cur_phase) = 1;
-        if(action->gdb_parameter.length == action->intern[INTERN_MEMORY_OFFSET])
+        if(action->gdb_parameter.address_length.length == action->intern[INTERN_MEMORY_OFFSET])
         {
             // finished
             reply_packet_send();
@@ -580,6 +609,7 @@ Result handle_target_reply_read_memory(action_data_typ* const action, bool first
     return ERR_WRONG_STATE;
 }
 
+// GDB_CMD_WRITE_MEMORY
 Result handle_target_reply_write_memory(action_data_typ* const action, bool first_call)
 {
 
@@ -597,17 +627,31 @@ Result handle_target_reply_write_memory(action_data_typ* const action, bool firs
     if(true == first_call)
     {
         reply_packet_prepare();
-        *(action->cur_phase) = 1;
-        action->intern[0] = action->gdb_parameter.length;
+        if(ADDRESS_LENGTH_MEMORY != action->gdb_parameter.type)
+        {
+            // wrong parameter type
+            debug_line("ERROR: wrong parameter type !");
+            action->result = ERR_WRONG_VALUE;
+            action->is_done = true;
+            reply_packet_prepare();
+            reply_packet_add(ERROR_CODE_INVALID_PARAMETER_FORMAT_TYPE);
+            reply_packet_send();
+            return ERR_WRONG_VALUE;
+        }
+        else
+        {
+            *(action->cur_phase) = 1;
+            action->intern[0] = action->gdb_parameter.address_length_memory.length;
+        }
     }
 
     if(1 == *(action->cur_phase))
     {
         uint32_t i;
         bool found = false;
-        for(i = 0; i < action->gdb_parameter.num_memory_locations; i++)
+        for(i = 0; i < MAX_MEMORY_POSITIONS; i++)
         {
-            if(true == action->gdb_parameter.memory[i].has_value)
+            if(true == action->gdb_parameter.address_length_memory.memory[i].has_value)
             {
                 // write that value
                 found = true;
@@ -623,8 +667,8 @@ Result handle_target_reply_write_memory(action_data_typ* const action, bool firs
             return RESULT_OK;
         }
         // else
-        action->parameter[0] = action->gdb_parameter.address + i*4;
-        action->parameter[1] = action->gdb_parameter.memory[i].value;
+        action->parameter[0] = action->gdb_parameter.address_length_memory.address + i*4;
+        action->parameter[1] = action->gdb_parameter.address_length_memory.memory[i].value;
         *(action->cur_phase) = *(action->cur_phase) + 1;
     }
 
@@ -697,24 +741,38 @@ static void send_stopped_reply(void)
     reply_packet_send();
 }
 
-
+// GDB_MONITOR_REG
 Result handle_monitor_reg(action_data_typ* const action, bool first_call)
 {
 
     if(true == first_call)
     {
-        *(action->cur_phase) = 0;
-        if(true == action->gdb_parameter.has_index)
+        if(HAS_VALUE != action->gdb_parameter.type)
         {
-            // not all registers but just one
-            action->intern[INTERN_REGISTER_IDX] = action->gdb_parameter.index;
+            // wrong parameter type
+            debug_line("ERROR: wrong parameter type !");
+            action->result = ERR_WRONG_VALUE;
+            action->is_done = true;
+            reply_packet_prepare();
+            reply_packet_add(ERROR_CODE_INVALID_PARAMETER_FORMAT_TYPE);
+            reply_packet_send();
+            return ERR_WRONG_VALUE;
         }
         else
         {
-            // all registers
-            action->intern[INTERN_REGISTER_IDX] = 0;
+            *(action->cur_phase) = 0;
+            if(true == action->gdb_parameter.has_value.valid)
+            {
+                // not all registers but just one
+                action->intern[INTERN_REGISTER_IDX] = action->gdb_parameter.has_value.value;
+            }
+            else
+            {
+                // all registers
+                action->intern[INTERN_REGISTER_IDX] = 0;
+            }
+            action->intern[INTERN_RETRY_COUNTER] = 0;
         }
-        action->intern[INTERN_RETRY_COUNTER] = 0;
     }
 
     // 1. write to DCRSR the REGSEL value and REGWnR = 0
@@ -783,7 +841,7 @@ Result handle_monitor_reg(action_data_typ* const action, bool first_call)
         char buf[100];
         memset(&msg_buf, 0, sizeof(msg_buf));
 
-        if(true == action->gdb_parameter.has_index)
+        if(true == action->gdb_parameter.has_value.valid)
         {
             switch(action->intern[INTERN_REGISTER_IDX])
             {
@@ -924,8 +982,8 @@ Result handle_monitor_reg(action_data_typ* const action, bool first_call)
         action->intern[INTERN_REGISTER_IDX] ++;
         *(action->cur_phase) = 0;
 
-        if(   (true == action->gdb_parameter.has_index)
-           || (21 == action->intern[INTERN_REGISTER_IDX]) )
+        if(   (true == action->gdb_parameter.has_value.valid)  // only one value to report
+           || (21 == action->intern[INTERN_REGISTER_IDX]) ) // reported on all values
         {
             // finished
             // end of output

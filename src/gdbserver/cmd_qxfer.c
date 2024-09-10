@@ -17,9 +17,9 @@
 #include <stdbool.h>
 
 #include "cmd_qxfer.h"
-#include "gdb_error_codes.h"
 #include "hal/debug_uart.h"
 #include "probe_api/debug_log.h"
+#include "probe_api/gdb_error_codes.h"
 #include "probe_api/gdb_packets.h"
 #include "probe_api/hex.h"
 #include "probe_api/util.h"

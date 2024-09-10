@@ -16,6 +16,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "cfg/serial_cfg.h"
+#include "probe_api/gdb_error_codes.h"
 #include "probe_api/gdb_monitor_commands.h"
 #include "probe_api/gdb_monitor_defs.h"
 #include "probe_api/gdb_packets.h"
@@ -28,7 +29,6 @@
 #include "cmd_qxfer.h"
 // replies:
 #include "threads.h"
-#include "gdb_error_codes.h"
 
 typedef struct {
     bool extended_mode;
@@ -56,8 +56,8 @@ static void handle_general_set(char* received, uint32_t length);
 static void handle_vee(char* received, uint32_t length);
 static void handle_tee(char* received, uint32_t length);
 static bool parse_parameter(param_pattern_typ pattern, char* parameter);
-static bool parse_memory(char* parameter);
-static bool parse_binary(char* parameter);
+static bool parse_memory(char* parameter, mem_val_typ* memory);
+static bool parse_binary(char* parameter, mem_val_typ* memory);
 
 void commands_init(void)
 {
@@ -776,13 +776,11 @@ static void handle_general_set(char* received, uint32_t length)
 
 static bool parse_parameter(param_pattern_typ pattern, char* parameter)
 {
-    // reset values
-    parsed_parameter.has_address = false;
-    parsed_parameter.num_memory_locations = 0;
     switch(pattern)
     {
     case PARAM_XX: // XX
-        return parse_memory(parameter);
+        parsed_parameter.type = MEMORY;
+        return parse_memory(parameter, &(parsed_parameter.memory.memory[0]));
 
     case PARAM_ADDR_XX: // addr:XX
     {
@@ -798,10 +796,10 @@ static bool parse_parameter(param_pattern_typ pattern, char* parameter)
         }
         *mem_start = '\0';
         mem_start++;
-        parsed_parameter.address = hex_to_int(parameter, 0);
-        parsed_parameter.has_address = true;
+        parsed_parameter.type = ADDRESS_MEMORY;
+        parsed_parameter.address_memory.address = hex_to_int(parameter, 0);
         // XX is now in mem_start
-        return parse_memory(mem_start);
+        return parse_memory(mem_start, &(parsed_parameter.address_memory.memory[0]));
     }
 
 
@@ -830,11 +828,11 @@ static bool parse_parameter(param_pattern_typ pattern, char* parameter)
         }
         *mem_start = '\0';
         mem_start++;
-        parsed_parameter.address = hex_to_int(parameter, 0);
-        parsed_parameter.has_address = true;
-        parsed_parameter.length = hex_to_int(split_pos, 0);
+        parsed_parameter.type = ADDRESS_LENGTH_MEMORY;
+        parsed_parameter.address_length_memory.address = hex_to_int(parameter, 0);
+        parsed_parameter.address_length_memory.length = hex_to_int(split_pos, 0);
         // XX is now in mem_start
-        return parse_memory(mem_start);
+        return parse_memory(mem_start, &(parsed_parameter.address_length_memory.memory[0]));
     }
 
     case PARAM_ADDR_LENGTH: // addr,length
@@ -850,21 +848,22 @@ static bool parse_parameter(param_pattern_typ pattern, char* parameter)
         }
         *split_pos = '\0';
         split_pos++;
-        parsed_parameter.address = hex_to_int(parameter, 0);
-        parsed_parameter.has_address = true;
-        parsed_parameter.length = hex_to_int(split_pos, 0);
+        parsed_parameter.type = ADDRESS_LENGTH;
+        parsed_parameter.address_length.address = hex_to_int(parameter, 0);
+        parsed_parameter.address_length.length = hex_to_int(split_pos, 0);
         break;
     }
 
     case PARAM_OPT_ADDR: // optionaly addr
+        parsed_parameter.type = HAS_VALUE;
         if('\0' != *parameter)
         {
-            parsed_parameter.address = hex_to_int(parameter, 0);
-            parsed_parameter.has_address = true;
+            parsed_parameter.has_value.value = hex_to_int(parameter, 0);
+            parsed_parameter.has_value.valid = true;
         }
         else
         {
-            parsed_parameter.has_address = false;
+            parsed_parameter.has_value.valid = false;
         }
         break;
 
@@ -882,10 +881,10 @@ static bool parse_parameter(param_pattern_typ pattern, char* parameter)
         }
         *mem_start = '\0';
         mem_start++;
-        parsed_parameter.address = hex_to_int(parameter, 0);
-        parsed_parameter.has_address = true;
+        parsed_parameter.type = ADDRESS_MEMORY;
+        parsed_parameter.address_memory.address = hex_to_int(parameter, 0);
         // XX is now in mem_start
-        return parse_binary(mem_start);
+        return parse_binary(mem_start, &(parsed_parameter.address_memory.memory[0]));
     }
 
     default:
@@ -898,8 +897,9 @@ static bool parse_parameter(param_pattern_typ pattern, char* parameter)
     return true;
 }
 
-static bool parse_binary(char* parameter)
+static bool parse_binary(char* parameter, mem_val_typ* memory)
 {
+    (void)memory; // TODO
     if(NULL == parameter)
     {
         return false;
@@ -912,7 +912,7 @@ static bool parse_binary(char* parameter)
     return true;
 }
 
-static bool parse_memory(char* parameter)
+static bool parse_memory(char* parameter, mem_val_typ* memory)
 {
     // string is something like this:  xxxxxxxx00000000xxxxxxxx00000000
     uint32_t i;
@@ -933,19 +933,23 @@ static bool parse_memory(char* parameter)
         reply_packet_send();
         return false;
     }
-    parsed_parameter.num_memory_locations = len/8;
+
     for(i = 0; i < len/8; i++)
     {
         if(('x' == parameter[i*8]) || ('X' == parameter[i*8]))
         {
             // this value is skipped
-            parsed_parameter.memory[i].has_value = false;
+            memory[i].has_value = false;
         }
         else
         {
-            parsed_parameter.memory[i].has_value = true;
-            parsed_parameter.memory[i].value = hex_to_int(&(parameter[i*8]), 8);
+            memory[i].has_value = true;
+            memory[i].value = hex_to_int(&(parameter[i*8]), 8);
         }
+    }
+    for(i = len/8; i < MAX_MEMORY_POSITIONS; i++)
+    {
+        memory[i].has_value = false;
     }
     return true;
 }

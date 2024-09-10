@@ -16,8 +16,9 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "gdb_error_codes.h"
+
 #include "probe_api/debug_log.h"
+#include "probe_api/gdb_error_codes.h"
 #include "probe_api/gdb_monitor_commands.h"
 #include "probe_api/gdb_monitor_defs.h"
 #include "probe_api/gdb_packets.h"
@@ -178,7 +179,7 @@ void mon_cmd_reset(char* command)
     else if(0 == strncmp("reset halt", command, sizeof("reset halt")))
     {
         // Immediately halt the target
-    	// TODO
+        // TODO
         // end of output
         reply_packet_prepare();
         reply_packet_add("OK");
@@ -189,7 +190,7 @@ void mon_cmd_reset(char* command)
     {
         // reset or reset run
         // Let the target run
-    	// TODO
+        // TODO
         // end of output
         reply_packet_prepare();
         reply_packet_add("OK");
@@ -241,14 +242,15 @@ r1 (/32): 0x2002f91c
 
 void mon_cmd_reg(char* command)
 {
-	parameter_typ parsed_parameter;
+    parameter_typ parsed_parameter;
+    parsed_parameter.type = HAS_VALUE;
     // command can be "reg" or reg + register name like this "reg r0"
     bool valid_register = true;
     if(3 == strlen(command))
     {
         // command is "reg"
         char buf[100];
-        parsed_parameter.has_index = false;
+        parsed_parameter.has_value.valid = false;
 
         reply_packet_prepare();
         reply_packet_add("O"); // packet is $ big oh, hex string# checksum
@@ -260,29 +262,29 @@ void mon_cmd_reg(char* command)
     {
         // command is "reg" + register name
         char* register_name = command + 4;
-        parsed_parameter.has_index = true;
+        parsed_parameter.has_value.valid = true;
         if('r' == *register_name)
         {
             switch(register_name[1])
             {
-            case '0': parsed_parameter.index = 0; break;
+            case '0': parsed_parameter.has_value.value = 0; break;
             case '1': switch(register_name[2])
                       {
-                      case 0 :  parsed_parameter.index = 1; break;
-                      case '0': parsed_parameter.index = 10; break;
-                      case '1': parsed_parameter.index = 11; break;
-                      case '2': parsed_parameter.index = 12; break;
+                      case 0 :  parsed_parameter.has_value.value = 1; break;
+                      case '0': parsed_parameter.has_value.value = 10; break;
+                      case '1': parsed_parameter.has_value.value = 11; break;
+                      case '2': parsed_parameter.has_value.value = 12; break;
                       default: valid_register = false; break;
                       }
                       break;
-            case '2': parsed_parameter.index = 2; break;
-            case '3': parsed_parameter.index = 3; break;
-            case '4': parsed_parameter.index = 4; break;
-            case '5': parsed_parameter.index = 5; break;
-            case '6': parsed_parameter.index = 6; break;
-            case '7': parsed_parameter.index = 7; break;
-            case '8': parsed_parameter.index = 8; break;
-            case '9': parsed_parameter.index = 9; break;
+            case '2': parsed_parameter.has_value.value = 2; break;
+            case '3': parsed_parameter.has_value.value = 3; break;
+            case '4': parsed_parameter.has_value.value = 4; break;
+            case '5': parsed_parameter.has_value.value = 5; break;
+            case '6': parsed_parameter.has_value.value = 6; break;
+            case '7': parsed_parameter.has_value.value = 7; break;
+            case '8': parsed_parameter.has_value.value = 8; break;
+            case '9': parsed_parameter.has_value.value = 9; break;
 
             default: valid_register = false; break;
             }
@@ -291,43 +293,43 @@ void mon_cmd_reg(char* command)
         {
             if(0 == strncmp("sp", command, sizeof("sp")))
             {
-                parsed_parameter.index = 13;
+                parsed_parameter.has_value.value = 13;
             }
             else if(0 == strncmp("lr", command, sizeof("lr")))
             {
-                parsed_parameter.index = 14;
+                parsed_parameter.has_value.value = 14;
             }
             else if(0 == strncmp("pc", command, sizeof("pc")))
             {
-                parsed_parameter.index = 15;
+                parsed_parameter.has_value.value = 15;
             }
             else if(0 == strncmp("xPSR", command, sizeof("xPSR")))
             {
-                parsed_parameter.index = 16;
+                parsed_parameter.has_value.value = 16;
             }
             else if(0 == strncmp("msp", command, sizeof("msp")))
             {
-                parsed_parameter.index = 17;
+                parsed_parameter.has_value.value = 17;
             }
             else if(0 == strncmp("psp", command, sizeof("psp")))
             {
-                parsed_parameter.index = 18;
+                parsed_parameter.has_value.value = 18;
             }
             else if(0 == strncmp("primask", command, sizeof("primask")))
             {
-                parsed_parameter.index = 20;
+                parsed_parameter.has_value.value = 20;
             }
             else if(0 == strncmp("basepri", command, sizeof("basepri")))
             {
-                parsed_parameter.index = 20;
+                parsed_parameter.has_value.value = 20;
             }
             else if(0 == strncmp("faultmask", command, sizeof("faultmask")))
             {
-                parsed_parameter.index = 20;
+                parsed_parameter.has_value.value = 20;
             }
             else if(0 == strncmp("control", command, sizeof("control")))
             {
-                parsed_parameter.index = 20;
+                parsed_parameter.has_value.value = 20;
             }
             else
             {

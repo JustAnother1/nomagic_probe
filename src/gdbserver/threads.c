@@ -16,8 +16,8 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include "gdb_error_codes.h"
 #include "threads.h"
+#include "probe_api/gdb_error_codes.h"
 #include "probe_api/gdb_packets.h"
 
 typedef enum threadOperationEnum {

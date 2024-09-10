@@ -31,15 +31,64 @@ typedef struct {
     uint8_t padding[3];
 } mem_val_typ;
 
+// the parameter can accommodate different values.
+// For that the type gives the kind of value in the parameter and the data then
+// contains that parameter.
+// !!! Reading a data element from the wrong type will give a wrong result!!!
+// the following types are supported:
+#define HAS_VALUE             1
+// has_value contains:
+//  uint32_t value; <- the value of the parameter (an address or index,..)
+//  bool valid;     <- the value variable is only valid if this is true.
+//                     if this is false then no parameter value was given.
+#define ADDRESS_LENGTH        2
+// address_length contains:
+//  uint32_t address; <- the address
+//  uint32_t length;  <- the length
+#define ADDRESS_MEMORY        3
+// address_length contains:
+//  uint32_t address; <- the address
+// mem_val_typ memory[MAX_MEMORY_POSITIONS]; <- for every memory location a value
+//                                             or has_value = false to signal that it is missing
+#define ADDRESS_LENGTH_MEMORY 4
+// address_length contains:
+//  uint32_t address; <- the address
+//  uint32_t length;  <- the length
+// mem_val_typ memory[MAX_MEMORY_POSITIONS]; <- for every memory location a value
+//                                             or has_value = false to signal that it is missing
+#define MEMORY                5
+// memory contains:
+// mem_val_typ memory[MAX_MEMORY_POSITIONS]; <- for every memory location a value
+//                                             or has_value = false to signal that it is missing
+
 typedef struct {
-    uint32_t index;
-    uint32_t address;
-    uint32_t length;
-    uint32_t num_memory_locations;
-    mem_val_typ memory[MAX_MEMORY_POSITIONS];
-    bool has_address;
-    bool has_index;
-    uint8_t padding[3];
+    uint32_t type;
+    union{
+        struct {
+            uint32_t value;
+            bool valid;
+        } has_value;
+
+        struct {
+            uint32_t address;
+            uint32_t length;
+        } address_length;
+
+        struct {
+            uint32_t address;
+            mem_val_typ memory[MAX_MEMORY_POSITIONS];
+        } address_memory;
+
+        struct {
+            uint32_t address;
+            uint32_t length;
+            mem_val_typ memory[MAX_MEMORY_POSITIONS];
+        } address_length_memory;
+
+        struct {
+            mem_val_typ memory[MAX_MEMORY_POSITIONS];
+        } memory;
+    };
 } parameter_typ;
 
 typedef enum {
