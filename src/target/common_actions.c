@@ -953,9 +953,15 @@ Result handle_monitor_halt(action_data_typ* const action, bool first_call)
     (void)action; // TODO
     if(true == first_call)
     {
+        reply_packet_prepare();
         return ERR_NOT_COMPLETED;
     }
-    return ERR_NOT_COMPLETED;
+
+    // TODO
+    reply_packet_add("OK");
+    reply_packet_send();
+    gdb_is_not_busy_anymore();
+    return RESULT_OK;
 }
 
 Result handle_monitor_reset_init(action_data_typ* const action, bool first_call)
@@ -963,9 +969,15 @@ Result handle_monitor_reset_init(action_data_typ* const action, bool first_call)
     (void)action; // TODO
     if(true == first_call)
     {
+        reply_packet_prepare();
         return ERR_NOT_COMPLETED;
     }
-    return ERR_NOT_COMPLETED;
+
+    // TODO
+    reply_packet_add("OK");
+    reply_packet_send();
+    gdb_is_not_busy_anymore();
+    return RESULT_OK;
 }
 
 

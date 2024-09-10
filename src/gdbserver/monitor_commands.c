@@ -163,13 +163,7 @@ void mon_cmd_halt(void)
     // 5 seconds if there is no parameter, for the target to halt (and enter
     // debug mode). Using 0 as the ms parameter prevents OpenOCD from waiting.
 
-    // add_action(GDB_CMD_MON_HALT);
-	// TODO
-    // end of output
-    reply_packet_prepare();
-    reply_packet_add("OK");
-    reply_packet_send();
-    gdb_is_not_busy_anymore();
+    add_action(GDB_CMD_MON_HALT);
 }
 
 void mon_cmd_reset(char* command)
@@ -179,13 +173,7 @@ void mon_cmd_reset(char* command)
     if(0 == strncmp("reset init", command, sizeof("reset init")))
     {
         // Immediately halt the target, and execute the reset-init script
-        // add_action(GDB_CMD_MON_RESET_INIT);
-    	// TODO
-        // end of output
-        reply_packet_prepare();
-        reply_packet_add("OK");
-        reply_packet_send();
-        gdb_is_not_busy_anymore();
+        add_action(GDB_CMD_MON_RESET_INIT);
     }
     else if(0 == strncmp("reset halt", command, sizeof("reset halt")))
     {
