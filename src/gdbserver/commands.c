@@ -27,7 +27,6 @@
 #include "cmd_qsupported.h"
 #include "cmd_qxfer.h"
 // replies:
-#include "replies.h"
 #include "threads.h"
 #include "gdb_error_codes.h"
 
@@ -120,7 +119,7 @@ void commands_execute(char* received, uint32_t length, char* checksum)
 
         case '?':  // Report why the target halted
             gdb_is_now_busy();
-            if(false == target_reply_questionmark())
+            if(false == add_action(GDB_CMD_QUESTIONMARK))
             {
                 // failed to add command
                 send_unknown_command_reply();
@@ -132,7 +131,7 @@ void commands_execute(char* received, uint32_t length, char* checksum)
         case 'C':  // continue
             gdb_is_now_busy();
             // TODO continue at address ? if(true == parse_parameter(PARAM_XX, received))
-            if(false == target_reply_continue())
+            if(false == add_action(GDB_CMD_CONTINUE))
             {
                 // failed to add command
                 send_unknown_command_reply();
@@ -148,8 +147,37 @@ void commands_execute(char* received, uint32_t length, char* checksum)
             break;
 
         case 'g':  // read general Registers
+            // ‘g’
+            //    Read general registers.
+            //    Reply:
+            //    ‘XX…’
+            //        Each byte of register data is described by two hex digits.
+            // The bytes with the register are transmitted in target byte order.
+            // The size of each register and their position within the ‘g’ packet
+            // are determined by the target description (see Target Descriptions);
+            // in the absence of a target description, this is done using code
+            // internal to GDB; typically this is some customary register layout
+            // for the architecture in question.
+            //        When reading registers, the stub may also return a string of
+            // literal ‘x’’s in place of the register data digits, to indicate that
+            // the corresponding register’s value is unavailable. For example, when
+            // reading registers from a trace frame (see Using the Collected Data),
+            // this means that the register has not been collected in the trace frame.
+            // When reading registers from a live program, this indicates that the stub
+            // has no means to access the register contents, even though the
+            // corresponding register is known to exist. Note that if a register truly
+            // does not exist on the target, then it is better to not include it in the
+            // target description in the first place.
+            //        For example, for an architecture with 4 registers of 4 bytes each,
+            // the following reply indicates to GDB that registers 0 and 2 are
+            // unavailable, while registers 1 and 3 are available, and both have zero
+            // value:
+            //        -> g
+            //        <- xxxxxxxx00000000xxxxxxxx00000000
+            //    ‘E NN’
+            //        for an error.
             gdb_is_now_busy();
-            if(false == target_reply_g())
+            if(false == add_action(GDB_CMD_G))
             {
                 // failed to add command
                 send_unknown_command_reply();
@@ -158,11 +186,43 @@ void commands_execute(char* received, uint32_t length, char* checksum)
             break;
 
         case 'G':  // write general Registers
+            // ‘G XX…’
+            //     Write general registers. See read registers packet, for a description
+            // of the XX… data.
+            //    ‘XX…’
+            //        Each byte of register data is described by two hex digits.
+            // The bytes with the register are transmitted in target byte order.
+            // The size of each register and their position within the ‘g’ packet
+            // are determined by the target description (see Target Descriptions);
+            // in the absence of a target description, this is done using code
+            // internal to GDB; typically this is some customary register layout
+            // for the architecture in question.
+            //        When reading registers, the stub may also return a string of
+            // literal ‘x’’s in place of the register data digits, to indicate that
+            // the corresponding register’s value is unavailable. For example, when
+            // reading registers from a trace frame (see Using the Collected Data),
+            // this means that the register has not been collected in the trace frame.
+            // When reading registers from a live program, this indicates that the stub
+            // has no means to access the register contents, even though the
+            // corresponding register is known to exist. Note that if a register truly
+            // does not exist on the target, then it is better to not include it in the
+            // target description in the first place.
+            //        For example, for an architecture with 4 registers of 4 bytes each,
+            // the following reply indicates to GDB that registers 0 and 2 are
+            // unavailable, while registers 1 and 3 are available, and both have zero
+            // value:
+            //        -> g
+            //        <- xxxxxxxx00000000xxxxxxxx00000000
+            //     Reply:
+            //     ‘OK’
+            //         for success
+            //     ‘E NN’
+            //         for an error
             received++;
             if(true == parse_parameter(PARAM_XX, received))
             {
                 gdb_is_now_busy();
-                if(false == target_reply_write_g(&parsed_parameter))
+                if(false == add_action_with_parameter(GDB_CMD_WRITE_G, &parsed_parameter))
                 {
                     // failed to add command
                     send_unknown_command_reply();
@@ -181,11 +241,21 @@ void commands_execute(char* received, uint32_t length, char* checksum)
             break;
 
         case 'M':  // write main memory : M addr,length:XX...
+            // ‘M addr,length:XX…’
+            //     Write length addressable memory units starting at address addr (see
+            // addressable memory unit). The data is given by XX…; each byte is
+            // transmitted as a two-digit hexadecimal number.
+            //     Reply:
+            //     ‘OK’
+            //         for success
+            //     ‘E NN’
+            //         for an error (this includes the case where only part of the data
+            // was written).
             received++;
             if(true == parse_parameter(PARAM_ADDR_LENGTH_XX, received))
             {
                 gdb_is_now_busy();
-                if(false == target_reply_write_memory(&parsed_parameter))
+                if(false == add_action_with_parameter(GDB_CMD_WRITE_MEMORY, &parsed_parameter))
                 {
                     // failed to add command
                     send_unknown_command_reply();
@@ -195,11 +265,28 @@ void commands_execute(char* received, uint32_t length, char* checksum)
             break;
 
         case 'm':  // read main memory : m addr,length
+            // ‘m addr,length’
+            //     Read length addressable memory units starting at address addr
+            // (see addressable memory unit). Note that addr may not be aligned to any
+            // particular boundary.
+            //     The stub need not use any particular size or alignment when gathering
+            // data from memory for the response; even if addr is word-aligned and
+            // length is a multiple of the word size, the stub is free to use byte
+            // accesses, or not. For this reason, this packet may not be suitable for
+            // accessing memory-mapped I/O devices.
+            //     Reply:
+            //     ‘XX…’
+            //         Memory contents; each byte is transmitted as a two-digit
+            // hexadecimal number. The reply may contain fewer addressable memory units
+            // than requested if the server was able to read only part of the region of
+            // memory.
+            //     ‘E NN’
+            //         NN is errno
             received++;
             if(true == parse_parameter(PARAM_ADDR_LENGTH, received))
             {
                 gdb_is_now_busy();
-                if(false == target_reply_read_memory(&parsed_parameter))
+                if(false == add_action_with_parameter(GDB_CMD_READ_MEMORY, &parsed_parameter))
                 {
                     // failed to add command
                     send_unknown_command_reply();
@@ -243,7 +330,7 @@ void commands_execute(char* received, uint32_t length, char* checksum)
             if(true == parse_parameter(PARAM_OPT_ADDR, received))
             {
                 gdb_is_now_busy();
-                if(false == target_reply_step(&parsed_parameter))
+                if(false == add_action_with_parameter(GDB_CMD_STEP, &parsed_parameter))
                 {
                     // failed to add command
                     send_unknown_command_reply();
@@ -370,7 +457,7 @@ static void handle_vee(char* received, uint32_t length)
                 {
                     // vCont;c  -> continue
                     found_cmd = true;
-                    if(true == target_reply_continue())
+                    if(true == add_action(GDB_CMD_CONTINUE))
                     {
                         found_cmd = true;
                     }
@@ -382,7 +469,7 @@ static void handle_vee(char* received, uint32_t length)
                     if(true == parse_parameter(PARAM_OPT_ADDR, &(received[7])))
                     {
                         gdb_is_now_busy();
-                        if(false == target_reply_step(&parsed_parameter))
+                        if(false == add_action_with_parameter(GDB_CMD_STEP, &parsed_parameter))
                         {
                             // failed to add command
                             send_unknown_command_reply();
@@ -413,7 +500,7 @@ static void handle_vee(char* received, uint32_t length)
             // command start with "vFlashDone"
             found_cmd = true;
             gdb_is_now_busy();
-            if(false == target_reply_flash_done())
+            if(false == add_action(GDB_CMD_VFLASH_DONE))
             {
                 // failed to add command
                 send_unknown_command_reply();
@@ -427,7 +514,7 @@ static void handle_vee(char* received, uint32_t length)
             if(true == parse_parameter(PARAM_ADDR_LENGTH, &(received[12])))
             {
                 gdb_is_now_busy();
-                if(false == target_reply_flash_erase(&parsed_parameter))
+                if(false == add_action_with_parameter(GDB_CMD_VFLASH_ERASE, &parsed_parameter))
                 {
                     // failed to add command
                     send_unknown_command_reply();
@@ -442,7 +529,7 @@ static void handle_vee(char* received, uint32_t length)
             if(true == parse_parameter(PARAM_ADDR_BINARY, &(received[12])))
             {
                 gdb_is_now_busy();
-                if(false == target_reply_flash_write(&parsed_parameter))
+                if(false == add_action_with_parameter(GDB_CMD_VFLASH_WRITE, &parsed_parameter))
                 {
                     // failed to add command
                     send_unknown_command_reply();

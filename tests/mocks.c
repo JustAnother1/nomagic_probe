@@ -1,6 +1,21 @@
+/*
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License version 2
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, see <http://www.gnu.org/licenses/>
+ *
+ */
+
 #include "mocks.h"
+#include "../src/probe_api/common.h"
 #include "../src/probe_api/result.h"
-#include "../src/gdbserver/replies.h"
 #include "../src/probe_api/time.h"
 #include <stdio.h>
 
@@ -85,45 +100,6 @@ void target_close_connection(void)
 
 }
 
-bool target_reply_g(void)
-{
-    return false;
-}
-
-bool target_reply_questionmark(void)
-{
-    return false;
-}
-
-bool target_reply_write_g(parameter_typ* parsed_parameter)
-{
-    (void)parsed_parameter;
-    return false;
-}
-
-bool target_reply_continue(void)
-{
-    return false;
-}
-
-bool target_reply_read_memory(parameter_typ* parsed_parameter)
-{
-    (void)parsed_parameter;
-    return false;
-}
-
-bool target_reply_write_memory(parameter_typ* parsed_parameter)
-{
-    (void)parsed_parameter;
-    return false;
-}
-
-bool target_reply_step(parameter_typ* parsed_parameter)
-{
-    (void)parsed_parameter;
-    return false;
-}
-
 void debug_line(const char *fmt, ...)
 {
     (void) fmt;
@@ -154,25 +130,21 @@ bool timeout_expired(timeout_typ* to)
     return false;
 }
 
-bool target_reply_flash_done(void)
-{
-    return false;
-}
-
-bool target_reply_flash_erase(parameter_typ* parsed_parameter)
-{
-    (void)parsed_parameter;
-    return false;
-}
-
-bool target_reply_flash_write(parameter_typ* parsed_parameter)
-{
-    (void)parsed_parameter;
-    return false;
-}
-
 void target_monitor_command(uint32_t which, char* command)
 {
     (void)command;
     (void)which;
+}
+
+bool add_action(action_typ act)
+{
+	(void)act;
+    return true;
+}
+
+bool add_action_with_parameter(action_typ act, parameter_typ* parsed_parameter)
+{
+	(void)act;
+	(void)parsed_parameter;
+    return true;
 }
