@@ -44,7 +44,7 @@ typedef struct{
 static void handle_actions(void);
 static void check_if_still_running(void);
 static void report_to_gdb(void);
-
+static action_data_typ * book_action_slot(void);
 
 static volatile uint32_t action_read;
 static volatile uint32_t action_write;
@@ -236,7 +236,7 @@ bool cmd_target_trace(uint32_t loop)
     return false; // true == Done; false = call me again
 }
 
-action_data_typ * book_action_slot(void)
+static action_data_typ * book_action_slot(void)
 {
     // TODO protect against concurrent access (action_write)
     uint32_t slot_index =  action_write;

@@ -583,7 +583,7 @@ static void handle_general_query(char* received, uint32_t length)
         {
             found_cmd = true;
             // request any symbol data
-            // TODO
+            // TODO detect RTOS by asking gdb for symbols specific to the RTOS
             reply_packet_prepare();
             reply_packet_add("OK"); // we do not need to resolve any more Symbols
             reply_packet_send();
