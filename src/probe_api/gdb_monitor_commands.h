@@ -23,7 +23,7 @@
 void target_monitor_command(uint32_t which, char* command);
 void mon_cmd_help(char* command);
 void mon_cmd_version(void);
-void mon_cmd_halt(void);
+void mon_cmd_halt(char* command);
 void mon_cmd_reset(char* command);
 void mon_cmd_reg(char* command);
 

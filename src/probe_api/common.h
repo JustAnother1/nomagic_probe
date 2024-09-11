@@ -21,9 +21,13 @@
 #include "result.h"
 #include "cfg/target_specific_actions.h"
 
-#define MAX_INTERN_VALUES      4
-#define MAX_PARAMETER_VALUES   3
-#define MAX_MEMORY_POSITIONS   20
+#define MAX_INTERN_VALUES          4
+#define MAX_PARAMETER_VALUES       3
+#define MAX_MEMORY_POSITIONS       20
+
+#define MONITOR_RESET_TYPE_RUN     1
+#define MONITOR_RESET_TYPE_INIT    2
+#define MONITOR_RESET_TYPE_HALT    3
 
 typedef struct {
     uint32_t value;

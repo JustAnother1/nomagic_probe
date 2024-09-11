@@ -1012,26 +1012,74 @@ Result handle_monitor_halt(action_data_typ* const action, bool first_call)
     if(true == first_call)
     {
         reply_packet_prepare();
-        return ERR_NOT_COMPLETED;
+        if(HAS_VALUE != action->gdb_parameter.type)
+        {
+            // wrong parameter type
+            debug_line("ERROR: wrong parameter type !");
+            action->result = ERR_WRONG_VALUE;
+            action->is_done = true;
+            reply_packet_prepare();
+            reply_packet_add(ERROR_CODE_INVALID_PARAMETER_FORMAT_TYPE);
+            reply_packet_send();
+            return ERR_WRONG_VALUE;
+        }
+        else
+        {
+            if(true == action->gdb_parameter.has_value.valid)
+            {
+                debug_line("DELAY: %ldms", action->gdb_parameter.has_value.value);
+                // TODO implement pause
+            }
+            return ERR_NOT_COMPLETED;
+        }
     }
 
-    // TODO
+    // TODO implement halt
     reply_packet_add("OK");
     reply_packet_send();
     gdb_is_not_busy_anymore();
     return RESULT_OK;
 }
 
-Result handle_monitor_reset_init(action_data_typ* const action, bool first_call)
+// GDB_CMD_MON_RESET
+Result handle_monitor_reset(action_data_typ* const action, bool first_call)
 {
     (void)action; // TODO
     if(true == first_call)
     {
         reply_packet_prepare();
-        return ERR_NOT_COMPLETED;
+        if(HAS_VALUE != action->gdb_parameter.type)
+        {
+            // wrong parameter type
+            debug_line("ERROR: wrong parameter type !");
+            action->result = ERR_WRONG_VALUE;
+            action->is_done = true;
+            reply_packet_prepare();
+            reply_packet_add(ERROR_CODE_INVALID_PARAMETER_FORMAT_TYPE);
+            reply_packet_send();
+            return ERR_WRONG_VALUE;
+        }
+        else
+        {
+            return ERR_NOT_COMPLETED;
+        }
     }
 
-    // TODO
+    switch(action->gdb_parameter.has_value.value)
+    {
+    default:  // fall through
+    case MONITOR_RESET_TYPE_RUN:
+        // TODO implement reset
+        break;
+
+    case MONITOR_RESET_TYPE_INIT:
+        // TODO implement reset
+        break;
+
+    case MONITOR_RESET_TYPE_HALT:
+        // TODO implement reset
+        break;
+    }
     reply_packet_add("OK");
     reply_packet_send();
     gdb_is_not_busy_anymore();

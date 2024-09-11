@@ -13,6 +13,7 @@
  *
  */
 
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -46,7 +47,7 @@ void target_monitor_command(uint32_t which, char* command)
         break;
 
     case MON_CMD_IDX_HALT:
-        mon_cmd_halt();
+        mon_cmd_halt(command);
         break;
 
     case MON_CMD_IDX_REG:
@@ -155,7 +156,7 @@ void mon_cmd_version(void)
     gdb_is_not_busy_anymore();
 }
 
-void mon_cmd_halt(void)
+void mon_cmd_halt(char* command)
 {
     // Command: halt [ms]
     // Command: wait_halt [ms]
@@ -163,40 +164,55 @@ void mon_cmd_halt(void)
     // doesn’t. Otherwise these behave the same: wait up to ms milliseconds, or
     // 5 seconds if there is no parameter, for the target to halt (and enter
     // debug mode). Using 0 as the ms parameter prevents OpenOCD from waiting.
-
-    add_action(GDB_CMD_MON_HALT);
+    parameter_typ param;
+    char* ptr = strchr(command, ' ');
+    param.type = HAS_VALUE;
+    if(NULL == ptr)
+    {
+        param.has_value.valid = false;
+    }
+    else
+    {
+        int val = atoi(ptr);
+        if(1 > val)
+        {
+            param.has_value.valid = false;
+        }
+        else
+        {
+            param.has_value.value = (uint32_t)val;
+            param.has_value.valid = true;
+        }
+    }
+    add_action_with_parameter(GDB_CMD_MON_HALT, &param);
 }
 
 void mon_cmd_reset(char* command)
 {
+    parameter_typ param;
+    param.type = HAS_VALUE;
+    param.has_value.valid = true;
+
     // Perform as hard a reset as possible, using SRST if possible. All defined
     // targets will be reset, and target events will fire during the reset sequence.
     if(0 == strncmp("reset init", command, sizeof("reset init")))
     {
         // Immediately halt the target, and execute the reset-init script
-        add_action(GDB_CMD_MON_RESET_INIT);
+        param.has_value.value = MONITOR_RESET_TYPE_INIT;
     }
     else if(0 == strncmp("reset halt", command, sizeof("reset halt")))
     {
         // Immediately halt the target
-        // TODO
-        // end of output
-        reply_packet_prepare();
-        reply_packet_add("OK");
-        reply_packet_send();
-        gdb_is_not_busy_anymore();
+        param.has_value.value = MONITOR_RESET_TYPE_HALT;
     }
     else
     {
         // reset or reset run
         // Let the target run
-        // TODO
-        // end of output
-        reply_packet_prepare();
-        reply_packet_add("OK");
-        reply_packet_send();
-        gdb_is_not_busy_anymore();
+        param.has_value.value = MONITOR_RESET_TYPE_RUN;
     }
+
+    add_action_with_parameter(GDB_CMD_MON_RESET, &param);
 }
 
 /*

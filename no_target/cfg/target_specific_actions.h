@@ -18,17 +18,17 @@
 
 #define TARGET_SPECIFIC_ACTIONS_ENUM \
     GDB_CMD_MON_HALT,                \
-    GDB_CMD_MON_RESET_INIT,          \
+    GDB_CMD_MON_RESET,               \
     GDB_MONITOR_REG,
 
 #define TARGET_SPECIFIC_ACTION_HANDLERS                     \
     handle_monitor_halt,       /* GDB_CMD_MON_HALT */       \
-    handle_monitor_reset_init, /* GDB_CMD_MON_RESET_INIT */ \
+    handle_monitor_reset,      /* GDB_CMD_MON_RESET */      \
     handle_monitor_reg,        /* GDB_MONITOR_REG, */
 
 #define TARGET_SPECIFIC_ACTION_NAMES \
     "monitor_halt",                  \
-    "monitor_reset_init",            \
+    "monitor_reset",                 \
     "monitor_reg",
 
 
