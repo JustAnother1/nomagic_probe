@@ -360,7 +360,6 @@ Result handle_target_reply_write_g(action_data_typ* const action, bool first_cal
             debug_line("ERROR: wrong parameter type !");
             action->result = ERR_WRONG_VALUE;
             action->is_done = true;
-            reply_packet_prepare();
             reply_packet_add(ERROR_CODE_INVALID_PARAMETER_FORMAT_TYPE);
             reply_packet_send();
             return ERR_WRONG_VALUE;
@@ -447,7 +446,6 @@ Result handle_target_reply_write_g(action_data_typ* const action, bool first_cal
                 debug_line("ERROR: too many retries !");
                 action->result = ERR_TIMEOUT;
                 action->is_done = true;
-                reply_packet_prepare();
                 reply_packet_add("E23");
                 reply_packet_send();
                 return action->result;
@@ -562,7 +560,6 @@ Result handle_target_reply_read_memory(action_data_typ* const action, bool first
             debug_line("ERROR: wrong parameter type !");
             action->result = ERR_WRONG_VALUE;
             action->is_done = true;
-            reply_packet_prepare();
             reply_packet_add(ERROR_CODE_INVALID_PARAMETER_FORMAT_TYPE);
             reply_packet_send();
             return ERR_WRONG_VALUE;
@@ -587,12 +584,12 @@ Result handle_target_reply_read_memory(action_data_typ* const action, bool first
     if(2 == *(action->cur_phase))
     {
         char buf[9];
-        buf[8] = 0;
         int_to_hex(buf, action->read_0, 8);
+        buf[8] = 0;
         reply_packet_add(buf);
         // debug_line("read 0x%08lx", action->read_0);
         action->intern[INTERN_MEMORY_OFFSET]++;
-        *(action->cur_phase) = 1;
+        *(action->cur_phase) = 0;
         if(action->gdb_parameter.address_length.length == action->intern[INTERN_MEMORY_OFFSET])
         {
             // finished
@@ -633,7 +630,6 @@ Result handle_target_reply_write_memory(action_data_typ* const action, bool firs
             debug_line("ERROR: wrong parameter type !");
             action->result = ERR_WRONG_VALUE;
             action->is_done = true;
-            reply_packet_prepare();
             reply_packet_add(ERROR_CODE_INVALID_PARAMETER_FORMAT_TYPE);
             reply_packet_send();
             return ERR_WRONG_VALUE;
@@ -1018,7 +1014,6 @@ Result handle_monitor_halt(action_data_typ* const action, bool first_call)
             debug_line("ERROR: wrong parameter type !");
             action->result = ERR_WRONG_VALUE;
             action->is_done = true;
-            reply_packet_prepare();
             reply_packet_add(ERROR_CODE_INVALID_PARAMETER_FORMAT_TYPE);
             reply_packet_send();
             return ERR_WRONG_VALUE;
@@ -1054,7 +1049,6 @@ Result handle_monitor_reset(action_data_typ* const action, bool first_call)
             debug_line("ERROR: wrong parameter type !");
             action->result = ERR_WRONG_VALUE;
             action->is_done = true;
-            reply_packet_prepare();
             reply_packet_add(ERROR_CODE_INVALID_PARAMETER_FORMAT_TYPE);
             reply_packet_send();
             return ERR_WRONG_VALUE;
