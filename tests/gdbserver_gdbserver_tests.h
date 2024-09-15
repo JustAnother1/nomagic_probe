@@ -24,5 +24,8 @@ void* gdbserver_gdbserver_setup(const MunitParameter params[], void* user_data);
 MunitResult test_gdbserver_empty_packet(const MunitParameter params[], void* user_data);
 MunitResult test_gdbserver_hex(const MunitParameter params[], void* user_data);
 MunitResult test_gdbserver_hex_sqish(const MunitParameter params[], void* user_data);
+MunitResult test_gdbserver_tick_connected(const MunitParameter params[], void* user_data);
+MunitResult test_gdbserver_tick_simple_commands(const MunitParameter params[], void* user_data);
+MunitResult test_gdbserver_tick_FlashWrite(const MunitParameter params[], void* user_data);
 
 #endif /* TESTS_GDBSERVER_GDBSERVER_TESTS_H_ */

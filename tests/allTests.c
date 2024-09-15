@@ -70,9 +70,12 @@ static MunitTest cli_tests[] = {
   { (char*) "/gdbserver/util/hex_to_int",   test_gdbserver_util_hex_to_int, gdbserver_util_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
   { (char*) "/gdbserver/util/int_to_hex",   test_gdbserver_util_int_to_hex, gdbserver_util_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
 
-  { (char*) "/gdbserver/gdbserver/empty_packet",   test_gdbserver_empty_packet, gdbserver_gdbserver_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
-  { (char*) "/gdbserver/gdbserver/hex",   test_gdbserver_hex, gdbserver_gdbserver_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
-  { (char*) "/gdbserver/gdbserver/hex_sqish",   test_gdbserver_hex_sqish, gdbserver_gdbserver_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  { (char*) "/gdbserver/gdbserver/empty_packet",         test_gdbserver_empty_packet, gdbserver_gdbserver_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  { (char*) "/gdbserver/gdbserver/hex",                  test_gdbserver_hex, gdbserver_gdbserver_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  { (char*) "/gdbserver/gdbserver/hex_sqish",            test_gdbserver_hex_sqish, gdbserver_gdbserver_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  { (char*) "/gdbserver/gdbserver/tick_connected",       test_gdbserver_tick_connected, gdbserver_gdbserver_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  { (char*) "/gdbserver/gdbserver/tick_simple_commands", test_gdbserver_tick_simple_commands, gdbserver_gdbserver_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
+  { (char*) "/gdbserver/gdbserver/tick_FlashWrite",      test_gdbserver_tick_FlashWrite, gdbserver_gdbserver_setup, NULL, MUNIT_TEST_OPTION_NONE, NULL },
 
   // To tell the test runner when the array is over, just add a NULL
   // entry at the end. */

@@ -26,6 +26,8 @@ static uint32_t recv_read_pos;
 static uint32_t recv_write_pos;
 static uint32_t send_read_pos;
 static uint32_t send_write_pos;
+static bool result_serial_gdb_is_connected = false;
+
 
 void gdb_reset_send_receive_buffers(void)
 {
@@ -203,9 +205,14 @@ void serial_gdb_putc(void* p, char c)
     serial_gdb_send_bytes((uint8_t *)&c, 1);
 }
 
+void mock_set_serial_gdb_is_connected(bool val)
+{
+    result_serial_gdb_is_connected = val;
+}
+
 bool serial_gdb_is_connected(void)
 {
-    return false;
+    return result_serial_gdb_is_connected;
 }
 
 void serial_gdb_flush(void)
