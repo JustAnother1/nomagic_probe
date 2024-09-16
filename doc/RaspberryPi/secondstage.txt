@@ -1,0 +1,617 @@
+/* RP2040: second stage boot loader used on Pico board */
+
+/*
+hex dump:
+0x10000000 : 00 b5 32 4b 21 20 58 60 98 68 02 21 88 43 98 60
+0x10000010 : d8 60 18 61 58 61 2e 4b 00 21 99 60 02 21 59 61
+0x10000020 : 01 21 f0 22 99 50 2b 49 19 60 01 21 99 60 35 20
+0x10000030 : 00 f0 44 f8 02 22 90 42 14 d0 06 21 19 66 00 f0
+0x10000040 : 34 f8 19 6e 01 21 19 66 00 20 18 66 1a 66 00 f0
+0x10000050 : 2c f8 19 6e 19 6e 19 6e 05 20 00 f0 2f f8 01 21
+0x10000060 : 08 42 f9 d1 00 21 99 60 1b 49 19 60 00 21 59 60
+0x10000070 : 1a 49 1b 48 01 60 01 21 99 60 eb 21 19 66 a0 21
+0x10000080 : 19 66 00 f0 12 f8 00 21 99 60 16 49 14 48 01 60
+0x10000090 : 01 21 99 60 01 bc 00 28 00 d0 00 47 12 48 13 49
+0x100000a0 : 08 60 03 c8 80 f3 08 88 08 47 03 b5 99 6a 04 20
+0x100000b0 : 01 42 fb d0 01 20 01 42 f8 d1 03 bd 02 b5 18 66
+0x100000c0 : 18 66 ff f7 f2 ff 18 6e 18 6e 02 bd 00 00 02 40
+0x100000d0 : 00 00 00 18 00 00 07 00 00 03 5f 00 21 22 00 00
+0x100000e0 : f4 00 00 18 22 20 00 a0 00 01 00 10 08 ed 00 e0
+0x100000f0 : 00 00 00 00 00 00 00 00 00 00 00 00 74 b2 4e 7a
+                                                |  CRC      |
+                                                | 32 bit    |
+
+
+The last four bytes of the image loaded from flash (which we hope is a valid flash second stage) are a CRC32 checksum
+of the first 252 bytes. The parameters of the checksum are:
+• Polynomial: 0x04c11db7
+• Input reflection: no
+• Output reflection: no
+• Initial value: 0xffffffff
+• Final XOR: 0x00000000
+• Checksum value appears as little-endian integer at end of image
+The Bootrom makes 128 attempts of approximately 4ms each for a total of approximately 0.5 seconds before giving up
+and dropping into USB code to load and checksum the second stage with varying SPI parameters. If it sees a checksum
+pass it will immediately jump into the 252-byte payload which contains the flash second stage.
+
+*/
+
+/* firmware : */
+/* 0000000 b500 4b32 2021 6058 6898 2102 4388 6098 */
+/* 0000010 60d8 6118 6158 4b2e 2100 6099 2102 6159 */
+/* 0000020 2101 22f0 5099 492b 6019 2101 6099 2035 */
+/* 0000030 f000 f844 2202 4290 d014 2106 6619 f000 */
+/* 0000040 f834 6e19 2101 6619 2000 6618 661a f000 */
+/* 0000050 f82c 6e19 6e19 6e19 2005 f000 f82f 2101 */
+/* 0000060 4208 d1f9 2100 6099 491b 6019 2100 6059 */
+/* 0000070 491a 481b 6001 2101 6099 21eb 6619 21a0 */
+/* 0000080 6619 f000 f812 2100 6099 4916 4814 6001 */
+/* 0000090 2101 6099 bc01 2800 d000 4700 4812 4913 */
+/* 00000a0 6008 c803 f380 8808 4708 b503 6a99 2004 */
+/* 00000b0 4201 d0fb 2001 4201 d1f8 bd03 b502 6618 */
+/* 00000c0 6618 f7ff fff2 6e18 6e18 bd02 0000 4002 */
+/* 00000d0 0000 1800 0000 0007 0300 005f 2221 0000 */
+/* 00000e0 00f4 1800 2022 a000 0100 1000 ed08 e000 */
+/* 00000f0 0000 0000 0000 0000 0000 0000 */
+/* CRC: b274 7a4e */
+
+Disassembly of section .data:
+
+00000000 <.data>:                                                /* What                                                             | Why */
+   0:    b500          push  {lr}                                /* write value of LR Register to top of stack                       | save return address */
+   2:    4b32          ldr   r3, [pc, #200]   ; (0xcc)           /* write to R3 the value located at PC + 200 (PC + 200 = 0xcc)      | R3 = 0x40 02 00 00 */
+   4:    2021          movs  r0, #33          ; 0x21             /* write 33(0x21) into Register R0                                  | R0 = 33 */
+   6:    6058          str   r0, [r3, #4]                        /* write to memory at address R3+4 the value from R0                | 0x40020004 = 0x21  PADS_QSPI_BASE = 0x40020000 PADS_QSPI:GPIO_QSPI_SCLK */
+   8:    6898          ldr   r0, [r3, #8]                        /* write to R0 the value located at R3 + 8                          | R0 = 0x40020008 = PADS_QSPI: GPIO_QSPI_SD0 */
+   a:    2102          movs  r1, #2                              /* write 2 into Register R1                                         | R1 = 2 */
+   c:    4388          bics  r0, r1                              /* R0 = R0 & ~R1                                                    | R0 = GPIO_QSPI_SD0 & ~2 default values but Schmitt Trigger disabled */
+   e:    6098          str   r0, [r3, #8]                        /* write the content of R0 to the address of the value from R3 + 8  | 0x40020008 = R0 = GPIO_QSPI_SD0 */
+  10:    60d8          str   r0, [r3, #12]                       /* write the content of R0 to the address of the value from R3 + 12 | 0x4002000c = R0 = GPIO_QSPI_SD1 */
+  12:    6118          str   r0, [r3, #16]                       /* write the content of R0 to the address of the value from R3 + 16 | 0x40020010 = R0 = GPIO_QSPI_SD2 */
+  14:    6158          str   r0, [r3, #20]                       /* write the content of R0 to the address of the value from R3 + 20 | 0x40020014 = R0 = GPIO_QSPI_SD3 */
+  16:    4b2e          ldr   r3, [pc, #184]   ; (0xd0)           /* write to R3 the value located at PC + 184 (PC + 184 = 0xd0)      | R3 = 0x18 00 00 00 */
+  18:    2100          movs  r1, #0                              /* write 0 into Register R1                                         | R1 = 0  */
+  1a:    6099          str   r1, [r3, #8]                        /* write the content of R1 to the address of the value from R3 + 8  | 0x18 00 00 08 = 0 SSIENR SSI not enabled */
+  1c:    2102          movs  r1, #2                              /* write 2 into Register R1                                         | R1 = 2 */
+  1e:    6159          str   r1, [r3, #20]                       /* write the content of R1 to the address of the value from R3 + 20 | 0x18 00 00 14 = 2 BAUDR baud rate = clock/2 */
+  20:    2101          movs  r1, #1                              /* write 1 into Register R1                                         | R1 = 1 */
+  22:    22f0          movs  r2, #240         ; 0xf0             /* write 240 (0xf0) into Register R2                                | R2 = 0xf0 */
+  24:    5099          str   r1, [r3, r2]                        /* write the content of R1 to the address of the value from R3 + R2 | 0x18 00 00 f0 = 1 RX_SAMPLE_DLY Delay = 1 SCLK cycle */
+  26:    492b          ldr   r1, [pc, #172]   ; (0xd4)           /* write to R1 the value located at PC + 172 (PC + 172 = 0xd4)      | R1 = 0x00 07 00 00 */
+  28:    6019          str   r1, [r3, #0]                        /* write the content of R1 to the address of the value from R3 + 0  | 0x18 00 00 00 = 0x00 07 00 00 CTRLR0 data frame size = 8 */
+  2a:    2101          movs  r1, #1                              /* write 1 into Register R1                                         | R1 = 1 */
+  2c:    6099          str   r1, [r3, #8]                        /* write the content of R1 to the address of the value from R3 + 8  | 0x18 00 00 08 =  1 SSIENR SSI enabled */
+  2e:    2035          movs  r0, #53          ; 0x35             /* write 53 (0x35) into Register R0                                 | R0 = 53 */
+  30:    f000 f844     bl    0xbc                                /* continue execution at 0xbc                                       | call read_flash_sreg */
+  34:    2202          movs  r2, #2                              /* write 2 into Register R2                                         | R2 = 2 */
+  36:    4290          cmp   r0, r2                              /* compare R0 and R2 result in flags                                | flags = R0 == 2 R0 is the value read from the Memory (read from SSI DR0)*/
+  38:    d014          beq.n 0x64                                /* if not equal then continue execution at 0x64                     | If SSI DR0 = 2 then  call skip_sreg_programming (0x64) */
+  3a:    2106          movs  r1, #6                              /* write 6 into Register R1                                         | R1 = 6 */
+  3c:    6619          str   r1, [r3, #96]    ; 0x60             /* write the contents of R1 to the adress R3 + 96                   | 0x18000060 = 6  DR0 Data Register 0 = 6 */
+  3e:    f000 f834     bl    0xaa                                /* continue execution at 0x55                                       | call wait_ssi_ready: */
+  42:    6e19          ldr   r1, [r3, #96]    ; 0x60             /* write the contents of R1 to the adress R3 + 96                   | 0x18000060 = 6  DR0 Data Register 0 = 6 */
+  44:    2101          movs  r1, #1                              /* write 1 into Register R1                                         | R1 = 1 */
+  46:    6619          str   r1, [r3, #96]    ; 0x60             /* write the contents of R1 to the adress R3 + 96                   | 0x18000060 = 1  DR0 Data Register 0 = 1 */
+  48:    2000          movs  r0, #0                              /* write 0 into Register R0                                         | R0 = 0 */
+  4a:    6618          str   r0, [r3, #96]    ; 0x60             /* write the contents of R0 to the adress R3 + 96                   | 0x18000060 = 0  DR0 Data Register 0 = 0 */
+  4c:    661a          str   r2, [r3, #96]    ; 0x60             /* write the contents of R2 to the adress R3 + 96                   | 0x18000060 = 2  DR0 Data Register 0 = 2 */
+  4e:    f000 f82c     bl    0xaa                                /* continue execution at 0x55                                       | call wait_ssi_ready */
+  52:    6e19          ldr   r1, [r3, #96]    ; 0x60             /* write to R1 the value located at R3 + 96                         | R1 = 0x18000060 R0 = SSI DR0 */
+  54:    6e19          ldr   r1, [r3, #96]    ; 0x60             /* write to R1 the value located at R3 + 96                         | R1 = 0x18000060 R0 = SSI DR0 */
+  56:    6e19          ldr   r1, [r3, #96]    ; 0x60             /* write to R1 the value located at R3 + 96                         | R1 = 0x18000060 R0 = SSI DR0 */
+# 1b:
+  58:    2005          movs  r0, #5                              /* write 5 into Register R0                                         | R0 = 5 */
+  5a:    f000 f82f     bl    0xbc                                /* continue execution at 0xbc                                       | call read_flash_sreg */
+  5e:    2101          movs  r1, #1                              /* write 1 into Register R1                                         | R1 = 1*/
+  60:    4208          tst   r0, r1                              /* logic AND of r1 and r0 result as flag                            | equal flag = R1 & R0 */
+  62:    d1f9          bne.n 0x58                                /* if not equal R1 R0 then continue execution at 0x58               | loop until equal */
+# skip_sreg_programming:
+  64:    2100          movs  r1, #0                              /* write 0 into Register R1                                         | R1 = 0 */
+  66:    6099          str   r1, [r3, #8]                        /* write the content of R1 to the address of the value from R3 + 8  | 0x18 00 00 08 = 0 SSIENR disable SSI */
+  68:    491b          ldr   r1, [pc, #108]   ; (0xd8)           /* write to R1 the value located at PC + 108 (PC + 108 = 0xd8)      | R1 = 0x005f0300 */
+  6a:    6019          str   r1, [r3, #0]                        /* write the content of R1 to the address of the value from R3 + 0  | 0x18 00 00 00 = 0x005f0300 SSI CTRLR0 */
+  6c:    2100          movs  r1, #0                              /* write 0 into Register R1                                         | R1 = 0*/
+  6e:    6059          str   r1, [r3, #4]                        /* write the content of R1 to the address of the value from R3 + 4  | 0x18 00 00 04 = 0 SSI CTRLR1 */
+  70:    491a          ldr   r1, [pc, #104]   ; (0xdc)           /* write to R1 the value located at PC + 104 (PC + 104 = 0xdc)      | R1 = 0x00002221 */
+  72:    481b          ldr   r0, [pc, #108]   ; (0xe0)           /* write to R0 the value located at PC + 104 (PC + 108 = 0xe0)      | R1 = 0x180000f4 */
+  74:    6001          str   r1, [r0, #0]                        /* write the content of R1 to the address of the value from R0 + 0  | 0x18 00 00 f4 = 0x00002221 SSI SPI_CTRL0 */
+  76:    2101          movs  r1, #1                              /* write 1 into Register R1                                         | R1 = 1 */
+  78:    6099          str   r1, [r3, #8]                        /* write the content of R1 to the address of the value from R3 + 8  | 0x18 00 00 08 = 1 SSIENR enable SSI */
+  7a:    21eb          movs  r1, #235         ; 0xeb             /* write 235 (0xeb) into Register R1                                | R1 = 0xeb */
+  7c:    6619          str   r1, [r3, #96]    ; 0x60             /* write the content of R1 to the address of the value from R3 + 96 | 0x18 00 00 60 = 0xeb SSI DR0 */
+  7e:    21a0          movs  r1, #160         ; 0xa0             /* write 160 (0xa0) into Register R1                                | R1 = 0xa0 */
+  80:    6619          str   r1, [r3, #96]    ; 0x60             /* write the content of R1 to the address of the value from R3 + 96 | 0x18 00 00 60 = 0xa0 SSI DR0 */
+  82:    f000 f812     bl    0xaa                                /* continue execution at 0x55                                       | call wait_ssi_ready: */
+  86:    2100          movs  r1, #0                              /* write 0 into Register R1                                         | R1 = 0*/
+  88:    6099          str   r1, [r3, #8]                        /* write the content of R1 to the address of the value from R3 + 8  | 0x18 00 00 08 = 1 SSIENR disable SSI */
+  8a:    4916          ldr   r1, [pc, #88]    ; (0xe4)           /* write to R1 the value located at PC + 88 (PC + 88 = 0xe4)        | R1 = 0xa00002022 */
+  8c:    4814          ldr   r0, [pc, #80]    ; (0xe0)           /* write to R0 the value located at PC + 80 (PC + 80 = 0xe0)        | R0 = 0x180000f4 */
+  8e:    6001          str   r1, [r0, #0]                        /* write the content of R1 to the address of the value from R0 + 0  | 0x18 00 00 f4 = 0xa00002022 SSI SPI_CTRL0 */
+  90:    2101          movs  r1, #1                              /* write 1 into Register R1                                         | R1 = 1 */
+  92:    6099          str   r1, [r3, #8]                        /* write the content of R1 to the address of the value from R3 + 8  | 0x18 00 00 08 = 1 SSIENR enable SSI */
+# check_return:
+  94:    bc01          pop   {r0}                                /* remove top entry from stack and into R0                          | R0 = LR stored at beginning */
+  96:    2800          cmp   r0, #0                              /* ompare R0 and 0 result in flags                                  | flags = R0 == 0 */
+  98:    d000          beq.n 0x9c                                /* if R0 is not equal to 0 then jump to 0x9c                        | 0 = called from bootloader, else called from firmware */
+  9a:    4700          bx    r0                                  /* jump to address from R0                                          | End of function back to caller (from LR) */
+# vector_into_flash:
+  9c:    4812          ldr   r0, [pc, #72]    ; (0xe8)           /* write to R0 the value located at PC + 72 (PC + 72 = 0xe8)        | R0 = 0x10000100 */
+  9e:    4913          ldr   r1, [pc, #76]    ; (0xec)           /* write to R1 the value located at PC + 76 (PC + 76 = 0xec)        | R1 = 0xe000ed08 */
+  a0:    6008          str   r0, [r1, #0]                        /* write the content of R0 to the address of the value from R1 + 0  | 0xe000ed08 = 0x10000100 set the Vector Table offset to the beginning of the firmware */
+  a2:    c803          ldmia r0, {r0, r1}                        /* read the value stored at the address in R0 to R0                 | At the start of the real binary there is the Stack pointer
+                                                                                              then read from address R0 + 4  into R1 | followed by the reset vector (start of firmware code */
+  a4:    f380 8808     msr   MSP, r0                             /* write the value from R0 into the MSP Register                    | set the Stack pointer to the value from R0 */
+  a8:    4708          bx    r1                                  /* jump to address from R1                                          | End of function return to address in R1 */
+# wait_ssi_ready:
+  aa:    b503          push  {r0, r1, lr}                        /* write values in R0, R1 and LR onto stack                         | R0 + R1 get used in this function, LR is return address*/
+  ac:    6a99          ldr   r1, [r3, #40]    ; 0x28             /* write to R1 the value at address R3 + 40                         | R1 = 0x18000028 SSI SR Status Register */
+  ae:    2004          movs  r0, #4                              /* write 4 into Register R0                                         | R0 = 4 */
+  b0:    4201          tst   r1, r0                              /* logic AND of r1 and r0 result as flag                            | 4 in SR = Transmit FIFO Empty */
+  b2:    d0fb          beq.n 0xac                                /* if not equal R1 R0 then continue execution at 0xac               | loop until transmit FIFO empty */
+  b4:    2001          movs  r0, #1                              /* write 1 into Register R0                                         | R0 = 1 i in SSI SR is Busy */
+  b6:    4201          tst   r1, r0                              /* logic AND of r1 and r0 result as flag                            | equal flag = R1 & R0 */
+  b8:    d1f8          bne.n 0xac                                /* if not equal R1 R0 then continue execution at 0xac               | loop until not busy */
+  ba:    bd03          pop   {r0, r1, pc}                        /* read value from stack                                            | End of function, jump to return address */
+# read_flash_sreg:
+  bc:    b502          push  {r1, lr}                            /* push value of R1 and LR register to stack                        | */
+  be:    6618          str   r0, [r3, #96]    ; 0x60             /* write the value contained in R0 to the adress of R3 + 0x60       | 0x18 00 00 60 = R0 DR0 Data Register 0 // R0 = 53 = dummy byte */
+  c0:    6618          str   r0, [r3, #96]    ; 0x60             /* write the value contained in R0 to the adress of R3 + 0x60       | 0x18 00 00 60 = R0 DR0 Data Register 0 // R0 = 53 */
+  c2:    f7ff fff2     bl    0xaa                                /* continue execution at 0x55                                       | call wait_ssi_ready: */
+  c6:    6e18          ldr   r0, [r3, #96]    ; 0x60             /* write to R0 the value located at the address R3 + 96             | R0 = 0x18000060 DR0  discard first byte */
+  c8:    6e18          ldr   r0, [r3, #96]    ; 0x60             /* write to R0 the value located at the address R3 + 96             | R0 = 0x18000060 DR0 */
+  ca:    bd02          pop   {r1, pc}                            /* remove top value from stack                                      | End of function, jump to return address */
+# data:
+  cc:    0000
+  ce:    4002   // 0x40020000
+  d0:    0000
+  d2:    1800   // 0x18000000
+  d4:    0000
+  d6:    0007   // 0x00070000
+  d8:    0300
+  da:    005f   // 0x005f0300
+  dc:    2221
+  de:    0000   // 0x00002221
+  e0:    00f4
+  e2:    1800   // 0x180000f4
+  e4:    2022
+  e6:    a000   // 0xa00002022
+  e8:    0100
+  ea:    1000   // 0x10000100
+  ec:    ed08
+  ee:    e000   // 0xe000ed08
+    ...
+
+    12 bytes unused = 0
+
+
+
+
+
+# Raspberry Pi Source:
+
+
+# compare with: https://github.com/raspberrypi/pico-sdk/blob/master/src/rp2_common/boot_stage2/boot2_w25q080.S
+
+// ----------------------------------------------------------------------------
+// Second stage boot code
+// Copyright (c) 2019-2021 Raspberry Pi (Trading) Ltd.
+// SPDX-License-Identifier: BSD-3-Clause
+//
+// Device:      Winbond W25Q080
+//              Also supports W25Q16JV (which has some different SR instructions)
+//              Also supports AT25SF081
+//              Also supports S25FL132K0
+//
+// Description: Configures W25Q080 to run in Quad I/O continuous read XIP mode
+//
+// Details:     * Check status register 2 to determine if QSPI mode is enabled,
+//                and perform an SR2 programming cycle if necessary.
+//              * Use SSI to perform a dummy 0xEB read command, with the mode
+//                continuation bits set, so that the flash will not require
+//                0xEB instruction prefix on subsequent reads.
+//              * Configure SSI to write address, mode bits, but no instruction.
+//                SSI + flash are now jointly in a state where continuous reads
+//                can take place.
+//              * Jump to exit pointer passed in via lr. Bootrom passes null,
+//                in which case this code uses a default 256 byte flash offset
+//
+// Building:    * This code must be position-independent, and use stack only
+//              * The code will be padded to a size of 256 bytes, including a
+//                4-byte checksum. Therefore code size cannot exceed 252 bytes.
+// ----------------------------------------------------------------------------
+
+#include "pico/asm_helper.S"
+#include "hardware/regs/addressmap.h"
+#include "hardware/regs/ssi.h"
+#include "hardware/regs/pads_qspi.h"
+
+// ----------------------------------------------------------------------------
+// Config section
+// ----------------------------------------------------------------------------
+// It should be possible to support most flash devices by modifying this section
+
+// The serial flash interface will run at clk_sys/PICO_FLASH_SPI_CLKDIV.
+// This must be a positive, even integer.
+// The bootrom is very conservative with SPI frequency, but here we should be
+// as aggressive as possible.
+
+#ifndef PICO_FLASH_SPI_CLKDIV
+#define PICO_FLASH_SPI_CLKDIV 4
+#endif
+#if PICO_FLASH_SPI_CLKDIV & 1
+#error PICO_FLASH_SPI_CLKDIV must be even
+#endif
+
+// Define interface width: single/dual/quad IO
+#define FRAME_FORMAT SSI_CTRLR0_SPI_FRF_VALUE_QUAD
+
+// For W25Q080 this is the "Read data fast quad IO" instruction:
+#define CMD_READ 0xeb
+
+// "Mode bits" are 8 special bits sent immediately after
+// the address bits in a "Read Data Fast Quad I/O" command sequence.
+// On W25Q080, the four LSBs are don't care, and if MSBs == 0xa, the
+// next read does not require the 0xeb instruction prefix.
+#define MODE_CONTINUOUS_READ 0xa0
+
+// The number of address + mode bits, divided by 4 (always 4, not function of
+// interface width).
+#define ADDR_L 8
+
+// How many clocks of Hi-Z following the mode bits. For W25Q080, 4 dummy cycles
+// are required.
+#define WAIT_CYCLES 4
+
+// If defined, we will read status reg, compare to SREG_DATA, and overwrite
+// with our value if the SR doesn't match.
+// We do a two-byte write to SR1 (01h cmd) rather than a one-byte write to
+// SR2 (31h cmd) as the latter command isn't supported by WX25Q080.
+// This isn't great because it will remove block protections.
+// A better solution is to use a volatile SR write if your device supports it.
+#define PROGRAM_STATUS_REG
+
+#define CMD_WRITE_ENABLE 0x06
+#define CMD_READ_STATUS 0x05
+#define CMD_READ_STATUS2 0x35
+#define CMD_WRITE_STATUS 0x01
+#define SREG_DATA 0x02  // Enable quad-SPI mode
+
+// ----------------------------------------------------------------------------
+// Start of 2nd Stage Boot Code
+// ----------------------------------------------------------------------------
+
+.syntax unified
+.cpu cortex-m0plus
+.thumb
+
+.section .text
+
+// The exit point is passed in lr. If entered from bootrom, this will be the
+// flash address immediately following this second stage (0x10000100).
+// Otherwise it will be a return address -- second stage being called as a
+// function by user code, after copying out of XIP region. r3 holds SSI base,
+// r0...2 used as temporaries. Other GPRs not used.
+.global _stage2_boot
+.type _stage2_boot,%function
+.thumb_func
+_stage2_boot:
+    push {lr}
+
+    // Set pad configuration:
+    // - SCLK 8mA drive, no slew limiting
+    // - SDx disable input Schmitt to reduce delay
+
+    ldr r3, =PADS_QSPI_BASE
+    movs r0, #(2 << PADS_QSPI_GPIO_QSPI_SCLK_DRIVE_LSB | PADS_QSPI_GPIO_QSPI_SCLK_SLEWFAST_BITS)
+    str r0, [r3, #PADS_QSPI_GPIO_QSPI_SCLK_OFFSET]
+    ldr r0, [r3, #PADS_QSPI_GPIO_QSPI_SD0_OFFSET]
+    movs r1, #PADS_QSPI_GPIO_QSPI_SD0_SCHMITT_BITS
+    bics r0, r1
+    str r0, [r3, #PADS_QSPI_GPIO_QSPI_SD0_OFFSET]
+    str r0, [r3, #PADS_QSPI_GPIO_QSPI_SD1_OFFSET]
+    str r0, [r3, #PADS_QSPI_GPIO_QSPI_SD2_OFFSET]
+    str r0, [r3, #PADS_QSPI_GPIO_QSPI_SD3_OFFSET]
+
+    ldr r3, =XIP_SSI_BASE
+
+    // Disable SSI to allow further config
+    movs r1, #0
+    str r1, [r3, #SSI_SSIENR_OFFSET]
+
+    // Set baud rate
+    movs r1, #PICO_FLASH_SPI_CLKDIV
+    str r1, [r3, #SSI_BAUDR_OFFSET]
+
+    // Set 1-cycle sample delay. If PICO_FLASH_SPI_CLKDIV == 2 then this means,
+    // if the flash launches data on SCLK posedge, we capture it at the time that
+    // the next SCLK posedge is launched. This is shortly before that posedge
+    // arrives at the flash, so data hold time should be ok. For
+    // PICO_FLASH_SPI_CLKDIV > 2 this pretty much has no effect.
+
+    movs r1, #1
+    movs r2, #SSI_RX_SAMPLE_DLY_OFFSET  // == 0xf0 so need 8 bits of offset significance
+    str r1, [r3, r2]
+
+
+// On QSPI parts we usually need a 01h SR-write command to enable QSPI mode
+// (i.e. turn WPn and HOLDn into IO2/IO3)
+#ifdef PROGRAM_STATUS_REG
+program_sregs:
+#define CTRL0_SPI_TXRX \
+    (7 << SSI_CTRLR0_DFS_32_LSB) | /* 8 bits per data frame */ \
+    (SSI_CTRLR0_TMOD_VALUE_TX_AND_RX << SSI_CTRLR0_TMOD_LSB)
+
+    ldr r1, =(CTRL0_SPI_TXRX)
+    str r1, [r3, #SSI_CTRLR0_OFFSET]
+
+     // Enable SSI and select slave 0
+    movs r1, #1
+    str r1, [r3, #SSI_SSIENR_OFFSET]
+
+    // Check whether SR needs updating
+    movs r0, #CMD_READ_STATUS2
+    bl read_flash_sreg
+    movs r2, #SREG_DATA
+    cmp r0, r2
+    beq skip_sreg_programming
+
+    // Send write enable command
+    movs r1, #CMD_WRITE_ENABLE
+    str r1, [r3, #SSI_DR0_OFFSET]
+
+    // Poll for completion and discard RX
+    bl wait_ssi_ready
+    ldr r1, [r3, #SSI_DR0_OFFSET]
+
+    // Send status write command followed by data bytes
+    movs r1, #CMD_WRITE_STATUS
+    str r1, [r3, #SSI_DR0_OFFSET]
+    movs r0, #0
+    str r0, [r3, #SSI_DR0_OFFSET]
+    str r2, [r3, #SSI_DR0_OFFSET]
+
+    bl wait_ssi_ready
+    ldr r1, [r3, #SSI_DR0_OFFSET]
+    ldr r1, [r3, #SSI_DR0_OFFSET]
+    ldr r1, [r3, #SSI_DR0_OFFSET]
+
+    // Poll status register for write completion
+1:
+    movs r0, #CMD_READ_STATUS
+    bl read_flash_sreg
+    movs r1, #1
+    tst r0, r1
+    bne 1b
+
+skip_sreg_programming:
+
+    // Disable SSI again so that it can be reconfigured
+    movs r1, #0
+    str r1, [r3, #SSI_SSIENR_OFFSET]
+#endif
+
+// Currently the flash expects an 8 bit serial command prefix on every
+// transfer, which is a waste of cycles. Perform a dummy Fast Read Quad I/O
+// command, with mode bits set such that the flash will not expect a serial
+// command prefix on *subsequent* transfers. We don't care about the results
+// of the read, the important part is the mode bits.
+
+dummy_read:
+#define CTRLR0_ENTER_XIP \
+    (FRAME_FORMAT                          /* Quad I/O mode */                \
+        << SSI_CTRLR0_SPI_FRF_LSB) |                                          \
+    (31 << SSI_CTRLR0_DFS_32_LSB)  |       /* 32 data bits */                 \
+    (SSI_CTRLR0_TMOD_VALUE_EEPROM_READ     /* Send INST/ADDR, Receive Data */ \
+        << SSI_CTRLR0_TMOD_LSB)
+
+    ldr r1, =(CTRLR0_ENTER_XIP)
+    str r1, [r3, #SSI_CTRLR0_OFFSET]
+
+    movs r1, #0x0                    // NDF=0 (single 32b read)
+    str r1, [r3, #SSI_CTRLR1_OFFSET]
+
+#define SPI_CTRLR0_ENTER_XIP \
+    (ADDR_L << SSI_SPI_CTRLR0_ADDR_L_LSB) |     /* Address + mode bits */ \
+    (WAIT_CYCLES << SSI_SPI_CTRLR0_WAIT_CYCLES_LSB) | /* Hi-Z dummy clocks following address + mode */ \
+    (SSI_SPI_CTRLR0_INST_L_VALUE_8B \
+        << SSI_SPI_CTRLR0_INST_L_LSB) |        /* 8-bit instruction */ \
+    (SSI_SPI_CTRLR0_TRANS_TYPE_VALUE_1C2A      /* Send Command in serial mode then address in Quad I/O mode */ \
+        << SSI_SPI_CTRLR0_TRANS_TYPE_LSB)
+
+    ldr r1, =(SPI_CTRLR0_ENTER_XIP)
+    ldr r0, =(XIP_SSI_BASE + SSI_SPI_CTRLR0_OFFSET)  // SPI_CTRL0 Register
+    str r1, [r0]
+
+    movs r1, #1                      // Re-enable SSI
+    str r1, [r3, #SSI_SSIENR_OFFSET]
+
+    movs r1, #CMD_READ
+    str r1, [r3, #SSI_DR0_OFFSET]   // Push SPI command into TX FIFO
+    movs r1, #MODE_CONTINUOUS_READ   // 32-bit: 24 address bits (we don't care, so 0) and M[7:4]=1010
+    str r1, [r3, #SSI_DR0_OFFSET]   // Push Address into TX FIFO - this will trigger the transaction
+
+    // Poll for completion
+    bl wait_ssi_ready
+
+// The flash is in a state where we can blast addresses in parallel, and get
+// parallel data back. Now configure the SSI to translate XIP bus accesses
+// into QSPI transfers of this form.
+
+    movs r1, #0
+    str r1, [r3, #SSI_SSIENR_OFFSET]   // Disable SSI (and clear FIFO) to allow further config
+
+// Note that the INST_L field is used to select what XIP data gets pushed into
+// the TX FIFO:
+//      INST_L_0_BITS   {ADDR[23:0],XIP_CMD[7:0]}       Load "mode bits" into XIP_CMD
+//      Anything else   {XIP_CMD[7:0],ADDR[23:0]}       Load SPI command into XIP_CMD
+configure_ssi:
+#define SPI_CTRLR0_XIP \
+    (MODE_CONTINUOUS_READ                      /* Mode bits to keep flash in continuous read mode */ \
+        << SSI_SPI_CTRLR0_XIP_CMD_LSB) | \
+    (ADDR_L << SSI_SPI_CTRLR0_ADDR_L_LSB) |    /* Total number of address + mode bits */ \
+    (WAIT_CYCLES << SSI_SPI_CTRLR0_WAIT_CYCLES_LSB) |    /* Hi-Z dummy clocks following address + mode */ \
+    (SSI_SPI_CTRLR0_INST_L_VALUE_NONE          /* Do not send a command, instead send XIP_CMD as mode bits after address */ \
+        << SSI_SPI_CTRLR0_INST_L_LSB) | \
+    (SSI_SPI_CTRLR0_TRANS_TYPE_VALUE_2C2A      /* Send Address in Quad I/O mode (and Command but that is zero bits long) */ \
+        << SSI_SPI_CTRLR0_TRANS_TYPE_LSB)
+
+    ldr r1, =(SPI_CTRLR0_XIP)
+    ldr r0, =(XIP_SSI_BASE + SSI_SPI_CTRLR0_OFFSET)
+    str r1, [r0]
+
+    movs r1, #1
+    str r1, [r3, #SSI_SSIENR_OFFSET]   // Re-enable SSI
+
+// Bus accesses to the XIP window will now be transparently serviced by the
+// external flash on cache miss. We are ready to run code from flash.
+
+// Pull in standard exit routine
+#include "boot2_helpers/exit_from_boot2.S"
+
+// Common functions
+#include "boot2_helpers/wait_ssi_ready.S"
+#ifdef PROGRAM_STATUS_REG
+#include "boot2_helpers/read_flash_sreg.S"
+#endif
+
+.global literals
+literals:
+.ltorg
+
+.end
+
+
+
+
+# #include "pico/asm_helper.S"
+/*
+ * Copyright (c) 2020 Raspberry Pi (Trading) Ltd.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
+#include "pico.h"
+
+// do not put align in here as it is used mid function sometimes
+.macro regular_func x
+.global \x
+.type \x,%function
+.thumb_func
+\x:
+.endm
+
+.macro regular_func_with_section x
+.section .text.\x
+regular_func \x
+.endm
+
+// do not put align in here as it is used mid function sometimes
+.macro wrapper_func x
+regular_func WRAPPER_FUNC_NAME(\x)
+.endm
+
+.macro __pre_init func, priority_string
+.section .preinit_array.\priority_string
+.align 2
+.word \func
+.endm
+
+
+
+# #include "boot2_helpers/exit_from_boot2.S"
+/*
+ * Copyright (c) 2021 Raspberry Pi (Trading) Ltd.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
+#ifndef _BOOT2_HELPER_EXIT_FROM_BOOT2
+#define _BOOT2_HELPER_EXIT_FROM_BOOT2
+
+#include "hardware/regs/m0plus.h"
+
+// If entered from the bootrom, lr (which we earlier pushed) will be 0,
+// and we vector through the table at the start of the main flash image.
+// Any regular function call will have a nonzero value for lr.
+check_return:
+    pop {r0}
+    cmp r0, #0
+    beq vector_into_flash
+    bx r0
+vector_into_flash:
+    ldr r0, =(XIP_BASE + 0x100)
+    ldr r1, =(PPB_BASE + M0PLUS_VTOR_OFFSET)
+    str r0, [r1]
+    ldmia r0, {r0, r1}
+    msr msp, r0
+    bx r1
+
+#endif
+
+
+
+
+
+# #include "boot2_helpers/wait_ssi_ready.S"
+/*
+ * Copyright (c) 2021 Raspberry Pi (Trading) Ltd.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
+#ifndef _BOOT2_HELPER_WAIT_SSI_READY
+#define _BOOT2_HELPER_WAIT_SSI_READY
+
+wait_ssi_ready:
+    push {r0, r1, lr}
+
+    // Command is complete when there is nothing left to send
+    // (TX FIFO empty) and SSI is no longer busy (CSn deasserted)
+1:
+    ldr r1, [r3, #SSI_SR_OFFSET]
+    movs r0, #SSI_SR_TFE_BITS
+    tst r1, r0
+    beq 1b
+    movs r0, #SSI_SR_BUSY_BITS
+    tst r1, r0
+    bne 1b
+
+    pop {r0, r1, pc}
+
+#endif
+
+
+
+
+# #include "boot2_helpers/read_flash_sreg.S"
+/*
+ * Copyright (c) 2021 Raspberry Pi (Trading) Ltd.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
+#ifndef _BOOT2_HELPER_READ_FLASH_SREG
+#define _BOOT2_HELPER_READ_FLASH_SREG
+
+#include "boot2_helpers/wait_ssi_ready.S"
+
+// Pass status read cmd into r0.
+// Returns status value in r0.
+.global read_flash_sreg
+.type read_flash_sreg,%function
+.thumb_func
+read_flash_sreg:
+    push {r1, lr}
+    str r0, [r3, #SSI_DR0_OFFSET]
+    // Dummy byte:
+    str r0, [r3, #SSI_DR0_OFFSET]
+
+    bl wait_ssi_ready
+    // Discard first byte and combine the next two
+    ldr r0, [r3, #SSI_DR0_OFFSET]
+    ldr r0, [r3, #SSI_DR0_OFFSET]
+
+    pop {r1, pc}
+
+#endif
+
