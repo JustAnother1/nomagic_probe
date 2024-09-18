@@ -41,6 +41,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include "tusb.h"
+#include "tinyusb/src/class/msc/msc.h"
 #include "file/file_storage.h"
 
 
