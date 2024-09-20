@@ -13,18 +13,23 @@
  *
  */
 
-#ifndef NOMAGIC_PROBE_TESTS_MOCK_SERIAL_GDB_H_
-#define NOMAGIC_PROBE_TESTS_MOCK_SERIAL_GDB_H_
+#include <stdbool.h>
+#include <stdint.h>
 
-#define TST_GDB_RECEIVE_BUFFER_SIZE      100
-#define TST_GDB_SEND_BUFFER_SIZE         500
+bool cmd_swd_connect(const uint32_t loop)
+{
+    (void) loop;
+    return true;
+}
 
-void gdb_reset_send_receive_buffers(void);
-uint32_t gdb_get_num_bytes_in_recv_buffer(void);
-void gdb_dump_send_buffer(void);
-uint32_t gdb_get_num_bytes_in_send_buffer(void);
-bool gdb_mock_get_received_bytes(uint8_t *buf, uint32_t length);
-void gdb_send_bytes_to_cli(uint8_t *buf, uint32_t length);
-void gdb_dump_buffer_ascii(char* buffer, uint32_t length);
+bool cmd_swd_read_memory(const uint32_t loop)
+{
+    (void) loop;
+    return true;
+}
 
-#endif /* NOMAGIC_PROBE_TESTS_MOCK_SERIAL_GDB_H_ */
+bool cmd_swd_write_memory(const uint32_t loop)
+{
+    (void) loop;
+    return true;
+}

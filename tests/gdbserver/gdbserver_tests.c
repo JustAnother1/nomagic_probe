@@ -14,138 +14,116 @@
  */
 
 #include <stdio.h>
+#include <string.h>
+#include "gdbserver/gdbserver.h"
 
-#include "munit.h"
-#include "gdbserver_gdbserver_tests.h"
-#include "../src/gdbserver/gdbserver.h"
-#include "mocks.h"
-// #include "mock/serial_debug.h"
-#include "mock/serial_gdb.h"
+#include "../mock/target/common_mock.h"
+#include "unity.h"
+#include "mock/gdbserver/serial_gdb.h"
+#include "mock/gdbserver/commands_mock.h"
+
 
 extern uint8_t gdb_send_buf[TST_GDB_SEND_BUFFER_SIZE];
 
-void* gdbserver_gdbserver_setup(const MunitParameter params[], void* user_data)
+void setUp(void)
 {
-    (void)params;
-    (void)user_data;
-
     // reset test environment
     gdb_reset_send_receive_buffers();
-    mock_reset_call_counts();
+    mock_target_reset_call_counts();
+    mock_commands_reset_call_counts();
+    mock_commands_reset_commands();
 
     // initialize code under test
     gdbserver_init();
-    return NULL;
 }
 
-
-MunitResult test_gdbserver_empty_packet(const MunitParameter params[], void* user_data)
+void tearDown(void)
 {
-    /* These are just to silence compiler warnings about the parameters
-     * being unused. */
-    (void) params;
-    (void) user_data;
 
+}
+
+void test_gdbserver_empty_packet(void)
+{
     reply_packet_prepare();  // adds "$"
     reply_packet_send();   // adds "#xx
 
-    munit_assert_uint32(4, ==, gdb_get_num_bytes_in_send_buffer());
-    munit_assert_uint32(0, ==, gdb_get_num_bytes_in_recv_buffer());
-    // printf("\n%s\n", gdb_send_buf);
-    munit_assert_uint32(gdb_send_buf[0], ==, '$');
-    munit_assert_uint32(gdb_send_buf[1], ==, '#');
-    munit_assert_uint32(gdb_send_buf[2], ==, '0');
-    munit_assert_uint32(gdb_send_buf[3], ==, '0');
-
-    return MUNIT_OK;
+    TEST_ASSERT_EQUAL_UINT32(1, mock_commands_get_call_counter_of(CALL_IDX_COMMANDS_INIT));
+    TEST_ASSERT_EQUAL_UINT32(0, mock_commands_get_call_counter_of(CALL_IDX_COMMANDS_EXECUTE));
+    TEST_ASSERT_EQUAL_UINT32(4, gdb_get_num_bytes_in_send_buffer());
+    TEST_ASSERT_EQUAL_UINT32(0, gdb_get_num_bytes_in_recv_buffer());
+    TEST_ASSERT_EQUAL_STRING ("$#00", gdb_send_buf);
+    TEST_ASSERT_EQUAL_UINT32(0, mock_commands_get_num_received_commands());
 }
 
 // void reply_packet_add_hex(uint32_t data, uint32_t digits);
-MunitResult test_gdbserver_hex(const MunitParameter params[], void* user_data)
+void test_gdbserver_hex(void)
 {
-    /* These are just to silence compiler warnings about the parameters
-     * being unused. */
-    (void) params;
-    (void) user_data;
-
     reply_packet_prepare();  // adds "$"
     reply_packet_add_hex(42, 2); // adds "2a"
     reply_packet_send();   // adds "#xx
 
     // printf("\n%s\n", gdb_send_buf);
-    munit_assert_uint32(6, ==, gdb_get_num_bytes_in_send_buffer());
-    munit_assert_uint32(0, ==, gdb_get_num_bytes_in_recv_buffer());
-    munit_assert_uint32(gdb_send_buf[0], ==, '$');
-    munit_assert_uint32(gdb_send_buf[1], ==, '2');
-    munit_assert_uint32(gdb_send_buf[2], ==, 'a');
-    munit_assert_uint32(gdb_send_buf[3], ==, '#');
-    munit_assert_uint32(gdb_send_buf[4], ==, '9');
-    munit_assert_uint32(gdb_send_buf[5], ==, '3');
-
-    return MUNIT_OK;
+    TEST_ASSERT_EQUAL_UINT32(1, mock_commands_get_call_counter_of(CALL_IDX_COMMANDS_INIT));
+    TEST_ASSERT_EQUAL_UINT32(0, mock_commands_get_call_counter_of(CALL_IDX_COMMANDS_EXECUTE));
+    TEST_ASSERT_EQUAL_UINT32(6, gdb_get_num_bytes_in_send_buffer());
+    TEST_ASSERT_EQUAL_UINT32(0, gdb_get_num_bytes_in_recv_buffer());
+    TEST_ASSERT_EQUAL_STRING ("$2a#93", gdb_send_buf);
+    TEST_ASSERT_EQUAL_UINT32(0, mock_commands_get_num_received_commands());
 }
 
-MunitResult test_gdbserver_hex_sqish(const MunitParameter params[], void* user_data)
+void test_gdbserver_hex_sqish(void)
 {
-    /* These are just to silence compiler warnings about the parameters
-     * being unused. */
-    (void) params;
-    (void) user_data;
 
     reply_packet_prepare();  // adds "$"
     reply_packet_add_hex(500, 0); // adds "1f4"
     reply_packet_send();   // adds "#xx
 
     // printf("\n%s\n", gdb_send_buf);
-    munit_assert_uint32(8, ==, gdb_get_num_bytes_in_send_buffer());
-    munit_assert_uint32(0, ==, gdb_get_num_bytes_in_recv_buffer());
-    munit_assert_uint32(gdb_send_buf[0], ==, '$');
-    munit_assert_uint32(gdb_send_buf[1], ==, 'f');
-    munit_assert_uint32(gdb_send_buf[2], ==, '4');
-    munit_assert_uint32(gdb_send_buf[3], ==, '0');
-    munit_assert_uint32(gdb_send_buf[4], ==, '1');
-    munit_assert_uint32(gdb_send_buf[5], ==, '#');
-    munit_assert_uint32(gdb_send_buf[6], ==, 'f');
-    munit_assert_uint32(gdb_send_buf[7], ==, 'b');
-
-    return MUNIT_OK;
+    TEST_ASSERT_EQUAL_UINT32(1, mock_commands_get_call_counter_of(CALL_IDX_COMMANDS_INIT));
+    TEST_ASSERT_EQUAL_UINT32(0, mock_commands_get_call_counter_of(CALL_IDX_COMMANDS_EXECUTE));
+    TEST_ASSERT_EQUAL_UINT32(8, gdb_get_num_bytes_in_send_buffer());
+    TEST_ASSERT_EQUAL_UINT32(0, gdb_get_num_bytes_in_recv_buffer());
+    TEST_ASSERT_EQUAL_STRING ("$f401#fb", gdb_send_buf);
+    TEST_ASSERT_EQUAL_UINT32(0, mock_commands_get_num_received_commands());
 }
 
 // void gdbserver_tick(void)
-MunitResult test_gdbserver_tick_connected(const MunitParameter params[], void* user_data)
+void test_gdbserver_tick_connected(void)
 {
-    /* These are just to silence compiler warnings about the parameters
-     * being unused. */
-    (void) params;
-    (void) user_data;
-
+    TEST_ASSERT_EQUAL_UINT32(1, mock_commands_get_call_counter_of(CALL_IDX_COMMANDS_INIT));
+    TEST_ASSERT_EQUAL_UINT32(0, mock_commands_get_call_counter_of(CALL_IDX_COMMANDS_EXECUTE));
+    TEST_ASSERT_EQUAL_UINT32(0, mock_commands_get_num_received_commands());
     mock_set_serial_gdb_is_connected(false);
     gdbserver_tick();
-    munit_assert_uint32(0, ==, mock_get_call_counter_of(CALL_IDX_TARGET_CONNECT));
-    munit_assert_uint32(0, ==, mock_get_call_counter_of(CALL_IDX_TARGET_CLOSE_CONNECTION));
+    TEST_ASSERT_EQUAL_UINT32(0, mock_get_call_counter_of(CALL_IDX_TARGET_CONNECT));
+    TEST_ASSERT_EQUAL_UINT32(0, mock_get_call_counter_of(CALL_IDX_TARGET_CLOSE_CONNECTION));
+    TEST_ASSERT_EQUAL_UINT32(1, mock_commands_get_call_counter_of(CALL_IDX_COMMANDS_INIT));
+    TEST_ASSERT_EQUAL_UINT32(0, mock_commands_get_call_counter_of(CALL_IDX_COMMANDS_EXECUTE));
+    TEST_ASSERT_EQUAL_UINT32(0, mock_commands_get_num_received_commands());
 
     mock_set_serial_gdb_is_connected(true);
     gdbserver_tick();
-    munit_assert_uint32(1, ==, mock_get_call_counter_of(CALL_IDX_TARGET_CONNECT));
-    munit_assert_uint32(0, ==, mock_get_call_counter_of(CALL_IDX_TARGET_CLOSE_CONNECTION));
+    TEST_ASSERT_EQUAL_UINT32(1, mock_get_call_counter_of(CALL_IDX_TARGET_CONNECT));
+    TEST_ASSERT_EQUAL_UINT32(0, mock_get_call_counter_of(CALL_IDX_TARGET_CLOSE_CONNECTION));
+    TEST_ASSERT_EQUAL_UINT32(1, mock_commands_get_call_counter_of(CALL_IDX_COMMANDS_INIT));
+    TEST_ASSERT_EQUAL_UINT32(0, mock_commands_get_call_counter_of(CALL_IDX_COMMANDS_EXECUTE));
+    TEST_ASSERT_EQUAL_UINT32(0, mock_commands_get_num_received_commands());
 
     mock_set_serial_gdb_is_connected(false);
     gdbserver_tick();
-    munit_assert_uint32(1, ==, mock_get_call_counter_of(CALL_IDX_TARGET_CONNECT));
-    munit_assert_uint32(1, ==, mock_get_call_counter_of(CALL_IDX_TARGET_CLOSE_CONNECTION));
+    TEST_ASSERT_EQUAL_UINT32(1, mock_get_call_counter_of(CALL_IDX_TARGET_CONNECT));
+    TEST_ASSERT_EQUAL_UINT32(1, mock_get_call_counter_of(CALL_IDX_TARGET_CLOSE_CONNECTION));
+    TEST_ASSERT_EQUAL_UINT32(2, mock_commands_get_call_counter_of(CALL_IDX_COMMANDS_INIT));
+    TEST_ASSERT_EQUAL_UINT32(0, mock_commands_get_call_counter_of(CALL_IDX_COMMANDS_EXECUTE));
+    TEST_ASSERT_EQUAL_UINT32(0, mock_commands_get_num_received_commands());
 
-    return MUNIT_OK;
 }
 
-MunitResult test_gdbserver_tick_simple_commands(const MunitParameter params[], void* user_data)
+void test_gdbserver_tick_simple_commands(void)
 {
-    /* These are just to silence compiler warnings about the parameters
-     * being unused. */
-    (void) params;
-    (void) user_data;
-
     uint8_t buf[100];
-
+    TEST_ASSERT_EQUAL_UINT32(1, mock_commands_get_call_counter_of(CALL_IDX_COMMANDS_INIT));
+    TEST_ASSERT_EQUAL_UINT32(0, mock_commands_get_call_counter_of(CALL_IDX_COMMANDS_EXECUTE));
     // send:    +$vMustReplyEmpty#3a
     // receive: +$#00
 
@@ -158,39 +136,19 @@ MunitResult test_gdbserver_tick_simple_commands(const MunitParameter params[], v
     gdb_send_bytes_to_cli(buf, strlen((char *)buf));
     mock_set_serial_gdb_is_connected(true);
     gdbserver_tick();
-    munit_assert_uint32(0, ==, gdb_get_num_bytes_in_recv_buffer());
-    munit_assert_uint32(18, ==, gdb_get_num_bytes_in_send_buffer());
-    munit_assert_uint32(gdb_send_buf[0], ==, '+');
-    munit_assert_uint32(gdb_send_buf[1], ==, '$');
-    munit_assert_uint32(gdb_send_buf[2], ==, '#');
-    munit_assert_uint32(gdb_send_buf[3], ==, '0');
-    munit_assert_uint32(gdb_send_buf[4], ==, '0');
-
-    munit_assert_uint32(gdb_send_buf[5], ==, '+');
-    munit_assert_uint32(gdb_send_buf[6], ==, '$');
-    munit_assert_uint32(gdb_send_buf[7], ==, 'O');
-    munit_assert_uint32(gdb_send_buf[8], ==, 'K');
-    munit_assert_uint32(gdb_send_buf[9], ==, '#');
-    munit_assert_uint32(gdb_send_buf[10], ==, '9');
-    munit_assert_uint32(gdb_send_buf[11], ==, 'a');
-
-    munit_assert_uint32(gdb_send_buf[12], ==, '$');
-    munit_assert_uint32(gdb_send_buf[13], ==, 'O');
-    munit_assert_uint32(gdb_send_buf[14], ==, 'K');
-    munit_assert_uint32(gdb_send_buf[15], ==, '#');
-    munit_assert_uint32(gdb_send_buf[16], ==, '9');
-    munit_assert_uint32(gdb_send_buf[17], ==, 'a');
-
-    return MUNIT_OK;
+    // TEST_ASSERT_EQUAL_UINT32(0, gdb_get_num_bytes_in_recv_buffer());
+    // TEST_ASSERT_EQUAL_UINT32(18, gdb_get_num_bytes_in_send_buffer());
+    // TEST_ASSERT_EQUAL_STRING ("+$#00+$OK#)a$OK#9a", gdb_send_buf);
+    TEST_ASSERT_EQUAL_UINT32(1, mock_commands_get_call_counter_of(CALL_IDX_COMMANDS_INIT));
+    TEST_ASSERT_EQUAL_UINT32(3, mock_commands_get_call_counter_of(CALL_IDX_COMMANDS_EXECUTE));
+    TEST_ASSERT_EQUAL_UINT32(3, mock_commands_get_num_received_commands());
+    TEST_ASSERT_EQUAL_STRING ("vMustReplyEmpty#3a", mock_commands_get_command(0));
+    TEST_ASSERT_EQUAL_STRING ("QStartNoAckMode#b0", mock_commands_get_command(1));
+    TEST_ASSERT_EQUAL_STRING ("!#21", mock_commands_get_command(2));
 }
 
-MunitResult test_gdbserver_tick_FlashWrite(const MunitParameter params[], void* user_data)
+void test_gdbserver_tick_FlashWrite(void)
 {
-    /* These are just to silence compiler warnings about the parameters
-     * being unused. */
-    (void) params;
-    (void) user_data;
-
     uint8_t buf[] = {
             '$','v','F','l','a','s','h','W','r','i','t','e',':','1','0','0','0','0','0','0','0',':',
 
@@ -264,19 +222,28 @@ MunitResult test_gdbserver_tick_FlashWrite(const MunitParameter params[], void* 
             '#', '7', '9'
     };
 
+    TEST_ASSERT_EQUAL_UINT32(1, mock_commands_get_call_counter_of(CALL_IDX_COMMANDS_INIT));
+    TEST_ASSERT_EQUAL_UINT32(0, mock_commands_get_call_counter_of(CALL_IDX_COMMANDS_EXECUTE));
     gdb_send_bytes_to_cli(buf, sizeof(buf));
     mock_set_serial_gdb_is_connected(true);
     gdbserver_tick();
-    munit_assert_uint32(0, ==, gdb_get_num_bytes_in_recv_buffer());
-    munit_assert_uint32(7, ==, gdb_get_num_bytes_in_send_buffer());
-
-    munit_assert_uint32(gdb_send_buf[0], ==, '+');
-    munit_assert_uint32(gdb_send_buf[1], ==, '$');
-    munit_assert_uint32(gdb_send_buf[2], ==, 'O');
-    munit_assert_uint32(gdb_send_buf[3], ==, 'K');
-    munit_assert_uint32(gdb_send_buf[4], ==, '#');
-    munit_assert_uint32(gdb_send_buf[5], ==, '9');
-    munit_assert_uint32(gdb_send_buf[6], ==, 'a');
-
-    return MUNIT_OK;
+    TEST_ASSERT_EQUAL_UINT32(1, mock_commands_get_call_counter_of(CALL_IDX_COMMANDS_INIT));
+    TEST_ASSERT_EQUAL_UINT32(1, mock_commands_get_call_counter_of(CALL_IDX_COMMANDS_EXECUTE));
+    TEST_ASSERT_EQUAL_UINT32(1, mock_commands_get_num_received_commands());
+    TEST_ASSERT_EQUAL_STRING ("vFlashWrite:10000000:", mock_commands_get_command(0));
+    TEST_ASSERT_EQUAL_UINT32(533, mock_commands_get_length(0));
 }
+
+
+int main(void)
+{
+    UNITY_BEGIN();
+    RUN_TEST(test_gdbserver_empty_packet);
+    RUN_TEST(test_gdbserver_hex);
+    RUN_TEST(test_gdbserver_hex_sqish);
+    RUN_TEST(test_gdbserver_tick_connected);
+    RUN_TEST(test_gdbserver_tick_simple_commands);
+    RUN_TEST(test_gdbserver_tick_FlashWrite);
+    return UNITY_END();
+}
+

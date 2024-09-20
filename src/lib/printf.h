@@ -107,6 +107,7 @@ regs Kusti, 23.10.2004
 #define __TFP_PRINTF__
 
 #include <stdarg.h>
+#include <stddef.h>
 
 #define MAX_STRING_LENGTH     120
 

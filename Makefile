@@ -58,56 +58,14 @@ HAS_GDB_SERVER = yes
 HAS_NCM = yes
 
 include nomagic_probe.mk
+include tests/tests.mk
 
 # files specific to the chip that will be debugged:
 SRC += no_target/no.c
 
 INCDIRS +=no_target/
 
-
-
-# unit test configuration
-# =======================
-
-TST_LFLAGS = -lgcov --coverage
-TST_CFLAGS =  -c -Wall -Wextra -g3 -fprofile-arcs -ftest-coverage -Wno-int-to-pointer-cast -Wno-implicit-function-declaration -Wno-format
-TST_DDEFS = -DUNIT_TEST=1
-TST_DDEFS += -DFEAT_DEBUG_UART
-TST_DDEFS += -DFEAT_GDB_SERVER
-TST_INCDIRS = tests/
-TST_INCDIRS += tests/cfg/
-TST_INCDIRS += src/tinyusb/src/
-TST_INCDIRS += /usr/include/
-TST_INCDIRS += src/
-TST_INCDIRS +=tests/bin/
-TST_INCDIRS +=no_target/
-TST_INCDIR = $(patsubst %,-I%, $(TST_INCDIRS))
-
-# Files to compile for unit tests
-# ===============================
-
-TST_OBJS += tests/bin/src/cli/cli.o
-TST_OBJS += tests/bin/src/lib/printf.o
-TST_OBJS += tests/bin/src/tinyusb/usb_msc.o
-TST_OBJS += tests/bin/src/gdbserver/cmd_qsupported.o
-TST_OBJS += tests/bin/src/gdbserver/cmd_qxfer.o
-TST_OBJS += tests/bin/src/gdbserver/commands.o
-TST_OBJS += tests/bin/src/gdbserver/gdbserver.o
-TST_OBJS += tests/bin/src/gdbserver/threads.o
-TST_OBJS += tests/bin/src/gdbserver/util.o
-TST_OBJS += tests/bin/tests/cli_tests.o
-TST_OBJS += tests/bin/tests/mocks.o
-TST_OBJS += tests/bin/tests/printf_tests.o
-TST_OBJS += tests/bin/tests/usb_msc_tests.o
-TST_OBJS += tests/bin/tests/gdbserver_util_tests.o
-TST_OBJS += tests/bin/tests/gdbserver_gdbserver_tests.o
-TST_OBJS += tests/bin/tests/munit.o
-TST_OBJS += tests/bin/tests/allTests.o
-TST_OBJS += tests/bin/tests/mock/serial_debug.o
-TST_OBJS += tests/bin/tests/mock/serial_gdb.o
-
 # make config
-# remove ?  VPATH = $(SOURCE_DIR)
 .DEFAULT_GOAL = all
 
 
@@ -191,37 +149,6 @@ doc:
 	@echo "doxygen"
 	@echo "========"
 	doxygen
-
-tests/bin/src/cli/cli.o: src/cli/cli.c
-	@echo ""
-	@echo "=== compiling (tests) $@"
-	@$(MKDIR_P) $(@D)
-	@echo "#define VERSION \"x.x.x\"" > tests/bin/version.h
-	$(TST_CC) $(TST_CFLAGS) $(TST_DDEFS) $(TST_INCDIR) $< -o $@
-
-tests/bin/%o: %c
-	@echo ""
-	@echo "=== compiling (tests) $@"
-	@$(MKDIR_P) $(@D)
-	$(TST_CC) $(TST_CFLAGS) $(TST_DDEFS) $(TST_INCDIR) $< -o $@
-
-$(PROJECT)_tests: $(TST_OBJS)
-	@echo ""
-	@echo "linking tests"
-	@echo "============="
-	$(TST_LD) $(TST_LFLAGS) -o tests/bin/$(PROJECT)_tests $(TST_OBJS)
-
-
-test: $(PROJECT)_tests
-	@echo ""
-	@echo "executing tests"
-	@echo "==============="
-	tests/bin/$(PROJECT)_tests
-
-lcov: 
-	lcov  --directory tests/ -c -o tests/bin/lcov.info --exclude "*tests/*" --exclude "*/usr/include/*" 
-	genhtml -o test_coverage -t "coverage" --num-spaces 4 tests/bin/lcov.info -o tests/bin/test_coverage/
-
 
 clean:
 	@rm -rf $(BIN_FOLDER)/* tests/$(PROJECT)_tests tests/bin/ $(CLEAN_RM)

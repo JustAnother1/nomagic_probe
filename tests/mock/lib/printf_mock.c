@@ -12,15 +12,8 @@
  * with this program; if not, see <http://www.gnu.org/licenses/>
  *
  */
-#ifndef TESTS_GDBSERVER_UTIL_TESTS_H_
-#define TESTS_GDBSERVER_UTIL_TESTS_H_
 
-#include "munit.h"
-#include <stdint.h>
-#include <stdbool.h>
-
-void* gdbserver_util_setup(const MunitParameter params[], void* user_data);
-MunitResult test_gdbserver_util_hex_to_int(const MunitParameter params[], void* user_data);
-MunitResult test_gdbserver_util_int_to_hex(const MunitParameter params[], void* user_data);
-
-#endif /* TESTS_GDBSERVER_UTIL_TESTS_H_ */
+int my_printf(const char *__restrict, ...)
+{
+    return 0;
+}
