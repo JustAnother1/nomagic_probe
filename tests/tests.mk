@@ -137,8 +137,7 @@ test: $(TEST_LOGS)
 	@echo "\nDONE"
 
 # coverage
-# --exclude "*/usr/include/*" 
 lcov: $(TEST_LOGS)
-	lcov  --directory $(TEST_BIN_FOLDER) -c -o $(TEST_BIN_FOLDER)lcov.info --exclude "*tests/*"
+	lcov  --directory $(TEST_BIN_FOLDER) -c -o $(TEST_BIN_FOLDER)lcov.info --exclude "*tests/*" --exclude "*/usr/include/*" 
 	genhtml -o test_coverage -t "coverage" --num-spaces 4 $(TEST_BIN_FOLDER)lcov.info -o $(TEST_BIN_FOLDER)test_coverage/
 
