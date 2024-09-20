@@ -17,6 +17,8 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "probe_api/result.h"
+#include "probe_api/common.h"
 
 static uint32_t num_calls[NUM_CALL_COUNTER];
 
@@ -34,7 +36,51 @@ uint32_t mock_get_call_counter_of(uint32_t idx)
     return num_calls[idx];
 }
 
+void target_init(void)
+{
 
+}
+
+void target_set_status(target_status_typ new_status)
+{
+    (void) new_status;
+}
+
+void target_tick(void)
+{
+
+}
+
+bool common_cmd_target_info(uint32_t loop)
+{
+    (void) loop;
+    return true;
+}
+
+bool cmd_target_trace(uint32_t loop)
+{
+    (void) loop;
+    return true;
+}
+
+Result add_target_action(action_data_typ * const action)
+{
+    (void) action;
+    return RESULT_OK;
+}
+
+bool add_action(action_typ act)
+{
+    (void) act;
+    return true;
+}
+
+bool add_action_with_parameter(action_typ act, parameter_typ* parsed_parameter)
+{
+    (void) act;
+    (void) parsed_parameter;
+    return true;
+}
 
 void target_connect(void)
 {
@@ -46,8 +92,4 @@ void target_close_connection(void)
     num_calls[CALL_IDX_TARGET_CLOSE_CONNECTION]++;
 }
 
-bool cmd_target_trace(uint32_t loop)
-{
-    (void) loop;
-    return true;
-}
+

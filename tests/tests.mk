@@ -28,6 +28,19 @@ GDBSERVER_GDBSERVER_OBJS += $(TEST_BIN_FOLDER)mock/target/common_mock.o
 GDBSERVER_GDBSERVER_OBJS += $(TEST_BIN_FOLDER)mock/hal/time_base_mock.o
 GDBSERVER_GDBSERVER_OBJS += $(TEST_BIN_FOLDER)mock/lib/printf_mock.o
 
+#gdbserver/commands
+TEST_EXECUTEABLES += $(TEST_BIN_FOLDER)gdbserver_commands
+GDBSERVER_COMMANDS_OBJS = $(TEST_BIN_FOLDER)gdbserver/commands_tests.o 
+GDBSERVER_COMMANDS_OBJS += $(TEST_BIN_FOLDER)src/gdbserver/commands.o
+GDBSERVER_COMMANDS_OBJS += $(TEST_BIN_FOLDER)src/gdbserver/util.o
+GDBSERVER_COMMANDS_OBJS += $(TEST_BIN_FOLDER)mock/lib/printf_mock.o
+GDBSERVER_COMMANDS_OBJS += $(TEST_BIN_FOLDER)mock/gdbserver/gdbserver_mock.o
+GDBSERVER_COMMANDS_OBJS += $(TEST_BIN_FOLDER)mock/gdbserver/threads_mock.o
+GDBSERVER_COMMANDS_OBJS += $(TEST_BIN_FOLDER)mock/gdbserver/cmd_qxfer_mock.o
+GDBSERVER_COMMANDS_OBJS += $(TEST_BIN_FOLDER)mock/gdbserver/cmd_qsupported_mock.o
+GDBSERVER_COMMANDS_OBJS += $(TEST_BIN_FOLDER)mock/gdbserver/monitor_commands_mock.o
+GDBSERVER_COMMANDS_OBJS += $(TEST_BIN_FOLDER)mock/target/common_mock.o
+
 #tinyusb/usb_msc
 TEST_EXECUTEABLES += $(TEST_BIN_FOLDER)tinyusb_usb_msc
 TINYUSB_USB_MSC_OBJS = $(TEST_BIN_FOLDER)tinyusb/usb_msc_tests.o 
@@ -99,6 +112,12 @@ $(TEST_BIN_FOLDER)gdbserver_gdbserver: $(GDBSERVER_GDBSERVER_OBJS) $(FRAMEWORK_O
 	@echo "================================="
 	$(TST_LD) $(TST_LFLAGS) -o $(TEST_BIN_FOLDER)gdbserver_gdbserver $(GDBSERVER_GDBSERVER_OBJS) $(FRAMEWORK_OBJS)
 
+$(TEST_BIN_FOLDER)gdbserver_commands: $(GDBSERVER_COMMANDS_OBJS) $(FRAMEWORK_OBJS)
+	@echo ""
+	@echo "linking test: gdbserver/commands"
+	@echo "================================="
+	$(TST_LD) $(TST_LFLAGS) -o $(TEST_BIN_FOLDER)gdbserver_commands $(GDBSERVER_COMMANDS_OBJS) $(FRAMEWORK_OBJS)
+
 $(TEST_BIN_FOLDER)tinyusb_usb_msc: $(TINYUSB_USB_MSC_OBJS) $(FRAMEWORK_OBJS)
 	@echo ""
 	@echo "linking test: tinyusb/usb_msc"
@@ -121,8 +140,7 @@ $(TEST_BIN_FOLDER)cli_cli: $(CLI_CLI_OBJS) $(FRAMEWORK_OBJS)
 # run all tests
 $(TEST_BIN_FOLDER)%.txt: $(TEST_BIN_FOLDER)%
 	@echo ""
-	@echo "running tests"
-	@echo "============="
+	@echo "=== running test $@"
 	-./$< > $@ 2>&1
 
 # report results

@@ -13,13 +13,36 @@
  *
  */
 
-#ifndef SOURCE_CFG_TARGET_CLI_COMMANDS_H_
-#define SOURCE_CFG_TARGET_CLI_COMMANDS_H_
-
 #include <stdbool.h>
+#include <stdint.h>
 
-#define TARGET_CLI_COMMANDS
+void target_monitor_command(uint32_t which, char* command)
+{
+    (void) which;
+    (void) command;
+}
 
-bool cmd_target_info(uint32_t loop);
+void mon_cmd_help(char* command)
+{
+    (void) command;
+}
 
-#endif /* SOURCE_CFG_TARGET_CLI_COMMANDS_H_ */
+void mon_cmd_version(void)
+{
+
+}
+
+void mon_cmd_halt(char* command)
+{
+    (void) command;
+}
+
+void mon_cmd_reset(char* command)
+{
+    (void) command;
+}
+
+void mon_cmd_reg(char* command)
+{
+    (void) command;
+}

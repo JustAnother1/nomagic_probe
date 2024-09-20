@@ -13,13 +13,28 @@
  *
  */
 
-#ifndef SOURCE_CFG_TARGET_CLI_COMMANDS_H_
-#define SOURCE_CFG_TARGET_CLI_COMMANDS_H_
+#include "unity.h"
+#include "gdbserver/commands.h"
 
-#include <stdbool.h>
+void setUp(void)
+{
+    commands_init();
+}
 
-#define TARGET_CLI_COMMANDS
+void tearDown(void)
+{
 
-bool cmd_target_info(uint32_t loop);
+}
 
-#endif /* SOURCE_CFG_TARGET_CLI_COMMANDS_H_ */
+void test_commands_execute_null(void)
+{
+    commands_execute(NULL, 0, NULL);
+}
+
+
+int main(void)
+{
+    UNITY_BEGIN();
+    RUN_TEST(test_commands_execute_null);
+    return UNITY_END();
+}

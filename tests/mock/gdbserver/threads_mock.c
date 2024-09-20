@@ -13,13 +13,30 @@
  *
  */
 
-#ifndef SOURCE_CFG_TARGET_CLI_COMMANDS_H_
-#define SOURCE_CFG_TARGET_CLI_COMMANDS_H_
-
 #include <stdbool.h>
+#include <stdint.h>
 
-#define TARGET_CLI_COMMANDS
+void threads_init(void)
+{
 
-bool cmd_target_info(uint32_t loop);
+}
 
-#endif /* SOURCE_CFG_TARGET_CLI_COMMANDS_H_ */
+void handle_H_command(char* command)
+{
+    (void) command;
+}
+
+void handle_qfThreadInfo_command(char* command)
+{
+    (void) command;
+}
+
+void handle_qsThreadInfo_command(char* command)
+{
+    (void) command;
+}
+
+void handle_qC_command(char* command)
+{
+    (void) command;
+}

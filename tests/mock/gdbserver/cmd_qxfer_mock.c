@@ -13,13 +13,12 @@
  *
  */
 
-#ifndef SOURCE_CFG_TARGET_CLI_COMMANDS_H_
-#define SOURCE_CFG_TARGET_CLI_COMMANDS_H_
-
 #include <stdbool.h>
+#include <stdint.h>
 
-#define TARGET_CLI_COMMANDS
+void handle_cmd_qXfer(char* parameter, uint32_t length)
+{
+    (void) parameter;
+    (void) length;
+}
 
-bool cmd_target_info(uint32_t loop);
-
-#endif /* SOURCE_CFG_TARGET_CLI_COMMANDS_H_ */

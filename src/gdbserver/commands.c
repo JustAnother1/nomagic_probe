@@ -88,6 +88,10 @@ void commands_init(void)
 // received is guaranteed to end with zeros
 void commands_execute(char* received, uint32_t length, char* checksum)
 {
+    if((NULL == received) || (NULL == checksum))
+    {
+        return;
+    }
     debug_line("gdbs received: %s", received);
     if(false == checksumOK(received, length, checksum))
     {
