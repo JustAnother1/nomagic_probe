@@ -13,60 +13,66 @@ TST_INCDIR = $(patsubst %,-I%, $(TST_INCDIRS))
 
 #gdbserver/util
 TEST_EXECUTEABLES = $(TEST_BIN_FOLDER)gdbserver_util
-GDBSERVER_UTIL_OBJS = $(TEST_BIN_FOLDER)gdbserver/util_tests.o 
-GDBSERVER_UTIL_OBJS += $(TEST_BIN_FOLDER)src/gdbserver/util.o
-GDBSERVER_UTIL_OBJS += $(TEST_BIN_FOLDER)mock/lib/printf_mock.o
+GDBSERVER_UTIL_OBJS =                      \
+ $(TEST_BIN_FOLDER)gdbserver/util_tests.o  \
+ $(TEST_BIN_FOLDER)src/gdbserver/util.o    \
+ $(TEST_BIN_FOLDER)mock/lib/printf_mock.o
 
 #gdbserver/gdbserver
 TEST_EXECUTEABLES += $(TEST_BIN_FOLDER)gdbserver_gdbserver
-GDBSERVER_GDBSERVER_OBJS = $(TEST_BIN_FOLDER)gdbserver/gdbserver_tests.o 
-GDBSERVER_GDBSERVER_OBJS += $(TEST_BIN_FOLDER)src/gdbserver/gdbserver.o
-GDBSERVER_GDBSERVER_OBJS += $(TEST_BIN_FOLDER)src/gdbserver/util.o
-GDBSERVER_GDBSERVER_OBJS += $(TEST_BIN_FOLDER)mock/gdbserver/serial_gdb.o
-GDBSERVER_GDBSERVER_OBJS += $(TEST_BIN_FOLDER)mock/gdbserver/commands_mock.o
-GDBSERVER_GDBSERVER_OBJS += $(TEST_BIN_FOLDER)mock/target/common_mock.o
-GDBSERVER_GDBSERVER_OBJS += $(TEST_BIN_FOLDER)mock/hal/time_base_mock.o
-GDBSERVER_GDBSERVER_OBJS += $(TEST_BIN_FOLDER)mock/lib/printf_mock.o
+GDBSERVER_GDBSERVER_OBJS =                        \
+ $(TEST_BIN_FOLDER)gdbserver/gdbserver_tests.o    \
+ $(TEST_BIN_FOLDER)src/gdbserver/gdbserver.o      \
+ $(TEST_BIN_FOLDER)src/gdbserver/util.o           \
+ $(TEST_BIN_FOLDER)mock/gdbserver/serial_gdb.o    \
+ $(TEST_BIN_FOLDER)mock/gdbserver/commands_mock.o \
+ $(TEST_BIN_FOLDER)mock/target/common_mock.o      \
+ $(TEST_BIN_FOLDER)mock/hal/time_base_mock.o      \
+ $(TEST_BIN_FOLDER)mock/lib/printf_mock.o
 
 #gdbserver/commands
 TEST_EXECUTEABLES += $(TEST_BIN_FOLDER)gdbserver_commands
-GDBSERVER_COMMANDS_OBJS = $(TEST_BIN_FOLDER)gdbserver/commands_tests.o 
-GDBSERVER_COMMANDS_OBJS += $(TEST_BIN_FOLDER)src/gdbserver/commands.o
-GDBSERVER_COMMANDS_OBJS += $(TEST_BIN_FOLDER)src/gdbserver/util.o
-GDBSERVER_COMMANDS_OBJS += $(TEST_BIN_FOLDER)mock/lib/printf_mock.o
-GDBSERVER_COMMANDS_OBJS += $(TEST_BIN_FOLDER)mock/gdbserver/gdbserver_mock.o
-GDBSERVER_COMMANDS_OBJS += $(TEST_BIN_FOLDER)mock/gdbserver/threads_mock.o
-GDBSERVER_COMMANDS_OBJS += $(TEST_BIN_FOLDER)mock/gdbserver/cmd_qxfer_mock.o
-GDBSERVER_COMMANDS_OBJS += $(TEST_BIN_FOLDER)mock/gdbserver/cmd_qsupported_mock.o
-GDBSERVER_COMMANDS_OBJS += $(TEST_BIN_FOLDER)mock/gdbserver/monitor_commands_mock.o
-GDBSERVER_COMMANDS_OBJS += $(TEST_BIN_FOLDER)mock/target/common_mock.o
+GDBSERVER_COMMANDS_OBJS =                                 \
+ $(TEST_BIN_FOLDER)gdbserver/commands_tests.o             \
+ $(TEST_BIN_FOLDER)src/gdbserver/commands.o               \
+ $(TEST_BIN_FOLDER)src/gdbserver/util.o                   \
+ $(TEST_BIN_FOLDER)mock/lib/printf_mock.o                 \
+ $(TEST_BIN_FOLDER)mock/gdbserver/gdbserver_mock.o        \
+ $(TEST_BIN_FOLDER)mock/gdbserver/threads_mock.o          \
+ $(TEST_BIN_FOLDER)mock/gdbserver/cmd_qxfer_mock.o        \
+ $(TEST_BIN_FOLDER)mock/gdbserver/cmd_qsupported_mock.o   \
+ $(TEST_BIN_FOLDER)mock/gdbserver/monitor_commands_mock.o \
+ $(TEST_BIN_FOLDER)mock/target/common_mock.o
 
 #tinyusb/usb_msc
 TEST_EXECUTEABLES += $(TEST_BIN_FOLDER)tinyusb_usb_msc
-TINYUSB_USB_MSC_OBJS = $(TEST_BIN_FOLDER)tinyusb/usb_msc_tests.o 
-TINYUSB_USB_MSC_OBJS += $(TEST_BIN_FOLDER)src/tinyusb/usb_msc.o
-TINYUSB_USB_MSC_OBJS += $(TEST_BIN_FOLDER)mock/file/file_storage_mock.o
-TINYUSB_USB_MSC_OBJS += $(TEST_BIN_FOLDER)mock/tinyusb/tinyusb_mock.o
+TINYUSB_USB_MSC_OBJS =                           \
+ $(TEST_BIN_FOLDER)tinyusb/usb_msc_tests.o       \
+ $(TEST_BIN_FOLDER)src/tinyusb/usb_msc.o         \
+ $(TEST_BIN_FOLDER)mock/file/file_storage_mock.o \
+ $(TEST_BIN_FOLDER)mock/tinyusb/tinyusb_mock.o
 
 #lib/printf
 TEST_EXECUTEABLES += $(TEST_BIN_FOLDER)lib_printf
-LIB_PRINTF_OBJS = $(TEST_BIN_FOLDER)lib/printf_tests.o
-LIB_PRINTF_OBJS += $(TEST_BIN_FOLDER)src/lib/printf.o
-LIB_PRINTF_OBJS += $(TEST_BIN_FOLDER)mock/hal/hw_divider_mock.o
+LIB_PRINTF_OBJS =                     \
+ $(TEST_BIN_FOLDER)lib/printf_tests.o \
+ $(TEST_BIN_FOLDER)src/lib/printf.o   \
+ $(TEST_BIN_FOLDER)mock/hal/hw_divider_mock.o
 
 #cli/cli
 TEST_EXECUTEABLES += $(TEST_BIN_FOLDER)cli_cli
-CLI_CLI_OBJS = $(TEST_BIN_FOLDER)cli/cli_tests.o
-CLI_CLI_OBJS += $(TEST_BIN_FOLDER)src/cli/cli.o
-CLI_CLI_OBJS += $(TEST_BIN_FOLDER)src/lib/printf.o
-CLI_CLI_OBJS += $(TEST_BIN_FOLDER)mock/cli/serial_debug.o
-CLI_CLI_OBJS += $(TEST_BIN_FOLDER)mock/cli/cli_sys_mock.o
-CLI_CLI_OBJS += $(TEST_BIN_FOLDER)mock/cli/cli_swd_mock.o
-CLI_CLI_OBJS += $(TEST_BIN_FOLDER)mock/cli/cli_memory_mock.o
-CLI_CLI_OBJS += $(TEST_BIN_FOLDER)mock/hal/hw_divider_mock.o
-CLI_CLI_OBJS += $(TEST_BIN_FOLDER)mock/hal/watchdog_mock.o
-CLI_CLI_OBJS += $(TEST_BIN_FOLDER)mock/target/common_mock.o
-CLI_CLI_OBJS += $(TEST_BIN_FOLDER)mock/atarget_mock.o
+CLI_CLI_OBJS =                                \
+ $(TEST_BIN_FOLDER)cli/cli_tests.o            \
+ $(TEST_BIN_FOLDER)src/cli/cli.o              \
+ $(TEST_BIN_FOLDER)src/lib/printf.o           \
+ $(TEST_BIN_FOLDER)mock/cli/serial_debug.o    \
+ $(TEST_BIN_FOLDER)mock/cli/cli_sys_mock.o    \
+ $(TEST_BIN_FOLDER)mock/cli/cli_swd_mock.o    \
+ $(TEST_BIN_FOLDER)mock/cli/cli_memory_mock.o \
+ $(TEST_BIN_FOLDER)mock/hal/hw_divider_mock.o \
+ $(TEST_BIN_FOLDER)mock/hal/watchdog_mock.o   \
+ $(TEST_BIN_FOLDER)mock/target/common_mock.o  \
+ $(TEST_BIN_FOLDER)mock/atarget_mock.o
 
 TEST_LOGS = $(patsubst %,%.txt, $(TEST_EXECUTEABLES))
 
@@ -74,9 +80,10 @@ FRAMEWORK_OBJS = $(TEST_BIN_FOLDER)unity.o
 
 # for reporting the results
 # ! ! ! Important: ` are speciall ! ! !
-IGNORES = `grep -a -s IGNORE $(TEST_BIN_FOLDER)*.txt)`
-FAILURES = `grep -a -s FAIL $(TEST_BIN_FOLDER)*.txt`
-PASSED = `grep -a -s PASS $(TEST_BIN_FOLDER)*.txt`
+IGNORES  = `grep -a -s IGNORE $(TEST_BIN_FOLDER)*.txt)`
+FAILURES = `grep -a -s FAIL   $(TEST_BIN_FOLDER)*.txt`
+PASSED   = `grep -a -s PASS   $(TEST_BIN_FOLDER)*.txt`
+
 
 # Unit Test framework
 $(TEST_BIN_FOLDER)unity.o: tests/unity.c
@@ -85,6 +92,7 @@ $(TEST_BIN_FOLDER)unity.o: tests/unity.c
 	@$(MKDIR_P) $(@D)
 	$(TST_CC) $(TST_CFLAGS) $(TST_DDEFS) $(TST_INCDIR) $< -o $@
 
+
 # Tests
 $(TEST_BIN_FOLDER)%.o: tests/%.c
 	@echo ""
@@ -92,12 +100,14 @@ $(TEST_BIN_FOLDER)%.o: tests/%.c
 	@$(MKDIR_P) $(@D)
 	$(TST_CC) $(TST_CFLAGS) $(TST_DDEFS) $(TST_INCDIR) $< -o $@
 
+
 # source code module to Test
 $(TEST_BIN_FOLDER)src/%.o: src/%.c
 	@echo ""
 	@echo "=== compiling (tests) $@"
 	@$(MKDIR_P) $(@D)
 	$(TST_CC) $(TST_CFLAGS) $(TST_DDEFS) $(TST_INCDIR) $< -o $@
+
 
 # Test executeables
 $(TEST_BIN_FOLDER)gdbserver_util: $(GDBSERVER_UTIL_OBJS) $(FRAMEWORK_OBJS)
@@ -143,6 +153,7 @@ $(TEST_BIN_FOLDER)%.txt: $(TEST_BIN_FOLDER)%
 	@echo "=== running test $@"
 	-./$< > $@ 2>&1
 
+
 # report results
 test: $(TEST_LOGS)
 	@echo ""
@@ -153,6 +164,7 @@ test: $(TEST_LOGS)
 	@echo "-----------------------\nPASSED:\n-----------------------"
 	@echo "$(PASSED)"
 	@echo "\nDONE"
+
 
 # coverage
 lcov: $(TEST_LOGS)
