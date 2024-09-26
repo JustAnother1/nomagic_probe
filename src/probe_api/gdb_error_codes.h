@@ -25,5 +25,6 @@
 #define ERROR_CODE_INVALID_PARAMETER_VALUE           "E06"
 #define ERROR_CODE_WRONG_OFFSET                      "E07"
 #define ERROR_CODE_INVALID_THREAD_OPERATION          "E08"
+#define ERROR_CODE_TOO_LONG                          "E09"
 
 #endif /* NOMAGIC_PROBE_SRC_GDBSERVER_GDB_ERROR_CODES_H_ */

@@ -31,7 +31,7 @@
 
 #define ACTION_TRACE_LENGTH           10
 #define ACTION_QUEUE_LENGTH           5
-#define ACTION_TIMEOUT_TIME_MS        600
+#define ACTION_TIMEOUT_TIME_MS        6000
 #define GDB_RUNNING_REPORT_TIMEOUT_MS 500
 
 typedef struct{
@@ -335,8 +335,8 @@ static void handle_actions(void)
 
     if(true == serial_gdb_is_buffer_full())
     {
-    	// give the buffer time to drain -> try again next time
-    	return;
+        // give the buffer time to drain -> try again next time
+        return;
     }
 
     if(NULL == cur_action)

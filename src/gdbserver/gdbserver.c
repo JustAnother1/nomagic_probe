@@ -27,7 +27,7 @@
 #include "probe_api/util.h"
 
 
-#define GDB_BUSY_TIMEOUT_MS      1000
+#define GDB_BUSY_TIMEOUT_MS      5000
 #define CLEAN_END_LENGTH         10
 
 // defines what we have received and have processed
@@ -110,6 +110,10 @@ void reply_packet_add(char* data)
         length++;
         data++;
     }
+    if( ! (reply_length + length < MAX_REPLY_LENGTH))
+    {
+        debug_line("ERROR: add: reply too long !");
+    }
     serial_gdb_send_bytes(&(reply_buffer[reply_length]), length);
     reply_length = reply_length + length;
 }
@@ -117,14 +121,22 @@ void reply_packet_add(char* data)
 void reply_packet_add_max(char* data, uint32_t length)
 {
     uint32_t i;
-    memcpy(&(reply_buffer[reply_length]), data, length);
-    serial_gdb_send_bytes(&(reply_buffer[reply_length]), length);
-    for(i = 0; i < length; i++)
+
+    if(reply_length + length < MAX_REPLY_LENGTH)
     {
-        sum = sum + (uint8_t)(*data);
-        data++;
+        memcpy(&(reply_buffer[reply_length]), data, length);
+        serial_gdb_send_bytes(&(reply_buffer[reply_length]), length);
+        for(i = 0; i < length; i++)
+        {
+            sum = sum + (uint8_t)(*data);
+            data++;
+        }
+        reply_length = reply_length + length;
     }
-    reply_length = reply_length + length;
+    else
+    {
+        debug_line("ERROR: add max: reply too long !");
+    }
 }
 
 void reply_packet_add_hex(uint32_t data, uint32_t digits)
@@ -169,13 +181,20 @@ void reply_packet_add_hex(uint32_t data, uint32_t digits)
             }
         }
     }
-    for(i = 0; i < report; i++)
+    if(reply_length + report < MAX_REPLY_LENGTH)
     {
-        reply_buffer[reply_length + i] = (uint8_t)(buf[(report - 1) -i]);
-        sum = sum + (uint8_t)(buf[(report - 1) -i]);
-        serial_gdb_send_bytes(&(reply_buffer[reply_length + i]), 1);
+        for(i = 0; i < report; i++)
+        {
+            reply_buffer[reply_length + i] = (uint8_t)(buf[(report - 1) -i]);
+            sum = sum + (uint8_t)(buf[(report - 1) -i]);
+            serial_gdb_send_bytes(&(reply_buffer[reply_length + i]), 1);
+        }
+        reply_length = reply_length + report;
     }
-    reply_length = reply_length + report;
+    else
+    {
+        debug_line("ERROR: add hex: reply too long !");
+    }
 }
 
 void reply_packet_send(void)
@@ -258,6 +277,98 @@ bool is_gdb_busy(void)
     return busy_processing_cmd;
 }
 
+bool gdbs_info(const uint32_t loop)
+{
+    switch(loop)
+    {
+    case 0:
+        if(true == busy_processing_cmd)
+        {
+            debug_line("gdb-server is busy !");
+        }
+        else
+        {
+            debug_line("gdb-server is not busy.");
+        }
+        break;
+
+    case 1:
+        if(true == connected)
+        {
+            debug_line("gdb-server is connected to gdb.");
+        }
+        else
+        {
+            debug_line("gdb-server is not connected.");
+        }
+        break;
+
+    case 2:
+        switch(state)
+        {
+        default:
+        case UNKNOWN:       debug_line("state is unknown.");        break;
+        case IN_PACKET:     debug_line("state is 'in packet'.");    break;
+        case FOUND_END:     debug_line("state is 'found end'.");    break;
+        case CHECKSUM_HIGH: debug_line("state is checksum(high)."); break;
+        case CHECKSUM_LOW:  debug_line("state is checksum(low).");  break;
+        }
+        break;
+
+    case 3:
+        debug_line("line_pos : %ld", line_pos);
+        break;
+
+    case 4:
+        debug_line("reply_length : %ld", reply_length);
+        break;
+
+    case 5:
+    {
+        uint32_t i;
+        uint32_t max = 40;
+        if(reply_length < max)
+        {
+            max = reply_length;
+        }
+        debug_msg("reply_buffer[");
+        for(i = 0; i < max; i++)
+        {
+            debug_msg(" %02x", reply_buffer[i]);
+        }
+        debug_line(" ]");
+    }
+        break;
+
+    case 6:
+    {
+        uint32_t i;
+        uint32_t max = 40;
+        if(line_pos < max)
+        {
+            max = line_pos;
+        }
+        debug_msg("line_buffer[");
+        for(i = 0; i < max; i++)
+        {
+            if((line_buffer[i] > 31) && (line_buffer[i] < 127))
+            {
+                debug_msg(" %2c", line_buffer[i]);
+            }
+            else
+            {
+                debug_msg(" %02x", line_buffer[i]);
+            }
+        }
+        debug_line(" ]");
+    }
+        break;
+
+    default: return true;// we are done
+    }
+    return false;
+}
+
 static void communicate_with_gdb(void)
 {
     uint32_t num_bytes_received;
@@ -280,6 +391,7 @@ static void communicate_with_gdb(void)
     while(0 < num_bytes_received)
     {
         uint32_t i;
+        // debug_line("gdb-server received %ld bytes !", num_bytes_received);
         for(i = 0; i < num_bytes_received; i++)
         {
             uint8_t data = serial_gdb_get_next_received_byte();

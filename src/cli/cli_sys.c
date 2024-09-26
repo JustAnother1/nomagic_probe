@@ -27,6 +27,9 @@
 #include "file/file_system.h"
 #include "probe_api/debug_log.h"
 #include "probe_api/swd.h"
+#ifdef FEAT_GDB_SERVER
+#include "gdbserver/gdbserver.h"
+#endif
 
 bool cmd_time(const uint32_t loop)
 {
@@ -169,11 +172,18 @@ bool cmd_info_overview(const uint32_t loop)
         case 0: debug_line("choose the information to show:"); break;
         case 1: debug_line("1: Startup"); break;
         case 2: debug_line("2: Watchdog"); break;
+#ifdef BOOT_ROM_ENABLED
         case 3: debug_line("3: boot ROM"); break;
+#endif
         case 4: debug_line("4: QSPI"); break;
+#ifdef FEAT_USB_MSC
         case 5: debug_line("5: file system"); break;
+#endif
         case 6: debug_line("6: SWD"); break;
         case 7: debug_line("7: USB"); break;
+#ifdef FEAT_GDB_SERVER
+        case 8: debug_line("8: gdb-server"); break;
+#endif
         default: debug_line("Done"); return true;  // we are done
     }
     return false;
@@ -207,7 +217,12 @@ bool cmd_info(const uint32_t loop)
 #endif
         case 6: return swd_info(loop);
         case 7: return cmd_usb_info(loop);
-        default: return true;
+#ifdef FEAT_GDB_SERVER
+        case 8: return gdbs_info(loop);
+#endif
+        default:
+            debug_line("ERROR: invalid information selector(%ld) !", which_info);
+            return true;
     }
     return false;
 }

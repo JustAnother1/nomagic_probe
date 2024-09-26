@@ -90,7 +90,7 @@ Result do_write_ap(action_data_typ* const action, uint32_t address, uint32_t dat
 Result do_read_ap(action_data_typ* const action, uint32_t address)
 {
     Result res;
-    debug_line("do_read_ap(0x%08lx)", address);
+    // debug_line("do_read_ap(0x%08lx)", address);
     res = swd_read_ap(address);
     if(RESULT_OK < res)
     {

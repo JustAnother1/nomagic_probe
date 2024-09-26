@@ -20,5 +20,6 @@
 
 void gdbserver_init(void);
 void gdbserver_tick(void);
+bool gdbs_info(const uint32_t loop);
 
 #endif /* GDBSERVER_H_ */

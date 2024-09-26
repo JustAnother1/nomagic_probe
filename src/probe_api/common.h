@@ -24,6 +24,7 @@
 #define MAX_INTERN_VALUES          4
 #define MAX_PARAMETER_VALUES       3
 #define MAX_MEMORY_POSITIONS       20
+#define MAX_BINARY_SIZE_BYTES      1024
 
 #define MONITOR_RESET_TYPE_RUN     1
 #define MONITOR_RESET_TYPE_INIT    2
@@ -40,30 +41,43 @@ typedef struct {
 // contains that parameter.
 // !!! Reading a data element from the wrong type will give a wrong result!!!
 // the following types are supported:
+
 #define HAS_VALUE             1
 // has_value contains:
 //  uint32_t value; <- the value of the parameter (an address or index,..)
 //  bool valid;     <- the value variable is only valid if this is true.
 //                     if this is false then no parameter value was given.
+
 #define ADDRESS_LENGTH        2
 // address_length contains:
 //  uint32_t address; <- the address
 //  uint32_t length;  <- the length
+
 #define ADDRESS_MEMORY        3
 // address_length contains:
 //  uint32_t address; <- the address
-// mem_val_typ memory[MAX_MEMORY_POSITIONS]; <- for every memory location a value
-//                                             or has_value = false to signal that it is missing
+//  mem_val_typ memory[MAX_MEMORY_POSITIONS]; <- for every memory location a value
+//                                               or has_value = false to signal that it is missing
+
 #define ADDRESS_LENGTH_MEMORY 4
 // address_length contains:
 //  uint32_t address; <- the address
 //  uint32_t length;  <- the length
-// mem_val_typ memory[MAX_MEMORY_POSITIONS]; <- for every memory location a value
-//                                             or has_value = false to signal that it is missing
+//  mem_val_typ memory[MAX_MEMORY_POSITIONS]; <- for every memory location a value
+//                                               or has_value = false to signal that it is missing
+
 #define MEMORY                5
 // memory contains:
-// mem_val_typ memory[MAX_MEMORY_POSITIONS]; <- for every memory location a value
-//                                             or has_value = false to signal that it is missing
+//  mem_val_typ memory[MAX_MEMORY_POSITIONS]; <- for every memory location a value
+//                                               or has_value = false to signal that it is missing
+
+#define ADDRESS_BINARY        6
+// address_length contains:
+//  uint32_t address; <- the address
+//  uint32_t data_length; <- number of bytes in data[]
+//  uint32_t data[MAX_BINARY_SIZE]; <- the data bytes (4 byte aligned)
+
+
 
 typedef struct {
     uint32_t type;
@@ -92,6 +106,13 @@ typedef struct {
         struct {
             mem_val_typ memory[MAX_MEMORY_POSITIONS];
         } memory;
+
+        struct {
+            uint32_t address;
+            uint32_t data_length;
+            uint32_t data[MAX_BINARY_SIZE_BYTES/4];
+        } address_binary;
+
     };
 } parameter_typ;
 

@@ -55,9 +55,8 @@ static void handle_general_query(char* received, uint32_t length);
 static void handle_general_set(char* received, uint32_t length);
 static void handle_vee(char* received, uint32_t length);
 static void handle_tee(char* received, uint32_t length);
-static bool parse_parameter(param_pattern_typ pattern, char* parameter);
+static bool parse_parameter(param_pattern_typ pattern, char* parameter, uint32_t parameter_length);
 static bool parse_memory(char* parameter, mem_val_typ* memory);
-static bool parse_binary(char* parameter, mem_val_typ* memory);
 
 void commands_init(void)
 {
@@ -90,9 +89,20 @@ void commands_execute(char* received, uint32_t length, char* checksum)
 {
     if((NULL == received) || (NULL == checksum))
     {
+        debug_line("ERROR: gdbs received: NULL !");
         return;
     }
-    debug_line("gdbs received: %s", received);
+    if(length < 50)
+    {
+        debug_line("gdbs received: %s", received);
+    }
+    else
+    {
+        char buf[30];
+        memcpy(buf, received, sizeof(buf));
+        binary_to_ascii_dump(buf, sizeof(buf));
+        debug_line("gdbs received: %s ... (something really long)", buf);
+    }
     if(false == checksumOK(received, length, checksum))
     {
         debug_line("checksum is wrong($%s#%s)!", received, checksum);
@@ -223,7 +233,7 @@ void commands_execute(char* received, uint32_t length, char* checksum)
             //     ‘E NN’
             //         for an error
             received++;
-            if(true == parse_parameter(PARAM_XX, received))
+            if(true == parse_parameter(PARAM_XX, received, length))
             {
                 gdb_is_now_busy();
                 if(false == add_action_with_parameter(GDB_CMD_WRITE_G, &parsed_parameter))
@@ -256,7 +266,7 @@ void commands_execute(char* received, uint32_t length, char* checksum)
             //         for an error (this includes the case where only part of the data
             // was written).
             received++;
-            if(true == parse_parameter(PARAM_ADDR_LENGTH_XX, received))
+            if(true == parse_parameter(PARAM_ADDR_LENGTH_XX, received, length))
             {
                 gdb_is_now_busy();
                 if(false == add_action_with_parameter(GDB_CMD_WRITE_MEMORY, &parsed_parameter))
@@ -287,7 +297,7 @@ void commands_execute(char* received, uint32_t length, char* checksum)
             //     ‘E NN’
             //         NN is errno
             received++;
-            if(true == parse_parameter(PARAM_ADDR_LENGTH, received))
+            if(true == parse_parameter(PARAM_ADDR_LENGTH, received, length))
             {
                 gdb_is_now_busy();
                 if(false == add_action_with_parameter(GDB_CMD_READ_MEMORY, &parsed_parameter))
@@ -331,7 +341,7 @@ void commands_execute(char* received, uint32_t length, char* checksum)
         case 's':  // step
         case 'S':  // step
             received++;
-            if(true == parse_parameter(PARAM_OPT_ADDR, received))
+            if(true == parse_parameter(PARAM_OPT_ADDR, received, length))
             {
                 gdb_is_now_busy();
                 if(false == add_action_with_parameter(GDB_CMD_STEP, &parsed_parameter))
@@ -470,7 +480,7 @@ static void handle_vee(char* received, uint32_t length)
                 {
                     // vCont;s -> single step
                     found_cmd = true;
-                    if(true == parse_parameter(PARAM_OPT_ADDR, &(received[7])))
+                    if(true == parse_parameter(PARAM_OPT_ADDR, &(received[7]), length - 7))
                     {
                         gdb_is_now_busy();
                         if(false == add_action_with_parameter(GDB_CMD_STEP, &parsed_parameter))
@@ -515,7 +525,7 @@ static void handle_vee(char* received, uint32_t length)
         {
             // command start with "vFlashErase"
             found_cmd = true;
-            if(true == parse_parameter(PARAM_ADDR_LENGTH, &(received[12])))
+            if(true == parse_parameter(PARAM_ADDR_LENGTH, &(received[12]), length -12))
             {
                 gdb_is_now_busy();
                 if(false == add_action_with_parameter(GDB_CMD_VFLASH_ERASE, &parsed_parameter))
@@ -530,7 +540,7 @@ static void handle_vee(char* received, uint32_t length)
         {
             // command start with "vFlashWrite"
             found_cmd = true;
-            if(true == parse_parameter(PARAM_ADDR_BINARY, &(received[12])))
+            if(true == parse_parameter(PARAM_ADDR_BINARY, &(received[12]), length - 12))
             {
                 gdb_is_now_busy();
                 if(false == add_action_with_parameter(GDB_CMD_VFLASH_WRITE, &parsed_parameter))
@@ -778,7 +788,7 @@ static void handle_general_set(char* received, uint32_t length)
     }
 }
 
-static bool parse_parameter(param_pattern_typ pattern, char* parameter)
+static bool parse_parameter(param_pattern_typ pattern, char* parameter, uint32_t parameter_length)
 {
     switch(pattern)
     {
@@ -807,7 +817,7 @@ static bool parse_parameter(param_pattern_typ pattern, char* parameter)
     }
 
 
-    case PARAM_ADDR_LENGTH_XX: // addr,length:XX
+    case PARAM_ADDR_LENGTH_XX: // address,length:XX
     {
         char* mem_start;
         char* split_pos = strchr(parameter, ',');
@@ -839,7 +849,7 @@ static bool parse_parameter(param_pattern_typ pattern, char* parameter)
         return parse_memory(mem_start, &(parsed_parameter.address_length_memory.memory[0]));
     }
 
-    case PARAM_ADDR_LENGTH: // addr,length
+    case PARAM_ADDR_LENGTH: // address,length
     {
         char* split_pos = strchr(parameter, ',');
         if(NULL == split_pos)
@@ -858,7 +868,7 @@ static bool parse_parameter(param_pattern_typ pattern, char* parameter)
         break;
     }
 
-    case PARAM_OPT_ADDR: // optionaly addr
+    case PARAM_OPT_ADDR: // Optionally address
         parsed_parameter.type = HAS_VALUE;
         if('\0' != *parameter)
         {
@@ -873,6 +883,8 @@ static bool parse_parameter(param_pattern_typ pattern, char* parameter)
 
     case PARAM_ADDR_BINARY:  // address followed by binary data
     {
+        uint32_t length;
+        uint32_t offset;
         char* mem_start;
         mem_start = strchr(parameter, ':');
         if(NULL == mem_start)
@@ -883,12 +895,26 @@ static bool parse_parameter(param_pattern_typ pattern, char* parameter)
             reply_packet_send();
             return false;
         }
-        *mem_start = '\0';
+        *mem_start = 0;
         mem_start++;
         parsed_parameter.type = ADDRESS_MEMORY;
-        parsed_parameter.address_memory.address = hex_to_int(parameter, 0);
+        parsed_parameter.address_binary.address = hex_to_int(parameter, 0);
         // XX is now in mem_start
-        return parse_binary(mem_start, &(parsed_parameter.address_memory.memory[0]));
+        offset = (uint32_t)(mem_start - parameter);
+        length = parameter_length - offset;
+        if(length < MAX_BINARY_SIZE_BYTES)
+        {
+            parsed_parameter.address_binary.data_length = length;
+            memcpy(&(parsed_parameter.address_binary.data[0]), mem_start, length);
+        }
+        else
+        {
+            reply_packet_prepare();
+            reply_packet_add(ERROR_CODE_TOO_LONG);
+            reply_packet_send();
+            return false;
+        }
+        return true;
     }
 
     default:
@@ -898,21 +924,6 @@ static bool parse_parameter(param_pattern_typ pattern, char* parameter)
         reply_packet_send();
         return false;
     }
-    return true;
-}
-
-static bool parse_binary(char* parameter, mem_val_typ* memory)
-{
-    (void)memory; // TODO
-    if(NULL == parameter)
-    {
-        return false;
-    }
-    if(0 == *parameter)
-    {
-        return false;
-    }
-    // TODO implement
     return true;
 }
 
