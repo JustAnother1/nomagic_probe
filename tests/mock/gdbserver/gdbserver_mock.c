@@ -15,6 +15,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <string.h>
 
 #define MAX_REPLIES           10
 #define MAX_REPLY_LENGTH      2000
@@ -38,7 +39,7 @@ uint32_t mock_gdbserver_get_num_send_replies(void)
 
 char* mock_gdbserver_get_reply(uint32_t idx)
 {
-    return &reply_buffer[idx][0];
+    return (char*)&reply_buffer[idx][0];
 }
 
 void reply_packet_prepare(void)
