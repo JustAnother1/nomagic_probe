@@ -5,6 +5,7 @@ TST_DDEFS = -DUNIT_TEST=1
 TST_DDEFS += -DFEAT_DEBUG_UART
 TST_DDEFS += -DFEAT_GDB_SERVER
 TST_INCDIRS = tests/
+TST_INCDIRS += tests/unity/
 TST_INCDIRS += src/
 TST_INCDIRS += src/cfg/
 TST_INCDIRS += src/tinyusb/src/
@@ -76,7 +77,7 @@ CLI_CLI_OBJS =                                \
 
 TEST_LOGS = $(patsubst %,%.txt, $(TEST_EXECUTEABLES))
 
-FRAMEWORK_OBJS = $(TEST_BIN_FOLDER)unity.o
+FRAMEWORK_OBJS = $(TEST_BIN_FOLDER)unity/unity.o
 
 # for reporting the results
 # ! ! ! Important: ` are speciall ! ! !
@@ -86,9 +87,9 @@ PASSED   = `grep -a -s PASS   $(TEST_BIN_FOLDER)*.txt`
 
 
 # Unit Test framework
-$(TEST_BIN_FOLDER)unity.o: tests/unity.c
+$(TEST_BIN_FOLDER)unity/%.o: tests/unity/%.c
 	@echo ""
-	@echo "=== compiling (tests) $@"
+	@echo "=== compiling (unity) $@"
 	@$(MKDIR_P) $(@D)
 	$(TST_CC) $(TST_CFLAGS) $(TST_DDEFS) $(TST_INCDIR) $< -o $@
 
@@ -104,7 +105,7 @@ $(TEST_BIN_FOLDER)%.o: tests/%.c
 # source code module to Test
 $(TEST_BIN_FOLDER)src/%.o: src/%.c
 	@echo ""
-	@echo "=== compiling (tests) $@"
+	@echo "=== compiling (tested) $@"
 	@$(MKDIR_P) $(@D)
 	$(TST_CC) $(TST_CFLAGS) $(TST_DDEFS) $(TST_INCDIR) $< -o $@
 
