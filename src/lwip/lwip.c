@@ -376,15 +376,15 @@ bool network_gdb_is_connected(void)
 
 bool network_gdb_is_buffer_full(void)
 {
-	uint16_t available = tcp_sndbuf(gdb_def.connection_pcb);
-	if(available < 100)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+    uint16_t available = tcp_sndbuf(gdb_def.connection_pcb);
+    if(available < 100)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 // gdb_def

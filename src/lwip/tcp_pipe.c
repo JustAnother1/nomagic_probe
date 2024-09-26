@@ -79,25 +79,25 @@ uint32_t tcp_pipe_write(tcp_pipe_def* pipe, const uint8_t * data, const uint16_t
     available = tcp_sndbuf(pipe->connection_pcb);
     if(0 == available)
     {
-    	// buffer is full we can currently not send anything
+        // buffer is full we can currently not send anything
         return 0;
     }
     if(length > available)
     {
-    	// we can not send the complete data all at once, so only send as much as we can.
-    	bytes_to_send = available;
+        // we can not send the complete data all at once, so only send as much as we can.
+        bytes_to_send = available;
     }
     // TCP_WRITE_FLAG_COPY : We want the stack to copy the data into his buffer.
     // This way we do not need to keep the data in the callers buffer.
     res = tcp_write(pipe->connection_pcb, (void *)data, bytes_to_send, TCP_WRITE_FLAG_COPY);
     if(ERR_OK == res)
     {
-    	// we send the data
+        // we send the data
         return bytes_to_send;
     }
     else
     {
-    	// sending failed
+        // sending failed
         return 0;
     }
 }
@@ -205,11 +205,14 @@ static err_t pipe_recv(void *arg, struct tcp_pcb *tpcb, struct pbuf *p, err_t er
                 memcpy(&(pipe->recv_buf[0]), (uint8_t *)(p->payload) + fit, rest);
                 pipe->recv_write_pos = rest;
             }
+            // tell lwIP stack that we have received the data, so that it can forget about it.
+            tcp_recved(tpcb, p->len);
             pbuf_free(p);
             return ERR_OK;
         }
         else
         {
+            // TODO can I copy only some bytes?
             // not enough space in buffer
             return ERR_MEM;
         }

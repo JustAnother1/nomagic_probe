@@ -19,7 +19,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#define RECEIVE_BUFFER_SIZE   300
+#define RECEIVE_BUFFER_SIZE   2000
 
 typedef struct {
     struct tcp_pcb * port_pcb;
