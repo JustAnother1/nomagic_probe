@@ -291,7 +291,7 @@ Result handle_target_reply_g(action_data_typ* const action, bool first_call)
     {
         // this register done, next?
         reply_packet_add_hex(action->read_0, 8);
-        debug_line("read 0x%08lx", action->read_0);
+        // debug_line("read 0x%08lx", action->read_0);
         action->intern[INTERN_REGISTER_IDX] ++;
         *(action->cur_phase) = 0;
         if(19 == action->intern[INTERN_REGISTER_IDX])
@@ -573,7 +573,7 @@ Result handle_target_reply_read_memory(action_data_typ* const action, bool first
 
     if(0 == *(action->cur_phase))
     {
-        return do_read_ap(action, (action->gdb_parameter.address_length.address + action->intern[INTERN_MEMORY_OFFSET] * 4));
+        return do_read_ap(action, (action->gdb_parameter.address_length.address + action->intern[INTERN_MEMORY_OFFSET]));
     }
 
     if(1 == *(action->cur_phase))
@@ -588,9 +588,9 @@ Result handle_target_reply_read_memory(action_data_typ* const action, bool first
         buf[8] = 0;
         reply_packet_add(buf);
         // debug_line("read 0x%08lx", action->read_0);
-        action->intern[INTERN_MEMORY_OFFSET]++;
+        action->intern[INTERN_MEMORY_OFFSET] = action->intern[INTERN_MEMORY_OFFSET] + 4;
         *(action->cur_phase) = 0;
-        if(action->gdb_parameter.address_length.length == action->intern[INTERN_MEMORY_OFFSET])
+        if(action->gdb_parameter.address_length.length <= action->intern[INTERN_MEMORY_OFFSET])
         {
             // finished
             reply_packet_send();
