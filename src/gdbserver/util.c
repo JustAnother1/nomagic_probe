@@ -269,3 +269,19 @@ void encode_text_to_hex_string(char * text, uint32_t buf_length, char * buf)
     }
     buf[pos] = 0;
 }
+
+void binary_to_ascii_dump(char * data, uint32_t length)
+{
+    uint32_t i;
+    for(i = 0; i < length; i++)
+    {
+        if(   (data[i] > 126)
+           || (data[i] < 32)
+           || (data[i] == '\n')
+           || (data[i] == '\r')
+           || (data[i] == '\t') )
+        {
+            data[i] = '.';
+        }
+    }
+}

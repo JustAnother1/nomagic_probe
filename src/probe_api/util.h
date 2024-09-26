@@ -22,5 +22,6 @@
 uint32_t calculateChecksum(char *data, uint32_t length);
 void decode_hex_string_to_text(char * hex, uint32_t buf_length, char * buf);
 void encode_text_to_hex_string(char * text, uint32_t buf_length, char * buf);
+void binary_to_ascii_dump(char * data, uint32_t length);
 
 #endif /* UTIL_H_ */
