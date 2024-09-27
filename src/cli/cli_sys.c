@@ -174,15 +174,21 @@ bool cmd_info_overview(const uint32_t loop)
         case 2: debug_line("2: Watchdog"); break;
 #ifdef BOOT_ROM_ENABLED
         case 3: debug_line("3: boot ROM"); break;
+#else
+        case 3: break;
 #endif
         case 4: debug_line("4: QSPI"); break;
 #ifdef FEAT_USB_MSC
         case 5: debug_line("5: file system"); break;
+#else
+        case 5: break;
 #endif
         case 6: debug_line("6: SWD"); break;
         case 7: debug_line("7: USB"); break;
 #ifdef FEAT_GDB_SERVER
         case 8: debug_line("8: gdb-server"); break;
+#else
+        case 8: break;
 #endif
         default: debug_line("Done"); return true;  // we are done
     }
