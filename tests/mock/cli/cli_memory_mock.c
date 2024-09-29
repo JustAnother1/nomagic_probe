@@ -52,12 +52,6 @@ bool cmd_flash_enable_XIP(const uint32_t loop)
     return true;
 }
 
-bool cmd_flash_reset(const uint32_t loop)
-{
-    (void) loop;
-    return true;
-}
-
 bool cmd_file_dump(const uint32_t loop)
 {
     (void) loop;

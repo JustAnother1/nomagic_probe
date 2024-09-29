@@ -187,13 +187,6 @@ bool cmd_flash_memory_write(const uint32_t loop)
     return true; // we are done
 }
 
-bool cmd_flash_reset(const uint32_t loop)
-{
-    (void) loop;
-    flash_reset();
-    return true; // we are done
-}
-
 #ifdef BOOT_ROM_ENABLED
 bool cmd_flash_disable_XIP(const uint32_t loop)
 {

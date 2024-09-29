@@ -13,12 +13,12 @@
  *
  */
 
+#ifdef BOOT_ROM_ENABLED
 #include "boot_rom.h"
 #include "cfg/cli_cfg.h"
 #include "probe_api/debug_log.h"
 
 typedef void *(*rom_table_lookup_fn)(uint16_t *table, uint32_t code);
-#ifdef BOOT_ROM_ENABLED
 static bool valid = false;
 
 static boot_rom_flash_functions flash_funcs;

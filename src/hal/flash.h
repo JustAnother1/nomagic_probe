@@ -38,6 +38,5 @@ void flash_write_block(uint32_t start_address, uint8_t* data, uint32_t length);
 void flash_erase_page(uint32_t number);
 void flash_read(uint32_t start_address, uint8_t* data, uint32_t length);
 bool flash_report(uint32_t loop);
-void flash_reset(void);
 
 #endif /* HAL_FLASH_H_ */

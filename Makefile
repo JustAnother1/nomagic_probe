@@ -56,6 +56,7 @@ HAS_DEBUG_CDC = no
 HAS_CLI = yes
 HAS_GDB_SERVER = yes
 HAS_NCM = yes
+USE_BOOT_ROM = yes
 
 include nomagic_probe.mk
 include tests/tests.mk

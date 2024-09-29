@@ -11,7 +11,11 @@ DDEFS += -DDISABLE_WATCHDOG_FOR_DEBUG=0
 # use both cores
 #DDEFS += -DENABLE_CORE_1=1
 # use BOOT ROM (for flash functions,...)
-DDEFS += -DBOOT_ROM_ENABLED=1
+ifeq ($(USE_BOOT_ROM), yes)
+	DDEFS += -DBOOT_ROM_ENABLED=1
+endif
+
+
 DDEFS += -DLWIP_DEBUG=1
 # enable USB Mass Storage (Thumb Drive)
 ifeq ($(HAS_MSC), yes)
@@ -97,9 +101,12 @@ endif
 SRC += $(NOMAGIC_SRC_FOLDER)hal/startup.c
 SRC += $(NOMAGIC_SRC_FOLDER)hal/hw_divider.c
 SRC += $(NOMAGIC_SRC_FOLDER)hal/watchdog.c
+ifeq ($(USE_BOOT_ROM), yes)
 SRC += $(NOMAGIC_SRC_FOLDER)hal/boot_rom.c
-SRC += $(NOMAGIC_SRC_FOLDER)hal/flash.c
+else
 SRC += $(NOMAGIC_SRC_FOLDER)hal/qspi.c
+endif
+SRC += $(NOMAGIC_SRC_FOLDER)hal/flash.c
 SRC += $(NOMAGIC_SRC_FOLDER)hal/time_base.c
 SRC += $(NOMAGIC_SRC_FOLDER)hal/random.c
 
@@ -247,13 +254,13 @@ $(BIN_FOLDER)version.h:
 
 $(BIN_FOLDER)$(NOMAGIC_SRC_FOLDER)cli/cli.o: $(NOMAGIC_SRC_FOLDER)cli/cli.c $(BIN_FOLDER)version.h
 	@echo ""
-	@echo "=== compiling $@"
+	@echo "=== compiling (cli) $@"
 	@$(MKDIR_P) $(@D)
 	$(CC) $(CFLAGS) $(DDEFS) $(INCDIR) $< -o $@
 	
 $(BIN_FOLDER)$(NOMAGIC_SRC_FOLDER)gdbserver/monitor_commands.o: $(NOMAGIC_SRC_FOLDER)gdbserver/monitor_commands.c $(BIN_FOLDER)version.h
 	@echo ""
-	@echo "=== compiling $@"
+	@echo "=== compiling (monitor commands) $@"
 	@$(MKDIR_P) $(@D)
 	$(CC) $(CFLAGS) $(DDEFS) $(INCDIR) $< -o $@
 

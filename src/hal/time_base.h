@@ -28,4 +28,6 @@ static inline uint32_t time_us_32(void)
     return TIMER->TIMERAWL;
 }
 
+void yield(void);
+
 #endif /* HAL_TIME_BASE_H_ */

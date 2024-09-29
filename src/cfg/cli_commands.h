@@ -45,7 +45,6 @@ cmd_typ commands[] = {
         {"swd_open",    "open a connection on the SWD interface", cmd_swd_connect},
         {"swd_rm",      "read target memory address <address>", cmd_swd_read_memory},
         {"swd_wm",      "write to target memory address <address> <value>", cmd_swd_write_memory},
-        {"flash_reset", "reset the external QSPI flash", cmd_flash_reset},
 #ifdef FEAT_USB_MSC
         {"cat",         "dump the content of the file <filename>", cmd_file_dump},
         {"ls",          "list all files in the file system", cmd_file_ls},

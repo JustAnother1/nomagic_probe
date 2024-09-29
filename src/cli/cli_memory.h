@@ -24,7 +24,6 @@ bool cmd_flash_memory_erase(const uint32_t loop);
 bool cmd_flash_memory_write(const uint32_t loop);
 bool cmd_flash_disable_XIP(const uint32_t loop);
 bool cmd_flash_enable_XIP(const uint32_t loop);
-bool cmd_flash_reset(const uint32_t loop);
 #ifdef FEAT_USB_MSC
 bool cmd_file_dump(const uint32_t loop);
 bool cmd_file_ls(const uint32_t loop);

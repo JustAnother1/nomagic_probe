@@ -18,6 +18,9 @@
 #include "hal/hw/PPB.h"
 #include "hal/time_base.h"
 #include "probe_api/time.h"
+#if (defined FEAT_DEBUG_UART)
+#include "hal/debug_uart.h"
+#endif
 
 // comparing against < 0xffffffff is always true
 // -> we want to avoid 0xffffffff as end time of timeout
@@ -117,4 +120,11 @@ bool timeout_expired(timeout_typ* to)
         // if we do not get data then that timeout expired!
         return true;
     }
+}
+
+void yield(void)
+{
+#if (defined FEAT_DEBUG_UART)
+    debug_uart_tick(); // to keep the UART alive if this takes some time
+#endif
 }
