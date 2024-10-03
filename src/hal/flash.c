@@ -13,6 +13,11 @@
  *
  */
 
+/*
+ * parts of this code have been inspired by the RaspberryPi pico-bootrom-rp2040 code.
+ * That code is licensed as BSD-3-Clause
+ */
+
 #include "hal/time_base.h"
 #include "hal/debug_uart.h"
 #include "flash.h"
@@ -82,10 +87,6 @@ void flash_init(void)
 void flash_write_block(uint32_t start_address, uint8_t* data, uint32_t length)
 {
 #ifdef BOOT_ROM_ENABLED
-    if(NULL == flash_funcs)
-    {
-        flash_funcs = boot_rom_get_flash_functions();
-    }
     if(NULL != flash_funcs)
     {
         // data sheet says:
@@ -120,6 +121,23 @@ void flash_write_block(uint32_t start_address, uint8_t* data, uint32_t length)
         debug_line("Flash: get boot ROM functions failed !");
     }
 #else
+
+    if(0 == (start_address & 0xff))
+    {
+        uint32_t goal = start_address + length;
+        while(start_address < goal && !flash_was_aborted())
+        {
+            qspi_page_program_256(start_address, data);
+            start_address += 256;
+            data += 256;
+        }
+    }
+    else
+    {
+        debug_line("Flash: start address(0x%08lx)[0x%08x] must be aligned to 256 !", start_address, (start_address && 0xff));
+    }
+
+    /*  TODO
     if(256 < length + (start_address & 0xff))
     {
         if(0 != (start_address & 0xff))
@@ -145,6 +163,9 @@ void flash_write_block(uint32_t start_address, uint8_t* data, uint32_t length)
     {
         qspi_page_program(start_address, data, length);
     }
+    */
+
+
 #endif
 }
 
@@ -153,10 +174,6 @@ void flash_write_block(uint32_t start_address, uint8_t* data, uint32_t length)
 void flash_erase_page(uint32_t number)
 {
 #ifdef BOOT_ROM_ENABLED
-    if(NULL == flash_funcs)
-    {
-        flash_funcs = boot_rom_get_flash_functions();
-    }
     if(NULL != flash_funcs)
     {
         while(0 != (1& XIP_SSI->SR))
@@ -174,22 +191,7 @@ void flash_erase_page(uint32_t number)
     }
 #else
     /// erase (set to 0xff) a sector (4096 Bytes)
-    uint8_t tx_buf[4];
-    uint8_t rx_buf[4];
-    uint32_t address = number * 4096;
-    qspi_wait_for_flash_not_busy();
-    // command write enable = 0x06
-    // command sector erase = 0x20
-    // falling edge on /CS - write 0x20 - write 24bits(3 bytes) address - rising edge of /CS
-    tx_buf[0] = 0x20;
-    tx_buf[1] = (address & 0xff);
-    tx_buf[2] = ((address >>8) & 0xff);
-    tx_buf[3] = ((address >>16) & 0xff);
-    rx_buf[0] = 0;
-    rx_buf[1] = 0;
-    rx_buf[2] = 0;
-    rx_buf[3] = 0;
-    qspi_transfere(tx_buf, rx_buf, 4);
+    qspi_erase_sector(number);
 #endif
 }
 
@@ -202,50 +204,37 @@ void flash_read(uint32_t start_address, uint8_t* data, uint32_t length)
 #ifdef BOOT_ROM_ENABLED
     if(NULL == flash_funcs)
     {
-        flash_funcs = boot_rom_get_flash_functions();
+        debug_line("Flash: get boot ROM functions failed !");
     }
     // XIP ON
-    if(NULL != flash_funcs)
+    while(0 != (1& XIP_SSI->SR))
     {
-        while(0 != (1& XIP_SSI->SR))
-        {
-            yield();
-        }
-        flash_funcs->_flash_flush_cache();
-        yield();
-        flash_funcs->_flash_enter_cmd_xip();
         yield();
     }
-    else
-    {
-        debug_line("Flash: get boot ROM functions failed !");
-    }
+    flash_funcs->_flash_flush_cache();
+    yield();
+    flash_funcs->_flash_enter_cmd_xip();
+    yield();
+
     memcpy(data, (void*)(0x13000000 + (0xffffff & start_address)), length);
+
     // XIP off
-    if(NULL != flash_funcs)
+    while(0 != (1& XIP_SSI->SR))
     {
-        while(0 != (1& XIP_SSI->SR))
-        {
-            yield();
-        }
-        flash_funcs->_connect_internal_flash();
-        yield();
-        flash_funcs->_flash_exit_xip();
         yield();
     }
-    else
-    {
-        debug_line("Flash: get boot ROM functions failed !");
-    }
+    flash_funcs->_connect_internal_flash();
+    yield();
+    flash_funcs->_flash_exit_xip();
+    yield();
+
 #else
-    qspi_wait_for_flash_not_busy();
     // command read data = 0x03
     // falling edge on /CS - write 0x03 - write 24bits(3 bytes) address - read as many bytes as needed - rising edge of /CS
 
     // fast read quad output = 0x6b
     // falling edge on /CS - write 0x6b - write 24bits(3 bytes) address - read and ignore 8 bits - read as many bytes as needed - rising edge of /CS
-    (void)start_address; // TODO
-    memset(data, 0xff, length); // TODO
+    qspi_read(start_address, data, length);
 #endif
 }
 
@@ -256,6 +245,16 @@ bool flash_report(uint32_t loop)
     {
 #ifdef BOOT_ROM_ENABLED
     case 0: debug_line("using BOOT ROM functions !"); break;
+    case 1:
+        if(NULL == flash_funcs)
+        {
+            debug_line("ERROR: failed to read BOOT ROM functions !"); break;
+        }
+        else
+        {
+            debug_line("BOOT ROM functions have been discovered !"); break;
+        }
+        break;
 #else
     case 0:
         if(true == qspi_is_active())

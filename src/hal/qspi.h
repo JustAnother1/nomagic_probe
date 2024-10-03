@@ -18,15 +18,17 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include <stdbool.h>
 
 // size is 16 bit -> 0..65535 fastest allowed value is 2, 1 is not valid, 0 mean no clock
 // #define QSPI_BAUDRATE_DIVIDOR     2
 #define QSPI_BAUDRATE_DIVIDOR     128
 
 void qspi_init(void);
-void qspi_transfere(const uint8_t *tx, uint8_t *rx, size_t count);
-void qspi_transfere_no_cmd(const uint8_t *tx, uint8_t *rx, size_t count);
-void qspi_reset_flash(void);
-
+bool qspi_is_active(void);
+void qspi_page_program_256(uint32_t start_address, uint8_t* data);
+void qspi_read(uint32_t start_address, uint8_t* data, uint32_t length);
+void qspi_erase_sector(uint32_t number);
+uint32_t flash_was_aborted(void);
 
 #endif /* HAL_QSPI_H_ */
