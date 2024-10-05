@@ -18,6 +18,7 @@
  * That code is licensed as BSD-3-Clause
  */
 
+#include <string.h>
 
 #include "qspi.h"
 #include "startup.h"
