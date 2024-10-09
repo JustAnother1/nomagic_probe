@@ -20,7 +20,6 @@
 #include "hal/hw/PPB.h"
 #include "hal/hw/RESETS.h"
 #include "hal/hw/SIO.h"
-#include "hal/hw/XIP_CTRL.h"
 #include "hal/hw/XIP_SSI.h"
 #include "main.h"
 #include <stdnoreturn.h>
