@@ -18,6 +18,7 @@
 #include "probe_api/cli.h"
 #include "cli_cfg.h"
 #include "hal/flash.h"
+#include "hal/qspi.h"
 #include "hal/boot_rom.h"
 #include "hal/hw/TIMER.h"
 #include "file/fake_fs.h"
@@ -145,9 +146,9 @@ bool cmd_flash_memory_erase(const uint32_t loop)
     uint32_t diff;
     (void) loop;
     uint8_t* addr_str = cli_get_parameter(0);
-    uint32_t address = (uint32_t)atoi((const char*)addr_str);
+    uint32_t number = (uint32_t)atoi((const char*)addr_str);
     diff = TIMER->TIMERAWL;
-    flash_erase_page(address);
+    flash_erase_page(number);
     diff = TIMER->TIMERAWL - diff;
     debug_line("operation took %lu µs", diff);
     return true; // we are done
@@ -221,6 +222,21 @@ bool cmd_flash_enable_XIP(const uint32_t loop)
     }
     return true; // we are done
 }
+#else
+
+
+bool cmd_flash_init(const uint32_t loop)
+{
+    (void)loop;
+    qspi_init();
+    return true; // we are done
+}
+
+bool cmd_flash_detect(const uint32_t loop)
+{
+    return qspi_detect(loop);
+}
+
 #endif
 
 #ifdef FEAT_USB_MSC

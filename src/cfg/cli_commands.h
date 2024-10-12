@@ -41,6 +41,9 @@ cmd_typ commands[] = {
 #ifdef BOOT_ROM_ENABLED
         {"xip_off",     "disable XIP on FLash", cmd_flash_disable_XIP},
         {"xip_on",      "enable XIP on FLash", cmd_flash_enable_XIP},
+#else
+        {"fl_init",      "initialize QSPI interface for FLash", cmd_flash_init},
+        {"fl_detect",    "detect the QSPI FLash", cmd_flash_detect},
 #endif
         {"swd_open",    "open a connection on the SWD interface", cmd_swd_connect},
         {"swd_rm",      "read target memory address <address>", cmd_swd_read_memory},

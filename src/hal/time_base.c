@@ -124,6 +124,12 @@ bool timeout_expired(timeout_typ* to)
 
 void yield(void)
 {
+    // TODO move to main,c
+    // make this the normal loop
+    // have each function/thread have a busy/not enabled flag
+    // once called from yield first is to check the flag and return immidiatedly
+    // if yield called from a task then set this task to not execute
+    // this way if one task is blocked all other tasks will get called.
 #if (defined FEAT_DEBUG_UART)
     debug_uart_tick(); // to keep the UART alive if this takes some time
 #endif

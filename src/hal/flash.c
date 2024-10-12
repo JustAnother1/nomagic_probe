@@ -125,7 +125,7 @@ void flash_write_block(uint32_t start_address, uint8_t* data, uint32_t length)
     if(0 == (start_address & 0xff))
     {
         uint32_t goal = start_address + length;
-        while(start_address < goal && !flash_was_aborted())
+        while(start_address < goal)
         {
             qspi_page_program_256(start_address, data);
             start_address += 256;
@@ -256,16 +256,6 @@ bool flash_report(uint32_t loop)
         }
         break;
 #else
-    case 0:
-        if(true == qspi_is_active())
-        {
-            debug_line("QSPI state: active");
-        }
-        else
-        {
-            debug_line("QSPI state: idle");
-        }
-        break;
 
 #endif
         default : return true;

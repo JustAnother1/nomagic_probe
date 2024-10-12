@@ -22,8 +22,13 @@ bool cmd_memory_display(const uint32_t loop);
 bool cmd_memory_dump(const uint32_t loop);
 bool cmd_flash_memory_erase(const uint32_t loop);
 bool cmd_flash_memory_write(const uint32_t loop);
+#ifdef BOOT_ROM_ENABLED
 bool cmd_flash_disable_XIP(const uint32_t loop);
 bool cmd_flash_enable_XIP(const uint32_t loop);
+#else
+bool cmd_flash_init(const uint32_t loop);
+bool cmd_flash_detect(const uint32_t loop);
+#endif
 #ifdef FEAT_USB_MSC
 bool cmd_file_dump(const uint32_t loop);
 bool cmd_file_ls(const uint32_t loop);
