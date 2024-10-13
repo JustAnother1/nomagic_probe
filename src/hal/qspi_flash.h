@@ -82,7 +82,7 @@
 #define FLASHCMD_READ_STATUS_2             0x35
 #define FLASHCMD_INDIVIDUAL_BLOCK_LOCK     0x36
 #define FLASHCMD_INDIVIDUAL_BLOCK_UNLOCK   0x39
-#define FLASHCMD_FAST_READ_DUAL_OUTPUT     0x3B
+#define FLASHCMD_FAST_READ_DUAL_OUTPUT     0x3B  // Dual SPI
 #define FLASHCMD_READ_BLOCK_LOCK           0x3D
 #define FLASHCMD_PROGRAM_SECURITY          0x42
 #define FLASHCMD_ERASE_SECURITY            0x44
@@ -93,23 +93,23 @@
 #define FLASHCMD_READ_SFDP                 0x5a  // These are supported by almost any SPI flash
 #define FLASHCMD_CHIP_ERASE_A              0x60
 #define FLASHCMD_ENABLE_RESET              0x66
-#define FLASHCMD_FAST_READ_QUAD_OUTPUT     0x6B
+#define FLASHCMD_FAST_READ_QUAD_OUTPUT     0x6B  // Quad SPI
 #define FLASHCMD_ERASE_PROGRAM_SUSPEND     0x75
 #define FLASHCMD_SET_BURST_WITH_WRAP       0x77
 #define FLASHCMD_ERASE_PROGRAM_RESUME      0x7A
 #define FLASHCMD_GLOBAL_BLOCK_LOCK         0x7E
 #define FLASHCMD_MANUFACTURER_DEVICE_ID    0x90
-#define FLASHCMD_MFTR_DEVICE_ID_DUAL_IO    0x92
-#define FLASHCMD_MFTR_DEVICE_ID_QUAD_IO    0x94
+#define FLASHCMD_MFTR_DEVICE_ID_DUAL_IO    0x92  // Dual SPI
+#define FLASHCMD_MFTR_DEVICE_ID_QUAD_IO    0x94  // Quad SPI
 #define FLASHCMD_GLOBAL_BLOCK_UNLOCK       0x98
 #define FLASHCMD_RESET_DEVICE              0x99
 #define FLASHCMD_READ_JEDEC_ID             0x9f  // These are supported by almost any SPI flash
 #define FLASHCMD_RELEASE_POWER_DOWN_ID     0xAB
 #define FLASHCMD_POWER_DOWN                0xB9
-#define FLASHCMD_FAST_READ_DUAL_IO         0xBB
+#define FLASHCMD_FAST_READ_DUAL_IO         0xBB  // Dual SPI
 #define FLASHCMD_CHIP_ERASE                0xC7
 #define FLASHCMD_BLOCK_ERASE_64KB          0xD8
-#define FLASHCMD_FAST_READ_QUAD_IO         0xEB
+#define FLASHCMD_FAST_READ_QUAD_IO         0xEB  // Quad SPI
 
 
 #endif /* NOMAGIC_PROBE_SRC_HAL_QSPI_FLASH_H_ */
