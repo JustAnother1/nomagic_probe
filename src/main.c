@@ -12,7 +12,15 @@
  * with this program; if not, see <http://www.gnu.org/licenses/>
  *
  */
+
+#include <stdint.h>
+#include "cfg/config_file_reader.h"
+#include "cfg/serial_cfg.h"
+#include "cli/cli_priv.h"
+#include "file/file_system.h"
+#include "gdbserver/gdbserver.h"
 #include "hal/debug_uart.h"
+#include "hal/time_base.h"
 #include "hal/hw/IO_BANK0.h"
 #include "hal/hw/PADS_BANK0.h"
 #include "hal/hw/PSM.h"
@@ -20,28 +28,24 @@
 #include "hal/hw/SIO.h"
 #include "hal/hw/XOSC.h"
 #include "hal/watchdog.h"
+#include "led.h"
+#include "swd/swd_engine.h"
+#include "target.h"
+#include "tinyusb/usb.h"
+#include "tinyusb/src/tusb.h"
+
 #ifdef BOOT_ROM_ENABLED
 #include "hal/boot_rom.h"
 #endif
-#include "cli/cli_priv.h"
-#include "hal/time_base.h"
-#include <stdint.h>
-#include "tinyusb/usb.h"
-#include "tinyusb/src/tusb.h"
-#include "led.h"
-#include "gdbserver/gdbserver.h"
-#include "file/file_system.h"
-#include "swd/swd_engine.h"
-#include "target/priv_common.h"
+
 #ifdef FEAT_DEBUG_CDC
 #include "tinyusb/usb_cdc.h"
 #endif
+
 #ifdef FEAT_USB_NCM
-#include "lwip.h"
 #include "cfg/network_cfg.h"
+#include "lwip.h"
 #endif
-#include "config_file_reader.h"
-#include "cfg/serial_cfg.h"
 
 
 #define TASK_LOOP_0           0x1ul

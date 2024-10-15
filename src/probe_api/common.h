@@ -165,6 +165,9 @@ typedef struct{
 
 typedef Result (*action_handler)(action_data_typ * const action, bool first_call);
 
+void common_target_init(void);
+void common_target_tick(void);
+
 Result add_target_action(action_data_typ * const action);
 bool add_action(action_typ act);
 bool add_action_with_parameter(action_typ act, parameter_typ* parsed_parameter);

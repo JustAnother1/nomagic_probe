@@ -36,7 +36,7 @@ uint32_t mock_get_call_counter_of(uint32_t idx)
     return num_calls[idx];
 }
 
-void target_init(void)
+void common_target_init(void)
 {
 
 }
@@ -46,7 +46,7 @@ void target_set_status(target_status_typ new_status)
     (void) new_status;
 }
 
-void target_tick(void)
+void common_target_tick(void)
 {
 
 }

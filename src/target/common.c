@@ -97,7 +97,7 @@ static action_trace_typ trace_buf[ACTION_TRACE_LENGTH];
 static uint32_t trace_end;
 static timeout_typ report_to;
 
-void target_init(void)
+void common_target_init(void)
 {
     action_read = 0;
     action_write = 0;
@@ -124,7 +124,7 @@ void target_set_status(target_status_typ new_status)
     // else no change
 }
 
-void target_tick(void)
+void common_target_tick(void)
 {
     swd_tick();
     handle_actions();
@@ -415,6 +415,10 @@ static void handle_actions(void)
             {
                 action_read = 0;
             }
+        }
+        else
+        {
+            // try again
         }
     }
     else
