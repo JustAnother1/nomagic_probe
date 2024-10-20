@@ -26,6 +26,7 @@
 #include "probe_api/debug_log.h"
 
 static bool is_USB_CDC_enabled;
+static bool is_target_UART_enabled;
 
 typedef void (* send_string_function)(char * str);
 typedef void (* send_bytes_function)(const uint8_t * data, const uint32_t length);
@@ -45,7 +46,7 @@ static bool null_is_connected_function(void);
 static void null_flush_function(void);
 static bool null_is_buffer_full_function(void);
 
-
+// GDB
 static send_string_function send_string_fct;
 static send_bytes_function send_bytes_fct;
 static get_num_received_bytes_function get_num_received_bytes_fct;
@@ -55,18 +56,34 @@ static is_connected_function is_connected_fct;
 static flush_function flush_fct;
 static is_buffer_full_function is_buffer_full_fct;
 
+// target UART
+static send_string_function target_uart_send_string_fct;
+static send_bytes_function target_uart_send_bytes_fct;
+static get_num_received_bytes_function target_uart_get_num_received_bytes_fct;
+static get_next_received_byte_function target_uart_get_next_received_byte_fct;
+static putc_function target_uart_putc_fct;
+static is_connected_function target_uart_is_connected_fct;
+static flush_function target_uart_flush_fct;
+static is_buffer_full_function target_uart_is_buffer_full_fct;
+
 void serial_cfg_reset_to_default(void)
 {
     is_USB_CDC_enabled = true;
+    is_target_UART_enabled = false;
 }
 
 void serial_cfg_set(char * setting, char * value)
 {
-    // debug_line("serial cfg: %s = %s !", setting, value);
     if(0 == strncmp(setting, CDC_ENABLED_SETTING, sizeof(CDC_ENABLED_SETTING)))
     {
         is_USB_CDC_enabled = read_ini_bool(value);
     }
+
+    if(0 == strncmp(setting, TARGET_UART_ENABLED_SETTING, sizeof(TARGET_UART_ENABLED_SETTING)))
+    {
+        is_target_UART_enabled = read_ini_bool(value);
+    }
+
 }
 
 
@@ -86,7 +103,7 @@ void serial_cfg_apply(void)
         is_buffer_full_fct         = null_is_buffer_full_function;
     }
 #ifdef FEAT_USB_NCM
-    else if(0 != net_cfg.gdb_port)
+    else if((true == network_cfg_is_network_enabled()) && (0 != net_cfg.gdb_port))
     {
         debug_line("GDB on Ethernet !");
         send_string_fct            = network_gdb_send_string;
@@ -114,11 +131,43 @@ void serial_cfg_apply(void)
     }
 
     // Debug interface is handled by compiler switches (ifdef)
+
+    if(true == is_target_UART_enabled)
+    {
+#ifdef FEAT_USB_NCM
+        if((true == network_cfg_is_network_enabled()) && (0 != net_cfg.target_uart_port))
+        {
+            debug_line("target UART on Ethernet !");
+            // TODO
+            target_uart_get_num_received_bytes_fct = network_target_uart_get_num_received_bytes;
+            target_uart_get_next_received_byte_fct = network_target_uart_get_next_received_byte;
+            target_uart_send_bytes_fct             = network_target_uart_send_bytes;
+        }
+        else
+#endif
+        {
+            debug_line("target UART on USB CDC !");
+            // TODO
+            target_uart_send_string_fct            = null_send_string_function;
+            target_uart_send_bytes_fct             = null_send_bytes_function;
+            target_uart_get_num_received_bytes_fct = null_get_num_received_bytes_function;
+            target_uart_get_next_received_byte_fct = null_get_next_received_byte_function;
+            target_uart_putc_fct                   = null_putc_function;
+            target_uart_is_connected_fct           = null_is_connected_function;
+            target_uart_flush_fct                  = null_flush_function;
+            target_uart_is_buffer_full_fct         = null_is_buffer_full_function;
+        }
+    }
 }
 
 bool serial_cfg_is_USB_CDC_enabled(void)
 {
     return is_USB_CDC_enabled;
+}
+
+bool serial_cfg_is_target_UART_enabled(void)
+{
+    return is_target_UART_enabled;
 }
 
 // NULL interface
@@ -164,8 +213,8 @@ static void null_flush_function(void)
 
 static bool null_is_buffer_full_function(void)
 {
-	// buffer is never full
-	return false;
+    // buffer is never full
+    return false;
 }
 
 // DEBUG CLI interface
@@ -261,8 +310,26 @@ void serial_gdb_flush(void)
 
 bool serial_gdb_is_buffer_full(void)
 {
-	return (* is_buffer_full_fct)();
+    return (* is_buffer_full_fct)();
 }
+
+// Target UART
+// ===========
+uint32_t target_uart_pc_get_num_received_bytes(void)
+{
+    return (* target_uart_get_num_received_bytes_fct)();
+}
+
+uint8_t target_uart_pc_get_next_received_byte(void)
+{
+    return (* target_uart_get_next_received_byte_fct)();
+}
+
+void target_uart_pc_send_bytes(const uint8_t * data, const uint32_t length)
+{
+    (* target_uart_send_bytes_fct)(data, length);
+}
+
 
 // new interfaces:
 // void send_string_function(char * str);

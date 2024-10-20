@@ -25,7 +25,8 @@
 #include "tinyusb/src/class/cdc/cdc_device.h"
 
 // configuration settings
-#define CDC_ENABLED_SETTING "cdc"
+#define CDC_ENABLED_SETTING         "cdc"
+#define TARGET_UART_ENABLED_SETTING "target"
 
 // DEBUG CLI interface
 void serial_debug_send_string(char * str);
@@ -47,6 +48,11 @@ bool serial_gdb_is_connected(void);
 void serial_gdb_flush(void);
 bool serial_gdb_is_buffer_full(void);
 
+// target UART
+bool serial_cfg_is_target_UART_enabled(void);
+uint32_t target_uart_pc_get_num_received_bytes(void);
+uint8_t target_uart_pc_get_next_received_byte(void);
+void target_uart_pc_send_bytes(const uint8_t * data, const uint32_t length);
 
 // load configuration
 void serial_cfg_reset_to_default(void);

@@ -98,6 +98,7 @@ endif
 ifeq ($(HAS_DEBUG_UART), yes)
 SRC += $(NOMAGIC_SRC_FOLDER)hal/debug_uart.c
 endif
+SRC += $(NOMAGIC_SRC_FOLDER)hal/target_uart.c
 SRC += $(NOMAGIC_SRC_FOLDER)hal/startup.c
 SRC += $(NOMAGIC_SRC_FOLDER)hal/hw_divider.c
 SRC += $(NOMAGIC_SRC_FOLDER)hal/watchdog.c
@@ -219,6 +220,7 @@ endif
 SRC += $(NOMAGIC_SRC_FOLDER)target/common.c
 SRC += $(NOMAGIC_SRC_FOLDER)target/common_actions.c
 SRC += $(NOMAGIC_SRC_FOLDER)target/steps.c
+SRC += $(NOMAGIC_SRC_FOLDER)target/target_uart_handler.c
 
 # user feedback
 SRC += $(NOMAGIC_SRC_FOLDER)led.c

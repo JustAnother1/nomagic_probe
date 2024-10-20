@@ -13,23 +13,25 @@
  *
  */
 #include <stdlib.h>
+#include "cfg/cli_cfg.h"
 #include "cli_sys.h"
 #include "cli_usb.h"
-#include "cfg/cli_cfg.h"
-#include "hal/startup.h"
-#include "hal/hw_divider.h"
-#include "hal/hw/TIMER.h"
-#include "hal/time_base.h"
-#include "probe_api/cli.h"
-#include "hal/watchdog.h"
-#include "hal/boot_rom.h"
-#include "hal/flash.h"
 #include "file/file_system.h"
-#include "probe_api/debug_log.h"
-#include "probe_api/swd.h"
 #ifdef FEAT_GDB_SERVER
 #include "gdbserver/gdbserver.h"
 #endif
+#include "hal/boot_rom.h"
+#include "hal/flash.h"
+#include "hal/hw_divider.h"
+#include "hal/hw/TIMER.h"
+#include "hal/startup.h"
+#include "hal/time_base.h"
+#include "hal/watchdog.h"
+#include "probe_api/cli.h"
+#include "probe_api/debug_log.h"
+#include "probe_api/swd.h"
+#include "target/target_uart_handler.h"
+
 
 bool cmd_time(const uint32_t loop)
 {
@@ -190,6 +192,7 @@ bool cmd_info_overview(const uint32_t loop)
 #else
         case 8: break;
 #endif
+        case 9: debug_line("9: target UART"); break;
         default: debug_line("Done"); return true;  // we are done
     }
     return false;
@@ -225,7 +228,11 @@ bool cmd_info(const uint32_t loop)
         case 7: return cmd_usb_info(loop);
 #ifdef FEAT_GDB_SERVER
         case 8: return gdbs_info(loop);
+#else
+        case 8: debug_line("gdb server not active !"); return true;
 #endif
+        case 9: return target_handler_cmd_info(loop);
+
         default:
             debug_line("ERROR: invalid information selector(%ld) !", which_info);
             return true;

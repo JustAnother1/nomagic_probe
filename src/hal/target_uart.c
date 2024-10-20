@@ -12,11 +12,12 @@
  * with this program; if not, see <http://www.gnu.org/licenses/>
  *
  */
-#include "hal/debug_uart.h"
+
+#include "target_uart.h"
 #include "hal/hw/RESETS.h"
 #include "hal/hw/IO_BANK0.h"
 #include "hal/hw/PADS_BANK0.h"
-#include "hal/hw/UART0.h"
+#include "hal/hw/UART1.h"
 #include "hal/hw/SYSCFG.h"
 #include "hal/hw/PSM.h"
 #include "startup.h"
@@ -32,7 +33,7 @@ static volatile bool is_sending;
 static void send_a_byte(void);
 static void receive_a_byte(void);
 
-void debug_uart_initialize(void)
+void target_uart_initialize(void)
 {
     recv_read_pos = 0;
     recv_write_pos = 0;
@@ -41,45 +42,45 @@ void debug_uart_initialize(void)
 
     RESETS->RESET = RESETS->RESET & ~((uint32_t)(1<< RESETS_RESET_IO_BANK0_OFFSET)); // take IO_BANK0 out of Reset
     PSM->FRCE_ON = PSM->FRCE_ON | (1<<PSM_FRCE_ON_SIO_OFFSET); // make sure that SIO is powered on
-    // take UART0 out of Reset
+    // take UART1 out of Reset
     RESETS->RESET = RESETS->RESET & ~(1ul << RESETS_RESET_SYSCFG_OFFSET);
     while (0 == ((1 << RESETS_RESET_SYSCFG_OFFSET) & RESETS->RESET_DONE))
     {
         ;
     }
 
-    RESETS->RESET = RESETS->RESET & ~(1ul << RESETS_RESET_UART0_OFFSET);
-    // wait for UART0 to come out of Reset
-    while (0 == ((1 << RESETS_RESET_UART0_OFFSET) & RESETS->RESET_DONE))
+    RESETS->RESET = RESETS->RESET & ~(1ul << RESETS_RESET_UART1_OFFSET);
+    // wait for UART1 to come out of Reset
+    while (0 == ((1 << RESETS_RESET_UART1_OFFSET) & RESETS->RESET_DONE))
     {
          ;
     }
     // configure GPIO Pins
-    IO_BANK0->GPIO16_CTRL = IO_BANK0_GPIO16_CTRL_FUNCSEL_uart0_tx; // TX
-    IO_BANK0->GPIO17_CTRL = IO_BANK0_GPIO17_CTRL_FUNCSEL_uart0_rx; // RX
+    IO_BANK0->GPIO4_CTRL = IO_BANK0_GPIO4_CTRL_FUNCSEL_uart1_tx; // TX  // TODO better name for define?
+    IO_BANK0->GPIO5_CTRL = IO_BANK0_GPIO5_CTRL_FUNCSEL_uart1_rx; // RX  // TODO better name for define?
 
-    // UART0 configuration
+    // UART1 configuration
     // baud rate:
-    UART0->UARTIBRD = 67; // integer
-    UART0->UARTFBRD = 52; // fraction
+    UART1->UARTIBRD = 67; // integer  // TODO
+    UART1->UARTFBRD = 52; // fraction // TODO
     // FIFO enabled + 8,n,1
-    UART0->UARTLCR_H = (1 << UART0_UARTLCR_H_FEN_OFFSET) // FIFO enabled
-                     | (3 << UART0_UARTLCR_H_WLEN_OFFSET);  // Word length = 8 bit
+    UART1->UARTLCR_H = (1 << UART1_UARTLCR_H_FEN_OFFSET) // FIFO enabled
+                     | (3 << UART1_UARTLCR_H_WLEN_OFFSET);  // Word length = 8 bit
     // FIFO Level trigger IRQ
-    UART0->UARTIFLS = (0 << UART0_UARTIFLS_RXIFLSEL_OFFSET)  // trigger when RX FIFO is 1/8 full
-                    | (4 << UART0_UARTIFLS_TXIFLSEL_OFFSET); // trigger when TX FIFO is 7/8 full
-    UART0->UARTIMSC = 0x7fe; // enable all IRQs (but not Ring Indication)
-    UART0->UARTLCR_H = (3 << UART0_UARTLCR_H_WLEN_OFFSET);  // Word length = 8 bit
+    UART1->UARTIFLS = (0 << UART1_UARTIFLS_RXIFLSEL_OFFSET)  // trigger when RX FIFO is 1/8 full
+                    | (4 << UART1_UARTIFLS_TXIFLSEL_OFFSET); // trigger when TX FIFO is 7/8 full
+    UART1->UARTIMSC = 0x7fe; // enable all IRQs (but not Ring Indication)
+    UART1->UARTLCR_H = (3 << UART1_UARTLCR_H_WLEN_OFFSET);  // Word length = 8 bit
     // UART mode + RX+TX enabled
-    UART0->UARTCR = (1 << UART0_UARTCR_RXE_OFFSET)
-            | (1 << UART0_UARTCR_TXE_OFFSET)
-            | (1 << UART0_UARTCR_UARTEN_OFFSET);
+    UART1->UARTCR = (1 << UART1_UARTCR_RXE_OFFSET)
+            | (1 << UART1_UARTCR_TXE_OFFSET)
+            | (1 << UART1_UARTCR_UARTEN_OFFSET);
 
     is_sending = false;
-    NVIC_EnableIRQ(UART0_IRQ_NUMBER, UART0_IRQ_PRIORITY);
+    NVIC_EnableIRQ(UART1_IRQ_NUMBER, UART1_IRQ_PRIORITY);
 }
 
-void debug_uart_tick(void)
+void target_uart_tick(void)
 {
     if(send_read_pos != send_write_pos)
     {
@@ -91,69 +92,69 @@ void debug_uart_tick(void)
     }
 }
 
-void UART0_IRQ(void)
+void UART1_IRQ(void)
 {
-    uint32_t irq = UART0->UARTMIS;
-    if (0 != (irq & (1 << UART0_UARTRIS_OERIS_OFFSET))) // Overrun error
+    uint32_t irq = UART1->UARTMIS;
+    if (0 != (irq & (1 << UART1_UARTRIS_OERIS_OFFSET))) // Overrun error
     {
-        UART0->UARTICR = (1 << UART0_UARTRIS_OERIS_OFFSET); // clear Interrupt
+        UART1->UARTICR = (1 << UART1_UARTRIS_OERIS_OFFSET); // clear Interrupt
     }
-    if (0 != (irq & (1 << UART0_UARTRIS_BERIS_OFFSET))) // Break error
+    if (0 != (irq & (1 << UART1_UARTRIS_BERIS_OFFSET))) // Break error
     {
-        UART0->UARTICR = (1 << UART0_UARTRIS_BERIS_OFFSET); // clear Interrupt
+        UART1->UARTICR = (1 << UART1_UARTRIS_BERIS_OFFSET); // clear Interrupt
     }
-    if (0 != (irq & (1 << UART0_UARTRIS_PERIS_OFFSET))) // Parity error
+    if (0 != (irq & (1 << UART1_UARTRIS_PERIS_OFFSET))) // Parity error
     {
-        UART0->UARTICR = (1 << UART0_UARTRIS_PERIS_OFFSET); // clear Interrupt
+        UART1->UARTICR = (1 << UART1_UARTRIS_PERIS_OFFSET); // clear Interrupt
     }
-    if (0 != (irq & (1 << UART0_UARTRIS_FERIS_OFFSET))) // Framing error
+    if (0 != (irq & (1 << UART1_UARTRIS_FERIS_OFFSET))) // Framing error
     {
-        UART0->UARTICR = (1 << UART0_UARTRIS_FERIS_OFFSET); // clear Interrupt
+        UART1->UARTICR = (1 << UART1_UARTRIS_FERIS_OFFSET); // clear Interrupt
     }
-    if (0 != (irq & (1 << UART0_UARTRIS_RTRIS_OFFSET))) // Receive timeout
+    if (0 != (irq & (1 << UART1_UARTRIS_RTRIS_OFFSET))) // Receive timeout
     {
-        UART0->UARTICR = (1 << UART0_UARTRIS_RTRIS_OFFSET); // clear Interrupt
+        UART1->UARTICR = (1 << UART1_UARTRIS_RTRIS_OFFSET); // clear Interrupt
     }
-    if (0 != (irq & (1 << UART0_UARTRIS_TXRIS_OFFSET))) {  // Transmit
+    if (0 != (irq & (1 << UART1_UARTRIS_TXRIS_OFFSET))) {  // Transmit
         // we can send a byte
         is_sending = false;
-        UART0->UARTICR = (1 << UART0_UARTRIS_TXRIS_OFFSET); // clear Interrupt
+        UART1->UARTICR = (1 << UART1_UARTRIS_TXRIS_OFFSET); // clear Interrupt
     }
-    if (0 != (irq & (1 << UART0_UARTRIS_RXRIS_OFFSET))) // Receive
+    if (0 != (irq & (1 << UART1_UARTRIS_RXRIS_OFFSET))) // Receive
     {
         // we received a byte
         receive_a_byte();
-        UART0->UARTICR = (1 << UART0_UARTRIS_RXRIS_OFFSET); // clear Interrupt
+        UART1->UARTICR = (1 << UART1_UARTRIS_RXRIS_OFFSET); // clear Interrupt
     }
-    if (0 != (irq & (1 << UART0_UARTRIS_DSRRMIS_OFFSET))) // DSR
+    if (0 != (irq & (1 << UART1_UARTRIS_DSRRMIS_OFFSET))) // DSR
     {
-        UART0->UARTICR = (1 << UART0_UARTRIS_DSRRMIS_OFFSET); // clear Interrupt
+        UART1->UARTICR = (1 << UART1_UARTRIS_DSRRMIS_OFFSET); // clear Interrupt
     }
-    if (0 != (irq & (1 << UART0_UARTRIS_DCDRMIS_OFFSET))) // DCD
+    if (0 != (irq & (1 << UART1_UARTRIS_DCDRMIS_OFFSET))) // DCD
     {
-        UART0->UARTICR = (1 << UART0_UARTRIS_DCDRMIS_OFFSET); // clear Interrupt
+        UART1->UARTICR = (1 << UART1_UARTRIS_DCDRMIS_OFFSET); // clear Interrupt
     }
-    if (0 != (irq & (1 << UART0_UARTRIS_CTSRMIS_OFFSET))) // CTS
+    if (0 != (irq & (1 << UART1_UARTRIS_CTSRMIS_OFFSET))) // CTS
     {
-        UART0->UARTICR = (1 << UART0_UARTRIS_CTSRMIS_OFFSET); // clear Interrupt
+        UART1->UARTICR = (1 << UART1_UARTRIS_CTSRMIS_OFFSET); // clear Interrupt
     }
-    if (0 != (irq & (1 << UART0_UARTRIS_RIRMIS_OFFSET))) // RI
+    if (0 != (irq & (1 << UART1_UARTRIS_RIRMIS_OFFSET))) // RI
     {
-        UART0->UARTICR = (1 << UART0_UARTRIS_RIRMIS_OFFSET); // clear Interrupt
+        UART1->UARTICR = (1 << UART1_UARTRIS_RIRMIS_OFFSET); // clear Interrupt
     }
 }
 
-void debug_uart_flush(void)
+void target_uart_flush(void)
 {
     while(send_read_pos != send_write_pos)
     {
-        UART0_IRQ(); // we might be in an interrupt that blocks the UART interrupt
-        debug_uart_tick();
+        UART1_IRQ(); // we might be in an interrupt that blocks the UART interrupt
+        target_uart_tick();
     }
 }
 
 // send data:
-void debug_uart_send_bytes(const uint8_t* data, const uint32_t length)
+void target_uart_send_bytes(const uint8_t* data, const uint32_t length)
 {
     uint32_t i;
     for (i = 0; i < length; i++)
@@ -168,15 +169,15 @@ void debug_uart_send_bytes(const uint8_t* data, const uint32_t length)
         {
             // buffer is full
             // -> wait for space to become available
-            UART0_IRQ();// we might be in an interrupt that blocks the UART interrupt
-            debug_uart_tick();
+            UART1_IRQ();// we might be in an interrupt that blocks the UART interrupt
+            target_uart_tick();
         }
         send_buf[send_write_pos] = data[i];
         send_write_pos = next_write;
     }
 }
 
-void debug_uart_send_String(char* str)
+void target_uart_send_String(char* str)
 {
     while(*str != 0)
     {
@@ -190,8 +191,8 @@ void debug_uart_send_String(char* str)
         {
             // buffer is full
             // -> wait for space to become available
-            UART0_IRQ();// we might be in an interrupt that blocks the UART interrupt
-            debug_uart_tick();
+            UART1_IRQ();// we might be in an interrupt that blocks the UART interrupt
+            target_uart_tick();
         }
         send_buf[send_write_pos] = *str;
         str++;
@@ -200,7 +201,7 @@ void debug_uart_send_String(char* str)
 }
 
 // get received data:
-uint32_t debug_uart_get_num_received_bytes(void)
+uint32_t target_uart_get_num_received_bytes(void)
 {
     if (recv_read_pos == recv_write_pos)
     {
@@ -218,7 +219,7 @@ uint32_t debug_uart_get_num_received_bytes(void)
     }
 }
 
-uint8_t debug_uart_get_next_received_byte(void)
+uint8_t target_uart_get_next_received_byte(void)
 {
     uint8_t res;
     if (recv_read_pos == recv_write_pos)
@@ -235,31 +236,25 @@ uint8_t debug_uart_get_next_received_byte(void)
     return res;
 }
 
-bool debug_uart_get_received_bytes(uint8_t *buf, const uint32_t length)
+bool target_uart_get_received_bytes(uint8_t *buf, const uint32_t length)
 {
     uint32_t i;
-    if (length < debug_uart_get_num_received_bytes())
+    if (length < target_uart_get_num_received_bytes())
     {
         return false;
     }
     for (i = 0; i < length; i++)
     {
-        buf[i] = debug_uart_get_next_received_byte();
+        buf[i] = target_uart_get_next_received_byte();
     }
     return true;
-}
-
-void debug_putc(void* p, char c)
-{
-    (void) p; // not used
-    debug_uart_send_bytes((uint8_t *)&c, 1);
 }
 
 static void send_a_byte(void)
 {
     if (send_read_pos != send_write_pos)
     {
-        UART0->UARTDR = send_buf[send_read_pos];
+        UART1->UARTDR = send_buf[send_read_pos];
         send_read_pos++;
         if (SEND_BUFFER_SIZE == send_read_pos)
         {
@@ -275,7 +270,7 @@ static void send_a_byte(void)
 
 static void receive_a_byte(void)
 {
-    uint32_t data = UART0->UARTDR;
+    uint32_t data = UART1->UARTDR;
     if (0 != (data & 0xf00))
     {
         // error

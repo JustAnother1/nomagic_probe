@@ -48,7 +48,8 @@ void network_cfg_reset_to_default(void)
     // net_cfg.ip.addr =      IPADDR4_INIT_BYTES(192, 168, 66,  1);
     // net_cfg.netmask.addr = IPADDR4_INIT_BYTES(255, 255, 255, 0);
     // net_cfg.gateway.addr = IPADDR4_INIT_BYTES(192, 168, 66,  1);
-    net_cfg.gdb_port = 3333;
+    net_cfg.gdb_port = 0;
+    net_cfg.target_uart_port = 0;
 }
 
 void network_cfg_set(char * setting, char * value)
@@ -104,6 +105,14 @@ void network_cfg_set(char * setting, char * value)
         }
     }
 
+    if(0 == strncmp(setting, TARGET_UART_TCP_PORT_SETTING, sizeof(TARGET_UART_TCP_PORT_SETTING)))
+    {
+        uint32_t port = read_int_address(value);
+        if(0 != port)
+        {
+            net_cfg.target_uart_port = (uint16_t)(port & 0xffff);
+        }
+    }
 }
 
 void network_cfg_apply(void)

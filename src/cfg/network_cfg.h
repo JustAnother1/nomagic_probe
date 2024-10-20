@@ -19,12 +19,13 @@
 #include <stdbool.h>
 #include "lwip/src/include/lwip/ip4_addr.h"
 
-#define NCM_ENABLED_SETTING   "ncm"
-#define PROBE_IP_SETTING      "probe_ip"
-#define HOST_IP_SETTING       "host_ip"
-#define NETMASK_SETTING       "net_mask"
-#define GATEWAY_IP_SETTING    "gateway_ip"
-#define GDB_TCP_PORT_SETTING  "gdb_tcp_port"
+#define NCM_ENABLED_SETTING           "ncm"
+#define PROBE_IP_SETTING              "probe_ip"
+#define HOST_IP_SETTING               "host_ip"
+#define NETMASK_SETTING               "net_mask"
+#define GATEWAY_IP_SETTING            "gateway_ip"
+#define GDB_TCP_PORT_SETTING          "gdb_tcp_port"
+#define TARGET_UART_TCP_PORT_SETTING  "target_uart_port"
 
 typedef struct {
     ip4_addr_t probe_ip;
@@ -32,6 +33,7 @@ typedef struct {
     ip4_addr_t netmask;
     ip4_addr_t gateway;
     uint16_t   gdb_port;
+    uint16_t   target_uart_port;
 } network_cfg_typ;
 
 extern network_cfg_typ net_cfg;

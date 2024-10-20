@@ -396,12 +396,8 @@ void qspi_read(uint32_t start_address, uint8_t* data, uint32_t length)
         return;
     }
     memset(data, 0x23, length);  // for testing
-    if(start_address > 0xffffff)
-    {
-        // max 16MB are possible
-        debug_line("ERROR: QSPI read: wrong address");
-        return;
-    }
+    // max 16MB are possible
+    start_address  =  (start_address & 0xffffff);
     flash_put_cmd_addr(FLASHCMD_READ_DATA, start_address);
     flash_put_get(NULL, data, length, 4);
     manual_nCS_deselect();

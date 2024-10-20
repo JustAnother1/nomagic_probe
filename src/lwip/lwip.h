@@ -32,4 +32,9 @@ uint8_t network_gdb_get_next_received_byte(void);
 void network_gdb_putc(void* p, char c);
 bool network_gdb_is_connected(void);
 
+// target UART
+uint32_t network_target_uart_get_num_received_bytes(void);
+uint8_t network_target_uart_get_next_received_byte(void);
+void network_target_uart_send_bytes(const uint8_t * data, const uint32_t length);
+
 #endif /* NOMAGIC_PROBE_SRC_LWIP_LWIP_H_ */

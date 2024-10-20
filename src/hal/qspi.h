@@ -23,7 +23,7 @@
 // clock of QSPI is peripheralClock divided by QSPI_BAUDRATE_DIVIDOR
 // size is 16 bit -> 0..65535 fastest allowed value is 2, 1 is not valid, 0 means no clock
 // #define QSPI_BAUDRATE_DIVIDOR     2
-#define QSPI_BAUDRATE_DIVIDOR     128
+#define QSPI_BAUDRATE_DIVIDOR     2
 
 void qspi_init(void);
 void qspi_page_program_256(uint32_t start_address, uint8_t* data);

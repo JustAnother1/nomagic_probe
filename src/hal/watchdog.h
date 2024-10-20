@@ -62,6 +62,7 @@
 #define SECTION_SWD                              0x40
 #define SECTION_TARGET                           0x80
 #define SECTION_LWIP                            0x100
+#define SECTION_TARGET_UART                     0x200
 
 void watchdog_disable(void);
 void watchdog_enable(void);

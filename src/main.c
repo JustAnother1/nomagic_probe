@@ -31,6 +31,7 @@
 #include "led.h"
 #include "swd/swd_engine.h"
 #include "target.h"
+#include "target/target_uart_handler.h"
 #include "tinyusb/usb.h"
 #include "tinyusb/src/tusb.h"
 
@@ -94,6 +95,11 @@ init_printf(NULL, serial_debug_putc);
     gdbserver_init();
 #endif
 
+    if(true == serial_cfg_is_target_UART_enabled())
+    {
+        target_uart_handler_init();
+    }
+
 #if (defined FEAT_DEBUG_UART) || (defined FEAT_DEBUG_CDC)
     cli_init(); // should be last to signal that initialization is complete.
 #endif
@@ -155,6 +161,14 @@ static void loop_1(void)
     watchdog_enter_section(SECTION_TARGET);
     target_tick();
     watchdog_leave_section(SECTION_TARGET);
+
+    watchdog_enter_section(SECTION_TARGET_UART);
+    if(true == serial_cfg_is_target_UART_enabled())
+    {
+        target_uart_handler_tick();
+        target_uart_tick();
+    }
+    watchdog_leave_section(SECTION_TARGET_UART);
 }
 
 #ifdef ENABLE_CORE_1

@@ -119,6 +119,8 @@ static volatile uint16_t xmt_buff_len = 0;
 
 // GDB server TCP port
 static tcp_pipe_def gdb_def;
+// target UART port
+static tcp_pipe_def target_uart_def;
 
 
 void network_stack_init(void)
@@ -140,6 +142,7 @@ void network_stack_init(void)
         netif_set_up(&ncm_netif);  // TODO only set(_link)_up if the USB side is connected to the PC. set(_link)_down if the USB disconnects.
         etharp_gratuitous(&ncm_netif); // sending the host the ARP info of the probe might help speed up the connection process.
         dhcp_server_init();
+        // if we provide gdb-server over Ethernet
         if(0 != net_cfg.gdb_port)
         {
             // bring up the gdb server port
@@ -147,7 +150,14 @@ void network_stack_init(void)
             gdb_def.port = net_cfg.gdb_port;
             tcp_pipe_activate(&gdb_def);
         }
-
+        // if we provide target UART over Ethernet
+        if(0 != net_cfg.target_uart_port)
+        {
+            // bring up the target UART  port
+            memset(&target_uart_def, 0, sizeof(target_uart_def));
+            target_uart_def.port = net_cfg.target_uart_port;
+            tcp_pipe_activate(&target_uart_def);
+        }
     }
     // else no network
 }
@@ -388,3 +398,45 @@ bool network_gdb_is_buffer_full(void)
 }
 
 // gdb_def
+
+uint32_t network_target_uart_get_num_received_bytes(void)
+{
+    // report the number of bytes received from the host
+    return tcp_pipe_get_num_received_bytes(&target_uart_def);
+}
+
+uint8_t network_target_uart_get_next_received_byte(void)
+{
+    // return the next byte received from the host
+    return tcp_pipe_get_next_received_byte(&target_uart_def);
+}
+
+void network_target_uart_send_bytes(const uint8_t * data, const uint32_t length)
+{
+    // send "data" bytes over the network to the host
+    uint32_t bytes_send = 0;
+
+    if((NULL == target_uart_def.connection_pcb) || (false == target_uart_def.is_connected))
+    {
+        // not connected
+        debug_line("LWIP: could not send bytes as connection is closed!");
+        return;
+    }
+
+    do {
+        const uint8_t * pos =  data + bytes_send;
+        bytes_send = bytes_send + tcp_pipe_write(&target_uart_def, pos, (uint16_t)(length - bytes_send));
+        if(bytes_send < length)
+        {
+            // wait for buffers to clear up
+            network_stack_tick();
+        }
+    } while((bytes_send < length) && (target_uart_def.connection_pcb->state != CLOSED));
+    if(target_uart_def.connection_pcb->state == CLOSED)
+    {
+        target_uart_def.is_connected = false;
+        target_uart_def.connection_pcb = NULL;
+    }
+}
+
+// target_uart_def

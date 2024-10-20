@@ -26,7 +26,7 @@ const uint8_t boot_sector[62] = {
         0x80, 0x00, // max number of entries in the root folder (32 Bytes per entry=16 entries per sector of 512 Bytes; 4096 Bytes -> 128 Entries = 0x80
         0xff, 0x00, // number of sectors in this partition  2047 Blocks -> 255 Sectors
         0xf8, // Media descriptor Byte - obsolete (0xf8 = hdd)
-        0x10, 0x00, // blocks per FAT
+        0x10, 0x00, // blocks per FAT - 1.5 Bytes(12 bit) per file/directory - 16x512 = 8192 / 1.5 = 5461 Files and directories (8x512 = 4096 / 1.5 = 2730)
         0x01, 0x00, // sectors per track
         0x01, 0x00, // number of read/write heads
         0x00, 0x00, 0x00, 0x00, // number of hidden sectors (between MBR and start of partition
