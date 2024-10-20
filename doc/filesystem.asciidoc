@@ -1,0 +1,99 @@
+File system
+===========
+
+:toc:
+
+This document should help the reader to get a better understanding of the file system.
+
+The file system consists of several components that together form a FAT formated storage area that can be accessed from the PC (USB-MSC).
+Some parts are "faked" others are backed up by real memory reagions in the QSPI flash memory. Being "faked" means that this area is not read from a storage space but rather the data is computed by the firmware.
+
+The flash can only be erased in 4KB or bigger blocks. sectors are therefore of size 4KB. Writes can be done in blocks of up to 256 bytes. Therefore blocks are 256 Bytes long. Therefore a sector consists of 16 blocks. USB usually access the area in chunks of 512 Bytes.
+
+== FAT parameters
+
+The FAT used is Fat-12.
+
+=== File Allacation Table
+
+[cols="1,1"]
+|===
+|FAT Cluster | usage
+
+|
+| FAT
+
+|
+| Root Directory
+
+| 2
+| Readme.txt
+| 3
+| autorun.inf
+| 4
+| favicon.ico
+| 5
+| favicon.ico
+
+| 6 ...
+| files written by the PC
+
+|===
+
+== Memory layout
+From the pc the wholedisc can be read as a linear address area. The followinf therefore describes whcih blocks can be found at what offsets (address) in that area.
+
+Unused areas will be reported to be all bytes = 0xff.
+
+[cols="1,1,1,5"]
+|===
+|start address | end address | fake? | usage
+
+| 0x0
+| 0x200
+| Y
+| Master Boot Record (MBR)
+
+| 0x200
+| 0x400
+| Y
+| boot sector (of FAT partition)
+
+| 0x400
+| 0x2400
+| Y
+| FAT
+
+| 0x2400
+| 0x3400
+| Y
+| FAT: root folder
+
+| 0x3400
+| 0x4400
+| Y
+| readme
+
+| 0x4400
+| 0x5400
+| Y
+| autorun.inf
+
+| 0x5400
+| 0x7400
+| Y
+| favicon.ico
+
+| 0x7400
+| 0x1f000
+| N
+| files written by PC
+
+|===
+
+
+=== Cheat sheet
+
+512 Bytes = 0x200
+
+4KB = 4*1024 = 4096 Bytes = 0x1000

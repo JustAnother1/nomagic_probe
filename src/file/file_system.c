@@ -27,6 +27,7 @@
 #define FLASH_MAX_SECTORS         512
 
 // TODO detect flash size
+// 2MB = 0x10200000
 #define FILE_SYSTEM_END           0x10200000
 
 // do not erase sectors as long as this many sectors remain empty

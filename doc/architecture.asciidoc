@@ -31,7 +31,7 @@ The recommendation is to add the frimware (*.elf or *.uf2 file) a well as any ne
 
 
 == applied methods
-the following sections describe the methods used to achive the targets. 
+the following sections describe the methods used to achive the targets.
 
 === run from RAM
 
@@ -96,7 +96,7 @@ The first and lowest layer is the bit layer. It is implemented in swd_gpio.c and
 The second layer is the packet layer it sits on top of the bit layer. It is implemented in swd_packets.c  and handles packets. It knows how SWD packets lok like and sends the requested packets over the line. It does this asynchronous to the API function being called in the tick function. It uses a queue. The API call enters the request for a packet to be send into the queue. In the tick call the queu is checked and if it contains a request then one packet will be send. This process makes it necessary to collect the result of a read packet from a result queue.
 
 ==== protocol layer
-On top of the packet layer is the protocol layer. It is implemented in swd_protocol.c and swd_engine.c. It provides an API(defined in probe_api/swd.h) for other modules (mainly the target module) to use. It also put the requested actions into a queue and executes them once the tick function gets called. 
+On top of the packet layer is the protocol layer. It is implemented in swd_protocol.c and swd_engine.c. It provides an API(defined in probe_api/swd.h) for other modules (mainly the target module) to use. It also put the requested actions into a queue and executes them once the tick function gets called.
 
 === Target
 
@@ -110,6 +110,7 @@ The gdbserver module implements the remote protocoll as specified for GDB.
 
 The file system module provides the USB Mass Storage device as well as the real and faked files inside it.
 
+link:filesystem.asciidoc[filesystem documentation]
 
 == folders
 The following lists all the folders and gives an overview what they contain.
