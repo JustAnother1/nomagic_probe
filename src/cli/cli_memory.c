@@ -354,9 +354,18 @@ bool cmd_file_ls(const uint32_t loop)
         {
             if(0 == (entry->attributes & 0x08))
             {
-                debug_line("%ld : %c%c%c%c%c%c%c%c.%c%c%c", loop,
-                           entry->name[0], entry->name[1], entry->name[2], entry->name[3], entry->name[4], entry->name[5], entry->name[6], entry->name[7],
-                           entry->extension[0], entry->extension[1], entry->extension[2]);
+                if(0xe5 == entry->name[0])
+                {
+                    debug_line("%ld : deleted %c%c%c%c%c%c%c%c.%c%c%c", loop,
+                               '_', entry->name[1], entry->name[2], entry->name[3], entry->name[4], entry->name[5], entry->name[6], entry->name[7],
+                               entry->extension[0], entry->extension[1], entry->extension[2]);
+                }
+                else
+                {
+                    debug_line("%ld : %c%c%c%c%c%c%c%c.%c%c%c", loop,
+                               entry->name[0], entry->name[1], entry->name[2], entry->name[3], entry->name[4], entry->name[5], entry->name[6], entry->name[7],
+                               entry->extension[0], entry->extension[1], entry->extension[2]);
+                }
                 num_loops++;
             }
             // else this is the Volume label -> skip

@@ -175,7 +175,7 @@ fat_entry* fake_root_get_entry_of_file_named(const char* filename)
     // convert into name + extension
     char name[8];
     char ext[3];
-    uint32_t dot_idx = 0;
+    uint32_t dot_idx = 8;
     uint32_t i;
     for(i = 0; i < 8; i++)
     {
@@ -205,9 +205,9 @@ fat_entry* fake_root_get_entry_of_file_named(const char* filename)
     // skip the dot
     dot_idx++;
     // extension
-    ext[0] = 0;
-    ext[1] = 0;
-    ext[2] = 0;
+    ext[0] = 0x20; // space
+    ext[1] = 0x20; // space
+    ext[2] = 0x20; // space
     for(i = 0; i < 3; i++)
     {
         if(0 == filename[dot_idx + i])
@@ -257,6 +257,15 @@ fat_entry* fake_root_get_entry_of_file_named(const char* filename)
                     // name is equal
                     // -> we found the file
                     return &(buf[i]);
+                }
+                else if((0xe5 == buf[i].name[0]) && ('_' == name[0]))
+                {
+                    // deleted file
+                    if(0 == strncmp(to_lower_case(&(buf[i].name[1])), &(name[1]), 7))
+                    {
+                        // -> we found the file
+                        return &(buf[i]);
+                    }
                 }
             }
             // else -> not the file we are looking for
