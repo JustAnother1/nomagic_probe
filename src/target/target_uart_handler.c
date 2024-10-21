@@ -14,16 +14,19 @@
  */
 
 #include "cfg/serial_cfg.h"
+#include "hal/hw/UART1.h"
 #include "hal/target_uart.h"
 #include "probe_api/debug_log.h"
 #include "target/target_uart_handler.h"
 
 static uint32_t from_pc;
 static uint32_t to_pc;
+static uint32_t baudrate;
 
 void target_uart_handler_init(void)
 {
-    target_uart_initialize();
+    baudrate = serial_cfg_get_target_UART_baudrate();
+    target_uart_initialize(baudrate);
     from_pc = 0;
     to_pc = 0;
 }
@@ -55,6 +58,9 @@ bool target_handler_cmd_info(const uint32_t loop)
         case 0: debug_line("Target UART status:"); break;
         case 1: debug_line("received %ld Bytes from target", to_pc); break;
         case 2: debug_line("send %ld Bytes to the target", from_pc); break;
+        case 3: debug_line("baudrate: %ld bit/s", baudrate); break;
+        case 4: debug_line("baudrate register : %ld ", UART1->UARTIBRD); break;
+        case 5: debug_line("fraction register : %ld ", UART1->UARTFBRD); break;
         default:
             return true;  // we are done
     }

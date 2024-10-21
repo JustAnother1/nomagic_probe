@@ -26,7 +26,7 @@
 #define SEND_BUFFER_SIZE         500
 
 // initialize:
-void target_uart_initialize(void);
+void target_uart_initialize(uint32_t baudrate);
 void target_uart_tick(void);
 void target_uart_flush(void);
 

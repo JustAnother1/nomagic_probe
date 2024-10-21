@@ -14,6 +14,7 @@
  */
 
 #include "target_uart.h"
+#include "hal/hw_divider.h"
 #include "hal/hw/RESETS.h"
 #include "hal/hw/IO_BANK0.h"
 #include "hal/hw/PADS_BANK0.h"
@@ -33,8 +34,10 @@ static volatile bool is_sending;
 static void send_a_byte(void);
 static void receive_a_byte(void);
 
-void target_uart_initialize(void)
+void target_uart_initialize(uint32_t baudrate)
 {
+    uint32_t reg_baud;
+    uint32_t reg_fract;
     recv_read_pos = 0;
     recv_write_pos = 0;
     send_read_pos = 0;
@@ -50,6 +53,24 @@ void target_uart_initialize(void)
     }
 
     RESETS->RESET = RESETS->RESET & ~(1ul << RESETS_RESET_UART1_OFFSET);
+
+    // while waiting for the end of Reset calculate the baud rate settings
+    // The baud rate divisor is = Peripheral Clock/(16*baud rate)
+    // the fraction of that value multiplied by 64 is the value for the fraction register
+    // example:
+    // peripheral Clock = 125 MHz = 125000000
+    // baud rate = 115200 bit/s
+    // -> 125000000/(16* 115200) = 67,8168402777 -> baud rate register = 67
+    // 0,8168402777 * 64 = 52,2777777 -> fraction register = 52
+    baudrate = 16 * baudrate;
+    reg_baud = (125000000 * 16) / baudrate;
+    reg_baud = reg_baud <<2; // *4
+
+    div_and_mod(reg_baud, 64, &reg_baud, &reg_fract);
+    // reg_fract = reg_baud % 64;
+    // reg_baud = reg_baud/ 64;
+
+
     // wait for UART1 to come out of Reset
     while (0 == ((1 << RESETS_RESET_UART1_OFFSET) & RESETS->RESET_DONE))
     {
@@ -61,8 +82,8 @@ void target_uart_initialize(void)
 
     // UART1 configuration
     // baud rate:
-    UART1->UARTIBRD = 67; // integer  // TODO
-    UART1->UARTFBRD = 52; // fraction // TODO
+    UART1->UARTIBRD = reg_baud;
+    UART1->UARTFBRD = reg_fract;
     // FIFO enabled + 8,n,1
     UART1->UARTLCR_H = (1 << UART1_UARTLCR_H_FEN_OFFSET) // FIFO enabled
                      | (3 << UART1_UARTLCR_H_WLEN_OFFSET);  // Word length = 8 bit

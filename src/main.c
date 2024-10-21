@@ -27,6 +27,7 @@
 #include "hal/hw/RESETS.h"
 #include "hal/hw/SIO.h"
 #include "hal/hw/XOSC.h"
+#include "hal/target_uart.h"
 #include "hal/watchdog.h"
 #include "led.h"
 #include "swd/swd_engine.h"

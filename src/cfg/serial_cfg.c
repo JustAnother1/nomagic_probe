@@ -27,6 +27,7 @@
 
 static bool is_USB_CDC_enabled;
 static bool is_target_UART_enabled;
+static uint32_t target_uart_baudrate;
 
 typedef void (* send_string_function)(char * str);
 typedef void (* send_bytes_function)(const uint8_t * data, const uint32_t length);
@@ -70,6 +71,7 @@ void serial_cfg_reset_to_default(void)
 {
     is_USB_CDC_enabled = true;
     is_target_UART_enabled = false;
+    target_uart_baudrate = 115200; // default value
 }
 
 void serial_cfg_set(char * setting, char * value)
@@ -82,6 +84,15 @@ void serial_cfg_set(char * setting, char * value)
     if(0 == strncmp(setting, TARGET_UART_ENABLED_SETTING, sizeof(TARGET_UART_ENABLED_SETTING)))
     {
         is_target_UART_enabled = read_ini_bool(value);
+    }
+
+    if(0 == strncmp(setting, TARGET_UART_BAUDRATE_SETTING, sizeof(TARGET_UART_BAUDRATE_SETTING)))
+    {
+        target_uart_baudrate = read_int_address(value);
+        if(0 == target_uart_baudrate)
+        {
+            target_uart_baudrate = 115200; // default value
+        }
     }
 
 }
@@ -168,6 +179,11 @@ bool serial_cfg_is_USB_CDC_enabled(void)
 bool serial_cfg_is_target_UART_enabled(void)
 {
     return is_target_UART_enabled;
+}
+
+uint32_t serial_cfg_get_target_UART_baudrate(void)
+{
+    return target_uart_baudrate;
 }
 
 // NULL interface
