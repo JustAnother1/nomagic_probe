@@ -26,6 +26,15 @@ static uint32_t baudrate;
 void target_uart_handler_init(void)
 {
     baudrate = serial_cfg_get_target_UART_baudrate();
+    // limit the baudrate to the possible values. ( all values are in bit/s )
+    if(120 > baudrate)
+    {
+        baudrate = 120;
+    }
+    if(7812500 < baudrate)
+    {
+        baudrate = 7812500;
+    }
     target_uart_initialize(baudrate);
     from_pc = 0;
     to_pc = 0;
