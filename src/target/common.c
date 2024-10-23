@@ -397,7 +397,6 @@ static void handle_actions(void)
         if(true == timeout_expired(&action_to))
         {
             action_queue[action_read].is_done = true;
-            action_queue[action_read].result = ERR_TIMEOUT;
             debug_line("ERROR: target: SWD: timeout in running %d.%ld.%ld order !",
                        action_queue[action_read].action,
                        action_queue[action_read].main_phase,

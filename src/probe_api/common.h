@@ -155,7 +155,6 @@ typedef struct{
     uint32_t main_phase;
     uint32_t sub_phase;
     uint32_t intern[MAX_INTERN_VALUES];
-    Result result;
     uint32_t read_0;
     action_typ action;
     bool can_run;

@@ -126,28 +126,26 @@ Result handle_target_close_connection(action_data_typ* const action)
         debug_line("closing SWD connection !");
         *(action->cur_phase) = 0;
         action->is_done = false;
+        action->first_call = false;
 
         Result res = swd_disconnect();
         if(RESULT_OK < res)
         {
             action->intern[0] = (uint32_t)res;
             *(action->cur_phase) = 1;
-            action->result = ERR_NOT_COMPLETED;
+            return ERR_NOT_COMPLETED;
         }
         else if(ERR_QUEUE_FULL_TRY_AGAIN == res)
         {
             // try again
-            action->result = ERR_NOT_COMPLETED;
+            return ERR_NOT_COMPLETED;
         }
         else
         {
             // some error
-            action->result = res;
+            return res;
             action->is_done = true;
         }
-
-        action->first_call = false;
-        return action->result;
     }
     else
     {
@@ -155,37 +153,36 @@ Result handle_target_close_connection(action_data_typ* const action)
         Result res = swd_get_result((Result)action->intern[0], &data);
         if(RESULT_OK == res)
         {
+            target_set_status(NOT_CONNECTED);
             if(RESULT_OK == data)
             {
-                action->result = RESULT_OK;
                 action->is_done = true;
                 debug_line("Disconnected!");
+                return RESULT_OK;
             }
             else
             {
                 debug_line("target: SWD disconnect failed ! (Res: %ld)", data);
-                action->result = ERR_WRONG_VALUE;
                 action->is_done = true;
+                return ERR_WRONG_VALUE;
             }
-            target_set_status(NOT_CONNECTED);
         }
         else
         {
             if(ERR_QUEUE_FULL_TRY_AGAIN == res)
             {
                 // try again
-                action->result = ERR_NOT_COMPLETED;
+                return ERR_NOT_COMPLETED;
             }
             else
             {
                 // some error
-                action->result = res;
                 action->is_done = true;
                 debug_line("target: SWD disconnect failed ! (%ld)", res);
+                return res;
             }
         }
     }
-    return action->result;
 }
 
 
@@ -265,10 +262,9 @@ Result handle_target_reply_g(action_data_typ* const action)
             {
                 // too many retries
                 debug_line("ERROR: too many retries !");
-                action->result = ERR_TIMEOUT;
                 action->is_done = true;
                 reply_packet_send();
-                return action->result;
+                return ERR_TIMEOUT;
             }
         }
         else
@@ -361,7 +357,6 @@ Result handle_target_reply_write_g(action_data_typ* const action)
         {
             // wrong parameter type
             debug_line("ERROR: wrong parameter type !");
-            action->result = ERR_WRONG_VALUE;
             action->is_done = true;
             reply_packet_add(ERROR_CODE_INVALID_PARAMETER_FORMAT_TYPE);
             reply_packet_send();
@@ -448,11 +443,10 @@ Result handle_target_reply_write_g(action_data_typ* const action)
             {
                 // too many retries
                 debug_line("ERROR: too many retries !");
-                action->result = ERR_TIMEOUT;
                 action->is_done = true;
                 reply_packet_add("E23");
                 reply_packet_send();
-                return action->result;
+                return ERR_TIMEOUT;
             }
         }
         else
@@ -562,7 +556,6 @@ Result handle_target_reply_read_memory(action_data_typ* const action)
         {
             // wrong parameter type
             debug_line("ERROR: wrong parameter type !");
-            action->result = ERR_WRONG_VALUE;
             action->is_done = true;
             reply_packet_add(ERROR_CODE_INVALID_PARAMETER_FORMAT_TYPE);
             reply_packet_send();
@@ -633,7 +626,6 @@ Result handle_target_reply_write_memory(action_data_typ* const action)
         {
             // wrong parameter type
             debug_line("ERROR: wrong parameter type !");
-            action->result = ERR_WRONG_VALUE;
             action->is_done = true;
             reply_packet_add(ERROR_CODE_INVALID_PARAMETER_FORMAT_TYPE);
             reply_packet_send();
@@ -753,7 +745,6 @@ Result handle_monitor_reg(action_data_typ* const action)
         {
             // wrong parameter type
             debug_line("ERROR: wrong parameter type !");
-            action->result = ERR_WRONG_VALUE;
             action->is_done = true;
             reply_packet_prepare();
             reply_packet_add(ERROR_CODE_INVALID_PARAMETER_FORMAT_TYPE);
@@ -813,10 +804,9 @@ Result handle_monitor_reg(action_data_typ* const action)
             {
                 // too many retries
                 debug_line("ERROR: too many retries !");
-                action->result = ERR_TIMEOUT;
                 action->is_done = true;
                 reply_packet_send();
-                return action->result;
+                return ERR_TIMEOUT;
             }
         }
         else
@@ -1019,7 +1009,6 @@ Result handle_monitor_halt(action_data_typ* const action)
         {
             // wrong parameter type
             debug_line("ERROR: wrong parameter type !");
-            action->result = ERR_WRONG_VALUE;
             action->is_done = true;
             reply_packet_add(ERROR_CODE_INVALID_PARAMETER_FORMAT_TYPE);
             reply_packet_send();
@@ -1055,7 +1044,6 @@ Result handle_monitor_reset(action_data_typ* const action)
         {
             // wrong parameter type
             debug_line("ERROR: wrong parameter type !");
-            action->result = ERR_WRONG_VALUE;
             action->is_done = true;
             reply_packet_add(ERROR_CODE_INVALID_PARAMETER_FORMAT_TYPE);
             reply_packet_send();
