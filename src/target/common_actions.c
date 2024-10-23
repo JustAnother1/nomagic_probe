@@ -41,9 +41,9 @@ static void send_stopped_reply(void);
 
 #endif
 
-Result handle_target_connect(action_data_typ* const action, bool first_call)
+Result handle_target_connect(action_data_typ* const action)
 {
-    if(true == first_call)
+    if(true == action->first_call)
     {
         debug_line("resetting error condition!");
         swd_reset_error_condition();
@@ -52,6 +52,7 @@ Result handle_target_connect(action_data_typ* const action, bool first_call)
         action->parameter[1] = target_get_SWD_core_id(0);  // TODO multi core
         action->parameter[2] = target_get_SWD_APSel(0);  // TODO multi core
         *(action->cur_phase) = 0;
+        action->first_call = false;
     }
 
     // disconnect (In case the Chips it is still connected to a previous session)
@@ -118,9 +119,9 @@ Result handle_target_connect(action_data_typ* const action, bool first_call)
     return ERR_WRONG_STATE;
 }
 
-Result handle_target_close_connection(action_data_typ* const action, bool first_call)
+Result handle_target_close_connection(action_data_typ* const action)
 {
-    if(true == first_call)
+    if(true == action->first_call)
     {
         debug_line("closing SWD connection !");
         *(action->cur_phase) = 0;
@@ -145,6 +146,7 @@ Result handle_target_close_connection(action_data_typ* const action, bool first_
             action->is_done = true;
         }
 
+        action->first_call = false;
         return action->result;
     }
     else
@@ -189,7 +191,7 @@ Result handle_target_close_connection(action_data_typ* const action, bool first_
 
 #ifdef FEAT_GDB_SERVER
 
-Result handle_target_reply_g(action_data_typ* const action, bool first_call)
+Result handle_target_reply_g(action_data_typ* const action)
 {
     // ‘g’
     //    Read general registers.
@@ -221,12 +223,13 @@ Result handle_target_reply_g(action_data_typ* const action, bool first_call)
     //    ‘E NN’
     //        for an error.
 
-    if(true == first_call)
+    if(true == action->first_call)
     {
         reply_packet_prepare();
         *(action->cur_phase) = 0;
         action->intern[INTERN_REGISTER_IDX] = 0;
         action->intern[INTERN_RETRY_COUNTER] = 0;
+        action->first_call = false;
     }
 
     // 1. write to DCRSR the REGSEL value and REGWnR = 0
@@ -316,7 +319,7 @@ Result handle_target_reply_g(action_data_typ* const action, bool first_call)
 }
 
 // GDB_CMD_WRITE_G
-Result handle_target_reply_write_g(action_data_typ* const action, bool first_call)
+Result handle_target_reply_write_g(action_data_typ* const action)
 {
     // ‘G XX…’
     //     Write general registers. See read registers packet, for a description
@@ -351,7 +354,7 @@ Result handle_target_reply_write_g(action_data_typ* const action, bool first_cal
     //     ‘E NN’
     //         for an error
 
-    if(true == first_call)
+    if(true == action->first_call)
     {
         reply_packet_prepare();
         if(MEMORY != action->gdb_parameter.type)
@@ -369,6 +372,7 @@ Result handle_target_reply_write_g(action_data_typ* const action, bool first_cal
             *(action->cur_phase) = 1;
             action->intern[INTERN_RETRY_COUNTER] = 0;
         }
+        action->first_call = false;
     }
 
     if(1 == *(action->cur_phase))
@@ -462,21 +466,21 @@ Result handle_target_reply_write_g(action_data_typ* const action, bool first_cal
     return ERR_WRONG_STATE;
 }
 
-Result handle_target_reply_questionmark(action_data_typ* const action, bool first_call)
+Result handle_target_reply_questionmark(action_data_typ* const action)
 {
     (void)action;
-    (void)first_call;
     send_stopped_reply();
     return RESULT_OK;
 }
 
-Result handle_target_reply_continue(action_data_typ* const action, bool first_call)
+Result handle_target_reply_continue(action_data_typ* const action)
 {
-    if(true == first_call)
+    if(true == action->first_call)
     {
         reply_packet_prepare();
         *(action->cur_phase) = 1;
         action->intern[INTERN_RETRY_COUNTER] = 0;
+        action->first_call = false;
         return ERR_NOT_COMPLETED;
     }
 
@@ -530,7 +534,7 @@ Result handle_target_reply_continue(action_data_typ* const action, bool first_ca
 }
 
 // GDB_CMD_READ_MEMORY
-Result handle_target_reply_read_memory(action_data_typ* const action, bool first_call)
+Result handle_target_reply_read_memory(action_data_typ* const action)
 {
     // ‘m addr,length’
     //     Read length addressable memory units starting at address addr
@@ -551,7 +555,7 @@ Result handle_target_reply_read_memory(action_data_typ* const action, bool first
     //         NN is errno
 #define INTERN_MEMORY_OFFSET     1
 
-    if(true == first_call)
+    if(true == action->first_call)
     {
         reply_packet_prepare();
         if(ADDRESS_LENGTH != action->gdb_parameter.type)
@@ -569,6 +573,7 @@ Result handle_target_reply_read_memory(action_data_typ* const action, bool first
             *(action->cur_phase) = 0;
             action->intern[INTERN_MEMORY_OFFSET] = 0;
         }
+        action->first_call = false;
     }
 
     if(0 == *(action->cur_phase))
@@ -607,7 +612,7 @@ Result handle_target_reply_read_memory(action_data_typ* const action, bool first
 }
 
 // GDB_CMD_WRITE_MEMORY
-Result handle_target_reply_write_memory(action_data_typ* const action, bool first_call)
+Result handle_target_reply_write_memory(action_data_typ* const action)
 {
 
     // ‘M addr,length:XX…’
@@ -621,7 +626,7 @@ Result handle_target_reply_write_memory(action_data_typ* const action, bool firs
     //         for an error (this includes the case where only part of the data
     // was written).
 
-    if(true == first_call)
+    if(true == action->first_call)
     {
         reply_packet_prepare();
         if(ADDRESS_LENGTH_MEMORY != action->gdb_parameter.type)
@@ -639,6 +644,7 @@ Result handle_target_reply_write_memory(action_data_typ* const action, bool firs
             *(action->cur_phase) = 1;
             action->intern[0] = action->gdb_parameter.address_length_memory.length;
         }
+        action->first_call = false;
     }
 
     if(1 == *(action->cur_phase))
@@ -683,21 +689,21 @@ Result handle_target_reply_write_memory(action_data_typ* const action, bool firs
     return ERR_WRONG_STATE;
 }
 
-Result handle_target_reply_step(action_data_typ* const action, bool first_call)
+Result handle_target_reply_step(action_data_typ* const action)
 {
     (void)action;
-    (void)first_call;
     send_unknown_command_reply();
     return RESULT_OK;
 }
 
-Result handle_check_target_running(action_data_typ* const action, bool first_call)
+Result handle_check_target_running(action_data_typ* const action)
 {
-    if(true == first_call)
+    if(true == action->first_call)
     {
         reply_packet_prepare();
         *(action->cur_phase) = 0;
         action->intern[INTERN_RETRY_COUNTER] = 0;
+        action->first_call = false;
         return ERR_NOT_COMPLETED;
     }
 
@@ -738,10 +744,10 @@ static void send_stopped_reply(void)
 }
 
 // GDB_MONITOR_REG
-Result handle_monitor_reg(action_data_typ* const action, bool first_call)
+Result handle_monitor_reg(action_data_typ* const action)
 {
 
-    if(true == first_call)
+    if(true == action->first_call)
     {
         if(HAS_VALUE != action->gdb_parameter.type)
         {
@@ -769,6 +775,7 @@ Result handle_monitor_reg(action_data_typ* const action, bool first_call)
             }
             action->intern[INTERN_RETRY_COUNTER] = 0;
         }
+        action->first_call = false;
     }
 
     // 1. write to DCRSR the REGSEL value and REGWnR = 0
@@ -1000,12 +1007,12 @@ Result handle_monitor_reg(action_data_typ* const action, bool first_call)
     return ERR_WRONG_STATE;
 }
 
-Result handle_monitor_halt(action_data_typ* const action, bool first_call)
+Result handle_monitor_halt(action_data_typ* const action)
 {
     // DHCSR.C_HALT == 1
     // then DHCSR.C_MASKINTS = 1 if ignore interrupt is enabled
     (void)action; // TODO
-    if(true == first_call)
+    if(true == action->first_call)
     {
         reply_packet_prepare();
         if(HAS_VALUE != action->gdb_parameter.type)
@@ -1025,6 +1032,7 @@ Result handle_monitor_halt(action_data_typ* const action, bool first_call)
                 debug_line("DELAY: %ldms", action->gdb_parameter.has_value.value);
                 // TODO implement pause
             }
+            action->first_call = false;
             return ERR_NOT_COMPLETED;
         }
     }
@@ -1037,10 +1045,10 @@ Result handle_monitor_halt(action_data_typ* const action, bool first_call)
 }
 
 // GDB_CMD_MON_RESET
-Result handle_monitor_reset(action_data_typ* const action, bool first_call)
+Result handle_monitor_reset(action_data_typ* const action)
 {
     (void)action; // TODO
-    if(true == first_call)
+    if(true == action->first_call)
     {
         reply_packet_prepare();
         if(HAS_VALUE != action->gdb_parameter.type)
@@ -1055,6 +1063,7 @@ Result handle_monitor_reset(action_data_typ* const action, bool first_call)
         }
         else
         {
+            action->first_call = false;
             return ERR_NOT_COMPLETED;
         }
     }

@@ -223,7 +223,7 @@ bool cmd_target_trace(uint32_t loop)
         {
             // print entry
             debug_line("%20s,     %ld,   %ld",
-                       action_names[trace_buf[idx].action -1],
+                       action_names[trace_buf[idx].action -1], // 0 is a valid action
                        trace_buf[idx].main_phase,
                        trace_buf[idx].result);
         }
@@ -264,6 +264,7 @@ static action_data_typ * book_action_slot(void)
 Result add_target_action(action_data_typ * const action)
 {
     action->can_run = true;
+    action->first_call = true;
     return RESULT_OK;
 }
 
@@ -331,7 +332,6 @@ static void check_if_still_running(void)
 static void handle_actions(void)
 {
     Result res;
-    bool first;
 
     if(true == serial_gdb_is_buffer_full())
     {
@@ -350,7 +350,6 @@ static void handle_actions(void)
                 action_queue[action_read].main_phase = 0;
                 cur_action = action_look_up[action_queue[action_read].action];
                 action_queue[action_read].cur_phase = &(action_queue[action_read].main_phase);
-                first = true;
                 start_timeout(&action_to, ACTION_TIMEOUT_TIME_MS);
             }
             else
@@ -366,17 +365,13 @@ static void handle_actions(void)
             return;
         }
     }
-    else
-    {
-        first = false;
-    }
 
     // we now have an action
     // call handler
-    res = (*cur_action)(&action_queue[action_read], first);
+    res = (*cur_action)(&action_queue[action_read]);
 
     // trace call
-    if(false == first)
+    if(false == action_queue[action_read].first_call)
     {
         // another call to the same action
         // trace_buf[trace_end].action = action_queue[action_read].action + 1;

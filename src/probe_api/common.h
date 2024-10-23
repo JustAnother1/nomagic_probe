@@ -160,10 +160,11 @@ typedef struct{
     action_typ action;
     bool can_run;
     bool is_done;
+    bool first_call;
 } action_data_typ;
 
 
-typedef Result (*action_handler)(action_data_typ * const action, bool first_call);
+typedef Result (*action_handler)(action_data_typ * const action);
 
 void common_target_init(void);
 void common_target_tick(void);
