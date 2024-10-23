@@ -113,6 +113,7 @@ static void init_1(void)
 
 static void loop_0(void)
 {
+    // software watch dog
     watchdog_enter_section(SECTION_WATCHDOG);
     tasks = tasks &~TASK_LOOP_0;
     if(0 == tasks)
@@ -122,6 +123,7 @@ static void loop_0(void)
     }
     watchdog_leave_section(SECTION_WATCHDOG);
 
+    // command line interface to debug this firmware(not the target)
 #if (defined FEAT_DEBUG_UART) || (defined FEAT_DEBUG_CDC)
     watchdog_enter_section(SECTION_CLI);
 #if (defined FEAT_DEBUG_UART)
@@ -131,16 +133,19 @@ static void loop_0(void)
     watchdog_leave_section(SECTION_CLI);
 #endif
 
+    // keep the USB interface alive (tinyUSB)
     watchdog_enter_section(SECTION_USB);
     usb_tick();
     watchdog_leave_section(SECTION_USB);
 
+    // handle the gdb-server protocol
 #ifdef FEAT_GDB_SERVER
     watchdog_enter_section(SECTION_GDBSERVER);
     gdbserver_tick();
     watchdog_leave_section(SECTION_GDBSERVER);
 #endif
 
+    // keep USB networking alive
 #ifdef FEAT_USB_NCM
     if(true == network_cfg_is_network_enabled())
     {
@@ -154,15 +159,20 @@ static void loop_0(void)
 
 static void loop_1(void)
 {
+    // flag for watch dog that function has been called again
     tasks = tasks &~TASK_LOOP_1;
+
+    // blink the LED to let the user know everything is fine
     watchdog_enter_section(SECTION_LED);
     led_tick();
     watchdog_leave_section(SECTION_LED);
 
+    // debug protocol state machine (above SWD but below gdb-server)
     watchdog_enter_section(SECTION_TARGET);
     target_tick();
     watchdog_leave_section(SECTION_TARGET);
 
+    // move bytes from the UART that is connected to the debugged chip to the PC
     watchdog_enter_section(SECTION_TARGET_UART);
     if(true == serial_cfg_is_target_UART_enabled())
     {
