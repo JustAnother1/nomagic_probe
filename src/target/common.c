@@ -171,7 +171,6 @@ bool common_cmd_target_info(uint32_t loop)
     {
         debug_line("action type: %d", action_queue[action_read].action);
         debug_line("main_phase: %ld", action_queue[action_read].main_phase);
-        debug_line("sub-phase : %ld", action_queue[action_read].sub_phase);
         debug_line("action is done : %d", action_queue[action_read].is_done);
         debug_line("can run : %d", action_queue[action_read].can_run);
         debug_line("action_write : %ld", action_write);
@@ -397,10 +396,9 @@ static void handle_actions(void)
         if(true == timeout_expired(&action_to))
         {
             action_queue[action_read].is_done = true;
-            debug_line("ERROR: target: SWD: timeout in running %d.%ld.%ld order !",
+            debug_line("ERROR: target: SWD: timeout in running %d.%ld order !",
                        action_queue[action_read].action,
-                       action_queue[action_read].main_phase,
-                       action_queue[action_read].sub_phase);
+                       action_queue[action_read].main_phase);
             // TODO can we do something better than to just skip this command?
             // do not try anymore
             cur_action = NULL;
@@ -425,11 +423,10 @@ static void handle_actions(void)
         if(RESULT_OK > res)
         {
             // error
-            debug_line("target: error %ld on action %s.%ld.%ld",
+            debug_line("target: error %ld on action %s.%ld",
                        res,
                        action_names[action_queue[action_read].action],
-                       action_queue[action_read].main_phase,
-                       action_queue[action_read].sub_phase);
+                       action_queue[action_read].main_phase);
 #ifdef FEAT_GDB_SERVER
             if(true == is_gdb_busy())
             {

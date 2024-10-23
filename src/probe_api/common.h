@@ -153,7 +153,6 @@ typedef struct{
     parameter_typ gdb_parameter;
     uint32_t* cur_phase;
     uint32_t main_phase;
-    uint32_t sub_phase;
     uint32_t intern[MAX_INTERN_VALUES];
     uint32_t read_0;
     action_typ action;
