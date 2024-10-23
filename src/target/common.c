@@ -36,7 +36,7 @@
 
 typedef struct{
     uint32_t action;
-    uint32_t main_phase;
+    uint32_t cur_phase;
     Result result;
 } action_trace_typ;
 
@@ -170,7 +170,7 @@ bool common_cmd_target_info(uint32_t loop)
     else if(1 == loop)
     {
         debug_line("action type: %d", action_queue[action_read].action);
-        debug_line("main_phase: %ld", action_queue[action_read].main_phase);
+        debug_line("cur_phase: %ld", action_queue[action_read].cur_phase);
         debug_line("action is done : %d", action_queue[action_read].is_done);
         debug_line("can run : %d", action_queue[action_read].can_run);
         debug_line("action_write : %ld", action_write);
@@ -181,8 +181,8 @@ bool common_cmd_target_info(uint32_t loop)
         if(loop -2 < ACTION_QUEUE_LENGTH)
         {
             debug_line("action_queue[%ld].action = %d", loop -2, action_queue[loop-2].action);
-            debug_line(".main_phase = %ld, .intern[0] = %ld, .parameter[0] = %ld",
-                       action_queue[loop-2].main_phase,
+            debug_line(".cur_phase = %ld, .intern[0] = %ld, .parameter[0] = %ld",
+                       action_queue[loop-2].cur_phase,
                        action_queue[loop-2].intern[0],
                        action_queue[loop-2].parameter[0]);
         }
@@ -223,7 +223,7 @@ bool cmd_target_trace(uint32_t loop)
             // print entry
             debug_line("%20s,     %ld,   %ld",
                        action_names[trace_buf[idx].action -1], // 0 is a valid action
-                       trace_buf[idx].main_phase,
+                       trace_buf[idx].cur_phase,
                        trace_buf[idx].result);
         }
         else
@@ -346,9 +346,8 @@ static void handle_actions(void)
             if(true == action_queue[action_read].can_run)
             {
                 // new action available
-                action_queue[action_read].main_phase = 0;
+                action_queue[action_read].cur_phase = 0;
                 cur_action = action_look_up[action_queue[action_read].action];
-                action_queue[action_read].cur_phase = &(action_queue[action_read].main_phase);
                 start_timeout(&action_to, ACTION_TIMEOUT_TIME_MS);
             }
             else
@@ -374,7 +373,7 @@ static void handle_actions(void)
     {
         // another call to the same action
         // trace_buf[trace_end].action = action_queue[action_read].action + 1;
-        trace_buf[trace_end].main_phase = action_queue[action_read].main_phase;
+        trace_buf[trace_end].cur_phase = action_queue[action_read].cur_phase;
         trace_buf[trace_end].result = res;
     }
     else
@@ -386,7 +385,7 @@ static void handle_actions(void)
             trace_end = 0;
         }
         trace_buf[trace_end].action = action_queue[action_read].action + 1;  // 0 is a valid action
-        trace_buf[trace_end].main_phase = action_queue[action_read].main_phase;
+        trace_buf[trace_end].cur_phase = action_queue[action_read].cur_phase;
         trace_buf[trace_end].result = res;
     }
 
@@ -398,7 +397,7 @@ static void handle_actions(void)
             action_queue[action_read].is_done = true;
             debug_line("ERROR: target: SWD: timeout in running %d.%ld order !",
                        action_queue[action_read].action,
-                       action_queue[action_read].main_phase);
+                       action_queue[action_read].cur_phase);
             // TODO can we do something better than to just skip this command?
             // do not try anymore
             cur_action = NULL;
@@ -426,7 +425,7 @@ static void handle_actions(void)
             debug_line("target: error %ld on action %s.%ld",
                        res,
                        action_names[action_queue[action_read].action],
-                       action_queue[action_read].main_phase);
+                       action_queue[action_read].cur_phase);
 #ifdef FEAT_GDB_SERVER
             if(true == is_gdb_busy())
             {

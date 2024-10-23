@@ -24,7 +24,7 @@ Result do_read_ap_reg(action_data_typ* const action, uint32_t bank, uint32_t reg
     if(RESULT_OK < res)
     {
         action->intern[INTERN_TRANSACTION_ID] = (uint32_t)res;
-        *(action->cur_phase) = *(action->cur_phase) + 1;
+        action->cur_phase = action->cur_phase + 1;
         return ERR_NOT_COMPLETED;
     }
     else if(ERR_QUEUE_FULL_TRY_AGAIN == res)
@@ -46,7 +46,7 @@ Result do_write_ap_reg(action_data_typ* const action, uint32_t bank, uint32_t re
     if(RESULT_OK == res)
     {
         action->intern[INTERN_TRANSACTION_ID] = 0;
-        *(action->cur_phase) = *(action->cur_phase) + 1;
+        action->cur_phase = action->cur_phase + 1;
         return ERR_NOT_COMPLETED;
     }
     else if(ERR_QUEUE_FULL_TRY_AGAIN == res)
@@ -68,7 +68,7 @@ Result do_write_ap(action_data_typ* const action, uint32_t address, uint32_t dat
     if(RESULT_OK == res)
     {
         action->intern[INTERN_TRANSACTION_ID] = 0;
-        *(action->cur_phase) = *(action->cur_phase) + 1;
+        action->cur_phase = action->cur_phase + 1;
         return ERR_NOT_COMPLETED;
     }
     else if(ERR_QUEUE_FULL_TRY_AGAIN == res)
@@ -92,7 +92,7 @@ Result do_read_ap(action_data_typ* const action, uint32_t address)
     if(RESULT_OK < res)
     {
         action->intern[INTERN_TRANSACTION_ID] = (uint32_t)res;
-        *(action->cur_phase) = *(action->cur_phase) + 1;
+        action->cur_phase = action->cur_phase + 1;
         return ERR_NOT_COMPLETED;
     }
     else if(ERR_QUEUE_FULL_TRY_AGAIN == res)
@@ -114,7 +114,7 @@ Result do_disconnect(action_data_typ* const action)
     if(RESULT_OK < res)
     {
         action->intern[INTERN_TRANSACTION_ID] = (uint32_t)res;
-        *(action->cur_phase) = *(action->cur_phase) + 1;
+        action->cur_phase = action->cur_phase + 1;
         return ERR_NOT_COMPLETED;
     }
     else if(ERR_QUEUE_FULL_TRY_AGAIN == res)
@@ -136,7 +136,7 @@ Result do_connect(action_data_typ* const action)
     if(RESULT_OK < res)
     {
         action->intern[INTERN_TRANSACTION_ID] = (uint32_t)res;
-        *(action->cur_phase) = *(action->cur_phase) + 1;
+        action->cur_phase = action->cur_phase + 1;
         return ERR_NOT_COMPLETED;
     }
     else if(ERR_QUEUE_FULL_TRY_AGAIN == res)
@@ -160,12 +160,12 @@ Result do_get_Result_OK(action_data_typ* const action)
     {
         if(RESULT_OK == data)
         {
-            *(action->cur_phase) = *(action->cur_phase) + 1;
+            action->cur_phase = action->cur_phase + 1;
             return ERR_NOT_COMPLETED;
         }
         else
         {
-            debug_line("target: step %ld failed (0x%08lx)", *(action->cur_phase), data);
+            debug_line("target: step %ld failed (0x%08lx)", action->cur_phase, data);
             action->is_done = true;
             return ERR_WRONG_VALUE;
         }
@@ -193,7 +193,7 @@ Result do_get_Result_data(action_data_typ* const action)
     if(RESULT_OK == res)
     {
         action->read_0 = data;
-        *(action->cur_phase) = *(action->cur_phase) + 1;
+        action->cur_phase = action->cur_phase + 1;
         return ERR_NOT_COMPLETED;
     }
     else

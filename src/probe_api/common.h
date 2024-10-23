@@ -151,8 +151,7 @@ typedef enum {
 typedef struct{
     uint32_t parameter[MAX_PARAMETER_VALUES];
     parameter_typ gdb_parameter;
-    uint32_t* cur_phase;
-    uint32_t main_phase;
+    uint32_t cur_phase;
     uint32_t intern[MAX_INTERN_VALUES];
     uint32_t read_0;
     action_typ action;
