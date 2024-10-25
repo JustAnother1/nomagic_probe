@@ -125,7 +125,6 @@ Result handle_target_close_connection(action_data_typ* const action)
     {
         debug_line("closing SWD connection !");
         action->cur_phase = 0;
-        action->is_done = false;
         action->first_call = false;
 
         Result res = swd_disconnect();
@@ -144,7 +143,6 @@ Result handle_target_close_connection(action_data_typ* const action)
         {
             // some error
             return res;
-            action->is_done = true;
         }
     }
     else
@@ -156,14 +154,12 @@ Result handle_target_close_connection(action_data_typ* const action)
             target_set_status(NOT_CONNECTED);
             if(RESULT_OK == data)
             {
-                action->is_done = true;
                 debug_line("Disconnected!");
                 return RESULT_OK;
             }
             else
             {
                 debug_line("target: SWD disconnect failed ! (Res: %ld)", data);
-                action->is_done = true;
                 return ERR_WRONG_VALUE;
             }
         }
@@ -177,7 +173,6 @@ Result handle_target_close_connection(action_data_typ* const action)
             else
             {
                 // some error
-                action->is_done = true;
                 debug_line("target: SWD disconnect failed ! (%ld)", res);
                 return res;
             }
@@ -262,7 +257,6 @@ Result handle_target_reply_g(action_data_typ* const action)
             {
                 // too many retries
                 debug_line("ERROR: too many retries !");
-                action->is_done = true;
                 reply_packet_send();
                 return ERR_TIMEOUT;
             }
@@ -357,7 +351,6 @@ Result handle_target_reply_write_g(action_data_typ* const action)
         {
             // wrong parameter type
             debug_line("ERROR: wrong parameter type !");
-            action->is_done = true;
             reply_packet_add(ERROR_CODE_INVALID_PARAMETER_FORMAT_TYPE);
             reply_packet_send();
             return ERR_WRONG_VALUE;
@@ -443,7 +436,6 @@ Result handle_target_reply_write_g(action_data_typ* const action)
             {
                 // too many retries
                 debug_line("ERROR: too many retries !");
-                action->is_done = true;
                 reply_packet_add("E23");
                 reply_packet_send();
                 return ERR_TIMEOUT;
@@ -556,7 +548,6 @@ Result handle_target_reply_read_memory(action_data_typ* const action)
         {
             // wrong parameter type
             debug_line("ERROR: wrong parameter type !");
-            action->is_done = true;
             reply_packet_add(ERROR_CODE_INVALID_PARAMETER_FORMAT_TYPE);
             reply_packet_send();
             return ERR_WRONG_VALUE;
@@ -626,7 +617,6 @@ Result handle_target_reply_write_memory(action_data_typ* const action)
         {
             // wrong parameter type
             debug_line("ERROR: wrong parameter type !");
-            action->is_done = true;
             reply_packet_add(ERROR_CODE_INVALID_PARAMETER_FORMAT_TYPE);
             reply_packet_send();
             return ERR_WRONG_VALUE;
@@ -745,7 +735,6 @@ Result handle_monitor_reg(action_data_typ* const action)
         {
             // wrong parameter type
             debug_line("ERROR: wrong parameter type !");
-            action->is_done = true;
             reply_packet_prepare();
             reply_packet_add(ERROR_CODE_INVALID_PARAMETER_FORMAT_TYPE);
             reply_packet_send();
@@ -804,7 +793,6 @@ Result handle_monitor_reg(action_data_typ* const action)
             {
                 // too many retries
                 debug_line("ERROR: too many retries !");
-                action->is_done = true;
                 reply_packet_send();
                 return ERR_TIMEOUT;
             }
@@ -1009,7 +997,6 @@ Result handle_monitor_halt(action_data_typ* const action)
         {
             // wrong parameter type
             debug_line("ERROR: wrong parameter type !");
-            action->is_done = true;
             reply_packet_add(ERROR_CODE_INVALID_PARAMETER_FORMAT_TYPE);
             reply_packet_send();
             return ERR_WRONG_VALUE;
@@ -1044,7 +1031,6 @@ Result handle_monitor_reset(action_data_typ* const action)
         {
             // wrong parameter type
             debug_line("ERROR: wrong parameter type !");
-            action->is_done = true;
             reply_packet_add(ERROR_CODE_INVALID_PARAMETER_FORMAT_TYPE);
             reply_packet_send();
             return ERR_WRONG_VALUE;

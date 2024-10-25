@@ -156,7 +156,6 @@ typedef struct{
     uint32_t read_0;
     action_typ action;
     bool can_run;
-    bool is_done;
     bool first_call;
 } action_data_typ;
 

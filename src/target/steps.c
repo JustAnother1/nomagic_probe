@@ -35,7 +35,6 @@ Result do_read_ap_reg(action_data_typ* const action, uint32_t bank, uint32_t reg
     else
     {
         // some error
-        action->is_done = true;
         return res;
     }
 }
@@ -57,7 +56,6 @@ Result do_write_ap_reg(action_data_typ* const action, uint32_t bank, uint32_t re
     else
     {
         // some error
-        action->is_done = true;
         return res;
     }
 }
@@ -79,7 +77,6 @@ Result do_write_ap(action_data_typ* const action, uint32_t address, uint32_t dat
     else
     {
         // some error
-        action->is_done = true;
         return res;
     }
 }
@@ -103,7 +100,6 @@ Result do_read_ap(action_data_typ* const action, uint32_t address)
     else
     {
         // some error
-        action->is_done = true;
         return res;
     }
 }
@@ -125,7 +121,6 @@ Result do_disconnect(action_data_typ* const action)
     else
     {
         // some error
-        action->is_done = true;
         return res;
     }
 }
@@ -147,7 +142,6 @@ Result do_connect(action_data_typ* const action)
     else
     {
         // some error
-        action->is_done = true;
         return res;
     }
 }
@@ -166,7 +160,6 @@ Result do_get_Result_OK(action_data_typ* const action)
         else
         {
             debug_line("target: step %ld failed (0x%08lx)", action->cur_phase, data);
-            action->is_done = true;
             return ERR_WRONG_VALUE;
         }
     }
@@ -180,7 +173,6 @@ Result do_get_Result_OK(action_data_typ* const action)
         else
         {
             // some error
-            action->is_done = true;
             return res;
         }
     }
@@ -206,7 +198,6 @@ Result do_get_Result_data(action_data_typ* const action)
         else
         {
             // some error
-            action->is_done = true;
             return res;
         }
     }

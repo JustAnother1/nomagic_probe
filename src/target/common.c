@@ -171,7 +171,6 @@ bool common_cmd_target_info(uint32_t loop)
     {
         debug_line("action type: %d", action_queue[action_read].action);
         debug_line("cur_phase: %ld", action_queue[action_read].cur_phase);
-        debug_line("action is done : %d", action_queue[action_read].is_done);
         debug_line("can run : %d", action_queue[action_read].can_run);
         debug_line("action_write : %ld", action_write);
         debug_line("action_read : %ld", action_read);
@@ -394,7 +393,6 @@ static void handle_actions(void)
         // order not done
         if(true == timeout_expired(&action_to))
         {
-            action_queue[action_read].is_done = true;
             debug_line("ERROR: target: SWD: timeout in running %d.%ld order !",
                        action_queue[action_read].action,
                        action_queue[action_read].cur_phase);
@@ -415,7 +413,6 @@ static void handle_actions(void)
     else
     {
         // action has finished
-        action_queue[action_read].is_done = true;
 #ifdef FEAT_GDB_SERVER
         gdb_is_not_busy_anymore();
 #endif
