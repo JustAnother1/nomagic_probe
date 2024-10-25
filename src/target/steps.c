@@ -18,14 +18,13 @@
 #include "probe_api/debug_log.h"
 
 
-Result do_read_ap_reg(action_data_typ* const action, uint32_t bank, uint32_t reg)
+Result step_read_ap_reg(action_data_typ* const action, uint32_t bank, uint32_t reg)
 {
     Result res = swd_read_ap_reg(bank, reg);
     if(RESULT_OK < res)
     {
         action->intern[INTERN_TRANSACTION_ID] = (uint32_t)res;
-        action->cur_phase = action->cur_phase + 1;
-        return ERR_NOT_COMPLETED;
+        return RESULT_OK;
     }
     else if(ERR_QUEUE_FULL_TRY_AGAIN == res)
     {
@@ -39,14 +38,13 @@ Result do_read_ap_reg(action_data_typ* const action, uint32_t bank, uint32_t reg
     }
 }
 
-Result do_write_ap_reg(action_data_typ* const action, uint32_t bank, uint32_t reg, uint32_t data)
+Result step_write_ap_reg(action_data_typ* const action, uint32_t bank, uint32_t reg, uint32_t data)
 {
     Result res = swd_write_ap_reg(bank, reg, data);
     if(RESULT_OK == res)
     {
         action->intern[INTERN_TRANSACTION_ID] = 0;
-        action->cur_phase = action->cur_phase + 1;
-        return ERR_NOT_COMPLETED;
+        return RESULT_OK;
     }
     else if(ERR_QUEUE_FULL_TRY_AGAIN == res)
     {
@@ -60,14 +58,13 @@ Result do_write_ap_reg(action_data_typ* const action, uint32_t bank, uint32_t re
     }
 }
 
-Result do_write_ap(action_data_typ* const action, uint32_t address, uint32_t data)
+Result step_write_ap(action_data_typ* const action, uint32_t address, uint32_t data)
 {
     Result res = swd_write_ap(address, data);
     if(RESULT_OK == res)
     {
         action->intern[INTERN_TRANSACTION_ID] = 0;
-        action->cur_phase = action->cur_phase + 1;
-        return ERR_NOT_COMPLETED;
+        return RESULT_OK;
     }
     else if(ERR_QUEUE_FULL_TRY_AGAIN == res)
     {
@@ -81,7 +78,7 @@ Result do_write_ap(action_data_typ* const action, uint32_t address, uint32_t dat
     }
 }
 
-Result do_read_ap(action_data_typ* const action, uint32_t address)
+Result step_read_ap(action_data_typ* const action, uint32_t address)
 {
     Result res;
     // debug_line("do_read_ap(0x%08lx)", address);
@@ -89,8 +86,7 @@ Result do_read_ap(action_data_typ* const action, uint32_t address)
     if(RESULT_OK < res)
     {
         action->intern[INTERN_TRANSACTION_ID] = (uint32_t)res;
-        action->cur_phase = action->cur_phase + 1;
-        return ERR_NOT_COMPLETED;
+        return RESULT_OK;
     }
     else if(ERR_QUEUE_FULL_TRY_AGAIN == res)
     {
@@ -104,14 +100,13 @@ Result do_read_ap(action_data_typ* const action, uint32_t address)
     }
 }
 
-Result do_disconnect(action_data_typ* const action)
+Result step_disconnect(action_data_typ* const action)
 {
     Result res = swd_disconnect();
     if(RESULT_OK < res)
     {
         action->intern[INTERN_TRANSACTION_ID] = (uint32_t)res;
-        action->cur_phase = action->cur_phase + 1;
-        return ERR_NOT_COMPLETED;
+        return RESULT_OK;
     }
     else if(ERR_QUEUE_FULL_TRY_AGAIN == res)
     {
@@ -125,14 +120,13 @@ Result do_disconnect(action_data_typ* const action)
     }
 }
 
-Result do_connect(action_data_typ* const action)
+Result step_connect(action_data_typ* const action)
 {
     Result res = swd_connect((bool)action->parameter[0], action->parameter[1],action->parameter[2]);
     if(RESULT_OK < res)
     {
         action->intern[INTERN_TRANSACTION_ID] = (uint32_t)res;
-        action->cur_phase = action->cur_phase + 1;
-        return ERR_NOT_COMPLETED;
+        return RESULT_OK;
     }
     else if(ERR_QUEUE_FULL_TRY_AGAIN == res)
     {
@@ -146,7 +140,7 @@ Result do_connect(action_data_typ* const action)
     }
 }
 
-Result do_get_Result_OK(action_data_typ* const action)
+Result step_get_Result_OK(action_data_typ* const action)
 {
     uint32_t data;
     Result res = swd_get_result((Result)action->intern[INTERN_TRANSACTION_ID], &data);
@@ -154,8 +148,7 @@ Result do_get_Result_OK(action_data_typ* const action)
     {
         if(RESULT_OK == data)
         {
-            action->cur_phase = action->cur_phase + 1;
-            return ERR_NOT_COMPLETED;
+            return RESULT_OK;
         }
         else
         {
@@ -178,15 +171,14 @@ Result do_get_Result_OK(action_data_typ* const action)
     }
 }
 
-Result do_get_Result_data(action_data_typ* const action)
+Result step_get_Result_data(action_data_typ* const action)
 {
     uint32_t data;
     Result res = swd_get_result((Result)action->intern[INTERN_TRANSACTION_ID], &data);
     if(RESULT_OK == res)
     {
         action->read_0 = data;
-        action->cur_phase = action->cur_phase + 1;
-        return ERR_NOT_COMPLETED;
+        return RESULT_OK;
     }
     else
     {
