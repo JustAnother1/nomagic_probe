@@ -317,7 +317,7 @@ static void flash_put_get(const uint8_t *tx, uint8_t *rx, size_t count, size_t r
         }
         if(0 != rx_level) // we received something
         {
-            uint8_t rxbyte = (uint8_t)XIP_SSI->DR0; // get the mext received byte
+            uint8_t rxbyte = (uint8_t)XIP_SSI->DR0; // get the next received byte
             if(0 != rx_skip)
             {
                 --rx_skip; // we should skip this byte
