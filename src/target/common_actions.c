@@ -723,7 +723,7 @@ Result handle_target_reply_read_memory(action_data_typ* const action)
 
     if(0 == action->cur_phase)
     {
-        res = step_read_ap(action, (action->gdb_parameter.address_length.address + action->intern[INTERN_MEMORY_OFFSET]));
+        res = step_read_ap(action, (uint32_t *)(action->gdb_parameter.address_length.address + action->intern[INTERN_MEMORY_OFFSET]));
         if(RESULT_OK == res)
         {
             action->cur_phase++;
@@ -837,7 +837,7 @@ Result handle_target_reply_write_memory(action_data_typ* const action)
 
     if(2 == action->cur_phase)
     {
-        res = step_write_ap(action, action->parameter[0], action->parameter[1]);
+        res = step_write_ap(action, (uint32_t *)action->parameter[0], action->parameter[1]);
         if(RESULT_OK == res)
         {
             action->cur_phase++;

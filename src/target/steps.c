@@ -58,9 +58,9 @@ Result step_write_ap_reg(action_data_typ* const action, uint32_t bank, uint32_t 
     }
 }
 
-Result step_write_ap(action_data_typ* const action, uint32_t address, uint32_t data)
+Result step_write_ap(action_data_typ* const action, volatile uint32_t* address, uint32_t data)
 {
-    Result res = swd_write_ap(address, data);
+    Result res = swd_write_ap((uint32_t)address, data);
     if(RESULT_OK == res)
     {
         action->intern[INTERN_TRANSACTION_ID] = 0;
@@ -78,11 +78,11 @@ Result step_write_ap(action_data_typ* const action, uint32_t address, uint32_t d
     }
 }
 
-Result step_read_ap(action_data_typ* const action, uint32_t address)
+Result step_read_ap(action_data_typ* const action, volatile uint32_t* address)
 {
     Result res;
     // debug_line("do_read_ap(0x%08lx)", address);
-    res = swd_read_ap(address);
+    res = swd_read_ap((uint32_t)address);
     if(RESULT_OK < res)
     {
         action->intern[INTERN_TRANSACTION_ID] = (uint32_t)res;
