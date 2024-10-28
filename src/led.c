@@ -21,6 +21,8 @@
 #include "hal/hw/SIO.h"
 #include "hal/time_base.h"
 
+#define LOOP_MONITOR 1
+
 #define NUM_MAX_STEPS  2
 
 #define LED_OFF_ACTION 0
@@ -75,6 +77,13 @@ void led_init(void)
     SIO->GPIO_OE_SET = 1ul << 25;
 
     led_set_pattern(PATTERN_NORMAL);
+#ifdef LOOP_MONITOR
+    SIO->GPIO_OE_CLR = 1ul << 22;
+    SIO->GPIO_OUT_CLR = 1ul << 22;
+    PADS_BANK0->GPIO22 = 0x00000030;
+    IO_BANK0->GPIO22_CTRL = 5;  // 5 == SIO
+    SIO->GPIO_OE_SET = 1ul << 22;
+#endif
 }
 
 void led_set_pattern(uint32_t pattern)
@@ -121,5 +130,8 @@ void led_tick(void)
         }
     }
     // else nothing to do
+#ifdef LOOP_MONITOR
+    SIO->GPIO_OUT_XOR = 1 << 22;
+#endif
 }
 
