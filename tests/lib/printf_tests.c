@@ -82,6 +82,28 @@ void test_printf_printf_digits(void)
     TEST_ASSERT_EQUAL_STRING(expected, str_buffer);
 }
 
+void test_printf_printf_width(void)
+{
+    const char* expected = "Value =   1";
+    uint32_t val = 1;
+    my_printf("Value = %3d", val);
+    TEST_ASSERT_EQUAL_UINT32(strlen(expected), buf_idx);
+    str_buffer[buf_idx] = 0;
+    TEST_ASSERT_EQUAL_STRING(expected, str_buffer);
+}
+
+void test_printf_printf_width_long(void)
+{
+    const char* expected = "Value =   5";
+    uint32_t val = 5;
+    my_printf("Value = %3ld", val);
+    TEST_ASSERT_EQUAL_UINT32(strlen(expected), buf_idx);
+    str_buffer[buf_idx] = 0;
+    TEST_ASSERT_EQUAL_STRING(expected, str_buffer);
+}
+
+
+
 int main(void)
 {
     UNITY_BEGIN();
@@ -89,5 +111,7 @@ int main(void)
     RUN_TEST(test_printf_printf_str);
     RUN_TEST(test_printf_printf_int);
     RUN_TEST(test_printf_printf_digits);
+    RUN_TEST(test_printf_printf_width);
+    RUN_TEST(test_printf_printf_width_long);
     return UNITY_END();
 }
