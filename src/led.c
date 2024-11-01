@@ -19,9 +19,10 @@
 #include "hal/hw/PSM.h"
 #include "hal/hw/RESETS.h"
 #include "hal/hw/SIO.h"
+#ifdef LOOP_MONITOR
+#include "hal/loop_monitor_pin.h"
+#endif
 #include "hal/time_base.h"
-
-#define LOOP_MONITOR 1
 
 #define NUM_MAX_STEPS  2
 
@@ -78,11 +79,7 @@ void led_init(void)
 
     led_set_pattern(PATTERN_NORMAL);
 #ifdef LOOP_MONITOR
-    SIO->GPIO_OE_CLR = 1ul << 22;
-    SIO->GPIO_OUT_CLR = 1ul << 22;
-    PADS_BANK0->GPIO22 = 0x00000030;
-    IO_BANK0->GPIO22_CTRL = 5;  // 5 == SIO
-    SIO->GPIO_OE_SET = 1ul << 22;
+    loop_monitor_pin_init();
 #endif
 }
 
@@ -131,7 +128,7 @@ void led_tick(void)
     }
     // else nothing to do
 #ifdef LOOP_MONITOR
-    SIO->GPIO_OUT_XOR = 1 << 22;
+    loop_monitor_pin_toggle();
 #endif
 }
 
