@@ -14,11 +14,7 @@
  */
 
 #include "led.h"
-#include "hal/hw/IO_BANK0.h"
-#include "hal/hw/PADS_BANK0.h"
-#include "hal/hw/PSM.h"
-#include "hal/hw/RESETS.h"
-#include "hal/hw/SIO.h"
+#include "hal/led_pin.h"
 #ifdef LOOP_MONITOR
 #include "hal/loop_monitor_pin.h"
 #endif
@@ -69,14 +65,7 @@ static uint32_t next_step;
 
 void led_init(void)
 {
-    RESETS->RESET = RESETS->RESET & ~0x00000020lu; // take IO_BANK0 out of Reset
-    PSM->FRCE_ON = PSM->FRCE_ON | 0x00000400; // make sure that SIO is powered on
-    SIO->GPIO_OE_CLR = 1ul << 25;
-    SIO->GPIO_OUT_CLR = 1ul << 25;
-    PADS_BANK0->GPIO25 = 0x00000030;
-    IO_BANK0->GPIO25_CTRL = 5;  // 5 == SIO
-    SIO->GPIO_OE_SET = 1ul << 25;
-
+    led_pin_init();
     led_set_pattern(PATTERN_NORMAL);
 #ifdef LOOP_MONITOR
     loop_monitor_pin_init();
@@ -104,11 +93,11 @@ void led_tick(void)
             switch(patterns[curPattern].steps[next_step].action)
             {
             case LED_OFF_ACTION :
-                SIO->GPIO_OUT_CLR = 1 << 25;
+                led_pin_off();
                 break;
 
             case LED_ON_ACTION :
-                SIO->GPIO_OUT_SET = 1 << 25;
+                led_pin_on();
                 break;
 
             default:
