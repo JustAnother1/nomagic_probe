@@ -265,6 +265,10 @@ Result swd_disconnect(void)
 
 Result swd_get_result(Result transaction, uint32_t* data)
 {
+    if(NULL == data)
+    {
+        return ERR_INVALID_PARAMETER;
+    }
     if(transaction < 1)
     {
         // 0 or negative values are not valid
@@ -305,14 +309,14 @@ void swd_eingine_add_cmd_result(Result idx, uint32_t data)
 
 static uint32_t next_cmd_result_slot(void)
 {
-    uint32_t res = cmd_result_data_write;
-    cmd_result_data_available[res] = false;
-    cmd_result_data_write++;
-    if(CMD_QUEUE_LENGTH == cmd_result_data_write)
+    uint32_t res = cmd_result_data_write; // get next free slot
+    cmd_result_data_available[res] = false; // mark slot as used
+    cmd_result_data_write++; // move pointer to next free slot
+    if(CMD_QUEUE_LENGTH == cmd_result_data_write) // handle wrap around
     {
         cmd_result_data_write = 0;
     }
-    res = res + 1;
+    res = res + 1;  // to avoid a value of 0
     return res;
 }
 
