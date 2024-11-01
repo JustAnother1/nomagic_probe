@@ -21,7 +21,7 @@
 void reply_packet_prepare(void);
 void reply_packet_add(char* data);  // adds string
 void reply_packet_add_max(char* data, uint32_t length);  // adds string with max length
-void reply_packet_add_hex(uint32_t data, uint32_t digits);
+bool reply_packet_add_hex(uint32_t data, uint32_t digits);
 void reply_packet_send(void);
 void send_error_packet(void);
 void send_ack_packet(void);

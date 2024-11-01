@@ -139,7 +139,7 @@ void reply_packet_add_max(char* data, uint32_t length)
     }
 }
 
-void reply_packet_add_hex(uint32_t data, uint32_t digits)
+bool reply_packet_add_hex(uint32_t data, uint32_t digits)
 {
     uint32_t i;
     uint32_t report;  // report this many digits
@@ -190,10 +190,12 @@ void reply_packet_add_hex(uint32_t data, uint32_t digits)
             serial_gdb_send_bytes(&(reply_buffer[reply_length + i]), 1);
         }
         reply_length = reply_length + report;
+        return true;
     }
     else
     {
         debug_line("ERROR: add hex: reply too long !");
+        return false;
     }
 }
 
