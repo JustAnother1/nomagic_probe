@@ -13,11 +13,11 @@
  *
  */
 
+#include <hal/swd_gpio.h>
 #include <stdbool.h>
 #include "swd_packet_bits.h"
 #include "probe_api/debug_log.h"
 #include "probe_api/result.h"
-#include "swd_gpio.h"
 
 /*
 Write to Target: (SWDIO must be valid before rising edge)
