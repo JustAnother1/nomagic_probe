@@ -13,16 +13,18 @@
  *
  */
 
-#include <unistd.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
+#include "hal/reset_pin.h"
 #include "hal/time_base.h"
-#include "swd_protocol.h"
-#include "swd_packets.h"
 #include "probe_api/debug_log.h"
-#include "swd_packet_bits.h"
-#include "swd_engine.h"
 #include "probe_api/swd.h"
+#include "swd_engine.h"
+#include "swd_packets.h"
+#include "swd_packet_bits.h"
+#include "swd_protocol.h"
+
 
 // timeout until the WDIO line will be put into low power mode (High)
 #define SWDIO_IDLE_TIMEOUT_US    12000
@@ -82,6 +84,7 @@ void swd_protocol_init(void)
     state.mem_ap.reg_CSW = 0;
     state.mem_ap.reg_TAR = 0;
     swd_packets_init();
+    reset_pin_init();
 }
 
 void swd_protocol_tick(void)
@@ -205,6 +208,7 @@ Result connect_handler(command_typ* cmd, bool first_call)
         state.mem_ap.ap_sel = cmd->i_val_2;
         cmd->phase = 1;
         swd_packet_bits_reset_error_condition();
+        reset_pin_active();
     }
 
 // Phase 1 (multi(SWDv2) only - disconnect)
@@ -695,6 +699,7 @@ Result disconnect_handler(command_typ* cmd, bool first_call)
     {
         // done!
         swd_eingine_add_cmd_result(cmd->transaction_id, RESULT_OK);
+        reset_pin_inactive();
         return RESULT_OK;
     }
     else
