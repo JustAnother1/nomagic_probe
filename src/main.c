@@ -60,7 +60,7 @@ static void init_1(void);
 static void loop_0(void);
 static void loop_1(void);
 
-static uint32_t tasks = 0;
+static uint32_t task_list = 0;
 
 static void init_0(void)
 {
@@ -68,7 +68,7 @@ static void init_0(void)
     boot_rom_check_if_valid();
 #endif
 
-    tasks = ALL_SUPERVISED_TASKS;
+    task_list = ALL_SUPERVISED_TASKS;
     watchdog_enable();
     init_time();
 
@@ -115,11 +115,11 @@ static void loop_0(void)
 {
     // software watch dog
     watchdog_enter_section(SECTION_WATCHDOG);
-    tasks = tasks &~TASK_LOOP_0;
-    if(0 == tasks)
+    task_list = task_list &~TASK_LOOP_0;
+    if(0 == task_list)
     {
         watchdog_feed();
-        tasks = ALL_SUPERVISED_TASKS;
+        task_list = ALL_SUPERVISED_TASKS;
     }
     watchdog_leave_section(SECTION_WATCHDOG);
 
@@ -160,7 +160,7 @@ static void loop_0(void)
 static void loop_1(void)
 {
     // flag for watch dog that function has been called again
-    tasks = tasks &~TASK_LOOP_1;
+    task_list = task_list &~TASK_LOOP_1;
 
     // blink the LED to let the user know everything is fine
     watchdog_enter_section(SECTION_LED);
