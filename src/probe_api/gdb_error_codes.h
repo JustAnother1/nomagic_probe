@@ -27,5 +27,6 @@
 #define ERROR_CODE_INVALID_THREAD_OPERATION          "E08"
 #define ERROR_CODE_TOO_LONG                          "E09"
 #define ERROR_TARGET_FAILED                          "E10"
+#define ERROR_TIMEOUT                                "E11"
 
 #endif /* NOMAGIC_PROBE_SRC_GDBSERVER_GDB_ERROR_CODES_H_ */
