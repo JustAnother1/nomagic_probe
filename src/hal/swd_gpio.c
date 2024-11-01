@@ -12,7 +12,7 @@
  * with this program; if not, see <http://www.gnu.org/licenses/>
  *
  */
-#include "swd_gpio.h"
+#include <hal/swd_gpio.h>
 #include "hal/hw/IO_BANK0.h"
 #include "hal/hw/PADS_BANK0.h"
 #include "hal/hw/PSM.h"

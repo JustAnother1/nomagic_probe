@@ -110,6 +110,7 @@ endif
 SRC += $(NOMAGIC_SRC_FOLDER)hal/flash.c
 SRC += $(NOMAGIC_SRC_FOLDER)hal/time_base.c
 SRC += $(NOMAGIC_SRC_FOLDER)hal/random.c
+SRC += $(NOMAGIC_SRC_FOLDER)hal/swd_gpio.c
 
 # command line interface (debug - UART0 / USB-CDC)
 ifeq ($(HAS_CLI), yes)
@@ -146,7 +147,6 @@ SRC += $(NOMAGIC_SRC_FOLDER)swd/swd_engine.c
 SRC += $(NOMAGIC_SRC_FOLDER)swd/swd_protocol.c
 SRC += $(NOMAGIC_SRC_FOLDER)swd/swd_packets.c
 SRC += $(NOMAGIC_SRC_FOLDER)swd/swd_packet_bits.c
-SRC += $(NOMAGIC_SRC_FOLDER)swd/swd_gpio.c
 
 # USB driver
 SRC += $(NOMAGIC_SRC_FOLDER)tinyusb/usb.c
