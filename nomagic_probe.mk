@@ -4,19 +4,12 @@ GITREF = $(shell cd $(NOMAGIC_FOLDER) && git describe --abbrev=40 --dirty --alwa
 # COMPILER SWITCHES
 # =================
 # These switches enable or disable functionality
-# tinyUSB logging has different levels 0 = no logging,1 = some logging, 2 = more logging, 3= all logging
-DDEFS += -DCFG_TUSB_DEBUG=1
-# with this (=1)the watchdog is only active if the debugger is not connected
-DDEFS += -DDISABLE_WATCHDOG_FOR_DEBUG=0
-# use both cores
-#DDEFS += -DENABLE_CORE_1=1
+
 # use BOOT ROM (for flash functions,...)
 ifeq ($(USE_BOOT_ROM), yes)
 	DDEFS += -DBOOT_ROM_ENABLED=1
 endif
 
-
-DDEFS += -DLWIP_DEBUG=1
 # enable USB Mass Storage (Thumb Drive)
 ifeq ($(HAS_MSC), yes)
 	DDEFS += -DFEAT_USB_MSC
@@ -39,33 +32,7 @@ ifeq ($(HAS_NCM), yes)
 	LWIP_DIR = $(NOMAGIC_SRC_FOLDER)lwip/
 endif
 
-CFLAGS  = -c -ggdb3 -MMD -MP
-CFLAGS += -O3
-# sometimes helps with debugging:
-# CFLAGS += -O0
-# CFLAGS += -save-temps=obj
-
-CFLAGS += -std=c17
-CFLAGS += -mcpu=cortex-m0plus -mthumb
-CFLAGS += -ffreestanding -funsigned-char
-# -fno-short-enums
-CFLAGS += -Wall -Wextra -pedantic -Wshadow -Wdouble-promotion -Wconversion 
-# -Wpadded : tinyUSB creates warnings with this enabled. :-( 
-CFLAGS += -ffunction-sections -fdata-sections
-
 LKR_SCRIPT = $(NOMAGIC_SRC_FOLDER)hal/RP2040.ld
-
-LFLAGS  = -ffreestanding -nostartfiles
-# disabled the following due to this issue:
-#  undefined reference to `__gnu_thumb1_case_si'
-LFLAGS += -nostdlib -nolibc -nodefaultlibs 
-LFLAGS += -specs=nosys.specs
-LFLAGS += -fno-builtin -fno-builtin-function
-# https://wiki.osdev.org/Libgcc : All code compiled with GCC must be linked with libgcc. 
-#LFLAGS += -lgcc
-LFLAGS += -Wl,--gc-sections,-Map=$(BIN_FOLDER)$(PROJECT).map -g
-LFLAGS += -fno-common -T$(LKR_SCRIPT)
-
 
 # Files to compile
 # ================
@@ -217,6 +184,7 @@ SRC += $(NOMAGIC_SRC_FOLDER)tinyusb/src/class/net/ncm_device.c
 endif
 
 # target
+SRC += $(NOMAGIC_SRC_FOLDER)target/activity.c
 SRC += $(NOMAGIC_SRC_FOLDER)target/common.c
 SRC += $(NOMAGIC_SRC_FOLDER)target/common_actions.c
 SRC += $(NOMAGIC_SRC_FOLDER)target/steps.c
