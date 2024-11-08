@@ -18,12 +18,14 @@
 #include "probe_api/debug_log.h"
 
 
-Result step_read_ap_reg(action_data_typ* const action, uint32_t bank, uint32_t reg)
+static Result transaction_id;
+
+Result step_read_ap_reg(uint32_t bank, uint32_t reg)
 {
     Result res = swd_read_ap_reg(bank, reg);
     if(RESULT_OK < res)
     {
-        action->intern[INTERN_TRANSACTION_ID] = (uint32_t)res;
+        transaction_id = res;
         return RESULT_OK;
     }
     else if(ERR_QUEUE_FULL_TRY_AGAIN == res)
@@ -38,12 +40,12 @@ Result step_read_ap_reg(action_data_typ* const action, uint32_t bank, uint32_t r
     }
 }
 
-Result step_write_ap_reg(action_data_typ* const action, uint32_t bank, uint32_t reg, uint32_t data)
+Result step_write_ap_reg(uint32_t bank, uint32_t reg, uint32_t data)
 {
     Result res = swd_write_ap_reg(bank, reg, data);
     if(RESULT_OK == res)
     {
-        action->intern[INTERN_TRANSACTION_ID] = 0;
+        transaction_id = 0;
         return RESULT_OK;
     }
     else if(ERR_QUEUE_FULL_TRY_AGAIN == res)
@@ -58,12 +60,12 @@ Result step_write_ap_reg(action_data_typ* const action, uint32_t bank, uint32_t 
     }
 }
 
-Result step_write_ap(action_data_typ* const action, volatile uint32_t* address, uint32_t data)
+Result step_write_ap(volatile uint32_t* address, uint32_t data)
 {
     Result res = swd_write_ap((uint32_t)address, data);
     if(RESULT_OK == res)
     {
-        action->intern[INTERN_TRANSACTION_ID] = 0;
+        transaction_id = 0;
         return RESULT_OK;
     }
     else if(ERR_QUEUE_FULL_TRY_AGAIN == res)
@@ -78,20 +80,24 @@ Result step_write_ap(action_data_typ* const action, volatile uint32_t* address, 
     }
 }
 
-Result step_read_ap(action_data_typ* const action, volatile uint32_t* address)
+Result step_read_ap(volatile uint32_t* address)
 {
     Result res;
     // debug_line("do_read_ap(0x%08lx)", address);
     res = swd_read_ap((uint32_t)address);
     if(RESULT_OK < res)
     {
-        action->intern[INTERN_TRANSACTION_ID] = (uint32_t)res;
+        transaction_id = res;
         return RESULT_OK;
     }
     else if(ERR_QUEUE_FULL_TRY_AGAIN == res)
     {
         // try again
         return ERR_NOT_COMPLETED;
+    }
+    else if(RESULT_OK == res)
+    {
+        return ERR_WRONG_VALUE;
     }
     else
     {
@@ -100,12 +106,12 @@ Result step_read_ap(action_data_typ* const action, volatile uint32_t* address)
     }
 }
 
-Result step_disconnect(action_data_typ* const action)
+Result step_disconnect(void)
 {
     Result res = swd_disconnect();
     if(RESULT_OK < res)
     {
-        action->intern[INTERN_TRANSACTION_ID] = (uint32_t)res;
+        transaction_id = res;
         return RESULT_OK;
     }
     else if(ERR_QUEUE_FULL_TRY_AGAIN == res)
@@ -120,12 +126,12 @@ Result step_disconnect(action_data_typ* const action)
     }
 }
 
-Result step_connect(action_data_typ* const action)
+Result step_connect(bool multi, uint32_t target, uint32_t AP_sel)
 {
-    Result res = swd_connect((bool)action->parameter[0], action->parameter[1],action->parameter[2]);
+    Result res = swd_connect(multi, target, AP_sel);
     if(RESULT_OK < res)
     {
-        action->intern[INTERN_TRANSACTION_ID] = (uint32_t)res;
+        transaction_id = res;
         return RESULT_OK;
     }
     else if(ERR_QUEUE_FULL_TRY_AGAIN == res)
@@ -140,10 +146,10 @@ Result step_connect(action_data_typ* const action)
     }
 }
 
-Result step_get_Result_OK(action_data_typ* const action)
+Result step_get_Result_OK(void)
 {
     uint32_t data;
-    Result res = swd_get_result((Result)action->intern[INTERN_TRANSACTION_ID], &data);
+    Result res = swd_get_result(transaction_id, &data);
     if(RESULT_OK == res)
     {
         if(RESULT_OK == data)
@@ -152,7 +158,7 @@ Result step_get_Result_OK(action_data_typ* const action)
         }
         else
         {
-            debug_line("target: step %ld failed (0x%08lx)", action->cur_phase, data);
+            debug_line("target: step failed (0x%08lx)", data);
             return ERR_WRONG_VALUE;
         }
     }
@@ -171,27 +177,8 @@ Result step_get_Result_OK(action_data_typ* const action)
     }
 }
 
-Result step_get_Result_data(action_data_typ* const action)
+Result step_get_Result_data(uint32_t* data)
 {
-    uint32_t data;
-    Result res = swd_get_result((Result)action->intern[INTERN_TRANSACTION_ID], &data);
-    if(RESULT_OK == res)
-    {
-        action->read_0 = data;
-        return RESULT_OK;
-    }
-    else
-    {
-        if(ERR_NOT_COMPLETED == res)
-        {
-            // try again
-            return ERR_NOT_COMPLETED;
-        }
-        else
-        {
-            // some error
-            return res;
-        }
-    }
+    return swd_get_result(transaction_id, data);
 }
 

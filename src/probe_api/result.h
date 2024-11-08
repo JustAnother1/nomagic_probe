@@ -31,6 +31,7 @@
 #define ERR_WRONG_VALUE             -9 // 0xfffffff7
 #define ERR_TOO_LONG               -10 // 0xfffffff6
 #define ERR_INVALID_PARAMETER      -11 // 0xfffffff5
+#define ERR_ACTION_NULL            -12 // 0xfffffff4
 
 typedef int32_t Result;
 

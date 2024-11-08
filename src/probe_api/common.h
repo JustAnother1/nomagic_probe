@@ -150,10 +150,11 @@ typedef enum {
 
 typedef struct{
     uint32_t parameter[MAX_PARAMETER_VALUES];
-    parameter_typ gdb_parameter;
-    uint32_t cur_phase;
+    volatile uint32_t cur_phase;
+    uint32_t activity_phase;
     uint32_t intern[MAX_INTERN_VALUES];
     uint32_t read_0;
+    parameter_typ gdb_parameter;
     action_typ action;
     bool can_run;
     bool first_call;
@@ -165,11 +166,11 @@ typedef Result (*action_handler)(action_data_typ * const action);
 void common_target_init(void);
 void common_target_tick(void);
 
-Result add_target_action(action_data_typ * const action);
 bool add_action(action_typ act);
 bool add_action_with_parameter(action_typ act, parameter_typ* parsed_parameter);
 void target_connect(void);
 void target_close_connection(void);
+void target_restart_action_timeout(void);
 
 void target_set_status(target_status_typ new_status);
 bool common_cmd_target_info(uint32_t loop);

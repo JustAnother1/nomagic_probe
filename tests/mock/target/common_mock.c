@@ -63,12 +63,6 @@ bool cmd_target_trace(uint32_t loop)
     return true;
 }
 
-Result add_target_action(action_data_typ * const action)
-{
-    (void) action;
-    return RESULT_OK;
-}
-
 bool add_action(action_typ act)
 {
     (void) act;

@@ -18,25 +18,26 @@
 #include <stddef.h>
 #include <string.h>
 #include "cfg/serial_cfg.h"
+#include "probe_api/actions.h"
+#include "probe_api/common.h"
+#include "probe_api/debug_log.h"
+#include "probe_api/gdb_error_codes.h"
 #include "probe_api/gdb_packets.h"
+#include "probe_api/hex.h"
 #include "probe_api/result.h"
 #include "probe_api/swd.h"
-#include "probe_api/debug_log.h"
 #include "probe_api/time.h"
-#include "probe_api/hex.h"
-#include "probe_api/common.h"
-#include "probe_api/gdb_packets.h"
-#include "probe_api/actions.h"
 #include "target.h"
 
-#define ACTION_TRACE_LENGTH           10
+#define ACTION_TRACE_LENGTH           30
 #define ACTION_QUEUE_LENGTH           5
 #define ACTION_TIMEOUT_TIME_MS        6000
 #define GDB_RUNNING_REPORT_TIMEOUT_MS 500
 
 typedef struct{
     uint32_t action;
-    uint32_t cur_phase;
+    uint32_t phase_in;
+    uint32_t phase_out;
     Result result;
 } action_trace_typ;
 
@@ -45,6 +46,7 @@ static void handle_actions(void);
 static void check_if_still_running(void);
 static void report_to_gdb(void);
 static action_data_typ * book_action_slot(void);
+static Result add_target_action(action_data_typ * const action);
 
 static volatile uint32_t action_read;
 static volatile uint32_t action_write;
@@ -103,7 +105,7 @@ void common_target_init(void)
     action_write = 0;
     cur_action = NULL;
     attached = false;
-    trace_end = 0;
+    trace_end = ACTION_TRACE_LENGTH -1;
     memset(&action_queue, 0, sizeof(action_queue));
     memset(&trace_buf, 0, sizeof(trace_buf));
     target_status = NOT_CONNECTED;
@@ -198,9 +200,10 @@ bool cmd_target_trace(uint32_t loop)
 {
     if(0 == loop)
     {
-        debug_line("action(newest first), phase,   result");
+        debug_line("trace end : %ld", trace_end);
+        debug_line("num, action(newest last), phase,   result");
     }
-    else // if(1 == loop)
+    else
     {
         uint32_t idx;
         if(loop > ACTION_TRACE_LENGTH)
@@ -208,27 +211,30 @@ bool cmd_target_trace(uint32_t loop)
             // printed complete trace buffer
             return true;
         }
-        if(loop -1 > trace_end)
+        idx = trace_end + loop;
+
+        while(ACTION_TRACE_LENGTH <= idx)
         {
-            idx = (ACTION_TRACE_LENGTH + trace_end) - (loop -1);
-        }
-        else
-        {
-            idx = trace_end - (loop -1);
+            idx = idx - ACTION_TRACE_LENGTH;
         }
 
         if(0 != trace_buf[idx].action)
         {
             // print entry
-            debug_line("%20s,     %ld,   %ld",
+            debug_line("%3ld, %20s,     %ld,   %ld",
+                       idx,
                        action_names[trace_buf[idx].action -1], // 0 is a valid action
-                       trace_buf[idx].cur_phase,
+                       trace_buf[idx].phase_in,
                        trace_buf[idx].result);
         }
         else
         {
-            // no more entries
-            return true;
+            // unused entries (not yet wrapped around)
+            debug_line("%3ld, %20s,     %ld,   %ld",
+                       idx,
+                       "not used",
+                       trace_buf[idx].phase_in,
+                       trace_buf[idx].result);
         }
     }
     return false; // true == Done; false = call me again
@@ -259,7 +265,7 @@ static action_data_typ * book_action_slot(void)
     }
 }
 
-Result add_target_action(action_data_typ * const action)
+static Result add_target_action(action_data_typ * const action)
 {
     action->can_run = true;
     action->first_call = true;
@@ -316,6 +322,11 @@ void target_close_connection(void)
     add_action(SWD_CLOSE_CONNECTION);
 }
 
+void target_restart_action_timeout(void)
+{
+    start_timeout(&action_to, ACTION_TIMEOUT_TIME_MS);
+}
+
 static void check_if_still_running(void)
 {
 #ifdef FEAT_GDB_SERVER
@@ -347,6 +358,7 @@ static void handle_actions(void)
                 // new action available
                 action_queue[action_read].cur_phase = 0;
                 cur_action = action_look_up[action_queue[action_read].action];
+                debug_line("ACTIONS: starting with action %s !", action_names[action_queue[action_read].action]);
                 start_timeout(&action_to, ACTION_TIMEOUT_TIME_MS);
             }
             else
@@ -364,18 +376,9 @@ static void handle_actions(void)
     }
 
     // we now have an action
-    // call handler
-    res = (*cur_action)(&action_queue[action_read]);
 
     // trace call
-    if(false == action_queue[action_read].first_call)
-    {
-        // another call to the same action
-        // trace_buf[trace_end].action = action_queue[action_read].action + 1;
-        trace_buf[trace_end].cur_phase = action_queue[action_read].cur_phase;
-        trace_buf[trace_end].result = res;
-    }
-    else
+    if(true == action_queue[action_read].first_call)
     {
         // new action
         trace_end ++;
@@ -383,20 +386,29 @@ static void handle_actions(void)
         {
             trace_end = 0;
         }
-        trace_buf[trace_end].action = action_queue[action_read].action + 1;  // 0 is a valid action
-        trace_buf[trace_end].cur_phase = action_queue[action_read].cur_phase;
-        trace_buf[trace_end].result = res;
     }
+    trace_buf[trace_end].action = action_queue[action_read].action + 1;  // 0 is a valid action
+    trace_buf[trace_end].phase_in = action_queue[action_read].cur_phase;
+
+    // call handler
+    res = (*cur_action)(&action_queue[action_read]);
+    // TODO I don't understand why these line cause an Hard Fault
+    // trace_buf[trace_end].phase_out = action_queue[action_read].cur_phase;
+    // trace_buf[trace_end].result = res;
+
 
     if(ERR_NOT_COMPLETED == res)
     {
         // order not done
         if(true == timeout_expired(&action_to))
         {
-            debug_line("ERROR: target: SWD: timeout in running %d.%ld order !",
-                       action_queue[action_read].action,
+            debug_line("ERROR: target: SWD: timeout in running '%s' phase %ld !",
+                       action_names[action_queue[action_read].action],
                        action_queue[action_read].cur_phase);
             // TODO can we do something better than to just skip this command?
+            reply_packet_prepare();
+            reply_packet_add(ERROR_TIMEOUT);
+            reply_packet_send();
             // do not try anymore
             cur_action = NULL;
             action_read++;
@@ -430,6 +442,10 @@ static void handle_actions(void)
                 gdb_is_not_busy_anymore();
             }
 #endif
+        }
+        else
+        {
+            debug_line("ACTIONS: finished with action %s !", action_names[action_queue[action_read].action]);
         }
         cur_action = NULL;
         action_read++;

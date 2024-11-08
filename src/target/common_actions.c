@@ -44,14 +44,17 @@ static void send_stopped_reply(void);
 Result handle_target_connect(action_data_typ* const action)
 {
     Result res;
+
+    if(NULL == action)
+    {
+        return ERR_ACTION_NULL;
+    }
+
     if(true == action->first_call)
     {
         debug_line("resetting error condition!");
         swd_reset_error_condition();
 
-        action->parameter[0] = target_is_SWDv2();
-        action->parameter[1] = target_get_SWD_core_id(0);  // TODO multi core
-        action->parameter[2] = target_get_SWD_APSel(0);  // TODO multi core
         action->cur_phase = 0;
         action->first_call = false;
     }
@@ -59,7 +62,7 @@ Result handle_target_connect(action_data_typ* const action)
     // disconnect (In case the Chips it is still connected to a previous session)
     if(0 == action->cur_phase)
     {
-        res = step_disconnect(action);
+        res = step_disconnect();
         if(RESULT_OK == res)
         {
             action->cur_phase++;
@@ -72,7 +75,7 @@ Result handle_target_connect(action_data_typ* const action)
 
     if(1 == action->cur_phase)
     {
-        res = step_get_Result_OK(action);  // TODO do we really need this?
+        res = step_get_Result_OK();  // TODO do we really need this?
         if(RESULT_OK == res)
         {
             action->cur_phase++;
@@ -86,7 +89,9 @@ Result handle_target_connect(action_data_typ* const action)
     // connect
     if(2 == action->cur_phase)
     {
-        res = step_connect(action);
+        res = step_connect(target_is_SWDv2(),
+                           target_get_SWD_core_id(0), // TODO multi core
+                           target_get_SWD_APSel(0)); // TODO multi core
         if(RESULT_OK == res)
         {
             action->cur_phase++;
@@ -99,7 +104,7 @@ Result handle_target_connect(action_data_typ* const action)
 
     if(3 == action->cur_phase)
     {
-        res = step_get_Result_OK(action);
+        res = step_get_Result_OK();
         if(RESULT_OK == res)
         {
             action->cur_phase++;
@@ -114,7 +119,7 @@ Result handle_target_connect(action_data_typ* const action)
     // C_DEBUGEN = 1; C_HALT = b10;
     if(4 == action->cur_phase)
     {
-        res = step_write_ap(action, DHCSR, DBGKEY | (1 << DHCSR_C_DEBUGEN_OFFSET) );
+        res = step_write_ap(DHCSR, DBGKEY | (1 << DHCSR_C_DEBUGEN_OFFSET) );
         if(RESULT_OK == res)
         {
             action->cur_phase++;
@@ -131,7 +136,7 @@ Result handle_target_connect(action_data_typ* const action)
         // bit 24: DWTENA:       0= DWT disabled;                 1= DWT enabled.
         // bit 10: VC_HARDERR:   0= haling on HardFault disabled; 1= halting on HardFault enabled.
         // bit 0:  VC_CORERESET: 0= Reset Vector Catch disabled;  1= Reset Vector Catch enabled.
-        res = step_write_ap(action, DEMCR, (1 << 24) | (1 << 10) | 1 );
+        res = step_write_ap(DEMCR, (1 << 24) | (1 << 10) | 1 );
         if(RESULT_OK == res)
         {
             action->cur_phase++;
@@ -149,7 +154,7 @@ Result handle_target_connect(action_data_typ* const action)
     // bit 0: C_DEBUGEN:  0= Halting debug disabled;            1= Halting debug enabled.
     if(6 == action->cur_phase)
     {
-        res = step_write_ap(action, DHCSR, DBGKEY
+        res = step_write_ap(DHCSR, DBGKEY
                          | (1 << DHCSR_C_MASKINTS_OFFSET)   // TODO configure ?
                       // | (1 << DHCSR_C_STEP_OFFSET)
                          | (1 << DHCSR_C_HALT_OFFSET)
@@ -178,6 +183,11 @@ Result handle_target_connect(action_data_typ* const action)
 
 Result handle_target_close_connection(action_data_typ* const action)
 {
+    if(NULL == action)
+    {
+        return ERR_ACTION_NULL;
+    }
+
     if(true == action->first_call)
     {
         debug_line("closing SWD connection !");
@@ -271,7 +281,13 @@ Result handle_target_reply_g(action_data_typ* const action)
     //        <- xxxxxxxx00000000xxxxxxxx00000000
     //    ‘E NN’
     //        for an error.
+
     Result res;
+
+    if(NULL == action)
+    {
+        return ERR_ACTION_NULL;
+    }
 
     if(true == action->first_call)
     {
@@ -285,7 +301,7 @@ Result handle_target_reply_g(action_data_typ* const action)
     // 1. write to DCRSR the REGSEL value and REGWnR = 0
     if(0 == action->cur_phase)
     {
-        res = step_write_ap(action, DCRSR, action->intern[INTERN_REGISTER_IDX]);
+        res = step_write_ap(DCRSR, action->intern[INTERN_REGISTER_IDX]);
         if(RESULT_OK == res)
         {
             action->cur_phase++;
@@ -299,7 +315,7 @@ Result handle_target_reply_g(action_data_typ* const action)
     // 2. read DHCSR until S_REGRDY is 1
     if(1 == action->cur_phase)
     {
-        res = step_read_ap(action, DHCSR);
+        res = step_read_ap(DHCSR);
         if(RESULT_OK == res)
         {
             action->cur_phase++;
@@ -312,7 +328,7 @@ Result handle_target_reply_g(action_data_typ* const action)
 
     if(2 == action->cur_phase)
     {
-        res = step_get_Result_data(action);
+        res = step_get_Result_data(&action->read_0);
         if(RESULT_OK == res)
         {
             action->cur_phase++;
@@ -354,7 +370,7 @@ Result handle_target_reply_g(action_data_typ* const action)
     // 3. read data from DCRDR
     if(4 == action->cur_phase)
     {
-        res = step_read_ap(action, DCRDR);
+        res = step_read_ap(DCRDR);
         if(RESULT_OK == res)
         {
             action->cur_phase++;
@@ -367,7 +383,7 @@ Result handle_target_reply_g(action_data_typ* const action)
 
     if(5 == action->cur_phase)
     {
-        res = step_get_Result_data(action);
+        res = step_get_Result_data(&action->read_0);
         if(RESULT_OK == res)
         {
             action->cur_phase++;
@@ -381,7 +397,11 @@ Result handle_target_reply_g(action_data_typ* const action)
     if(6 == action->cur_phase)
     {
         // this register done, next?
-        reply_packet_add_hex(action->read_0, 8);
+        if(false == reply_packet_add_hex(action->read_0, 8))
+        {
+            reply_packet_send();
+            return ERR_TOO_LONG;
+        }
         // debug_line("read 0x%08lx", action->read_0);
         action->intern[INTERN_REGISTER_IDX] ++;
         action->cur_phase = 0;
@@ -444,6 +464,11 @@ Result handle_target_reply_write_g(action_data_typ* const action)
 
     Result res;
 
+    if(NULL == action)
+    {
+        return ERR_ACTION_NULL;
+    }
+
     if(true == action->first_call)
     {
         reply_packet_prepare();
@@ -500,7 +525,7 @@ Result handle_target_reply_write_g(action_data_typ* const action)
     // 1. write value to DCRDR.
     if(2 == action->cur_phase)
     {
-        res = step_write_ap(action, DCRDR, action->parameter[1]);
+        res = step_write_ap(DCRDR, action->parameter[1]);
         if(RESULT_OK == res)
         {
             action->cur_phase++;
@@ -514,7 +539,7 @@ Result handle_target_reply_write_g(action_data_typ* const action)
     // 2. write to DCRSR the REGSEL value and REGWnR = 1
     if(3 == action->cur_phase)
     {
-        res = step_write_ap(action, DCRSR, action->parameter[0] | (1 << DCRSR_REGWNR_OFFSET) );
+        res = step_write_ap(DCRSR, action->parameter[0] | (1 << DCRSR_REGWNR_OFFSET) );
         if(RESULT_OK == res)
         {
             action->cur_phase++;
@@ -528,7 +553,7 @@ Result handle_target_reply_write_g(action_data_typ* const action)
     // 2. read DHCSR until S_REGRDY is 1
     if(4 == action->cur_phase)
     {
-        res = step_read_ap(action, DHCSR);
+        res = step_read_ap(DHCSR);
         if(RESULT_OK == res)
         {
             action->cur_phase++;
@@ -541,7 +566,7 @@ Result handle_target_reply_write_g(action_data_typ* const action)
 
     if(5 == action->cur_phase)
     {
-        res = step_get_Result_data(action);
+        res = step_get_Result_data(&action->read_0);
         if(RESULT_OK == res)
         {
             action->cur_phase++;
@@ -586,7 +611,11 @@ Result handle_target_reply_write_g(action_data_typ* const action)
 
 Result handle_target_reply_questionmark(action_data_typ* const action)
 {
-    (void)action;
+    if(NULL == action)
+    {
+        return ERR_ACTION_NULL;
+    }
+
     send_stopped_reply();
     return RESULT_OK;
 }
@@ -594,6 +623,11 @@ Result handle_target_reply_questionmark(action_data_typ* const action)
 Result handle_target_reply_continue(action_data_typ* const action)
 {
     Result res;
+
+    if(NULL == action)
+    {
+        return ERR_ACTION_NULL;
+    }
 
     if(true == action->first_call)
     {
@@ -606,7 +640,7 @@ Result handle_target_reply_continue(action_data_typ* const action)
 
     if(1 == action->cur_phase)
     {
-        res = step_write_ap(action, DHCSR,  DBGKEY | (1 << DHCSR_C_DEBUGEN_OFFSET) );
+        res = step_write_ap(DHCSR,  DBGKEY | (1 << DHCSR_C_DEBUGEN_OFFSET) );
         if(RESULT_OK == res)
         {
             action->cur_phase++;
@@ -619,7 +653,7 @@ Result handle_target_reply_continue(action_data_typ* const action)
 
     if(2 == action->cur_phase)
     {
-        res = step_read_ap(action, DHCSR);
+        res = step_read_ap(DHCSR);
         if(RESULT_OK == res)
         {
             action->cur_phase++;
@@ -632,7 +666,7 @@ Result handle_target_reply_continue(action_data_typ* const action)
 
     if(3 == action->cur_phase)
     {
-        res = step_get_Result_data(action);
+        res = step_get_Result_data(&action->read_0);
         if(RESULT_OK == res)
         {
             action->cur_phase++;
@@ -702,6 +736,11 @@ Result handle_target_reply_read_memory(action_data_typ* const action)
 
     Result res;
 
+    if(NULL == action)
+    {
+        return ERR_ACTION_NULL;
+    }
+
     if(true == action->first_call)
     {
         reply_packet_prepare();
@@ -723,7 +762,7 @@ Result handle_target_reply_read_memory(action_data_typ* const action)
 
     if(0 == action->cur_phase)
     {
-        res = step_read_ap(action, (uint32_t *)(action->gdb_parameter.address_length.address + action->intern[INTERN_MEMORY_OFFSET]));
+        res = step_read_ap((uint32_t *)(action->gdb_parameter.address_length.address + action->intern[INTERN_MEMORY_OFFSET]));
         if(RESULT_OK == res)
         {
             action->cur_phase++;
@@ -736,7 +775,7 @@ Result handle_target_reply_read_memory(action_data_typ* const action)
 
     if(1 == action->cur_phase)
     {
-        res = step_get_Result_data(action);
+        res = step_get_Result_data(&action->read_0);
         if(RESULT_OK == res)
         {
             action->cur_phase++;
@@ -789,6 +828,11 @@ Result handle_target_reply_write_memory(action_data_typ* const action)
 
     Result res;
 
+    if(NULL == action)
+    {
+        return ERR_ACTION_NULL;
+    }
+
     if(true == action->first_call)
     {
         reply_packet_prepare();
@@ -837,7 +881,7 @@ Result handle_target_reply_write_memory(action_data_typ* const action)
 
     if(2 == action->cur_phase)
     {
-        res = step_write_ap(action, (uint32_t *)action->parameter[0], action->parameter[1]);
+        res = step_write_ap((uint32_t *)action->parameter[0], action->parameter[1]);
         if(RESULT_OK == res)
         {
             action->cur_phase++;
@@ -860,7 +904,11 @@ Result handle_target_reply_write_memory(action_data_typ* const action)
 
 Result handle_target_reply_step(action_data_typ* const action)
 {
-    (void)action;
+    if(NULL == action)
+    {
+        return ERR_ACTION_NULL;
+    }
+
     send_unknown_command_reply();
     return RESULT_OK;
 }
@@ -868,6 +916,11 @@ Result handle_target_reply_step(action_data_typ* const action)
 Result handle_check_target_running(action_data_typ* const action)
 {
     Result res;
+
+    if(NULL == action)
+    {
+        return ERR_ACTION_NULL;
+    }
 
     if(true == action->first_call)
     {
@@ -880,7 +933,7 @@ Result handle_check_target_running(action_data_typ* const action)
 
     if(0 == action->cur_phase)
     {
-        res = step_read_ap(action, DHCSR);
+        res = step_read_ap(DHCSR);
         if(RESULT_OK == res)
         {
             action->cur_phase++;
@@ -893,7 +946,7 @@ Result handle_check_target_running(action_data_typ* const action)
 
     if(1 == action->cur_phase)
     {
-        res = step_get_Result_data(action);
+        res = step_get_Result_data(&action->read_0);
         if(RESULT_OK == res)
         {
             action->cur_phase++;
@@ -935,6 +988,11 @@ Result handle_monitor_reg(action_data_typ* const action)
 {
     Result res;
 
+    if(NULL == action)
+    {
+        return ERR_ACTION_NULL;
+    }
+
     if(true == action->first_call)
     {
         if(HAS_VALUE != action->gdb_parameter.type)
@@ -967,7 +1025,7 @@ Result handle_monitor_reg(action_data_typ* const action)
     // 1. write to DCRSR the REGSEL value and REGWnR = 0
     if(0 == action->cur_phase)
     {
-        res = step_write_ap(action, DCRSR, action->intern[INTERN_REGISTER_IDX]);
+        res = step_write_ap(DCRSR, action->intern[INTERN_REGISTER_IDX]);
         if(RESULT_OK == res)
         {
             action->cur_phase++;
@@ -983,7 +1041,7 @@ Result handle_monitor_reg(action_data_typ* const action)
     {
         reply_packet_prepare();
         reply_packet_add("O"); // packet is $ big oh, hex string# checksum
-        res = step_read_ap(action, DHCSR);
+        res = step_read_ap(DHCSR);
         if(RESULT_OK == res)
         {
             action->cur_phase++;
@@ -996,7 +1054,7 @@ Result handle_monitor_reg(action_data_typ* const action)
 
     if(2 == action->cur_phase)
     {
-        res = step_get_Result_data(action);
+        res = step_get_Result_data(&action->read_0);
         if(RESULT_OK == res)
         {
             action->cur_phase++;
@@ -1038,7 +1096,7 @@ Result handle_monitor_reg(action_data_typ* const action)
     // 3. read data from DCRDR
     if(4 == action->cur_phase)
     {
-        res = step_read_ap(action, DCRDR);
+        res = step_read_ap(DCRDR);
         if(RESULT_OK == res)
         {
             action->cur_phase++;
@@ -1051,7 +1109,7 @@ Result handle_monitor_reg(action_data_typ* const action)
 
     if(5 == action->cur_phase)
     {
-        res = step_get_Result_data(action);
+        res = step_get_Result_data(&action->read_0);
         if(RESULT_OK == res)
         {
             action->cur_phase++;
@@ -1233,9 +1291,13 @@ Result handle_monitor_reg(action_data_typ* const action)
 
 Result handle_monitor_halt(action_data_typ* const action)
 {
+    if(NULL == action)
+    {
+        return ERR_ACTION_NULL;
+    }
+
     // DHCSR.C_HALT == 1
     // then DHCSR.C_MASKINTS = 1 if ignore interrupt is enabled
-    (void)action; // TODO
     if(true == action->first_call)
     {
         reply_packet_prepare();
@@ -1269,7 +1331,11 @@ Result handle_monitor_halt(action_data_typ* const action)
 // GDB_CMD_MON_RESET
 Result handle_monitor_reset(action_data_typ* const action)
 {
-    (void)action; // TODO
+    if(NULL == action)
+    {
+        return ERR_ACTION_NULL;
+    }
+
     if(true == action->first_call)
     {
         reply_packet_prepare();

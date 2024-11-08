@@ -16,58 +16,54 @@
 #include "probe_api/steps.h"
 #include "probe_api/result.h"
 
-Result step_connect(action_data_typ* const action)
+Result step_connect(bool multi, uint32_t target, uint32_t AP_sel)
 {
-    (void) action;
+    (void) multi;
+    (void) target;
+    (void) AP_sel;
     return RESULT_OK;
 }
 
-Result step_disconnect(action_data_typ* const action)
+Result step_disconnect(void)
 {
-    (void) action;
     return RESULT_OK;
 }
 
-Result step_read_ap_reg(action_data_typ* const action, uint32_t bank, uint32_t reg)
+Result step_read_ap_reg(uint32_t bank, uint32_t reg)
 {
-    (void) action;
     (void) bank;
     (void) reg;
     return RESULT_OK;
 }
 
-Result step_write_ap_reg(action_data_typ* const action, uint32_t bank, uint32_t reg, uint32_t data)
+Result step_write_ap_reg(uint32_t bank, uint32_t reg, uint32_t data)
 {
-    (void) action;
     (void) bank;
     (void) reg;
     (void) data;
     return RESULT_OK;
 }
 
-Result step_read_ap(action_data_typ* const action, volatile uint32_t* address)
+Result step_read_ap(volatile uint32_t* address)
 {
-    (void) action;
     (void) address;
     return RESULT_OK;
 }
 
-Result step_write_ap(action_data_typ* const action, volatile uint32_t* address, uint32_t data)
+Result step_write_ap(volatile uint32_t* address, uint32_t data)
 {
-    (void) action;
     (void) address;
     (void) data;
     return RESULT_OK;
 }
 
-Result step_get_Result_OK(action_data_typ* const action)
+Result step_get_Result_OK(void)
 {
-    (void) action;
     return RESULT_OK;
 }
 
-Result step_get_Result_data(action_data_typ* const action)
+Result step_get_Result_data(uint32_t* data)
 {
-    (void) action;
+    (void) data;
     return RESULT_OK;
 }

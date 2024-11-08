@@ -13,22 +13,20 @@
  *
  */
 
-#ifndef NOMAGIC_PROBE_SRC_TARGET_STEPS_H_
-#define NOMAGIC_PROBE_SRC_TARGET_STEPS_H_
+#ifndef NOMAGIC_PROBE_SRC_PROBE_API_ACTIVITY_H_
+#define NOMAGIC_PROBE_SRC_PROBE_API_ACTIVITY_H_
 
 #include <stdint.h>
-#include "probe_api/result.h"
 #include "probe_api/common.h"
+#include "probe_api/result.h"
 
-#define INTERN_TRANSACTION_ID   0
+#define ACTIVITY_DONE   0
 
-Result step_connect(bool multi, uint32_t target, uint32_t AP_sel);
-Result step_disconnect(void);
-Result step_read_ap_reg(uint32_t bank, uint32_t reg);
-Result step_write_ap_reg(uint32_t bank, uint32_t reg, uint32_t data);
-Result step_read_ap(volatile uint32_t* address);
-Result step_write_ap(volatile uint32_t* address, uint32_t data);
-Result step_get_Result_OK(void);
-Result step_get_Result_data(uint32_t* data);
+typedef struct {
+    uint32_t phase;
+    bool first_call;
+} activity_data_typ;
 
-#endif /* NOMAGIC_PROBE_SRC_TARGET_STEPS_H_ */
+Result act_read_register(activity_data_typ* const state, volatile uint32_t* address, uint32_t* read_value);
+
+#endif /* NOMAGIC_PROBE_SRC_PROBE_API_ACTIVITY_H_ */
