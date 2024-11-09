@@ -25,7 +25,6 @@
 #include "probe_api/time.h"
 
 #define CMD_QUEUE_LENGTH       5
-// comparing against < 0xffffffff is always true -> we want to avoid 0xffffffff as end time of timeout
 #define ORDER_TIMEOUT_TIME_MS  100
 
 static void handle_order(void);

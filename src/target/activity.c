@@ -14,6 +14,7 @@
  */
 #include <stddef.h>
 #include "probe_api/activity.h"
+#include "probe_api/debug_log.h"
 #include "probe_api/result.h"
 #include "probe_api/steps.h"
 
@@ -29,6 +30,7 @@ Result act_read_register(activity_data_typ* const state, volatile uint32_t* addr
     if(true == state->first_call)
     {
         // first call
+        // debug_line("called act_read_register!");
         state->phase = 1;
         state->first_call = false;
     }
