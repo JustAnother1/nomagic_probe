@@ -904,8 +904,33 @@ static bool parse_parameter(param_pattern_typ pattern, char* parameter, uint32_t
         length = parameter_length - offset;
         if(length < MAX_BINARY_SIZE_BYTES)
         {
-            parsed_parameter.address_binary.data_length = length;
-            memcpy(&(parsed_parameter.address_binary.data[0]), mem_start, length);
+            uint32_t i;
+            bool escaped = false;
+            uint32_t skipped = 0;
+            char* target = (char*)(&(parsed_parameter.address_binary.data[0]));
+            for(i = 0; i < length; i++,mem_start++)
+            {
+                if(true == escaped)
+                {
+                    *target = 0x20^*mem_start;
+                    target++;
+                    escaped = false;
+                }
+                else
+                {
+                    if(0x7d == *mem_start)
+                    {
+                        escaped = true;
+                        skipped++;
+                    }
+                    else
+                    {
+                        *target = *mem_start;
+                        target++;
+                    }
+                }
+            }
+            parsed_parameter.address_binary.data_length = length - skipped;
         }
         else
         {
