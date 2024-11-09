@@ -154,6 +154,25 @@ void common_target_tick(void)
     }
 }
 
+bool common_action_info(uint32_t loop)
+{
+    if(0 == loop)
+    {
+        debug_line("available actions:");
+        return false;
+    }
+    if(loop > NUM_ACTIONS)
+    {
+        debug_line("Done!");
+        return true;
+    }
+    else
+    {
+        debug_line("%3ld : %20s", loop-1, action_names[loop -1]);
+        return false;
+    }
+}
+
 bool common_cmd_target_info(uint32_t loop)
 {
     if(0 == loop)

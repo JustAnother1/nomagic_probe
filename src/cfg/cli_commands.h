@@ -30,6 +30,7 @@ cmd_typ commands[] = {
         {"time",        "time since power on", cmd_time},
         {"param_dump",  "prints the parameters as hex", cmd_parameter_raw},
         {"target_info", "display target specific status information", cmd_target_info},
+        {"action_info", "list implemented actions", common_action_info},
         {"at",          "show action trace", cmd_target_trace},
         {"md",          "display memory", cmd_memory_dump},
         {"mdr",         "display memory as registers", cmd_memory_display},

@@ -20,6 +20,6 @@
 #include <stdint.h>
 
 bool cmd_target_trace(uint32_t loop);
-
+bool common_action_info(uint32_t loop);
 
 #endif /* NOMAGIC_PROBE_SRC_CLI_CLI_COMMON_TARGET_H_ */
