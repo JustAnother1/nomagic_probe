@@ -1,6 +1,8 @@
 TEST_BIN_FOLDER = $(BIN_FOLDER)test/
 TST_LFLAGS = -lgcov --coverage
-TST_CFLAGS =  -c -Wall -Wextra -g3 -fprofile-arcs -ftest-coverage -Wno-int-to-pointer-cast -Wno-implicit-function-declaration -Wno-format
+TST_CFLAGS =  -c -Wall -Wextra -g3  
+TST_CFLAGS += -fprofile-arcs -ftest-coverage -fprofile-update=atomic
+TST_CFLAGS += -Wno-int-to-pointer-cast -Wno-implicit-function-declaration -Wno-format
 TST_DDEFS = -DUNIT_TEST=1
 TST_DDEFS += -DFEAT_DEBUG_UART
 TST_DDEFS += -DFEAT_GDB_SERVER
@@ -191,4 +193,4 @@ test: $(TEST_LOGS)
 lcov: $(TEST_LOGS)
 	lcov  --directory $(TEST_BIN_FOLDER) -c -o $(TEST_BIN_FOLDER)lcov.info --exclude "*tests/*" --exclude "*/usr/include/*" 
 	genhtml -o test_coverage -t "coverage" --num-spaces 4 $(TEST_BIN_FOLDER)lcov.info -o $(TEST_BIN_FOLDER)test_coverage/
-
+	firefox bin/test/test_coverage/index.html

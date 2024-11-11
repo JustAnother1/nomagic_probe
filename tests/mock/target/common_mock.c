@@ -86,4 +86,7 @@ void target_close_connection(void)
     num_calls[CALL_IDX_TARGET_CLOSE_CONNECTION]++;
 }
 
+void target_restart_action_timeout(void)
+{
 
+}
