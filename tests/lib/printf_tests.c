@@ -18,30 +18,12 @@
 #include <string.h>
 #include "../src/lib/printf.h"
 #include "unity.h"
+#include "mock/lib/printf_mock.h"
 
-#define STRING_BUFFER_LENGTH  100
-
-char str_buffer[100];
-unsigned int buf_idx;
-bool putc_issue;
-
-static void test_putc(void* p, char c)
-{
-    (void) p; // not used
-    str_buffer[buf_idx] = c;
-    buf_idx++;
-    if(STRING_BUFFER_LENGTH == buf_idx)
-    {
-        buf_idx = 0;
-        putc_issue = true;
-    }
-}
 
 void setUp(void)
 {
-    putc_issue = false;
-    buf_idx = 0;
-    init_printf(NULL, test_putc);
+    init_printf_mock();
 }
 
 void tearDown(void)
@@ -52,24 +34,22 @@ void tearDown(void)
 void test_printf_init(void)
 {
     // init_printf()  <-- part of setUp()
-    TEST_ASSERT_FALSE(putc_issue);
+    TEST_ASSERT_FALSE(printf_mock_had_putc_issue());
 }
 
 void test_printf_printf_str(void)
 {
     my_printf("Hello World !\r\n");
-    TEST_ASSERT_EQUAL_UINT32(15, buf_idx);
-    str_buffer[buf_idx] = 0;
-    TEST_ASSERT_EQUAL_STRING("Hello World !\r\n", str_buffer);
+    TEST_ASSERT_EQUAL_UINT32(15, printf_mock_get_write_idx());
+    TEST_ASSERT_EQUAL_STRING("Hello World !\r\n", printf_mock_get_as_String());
 }
 
 void test_printf_printf_int(void)
 {
     uint32_t val = 5;
     my_printf("Value = %d", val);
-    TEST_ASSERT_EQUAL_UINT32(9, buf_idx);
-    str_buffer[buf_idx] = 0;
-    TEST_ASSERT_EQUAL_STRING("Value = 5", str_buffer);
+    TEST_ASSERT_EQUAL_UINT32(9, printf_mock_get_write_idx());
+    TEST_ASSERT_EQUAL_STRING("Value = 5", printf_mock_get_as_String());
 }
 
 void test_printf_printf_digits(void)
@@ -77,9 +57,8 @@ void test_printf_printf_digits(void)
     const char* expected = "Value = 54321";
     uint32_t val = 54321;
     my_printf("Value = %d", val);
-    TEST_ASSERT_EQUAL_UINT32(strlen(expected), buf_idx);
-    str_buffer[buf_idx] = 0;
-    TEST_ASSERT_EQUAL_STRING(expected, str_buffer);
+    TEST_ASSERT_EQUAL_UINT32(strlen(expected), printf_mock_get_write_idx());
+    TEST_ASSERT_EQUAL_STRING(expected, printf_mock_get_as_String());
 }
 
 void test_printf_printf_width(void)
@@ -87,9 +66,8 @@ void test_printf_printf_width(void)
     const char* expected = "Value =   1";
     uint32_t val = 1;
     my_printf("Value = %3d", val);
-    TEST_ASSERT_EQUAL_UINT32(strlen(expected), buf_idx);
-    str_buffer[buf_idx] = 0;
-    TEST_ASSERT_EQUAL_STRING(expected, str_buffer);
+    TEST_ASSERT_EQUAL_UINT32(strlen(expected), printf_mock_get_write_idx());
+    TEST_ASSERT_EQUAL_STRING(expected, printf_mock_get_as_String());
 }
 
 void test_printf_printf_width_long(void)
@@ -97,9 +75,8 @@ void test_printf_printf_width_long(void)
     const char* expected = "Value =   5";
     uint32_t val = 5;
     my_printf("Value = %3ld", val);
-    TEST_ASSERT_EQUAL_UINT32(strlen(expected), buf_idx);
-    str_buffer[buf_idx] = 0;
-    TEST_ASSERT_EQUAL_STRING(expected, str_buffer);
+    TEST_ASSERT_EQUAL_UINT32(strlen(expected), printf_mock_get_write_idx());
+    TEST_ASSERT_EQUAL_STRING(expected, printf_mock_get_as_String());
 }
 
 

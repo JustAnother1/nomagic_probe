@@ -12,8 +12,50 @@
  * with this program; if not, see <http://www.gnu.org/licenses/>
  *
  */
+#include <stdint.h>
+#include <stdbool.h>
+#include <stddef.h>
 
-int my_printf(const char *__restrict, ...)
+#include "printf.h"
+
+#define STRING_BUFFER_LENGTH  10000
+
+char str_buffer[STRING_BUFFER_LENGTH];
+uint32_t buf_idx;
+bool putc_issue;
+
+static void test_putc(void* p, char c)
 {
-    return 0;
+    (void) p; // not used
+    str_buffer[buf_idx] = c;
+    buf_idx++;
+    if(STRING_BUFFER_LENGTH == buf_idx)
+    {
+        buf_idx = 0;
+        putc_issue = true;
+    }
 }
+
+void init_printf_mock(void)
+{
+    putc_issue = false;
+    buf_idx = 0;
+    init_printf(NULL, test_putc);
+}
+
+uint32_t printf_mock_get_write_idx(void)
+{
+    return buf_idx;
+}
+
+char* printf_mock_get_as_String(void)
+{
+    str_buffer[buf_idx] = 0;
+    return str_buffer;
+}
+
+bool printf_mock_had_putc_issue(void)
+{
+    return putc_issue;
+}
+

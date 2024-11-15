@@ -56,16 +56,19 @@ GDBSERVER_GDBSERVER_OBJS =                        \
 
 #gdbserver/util
 TEST_EXECUTEABLES = $(TEST_BIN_FOLDER)gdbserver_util
-GDBSERVER_UTIL_OBJS =                      \
- $(TEST_BIN_FOLDER)gdbserver/util_tests.o  \
- $(TEST_BIN_FOLDER)src/gdbserver/util.o    \
+GDBSERVER_UTIL_OBJS =                         \
+ $(TEST_BIN_FOLDER)gdbserver/util_tests.o     \
+ $(TEST_BIN_FOLDER)src/gdbserver/util.o       \
+ $(TEST_BIN_FOLDER)src/lib/printf.o           \
+ $(TEST_BIN_FOLDER)mock/hal/hw_divider_mock.o \
  $(TEST_BIN_FOLDER)mock/lib/printf_mock.o
 
 #lib/printf
 TEST_EXECUTEABLES += $(TEST_BIN_FOLDER)lib_printf
-LIB_PRINTF_OBJS =                     \
- $(TEST_BIN_FOLDER)lib/printf_tests.o \
- $(TEST_BIN_FOLDER)src/lib/printf.o   \
+LIB_PRINTF_OBJS =                             \
+ $(TEST_BIN_FOLDER)lib/printf_tests.o         \
+ $(TEST_BIN_FOLDER)src/lib/printf.o           \
+ $(TEST_BIN_FOLDER)mock/lib/printf_mock.o     \
  $(TEST_BIN_FOLDER)mock/hal/hw_divider_mock.o
 
 #target/common_actions.c
@@ -79,6 +82,8 @@ TARGET_COMMON_ACTIONS_OBJS =                       \
  $(TEST_BIN_FOLDER)mock/target/common_mock.o       \
  $(TEST_BIN_FOLDER)mock/gdbserver/gdbserver_mock.o \
  $(TEST_BIN_FOLDER)mock/gdbserver/util_mock.o      \
+ $(TEST_BIN_FOLDER)src/lib/printf.o                \
+ $(TEST_BIN_FOLDER)mock/hal/hw_divider_mock.o      \
  $(TEST_BIN_FOLDER)mock/lib/printf_mock.o
 
 #tinyusb/usb_msc

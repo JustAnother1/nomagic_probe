@@ -18,7 +18,6 @@
 #include "probe_api/hex.h"
 #include "probe_api/util.h"
 
-
 uint32_t calculateChecksum(char* data, uint32_t length)
 {
     uint32_t sum = 0;
