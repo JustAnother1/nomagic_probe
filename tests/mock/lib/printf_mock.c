@@ -15,14 +15,15 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <string.h>
 
 #include "printf.h"
 
 #define STRING_BUFFER_LENGTH  10000
 
-char str_buffer[STRING_BUFFER_LENGTH];
-uint32_t buf_idx;
-bool putc_issue;
+static char str_buffer[STRING_BUFFER_LENGTH];
+static volatile uint32_t buf_idx;
+static bool putc_issue;
 
 static void test_putc(void* p, char c)
 {
@@ -38,6 +39,7 @@ static void test_putc(void* p, char c)
 
 void init_printf_mock(void)
 {
+    memset(str_buffer, 0, STRING_BUFFER_LENGTH);
     putc_issue = false;
     buf_idx = 0;
     init_printf(NULL, test_putc);
@@ -51,6 +53,7 @@ uint32_t printf_mock_get_write_idx(void)
 char* printf_mock_get_as_String(void)
 {
     str_buffer[buf_idx] = 0;
+    buf_idx = 0;
     return str_buffer;
 }
 
