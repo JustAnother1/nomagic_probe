@@ -17,10 +17,10 @@
 
 
 #ifdef ENABLE_CORE_1
-    void main(void);
-    void main1(void);
+    int main(void);
+    int main1(void);
 #else
-    void main(void);
+    int main(void);
 #endif
 
 

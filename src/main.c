@@ -183,7 +183,7 @@ static void loop_1(void)
 }
 
 #ifdef ENABLE_CORE_1
-void main1(void)
+int main1(void)
 {
     watchdog_enter_section(SECTION_INIT);
     init_1();
@@ -196,7 +196,7 @@ void main1(void)
 
 #endif
 
-void main(void)
+int main(void)
 {
     watchdog_enter_section(SECTION_INIT);
 #ifdef ENABLE_CORE_1
