@@ -870,12 +870,12 @@ volatile uint32_t CH0_TRANS_COUNT;
   offset: 30, size: 1, access: read-write
   If 1, the channel received a read bus error. Write one to clear.
 
- READ_ADDR shows the approximate address where the bus error was encountered (will not be earlier, or more than 3 transfers later)
+ READ_ADDR shows the approximate address where the bus error was encountered (will not to be earlier, or more than 3 transfers later)
   Field: WRITE_ERROR
   offset: 29, size: 1, access: read-write
   If 1, the channel received a write bus error. Write one to clear.
 
- WRITE_ADDR shows the approximate address where the bus error was encountered (will not be earlier, or more than 5 transfers later)
+ WRITE_ADDR shows the approximate address where the bus error was encountered (will not to be earlier, or more than 5 transfers later)
   Field: BUSY
   offset: 24, size: 1, access: read-only
   This flag goes high when the channel starts a new transfer sequence, and low when the last transfer of that sequence completes. Clearing EN while BUSY is high pauses the channel, and BUSY will stay high while paused.
@@ -1120,12 +1120,12 @@ volatile uint32_t CH1_TRANS_COUNT;
   offset: 30, size: 1, access: read-write
   If 1, the channel received a read bus error. Write one to clear.
 
- READ_ADDR shows the approximate address where the bus error was encountered (will not be earlier, or more than 3 transfers later)
+ READ_ADDR shows the approximate address where the bus error was encountered (will not to be earlier, or more than 3 transfers later)
   Field: WRITE_ERROR
   offset: 29, size: 1, access: read-write
   If 1, the channel received a write bus error. Write one to clear.
 
- WRITE_ADDR shows the approximate address where the bus error was encountered (will not be earlier, or more than 5 transfers later)
+ WRITE_ADDR shows the approximate address where the bus error was encountered (will not to be earlier, or more than 5 transfers later)
   Field: BUSY
   offset: 24, size: 1, access: read-only
   This flag goes high when the channel starts a new transfer sequence, and low when the last transfer of that sequence completes. Clearing EN while BUSY is high pauses the channel, and BUSY will stay high while paused.
@@ -1370,12 +1370,12 @@ volatile uint32_t CH2_TRANS_COUNT;
   offset: 30, size: 1, access: read-write
   If 1, the channel received a read bus error. Write one to clear.
 
- READ_ADDR shows the approximate address where the bus error was encountered (will not be earlier, or more than 3 transfers later)
+ READ_ADDR shows the approximate address where the bus error was encountered (will not to be earlier, or more than 3 transfers later)
   Field: WRITE_ERROR
   offset: 29, size: 1, access: read-write
   If 1, the channel received a write bus error. Write one to clear.
 
- WRITE_ADDR shows the approximate address where the bus error was encountered (will not be earlier, or more than 5 transfers later)
+ WRITE_ADDR shows the approximate address where the bus error was encountered (will not to be earlier, or more than 5 transfers later)
   Field: BUSY
   offset: 24, size: 1, access: read-only
   This flag goes high when the channel starts a new transfer sequence, and low when the last transfer of that sequence completes. Clearing EN while BUSY is high pauses the channel, and BUSY will stay high while paused.
@@ -1620,12 +1620,12 @@ volatile uint32_t CH3_TRANS_COUNT;
   offset: 30, size: 1, access: read-write
   If 1, the channel received a read bus error. Write one to clear.
 
- READ_ADDR shows the approximate address where the bus error was encountered (will not be earlier, or more than 3 transfers later)
+ READ_ADDR shows the approximate address where the bus error was encountered (will not to be earlier, or more than 3 transfers later)
   Field: WRITE_ERROR
   offset: 29, size: 1, access: read-write
   If 1, the channel received a write bus error. Write one to clear.
 
- WRITE_ADDR shows the approximate address where the bus error was encountered (will not be earlier, or more than 5 transfers later)
+ WRITE_ADDR shows the approximate address where the bus error was encountered (will not to be earlier, or more than 5 transfers later)
   Field: BUSY
   offset: 24, size: 1, access: read-only
   This flag goes high when the channel starts a new transfer sequence, and low when the last transfer of that sequence completes. Clearing EN while BUSY is high pauses the channel, and BUSY will stay high while paused.
@@ -1870,12 +1870,12 @@ volatile uint32_t CH4_TRANS_COUNT;
   offset: 30, size: 1, access: read-write
   If 1, the channel received a read bus error. Write one to clear.
 
- READ_ADDR shows the approximate address where the bus error was encountered (will not be earlier, or more than 3 transfers later)
+ READ_ADDR shows the approximate address where the bus error was encountered (will not to be earlier, or more than 3 transfers later)
   Field: WRITE_ERROR
   offset: 29, size: 1, access: read-write
   If 1, the channel received a write bus error. Write one to clear.
 
- WRITE_ADDR shows the approximate address where the bus error was encountered (will not be earlier, or more than 5 transfers later)
+ WRITE_ADDR shows the approximate address where the bus error was encountered (will not to be earlier, or more than 5 transfers later)
   Field: BUSY
   offset: 24, size: 1, access: read-only
   This flag goes high when the channel starts a new transfer sequence, and low when the last transfer of that sequence completes. Clearing EN while BUSY is high pauses the channel, and BUSY will stay high while paused.
@@ -2120,12 +2120,12 @@ volatile uint32_t CH5_TRANS_COUNT;
   offset: 30, size: 1, access: read-write
   If 1, the channel received a read bus error. Write one to clear.
 
- READ_ADDR shows the approximate address where the bus error was encountered (will not be earlier, or more than 3 transfers later)
+ READ_ADDR shows the approximate address where the bus error was encountered (will not to be earlier, or more than 3 transfers later)
   Field: WRITE_ERROR
   offset: 29, size: 1, access: read-write
   If 1, the channel received a write bus error. Write one to clear.
 
- WRITE_ADDR shows the approximate address where the bus error was encountered (will not be earlier, or more than 5 transfers later)
+ WRITE_ADDR shows the approximate address where the bus error was encountered (will not to be earlier, or more than 5 transfers later)
   Field: BUSY
   offset: 24, size: 1, access: read-only
   This flag goes high when the channel starts a new transfer sequence, and low when the last transfer of that sequence completes. Clearing EN while BUSY is high pauses the channel, and BUSY will stay high while paused.
@@ -2370,12 +2370,12 @@ volatile uint32_t CH6_TRANS_COUNT;
   offset: 30, size: 1, access: read-write
   If 1, the channel received a read bus error. Write one to clear.
 
- READ_ADDR shows the approximate address where the bus error was encountered (will not be earlier, or more than 3 transfers later)
+ READ_ADDR shows the approximate address where the bus error was encountered (will not to be earlier, or more than 3 transfers later)
   Field: WRITE_ERROR
   offset: 29, size: 1, access: read-write
   If 1, the channel received a write bus error. Write one to clear.
 
- WRITE_ADDR shows the approximate address where the bus error was encountered (will not be earlier, or more than 5 transfers later)
+ WRITE_ADDR shows the approximate address where the bus error was encountered (will not to be earlier, or more than 5 transfers later)
   Field: BUSY
   offset: 24, size: 1, access: read-only
   This flag goes high when the channel starts a new transfer sequence, and low when the last transfer of that sequence completes. Clearing EN while BUSY is high pauses the channel, and BUSY will stay high while paused.
@@ -2620,12 +2620,12 @@ volatile uint32_t CH7_TRANS_COUNT;
   offset: 30, size: 1, access: read-write
   If 1, the channel received a read bus error. Write one to clear.
 
- READ_ADDR shows the approximate address where the bus error was encountered (will not be earlier, or more than 3 transfers later)
+ READ_ADDR shows the approximate address where the bus error was encountered (will not to be earlier, or more than 3 transfers later)
   Field: WRITE_ERROR
   offset: 29, size: 1, access: read-write
   If 1, the channel received a write bus error. Write one to clear.
 
- WRITE_ADDR shows the approximate address where the bus error was encountered (will not be earlier, or more than 5 transfers later)
+ WRITE_ADDR shows the approximate address where the bus error was encountered (will not to be earlier, or more than 5 transfers later)
   Field: BUSY
   offset: 24, size: 1, access: read-only
   This flag goes high when the channel starts a new transfer sequence, and low when the last transfer of that sequence completes. Clearing EN while BUSY is high pauses the channel, and BUSY will stay high while paused.
@@ -2870,12 +2870,12 @@ volatile uint32_t CH8_TRANS_COUNT;
   offset: 30, size: 1, access: read-write
   If 1, the channel received a read bus error. Write one to clear.
 
- READ_ADDR shows the approximate address where the bus error was encountered (will not be earlier, or more than 3 transfers later)
+ READ_ADDR shows the approximate address where the bus error was encountered (will not to be earlier, or more than 3 transfers later)
   Field: WRITE_ERROR
   offset: 29, size: 1, access: read-write
   If 1, the channel received a write bus error. Write one to clear.
 
- WRITE_ADDR shows the approximate address where the bus error was encountered (will not be earlier, or more than 5 transfers later)
+ WRITE_ADDR shows the approximate address where the bus error was encountered (will not to be earlier, or more than 5 transfers later)
   Field: BUSY
   offset: 24, size: 1, access: read-only
   This flag goes high when the channel starts a new transfer sequence, and low when the last transfer of that sequence completes. Clearing EN while BUSY is high pauses the channel, and BUSY will stay high while paused.
@@ -3120,12 +3120,12 @@ volatile uint32_t CH9_TRANS_COUNT;
   offset: 30, size: 1, access: read-write
   If 1, the channel received a read bus error. Write one to clear.
 
- READ_ADDR shows the approximate address where the bus error was encountered (will not be earlier, or more than 3 transfers later)
+ READ_ADDR shows the approximate address where the bus error was encountered (will not to be earlier, or more than 3 transfers later)
   Field: WRITE_ERROR
   offset: 29, size: 1, access: read-write
   If 1, the channel received a write bus error. Write one to clear.
 
- WRITE_ADDR shows the approximate address where the bus error was encountered (will not be earlier, or more than 5 transfers later)
+ WRITE_ADDR shows the approximate address where the bus error was encountered (will not to be earlier, or more than 5 transfers later)
   Field: BUSY
   offset: 24, size: 1, access: read-only
   This flag goes high when the channel starts a new transfer sequence, and low when the last transfer of that sequence completes. Clearing EN while BUSY is high pauses the channel, and BUSY will stay high while paused.
@@ -3370,12 +3370,12 @@ volatile uint32_t CH10_TRANS_COUNT;
   offset: 30, size: 1, access: read-write
   If 1, the channel received a read bus error. Write one to clear.
 
- READ_ADDR shows the approximate address where the bus error was encountered (will not be earlier, or more than 3 transfers later)
+ READ_ADDR shows the approximate address where the bus error was encountered (will not to be earlier, or more than 3 transfers later)
   Field: WRITE_ERROR
   offset: 29, size: 1, access: read-write
   If 1, the channel received a write bus error. Write one to clear.
 
- WRITE_ADDR shows the approximate address where the bus error was encountered (will not be earlier, or more than 5 transfers later)
+ WRITE_ADDR shows the approximate address where the bus error was encountered (will not to be earlier, or more than 5 transfers later)
   Field: BUSY
   offset: 24, size: 1, access: read-only
   This flag goes high when the channel starts a new transfer sequence, and low when the last transfer of that sequence completes. Clearing EN while BUSY is high pauses the channel, and BUSY will stay high while paused.
@@ -3620,12 +3620,12 @@ volatile uint32_t CH11_TRANS_COUNT;
   offset: 30, size: 1, access: read-write
   If 1, the channel received a read bus error. Write one to clear.
 
- READ_ADDR shows the approximate address where the bus error was encountered (will not be earlier, or more than 3 transfers later)
+ READ_ADDR shows the approximate address where the bus error was encountered (will not to be earlier, or more than 3 transfers later)
   Field: WRITE_ERROR
   offset: 29, size: 1, access: read-write
   If 1, the channel received a write bus error. Write one to clear.
 
- WRITE_ADDR shows the approximate address where the bus error was encountered (will not be earlier, or more than 5 transfers later)
+ WRITE_ADDR shows the approximate address where the bus error was encountered (will not to be earlier, or more than 5 transfers later)
   Field: BUSY
   offset: 24, size: 1, access: read-only
   This flag goes high when the channel starts a new transfer sequence, and low when the last transfer of that sequence completes. Clearing EN while BUSY is high pauses the channel, and BUSY will stay high while paused.
@@ -3826,7 +3826,7 @@ volatile uint32_t reserved0[64];
   reset value : 0x0
   reset mask : 0x0
   Field: INTR
-  offset: 0, size: 16, access: read-write
+  offset: 0, size: 16, access: read-only
   Raw interrupt status for DMA Channels 0..15. Bit n corresponds to channel n. Ignores any masking or forcing. Channel interrupts can be cleared by writing a bit mask to INTR, INTS0 or INTS1.
 
 

@@ -5,7 +5,14 @@
 #include "hal/hw/IO_QSPI.h"
 #include "hal/hw/RESETS.h"
 #include "hal/hw/XIP_SSI.h"
+#include "hal/hw/XIP_CTRL.h"
 #include "hal/hw/PADS_QSPI.h"
+
+// Register address offsets for atomic RMW aliases
+#define REG_ALIAS_RW_BITS  (0x0u << 12u)
+#define REG_ALIAS_XOR_BITS (0x1u << 12u)
+#define REG_ALIAS_SET_BITS (0x2u << 12u)
+#define REG_ALIAS_CLR_BITS (0x3u << 12u)
 
 #define IO_QSPI_BASE   0x40018000
 #define XIP_SSI_BASE   0x18000000
@@ -856,7 +863,7 @@ void flash_range_program(uint32_t addr, const uint8_t *data, size_t count)
 
 
 
-/* not needed by nomagic probe, as XIP is not used
+
 
 
 // This is a hook for steps to be taken in between programming the flash and
@@ -865,15 +872,17 @@ void flash_range_program(uint32_t addr, const uint8_t *data, size_t count)
 // programming.
 void flash_flush_cache()
 {
-    xip_ctrl_hw->flush = 1;
-    // Read blocks until flush completion
-    (void) xip_ctrl_hw->flush;
+    XIP_CTRL->FLUSH = 1;
+    while(0 == XIP_CTRL->STAT & 1)
+    {
+        ;
+    }
     // Enable the cache
-    hw_set_bits(&xip_ctrl_hw->ctrl, XIP_CTRL_EN_BITS);
-    flash_cs_force(OUTOVER_NORMAL);
+    (XIP_CTRL->CTRL + REG_ALIAS_SET_BITS) = 1;
+
+    IO_QSPI->GPIO_QSPI_SS_CTRL = (IO_QSPI->GPIO_QSPI_SS_CTRL & ~IO_QSPI_GPIO_QSPI_SS_CTRL_OUTOVER_MASK);
 }
 
-*/
 
 
 
@@ -927,24 +936,32 @@ void flash_flush_cache()
 
 
 
-/* NOT USED by NOMAGIC PROBE
+
 
 // Put the SSI into a mode where XIP accesses translate to standard
 // serial 03h read commands. The flash remains in its default serial command
 // state, so will still respond to other commands.
 void flash_enter_cmd_xip()
 {
-    ssi->ssienr = 0;
+    XIP_SSI->SSIENR = 0;
+
+    XIP_SSI->CTRLR0 = 0x200300; // 0 << 21 Standard 1-bit SPI serial frames; 31 << 16 32 clocks per data frame; 3 << 8 Send instr + addr, receive data
+    /*
     ssi->ctrlr0 =
             (SSI_CTRLR0_SPI_FRF_VALUE_STD << SSI_CTRLR0_SPI_FRF_LSB) |  // Standard 1-bit SPI serial frames
             (31 << SSI_CTRLR0_DFS_32_LSB) |                             // 32 clocks per data frame
             (SSI_CTRLR0_TMOD_VALUE_EEPROM_READ << SSI_CTRLR0_TMOD_LSB); // Send instr + addr, receive data
+    */
+
+    XIP_SSI->SPI_CTRLR0 = 0x3000218; // 3 << 24 Standard 03h read; 2 << 8 8-bit instruction prefix 6 << 2 24-bit addressing for 03h commands; 0 << 0 Command and address both in serial format
+    /*
     ssi->spi_ctrlr0 =
             (FLASHCMD_READ_DATA << SSI_SPI_CTRLR0_XIP_CMD_LSB) | // Standard 03h read
             (2u << SSI_SPI_CTRLR0_INST_L_LSB) |    // 8-bit instruction prefix
             (6u << SSI_SPI_CTRLR0_ADDR_L_LSB) |    // 24-bit addressing for 03h commands
             (SSI_SPI_CTRLR0_TRANS_TYPE_VALUE_1C1A  // Command and address both in serial format
                     << SSI_SPI_CTRLR0_TRANS_TYPE_LSB);
-    ssi->ssienr = 1;
-}
 */
+    XIP_SSI->SSIENR = 1;
+}
+

@@ -1,0 +1,8 @@
+{
+    "chip_name": "RP2040",
+    "digital_output": {"led_pin": {
+        "pad": "25",
+        "type": "push pull"
+    }},
+    "vendor_name": "Raspberry Pi"
+}

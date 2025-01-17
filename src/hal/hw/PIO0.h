@@ -820,9 +820,6 @@ typedef struct
 
 
  Specifically, the following are cleared: input and output shift counters the contents of the input shift register the delay counter the waiting-on-IRQ state any stalled instruction written to SMx_INSTR or run by OUT/MOV EXEC any pin write left asserted due to OUT_STICKY.
-
-
- The program counter, the contents of the output shift register and the X/Y scratch registers are not affected.
   Field: SM_ENABLE
   offset: 0, size: 4, access: read-write
   Enable/disable each of the four state machines by writing 1/0 to each of these four bits. When disabled, a state machine will cease executing instructions, except those written directly to SMx_INSTR by the system. Multiple bits can be set/cleared at once to run/halt multiple state machines simultaneously.

@@ -101,6 +101,7 @@ void commands_execute(char* received, uint32_t length, char* checksum)
         char buf[30];
         memcpy(buf, received, sizeof(buf));
         binary_to_ascii_dump(buf, sizeof(buf));
+        buf[29] = 0;
         debug_line("gdbs received: %s ... (something really long)", buf);
     }
     if(false == checksumOK(received, length, checksum))
