@@ -13,6 +13,7 @@
  *
  */
 
+#include <stddef.h>
 #include <stdbool.h>
 #include <string.h>
 
@@ -895,7 +896,7 @@ Result handle_target_reply_write_memory(action_data_typ* const action)
     if(3 == action->cur_phase)
     {
         action->cur_phase = 1;
-        // continue with next register
+        // continue with next memory location
         return ERR_NOT_COMPLETED;
     }
 
