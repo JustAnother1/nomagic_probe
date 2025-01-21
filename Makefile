@@ -110,7 +110,7 @@ INCDIRS +=no_target/
 # =======
 
 help:
-	@echo ""
+	@echo "nomagic probe firmware"
 	@echo "available targets"
 	@echo "================="
 	@echo "make clean              delete all generated files"

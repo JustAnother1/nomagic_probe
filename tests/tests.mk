@@ -11,6 +11,7 @@ TST_INCDIRS += tests/unity/
 TST_INCDIRS += src/
 TST_INCDIRS += src/cfg/
 TST_INCDIRS += src/tinyusb/src/
+TST_INCDIRS += src/probe_api/
 TST_INCDIR = $(patsubst %,-I%, $(TST_INCDIRS))
 
 #cli/cli
@@ -94,6 +95,12 @@ TINYUSB_USB_MSC_OBJS =                           \
  $(TEST_BIN_FOLDER)mock/file/file_storage_mock.o \
  $(TEST_BIN_FOLDER)mock/tinyusb/tinyusb_mock.o
 
+# flash_write_buffer
+TEST_EXECUTEABLES += $(TEST_BIN_FOLDER)flash_write_buffer
+FLASH_WRITE_BUFFER_OBJS =                             \
+ $(TEST_BIN_FOLDER)target/flash_write_buffer_tests.o  \
+ $(TEST_BIN_FOLDER)src/target/flash_write_buffer.o
+
 
 
 TEST_LOGS = $(patsubst %,%.txt, $(TEST_EXECUTEABLES))
@@ -173,6 +180,12 @@ $(TEST_BIN_FOLDER)target_common_actions: $(TARGET_COMMON_ACTIONS_OBJS) $(FRAMEWO
 	@echo "linking test: target/common_actions"
 	@echo "================================="
 	$(TST_LD) $(TST_LFLAGS) -o $(TEST_BIN_FOLDER)target_common_actions $(TARGET_COMMON_ACTIONS_OBJS) $(FRAMEWORK_OBJS)
+
+$(TEST_BIN_FOLDER)flash_write_buffer: $(FLASH_WRITE_BUFFER_OBJS) $(FRAMEWORK_OBJS)
+	@echo ""
+	@echo "linking test: target/flash_write_buffer"
+	@echo "============================"
+	$(TST_LD) $(TST_LFLAGS) -o $(TEST_BIN_FOLDER)flash_write_buffer $(FLASH_WRITE_BUFFER_OBJS) $(FRAMEWORK_OBJS)
 
 
 # run all tests
