@@ -32,14 +32,19 @@ bool cmd_swd_connect(const uint32_t loop)
 bool cmd_swd_read_memory(const uint32_t loop)
 {
     static uint32_t addr;
+    static uint32_t len;
     static int32_t phase;
 
     if(0 == loop)
     {
         // first call
         phase = 0;
-        uint8_t* addr_str = cli_get_parameter(0);
-        addr = (uint32_t)atoi((const char*)addr_str);
+        // read address
+        uint8_t* str = cli_get_parameter(0);
+        addr = (uint32_t)atoi((const char*)str);
+        // read length
+        str = cli_get_parameter(1);
+        len = (uint32_t)atoi((const char*)str);
     }
     else
     {
@@ -68,7 +73,18 @@ bool cmd_swd_read_memory(const uint32_t loop)
             if(RESULT_OK == res)
             {
                 debug_line("addr: 0x%08lx, read : 0x%08lx", addr, data);
-                return true;
+                if(len < 4)
+                {
+                    // we are done
+                    return true;
+                }
+                else
+                {
+                    // read next address
+                    addr = addr + 4;
+                    len = len - 4;
+                    phase = 0;
+                }
             }
             else
             {

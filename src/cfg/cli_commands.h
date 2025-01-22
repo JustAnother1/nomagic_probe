@@ -47,7 +47,7 @@ cmd_typ commands[] = {
         {"fl_detect",    "detect the QSPI FLash", cmd_flash_detect},
 #endif
         {"swd_open",    "open a connection on the SWD interface", cmd_swd_connect},
-        {"swd_rm",      "read target memory address <address>", cmd_swd_read_memory},
+        {"swd_rm",      "read target memory address <address> <length>", cmd_swd_read_memory},
         {"swd_wm",      "write to target memory address <address> <value>", cmd_swd_write_memory},
 #ifdef FEAT_USB_MSC
         {"cat",         "dump the content of the file <filename>", cmd_file_dump},
