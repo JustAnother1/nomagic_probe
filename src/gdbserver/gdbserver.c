@@ -75,8 +75,7 @@ void gdbserver_tick(void)
     {
         if(false == connected)
         {
-            target_connect();
-            connected = true;
+            gdbserver_connect();
         }
         communicate_with_gdb();
     }
@@ -84,13 +83,25 @@ void gdbserver_tick(void)
     {
         if(true == connected)
         {
-            target_close_connection();
-            connected = false;
-            // reset settings from this session so that next session is the same as the first session
-            commands_init();
+            gdbserver_disconnect();
         }
     }
 }
+
+void gdbserver_connect(void)
+{
+    target_connect();
+    connected = true;
+}
+
+void gdbserver_disconnect(void)
+{
+    target_close_connection();
+    connected = false;
+    // reset settings from this session so that next session is the same as the first session
+    commands_init();
+}
+
 
 void reply_packet_prepare(void)
 {

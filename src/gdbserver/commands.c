@@ -24,6 +24,7 @@
 #include "probe_api/debug_log.h"
 #include "probe_api/util.h"
 #include "target.h"
+#include "gdbserver.h"
 // commands:
 #include "cmd_qsupported.h"
 #include "cmd_qxfer.h"
@@ -251,8 +252,10 @@ void commands_execute(char* received, uint32_t length, char* checksum)
             break;
 
         case 'k':  // kill the target
-            // TODO implement
-            send_unknown_command_reply();
+            gdbserver_disconnect();
+            reply_packet_prepare();
+            reply_packet_add("OK");
+            reply_packet_send();
             break;
 
         case 'M':  // write main memory : M addr,length:XX...
@@ -552,7 +555,13 @@ static void handle_vee(char* received, uint32_t length)
                 // else OK. Reply packet ends busy state.
             }
         }
-
+        else if(0 == strncmp(received, "vKill", 5))
+        {
+            gdbserver_disconnect();
+            reply_packet_prepare();
+            reply_packet_add("OK");
+            reply_packet_send();
+        }
     }
 
     if(false == found_cmd)
