@@ -157,8 +157,7 @@ Result handle_target_connect(action_data_typ* const action)
     {
         res = step_write_ap(DHCSR, DBGKEY
                          | (1 << DHCSR_C_MASKINTS_OFFSET)   // TODO configure ?
-                      // | (1 << DHCSR_C_STEP_OFFSET)
-                         | (1 << DHCSR_C_HALT_OFFSET)
+                         | (1 << DHCSR_C_HALT_OFFSET)       // TODO configure ?
                          | (1 << DHCSR_C_DEBUGEN_OFFSET) );
         if(RESULT_OK == res)
         {
@@ -354,8 +353,7 @@ Result handle_target_reply_g(action_data_typ* const action)
             }
             else
             {
-                // too many retries
-                debug_line("ERROR: too many retries !");
+                debug_line("ERROR: gdb 'g' : too many retries !");
                 reply_packet_send();
                 return ERR_TIMEOUT;
             }
@@ -592,8 +590,7 @@ Result handle_target_reply_write_g(action_data_typ* const action)
             }
             else
             {
-                // too many retries
-                debug_line("ERROR: too many retries !");
+                debug_line("ERROR: gdb 'G' : too many retries !");
                 reply_packet_add("E23");
                 reply_packet_send();
                 return ERR_TIMEOUT;
@@ -1080,8 +1077,7 @@ Result handle_monitor_reg(action_data_typ* const action)
             }
             else
             {
-                // too many retries
-                debug_line("ERROR: too many retries !");
+                debug_line("ERROR: gdm 'mon reg' : too many retries !");
                 reply_packet_send();
                 return ERR_TIMEOUT;
             }
