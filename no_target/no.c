@@ -90,3 +90,9 @@ Result handle_target_reply_vFlashWrite(action_data_typ* const action)
     return RESULT_OK;
 }
 
+Result handle_target_reply_read_memory(action_data_typ* const action)
+{
+    (void) action;
+    return RESULT_OK;
+}
+

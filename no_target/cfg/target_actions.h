@@ -18,9 +18,13 @@
 
 #include "probe_api/common.h"
 
+// writing/erasing the flash is target specific
 Result handle_target_reply_vFlashDone(action_data_typ* const action);
 Result handle_target_reply_vFlashErase(action_data_typ* const action);
 Result handle_target_reply_vFlashWrite(action_data_typ* const action);
+// reading some special regions of the memory might be target specific
+Result handle_target_reply_read_memory(action_data_typ* const action);
+
 
 
 #endif /* SOURCE_CFG_TARGET_ACTIONS_H_ */
