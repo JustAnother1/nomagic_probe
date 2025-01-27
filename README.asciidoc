@@ -104,9 +104,16 @@ Pin 21: (GPIO 16) Debug Uart TX (UART0)
 Pin 22: (GPIO 17) Debug Uart RX (UART0)
 
 
+== Acknowledgments
+
+This project would not be possible without many other open source projects.
+Especially OpenOCD and the black magic probe firmware were great sources of inspiration.
+This project relies on gcc for ARM Cortex-M, gdb, lcov, doxygen, make and many more.
+For all this help we want to thank the Linux and open source community.
+
 
 == license
-
+----
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License version 2
 as published by the Free Software Foundation.
@@ -118,3 +125,4 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along
 with this program; if not, see <http://www.gnu.org/licenses/>
+----
