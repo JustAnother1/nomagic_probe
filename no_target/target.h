@@ -47,5 +47,6 @@ uint32_t target_get_SWD_APSel(uint32_t core_num);
 #ifdef FEAT_GDB_SERVER
 void target_send_file(char* filename, uint32_t offset, uint32_t len);
 #endif
+Result target_write(uint32_t start_address, uint8_t* data, uint32_t length);
 
 #endif /* TARGET_H_ */

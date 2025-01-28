@@ -15,7 +15,7 @@
 
 #include <stddef.h>
 #include <string.h>
-#include "flash_write_buffer.h"
+#include "probe_api/flash_write_buffer.h"
 
 static uint32_t block_size;
 static uint32_t num_blocks;

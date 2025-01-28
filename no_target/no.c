@@ -96,3 +96,10 @@ Result handle_target_reply_read_memory(action_data_typ* const action)
     return RESULT_OK;
 }
 
+Result target_write(uint32_t start_address, uint8_t* data, uint32_t length)
+{
+    (void) start_address;
+    (void) data;
+    (void) length;
+    return RESULT_OK;
+}
