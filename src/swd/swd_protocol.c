@@ -700,6 +700,7 @@ Result disconnect_handler(command_typ* cmd, bool first_call)
         // done!
         swd_eingine_add_cmd_result(cmd->transaction_id, RESULT_OK);
         reset_pin_inactive();
+        state.is_connected = false;
         return RESULT_OK;
     }
     else
