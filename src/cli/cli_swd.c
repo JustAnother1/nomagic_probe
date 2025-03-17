@@ -72,7 +72,17 @@ bool cmd_swd_read_memory(const uint32_t loop)
             Result res = swd_get_result(phase, &data);
             if(RESULT_OK == res)
             {
-                debug_line("addr: 0x%08lx, read : 0x%08lx", addr, data);
+                uint32_t i;
+                for(i = 0; i < 4; i++)
+                {
+                    if(0 == ((addr + i) & 0xf))
+                    {
+                        debug_msg("\r\nAddress 0x%08lx :", addr + i);
+                    }
+                    debug_msg(" %02lx", data & 0xff);
+                    data = data>>8;
+                }
+                // debug_line("addr: 0x%08lx, read : 0x%08lx", addr, data);
                 if(len < 4)
                 {
                     // we are done

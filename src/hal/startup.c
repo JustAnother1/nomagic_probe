@@ -238,6 +238,14 @@ _Noreturn void Int_Handler(void)
         __asm__ __volatile__ ("bkpt #0");
     }
 
+    //led_pin_init();
+    RESETS->RESET = RESETS->RESET & ~0x00000020lu; // take IO_BANK0 out of Reset
+    PSM->FRCE_ON = PSM->FRCE_ON | 0x00000400; // make sure that SIO is powered on
+    SIO->GPIO_OE_CLR = 1ul << 25;
+    SIO->GPIO_OUT_CLR = 1ul << 25;
+    PADS_BANK0->GPIO25 = 0x00000030;
+    IO_BANK0->GPIO25_CTRL = 5;  // 5 == SIO
+    SIO->GPIO_OE_SET = 1ul << 25;
 
     for (;;)
     {
