@@ -12,20 +12,22 @@
  * with this program; if not, see <http://www.gnu.org/licenses/>
  *
  */
-#include "hal/hw/XOSC.h"
-#include "hal/hw/CLOCKS.h"
-#include "hal/hw/ROSC.h"
-#include "hal/hw/PLL_SYS.h"
-#include "hal/hw/PSM.h"
-#include "hal/hw/PPB.h"
-#include "hal/hw/RESETS.h"
-#include "hal/hw/SIO.h"
-#include "hal/hw/XIP_SSI.h"
-#include "main.h"
+
 #include <stdnoreturn.h>
 #include "hal/debug_uart.h"
-#include "hal/watchdog.h"
+#include "hal/hw/CLOCKS.h"
+#include "hal/hw/PLL_SYS.h"
+#include "hal/hw/PPB.h"
+#include "hal/hw/PSM.h"
+#include "hal/hw/RESETS.h"
+#include "hal/hw/ROSC.h"
+#include "hal/hw/SIO.h"
+#include "hal/hw/XIP_SSI.h"
+#include "hal/hw/XOSC.h"
+#include "hal/led_pin.h"
 #include "hal/time_base.h"
+#include "hal/watchdog.h"
+#include "main.h"
 #include "probe_api/debug_log.h"
 
 #define DHCSR_C_DEBUGEN_MASK  1
@@ -485,6 +487,15 @@ _Noreturn void error_state(void)
         __asm__ __volatile__ ("bkpt #0");
     }
 
+    //led_pin_init();
+    RESETS->RESET = RESETS->RESET & ~0x00000020lu; // take IO_BANK0 out of Reset
+    PSM->FRCE_ON = PSM->FRCE_ON | 0x00000400; // make sure that SIO is powered on
+    SIO->GPIO_OE_CLR = 1ul << 25;
+    SIO->GPIO_OUT_CLR = 1ul << 25;
+    PADS_BANK0->GPIO25 = 0x00000030;
+    IO_BANK0->GPIO25_CTRL = 5;  // 5 == SIO
+    SIO->GPIO_OE_SET = 1ul << 25;
+
     for (;;)
     {
         // error blink
@@ -499,28 +510,34 @@ bool startup_report(const uint32_t loop)
 {
     switch(loop)
     {
-    case 0:  debug_line("3rd stage boot start:   0x%08lx", (uint32_t)&__third_boot_start); break;
-    case 1:  debug_line("3rd stage boot end:     0x%08lx", (uint32_t)&__third_boot_end); break;
+    case 0:  debug_line("3rd stage boot start:   0x%08lx",   (uint32_t)&__third_boot_start); break;
+    case 1:  debug_line("3rd stage boot end:     0x%08lx",   (uint32_t)&__third_boot_end); break;
+    case 2:  debug_line("3rd stage boot size:    %ld bytes", (uint32_t)&__third_boot_end - (uint32_t)&__third_boot_start); break;
 
-    case 2:  debug_line(".code start:            0x%08lx", (uint32_t)&__code_start); break;
-    case 3:  debug_line(".code end:              0x%08lx", (uint32_t)&__code_end); break;
-    case 4:  debug_line(".code start in flash:   0x%08lx", (uint32_t)&__code_in_flash); break;
-    case 5:  debug_line(".code end in flash:     0x%08lx", (uint32_t)(&__code_in_flash + (&__code_end - &__code_start))); break;
+    case 3:  debug_line(".code start:            0x%08lx",   (uint32_t)&__code_start); break;
+    case 4:  debug_line(".code end:              0x%08lx",   (uint32_t)&__code_end); break;
+    case 5:  debug_line(".code start in flash:   0x%08lx",   (uint32_t)&__code_in_flash); break;
+    case 6:  debug_line(".code end in flash:     0x%08lx",   (uint32_t)(&__code_in_flash + (&__code_end - &__code_start))); break;
+    case 7:  debug_line(".code size:             %ld bytes", (uint32_t)&__code_end - (uint32_t)&__code_start); break;
 
-    case 6:  debug_line(".bss start:             0x%08lx", (uint32_t)&__bss_start); break;
-    case 7:  debug_line(".bss end:               0x%08lx", (uint32_t)&__bss_end); break;
+    case 8:  debug_line(".bss start:             0x%08lx",   (uint32_t)&__bss_start); break;
+    case 9:  debug_line(".bss end:               0x%08lx",   (uint32_t)&__bss_end); break;
+    case 10: debug_line(".bss size:              %ld bytes", (uint32_t)&__bss_end - (uint32_t)&__bss_start); break;
 
-    case 8:  debug_line(".data start:            0x%08lx", (uint32_t)&__data_start); break;
-    case 9:  debug_line(".data end:              0x%08lx", (uint32_t)&__data_end); break;
-    case 10: debug_line(".data start in flash:   0x%08lx", (uint32_t)&__data_in_flash); break;
-    case 11: debug_line(".data end in flash:     0x%08lx", (uint32_t)(&__data_in_flash + (&__data_end - &__data_start))); break;
+    case 11: debug_line(".data start:            0x%08lx",   (uint32_t)&__data_start); break;
+    case 12: debug_line(".data end:              0x%08lx",   (uint32_t)&__data_end); break;
+    case 13: debug_line(".data start in flash:   0x%08lx",   (uint32_t)&__data_in_flash); break;
+    case 14: debug_line(".data end in flash:     0x%08lx",   (uint32_t)(&__data_in_flash + (&__data_end - &__data_start))); break;
+    case 15: debug_line(".data size:             %ld bytes", (uint32_t)&__data_end - (uint32_t)&__data_start); break;
 
-    case 12: debug_line(".rodata start:          0x%08lx", (uint32_t)&__ro_data_start); break;
-    case 13: debug_line(".rodata end:            0x%08lx", (uint32_t)&__ro_data_end); break;
-    case 14: debug_line(".rodata start in flash: 0x%08lx", (uint32_t)&__ro_data_in_flash); break;
-    case 15: debug_line(".rodata end in flash:   0x%08lx", (uint32_t)(&__ro_data_in_flash + (&__ro_data_end - &__ro_data_start))); break;
+    case 16: debug_line(".rodata start:          0x%08lx",   (uint32_t)&__ro_data_start); break;
+    case 17: debug_line(".rodata end:            0x%08lx",   (uint32_t)&__ro_data_end); break;
+    case 18: debug_line(".rodata start in flash: 0x%08lx",   (uint32_t)&__ro_data_in_flash); break;
+    case 19: debug_line(".rodata end in flash:   0x%08lx",   (uint32_t)(&__ro_data_in_flash + (&__ro_data_end - &__ro_data_start))); break;
+    case 20: debug_line(".rodata size:           %ld bytes", (uint32_t)&__ro_data_end - (uint32_t)&__ro_data_start); break;
 
-    case 16: debug_line("file system start:      0x%08lx", file_system_start); break;
+
+    case 21: debug_line("file system start:      0x%08lx", file_system_start); break;
     default: return true;
     }
     return false;
@@ -605,6 +622,9 @@ _Noreturn void Reset_Handler(void)
     uint32_t *data_end_p = &__data_end;
     uint32_t *data_src_p = &__data_in_flash;
 
+    // __asm volatile ("LDR     R0,=0x20041ffc \n"
+    //                 "MOV     SP, R0"); // set stack pointer
+
     PSM->FRCE_ON = 0x1ffff; // power on all needed blocks
     // wait for powered on blocks to become available
     while (0xffff != (0xffff & PSM->DONE))
@@ -675,14 +695,6 @@ _Noreturn void Reset_Handler(void)
     // ROSC = off; XOSC = 12 MHz; PLL_SYS = 125 MHz
     // clk_ref = 12 MHz; clk_sys = 125 MHz; clk_peri = 125 MHz
 
-    // copy code from Flash to RAM
-    while(code_start_p < code_end_p)
-    {
-        *code_start_p = *code_src_p;
-        code_start_p++;
-        code_src_p++;
-    }
-
     // copy read only data from flash to RAM
     while(rodata_start_p < rodata_end_p)
     {
@@ -706,10 +718,19 @@ _Noreturn void Reset_Handler(void)
         bss_start_p++;
     }
 
+    PPB->VTOR = (uint32_t)&__VECTOR_TABLE_RAM;
+
+    // copy code from Flash to RAM
+    while(code_start_p < code_end_p)
+    {
+        *code_start_p = *code_src_p;
+        code_start_p++;
+        code_src_p++;
+    }
+
     // disable XIP / QSPI Flash Interrupts as the (boot loader) handlers are gone now.
     XIP_SSI->IMR = 0x3f; // all interrupt are masked
     (void)XIP_SSI->ICR;  // clear all active interrupts
-    PPB->VTOR = (uint32_t)&__VECTOR_TABLE_RAM;
     /// !!! AND THIS LINE  !!!
 
     file_system_start = (uint32_t)&__third_boot_end;
