@@ -118,7 +118,15 @@ static inline uint32_t read_SWDIO(void)
 
 static inline void quarter_clock_delay(void)
 {
-    delay_us(swd_freq_delay);
+//     delay_us(swd_freq_delay);
+
+    uint32_t i;
+    for(i = 0; i < swd_freq_delay; i++)
+    {
+        __asm__ __volatile__ ("nop");
+    }
+
+
 
 /*
     volatile uint32_t cnt = swd_freq_delay;
