@@ -6,71 +6,71 @@
 #include <stdint.h>
 
 
-#define SYSCFG_PROC_CONFIG_PROC1_DAP_INSTID_OFFSET         28
-#define SYSCFG_PROC_CONFIG_PROC1_DAP_INSTID_MASK           0xf0000000
+#define SYSCFG_PROC_CONFIG_PROC1_DAP_INSTID_OFFSET         28u
+#define SYSCFG_PROC_CONFIG_PROC1_DAP_INSTID_MASK           0xf0000000u
 
-#define SYSCFG_PROC_CONFIG_PROC0_DAP_INSTID_OFFSET         24
-#define SYSCFG_PROC_CONFIG_PROC0_DAP_INSTID_MASK           0xf000000
+#define SYSCFG_PROC_CONFIG_PROC0_DAP_INSTID_OFFSET         24u
+#define SYSCFG_PROC_CONFIG_PROC0_DAP_INSTID_MASK           0xf000000u
 
-#define SYSCFG_PROC_CONFIG_PROC1_HALTED_OFFSET             1
-#define SYSCFG_PROC_CONFIG_PROC1_HALTED_MASK               2
+#define SYSCFG_PROC_CONFIG_PROC1_HALTED_OFFSET             1u
+#define SYSCFG_PROC_CONFIG_PROC1_HALTED_MASK               2u
 
-#define SYSCFG_PROC_CONFIG_PROC0_HALTED_OFFSET             0
-#define SYSCFG_PROC_CONFIG_PROC0_HALTED_MASK               1
+#define SYSCFG_PROC_CONFIG_PROC0_HALTED_OFFSET             0u
+#define SYSCFG_PROC_CONFIG_PROC0_HALTED_MASK               1u
 
-#define SYSCFG_PROC_IN_SYNC_BYPASS_PROC_IN_SYNC_BYPASS_OFFSET   0
-#define SYSCFG_PROC_IN_SYNC_BYPASS_PROC_IN_SYNC_BYPASS_MASK   0x3fffffff
+#define SYSCFG_PROC_IN_SYNC_BYPASS_PROC_IN_SYNC_BYPASS_OFFSET   0u
+#define SYSCFG_PROC_IN_SYNC_BYPASS_PROC_IN_SYNC_BYPASS_MASK   0x3fffffffu
 
-#define SYSCFG_PROC_IN_SYNC_BYPASS_HI_PROC_IN_SYNC_BYPASS_HI_OFFSET   0
-#define SYSCFG_PROC_IN_SYNC_BYPASS_HI_PROC_IN_SYNC_BYPASS_HI_MASK   0x3f
+#define SYSCFG_PROC_IN_SYNC_BYPASS_HI_PROC_IN_SYNC_BYPASS_HI_OFFSET   0u
+#define SYSCFG_PROC_IN_SYNC_BYPASS_HI_PROC_IN_SYNC_BYPASS_HI_MASK   0x3fu
 
-#define SYSCFG_DBGFORCE_PROC1_ATTACH_OFFSET                7
-#define SYSCFG_DBGFORCE_PROC1_ATTACH_MASK                  0x80
+#define SYSCFG_DBGFORCE_PROC1_ATTACH_OFFSET                7u
+#define SYSCFG_DBGFORCE_PROC1_ATTACH_MASK                  0x80u
 
-#define SYSCFG_DBGFORCE_PROC1_SWCLK_OFFSET                 6
-#define SYSCFG_DBGFORCE_PROC1_SWCLK_MASK                   0x40
+#define SYSCFG_DBGFORCE_PROC1_SWCLK_OFFSET                 6u
+#define SYSCFG_DBGFORCE_PROC1_SWCLK_MASK                   0x40u
 
-#define SYSCFG_DBGFORCE_PROC1_SWDI_OFFSET                  5
-#define SYSCFG_DBGFORCE_PROC1_SWDI_MASK                    0x20
+#define SYSCFG_DBGFORCE_PROC1_SWDI_OFFSET                  5u
+#define SYSCFG_DBGFORCE_PROC1_SWDI_MASK                    0x20u
 
-#define SYSCFG_DBGFORCE_PROC1_SWDO_OFFSET                  4
-#define SYSCFG_DBGFORCE_PROC1_SWDO_MASK                    0x10
+#define SYSCFG_DBGFORCE_PROC1_SWDO_OFFSET                  4u
+#define SYSCFG_DBGFORCE_PROC1_SWDO_MASK                    0x10u
 
-#define SYSCFG_DBGFORCE_PROC0_ATTACH_OFFSET                3
-#define SYSCFG_DBGFORCE_PROC0_ATTACH_MASK                  8
+#define SYSCFG_DBGFORCE_PROC0_ATTACH_OFFSET                3u
+#define SYSCFG_DBGFORCE_PROC0_ATTACH_MASK                  8u
 
-#define SYSCFG_DBGFORCE_PROC0_SWCLK_OFFSET                 2
-#define SYSCFG_DBGFORCE_PROC0_SWCLK_MASK                   4
+#define SYSCFG_DBGFORCE_PROC0_SWCLK_OFFSET                 2u
+#define SYSCFG_DBGFORCE_PROC0_SWCLK_MASK                   4u
 
-#define SYSCFG_DBGFORCE_PROC0_SWDI_OFFSET                  1
-#define SYSCFG_DBGFORCE_PROC0_SWDI_MASK                    2
+#define SYSCFG_DBGFORCE_PROC0_SWDI_OFFSET                  1u
+#define SYSCFG_DBGFORCE_PROC0_SWDI_MASK                    2u
 
-#define SYSCFG_DBGFORCE_PROC0_SWDO_OFFSET                  0
-#define SYSCFG_DBGFORCE_PROC0_SWDO_MASK                    1
+#define SYSCFG_DBGFORCE_PROC0_SWDO_OFFSET                  0u
+#define SYSCFG_DBGFORCE_PROC0_SWDO_MASK                    1u
 
-#define SYSCFG_MEMPOWERDOWN_ROM_OFFSET                     7
-#define SYSCFG_MEMPOWERDOWN_ROM_MASK                       0x80
+#define SYSCFG_MEMPOWERDOWN_ROM_OFFSET                     7u
+#define SYSCFG_MEMPOWERDOWN_ROM_MASK                       0x80u
 
-#define SYSCFG_MEMPOWERDOWN_USB_OFFSET                     6
-#define SYSCFG_MEMPOWERDOWN_USB_MASK                       0x40
+#define SYSCFG_MEMPOWERDOWN_USB_OFFSET                     6u
+#define SYSCFG_MEMPOWERDOWN_USB_MASK                       0x40u
 
-#define SYSCFG_MEMPOWERDOWN_SRAM5_OFFSET                   5
-#define SYSCFG_MEMPOWERDOWN_SRAM5_MASK                     0x20
+#define SYSCFG_MEMPOWERDOWN_SRAM5_OFFSET                   5u
+#define SYSCFG_MEMPOWERDOWN_SRAM5_MASK                     0x20u
 
-#define SYSCFG_MEMPOWERDOWN_SRAM4_OFFSET                   4
-#define SYSCFG_MEMPOWERDOWN_SRAM4_MASK                     0x10
+#define SYSCFG_MEMPOWERDOWN_SRAM4_OFFSET                   4u
+#define SYSCFG_MEMPOWERDOWN_SRAM4_MASK                     0x10u
 
-#define SYSCFG_MEMPOWERDOWN_SRAM3_OFFSET                   3
-#define SYSCFG_MEMPOWERDOWN_SRAM3_MASK                     8
+#define SYSCFG_MEMPOWERDOWN_SRAM3_OFFSET                   3u
+#define SYSCFG_MEMPOWERDOWN_SRAM3_MASK                     8u
 
-#define SYSCFG_MEMPOWERDOWN_SRAM2_OFFSET                   2
-#define SYSCFG_MEMPOWERDOWN_SRAM2_MASK                     4
+#define SYSCFG_MEMPOWERDOWN_SRAM2_OFFSET                   2u
+#define SYSCFG_MEMPOWERDOWN_SRAM2_MASK                     4u
 
-#define SYSCFG_MEMPOWERDOWN_SRAM1_OFFSET                   1
-#define SYSCFG_MEMPOWERDOWN_SRAM1_MASK                     2
+#define SYSCFG_MEMPOWERDOWN_SRAM1_OFFSET                   1u
+#define SYSCFG_MEMPOWERDOWN_SRAM1_MASK                     2u
 
-#define SYSCFG_MEMPOWERDOWN_SRAM0_OFFSET                   0
-#define SYSCFG_MEMPOWERDOWN_SRAM0_MASK                     1
+#define SYSCFG_MEMPOWERDOWN_SRAM0_OFFSET                   0u
+#define SYSCFG_MEMPOWERDOWN_SRAM0_MASK                     1u
 
 
 typedef struct

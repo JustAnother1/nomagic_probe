@@ -7,122 +7,122 @@
 #include <stdint.h>
 
 
-#define RTC_CLKDIV_M1_CLKDIV_M1_OFFSET                     0
-#define RTC_CLKDIV_M1_CLKDIV_M1_MASK                       0xffff
+#define RTC_CLKDIV_M1_CLKDIV_M1_OFFSET                     0u
+#define RTC_CLKDIV_M1_CLKDIV_M1_MASK                       0xffffu
 
-#define RTC_SETUP_0_YEAR_OFFSET                            12
-#define RTC_SETUP_0_YEAR_MASK                              0xfff000
+#define RTC_SETUP_0_YEAR_OFFSET                            12u
+#define RTC_SETUP_0_YEAR_MASK                              0xfff000u
 
-#define RTC_SETUP_0_MONTH_OFFSET                           8
-#define RTC_SETUP_0_MONTH_MASK                             0xf00
+#define RTC_SETUP_0_MONTH_OFFSET                           8u
+#define RTC_SETUP_0_MONTH_MASK                             0xf00u
 
-#define RTC_SETUP_0_DAY_OFFSET                             0
-#define RTC_SETUP_0_DAY_MASK                               0x1f
+#define RTC_SETUP_0_DAY_OFFSET                             0u
+#define RTC_SETUP_0_DAY_MASK                               0x1fu
 
-#define RTC_SETUP_1_DOTW_OFFSET                            24
-#define RTC_SETUP_1_DOTW_MASK                              0x7000000
+#define RTC_SETUP_1_DOTW_OFFSET                            24u
+#define RTC_SETUP_1_DOTW_MASK                              0x7000000u
 
-#define RTC_SETUP_1_HOUR_OFFSET                            16
-#define RTC_SETUP_1_HOUR_MASK                              0x1f0000
+#define RTC_SETUP_1_HOUR_OFFSET                            16u
+#define RTC_SETUP_1_HOUR_MASK                              0x1f0000u
 
-#define RTC_SETUP_1_MIN_OFFSET                             8
-#define RTC_SETUP_1_MIN_MASK                               0x3f00
+#define RTC_SETUP_1_MIN_OFFSET                             8u
+#define RTC_SETUP_1_MIN_MASK                               0x3f00u
 
-#define RTC_SETUP_1_SEC_OFFSET                             0
-#define RTC_SETUP_1_SEC_MASK                               0x3f
+#define RTC_SETUP_1_SEC_OFFSET                             0u
+#define RTC_SETUP_1_SEC_MASK                               0x3fu
 
-#define RTC_CTRL_FORCE_NOTLEAPYEAR_OFFSET                  8
-#define RTC_CTRL_FORCE_NOTLEAPYEAR_MASK                    0x100
+#define RTC_CTRL_FORCE_NOTLEAPYEAR_OFFSET                  8u
+#define RTC_CTRL_FORCE_NOTLEAPYEAR_MASK                    0x100u
 
-#define RTC_CTRL_LOAD_OFFSET                               4
-#define RTC_CTRL_LOAD_MASK                                 0x10
+#define RTC_CTRL_LOAD_OFFSET                               4u
+#define RTC_CTRL_LOAD_MASK                                 0x10u
 
-#define RTC_CTRL_RTC_ACTIVE_OFFSET                         1
-#define RTC_CTRL_RTC_ACTIVE_MASK                           2
+#define RTC_CTRL_RTC_ACTIVE_OFFSET                         1u
+#define RTC_CTRL_RTC_ACTIVE_MASK                           2u
 
-#define RTC_CTRL_RTC_ENABLE_OFFSET                         0
-#define RTC_CTRL_RTC_ENABLE_MASK                           1
+#define RTC_CTRL_RTC_ENABLE_OFFSET                         0u
+#define RTC_CTRL_RTC_ENABLE_MASK                           1u
 
-#define RTC_IRQ_SETUP_0_MATCH_ACTIVE_OFFSET                29
-#define RTC_IRQ_SETUP_0_MATCH_ACTIVE_MASK                  0x20000000
+#define RTC_IRQ_SETUP_0_MATCH_ACTIVE_OFFSET                29u
+#define RTC_IRQ_SETUP_0_MATCH_ACTIVE_MASK                  0x20000000u
 
-#define RTC_IRQ_SETUP_0_MATCH_ENA_OFFSET                   28
-#define RTC_IRQ_SETUP_0_MATCH_ENA_MASK                     0x10000000
+#define RTC_IRQ_SETUP_0_MATCH_ENA_OFFSET                   28u
+#define RTC_IRQ_SETUP_0_MATCH_ENA_MASK                     0x10000000u
 
-#define RTC_IRQ_SETUP_0_YEAR_ENA_OFFSET                    26
-#define RTC_IRQ_SETUP_0_YEAR_ENA_MASK                      0x4000000
+#define RTC_IRQ_SETUP_0_YEAR_ENA_OFFSET                    26u
+#define RTC_IRQ_SETUP_0_YEAR_ENA_MASK                      0x4000000u
 
-#define RTC_IRQ_SETUP_0_MONTH_ENA_OFFSET                   25
-#define RTC_IRQ_SETUP_0_MONTH_ENA_MASK                     0x2000000
+#define RTC_IRQ_SETUP_0_MONTH_ENA_OFFSET                   25u
+#define RTC_IRQ_SETUP_0_MONTH_ENA_MASK                     0x2000000u
 
-#define RTC_IRQ_SETUP_0_DAY_ENA_OFFSET                     24
-#define RTC_IRQ_SETUP_0_DAY_ENA_MASK                       0x1000000
+#define RTC_IRQ_SETUP_0_DAY_ENA_OFFSET                     24u
+#define RTC_IRQ_SETUP_0_DAY_ENA_MASK                       0x1000000u
 
-#define RTC_IRQ_SETUP_0_YEAR_OFFSET                        12
-#define RTC_IRQ_SETUP_0_YEAR_MASK                          0xfff000
+#define RTC_IRQ_SETUP_0_YEAR_OFFSET                        12u
+#define RTC_IRQ_SETUP_0_YEAR_MASK                          0xfff000u
 
-#define RTC_IRQ_SETUP_0_MONTH_OFFSET                       8
-#define RTC_IRQ_SETUP_0_MONTH_MASK                         0xf00
+#define RTC_IRQ_SETUP_0_MONTH_OFFSET                       8u
+#define RTC_IRQ_SETUP_0_MONTH_MASK                         0xf00u
 
-#define RTC_IRQ_SETUP_0_DAY_OFFSET                         0
-#define RTC_IRQ_SETUP_0_DAY_MASK                           0x1f
+#define RTC_IRQ_SETUP_0_DAY_OFFSET                         0u
+#define RTC_IRQ_SETUP_0_DAY_MASK                           0x1fu
 
-#define RTC_IRQ_SETUP_1_DOTW_ENA_OFFSET                    31
-#define RTC_IRQ_SETUP_1_DOTW_ENA_MASK                      0x80000000
+#define RTC_IRQ_SETUP_1_DOTW_ENA_OFFSET                    31u
+#define RTC_IRQ_SETUP_1_DOTW_ENA_MASK                      0x80000000u
 
-#define RTC_IRQ_SETUP_1_HOUR_ENA_OFFSET                    30
-#define RTC_IRQ_SETUP_1_HOUR_ENA_MASK                      0x40000000
+#define RTC_IRQ_SETUP_1_HOUR_ENA_OFFSET                    30u
+#define RTC_IRQ_SETUP_1_HOUR_ENA_MASK                      0x40000000u
 
-#define RTC_IRQ_SETUP_1_MIN_ENA_OFFSET                     29
-#define RTC_IRQ_SETUP_1_MIN_ENA_MASK                       0x20000000
+#define RTC_IRQ_SETUP_1_MIN_ENA_OFFSET                     29u
+#define RTC_IRQ_SETUP_1_MIN_ENA_MASK                       0x20000000u
 
-#define RTC_IRQ_SETUP_1_SEC_ENA_OFFSET                     28
-#define RTC_IRQ_SETUP_1_SEC_ENA_MASK                       0x10000000
+#define RTC_IRQ_SETUP_1_SEC_ENA_OFFSET                     28u
+#define RTC_IRQ_SETUP_1_SEC_ENA_MASK                       0x10000000u
 
-#define RTC_IRQ_SETUP_1_DOTW_OFFSET                        24
-#define RTC_IRQ_SETUP_1_DOTW_MASK                          0x7000000
+#define RTC_IRQ_SETUP_1_DOTW_OFFSET                        24u
+#define RTC_IRQ_SETUP_1_DOTW_MASK                          0x7000000u
 
-#define RTC_IRQ_SETUP_1_HOUR_OFFSET                        16
-#define RTC_IRQ_SETUP_1_HOUR_MASK                          0x1f0000
+#define RTC_IRQ_SETUP_1_HOUR_OFFSET                        16u
+#define RTC_IRQ_SETUP_1_HOUR_MASK                          0x1f0000u
 
-#define RTC_IRQ_SETUP_1_MIN_OFFSET                         8
-#define RTC_IRQ_SETUP_1_MIN_MASK                           0x3f00
+#define RTC_IRQ_SETUP_1_MIN_OFFSET                         8u
+#define RTC_IRQ_SETUP_1_MIN_MASK                           0x3f00u
 
-#define RTC_IRQ_SETUP_1_SEC_OFFSET                         0
-#define RTC_IRQ_SETUP_1_SEC_MASK                           0x3f
+#define RTC_IRQ_SETUP_1_SEC_OFFSET                         0u
+#define RTC_IRQ_SETUP_1_SEC_MASK                           0x3fu
 
-#define RTC_RTC_1_YEAR_OFFSET                              12
-#define RTC_RTC_1_YEAR_MASK                                0xfff000
+#define RTC_RTC_1_YEAR_OFFSET                              12u
+#define RTC_RTC_1_YEAR_MASK                                0xfff000u
 
-#define RTC_RTC_1_MONTH_OFFSET                             8
-#define RTC_RTC_1_MONTH_MASK                               0xf00
+#define RTC_RTC_1_MONTH_OFFSET                             8u
+#define RTC_RTC_1_MONTH_MASK                               0xf00u
 
-#define RTC_RTC_1_DAY_OFFSET                               0
-#define RTC_RTC_1_DAY_MASK                                 0x1f
+#define RTC_RTC_1_DAY_OFFSET                               0u
+#define RTC_RTC_1_DAY_MASK                                 0x1fu
 
-#define RTC_RTC_0_DOTW_OFFSET                              24
-#define RTC_RTC_0_DOTW_MASK                                0x7000000
+#define RTC_RTC_0_DOTW_OFFSET                              24u
+#define RTC_RTC_0_DOTW_MASK                                0x7000000u
 
-#define RTC_RTC_0_HOUR_OFFSET                              16
-#define RTC_RTC_0_HOUR_MASK                                0x1f0000
+#define RTC_RTC_0_HOUR_OFFSET                              16u
+#define RTC_RTC_0_HOUR_MASK                                0x1f0000u
 
-#define RTC_RTC_0_MIN_OFFSET                               8
-#define RTC_RTC_0_MIN_MASK                                 0x3f00
+#define RTC_RTC_0_MIN_OFFSET                               8u
+#define RTC_RTC_0_MIN_MASK                                 0x3f00u
 
-#define RTC_RTC_0_SEC_OFFSET                               0
-#define RTC_RTC_0_SEC_MASK                                 0x3f
+#define RTC_RTC_0_SEC_OFFSET                               0u
+#define RTC_RTC_0_SEC_MASK                                 0x3fu
 
-#define RTC_INTR_RTC_OFFSET                                0
-#define RTC_INTR_RTC_MASK                                  1
+#define RTC_INTR_RTC_OFFSET                                0u
+#define RTC_INTR_RTC_MASK                                  1u
 
-#define RTC_INTE_RTC_OFFSET                                0
-#define RTC_INTE_RTC_MASK                                  1
+#define RTC_INTE_RTC_OFFSET                                0u
+#define RTC_INTE_RTC_MASK                                  1u
 
-#define RTC_INTF_RTC_OFFSET                                0
-#define RTC_INTF_RTC_MASK                                  1
+#define RTC_INTF_RTC_OFFSET                                0u
+#define RTC_INTF_RTC_MASK                                  1u
 
-#define RTC_INTS_RTC_OFFSET                                0
-#define RTC_INTS_RTC_MASK                                  1
+#define RTC_INTS_RTC_OFFSET                                0u
+#define RTC_INTS_RTC_MASK                                  1u
 
 
 typedef struct

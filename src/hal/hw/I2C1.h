@@ -147,584 +147,584 @@
 #include <stdint.h>
 
 
-#define I2C1_IC_CON_STOP_DET_IF_MASTER_ACTIVE_OFFSET       10
-#define I2C1_IC_CON_STOP_DET_IF_MASTER_ACTIVE_MASK         0x400
+#define I2C1_IC_CON_STOP_DET_IF_MASTER_ACTIVE_OFFSET       10u
+#define I2C1_IC_CON_STOP_DET_IF_MASTER_ACTIVE_MASK         0x400u
 
-#define I2C1_IC_CON_RX_FIFO_FULL_HLD_CTRL_OFFSET           9
-#define I2C1_IC_CON_RX_FIFO_FULL_HLD_CTRL_MASK             0x200
-#define I2C1_IC_CON_RX_FIFO_FULL_HLD_CTRL_DISABLED         0
-#define I2C1_IC_CON_RX_FIFO_FULL_HLD_CTRL_ENABLED          1
+#define I2C1_IC_CON_RX_FIFO_FULL_HLD_CTRL_OFFSET           9u
+#define I2C1_IC_CON_RX_FIFO_FULL_HLD_CTRL_MASK             0x200u
+#define I2C1_IC_CON_RX_FIFO_FULL_HLD_CTRL_DISABLED         0u
+#define I2C1_IC_CON_RX_FIFO_FULL_HLD_CTRL_ENABLED          1u
 
-#define I2C1_IC_CON_TX_EMPTY_CTRL_OFFSET                   8
-#define I2C1_IC_CON_TX_EMPTY_CTRL_MASK                     0x100
-#define I2C1_IC_CON_TX_EMPTY_CTRL_DISABLED                 0
-#define I2C1_IC_CON_TX_EMPTY_CTRL_ENABLED                  1
+#define I2C1_IC_CON_TX_EMPTY_CTRL_OFFSET                   8u
+#define I2C1_IC_CON_TX_EMPTY_CTRL_MASK                     0x100u
+#define I2C1_IC_CON_TX_EMPTY_CTRL_DISABLED                 0u
+#define I2C1_IC_CON_TX_EMPTY_CTRL_ENABLED                  1u
 
-#define I2C1_IC_CON_STOP_DET_IFADDRESSED_OFFSET            7
-#define I2C1_IC_CON_STOP_DET_IFADDRESSED_MASK              0x80
-#define I2C1_IC_CON_STOP_DET_IFADDRESSED_DISABLED          0
-#define I2C1_IC_CON_STOP_DET_IFADDRESSED_ENABLED           1
+#define I2C1_IC_CON_STOP_DET_IFADDRESSED_OFFSET            7u
+#define I2C1_IC_CON_STOP_DET_IFADDRESSED_MASK              0x80u
+#define I2C1_IC_CON_STOP_DET_IFADDRESSED_DISABLED          0u
+#define I2C1_IC_CON_STOP_DET_IFADDRESSED_ENABLED           1u
 
-#define I2C1_IC_CON_IC_SLAVE_DISABLE_OFFSET                6
-#define I2C1_IC_CON_IC_SLAVE_DISABLE_MASK                  0x40
-#define I2C1_IC_CON_IC_SLAVE_DISABLE_SLAVE_ENABLED         0
-#define I2C1_IC_CON_IC_SLAVE_DISABLE_SLAVE_DISABLED        1
+#define I2C1_IC_CON_IC_SLAVE_DISABLE_OFFSET                6u
+#define I2C1_IC_CON_IC_SLAVE_DISABLE_MASK                  0x40u
+#define I2C1_IC_CON_IC_SLAVE_DISABLE_SLAVE_ENABLED         0u
+#define I2C1_IC_CON_IC_SLAVE_DISABLE_SLAVE_DISABLED        1u
 
-#define I2C1_IC_CON_IC_RESTART_EN_OFFSET                   5
-#define I2C1_IC_CON_IC_RESTART_EN_MASK                     0x20
-#define I2C1_IC_CON_IC_RESTART_EN_DISABLED                 0
-#define I2C1_IC_CON_IC_RESTART_EN_ENABLED                  1
+#define I2C1_IC_CON_IC_RESTART_EN_OFFSET                   5u
+#define I2C1_IC_CON_IC_RESTART_EN_MASK                     0x20u
+#define I2C1_IC_CON_IC_RESTART_EN_DISABLED                 0u
+#define I2C1_IC_CON_IC_RESTART_EN_ENABLED                  1u
 
-#define I2C1_IC_CON_IC_10BITADDR_MASTER_OFFSET             4
-#define I2C1_IC_CON_IC_10BITADDR_MASTER_MASK               0x10
-#define I2C1_IC_CON_IC_10BITADDR_MASTER_ADDR_7BITS         0
-#define I2C1_IC_CON_IC_10BITADDR_MASTER_ADDR_10BITS        1
+#define I2C1_IC_CON_IC_10BITADDR_MASTER_OFFSET             4u
+#define I2C1_IC_CON_IC_10BITADDR_MASTER_MASK               0x10u
+#define I2C1_IC_CON_IC_10BITADDR_MASTER_ADDR_7BITS         0u
+#define I2C1_IC_CON_IC_10BITADDR_MASTER_ADDR_10BITS        1u
 
-#define I2C1_IC_CON_IC_10BITADDR_SLAVE_OFFSET              3
-#define I2C1_IC_CON_IC_10BITADDR_SLAVE_MASK                8
-#define I2C1_IC_CON_IC_10BITADDR_SLAVE_ADDR_7BITS          0
-#define I2C1_IC_CON_IC_10BITADDR_SLAVE_ADDR_10BITS         1
+#define I2C1_IC_CON_IC_10BITADDR_SLAVE_OFFSET              3u
+#define I2C1_IC_CON_IC_10BITADDR_SLAVE_MASK                8u
+#define I2C1_IC_CON_IC_10BITADDR_SLAVE_ADDR_7BITS          0u
+#define I2C1_IC_CON_IC_10BITADDR_SLAVE_ADDR_10BITS         1u
 
-#define I2C1_IC_CON_SPEED_OFFSET                           1
-#define I2C1_IC_CON_SPEED_MASK                             6
-#define I2C1_IC_CON_SPEED_STANDARD                         1
-#define I2C1_IC_CON_SPEED_FAST                             2
-#define I2C1_IC_CON_SPEED_HIGH                             3
+#define I2C1_IC_CON_SPEED_OFFSET                           1u
+#define I2C1_IC_CON_SPEED_MASK                             6u
+#define I2C1_IC_CON_SPEED_STANDARD                         1u
+#define I2C1_IC_CON_SPEED_FAST                             2u
+#define I2C1_IC_CON_SPEED_HIGH                             3u
 
-#define I2C1_IC_CON_MASTER_MODE_OFFSET                     0
-#define I2C1_IC_CON_MASTER_MODE_MASK                       1
-#define I2C1_IC_CON_MASTER_MODE_DISABLED                   0
-#define I2C1_IC_CON_MASTER_MODE_ENABLED                    1
+#define I2C1_IC_CON_MASTER_MODE_OFFSET                     0u
+#define I2C1_IC_CON_MASTER_MODE_MASK                       1u
+#define I2C1_IC_CON_MASTER_MODE_DISABLED                   0u
+#define I2C1_IC_CON_MASTER_MODE_ENABLED                    1u
 
-#define I2C1_IC_TAR_SPECIAL_OFFSET                         11
-#define I2C1_IC_TAR_SPECIAL_MASK                           0x800
-#define I2C1_IC_TAR_SPECIAL_DISABLED                       0
-#define I2C1_IC_TAR_SPECIAL_ENABLED                        1
+#define I2C1_IC_TAR_SPECIAL_OFFSET                         11u
+#define I2C1_IC_TAR_SPECIAL_MASK                           0x800u
+#define I2C1_IC_TAR_SPECIAL_DISABLED                       0u
+#define I2C1_IC_TAR_SPECIAL_ENABLED                        1u
 
-#define I2C1_IC_TAR_GC_OR_START_OFFSET                     10
-#define I2C1_IC_TAR_GC_OR_START_MASK                       0x400
-#define I2C1_IC_TAR_GC_OR_START_GENERAL_CALL               0
-#define I2C1_IC_TAR_GC_OR_START_START_BYTE                 1
+#define I2C1_IC_TAR_GC_OR_START_OFFSET                     10u
+#define I2C1_IC_TAR_GC_OR_START_MASK                       0x400u
+#define I2C1_IC_TAR_GC_OR_START_GENERAL_CALL               0u
+#define I2C1_IC_TAR_GC_OR_START_START_BYTE                 1u
 
-#define I2C1_IC_TAR_IC_TAR_OFFSET                          0
-#define I2C1_IC_TAR_IC_TAR_MASK                            0x3ff
+#define I2C1_IC_TAR_IC_TAR_OFFSET                          0u
+#define I2C1_IC_TAR_IC_TAR_MASK                            0x3ffu
 
-#define I2C1_IC_SAR_IC_SAR_OFFSET                          0
-#define I2C1_IC_SAR_IC_SAR_MASK                            0x3ff
+#define I2C1_IC_SAR_IC_SAR_OFFSET                          0u
+#define I2C1_IC_SAR_IC_SAR_MASK                            0x3ffu
 
-#define I2C1_IC_DATA_CMD_FIRST_DATA_BYTE_OFFSET            11
-#define I2C1_IC_DATA_CMD_FIRST_DATA_BYTE_MASK              0x800
-#define I2C1_IC_DATA_CMD_FIRST_DATA_BYTE_INACTIVE          0
-#define I2C1_IC_DATA_CMD_FIRST_DATA_BYTE_ACTIVE            1
+#define I2C1_IC_DATA_CMD_FIRST_DATA_BYTE_OFFSET            11u
+#define I2C1_IC_DATA_CMD_FIRST_DATA_BYTE_MASK              0x800u
+#define I2C1_IC_DATA_CMD_FIRST_DATA_BYTE_INACTIVE          0u
+#define I2C1_IC_DATA_CMD_FIRST_DATA_BYTE_ACTIVE            1u
 
-#define I2C1_IC_DATA_CMD_RESTART_OFFSET                    10
-#define I2C1_IC_DATA_CMD_RESTART_MASK                      0x400
-#define I2C1_IC_DATA_CMD_RESTART_DISABLE                   0
-#define I2C1_IC_DATA_CMD_RESTART_ENABLE                    1
+#define I2C1_IC_DATA_CMD_RESTART_OFFSET                    10u
+#define I2C1_IC_DATA_CMD_RESTART_MASK                      0x400u
+#define I2C1_IC_DATA_CMD_RESTART_DISABLE                   0u
+#define I2C1_IC_DATA_CMD_RESTART_ENABLE                    1u
 
-#define I2C1_IC_DATA_CMD_STOP_OFFSET                       9
-#define I2C1_IC_DATA_CMD_STOP_MASK                         0x200
-#define I2C1_IC_DATA_CMD_STOP_DISABLE                      0
-#define I2C1_IC_DATA_CMD_STOP_ENABLE                       1
+#define I2C1_IC_DATA_CMD_STOP_OFFSET                       9u
+#define I2C1_IC_DATA_CMD_STOP_MASK                         0x200u
+#define I2C1_IC_DATA_CMD_STOP_DISABLE                      0u
+#define I2C1_IC_DATA_CMD_STOP_ENABLE                       1u
 
-#define I2C1_IC_DATA_CMD_CMD_OFFSET                        8
-#define I2C1_IC_DATA_CMD_CMD_MASK                          0x100
-#define I2C1_IC_DATA_CMD_CMD_WRITE                         0
-#define I2C1_IC_DATA_CMD_CMD_READ                          1
+#define I2C1_IC_DATA_CMD_CMD_OFFSET                        8u
+#define I2C1_IC_DATA_CMD_CMD_MASK                          0x100u
+#define I2C1_IC_DATA_CMD_CMD_WRITE                         0u
+#define I2C1_IC_DATA_CMD_CMD_READ                          1u
 
-#define I2C1_IC_DATA_CMD_DAT_OFFSET                        0
-#define I2C1_IC_DATA_CMD_DAT_MASK                          0xff
+#define I2C1_IC_DATA_CMD_DAT_OFFSET                        0u
+#define I2C1_IC_DATA_CMD_DAT_MASK                          0xffu
 
-#define I2C1_IC_SS_SCL_HCNT_IC_SS_SCL_HCNT_OFFSET          0
-#define I2C1_IC_SS_SCL_HCNT_IC_SS_SCL_HCNT_MASK            0xffff
+#define I2C1_IC_SS_SCL_HCNT_IC_SS_SCL_HCNT_OFFSET          0u
+#define I2C1_IC_SS_SCL_HCNT_IC_SS_SCL_HCNT_MASK            0xffffu
 
-#define I2C1_IC_SS_SCL_LCNT_IC_SS_SCL_LCNT_OFFSET          0
-#define I2C1_IC_SS_SCL_LCNT_IC_SS_SCL_LCNT_MASK            0xffff
+#define I2C1_IC_SS_SCL_LCNT_IC_SS_SCL_LCNT_OFFSET          0u
+#define I2C1_IC_SS_SCL_LCNT_IC_SS_SCL_LCNT_MASK            0xffffu
 
-#define I2C1_IC_FS_SCL_HCNT_IC_FS_SCL_HCNT_OFFSET          0
-#define I2C1_IC_FS_SCL_HCNT_IC_FS_SCL_HCNT_MASK            0xffff
+#define I2C1_IC_FS_SCL_HCNT_IC_FS_SCL_HCNT_OFFSET          0u
+#define I2C1_IC_FS_SCL_HCNT_IC_FS_SCL_HCNT_MASK            0xffffu
 
-#define I2C1_IC_FS_SCL_LCNT_IC_FS_SCL_LCNT_OFFSET          0
-#define I2C1_IC_FS_SCL_LCNT_IC_FS_SCL_LCNT_MASK            0xffff
+#define I2C1_IC_FS_SCL_LCNT_IC_FS_SCL_LCNT_OFFSET          0u
+#define I2C1_IC_FS_SCL_LCNT_IC_FS_SCL_LCNT_MASK            0xffffu
 
-#define I2C1_IC_INTR_STAT_R_MASTER_ON_HOLD_OFFSET          13
-#define I2C1_IC_INTR_STAT_R_MASTER_ON_HOLD_MASK            0x7ffe000
-#define I2C1_IC_INTR_STAT_R_MASTER_ON_HOLD_INACTIVE        0
-#define I2C1_IC_INTR_STAT_R_MASTER_ON_HOLD_ACTIVE          1
+#define I2C1_IC_INTR_STAT_R_MASTER_ON_HOLD_OFFSET          13u
+#define I2C1_IC_INTR_STAT_R_MASTER_ON_HOLD_MASK            0x7ffe000u
+#define I2C1_IC_INTR_STAT_R_MASTER_ON_HOLD_INACTIVE        0u
+#define I2C1_IC_INTR_STAT_R_MASTER_ON_HOLD_ACTIVE          1u
 
-#define I2C1_IC_INTR_STAT_R_RESTART_DET_OFFSET             12
-#define I2C1_IC_INTR_STAT_R_RESTART_DET_MASK               0x1000
-#define I2C1_IC_INTR_STAT_R_RESTART_DET_INACTIVE           0
-#define I2C1_IC_INTR_STAT_R_RESTART_DET_ACTIVE             1
+#define I2C1_IC_INTR_STAT_R_RESTART_DET_OFFSET             12u
+#define I2C1_IC_INTR_STAT_R_RESTART_DET_MASK               0x1000u
+#define I2C1_IC_INTR_STAT_R_RESTART_DET_INACTIVE           0u
+#define I2C1_IC_INTR_STAT_R_RESTART_DET_ACTIVE             1u
 
-#define I2C1_IC_INTR_STAT_R_GEN_CALL_OFFSET                11
-#define I2C1_IC_INTR_STAT_R_GEN_CALL_MASK                  0x800
-#define I2C1_IC_INTR_STAT_R_GEN_CALL_INACTIVE              0
-#define I2C1_IC_INTR_STAT_R_GEN_CALL_ACTIVE                1
+#define I2C1_IC_INTR_STAT_R_GEN_CALL_OFFSET                11u
+#define I2C1_IC_INTR_STAT_R_GEN_CALL_MASK                  0x800u
+#define I2C1_IC_INTR_STAT_R_GEN_CALL_INACTIVE              0u
+#define I2C1_IC_INTR_STAT_R_GEN_CALL_ACTIVE                1u
 
-#define I2C1_IC_INTR_STAT_R_START_DET_OFFSET               10
-#define I2C1_IC_INTR_STAT_R_START_DET_MASK                 0x400
-#define I2C1_IC_INTR_STAT_R_START_DET_INACTIVE             0
-#define I2C1_IC_INTR_STAT_R_START_DET_ACTIVE               1
+#define I2C1_IC_INTR_STAT_R_START_DET_OFFSET               10u
+#define I2C1_IC_INTR_STAT_R_START_DET_MASK                 0x400u
+#define I2C1_IC_INTR_STAT_R_START_DET_INACTIVE             0u
+#define I2C1_IC_INTR_STAT_R_START_DET_ACTIVE               1u
 
-#define I2C1_IC_INTR_STAT_R_STOP_DET_OFFSET                9
-#define I2C1_IC_INTR_STAT_R_STOP_DET_MASK                  0x200
-#define I2C1_IC_INTR_STAT_R_STOP_DET_INACTIVE              0
-#define I2C1_IC_INTR_STAT_R_STOP_DET_ACTIVE                1
+#define I2C1_IC_INTR_STAT_R_STOP_DET_OFFSET                9u
+#define I2C1_IC_INTR_STAT_R_STOP_DET_MASK                  0x200u
+#define I2C1_IC_INTR_STAT_R_STOP_DET_INACTIVE              0u
+#define I2C1_IC_INTR_STAT_R_STOP_DET_ACTIVE                1u
 
-#define I2C1_IC_INTR_STAT_R_ACTIVITY_OFFSET                8
-#define I2C1_IC_INTR_STAT_R_ACTIVITY_MASK                  0x100
-#define I2C1_IC_INTR_STAT_R_ACTIVITY_INACTIVE              0
-#define I2C1_IC_INTR_STAT_R_ACTIVITY_ACTIVE                1
+#define I2C1_IC_INTR_STAT_R_ACTIVITY_OFFSET                8u
+#define I2C1_IC_INTR_STAT_R_ACTIVITY_MASK                  0x100u
+#define I2C1_IC_INTR_STAT_R_ACTIVITY_INACTIVE              0u
+#define I2C1_IC_INTR_STAT_R_ACTIVITY_ACTIVE                1u
 
-#define I2C1_IC_INTR_STAT_R_RX_DONE_OFFSET                 7
-#define I2C1_IC_INTR_STAT_R_RX_DONE_MASK                   0x80
-#define I2C1_IC_INTR_STAT_R_RX_DONE_INACTIVE               0
-#define I2C1_IC_INTR_STAT_R_RX_DONE_ACTIVE                 1
+#define I2C1_IC_INTR_STAT_R_RX_DONE_OFFSET                 7u
+#define I2C1_IC_INTR_STAT_R_RX_DONE_MASK                   0x80u
+#define I2C1_IC_INTR_STAT_R_RX_DONE_INACTIVE               0u
+#define I2C1_IC_INTR_STAT_R_RX_DONE_ACTIVE                 1u
 
-#define I2C1_IC_INTR_STAT_R_TX_ABRT_OFFSET                 6
-#define I2C1_IC_INTR_STAT_R_TX_ABRT_MASK                   0x40
-#define I2C1_IC_INTR_STAT_R_TX_ABRT_INACTIVE               0
-#define I2C1_IC_INTR_STAT_R_TX_ABRT_ACTIVE                 1
+#define I2C1_IC_INTR_STAT_R_TX_ABRT_OFFSET                 6u
+#define I2C1_IC_INTR_STAT_R_TX_ABRT_MASK                   0x40u
+#define I2C1_IC_INTR_STAT_R_TX_ABRT_INACTIVE               0u
+#define I2C1_IC_INTR_STAT_R_TX_ABRT_ACTIVE                 1u
 
-#define I2C1_IC_INTR_STAT_R_RD_REQ_OFFSET                  5
-#define I2C1_IC_INTR_STAT_R_RD_REQ_MASK                    0x20
-#define I2C1_IC_INTR_STAT_R_RD_REQ_INACTIVE                0
-#define I2C1_IC_INTR_STAT_R_RD_REQ_ACTIVE                  1
+#define I2C1_IC_INTR_STAT_R_RD_REQ_OFFSET                  5u
+#define I2C1_IC_INTR_STAT_R_RD_REQ_MASK                    0x20u
+#define I2C1_IC_INTR_STAT_R_RD_REQ_INACTIVE                0u
+#define I2C1_IC_INTR_STAT_R_RD_REQ_ACTIVE                  1u
 
-#define I2C1_IC_INTR_STAT_R_TX_EMPTY_OFFSET                4
-#define I2C1_IC_INTR_STAT_R_TX_EMPTY_MASK                  0x10
-#define I2C1_IC_INTR_STAT_R_TX_EMPTY_INACTIVE              0
-#define I2C1_IC_INTR_STAT_R_TX_EMPTY_ACTIVE                1
+#define I2C1_IC_INTR_STAT_R_TX_EMPTY_OFFSET                4u
+#define I2C1_IC_INTR_STAT_R_TX_EMPTY_MASK                  0x10u
+#define I2C1_IC_INTR_STAT_R_TX_EMPTY_INACTIVE              0u
+#define I2C1_IC_INTR_STAT_R_TX_EMPTY_ACTIVE                1u
 
-#define I2C1_IC_INTR_STAT_R_TX_OVER_OFFSET                 3
-#define I2C1_IC_INTR_STAT_R_TX_OVER_MASK                   8
-#define I2C1_IC_INTR_STAT_R_TX_OVER_INACTIVE               0
-#define I2C1_IC_INTR_STAT_R_TX_OVER_ACTIVE                 1
+#define I2C1_IC_INTR_STAT_R_TX_OVER_OFFSET                 3u
+#define I2C1_IC_INTR_STAT_R_TX_OVER_MASK                   8u
+#define I2C1_IC_INTR_STAT_R_TX_OVER_INACTIVE               0u
+#define I2C1_IC_INTR_STAT_R_TX_OVER_ACTIVE                 1u
 
-#define I2C1_IC_INTR_STAT_R_RX_FULL_OFFSET                 2
-#define I2C1_IC_INTR_STAT_R_RX_FULL_MASK                   4
-#define I2C1_IC_INTR_STAT_R_RX_FULL_INACTIVE               0
-#define I2C1_IC_INTR_STAT_R_RX_FULL_ACTIVE                 1
+#define I2C1_IC_INTR_STAT_R_RX_FULL_OFFSET                 2u
+#define I2C1_IC_INTR_STAT_R_RX_FULL_MASK                   4u
+#define I2C1_IC_INTR_STAT_R_RX_FULL_INACTIVE               0u
+#define I2C1_IC_INTR_STAT_R_RX_FULL_ACTIVE                 1u
 
-#define I2C1_IC_INTR_STAT_R_RX_OVER_OFFSET                 1
-#define I2C1_IC_INTR_STAT_R_RX_OVER_MASK                   2
-#define I2C1_IC_INTR_STAT_R_RX_OVER_INACTIVE               0
-#define I2C1_IC_INTR_STAT_R_RX_OVER_ACTIVE                 1
+#define I2C1_IC_INTR_STAT_R_RX_OVER_OFFSET                 1u
+#define I2C1_IC_INTR_STAT_R_RX_OVER_MASK                   2u
+#define I2C1_IC_INTR_STAT_R_RX_OVER_INACTIVE               0u
+#define I2C1_IC_INTR_STAT_R_RX_OVER_ACTIVE                 1u
 
-#define I2C1_IC_INTR_STAT_R_RX_UNDER_OFFSET                0
-#define I2C1_IC_INTR_STAT_R_RX_UNDER_MASK                  1
-#define I2C1_IC_INTR_STAT_R_RX_UNDER_INACTIVE              0
-#define I2C1_IC_INTR_STAT_R_RX_UNDER_ACTIVE                1
+#define I2C1_IC_INTR_STAT_R_RX_UNDER_OFFSET                0u
+#define I2C1_IC_INTR_STAT_R_RX_UNDER_MASK                  1u
+#define I2C1_IC_INTR_STAT_R_RX_UNDER_INACTIVE              0u
+#define I2C1_IC_INTR_STAT_R_RX_UNDER_ACTIVE                1u
 
-#define I2C1_IC_INTR_MASK_M_MASTER_ON_HOLD_READ_ONLY_OFFSET   13
-#define I2C1_IC_INTR_MASK_M_MASTER_ON_HOLD_READ_ONLY_MASK  0x7ffe000
+#define I2C1_IC_INTR_MASK_M_MASTER_ON_HOLD_READ_ONLY_OFFSET   13u
+#define I2C1_IC_INTR_MASK_M_MASTER_ON_HOLD_READ_ONLY_MASK  0x7ffe000u
 #define I2C1_IC_INTR_MASK_M_MASTER_ON_HOLD_READ_ONLY_ENABLED   0
 #define I2C1_IC_INTR_MASK_M_MASTER_ON_HOLD_READ_ONLY_DISABLED   1
 
-#define I2C1_IC_INTR_MASK_M_RESTART_DET_OFFSET             12
-#define I2C1_IC_INTR_MASK_M_RESTART_DET_MASK               0x1000
-#define I2C1_IC_INTR_MASK_M_RESTART_DET_ENABLED            0
-#define I2C1_IC_INTR_MASK_M_RESTART_DET_DISABLED           1
+#define I2C1_IC_INTR_MASK_M_RESTART_DET_OFFSET             12u
+#define I2C1_IC_INTR_MASK_M_RESTART_DET_MASK               0x1000u
+#define I2C1_IC_INTR_MASK_M_RESTART_DET_ENABLED            0u
+#define I2C1_IC_INTR_MASK_M_RESTART_DET_DISABLED           1u
 
-#define I2C1_IC_INTR_MASK_M_GEN_CALL_OFFSET                11
-#define I2C1_IC_INTR_MASK_M_GEN_CALL_MASK                  0x800
-#define I2C1_IC_INTR_MASK_M_GEN_CALL_ENABLED               0
-#define I2C1_IC_INTR_MASK_M_GEN_CALL_DISABLED              1
+#define I2C1_IC_INTR_MASK_M_GEN_CALL_OFFSET                11u
+#define I2C1_IC_INTR_MASK_M_GEN_CALL_MASK                  0x800u
+#define I2C1_IC_INTR_MASK_M_GEN_CALL_ENABLED               0u
+#define I2C1_IC_INTR_MASK_M_GEN_CALL_DISABLED              1u
 
-#define I2C1_IC_INTR_MASK_M_START_DET_OFFSET               10
-#define I2C1_IC_INTR_MASK_M_START_DET_MASK                 0x400
-#define I2C1_IC_INTR_MASK_M_START_DET_ENABLED              0
-#define I2C1_IC_INTR_MASK_M_START_DET_DISABLED             1
+#define I2C1_IC_INTR_MASK_M_START_DET_OFFSET               10u
+#define I2C1_IC_INTR_MASK_M_START_DET_MASK                 0x400u
+#define I2C1_IC_INTR_MASK_M_START_DET_ENABLED              0u
+#define I2C1_IC_INTR_MASK_M_START_DET_DISABLED             1u
 
-#define I2C1_IC_INTR_MASK_M_STOP_DET_OFFSET                9
-#define I2C1_IC_INTR_MASK_M_STOP_DET_MASK                  0x200
-#define I2C1_IC_INTR_MASK_M_STOP_DET_ENABLED               0
-#define I2C1_IC_INTR_MASK_M_STOP_DET_DISABLED              1
+#define I2C1_IC_INTR_MASK_M_STOP_DET_OFFSET                9u
+#define I2C1_IC_INTR_MASK_M_STOP_DET_MASK                  0x200u
+#define I2C1_IC_INTR_MASK_M_STOP_DET_ENABLED               0u
+#define I2C1_IC_INTR_MASK_M_STOP_DET_DISABLED              1u
 
-#define I2C1_IC_INTR_MASK_M_ACTIVITY_OFFSET                8
-#define I2C1_IC_INTR_MASK_M_ACTIVITY_MASK                  0x100
-#define I2C1_IC_INTR_MASK_M_ACTIVITY_ENABLED               0
-#define I2C1_IC_INTR_MASK_M_ACTIVITY_DISABLED              1
+#define I2C1_IC_INTR_MASK_M_ACTIVITY_OFFSET                8u
+#define I2C1_IC_INTR_MASK_M_ACTIVITY_MASK                  0x100u
+#define I2C1_IC_INTR_MASK_M_ACTIVITY_ENABLED               0u
+#define I2C1_IC_INTR_MASK_M_ACTIVITY_DISABLED              1u
 
-#define I2C1_IC_INTR_MASK_M_RX_DONE_OFFSET                 7
-#define I2C1_IC_INTR_MASK_M_RX_DONE_MASK                   0x80
-#define I2C1_IC_INTR_MASK_M_RX_DONE_ENABLED                0
-#define I2C1_IC_INTR_MASK_M_RX_DONE_DISABLED               1
+#define I2C1_IC_INTR_MASK_M_RX_DONE_OFFSET                 7u
+#define I2C1_IC_INTR_MASK_M_RX_DONE_MASK                   0x80u
+#define I2C1_IC_INTR_MASK_M_RX_DONE_ENABLED                0u
+#define I2C1_IC_INTR_MASK_M_RX_DONE_DISABLED               1u
 
-#define I2C1_IC_INTR_MASK_M_TX_ABRT_OFFSET                 6
-#define I2C1_IC_INTR_MASK_M_TX_ABRT_MASK                   0x40
-#define I2C1_IC_INTR_MASK_M_TX_ABRT_ENABLED                0
-#define I2C1_IC_INTR_MASK_M_TX_ABRT_DISABLED               1
+#define I2C1_IC_INTR_MASK_M_TX_ABRT_OFFSET                 6u
+#define I2C1_IC_INTR_MASK_M_TX_ABRT_MASK                   0x40u
+#define I2C1_IC_INTR_MASK_M_TX_ABRT_ENABLED                0u
+#define I2C1_IC_INTR_MASK_M_TX_ABRT_DISABLED               1u
 
-#define I2C1_IC_INTR_MASK_M_RD_REQ_OFFSET                  5
-#define I2C1_IC_INTR_MASK_M_RD_REQ_MASK                    0x20
-#define I2C1_IC_INTR_MASK_M_RD_REQ_ENABLED                 0
-#define I2C1_IC_INTR_MASK_M_RD_REQ_DISABLED                1
+#define I2C1_IC_INTR_MASK_M_RD_REQ_OFFSET                  5u
+#define I2C1_IC_INTR_MASK_M_RD_REQ_MASK                    0x20u
+#define I2C1_IC_INTR_MASK_M_RD_REQ_ENABLED                 0u
+#define I2C1_IC_INTR_MASK_M_RD_REQ_DISABLED                1u
 
-#define I2C1_IC_INTR_MASK_M_TX_EMPTY_OFFSET                4
-#define I2C1_IC_INTR_MASK_M_TX_EMPTY_MASK                  0x10
-#define I2C1_IC_INTR_MASK_M_TX_EMPTY_ENABLED               0
-#define I2C1_IC_INTR_MASK_M_TX_EMPTY_DISABLED              1
+#define I2C1_IC_INTR_MASK_M_TX_EMPTY_OFFSET                4u
+#define I2C1_IC_INTR_MASK_M_TX_EMPTY_MASK                  0x10u
+#define I2C1_IC_INTR_MASK_M_TX_EMPTY_ENABLED               0u
+#define I2C1_IC_INTR_MASK_M_TX_EMPTY_DISABLED              1u
 
-#define I2C1_IC_INTR_MASK_M_TX_OVER_OFFSET                 3
-#define I2C1_IC_INTR_MASK_M_TX_OVER_MASK                   8
-#define I2C1_IC_INTR_MASK_M_TX_OVER_ENABLED                0
-#define I2C1_IC_INTR_MASK_M_TX_OVER_DISABLED               1
+#define I2C1_IC_INTR_MASK_M_TX_OVER_OFFSET                 3u
+#define I2C1_IC_INTR_MASK_M_TX_OVER_MASK                   8u
+#define I2C1_IC_INTR_MASK_M_TX_OVER_ENABLED                0u
+#define I2C1_IC_INTR_MASK_M_TX_OVER_DISABLED               1u
 
-#define I2C1_IC_INTR_MASK_M_RX_FULL_OFFSET                 2
-#define I2C1_IC_INTR_MASK_M_RX_FULL_MASK                   4
-#define I2C1_IC_INTR_MASK_M_RX_FULL_ENABLED                0
-#define I2C1_IC_INTR_MASK_M_RX_FULL_DISABLED               1
+#define I2C1_IC_INTR_MASK_M_RX_FULL_OFFSET                 2u
+#define I2C1_IC_INTR_MASK_M_RX_FULL_MASK                   4u
+#define I2C1_IC_INTR_MASK_M_RX_FULL_ENABLED                0u
+#define I2C1_IC_INTR_MASK_M_RX_FULL_DISABLED               1u
 
-#define I2C1_IC_INTR_MASK_M_RX_OVER_OFFSET                 1
-#define I2C1_IC_INTR_MASK_M_RX_OVER_MASK                   2
-#define I2C1_IC_INTR_MASK_M_RX_OVER_ENABLED                0
-#define I2C1_IC_INTR_MASK_M_RX_OVER_DISABLED               1
+#define I2C1_IC_INTR_MASK_M_RX_OVER_OFFSET                 1u
+#define I2C1_IC_INTR_MASK_M_RX_OVER_MASK                   2u
+#define I2C1_IC_INTR_MASK_M_RX_OVER_ENABLED                0u
+#define I2C1_IC_INTR_MASK_M_RX_OVER_DISABLED               1u
 
-#define I2C1_IC_INTR_MASK_M_RX_UNDER_OFFSET                0
-#define I2C1_IC_INTR_MASK_M_RX_UNDER_MASK                  1
-#define I2C1_IC_INTR_MASK_M_RX_UNDER_ENABLED               0
-#define I2C1_IC_INTR_MASK_M_RX_UNDER_DISABLED              1
+#define I2C1_IC_INTR_MASK_M_RX_UNDER_OFFSET                0u
+#define I2C1_IC_INTR_MASK_M_RX_UNDER_MASK                  1u
+#define I2C1_IC_INTR_MASK_M_RX_UNDER_ENABLED               0u
+#define I2C1_IC_INTR_MASK_M_RX_UNDER_DISABLED              1u
 
-#define I2C1_IC_RAW_INTR_STAT_MASTER_ON_HOLD_OFFSET        13
-#define I2C1_IC_RAW_INTR_STAT_MASTER_ON_HOLD_MASK          0x7ffe000
-#define I2C1_IC_RAW_INTR_STAT_MASTER_ON_HOLD_INACTIVE      0
-#define I2C1_IC_RAW_INTR_STAT_MASTER_ON_HOLD_ACTIVE        1
+#define I2C1_IC_RAW_INTR_STAT_MASTER_ON_HOLD_OFFSET        13u
+#define I2C1_IC_RAW_INTR_STAT_MASTER_ON_HOLD_MASK          0x7ffe000u
+#define I2C1_IC_RAW_INTR_STAT_MASTER_ON_HOLD_INACTIVE      0u
+#define I2C1_IC_RAW_INTR_STAT_MASTER_ON_HOLD_ACTIVE        1u
 
-#define I2C1_IC_RAW_INTR_STAT_RESTART_DET_OFFSET           12
-#define I2C1_IC_RAW_INTR_STAT_RESTART_DET_MASK             0x1000
-#define I2C1_IC_RAW_INTR_STAT_RESTART_DET_INACTIVE         0
-#define I2C1_IC_RAW_INTR_STAT_RESTART_DET_ACTIVE           1
+#define I2C1_IC_RAW_INTR_STAT_RESTART_DET_OFFSET           12u
+#define I2C1_IC_RAW_INTR_STAT_RESTART_DET_MASK             0x1000u
+#define I2C1_IC_RAW_INTR_STAT_RESTART_DET_INACTIVE         0u
+#define I2C1_IC_RAW_INTR_STAT_RESTART_DET_ACTIVE           1u
 
-#define I2C1_IC_RAW_INTR_STAT_GEN_CALL_OFFSET              11
-#define I2C1_IC_RAW_INTR_STAT_GEN_CALL_MASK                0x800
-#define I2C1_IC_RAW_INTR_STAT_GEN_CALL_INACTIVE            0
-#define I2C1_IC_RAW_INTR_STAT_GEN_CALL_ACTIVE              1
+#define I2C1_IC_RAW_INTR_STAT_GEN_CALL_OFFSET              11u
+#define I2C1_IC_RAW_INTR_STAT_GEN_CALL_MASK                0x800u
+#define I2C1_IC_RAW_INTR_STAT_GEN_CALL_INACTIVE            0u
+#define I2C1_IC_RAW_INTR_STAT_GEN_CALL_ACTIVE              1u
 
-#define I2C1_IC_RAW_INTR_STAT_START_DET_OFFSET             10
-#define I2C1_IC_RAW_INTR_STAT_START_DET_MASK               0x400
-#define I2C1_IC_RAW_INTR_STAT_START_DET_INACTIVE           0
-#define I2C1_IC_RAW_INTR_STAT_START_DET_ACTIVE             1
+#define I2C1_IC_RAW_INTR_STAT_START_DET_OFFSET             10u
+#define I2C1_IC_RAW_INTR_STAT_START_DET_MASK               0x400u
+#define I2C1_IC_RAW_INTR_STAT_START_DET_INACTIVE           0u
+#define I2C1_IC_RAW_INTR_STAT_START_DET_ACTIVE             1u
 
-#define I2C1_IC_RAW_INTR_STAT_STOP_DET_OFFSET              9
-#define I2C1_IC_RAW_INTR_STAT_STOP_DET_MASK                0x200
-#define I2C1_IC_RAW_INTR_STAT_STOP_DET_INACTIVE            0
-#define I2C1_IC_RAW_INTR_STAT_STOP_DET_ACTIVE              1
+#define I2C1_IC_RAW_INTR_STAT_STOP_DET_OFFSET              9u
+#define I2C1_IC_RAW_INTR_STAT_STOP_DET_MASK                0x200u
+#define I2C1_IC_RAW_INTR_STAT_STOP_DET_INACTIVE            0u
+#define I2C1_IC_RAW_INTR_STAT_STOP_DET_ACTIVE              1u
 
-#define I2C1_IC_RAW_INTR_STAT_ACTIVITY_OFFSET              8
-#define I2C1_IC_RAW_INTR_STAT_ACTIVITY_MASK                0x100
-#define I2C1_IC_RAW_INTR_STAT_ACTIVITY_INACTIVE            0
-#define I2C1_IC_RAW_INTR_STAT_ACTIVITY_ACTIVE              1
+#define I2C1_IC_RAW_INTR_STAT_ACTIVITY_OFFSET              8u
+#define I2C1_IC_RAW_INTR_STAT_ACTIVITY_MASK                0x100u
+#define I2C1_IC_RAW_INTR_STAT_ACTIVITY_INACTIVE            0u
+#define I2C1_IC_RAW_INTR_STAT_ACTIVITY_ACTIVE              1u
 
-#define I2C1_IC_RAW_INTR_STAT_RX_DONE_OFFSET               7
-#define I2C1_IC_RAW_INTR_STAT_RX_DONE_MASK                 0x80
-#define I2C1_IC_RAW_INTR_STAT_RX_DONE_INACTIVE             0
-#define I2C1_IC_RAW_INTR_STAT_RX_DONE_ACTIVE               1
+#define I2C1_IC_RAW_INTR_STAT_RX_DONE_OFFSET               7u
+#define I2C1_IC_RAW_INTR_STAT_RX_DONE_MASK                 0x80u
+#define I2C1_IC_RAW_INTR_STAT_RX_DONE_INACTIVE             0u
+#define I2C1_IC_RAW_INTR_STAT_RX_DONE_ACTIVE               1u
 
-#define I2C1_IC_RAW_INTR_STAT_TX_ABRT_OFFSET               6
-#define I2C1_IC_RAW_INTR_STAT_TX_ABRT_MASK                 0x40
-#define I2C1_IC_RAW_INTR_STAT_TX_ABRT_INACTIVE             0
-#define I2C1_IC_RAW_INTR_STAT_TX_ABRT_ACTIVE               1
+#define I2C1_IC_RAW_INTR_STAT_TX_ABRT_OFFSET               6u
+#define I2C1_IC_RAW_INTR_STAT_TX_ABRT_MASK                 0x40u
+#define I2C1_IC_RAW_INTR_STAT_TX_ABRT_INACTIVE             0u
+#define I2C1_IC_RAW_INTR_STAT_TX_ABRT_ACTIVE               1u
 
-#define I2C1_IC_RAW_INTR_STAT_RD_REQ_OFFSET                5
-#define I2C1_IC_RAW_INTR_STAT_RD_REQ_MASK                  0x20
-#define I2C1_IC_RAW_INTR_STAT_RD_REQ_INACTIVE              0
-#define I2C1_IC_RAW_INTR_STAT_RD_REQ_ACTIVE                1
+#define I2C1_IC_RAW_INTR_STAT_RD_REQ_OFFSET                5u
+#define I2C1_IC_RAW_INTR_STAT_RD_REQ_MASK                  0x20u
+#define I2C1_IC_RAW_INTR_STAT_RD_REQ_INACTIVE              0u
+#define I2C1_IC_RAW_INTR_STAT_RD_REQ_ACTIVE                1u
 
-#define I2C1_IC_RAW_INTR_STAT_TX_EMPTY_OFFSET              4
-#define I2C1_IC_RAW_INTR_STAT_TX_EMPTY_MASK                0x10
-#define I2C1_IC_RAW_INTR_STAT_TX_EMPTY_INACTIVE            0
-#define I2C1_IC_RAW_INTR_STAT_TX_EMPTY_ACTIVE              1
+#define I2C1_IC_RAW_INTR_STAT_TX_EMPTY_OFFSET              4u
+#define I2C1_IC_RAW_INTR_STAT_TX_EMPTY_MASK                0x10u
+#define I2C1_IC_RAW_INTR_STAT_TX_EMPTY_INACTIVE            0u
+#define I2C1_IC_RAW_INTR_STAT_TX_EMPTY_ACTIVE              1u
 
-#define I2C1_IC_RAW_INTR_STAT_TX_OVER_OFFSET               3
-#define I2C1_IC_RAW_INTR_STAT_TX_OVER_MASK                 8
-#define I2C1_IC_RAW_INTR_STAT_TX_OVER_INACTIVE             0
-#define I2C1_IC_RAW_INTR_STAT_TX_OVER_ACTIVE               1
+#define I2C1_IC_RAW_INTR_STAT_TX_OVER_OFFSET               3u
+#define I2C1_IC_RAW_INTR_STAT_TX_OVER_MASK                 8u
+#define I2C1_IC_RAW_INTR_STAT_TX_OVER_INACTIVE             0u
+#define I2C1_IC_RAW_INTR_STAT_TX_OVER_ACTIVE               1u
 
-#define I2C1_IC_RAW_INTR_STAT_RX_FULL_OFFSET               2
-#define I2C1_IC_RAW_INTR_STAT_RX_FULL_MASK                 4
-#define I2C1_IC_RAW_INTR_STAT_RX_FULL_INACTIVE             0
-#define I2C1_IC_RAW_INTR_STAT_RX_FULL_ACTIVE               1
+#define I2C1_IC_RAW_INTR_STAT_RX_FULL_OFFSET               2u
+#define I2C1_IC_RAW_INTR_STAT_RX_FULL_MASK                 4u
+#define I2C1_IC_RAW_INTR_STAT_RX_FULL_INACTIVE             0u
+#define I2C1_IC_RAW_INTR_STAT_RX_FULL_ACTIVE               1u
 
-#define I2C1_IC_RAW_INTR_STAT_RX_OVER_OFFSET               1
-#define I2C1_IC_RAW_INTR_STAT_RX_OVER_MASK                 2
-#define I2C1_IC_RAW_INTR_STAT_RX_OVER_INACTIVE             0
-#define I2C1_IC_RAW_INTR_STAT_RX_OVER_ACTIVE               1
+#define I2C1_IC_RAW_INTR_STAT_RX_OVER_OFFSET               1u
+#define I2C1_IC_RAW_INTR_STAT_RX_OVER_MASK                 2u
+#define I2C1_IC_RAW_INTR_STAT_RX_OVER_INACTIVE             0u
+#define I2C1_IC_RAW_INTR_STAT_RX_OVER_ACTIVE               1u
 
-#define I2C1_IC_RAW_INTR_STAT_RX_UNDER_OFFSET              0
-#define I2C1_IC_RAW_INTR_STAT_RX_UNDER_MASK                1
-#define I2C1_IC_RAW_INTR_STAT_RX_UNDER_INACTIVE            0
-#define I2C1_IC_RAW_INTR_STAT_RX_UNDER_ACTIVE              1
+#define I2C1_IC_RAW_INTR_STAT_RX_UNDER_OFFSET              0u
+#define I2C1_IC_RAW_INTR_STAT_RX_UNDER_MASK                1u
+#define I2C1_IC_RAW_INTR_STAT_RX_UNDER_INACTIVE            0u
+#define I2C1_IC_RAW_INTR_STAT_RX_UNDER_ACTIVE              1u
 
-#define I2C1_IC_RX_TL_RX_TL_OFFSET                         0
-#define I2C1_IC_RX_TL_RX_TL_MASK                           0xff
+#define I2C1_IC_RX_TL_RX_TL_OFFSET                         0u
+#define I2C1_IC_RX_TL_RX_TL_MASK                           0xffu
 
-#define I2C1_IC_TX_TL_TX_TL_OFFSET                         0
-#define I2C1_IC_TX_TL_TX_TL_MASK                           0xff
+#define I2C1_IC_TX_TL_TX_TL_OFFSET                         0u
+#define I2C1_IC_TX_TL_TX_TL_MASK                           0xffu
 
-#define I2C1_IC_CLR_INTR_CLR_INTR_OFFSET                   0
-#define I2C1_IC_CLR_INTR_CLR_INTR_MASK                     1
+#define I2C1_IC_CLR_INTR_CLR_INTR_OFFSET                   0u
+#define I2C1_IC_CLR_INTR_CLR_INTR_MASK                     1u
 
-#define I2C1_IC_CLR_RX_UNDER_CLR_RX_UNDER_OFFSET           0
-#define I2C1_IC_CLR_RX_UNDER_CLR_RX_UNDER_MASK             1
+#define I2C1_IC_CLR_RX_UNDER_CLR_RX_UNDER_OFFSET           0u
+#define I2C1_IC_CLR_RX_UNDER_CLR_RX_UNDER_MASK             1u
 
-#define I2C1_IC_CLR_RX_OVER_CLR_RX_OVER_OFFSET             0
-#define I2C1_IC_CLR_RX_OVER_CLR_RX_OVER_MASK               1
+#define I2C1_IC_CLR_RX_OVER_CLR_RX_OVER_OFFSET             0u
+#define I2C1_IC_CLR_RX_OVER_CLR_RX_OVER_MASK               1u
 
-#define I2C1_IC_CLR_TX_OVER_CLR_TX_OVER_OFFSET             0
-#define I2C1_IC_CLR_TX_OVER_CLR_TX_OVER_MASK               1
+#define I2C1_IC_CLR_TX_OVER_CLR_TX_OVER_OFFSET             0u
+#define I2C1_IC_CLR_TX_OVER_CLR_TX_OVER_MASK               1u
 
-#define I2C1_IC_CLR_RD_REQ_CLR_RD_REQ_OFFSET               0
-#define I2C1_IC_CLR_RD_REQ_CLR_RD_REQ_MASK                 1
+#define I2C1_IC_CLR_RD_REQ_CLR_RD_REQ_OFFSET               0u
+#define I2C1_IC_CLR_RD_REQ_CLR_RD_REQ_MASK                 1u
 
-#define I2C1_IC_CLR_TX_ABRT_CLR_TX_ABRT_OFFSET             0
-#define I2C1_IC_CLR_TX_ABRT_CLR_TX_ABRT_MASK               1
+#define I2C1_IC_CLR_TX_ABRT_CLR_TX_ABRT_OFFSET             0u
+#define I2C1_IC_CLR_TX_ABRT_CLR_TX_ABRT_MASK               1u
 
-#define I2C1_IC_CLR_RX_DONE_CLR_RX_DONE_OFFSET             0
-#define I2C1_IC_CLR_RX_DONE_CLR_RX_DONE_MASK               1
+#define I2C1_IC_CLR_RX_DONE_CLR_RX_DONE_OFFSET             0u
+#define I2C1_IC_CLR_RX_DONE_CLR_RX_DONE_MASK               1u
 
-#define I2C1_IC_CLR_ACTIVITY_CLR_ACTIVITY_OFFSET           0
-#define I2C1_IC_CLR_ACTIVITY_CLR_ACTIVITY_MASK             1
+#define I2C1_IC_CLR_ACTIVITY_CLR_ACTIVITY_OFFSET           0u
+#define I2C1_IC_CLR_ACTIVITY_CLR_ACTIVITY_MASK             1u
 
-#define I2C1_IC_CLR_STOP_DET_CLR_STOP_DET_OFFSET           0
-#define I2C1_IC_CLR_STOP_DET_CLR_STOP_DET_MASK             1
+#define I2C1_IC_CLR_STOP_DET_CLR_STOP_DET_OFFSET           0u
+#define I2C1_IC_CLR_STOP_DET_CLR_STOP_DET_MASK             1u
 
-#define I2C1_IC_CLR_START_DET_CLR_START_DET_OFFSET         0
-#define I2C1_IC_CLR_START_DET_CLR_START_DET_MASK           1
+#define I2C1_IC_CLR_START_DET_CLR_START_DET_OFFSET         0u
+#define I2C1_IC_CLR_START_DET_CLR_START_DET_MASK           1u
 
-#define I2C1_IC_CLR_GEN_CALL_CLR_GEN_CALL_OFFSET           0
-#define I2C1_IC_CLR_GEN_CALL_CLR_GEN_CALL_MASK             1
+#define I2C1_IC_CLR_GEN_CALL_CLR_GEN_CALL_OFFSET           0u
+#define I2C1_IC_CLR_GEN_CALL_CLR_GEN_CALL_MASK             1u
 
-#define I2C1_IC_ENABLE_TX_CMD_BLOCK_OFFSET                 2
-#define I2C1_IC_ENABLE_TX_CMD_BLOCK_MASK                   4
-#define I2C1_IC_ENABLE_TX_CMD_BLOCK_NOT_BLOCKED            0
-#define I2C1_IC_ENABLE_TX_CMD_BLOCK_BLOCKED                1
+#define I2C1_IC_ENABLE_TX_CMD_BLOCK_OFFSET                 2u
+#define I2C1_IC_ENABLE_TX_CMD_BLOCK_MASK                   4u
+#define I2C1_IC_ENABLE_TX_CMD_BLOCK_NOT_BLOCKED            0u
+#define I2C1_IC_ENABLE_TX_CMD_BLOCK_BLOCKED                1u
 
-#define I2C1_IC_ENABLE_ABORT_OFFSET                        1
-#define I2C1_IC_ENABLE_ABORT_MASK                          2
-#define I2C1_IC_ENABLE_ABORT_DISABLE                       0
-#define I2C1_IC_ENABLE_ABORT_ENABLED                       1
+#define I2C1_IC_ENABLE_ABORT_OFFSET                        1u
+#define I2C1_IC_ENABLE_ABORT_MASK                          2u
+#define I2C1_IC_ENABLE_ABORT_DISABLE                       0u
+#define I2C1_IC_ENABLE_ABORT_ENABLED                       1u
 
-#define I2C1_IC_ENABLE_ENABLE_OFFSET                       0
-#define I2C1_IC_ENABLE_ENABLE_MASK                         1
-#define I2C1_IC_ENABLE_ENABLE_DISABLED                     0
-#define I2C1_IC_ENABLE_ENABLE_ENABLED                      1
+#define I2C1_IC_ENABLE_ENABLE_OFFSET                       0u
+#define I2C1_IC_ENABLE_ENABLE_MASK                         1u
+#define I2C1_IC_ENABLE_ENABLE_DISABLED                     0u
+#define I2C1_IC_ENABLE_ENABLE_ENABLED                      1u
 
-#define I2C1_IC_STATUS_SLV_ACTIVITY_OFFSET                 6
-#define I2C1_IC_STATUS_SLV_ACTIVITY_MASK                   0x40
-#define I2C1_IC_STATUS_SLV_ACTIVITY_IDLE                   0
-#define I2C1_IC_STATUS_SLV_ACTIVITY_ACTIVE                 1
+#define I2C1_IC_STATUS_SLV_ACTIVITY_OFFSET                 6u
+#define I2C1_IC_STATUS_SLV_ACTIVITY_MASK                   0x40u
+#define I2C1_IC_STATUS_SLV_ACTIVITY_IDLE                   0u
+#define I2C1_IC_STATUS_SLV_ACTIVITY_ACTIVE                 1u
 
-#define I2C1_IC_STATUS_MST_ACTIVITY_OFFSET                 5
-#define I2C1_IC_STATUS_MST_ACTIVITY_MASK                   0x20
-#define I2C1_IC_STATUS_MST_ACTIVITY_IDLE                   0
-#define I2C1_IC_STATUS_MST_ACTIVITY_ACTIVE                 1
+#define I2C1_IC_STATUS_MST_ACTIVITY_OFFSET                 5u
+#define I2C1_IC_STATUS_MST_ACTIVITY_MASK                   0x20u
+#define I2C1_IC_STATUS_MST_ACTIVITY_IDLE                   0u
+#define I2C1_IC_STATUS_MST_ACTIVITY_ACTIVE                 1u
 
-#define I2C1_IC_STATUS_RFF_OFFSET                          4
-#define I2C1_IC_STATUS_RFF_MASK                            0x10
-#define I2C1_IC_STATUS_RFF_NOT_FULL                        0
-#define I2C1_IC_STATUS_RFF_FULL                            1
+#define I2C1_IC_STATUS_RFF_OFFSET                          4u
+#define I2C1_IC_STATUS_RFF_MASK                            0x10u
+#define I2C1_IC_STATUS_RFF_NOT_FULL                        0u
+#define I2C1_IC_STATUS_RFF_FULL                            1u
 
-#define I2C1_IC_STATUS_RFNE_OFFSET                         3
-#define I2C1_IC_STATUS_RFNE_MASK                           8
-#define I2C1_IC_STATUS_RFNE_EMPTY                          0
-#define I2C1_IC_STATUS_RFNE_NOT_EMPTY                      1
+#define I2C1_IC_STATUS_RFNE_OFFSET                         3u
+#define I2C1_IC_STATUS_RFNE_MASK                           8u
+#define I2C1_IC_STATUS_RFNE_EMPTY                          0u
+#define I2C1_IC_STATUS_RFNE_NOT_EMPTY                      1u
 
-#define I2C1_IC_STATUS_TFE_OFFSET                          2
-#define I2C1_IC_STATUS_TFE_MASK                            4
-#define I2C1_IC_STATUS_TFE_NON_EMPTY                       0
-#define I2C1_IC_STATUS_TFE_EMPTY                           1
+#define I2C1_IC_STATUS_TFE_OFFSET                          2u
+#define I2C1_IC_STATUS_TFE_MASK                            4u
+#define I2C1_IC_STATUS_TFE_NON_EMPTY                       0u
+#define I2C1_IC_STATUS_TFE_EMPTY                           1u
 
-#define I2C1_IC_STATUS_TFNF_OFFSET                         1
-#define I2C1_IC_STATUS_TFNF_MASK                           2
-#define I2C1_IC_STATUS_TFNF_FULL                           0
-#define I2C1_IC_STATUS_TFNF_NOT_FULL                       1
+#define I2C1_IC_STATUS_TFNF_OFFSET                         1u
+#define I2C1_IC_STATUS_TFNF_MASK                           2u
+#define I2C1_IC_STATUS_TFNF_FULL                           0u
+#define I2C1_IC_STATUS_TFNF_NOT_FULL                       1u
 
-#define I2C1_IC_STATUS_ACTIVITY_OFFSET                     0
-#define I2C1_IC_STATUS_ACTIVITY_MASK                       1
-#define I2C1_IC_STATUS_ACTIVITY_INACTIVE                   0
-#define I2C1_IC_STATUS_ACTIVITY_ACTIVE                     1
+#define I2C1_IC_STATUS_ACTIVITY_OFFSET                     0u
+#define I2C1_IC_STATUS_ACTIVITY_MASK                       1u
+#define I2C1_IC_STATUS_ACTIVITY_INACTIVE                   0u
+#define I2C1_IC_STATUS_ACTIVITY_ACTIVE                     1u
 
-#define I2C1_IC_TXFLR_TXFLR_OFFSET                         0
-#define I2C1_IC_TXFLR_TXFLR_MASK                           0x1f
+#define I2C1_IC_TXFLR_TXFLR_OFFSET                         0u
+#define I2C1_IC_TXFLR_TXFLR_MASK                           0x1fu
 
-#define I2C1_IC_RXFLR_RXFLR_OFFSET                         0
-#define I2C1_IC_RXFLR_RXFLR_MASK                           0x1f
+#define I2C1_IC_RXFLR_RXFLR_OFFSET                         0u
+#define I2C1_IC_RXFLR_RXFLR_MASK                           0x1fu
 
-#define I2C1_IC_SDA_HOLD_IC_SDA_RX_HOLD_OFFSET             16
-#define I2C1_IC_SDA_HOLD_IC_SDA_RX_HOLD_MASK               0xff0000
+#define I2C1_IC_SDA_HOLD_IC_SDA_RX_HOLD_OFFSET             16u
+#define I2C1_IC_SDA_HOLD_IC_SDA_RX_HOLD_MASK               0xff0000u
 
-#define I2C1_IC_SDA_HOLD_IC_SDA_TX_HOLD_OFFSET             0
-#define I2C1_IC_SDA_HOLD_IC_SDA_TX_HOLD_MASK               0xffff
+#define I2C1_IC_SDA_HOLD_IC_SDA_TX_HOLD_OFFSET             0u
+#define I2C1_IC_SDA_HOLD_IC_SDA_TX_HOLD_MASK               0xffffu
 
-#define I2C1_IC_TX_ABRT_SOURCE_TX_FLUSH_CNT_OFFSET         23
-#define I2C1_IC_TX_ABRT_SOURCE_TX_FLUSH_CNT_MASK           0xff800000
+#define I2C1_IC_TX_ABRT_SOURCE_TX_FLUSH_CNT_OFFSET         23u
+#define I2C1_IC_TX_ABRT_SOURCE_TX_FLUSH_CNT_MASK           0xff800000u
 
-#define I2C1_IC_TX_ABRT_SOURCE_ABRT_USER_ABRT_OFFSET       16
-#define I2C1_IC_TX_ABRT_SOURCE_ABRT_USER_ABRT_MASK         0x10000
+#define I2C1_IC_TX_ABRT_SOURCE_ABRT_USER_ABRT_OFFSET       16u
+#define I2C1_IC_TX_ABRT_SOURCE_ABRT_USER_ABRT_MASK         0x10000u
 #define I2C1_IC_TX_ABRT_SOURCE_ABRT_USER_ABRT_ABRT_USER_ABRT_VOID   0
 #define I2C1_IC_TX_ABRT_SOURCE_ABRT_USER_ABRT_ABRT_USER_ABRT_GENERATED   1
 
-#define I2C1_IC_TX_ABRT_SOURCE_ABRT_SLVRD_INTX_OFFSET      15
-#define I2C1_IC_TX_ABRT_SOURCE_ABRT_SLVRD_INTX_MASK        0x8000
+#define I2C1_IC_TX_ABRT_SOURCE_ABRT_SLVRD_INTX_OFFSET      15u
+#define I2C1_IC_TX_ABRT_SOURCE_ABRT_SLVRD_INTX_MASK        0x8000u
 #define I2C1_IC_TX_ABRT_SOURCE_ABRT_SLVRD_INTX_ABRT_SLVRD_INTX_VOID   0
 #define I2C1_IC_TX_ABRT_SOURCE_ABRT_SLVRD_INTX_ABRT_SLVRD_INTX_GENERATED   1
 
-#define I2C1_IC_TX_ABRT_SOURCE_ABRT_SLV_ARBLOST_OFFSET     14
-#define I2C1_IC_TX_ABRT_SOURCE_ABRT_SLV_ARBLOST_MASK       0x4000
+#define I2C1_IC_TX_ABRT_SOURCE_ABRT_SLV_ARBLOST_OFFSET     14u
+#define I2C1_IC_TX_ABRT_SOURCE_ABRT_SLV_ARBLOST_MASK       0x4000u
 #define I2C1_IC_TX_ABRT_SOURCE_ABRT_SLV_ARBLOST_ABRT_SLV_ARBLOST_VOID   0
 #define I2C1_IC_TX_ABRT_SOURCE_ABRT_SLV_ARBLOST_ABRT_SLV_ARBLOST_GENERATED   1
 
-#define I2C1_IC_TX_ABRT_SOURCE_ABRT_SLVFLUSH_TXFIFO_OFFSET   13
-#define I2C1_IC_TX_ABRT_SOURCE_ABRT_SLVFLUSH_TXFIFO_MASK   0x2000
+#define I2C1_IC_TX_ABRT_SOURCE_ABRT_SLVFLUSH_TXFIFO_OFFSET   13u
+#define I2C1_IC_TX_ABRT_SOURCE_ABRT_SLVFLUSH_TXFIFO_MASK   0x2000u
 #define I2C1_IC_TX_ABRT_SOURCE_ABRT_SLVFLUSH_TXFIFO_ABRT_SLVFLUSH_TXFIFO_VOID   0
 #define I2C1_IC_TX_ABRT_SOURCE_ABRT_SLVFLUSH_TXFIFO_ABRT_SLVFLUSH_TXFIFO_GENERATED   1
 
-#define I2C1_IC_TX_ABRT_SOURCE_ARB_LOST_OFFSET             12
-#define I2C1_IC_TX_ABRT_SOURCE_ARB_LOST_MASK               0x1000
-#define I2C1_IC_TX_ABRT_SOURCE_ARB_LOST_ABRT_LOST_VOID     0
+#define I2C1_IC_TX_ABRT_SOURCE_ARB_LOST_OFFSET             12u
+#define I2C1_IC_TX_ABRT_SOURCE_ARB_LOST_MASK               0x1000u
+#define I2C1_IC_TX_ABRT_SOURCE_ARB_LOST_ABRT_LOST_VOID     0u
 #define I2C1_IC_TX_ABRT_SOURCE_ARB_LOST_ABRT_LOST_GENERATED   1
 
-#define I2C1_IC_TX_ABRT_SOURCE_ABRT_MASTER_DIS_OFFSET      11
-#define I2C1_IC_TX_ABRT_SOURCE_ABRT_MASTER_DIS_MASK        0x800
+#define I2C1_IC_TX_ABRT_SOURCE_ABRT_MASTER_DIS_OFFSET      11u
+#define I2C1_IC_TX_ABRT_SOURCE_ABRT_MASTER_DIS_MASK        0x800u
 #define I2C1_IC_TX_ABRT_SOURCE_ABRT_MASTER_DIS_ABRT_MASTER_DIS_VOID   0
 #define I2C1_IC_TX_ABRT_SOURCE_ABRT_MASTER_DIS_ABRT_MASTER_DIS_GENERATED   1
 
-#define I2C1_IC_TX_ABRT_SOURCE_ABRT_10B_RD_NORSTRT_OFFSET  10
-#define I2C1_IC_TX_ABRT_SOURCE_ABRT_10B_RD_NORSTRT_MASK    0x400
+#define I2C1_IC_TX_ABRT_SOURCE_ABRT_10B_RD_NORSTRT_OFFSET  10u
+#define I2C1_IC_TX_ABRT_SOURCE_ABRT_10B_RD_NORSTRT_MASK    0x400u
 #define I2C1_IC_TX_ABRT_SOURCE_ABRT_10B_RD_NORSTRT_ABRT_10B_RD_VOID   0
 #define I2C1_IC_TX_ABRT_SOURCE_ABRT_10B_RD_NORSTRT_ABRT_10B_RD_GENERATED   1
 
-#define I2C1_IC_TX_ABRT_SOURCE_ABRT_SBYTE_NORSTRT_OFFSET   9
-#define I2C1_IC_TX_ABRT_SOURCE_ABRT_SBYTE_NORSTRT_MASK     0x200
+#define I2C1_IC_TX_ABRT_SOURCE_ABRT_SBYTE_NORSTRT_OFFSET   9u
+#define I2C1_IC_TX_ABRT_SOURCE_ABRT_SBYTE_NORSTRT_MASK     0x200u
 #define I2C1_IC_TX_ABRT_SOURCE_ABRT_SBYTE_NORSTRT_ABRT_SBYTE_NORSTRT_VOID   0
 #define I2C1_IC_TX_ABRT_SOURCE_ABRT_SBYTE_NORSTRT_ABRT_SBYTE_NORSTRT_GENERATED   1
 
-#define I2C1_IC_TX_ABRT_SOURCE_ABRT_HS_NORSTRT_OFFSET      8
-#define I2C1_IC_TX_ABRT_SOURCE_ABRT_HS_NORSTRT_MASK        0x100
+#define I2C1_IC_TX_ABRT_SOURCE_ABRT_HS_NORSTRT_OFFSET      8u
+#define I2C1_IC_TX_ABRT_SOURCE_ABRT_HS_NORSTRT_MASK        0x100u
 #define I2C1_IC_TX_ABRT_SOURCE_ABRT_HS_NORSTRT_ABRT_HS_NORSTRT_VOID   0
 #define I2C1_IC_TX_ABRT_SOURCE_ABRT_HS_NORSTRT_ABRT_HS_NORSTRT_GENERATED   1
 
-#define I2C1_IC_TX_ABRT_SOURCE_ABRT_SBYTE_ACKDET_OFFSET    7
-#define I2C1_IC_TX_ABRT_SOURCE_ABRT_SBYTE_ACKDET_MASK      0x80
+#define I2C1_IC_TX_ABRT_SOURCE_ABRT_SBYTE_ACKDET_OFFSET    7u
+#define I2C1_IC_TX_ABRT_SOURCE_ABRT_SBYTE_ACKDET_MASK      0x80u
 #define I2C1_IC_TX_ABRT_SOURCE_ABRT_SBYTE_ACKDET_ABRT_SBYTE_ACKDET_VOID   0
 #define I2C1_IC_TX_ABRT_SOURCE_ABRT_SBYTE_ACKDET_ABRT_SBYTE_ACKDET_GENERATED   1
 
-#define I2C1_IC_TX_ABRT_SOURCE_ABRT_HS_ACKDET_OFFSET       6
-#define I2C1_IC_TX_ABRT_SOURCE_ABRT_HS_ACKDET_MASK         0x40
+#define I2C1_IC_TX_ABRT_SOURCE_ABRT_HS_ACKDET_OFFSET       6u
+#define I2C1_IC_TX_ABRT_SOURCE_ABRT_HS_ACKDET_MASK         0x40u
 #define I2C1_IC_TX_ABRT_SOURCE_ABRT_HS_ACKDET_ABRT_HS_ACK_VOID   0
 #define I2C1_IC_TX_ABRT_SOURCE_ABRT_HS_ACKDET_ABRT_HS_ACK_GENERATED   1
 
-#define I2C1_IC_TX_ABRT_SOURCE_ABRT_GCALL_READ_OFFSET      5
-#define I2C1_IC_TX_ABRT_SOURCE_ABRT_GCALL_READ_MASK        0x20
+#define I2C1_IC_TX_ABRT_SOURCE_ABRT_GCALL_READ_OFFSET      5u
+#define I2C1_IC_TX_ABRT_SOURCE_ABRT_GCALL_READ_MASK        0x20u
 #define I2C1_IC_TX_ABRT_SOURCE_ABRT_GCALL_READ_ABRT_GCALL_READ_VOID   0
 #define I2C1_IC_TX_ABRT_SOURCE_ABRT_GCALL_READ_ABRT_GCALL_READ_GENERATED   1
 
-#define I2C1_IC_TX_ABRT_SOURCE_ABRT_GCALL_NOACK_OFFSET     4
-#define I2C1_IC_TX_ABRT_SOURCE_ABRT_GCALL_NOACK_MASK       0x10
+#define I2C1_IC_TX_ABRT_SOURCE_ABRT_GCALL_NOACK_OFFSET     4u
+#define I2C1_IC_TX_ABRT_SOURCE_ABRT_GCALL_NOACK_MASK       0x10u
 #define I2C1_IC_TX_ABRT_SOURCE_ABRT_GCALL_NOACK_ABRT_GCALL_NOACK_VOID   0
 #define I2C1_IC_TX_ABRT_SOURCE_ABRT_GCALL_NOACK_ABRT_GCALL_NOACK_GENERATED   1
 
-#define I2C1_IC_TX_ABRT_SOURCE_ABRT_TXDATA_NOACK_OFFSET    3
-#define I2C1_IC_TX_ABRT_SOURCE_ABRT_TXDATA_NOACK_MASK      8
+#define I2C1_IC_TX_ABRT_SOURCE_ABRT_TXDATA_NOACK_OFFSET    3u
+#define I2C1_IC_TX_ABRT_SOURCE_ABRT_TXDATA_NOACK_MASK      8u
 #define I2C1_IC_TX_ABRT_SOURCE_ABRT_TXDATA_NOACK_ABRT_TXDATA_NOACK_VOID   0
 #define I2C1_IC_TX_ABRT_SOURCE_ABRT_TXDATA_NOACK_ABRT_TXDATA_NOACK_GENERATED   1
 
-#define I2C1_IC_TX_ABRT_SOURCE_ABRT_10ADDR2_NOACK_OFFSET   2
-#define I2C1_IC_TX_ABRT_SOURCE_ABRT_10ADDR2_NOACK_MASK     4
+#define I2C1_IC_TX_ABRT_SOURCE_ABRT_10ADDR2_NOACK_OFFSET   2u
+#define I2C1_IC_TX_ABRT_SOURCE_ABRT_10ADDR2_NOACK_MASK     4u
 #define I2C1_IC_TX_ABRT_SOURCE_ABRT_10ADDR2_NOACK_INACTIVE   0
-#define I2C1_IC_TX_ABRT_SOURCE_ABRT_10ADDR2_NOACK_ACTIVE   1
+#define I2C1_IC_TX_ABRT_SOURCE_ABRT_10ADDR2_NOACK_ACTIVE   1u
 
-#define I2C1_IC_TX_ABRT_SOURCE_ABRT_10ADDR1_NOACK_OFFSET   1
-#define I2C1_IC_TX_ABRT_SOURCE_ABRT_10ADDR1_NOACK_MASK     2
+#define I2C1_IC_TX_ABRT_SOURCE_ABRT_10ADDR1_NOACK_OFFSET   1u
+#define I2C1_IC_TX_ABRT_SOURCE_ABRT_10ADDR1_NOACK_MASK     2u
 #define I2C1_IC_TX_ABRT_SOURCE_ABRT_10ADDR1_NOACK_INACTIVE   0
-#define I2C1_IC_TX_ABRT_SOURCE_ABRT_10ADDR1_NOACK_ACTIVE   1
+#define I2C1_IC_TX_ABRT_SOURCE_ABRT_10ADDR1_NOACK_ACTIVE   1u
 
-#define I2C1_IC_TX_ABRT_SOURCE_ABRT_7B_ADDR_NOACK_OFFSET   0
-#define I2C1_IC_TX_ABRT_SOURCE_ABRT_7B_ADDR_NOACK_MASK     1
+#define I2C1_IC_TX_ABRT_SOURCE_ABRT_7B_ADDR_NOACK_OFFSET   0u
+#define I2C1_IC_TX_ABRT_SOURCE_ABRT_7B_ADDR_NOACK_MASK     1u
 #define I2C1_IC_TX_ABRT_SOURCE_ABRT_7B_ADDR_NOACK_INACTIVE   0
-#define I2C1_IC_TX_ABRT_SOURCE_ABRT_7B_ADDR_NOACK_ACTIVE   1
+#define I2C1_IC_TX_ABRT_SOURCE_ABRT_7B_ADDR_NOACK_ACTIVE   1u
 
-#define I2C1_IC_SLV_DATA_NACK_ONLY_NACK_OFFSET             0
-#define I2C1_IC_SLV_DATA_NACK_ONLY_NACK_MASK               1
-#define I2C1_IC_SLV_DATA_NACK_ONLY_NACK_DISABLED           0
-#define I2C1_IC_SLV_DATA_NACK_ONLY_NACK_ENABLED            1
+#define I2C1_IC_SLV_DATA_NACK_ONLY_NACK_OFFSET             0u
+#define I2C1_IC_SLV_DATA_NACK_ONLY_NACK_MASK               1u
+#define I2C1_IC_SLV_DATA_NACK_ONLY_NACK_DISABLED           0u
+#define I2C1_IC_SLV_DATA_NACK_ONLY_NACK_ENABLED            1u
 
-#define I2C1_IC_DMA_CR_TDMAE_OFFSET                        1
-#define I2C1_IC_DMA_CR_TDMAE_MASK                          2
-#define I2C1_IC_DMA_CR_TDMAE_DISABLED                      0
-#define I2C1_IC_DMA_CR_TDMAE_ENABLED                       1
+#define I2C1_IC_DMA_CR_TDMAE_OFFSET                        1u
+#define I2C1_IC_DMA_CR_TDMAE_MASK                          2u
+#define I2C1_IC_DMA_CR_TDMAE_DISABLED                      0u
+#define I2C1_IC_DMA_CR_TDMAE_ENABLED                       1u
 
-#define I2C1_IC_DMA_CR_RDMAE_OFFSET                        0
-#define I2C1_IC_DMA_CR_RDMAE_MASK                          1
-#define I2C1_IC_DMA_CR_RDMAE_DISABLED                      0
-#define I2C1_IC_DMA_CR_RDMAE_ENABLED                       1
+#define I2C1_IC_DMA_CR_RDMAE_OFFSET                        0u
+#define I2C1_IC_DMA_CR_RDMAE_MASK                          1u
+#define I2C1_IC_DMA_CR_RDMAE_DISABLED                      0u
+#define I2C1_IC_DMA_CR_RDMAE_ENABLED                       1u
 
-#define I2C1_IC_DMA_TDLR_DMATDL_OFFSET                     0
-#define I2C1_IC_DMA_TDLR_DMATDL_MASK                       0xf
+#define I2C1_IC_DMA_TDLR_DMATDL_OFFSET                     0u
+#define I2C1_IC_DMA_TDLR_DMATDL_MASK                       0xfu
 
-#define I2C1_IC_DMA_RDLR_DMARDL_OFFSET                     0
-#define I2C1_IC_DMA_RDLR_DMARDL_MASK                       0xf
+#define I2C1_IC_DMA_RDLR_DMARDL_OFFSET                     0u
+#define I2C1_IC_DMA_RDLR_DMARDL_MASK                       0xfu
 
-#define I2C1_IC_SDA_SETUP_SDA_SETUP_OFFSET                 0
-#define I2C1_IC_SDA_SETUP_SDA_SETUP_MASK                   0xff
+#define I2C1_IC_SDA_SETUP_SDA_SETUP_OFFSET                 0u
+#define I2C1_IC_SDA_SETUP_SDA_SETUP_MASK                   0xffu
 
-#define I2C1_IC_ACK_GENERAL_CALL_ACK_GEN_CALL_OFFSET       0
-#define I2C1_IC_ACK_GENERAL_CALL_ACK_GEN_CALL_MASK         1
-#define I2C1_IC_ACK_GENERAL_CALL_ACK_GEN_CALL_DISABLED     0
-#define I2C1_IC_ACK_GENERAL_CALL_ACK_GEN_CALL_ENABLED      1
+#define I2C1_IC_ACK_GENERAL_CALL_ACK_GEN_CALL_OFFSET       0u
+#define I2C1_IC_ACK_GENERAL_CALL_ACK_GEN_CALL_MASK         1u
+#define I2C1_IC_ACK_GENERAL_CALL_ACK_GEN_CALL_DISABLED     0u
+#define I2C1_IC_ACK_GENERAL_CALL_ACK_GEN_CALL_ENABLED      1u
 
-#define I2C1_IC_ENABLE_STATUS_SLV_RX_DATA_LOST_OFFSET      2
-#define I2C1_IC_ENABLE_STATUS_SLV_RX_DATA_LOST_MASK        4
-#define I2C1_IC_ENABLE_STATUS_SLV_RX_DATA_LOST_INACTIVE    0
-#define I2C1_IC_ENABLE_STATUS_SLV_RX_DATA_LOST_ACTIVE      1
+#define I2C1_IC_ENABLE_STATUS_SLV_RX_DATA_LOST_OFFSET      2u
+#define I2C1_IC_ENABLE_STATUS_SLV_RX_DATA_LOST_MASK        4u
+#define I2C1_IC_ENABLE_STATUS_SLV_RX_DATA_LOST_INACTIVE    0u
+#define I2C1_IC_ENABLE_STATUS_SLV_RX_DATA_LOST_ACTIVE      1u
 
-#define I2C1_IC_ENABLE_STATUS_SLV_DISABLED_WHILE_BUSY_OFFSET   1
-#define I2C1_IC_ENABLE_STATUS_SLV_DISABLED_WHILE_BUSY_MASK   2
+#define I2C1_IC_ENABLE_STATUS_SLV_DISABLED_WHILE_BUSY_OFFSET   1u
+#define I2C1_IC_ENABLE_STATUS_SLV_DISABLED_WHILE_BUSY_MASK   2u
 #define I2C1_IC_ENABLE_STATUS_SLV_DISABLED_WHILE_BUSY_INACTIVE   0
 #define I2C1_IC_ENABLE_STATUS_SLV_DISABLED_WHILE_BUSY_ACTIVE   1
 
-#define I2C1_IC_ENABLE_STATUS_IC_EN_OFFSET                 0
-#define I2C1_IC_ENABLE_STATUS_IC_EN_MASK                   1
-#define I2C1_IC_ENABLE_STATUS_IC_EN_DISABLED               0
-#define I2C1_IC_ENABLE_STATUS_IC_EN_ENABLED                1
+#define I2C1_IC_ENABLE_STATUS_IC_EN_OFFSET                 0u
+#define I2C1_IC_ENABLE_STATUS_IC_EN_MASK                   1u
+#define I2C1_IC_ENABLE_STATUS_IC_EN_DISABLED               0u
+#define I2C1_IC_ENABLE_STATUS_IC_EN_ENABLED                1u
 
-#define I2C1_IC_FS_SPKLEN_IC_FS_SPKLEN_OFFSET              0
-#define I2C1_IC_FS_SPKLEN_IC_FS_SPKLEN_MASK                0xff
+#define I2C1_IC_FS_SPKLEN_IC_FS_SPKLEN_OFFSET              0u
+#define I2C1_IC_FS_SPKLEN_IC_FS_SPKLEN_MASK                0xffu
 
-#define I2C1_IC_CLR_RESTART_DET_CLR_RESTART_DET_OFFSET     0
-#define I2C1_IC_CLR_RESTART_DET_CLR_RESTART_DET_MASK       1
+#define I2C1_IC_CLR_RESTART_DET_CLR_RESTART_DET_OFFSET     0u
+#define I2C1_IC_CLR_RESTART_DET_CLR_RESTART_DET_MASK       1u
 
-#define I2C1_IC_COMP_PARAM_1_TX_BUFFER_DEPTH_OFFSET        16
-#define I2C1_IC_COMP_PARAM_1_TX_BUFFER_DEPTH_MASK          0xff0000
+#define I2C1_IC_COMP_PARAM_1_TX_BUFFER_DEPTH_OFFSET        16u
+#define I2C1_IC_COMP_PARAM_1_TX_BUFFER_DEPTH_MASK          0xff0000u
 
-#define I2C1_IC_COMP_PARAM_1_RX_BUFFER_DEPTH_OFFSET        8
-#define I2C1_IC_COMP_PARAM_1_RX_BUFFER_DEPTH_MASK          0xff00
+#define I2C1_IC_COMP_PARAM_1_RX_BUFFER_DEPTH_OFFSET        8u
+#define I2C1_IC_COMP_PARAM_1_RX_BUFFER_DEPTH_MASK          0xff00u
 
-#define I2C1_IC_COMP_PARAM_1_ADD_ENCODED_PARAMS_OFFSET     7
-#define I2C1_IC_COMP_PARAM_1_ADD_ENCODED_PARAMS_MASK       0x80
+#define I2C1_IC_COMP_PARAM_1_ADD_ENCODED_PARAMS_OFFSET     7u
+#define I2C1_IC_COMP_PARAM_1_ADD_ENCODED_PARAMS_MASK       0x80u
 
-#define I2C1_IC_COMP_PARAM_1_HAS_DMA_OFFSET                6
-#define I2C1_IC_COMP_PARAM_1_HAS_DMA_MASK                  0x40
+#define I2C1_IC_COMP_PARAM_1_HAS_DMA_OFFSET                6u
+#define I2C1_IC_COMP_PARAM_1_HAS_DMA_MASK                  0x40u
 
-#define I2C1_IC_COMP_PARAM_1_INTR_IO_OFFSET                5
-#define I2C1_IC_COMP_PARAM_1_INTR_IO_MASK                  0x20
+#define I2C1_IC_COMP_PARAM_1_INTR_IO_OFFSET                5u
+#define I2C1_IC_COMP_PARAM_1_INTR_IO_MASK                  0x20u
 
-#define I2C1_IC_COMP_PARAM_1_HC_COUNT_VALUES_OFFSET        4
-#define I2C1_IC_COMP_PARAM_1_HC_COUNT_VALUES_MASK          0x10
+#define I2C1_IC_COMP_PARAM_1_HC_COUNT_VALUES_OFFSET        4u
+#define I2C1_IC_COMP_PARAM_1_HC_COUNT_VALUES_MASK          0x10u
 
-#define I2C1_IC_COMP_PARAM_1_MAX_SPEED_MODE_OFFSET         2
-#define I2C1_IC_COMP_PARAM_1_MAX_SPEED_MODE_MASK           0xc
+#define I2C1_IC_COMP_PARAM_1_MAX_SPEED_MODE_OFFSET         2u
+#define I2C1_IC_COMP_PARAM_1_MAX_SPEED_MODE_MASK           0xcu
 
-#define I2C1_IC_COMP_PARAM_1_APB_DATA_WIDTH_OFFSET         0
-#define I2C1_IC_COMP_PARAM_1_APB_DATA_WIDTH_MASK           3
+#define I2C1_IC_COMP_PARAM_1_APB_DATA_WIDTH_OFFSET         0u
+#define I2C1_IC_COMP_PARAM_1_APB_DATA_WIDTH_MASK           3u
 
-#define I2C1_IC_COMP_VERSION_IC_COMP_VERSION_OFFSET        0
-#define I2C1_IC_COMP_VERSION_IC_COMP_VERSION_MASK          0xffffffff
+#define I2C1_IC_COMP_VERSION_IC_COMP_VERSION_OFFSET        0u
+#define I2C1_IC_COMP_VERSION_IC_COMP_VERSION_MASK          0xffffffffu
 
-#define I2C1_IC_COMP_TYPE_IC_COMP_TYPE_OFFSET              0
-#define I2C1_IC_COMP_TYPE_IC_COMP_TYPE_MASK                0xffffffff
+#define I2C1_IC_COMP_TYPE_IC_COMP_TYPE_OFFSET              0u
+#define I2C1_IC_COMP_TYPE_IC_COMP_TYPE_MASK                0xffffffffu
 
 
 typedef struct
@@ -747,7 +747,7 @@ typedef struct
 
 
  Reset value: 0x0.
-  Enum: 
+  Enum:
   Value: 0 - DISABLED : Overflow when RX_FIFO is full
   Value: 1 - ENABLED : Hold bus when RX_FIFO is full
   Field: TX_EMPTY_CTRL
@@ -756,7 +756,7 @@ typedef struct
 
 
  Reset value: 0x0.
-  Enum: 
+  Enum:
   Value: 0 - DISABLED : Default behaviour of TX_EMPTY interrupt
   Value: 1 - ENABLED : Controlled generation of TX_EMPTY interrupt
   Field: STOP_DET_IFADDRESSED
@@ -765,7 +765,7 @@ typedef struct
 
 
  NOTE: During a general call address, this slave does not issue the STOP_DET interrupt if STOP_DET_IF_ADDRESSED = 1&apos;b1, even if the slave responds to the general call address by generating ACK. The STOP_DET interrupt is generated only when the transmitted address matches the slave address (SAR).
-  Enum: 
+  Enum:
   Value: 0 - DISABLED : slave issues STOP_DET intr always
   Value: 1 - ENABLED : slave issues STOP_DET intr only if addressed
   Field: IC_SLAVE_DISABLE
@@ -777,7 +777,7 @@ typedef struct
 
 
  NOTE: Software should ensure that if this bit is written with 0, then bit 0 should also be written with a 0.
-  Enum: 
+  Enum:
   Value: 0 - SLAVE_ENABLED : Slave mode is enabled
   Value: 1 - SLAVE_DISABLED : Slave mode is disabled
   Field: IC_RESTART_EN
@@ -786,19 +786,19 @@ typedef struct
 
 
  Reset value: ENABLED
-  Enum: 
+  Enum:
   Value: 0 - DISABLED : Master restart disabled
   Value: 1 - ENABLED : Master restart enabled
   Field: IC_10BITADDR_MASTER
   offset: 4, size: 1, access: read-write
   Controls whether the DW_apb_i2c starts its transfers in 7- or 10-bit addressing mode when acting as a master. - 0: 7-bit addressing - 1: 10-bit addressing
-  Enum: 
+  Enum:
   Value: 0 - ADDR_7BITS : Master 7Bit addressing mode
   Value: 1 - ADDR_10BITS : Master 10Bit addressing mode
   Field: IC_10BITADDR_SLAVE
   offset: 3, size: 1, access: read-write
   When acting as a slave, this bit controls whether the DW_apb_i2c responds to 7- or 10-bit addresses. - 0: 7-bit addressing. The DW_apb_i2c ignores transactions that involve 10-bit addressing for 7-bit addressing, only the lower 7 bits of the IC_SAR register are compared. - 1: 10-bit addressing. The DW_apb_i2c responds to only 10-bit addressing transfers that match the full 10 bits of the IC_SAR register.
-  Enum: 
+  Enum:
   Value: 0 - ADDR_7BITS : Slave 7Bit addressing
   Value: 1 - ADDR_10BITS : Slave 10Bit addressing
   Field: SPEED
@@ -819,7 +819,7 @@ typedef struct
 
 
  Note: This field is not applicable when IC_ULTRA_FAST_MODE=1
-  Enum: 
+  Enum:
   Value: 1 - STANDARD : Standard Speed mode of operation
   Value: 2 - FAST : Fast or Fast Plus mode of operation
   Value: 3 - HIGH : High Speed mode of operation
@@ -829,7 +829,7 @@ typedef struct
 
 
  NOTE: Software should ensure that if this bit is written with &apos;1&apos; then bit 6 should also be written with a &apos;1&apos;.
-  Enum: 
+  Enum:
   Value: 0 - DISABLED : Master mode is disabled
   Value: 1 - ENABLED : Master mode is enabled
 */
@@ -849,13 +849,13 @@ volatile uint32_t IC_CON;
   Field: SPECIAL
   offset: 11, size: 1, access: read-write
   This bit indicates whether software performs a Device-ID or General Call or START BYTE command. - 0: ignore bit 10 GC_OR_START and use IC_TAR normally - 1: perform special I2C command as specified in Device_ID or GC_OR_START bit Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - DISABLED : Disables programming of GENERAL_CALL or START_BYTE transmission
   Value: 1 - ENABLED : Enables programming of GENERAL_CALL or START_BYTE transmission
   Field: GC_OR_START
   offset: 10, size: 1, access: read-write
   If bit 11 (SPECIAL) is set to 1 and bit 13(Device-ID) is set to 0, then this bit indicates whether a General Call or START byte command is to be performed by the DW_apb_i2c. - 0: General Call Address - after issuing a General Call, only writes may be performed. Attempting to issue a read command results in setting bit 6 (TX_ABRT) of the IC_RAW_INTR_STAT register. The DW_apb_i2c remains in General Call mode until the SPECIAL bit value (bit 11) is cleared. - 1: START BYTE Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - GENERAL_CALL : GENERAL_CALL byte transmission
   Value: 1 - START_BYTE : START byte transmission
   Field: IC_TAR
@@ -914,7 +914,7 @@ volatile uint32_t reserved0;
 
 
  3. The 11th bit is an optional read field, user can ignore 2nd byte read [15:8] (offset 0x11) if not interested in FIRST_DATA_BYTE status.
-  Enum: 
+  Enum:
   Value: 0 - INACTIVE : Sequential data byte received
   Value: 1 - ACTIVE : Non sequential data byte received
   Field: RESTART
@@ -929,7 +929,7 @@ volatile uint32_t reserved0;
 
 
  Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - DISABLE : Don&apos;t Issue RESTART before this command
   Value: 1 - ENABLE : Issue RESTART before this command
   Field: STOP
@@ -938,7 +938,7 @@ volatile uint32_t reserved0;
 
 
  - 1 - STOP is issued after this byte, regardless of whether or not the Tx FIFO is empty. If the Tx FIFO is not empty, the master immediately tries to start a new transfer by issuing a START and arbitrating for the bus. - 0 - STOP is not issued after this byte, regardless of whether or not the Tx FIFO is empty. If the Tx FIFO is not empty, the master continues the current transfer by sending/receiving data bytes according to the value of the CMD bit. If the Tx FIFO is empty, the master holds the SCL line low and stalls the bus until a new command is available in the Tx FIFO. Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - DISABLE : Don&apos;t Issue STOP after this command
   Value: 1 - ENABLE : Issue STOP after this command
   Field: CMD
@@ -953,7 +953,7 @@ volatile uint32_t reserved0;
 
 
  Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - WRITE : Master Write Command
   Value: 1 - READ : Master Read Command
   Field: DAT
@@ -1053,7 +1053,7 @@ volatile uint32_t reserved1[2];
   See IC_RAW_INTR_STAT for a detailed description of R_MASTER_ON_HOLD bit.
   
    Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - INACTIVE : R_MASTER_ON_HOLD interrupt is inactive
   Value: 1 - ACTIVE : R_MASTER_ON_HOLD interrupt is active
   Field: R_RESTART_DET
@@ -1062,7 +1062,7 @@ volatile uint32_t reserved1[2];
 
 
  Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - INACTIVE : R_RESTART_DET interrupt is inactive
   Value: 1 - ACTIVE : R_RESTART_DET interrupt is active
   Field: R_GEN_CALL
@@ -1071,7 +1071,7 @@ volatile uint32_t reserved1[2];
 
 
  Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - INACTIVE : R_GEN_CALL interrupt is inactive
   Value: 1 - ACTIVE : R_GEN_CALL interrupt is active
   Field: R_START_DET
@@ -1080,7 +1080,7 @@ volatile uint32_t reserved1[2];
 
 
  Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - INACTIVE : R_START_DET interrupt is inactive
   Value: 1 - ACTIVE : R_START_DET interrupt is active
   Field: R_STOP_DET
@@ -1089,7 +1089,7 @@ volatile uint32_t reserved1[2];
 
 
  Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - INACTIVE : R_STOP_DET interrupt is inactive
   Value: 1 - ACTIVE : R_STOP_DET interrupt is active
   Field: R_ACTIVITY
@@ -1098,7 +1098,7 @@ volatile uint32_t reserved1[2];
 
 
  Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - INACTIVE : R_ACTIVITY interrupt is inactive
   Value: 1 - ACTIVE : R_ACTIVITY interrupt is active
   Field: R_RX_DONE
@@ -1107,7 +1107,7 @@ volatile uint32_t reserved1[2];
 
 
  Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - INACTIVE : R_RX_DONE interrupt is inactive
   Value: 1 - ACTIVE : R_RX_DONE interrupt is active
   Field: R_TX_ABRT
@@ -1116,7 +1116,7 @@ volatile uint32_t reserved1[2];
 
 
  Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - INACTIVE : R_TX_ABRT interrupt is inactive
   Value: 1 - ACTIVE : R_TX_ABRT interrupt is active
   Field: R_RD_REQ
@@ -1125,7 +1125,7 @@ volatile uint32_t reserved1[2];
 
 
  Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - INACTIVE : R_RD_REQ interrupt is inactive
   Value: 1 - ACTIVE : R_RD_REQ interrupt is active
   Field: R_TX_EMPTY
@@ -1134,7 +1134,7 @@ volatile uint32_t reserved1[2];
 
 
  Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - INACTIVE : R_TX_EMPTY interrupt is inactive
   Value: 1 - ACTIVE : R_TX_EMPTY interrupt is active
   Field: R_TX_OVER
@@ -1143,7 +1143,7 @@ volatile uint32_t reserved1[2];
 
 
  Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - INACTIVE : R_TX_OVER interrupt is inactive
   Value: 1 - ACTIVE : R_TX_OVER interrupt is active
   Field: R_RX_FULL
@@ -1152,7 +1152,7 @@ volatile uint32_t reserved1[2];
 
 
  Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - INACTIVE : R_RX_FULL interrupt is inactive
   Value: 1 - ACTIVE : R_RX_FULL interrupt is active
   Field: R_RX_OVER
@@ -1161,7 +1161,7 @@ volatile uint32_t reserved1[2];
 
 
  Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - INACTIVE : R_RX_OVER interrupt is inactive
   Value: 1 - ACTIVE : R_RX_OVER interrupt is active
   Field: R_RX_UNDER
@@ -1170,7 +1170,7 @@ volatile uint32_t reserved1[2];
 
 
  Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - INACTIVE : RX_UNDER interrupt is inactive
   Value: 1 - ACTIVE : RX_UNDER interrupt is active
 */
@@ -1189,7 +1189,7 @@ volatile uint32_t IC_INTR_STAT;
   This M_MASTER_ON_HOLD_read_only bit masks the R_MASTER_ON_HOLD interrupt in IC_INTR_STAT register.
   
    Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - ENABLED : MASTER_ON_HOLD interrupt is masked
   Value: 1 - DISABLED : MASTER_ON_HOLD interrupt is unmasked
   Field: M_RESTART_DET
@@ -1198,7 +1198,7 @@ volatile uint32_t IC_INTR_STAT;
 
 
  Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - ENABLED : RESTART_DET interrupt is masked
   Value: 1 - DISABLED : RESTART_DET interrupt is unmasked
   Field: M_GEN_CALL
@@ -1207,7 +1207,7 @@ volatile uint32_t IC_INTR_STAT;
 
 
  Reset value: 0x1
-  Enum: 
+  Enum:
   Value: 0 - ENABLED : GEN_CALL interrupt is masked
   Value: 1 - DISABLED : GEN_CALL interrupt is unmasked
   Field: M_START_DET
@@ -1216,7 +1216,7 @@ volatile uint32_t IC_INTR_STAT;
 
 
  Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - ENABLED : START_DET interrupt is masked
   Value: 1 - DISABLED : START_DET interrupt is unmasked
   Field: M_STOP_DET
@@ -1225,7 +1225,7 @@ volatile uint32_t IC_INTR_STAT;
 
 
  Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - ENABLED : STOP_DET interrupt is masked
   Value: 1 - DISABLED : STOP_DET interrupt is unmasked
   Field: M_ACTIVITY
@@ -1234,7 +1234,7 @@ volatile uint32_t IC_INTR_STAT;
 
 
  Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - ENABLED : ACTIVITY interrupt is masked
   Value: 1 - DISABLED : ACTIVITY interrupt is unmasked
   Field: M_RX_DONE
@@ -1243,7 +1243,7 @@ volatile uint32_t IC_INTR_STAT;
 
 
  Reset value: 0x1
-  Enum: 
+  Enum:
   Value: 0 - ENABLED : RX_DONE interrupt is masked
   Value: 1 - DISABLED : RX_DONE interrupt is unmasked
   Field: M_TX_ABRT
@@ -1252,7 +1252,7 @@ volatile uint32_t IC_INTR_STAT;
 
 
  Reset value: 0x1
-  Enum: 
+  Enum:
   Value: 0 - ENABLED : TX_ABORT interrupt is masked
   Value: 1 - DISABLED : TX_ABORT interrupt is unmasked
   Field: M_RD_REQ
@@ -1261,7 +1261,7 @@ volatile uint32_t IC_INTR_STAT;
 
 
  Reset value: 0x1
-  Enum: 
+  Enum:
   Value: 0 - ENABLED : RD_REQ interrupt is masked
   Value: 1 - DISABLED : RD_REQ interrupt is unmasked
   Field: M_TX_EMPTY
@@ -1270,7 +1270,7 @@ volatile uint32_t IC_INTR_STAT;
 
 
  Reset value: 0x1
-  Enum: 
+  Enum:
   Value: 0 - ENABLED : TX_EMPTY interrupt is masked
   Value: 1 - DISABLED : TX_EMPTY interrupt is unmasked
   Field: M_TX_OVER
@@ -1279,7 +1279,7 @@ volatile uint32_t IC_INTR_STAT;
 
 
  Reset value: 0x1
-  Enum: 
+  Enum:
   Value: 0 - ENABLED : TX_OVER interrupt is masked
   Value: 1 - DISABLED : TX_OVER interrupt is unmasked
   Field: M_RX_FULL
@@ -1288,7 +1288,7 @@ volatile uint32_t IC_INTR_STAT;
 
 
  Reset value: 0x1
-  Enum: 
+  Enum:
   Value: 0 - ENABLED : RX_FULL interrupt is masked
   Value: 1 - DISABLED : RX_FULL interrupt is unmasked
   Field: M_RX_OVER
@@ -1297,7 +1297,7 @@ volatile uint32_t IC_INTR_STAT;
 
 
  Reset value: 0x1
-  Enum: 
+  Enum:
   Value: 0 - ENABLED : RX_OVER interrupt is masked
   Value: 1 - DISABLED : RX_OVER interrupt is unmasked
   Field: M_RX_UNDER
@@ -1306,7 +1306,7 @@ volatile uint32_t IC_INTR_STAT;
 
 
  Reset value: 0x1
-  Enum: 
+  Enum:
   Value: 0 - ENABLED : RX_UNDER interrupt is masked
   Value: 1 - DISABLED : RX_UNDER interrupt is unmasked
 */
@@ -1325,7 +1325,7 @@ volatile uint32_t IC_INTR_MASK;
   Indicates whether master is holding the bus and TX FIFO is empty. Enabled only when I2C_DYNAMIC_TAR_UPDATE=1 and IC_EMPTYFIFO_HOLD_MASTER_EN=1.
   
    Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - INACTIVE : MASTER_ON_HOLD interrupt is inactive
   Value: 1 - ACTIVE : MASTER_ON_HOLD interrupt is active
   Field: RESTART_DET
@@ -1337,7 +1337,7 @@ volatile uint32_t IC_INTR_MASK;
 
 
  Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - INACTIVE : RESTART_DET interrupt is inactive
   Value: 1 - ACTIVE : RESTART_DET interrupt is active
   Field: GEN_CALL
@@ -1346,7 +1346,7 @@ volatile uint32_t IC_INTR_MASK;
 
 
  Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - INACTIVE : GEN_CALL interrupt is inactive
   Value: 1 - ACTIVE : GEN_CALL interrupt is active
   Field: START_DET
@@ -1355,7 +1355,7 @@ volatile uint32_t IC_INTR_MASK;
 
 
  Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - INACTIVE : START_DET interrupt is inactive
   Value: 1 - ACTIVE : START_DET interrupt is active
   Field: STOP_DET
@@ -1364,7 +1364,7 @@ volatile uint32_t IC_INTR_MASK;
 
 
  In Slave Mode: - If IC_CON[7]=1&apos;b1 (STOP_DET_IFADDRESSED), the STOP_DET interrupt will be issued only if slave is addressed. Note: During a general call address, this slave does not issue a STOP_DET interrupt if STOP_DET_IF_ADDRESSED=1&apos;b1, even if the slave responds to the general call address by generating ACK. The STOP_DET interrupt is generated only when the transmitted address matches the slave address (SAR). - If IC_CON[7]=1&apos;b0 (STOP_DET_IFADDRESSED), the STOP_DET interrupt is issued irrespective of whether it is being addressed. In Master Mode: - If IC_CON[10]=1&apos;b1 (STOP_DET_IF_MASTER_ACTIVE),the STOP_DET interrupt will be issued only if Master is active. - If IC_CON[10]=1&apos;b0 (STOP_DET_IFADDRESSED),the STOP_DET interrupt will be issued irrespective of whether master is active or not. Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - INACTIVE : STOP_DET interrupt is inactive
   Value: 1 - ACTIVE : STOP_DET interrupt is active
   Field: ACTIVITY
@@ -1373,7 +1373,7 @@ volatile uint32_t IC_INTR_MASK;
 
 
  Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - INACTIVE : RAW_INTR_ACTIVITY interrupt is inactive
   Value: 1 - ACTIVE : RAW_INTR_ACTIVITY interrupt is active
   Field: RX_DONE
@@ -1382,7 +1382,7 @@ volatile uint32_t IC_INTR_MASK;
 
 
  Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - INACTIVE : RX_DONE interrupt is inactive
   Value: 1 - ACTIVE : RX_DONE interrupt is active
   Field: TX_ABRT
@@ -1394,7 +1394,7 @@ volatile uint32_t IC_INTR_MASK;
 
 
  Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - INACTIVE : TX_ABRT interrupt is inactive
   Value: 1 - ACTIVE : TX_ABRT interrupt is active
   Field: RD_REQ
@@ -1403,7 +1403,7 @@ volatile uint32_t IC_INTR_MASK;
 
 
  Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - INACTIVE : RD_REQ interrupt is inactive
   Value: 1 - ACTIVE : RD_REQ interrupt is active
   Field: TX_EMPTY
@@ -1412,7 +1412,7 @@ volatile uint32_t IC_INTR_MASK;
 
 
  Reset value: 0x0.
-  Enum: 
+  Enum:
   Value: 0 - INACTIVE : TX_EMPTY interrupt is inactive
   Value: 1 - ACTIVE : TX_EMPTY interrupt is active
   Field: TX_OVER
@@ -1421,7 +1421,7 @@ volatile uint32_t IC_INTR_MASK;
 
 
  Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - INACTIVE : TX_OVER interrupt is inactive
   Value: 1 - ACTIVE : TX_OVER interrupt is active
   Field: RX_FULL
@@ -1430,7 +1430,7 @@ volatile uint32_t IC_INTR_MASK;
 
 
  Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - INACTIVE : RX_FULL interrupt is inactive
   Value: 1 - ACTIVE : RX_FULL interrupt is active
   Field: RX_OVER
@@ -1442,7 +1442,7 @@ volatile uint32_t IC_INTR_MASK;
 
 
  Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - INACTIVE : RX_OVER interrupt is inactive
   Value: 1 - ACTIVE : RX_OVER interrupt is active
   Field: RX_UNDER
@@ -1451,7 +1451,7 @@ volatile uint32_t IC_INTR_MASK;
 
 
  Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - INACTIVE : RX_UNDER interrupt is inactive
   Value: 1 - ACTIVE : RX_UNDER interrupt is active
 */
@@ -1647,7 +1647,7 @@ volatile uint32_t IC_CLR_GEN_CALL;
   Field: TX_CMD_BLOCK
   offset: 2, size: 1, access: read-write
   In Master mode: - 1&apos;b1: Blocks the transmission of data on I2C bus even if Tx FIFO has data to transmit. - 1&apos;b0: The transmission of data starts on I2C bus automatically, as soon as the first data is available in the Tx FIFO. Note: To block the execution of Master commands, set the TX_CMD_BLOCK bit only when Tx FIFO is empty (IC_STATUS[2]==1) and Master is in Idle state (IC_STATUS[5] == 0). Any further commands put in the Tx FIFO are not executed until TX_CMD_BLOCK bit is unset. Reset value: IC_TX_CMD_BLOCK_DEFAULT
-  Enum: 
+  Enum:
   Value: 0 - NOT_BLOCKED : Tx Command execution not blocked
   Value: 1 - BLOCKED : Tx Command execution blocked
   Field: ABORT
@@ -1659,7 +1659,7 @@ volatile uint32_t IC_CLR_GEN_CALL;
 
 
  Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - DISABLE : ABORT operation not in progress
   Value: 1 - ENABLED : ABORT operation in progress
   Field: ENABLE
@@ -1674,7 +1674,7 @@ volatile uint32_t IC_CLR_GEN_CALL;
 
 
  Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - DISABLED : I2C is disabled
   Value: 1 - ENABLED : I2C is enabled
 */
@@ -1694,7 +1694,7 @@ volatile uint32_t IC_ENABLE;
   Field: SLV_ACTIVITY
   offset: 6, size: 1, access: read-only
   Slave FSM Activity Status. When the Slave Finite State Machine (FSM) is not in the IDLE state, this bit is set. - 0: Slave FSM is in IDLE state so the Slave part of DW_apb_i2c is not Active - 1: Slave FSM is not in IDLE state so the Slave part of DW_apb_i2c is Active Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - IDLE : Slave is idle
   Value: 1 - ACTIVE : Slave not idle
   Field: MST_ACTIVITY
@@ -1703,37 +1703,37 @@ volatile uint32_t IC_ENABLE;
 
 
  Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - IDLE : Master is idle
   Value: 1 - ACTIVE : Master not idle
   Field: RFF
   offset: 4, size: 1, access: read-only
   Receive FIFO Completely Full. When the receive FIFO is completely full, this bit is set. When the receive FIFO contains one or more empty location, this bit is cleared. - 0: Receive FIFO is not full - 1: Receive FIFO is full Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - NOT_FULL : Rx FIFO not full
   Value: 1 - FULL : Rx FIFO is full
   Field: RFNE
   offset: 3, size: 1, access: read-only
   Receive FIFO Not Empty. This bit is set when the receive FIFO contains one or more entries it is cleared when the receive FIFO is empty. - 0: Receive FIFO is empty - 1: Receive FIFO is not empty Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - EMPTY : Rx FIFO is empty
   Value: 1 - NOT_EMPTY : Rx FIFO not empty
   Field: TFE
   offset: 2, size: 1, access: read-only
   Transmit FIFO Completely Empty. When the transmit FIFO is completely empty, this bit is set. When it contains one or more valid entries, this bit is cleared. This bit field does not request an interrupt. - 0: Transmit FIFO is not empty - 1: Transmit FIFO is empty Reset value: 0x1
-  Enum: 
+  Enum:
   Value: 0 - NON_EMPTY : Tx FIFO not empty
   Value: 1 - EMPTY : Tx FIFO is empty
   Field: TFNF
   offset: 1, size: 1, access: read-only
   Transmit FIFO Not Full. Set when the transmit FIFO contains one or more empty locations, and is cleared when the FIFO is full. - 0: Transmit FIFO is full - 1: Transmit FIFO is not full Reset value: 0x1
-  Enum: 
+  Enum:
   Value: 0 - FULL : Tx FIFO is full
   Value: 1 - NOT_FULL : Tx FIFO not full
   Field: ACTIVITY
   offset: 0, size: 1, access: read-only
   I2C Activity Status. Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - INACTIVE : I2C is idle
   Value: 1 - ACTIVE : I2C is active
 */
@@ -1831,7 +1831,7 @@ volatile uint32_t IC_SDA_HOLD;
 
 
  Role of DW_apb_i2c: Master-Transmitter
-  Enum: 
+  Enum:
   Value: 0 - ABRT_USER_ABRT_VOID : Transfer abort detected by master- scenario not present
   Value: 1 - ABRT_USER_ABRT_GENERATED : Transfer abort detected by master
   Field: ABRT_SLVRD_INTX
@@ -1843,7 +1843,7 @@ volatile uint32_t IC_SDA_HOLD;
 
 
  Role of DW_apb_i2c: Slave-Transmitter
-  Enum: 
+  Enum:
   Value: 0 - ABRT_SLVRD_INTX_VOID : Slave trying to transmit to remote master in read mode- scenario not present
   Value: 1 - ABRT_SLVRD_INTX_GENERATED : Slave trying to transmit to remote master in read mode
   Field: ABRT_SLV_ARBLOST
@@ -1855,7 +1855,7 @@ volatile uint32_t IC_SDA_HOLD;
 
 
  Role of DW_apb_i2c: Slave-Transmitter
-  Enum: 
+  Enum:
   Value: 0 - ABRT_SLV_ARBLOST_VOID : Slave lost arbitration to remote master- scenario not present
   Value: 1 - ABRT_SLV_ARBLOST_GENERATED : Slave lost arbitration to remote master
   Field: ABRT_SLVFLUSH_TXFIFO
@@ -1867,7 +1867,7 @@ volatile uint32_t IC_SDA_HOLD;
 
 
  Role of DW_apb_i2c: Slave-Transmitter
-  Enum: 
+  Enum:
   Value: 0 - ABRT_SLVFLUSH_TXFIFO_VOID : Slave flushes existing data in TX-FIFO upon getting read command- scenario not present
   Value: 1 - ABRT_SLVFLUSH_TXFIFO_GENERATED : Slave flushes existing data in TX-FIFO upon getting read command
   Field: ARB_LOST
@@ -1879,7 +1879,7 @@ volatile uint32_t IC_SDA_HOLD;
 
 
  Role of DW_apb_i2c: Master-Transmitter or Slave-Transmitter
-  Enum: 
+  Enum:
   Value: 0 - ABRT_LOST_VOID : Master or Slave-Transmitter lost arbitration- scenario not present
   Value: 1 - ABRT_LOST_GENERATED : Master or Slave-Transmitter lost arbitration
   Field: ABRT_MASTER_DIS
@@ -1891,7 +1891,7 @@ volatile uint32_t IC_SDA_HOLD;
 
 
  Role of DW_apb_i2c: Master-Transmitter or Master-Receiver
-  Enum: 
+  Enum:
   Value: 0 - ABRT_MASTER_DIS_VOID : User initiating master operation when MASTER disabled- scenario not present
   Value: 1 - ABRT_MASTER_DIS_GENERATED : User initiating master operation when MASTER disabled
   Field: ABRT_10B_RD_NORSTRT
@@ -1903,7 +1903,7 @@ volatile uint32_t IC_SDA_HOLD;
 
 
  Role of DW_apb_i2c: Master-Receiver
-  Enum: 
+  Enum:
   Value: 0 - ABRT_10B_RD_VOID : Master not trying to read in 10Bit addressing mode when RESTART disabled
   Value: 1 - ABRT_10B_RD_GENERATED : Master trying to read in 10Bit addressing mode when RESTART disabled
   Field: ABRT_SBYTE_NORSTRT
@@ -1915,7 +1915,7 @@ volatile uint32_t IC_SDA_HOLD;
 
 
  Role of DW_apb_i2c: Master
-  Enum: 
+  Enum:
   Value: 0 - ABRT_SBYTE_NORSTRT_VOID : User trying to send START byte when RESTART disabled- scenario not present
   Value: 1 - ABRT_SBYTE_NORSTRT_GENERATED : User trying to send START byte when RESTART disabled
   Field: ABRT_HS_NORSTRT
@@ -1927,7 +1927,7 @@ volatile uint32_t IC_SDA_HOLD;
 
 
  Role of DW_apb_i2c: Master-Transmitter or Master-Receiver
-  Enum: 
+  Enum:
   Value: 0 - ABRT_HS_NORSTRT_VOID : User trying to switch Master to HS mode when RESTART disabled- scenario not present
   Value: 1 - ABRT_HS_NORSTRT_GENERATED : User trying to switch Master to HS mode when RESTART disabled
   Field: ABRT_SBYTE_ACKDET
@@ -1939,7 +1939,7 @@ volatile uint32_t IC_SDA_HOLD;
 
 
  Role of DW_apb_i2c: Master
-  Enum: 
+  Enum:
   Value: 0 - ABRT_SBYTE_ACKDET_VOID : ACK detected for START byte- scenario not present
   Value: 1 - ABRT_SBYTE_ACKDET_GENERATED : ACK detected for START byte
   Field: ABRT_HS_ACKDET
@@ -1951,7 +1951,7 @@ volatile uint32_t IC_SDA_HOLD;
 
 
  Role of DW_apb_i2c: Master
-  Enum: 
+  Enum:
   Value: 0 - ABRT_HS_ACK_VOID : HS Master code ACKed in HS Mode- scenario not present
   Value: 1 - ABRT_HS_ACK_GENERATED : HS Master code ACKed in HS Mode
   Field: ABRT_GCALL_READ
@@ -1963,7 +1963,7 @@ volatile uint32_t IC_SDA_HOLD;
 
 
  Role of DW_apb_i2c: Master-Transmitter
-  Enum: 
+  Enum:
   Value: 0 - ABRT_GCALL_READ_VOID : GCALL is followed by read from bus-scenario not present
   Value: 1 - ABRT_GCALL_READ_GENERATED : GCALL is followed by read from bus
   Field: ABRT_GCALL_NOACK
@@ -1975,7 +1975,7 @@ volatile uint32_t IC_SDA_HOLD;
 
 
  Role of DW_apb_i2c: Master-Transmitter
-  Enum: 
+  Enum:
   Value: 0 - ABRT_GCALL_NOACK_VOID : GCALL not ACKed by any slave-scenario not present
   Value: 1 - ABRT_GCALL_NOACK_GENERATED : GCALL not ACKed by any slave
   Field: ABRT_TXDATA_NOACK
@@ -1987,7 +1987,7 @@ volatile uint32_t IC_SDA_HOLD;
 
 
  Role of DW_apb_i2c: Master-Transmitter
-  Enum: 
+  Enum:
   Value: 0 - ABRT_TXDATA_NOACK_VOID : Transmitted data non-ACKed by addressed slave-scenario not present
   Value: 1 - ABRT_TXDATA_NOACK_GENERATED : Transmitted data not ACKed by addressed slave
   Field: ABRT_10ADDR2_NOACK
@@ -1999,7 +1999,7 @@ volatile uint32_t IC_SDA_HOLD;
 
 
  Role of DW_apb_i2c: Master-Transmitter or Master-Receiver
-  Enum: 
+  Enum:
   Value: 0 - INACTIVE : This abort is not generated
   Value: 1 - ACTIVE : Byte 2 of 10Bit Address not ACKed by any slave
   Field: ABRT_10ADDR1_NOACK
@@ -2011,7 +2011,7 @@ volatile uint32_t IC_SDA_HOLD;
 
 
  Role of DW_apb_i2c: Master-Transmitter or Master-Receiver
-  Enum: 
+  Enum:
   Value: 0 - INACTIVE : This abort is not generated
   Value: 1 - ACTIVE : Byte 1 of 10Bit Address not ACKed by any slave
   Field: ABRT_7B_ADDR_NOACK
@@ -2023,7 +2023,7 @@ volatile uint32_t IC_SDA_HOLD;
 
 
  Role of DW_apb_i2c: Master-Transmitter or Master-Receiver
-  Enum: 
+  Enum:
   Value: 0 - INACTIVE : This abort is not generated
   Value: 1 - ACTIVE : This abort is generated because of NOACK for 7-bit address
 */
@@ -2046,7 +2046,7 @@ volatile uint32_t IC_TX_ABRT_SOURCE;
 
 
  When the register is set to a value of 0, it generates NACK/ACK, depending on normal criteria. - 1: generate NACK after data byte received - 0: generate NACK/ACK normally Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - DISABLED : Slave receiver generates NACK normally
   Value: 1 - ENABLED : Slave receiver generates NACK upon data reception only
 */
@@ -2063,13 +2063,13 @@ volatile uint32_t IC_SLV_DATA_NACK_ONLY;
   Field: TDMAE
   offset: 1, size: 1, access: read-write
   Transmit DMA Enable. This bit enables/disables the transmit FIFO DMA channel. Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - DISABLED : transmit FIFO DMA channel disabled
   Value: 1 - ENABLED : Transmit FIFO DMA channel enabled
   Field: RDMAE
   offset: 0, size: 1, access: read-write
   Receive DMA Enable. This bit enables/disables the receive FIFO DMA channel. Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - DISABLED : Receive FIFO DMA channel disabled
   Value: 1 - ENABLED : Receive FIFO DMA channel enabled
 */
@@ -2137,7 +2137,7 @@ volatile uint32_t IC_SDA_SETUP;
   Field: ACK_GEN_CALL
   offset: 0, size: 1, access: read-write
   ACK General Call. When set to 1, DW_apb_i2c responds with a ACK (by asserting ic_data_oe) when it receives a General Call. Otherwise, DW_apb_i2c responds with a NACK (by negating ic_data_oe).
-  Enum: 
+  Enum:
   Value: 0 - DISABLED : Generate NACK for a General Call
   Value: 1 - ENABLED : Generate ACK for a General Call
 */
@@ -2175,7 +2175,7 @@ volatile uint32_t IC_ACK_GENERAL_CALL;
 
 
  Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - INACTIVE : Slave RX Data is not lost
   Value: 1 - ACTIVE : Slave RX Data is lost
   Field: SLV_DISABLED_WHILE_BUSY
@@ -2205,7 +2205,7 @@ volatile uint32_t IC_ACK_GENERAL_CALL;
 
 
  Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - INACTIVE : Slave is disabled when it is idle
   Value: 1 - ACTIVE : Slave is disabled when it is active
   Field: IC_EN
@@ -2214,7 +2214,7 @@ volatile uint32_t IC_ACK_GENERAL_CALL;
 
 
  Reset value: 0x0
-  Enum: 
+  Enum:
   Value: 0 - DISABLED : I2C disabled
   Value: 1 - ENABLED : I2C enabled
 */

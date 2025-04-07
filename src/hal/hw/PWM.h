@@ -7,469 +7,469 @@
 #include <stdint.h>
 
 
-#define PWM_CH0_CSR_PH_ADV_OFFSET                          7
-#define PWM_CH0_CSR_PH_ADV_MASK                            0x80
+#define PWM_CH0_CSR_PH_ADV_OFFSET                          7u
+#define PWM_CH0_CSR_PH_ADV_MASK                            0x80u
 
-#define PWM_CH0_CSR_PH_RET_OFFSET                          6
-#define PWM_CH0_CSR_PH_RET_MASK                            0x40
+#define PWM_CH0_CSR_PH_RET_OFFSET                          6u
+#define PWM_CH0_CSR_PH_RET_MASK                            0x40u
 
-#define PWM_CH0_CSR_DIVMODE_OFFSET                         4
-#define PWM_CH0_CSR_DIVMODE_MASK                           0x30
-#define PWM_CH0_CSR_DIVMODE_div                            0
-#define PWM_CH0_CSR_DIVMODE_level                          1
-#define PWM_CH0_CSR_DIVMODE_rise                           2
-#define PWM_CH0_CSR_DIVMODE_fall                           3
+#define PWM_CH0_CSR_DIVMODE_OFFSET                         4u
+#define PWM_CH0_CSR_DIVMODE_MASK                           0x30u
+#define PWM_CH0_CSR_DIVMODE_div                            0u
+#define PWM_CH0_CSR_DIVMODE_level                          1u
+#define PWM_CH0_CSR_DIVMODE_rise                           2u
+#define PWM_CH0_CSR_DIVMODE_fall                           3u
 
-#define PWM_CH0_CSR_B_INV_OFFSET                           3
-#define PWM_CH0_CSR_B_INV_MASK                             8
+#define PWM_CH0_CSR_B_INV_OFFSET                           3u
+#define PWM_CH0_CSR_B_INV_MASK                             8u
 
-#define PWM_CH0_CSR_A_INV_OFFSET                           2
-#define PWM_CH0_CSR_A_INV_MASK                             4
+#define PWM_CH0_CSR_A_INV_OFFSET                           2u
+#define PWM_CH0_CSR_A_INV_MASK                             4u
 
-#define PWM_CH0_CSR_PH_CORRECT_OFFSET                      1
-#define PWM_CH0_CSR_PH_CORRECT_MASK                        2
+#define PWM_CH0_CSR_PH_CORRECT_OFFSET                      1u
+#define PWM_CH0_CSR_PH_CORRECT_MASK                        2u
 
-#define PWM_CH0_CSR_EN_OFFSET                              0
-#define PWM_CH0_CSR_EN_MASK                                1
+#define PWM_CH0_CSR_EN_OFFSET                              0u
+#define PWM_CH0_CSR_EN_MASK                                1u
 
-#define PWM_CH0_DIV_INT_OFFSET                             4
-#define PWM_CH0_DIV_INT_MASK                               0xff0
+#define PWM_CH0_DIV_INT_OFFSET                             4u
+#define PWM_CH0_DIV_INT_MASK                               0xff0u
 
-#define PWM_CH0_DIV_FRAC_OFFSET                            0
-#define PWM_CH0_DIV_FRAC_MASK                              0xf
+#define PWM_CH0_DIV_FRAC_OFFSET                            0u
+#define PWM_CH0_DIV_FRAC_MASK                              0xfu
 
-#define PWM_CH0_CTR_CH0_CTR_OFFSET                         0
-#define PWM_CH0_CTR_CH0_CTR_MASK                           0xffff
+#define PWM_CH0_CTR_CH0_CTR_OFFSET                         0u
+#define PWM_CH0_CTR_CH0_CTR_MASK                           0xffffu
 
-#define PWM_CH0_CC_B_OFFSET                                16
-#define PWM_CH0_CC_B_MASK                                  0xffff0000
+#define PWM_CH0_CC_B_OFFSET                                16u
+#define PWM_CH0_CC_B_MASK                                  0xffff0000u
 
-#define PWM_CH0_CC_A_OFFSET                                0
-#define PWM_CH0_CC_A_MASK                                  0xffff
+#define PWM_CH0_CC_A_OFFSET                                0u
+#define PWM_CH0_CC_A_MASK                                  0xffffu
 
-#define PWM_CH0_TOP_CH0_TOP_OFFSET                         0
-#define PWM_CH0_TOP_CH0_TOP_MASK                           0xffff
+#define PWM_CH0_TOP_CH0_TOP_OFFSET                         0u
+#define PWM_CH0_TOP_CH0_TOP_MASK                           0xffffu
 
-#define PWM_CH1_CSR_PH_ADV_OFFSET                          7
-#define PWM_CH1_CSR_PH_ADV_MASK                            0x80
+#define PWM_CH1_CSR_PH_ADV_OFFSET                          7u
+#define PWM_CH1_CSR_PH_ADV_MASK                            0x80u
 
-#define PWM_CH1_CSR_PH_RET_OFFSET                          6
-#define PWM_CH1_CSR_PH_RET_MASK                            0x40
+#define PWM_CH1_CSR_PH_RET_OFFSET                          6u
+#define PWM_CH1_CSR_PH_RET_MASK                            0x40u
 
-#define PWM_CH1_CSR_DIVMODE_OFFSET                         4
-#define PWM_CH1_CSR_DIVMODE_MASK                           0x30
-#define PWM_CH1_CSR_DIVMODE_div                            0
-#define PWM_CH1_CSR_DIVMODE_level                          1
-#define PWM_CH1_CSR_DIVMODE_rise                           2
-#define PWM_CH1_CSR_DIVMODE_fall                           3
+#define PWM_CH1_CSR_DIVMODE_OFFSET                         4u
+#define PWM_CH1_CSR_DIVMODE_MASK                           0x30u
+#define PWM_CH1_CSR_DIVMODE_div                            0u
+#define PWM_CH1_CSR_DIVMODE_level                          1u
+#define PWM_CH1_CSR_DIVMODE_rise                           2u
+#define PWM_CH1_CSR_DIVMODE_fall                           3u
 
-#define PWM_CH1_CSR_B_INV_OFFSET                           3
-#define PWM_CH1_CSR_B_INV_MASK                             8
+#define PWM_CH1_CSR_B_INV_OFFSET                           3u
+#define PWM_CH1_CSR_B_INV_MASK                             8u
 
-#define PWM_CH1_CSR_A_INV_OFFSET                           2
-#define PWM_CH1_CSR_A_INV_MASK                             4
+#define PWM_CH1_CSR_A_INV_OFFSET                           2u
+#define PWM_CH1_CSR_A_INV_MASK                             4u
 
-#define PWM_CH1_CSR_PH_CORRECT_OFFSET                      1
-#define PWM_CH1_CSR_PH_CORRECT_MASK                        2
+#define PWM_CH1_CSR_PH_CORRECT_OFFSET                      1u
+#define PWM_CH1_CSR_PH_CORRECT_MASK                        2u
 
-#define PWM_CH1_CSR_EN_OFFSET                              0
-#define PWM_CH1_CSR_EN_MASK                                1
+#define PWM_CH1_CSR_EN_OFFSET                              0u
+#define PWM_CH1_CSR_EN_MASK                                1u
 
-#define PWM_CH1_DIV_INT_OFFSET                             4
-#define PWM_CH1_DIV_INT_MASK                               0xff0
+#define PWM_CH1_DIV_INT_OFFSET                             4u
+#define PWM_CH1_DIV_INT_MASK                               0xff0u
 
-#define PWM_CH1_DIV_FRAC_OFFSET                            0
-#define PWM_CH1_DIV_FRAC_MASK                              0xf
+#define PWM_CH1_DIV_FRAC_OFFSET                            0u
+#define PWM_CH1_DIV_FRAC_MASK                              0xfu
 
-#define PWM_CH1_CTR_CH1_CTR_OFFSET                         0
-#define PWM_CH1_CTR_CH1_CTR_MASK                           0xffff
+#define PWM_CH1_CTR_CH1_CTR_OFFSET                         0u
+#define PWM_CH1_CTR_CH1_CTR_MASK                           0xffffu
 
-#define PWM_CH1_CC_B_OFFSET                                16
-#define PWM_CH1_CC_B_MASK                                  0xffff0000
+#define PWM_CH1_CC_B_OFFSET                                16u
+#define PWM_CH1_CC_B_MASK                                  0xffff0000u
 
-#define PWM_CH1_CC_A_OFFSET                                0
-#define PWM_CH1_CC_A_MASK                                  0xffff
+#define PWM_CH1_CC_A_OFFSET                                0u
+#define PWM_CH1_CC_A_MASK                                  0xffffu
 
-#define PWM_CH1_TOP_CH1_TOP_OFFSET                         0
-#define PWM_CH1_TOP_CH1_TOP_MASK                           0xffff
+#define PWM_CH1_TOP_CH1_TOP_OFFSET                         0u
+#define PWM_CH1_TOP_CH1_TOP_MASK                           0xffffu
 
-#define PWM_CH2_CSR_PH_ADV_OFFSET                          7
-#define PWM_CH2_CSR_PH_ADV_MASK                            0x80
+#define PWM_CH2_CSR_PH_ADV_OFFSET                          7u
+#define PWM_CH2_CSR_PH_ADV_MASK                            0x80u
 
-#define PWM_CH2_CSR_PH_RET_OFFSET                          6
-#define PWM_CH2_CSR_PH_RET_MASK                            0x40
+#define PWM_CH2_CSR_PH_RET_OFFSET                          6u
+#define PWM_CH2_CSR_PH_RET_MASK                            0x40u
 
-#define PWM_CH2_CSR_DIVMODE_OFFSET                         4
-#define PWM_CH2_CSR_DIVMODE_MASK                           0x30
-#define PWM_CH2_CSR_DIVMODE_div                            0
-#define PWM_CH2_CSR_DIVMODE_level                          1
-#define PWM_CH2_CSR_DIVMODE_rise                           2
-#define PWM_CH2_CSR_DIVMODE_fall                           3
+#define PWM_CH2_CSR_DIVMODE_OFFSET                         4u
+#define PWM_CH2_CSR_DIVMODE_MASK                           0x30u
+#define PWM_CH2_CSR_DIVMODE_div                            0u
+#define PWM_CH2_CSR_DIVMODE_level                          1u
+#define PWM_CH2_CSR_DIVMODE_rise                           2u
+#define PWM_CH2_CSR_DIVMODE_fall                           3u
 
-#define PWM_CH2_CSR_B_INV_OFFSET                           3
-#define PWM_CH2_CSR_B_INV_MASK                             8
+#define PWM_CH2_CSR_B_INV_OFFSET                           3u
+#define PWM_CH2_CSR_B_INV_MASK                             8u
 
-#define PWM_CH2_CSR_A_INV_OFFSET                           2
-#define PWM_CH2_CSR_A_INV_MASK                             4
+#define PWM_CH2_CSR_A_INV_OFFSET                           2u
+#define PWM_CH2_CSR_A_INV_MASK                             4u
 
-#define PWM_CH2_CSR_PH_CORRECT_OFFSET                      1
-#define PWM_CH2_CSR_PH_CORRECT_MASK                        2
+#define PWM_CH2_CSR_PH_CORRECT_OFFSET                      1u
+#define PWM_CH2_CSR_PH_CORRECT_MASK                        2u
 
-#define PWM_CH2_CSR_EN_OFFSET                              0
-#define PWM_CH2_CSR_EN_MASK                                1
+#define PWM_CH2_CSR_EN_OFFSET                              0u
+#define PWM_CH2_CSR_EN_MASK                                1u
 
-#define PWM_CH2_DIV_INT_OFFSET                             4
-#define PWM_CH2_DIV_INT_MASK                               0xff0
+#define PWM_CH2_DIV_INT_OFFSET                             4u
+#define PWM_CH2_DIV_INT_MASK                               0xff0u
 
-#define PWM_CH2_DIV_FRAC_OFFSET                            0
-#define PWM_CH2_DIV_FRAC_MASK                              0xf
+#define PWM_CH2_DIV_FRAC_OFFSET                            0u
+#define PWM_CH2_DIV_FRAC_MASK                              0xfu
 
-#define PWM_CH2_CTR_CH2_CTR_OFFSET                         0
-#define PWM_CH2_CTR_CH2_CTR_MASK                           0xffff
+#define PWM_CH2_CTR_CH2_CTR_OFFSET                         0u
+#define PWM_CH2_CTR_CH2_CTR_MASK                           0xffffu
 
-#define PWM_CH2_CC_B_OFFSET                                16
-#define PWM_CH2_CC_B_MASK                                  0xffff0000
+#define PWM_CH2_CC_B_OFFSET                                16u
+#define PWM_CH2_CC_B_MASK                                  0xffff0000u
 
-#define PWM_CH2_CC_A_OFFSET                                0
-#define PWM_CH2_CC_A_MASK                                  0xffff
+#define PWM_CH2_CC_A_OFFSET                                0u
+#define PWM_CH2_CC_A_MASK                                  0xffffu
 
-#define PWM_CH2_TOP_CH2_TOP_OFFSET                         0
-#define PWM_CH2_TOP_CH2_TOP_MASK                           0xffff
+#define PWM_CH2_TOP_CH2_TOP_OFFSET                         0u
+#define PWM_CH2_TOP_CH2_TOP_MASK                           0xffffu
 
-#define PWM_CH3_CSR_PH_ADV_OFFSET                          7
-#define PWM_CH3_CSR_PH_ADV_MASK                            0x80
+#define PWM_CH3_CSR_PH_ADV_OFFSET                          7u
+#define PWM_CH3_CSR_PH_ADV_MASK                            0x80u
 
-#define PWM_CH3_CSR_PH_RET_OFFSET                          6
-#define PWM_CH3_CSR_PH_RET_MASK                            0x40
+#define PWM_CH3_CSR_PH_RET_OFFSET                          6u
+#define PWM_CH3_CSR_PH_RET_MASK                            0x40u
 
-#define PWM_CH3_CSR_DIVMODE_OFFSET                         4
-#define PWM_CH3_CSR_DIVMODE_MASK                           0x30
-#define PWM_CH3_CSR_DIVMODE_div                            0
-#define PWM_CH3_CSR_DIVMODE_level                          1
-#define PWM_CH3_CSR_DIVMODE_rise                           2
-#define PWM_CH3_CSR_DIVMODE_fall                           3
+#define PWM_CH3_CSR_DIVMODE_OFFSET                         4u
+#define PWM_CH3_CSR_DIVMODE_MASK                           0x30u
+#define PWM_CH3_CSR_DIVMODE_div                            0u
+#define PWM_CH3_CSR_DIVMODE_level                          1u
+#define PWM_CH3_CSR_DIVMODE_rise                           2u
+#define PWM_CH3_CSR_DIVMODE_fall                           3u
 
-#define PWM_CH3_CSR_B_INV_OFFSET                           3
-#define PWM_CH3_CSR_B_INV_MASK                             8
+#define PWM_CH3_CSR_B_INV_OFFSET                           3u
+#define PWM_CH3_CSR_B_INV_MASK                             8u
 
-#define PWM_CH3_CSR_A_INV_OFFSET                           2
-#define PWM_CH3_CSR_A_INV_MASK                             4
+#define PWM_CH3_CSR_A_INV_OFFSET                           2u
+#define PWM_CH3_CSR_A_INV_MASK                             4u
 
-#define PWM_CH3_CSR_PH_CORRECT_OFFSET                      1
-#define PWM_CH3_CSR_PH_CORRECT_MASK                        2
+#define PWM_CH3_CSR_PH_CORRECT_OFFSET                      1u
+#define PWM_CH3_CSR_PH_CORRECT_MASK                        2u
 
-#define PWM_CH3_CSR_EN_OFFSET                              0
-#define PWM_CH3_CSR_EN_MASK                                1
+#define PWM_CH3_CSR_EN_OFFSET                              0u
+#define PWM_CH3_CSR_EN_MASK                                1u
 
-#define PWM_CH3_DIV_INT_OFFSET                             4
-#define PWM_CH3_DIV_INT_MASK                               0xff0
+#define PWM_CH3_DIV_INT_OFFSET                             4u
+#define PWM_CH3_DIV_INT_MASK                               0xff0u
 
-#define PWM_CH3_DIV_FRAC_OFFSET                            0
-#define PWM_CH3_DIV_FRAC_MASK                              0xf
+#define PWM_CH3_DIV_FRAC_OFFSET                            0u
+#define PWM_CH3_DIV_FRAC_MASK                              0xfu
 
-#define PWM_CH3_CTR_CH3_CTR_OFFSET                         0
-#define PWM_CH3_CTR_CH3_CTR_MASK                           0xffff
+#define PWM_CH3_CTR_CH3_CTR_OFFSET                         0u
+#define PWM_CH3_CTR_CH3_CTR_MASK                           0xffffu
 
-#define PWM_CH3_CC_B_OFFSET                                16
-#define PWM_CH3_CC_B_MASK                                  0xffff0000
+#define PWM_CH3_CC_B_OFFSET                                16u
+#define PWM_CH3_CC_B_MASK                                  0xffff0000u
 
-#define PWM_CH3_CC_A_OFFSET                                0
-#define PWM_CH3_CC_A_MASK                                  0xffff
+#define PWM_CH3_CC_A_OFFSET                                0u
+#define PWM_CH3_CC_A_MASK                                  0xffffu
 
-#define PWM_CH3_TOP_CH3_TOP_OFFSET                         0
-#define PWM_CH3_TOP_CH3_TOP_MASK                           0xffff
+#define PWM_CH3_TOP_CH3_TOP_OFFSET                         0u
+#define PWM_CH3_TOP_CH3_TOP_MASK                           0xffffu
 
-#define PWM_CH4_CSR_PH_ADV_OFFSET                          7
-#define PWM_CH4_CSR_PH_ADV_MASK                            0x80
+#define PWM_CH4_CSR_PH_ADV_OFFSET                          7u
+#define PWM_CH4_CSR_PH_ADV_MASK                            0x80u
 
-#define PWM_CH4_CSR_PH_RET_OFFSET                          6
-#define PWM_CH4_CSR_PH_RET_MASK                            0x40
+#define PWM_CH4_CSR_PH_RET_OFFSET                          6u
+#define PWM_CH4_CSR_PH_RET_MASK                            0x40u
 
-#define PWM_CH4_CSR_DIVMODE_OFFSET                         4
-#define PWM_CH4_CSR_DIVMODE_MASK                           0x30
-#define PWM_CH4_CSR_DIVMODE_div                            0
-#define PWM_CH4_CSR_DIVMODE_level                          1
-#define PWM_CH4_CSR_DIVMODE_rise                           2
-#define PWM_CH4_CSR_DIVMODE_fall                           3
+#define PWM_CH4_CSR_DIVMODE_OFFSET                         4u
+#define PWM_CH4_CSR_DIVMODE_MASK                           0x30u
+#define PWM_CH4_CSR_DIVMODE_div                            0u
+#define PWM_CH4_CSR_DIVMODE_level                          1u
+#define PWM_CH4_CSR_DIVMODE_rise                           2u
+#define PWM_CH4_CSR_DIVMODE_fall                           3u
 
-#define PWM_CH4_CSR_B_INV_OFFSET                           3
-#define PWM_CH4_CSR_B_INV_MASK                             8
+#define PWM_CH4_CSR_B_INV_OFFSET                           3u
+#define PWM_CH4_CSR_B_INV_MASK                             8u
 
-#define PWM_CH4_CSR_A_INV_OFFSET                           2
-#define PWM_CH4_CSR_A_INV_MASK                             4
+#define PWM_CH4_CSR_A_INV_OFFSET                           2u
+#define PWM_CH4_CSR_A_INV_MASK                             4u
 
-#define PWM_CH4_CSR_PH_CORRECT_OFFSET                      1
-#define PWM_CH4_CSR_PH_CORRECT_MASK                        2
+#define PWM_CH4_CSR_PH_CORRECT_OFFSET                      1u
+#define PWM_CH4_CSR_PH_CORRECT_MASK                        2u
 
-#define PWM_CH4_CSR_EN_OFFSET                              0
-#define PWM_CH4_CSR_EN_MASK                                1
+#define PWM_CH4_CSR_EN_OFFSET                              0u
+#define PWM_CH4_CSR_EN_MASK                                1u
 
-#define PWM_CH4_DIV_INT_OFFSET                             4
-#define PWM_CH4_DIV_INT_MASK                               0xff0
+#define PWM_CH4_DIV_INT_OFFSET                             4u
+#define PWM_CH4_DIV_INT_MASK                               0xff0u
 
-#define PWM_CH4_DIV_FRAC_OFFSET                            0
-#define PWM_CH4_DIV_FRAC_MASK                              0xf
+#define PWM_CH4_DIV_FRAC_OFFSET                            0u
+#define PWM_CH4_DIV_FRAC_MASK                              0xfu
 
-#define PWM_CH4_CTR_CH4_CTR_OFFSET                         0
-#define PWM_CH4_CTR_CH4_CTR_MASK                           0xffff
+#define PWM_CH4_CTR_CH4_CTR_OFFSET                         0u
+#define PWM_CH4_CTR_CH4_CTR_MASK                           0xffffu
 
-#define PWM_CH4_CC_B_OFFSET                                16
-#define PWM_CH4_CC_B_MASK                                  0xffff0000
+#define PWM_CH4_CC_B_OFFSET                                16u
+#define PWM_CH4_CC_B_MASK                                  0xffff0000u
 
-#define PWM_CH4_CC_A_OFFSET                                0
-#define PWM_CH4_CC_A_MASK                                  0xffff
+#define PWM_CH4_CC_A_OFFSET                                0u
+#define PWM_CH4_CC_A_MASK                                  0xffffu
 
-#define PWM_CH4_TOP_CH4_TOP_OFFSET                         0
-#define PWM_CH4_TOP_CH4_TOP_MASK                           0xffff
+#define PWM_CH4_TOP_CH4_TOP_OFFSET                         0u
+#define PWM_CH4_TOP_CH4_TOP_MASK                           0xffffu
 
-#define PWM_CH5_CSR_PH_ADV_OFFSET                          7
-#define PWM_CH5_CSR_PH_ADV_MASK                            0x80
+#define PWM_CH5_CSR_PH_ADV_OFFSET                          7u
+#define PWM_CH5_CSR_PH_ADV_MASK                            0x80u
 
-#define PWM_CH5_CSR_PH_RET_OFFSET                          6
-#define PWM_CH5_CSR_PH_RET_MASK                            0x40
+#define PWM_CH5_CSR_PH_RET_OFFSET                          6u
+#define PWM_CH5_CSR_PH_RET_MASK                            0x40u
 
-#define PWM_CH5_CSR_DIVMODE_OFFSET                         4
-#define PWM_CH5_CSR_DIVMODE_MASK                           0x30
-#define PWM_CH5_CSR_DIVMODE_div                            0
-#define PWM_CH5_CSR_DIVMODE_level                          1
-#define PWM_CH5_CSR_DIVMODE_rise                           2
-#define PWM_CH5_CSR_DIVMODE_fall                           3
+#define PWM_CH5_CSR_DIVMODE_OFFSET                         4u
+#define PWM_CH5_CSR_DIVMODE_MASK                           0x30u
+#define PWM_CH5_CSR_DIVMODE_div                            0u
+#define PWM_CH5_CSR_DIVMODE_level                          1u
+#define PWM_CH5_CSR_DIVMODE_rise                           2u
+#define PWM_CH5_CSR_DIVMODE_fall                           3u
 
-#define PWM_CH5_CSR_B_INV_OFFSET                           3
-#define PWM_CH5_CSR_B_INV_MASK                             8
+#define PWM_CH5_CSR_B_INV_OFFSET                           3u
+#define PWM_CH5_CSR_B_INV_MASK                             8u
 
-#define PWM_CH5_CSR_A_INV_OFFSET                           2
-#define PWM_CH5_CSR_A_INV_MASK                             4
+#define PWM_CH5_CSR_A_INV_OFFSET                           2u
+#define PWM_CH5_CSR_A_INV_MASK                             4u
 
-#define PWM_CH5_CSR_PH_CORRECT_OFFSET                      1
-#define PWM_CH5_CSR_PH_CORRECT_MASK                        2
+#define PWM_CH5_CSR_PH_CORRECT_OFFSET                      1u
+#define PWM_CH5_CSR_PH_CORRECT_MASK                        2u
 
-#define PWM_CH5_CSR_EN_OFFSET                              0
-#define PWM_CH5_CSR_EN_MASK                                1
+#define PWM_CH5_CSR_EN_OFFSET                              0u
+#define PWM_CH5_CSR_EN_MASK                                1u
 
-#define PWM_CH5_DIV_INT_OFFSET                             4
-#define PWM_CH5_DIV_INT_MASK                               0xff0
+#define PWM_CH5_DIV_INT_OFFSET                             4u
+#define PWM_CH5_DIV_INT_MASK                               0xff0u
 
-#define PWM_CH5_DIV_FRAC_OFFSET                            0
-#define PWM_CH5_DIV_FRAC_MASK                              0xf
+#define PWM_CH5_DIV_FRAC_OFFSET                            0u
+#define PWM_CH5_DIV_FRAC_MASK                              0xfu
 
-#define PWM_CH5_CTR_CH5_CTR_OFFSET                         0
-#define PWM_CH5_CTR_CH5_CTR_MASK                           0xffff
+#define PWM_CH5_CTR_CH5_CTR_OFFSET                         0u
+#define PWM_CH5_CTR_CH5_CTR_MASK                           0xffffu
 
-#define PWM_CH5_CC_B_OFFSET                                16
-#define PWM_CH5_CC_B_MASK                                  0xffff0000
+#define PWM_CH5_CC_B_OFFSET                                16u
+#define PWM_CH5_CC_B_MASK                                  0xffff0000u
 
-#define PWM_CH5_CC_A_OFFSET                                0
-#define PWM_CH5_CC_A_MASK                                  0xffff
+#define PWM_CH5_CC_A_OFFSET                                0u
+#define PWM_CH5_CC_A_MASK                                  0xffffu
 
-#define PWM_CH5_TOP_CH5_TOP_OFFSET                         0
-#define PWM_CH5_TOP_CH5_TOP_MASK                           0xffff
+#define PWM_CH5_TOP_CH5_TOP_OFFSET                         0u
+#define PWM_CH5_TOP_CH5_TOP_MASK                           0xffffu
 
-#define PWM_CH6_CSR_PH_ADV_OFFSET                          7
-#define PWM_CH6_CSR_PH_ADV_MASK                            0x80
+#define PWM_CH6_CSR_PH_ADV_OFFSET                          7u
+#define PWM_CH6_CSR_PH_ADV_MASK                            0x80u
 
-#define PWM_CH6_CSR_PH_RET_OFFSET                          6
-#define PWM_CH6_CSR_PH_RET_MASK                            0x40
+#define PWM_CH6_CSR_PH_RET_OFFSET                          6u
+#define PWM_CH6_CSR_PH_RET_MASK                            0x40u
 
-#define PWM_CH6_CSR_DIVMODE_OFFSET                         4
-#define PWM_CH6_CSR_DIVMODE_MASK                           0x30
-#define PWM_CH6_CSR_DIVMODE_div                            0
-#define PWM_CH6_CSR_DIVMODE_level                          1
-#define PWM_CH6_CSR_DIVMODE_rise                           2
-#define PWM_CH6_CSR_DIVMODE_fall                           3
+#define PWM_CH6_CSR_DIVMODE_OFFSET                         4u
+#define PWM_CH6_CSR_DIVMODE_MASK                           0x30u
+#define PWM_CH6_CSR_DIVMODE_div                            0u
+#define PWM_CH6_CSR_DIVMODE_level                          1u
+#define PWM_CH6_CSR_DIVMODE_rise                           2u
+#define PWM_CH6_CSR_DIVMODE_fall                           3u
 
-#define PWM_CH6_CSR_B_INV_OFFSET                           3
-#define PWM_CH6_CSR_B_INV_MASK                             8
+#define PWM_CH6_CSR_B_INV_OFFSET                           3u
+#define PWM_CH6_CSR_B_INV_MASK                             8u
 
-#define PWM_CH6_CSR_A_INV_OFFSET                           2
-#define PWM_CH6_CSR_A_INV_MASK                             4
+#define PWM_CH6_CSR_A_INV_OFFSET                           2u
+#define PWM_CH6_CSR_A_INV_MASK                             4u
 
-#define PWM_CH6_CSR_PH_CORRECT_OFFSET                      1
-#define PWM_CH6_CSR_PH_CORRECT_MASK                        2
+#define PWM_CH6_CSR_PH_CORRECT_OFFSET                      1u
+#define PWM_CH6_CSR_PH_CORRECT_MASK                        2u
 
-#define PWM_CH6_CSR_EN_OFFSET                              0
-#define PWM_CH6_CSR_EN_MASK                                1
+#define PWM_CH6_CSR_EN_OFFSET                              0u
+#define PWM_CH6_CSR_EN_MASK                                1u
 
-#define PWM_CH6_DIV_INT_OFFSET                             4
-#define PWM_CH6_DIV_INT_MASK                               0xff0
+#define PWM_CH6_DIV_INT_OFFSET                             4u
+#define PWM_CH6_DIV_INT_MASK                               0xff0u
 
-#define PWM_CH6_DIV_FRAC_OFFSET                            0
-#define PWM_CH6_DIV_FRAC_MASK                              0xf
+#define PWM_CH6_DIV_FRAC_OFFSET                            0u
+#define PWM_CH6_DIV_FRAC_MASK                              0xfu
 
-#define PWM_CH6_CTR_CH6_CTR_OFFSET                         0
-#define PWM_CH6_CTR_CH6_CTR_MASK                           0xffff
+#define PWM_CH6_CTR_CH6_CTR_OFFSET                         0u
+#define PWM_CH6_CTR_CH6_CTR_MASK                           0xffffu
 
-#define PWM_CH6_CC_B_OFFSET                                16
-#define PWM_CH6_CC_B_MASK                                  0xffff0000
+#define PWM_CH6_CC_B_OFFSET                                16u
+#define PWM_CH6_CC_B_MASK                                  0xffff0000u
 
-#define PWM_CH6_CC_A_OFFSET                                0
-#define PWM_CH6_CC_A_MASK                                  0xffff
+#define PWM_CH6_CC_A_OFFSET                                0u
+#define PWM_CH6_CC_A_MASK                                  0xffffu
 
-#define PWM_CH6_TOP_CH6_TOP_OFFSET                         0
-#define PWM_CH6_TOP_CH6_TOP_MASK                           0xffff
+#define PWM_CH6_TOP_CH6_TOP_OFFSET                         0u
+#define PWM_CH6_TOP_CH6_TOP_MASK                           0xffffu
 
-#define PWM_CH7_CSR_PH_ADV_OFFSET                          7
-#define PWM_CH7_CSR_PH_ADV_MASK                            0x80
+#define PWM_CH7_CSR_PH_ADV_OFFSET                          7u
+#define PWM_CH7_CSR_PH_ADV_MASK                            0x80u
 
-#define PWM_CH7_CSR_PH_RET_OFFSET                          6
-#define PWM_CH7_CSR_PH_RET_MASK                            0x40
+#define PWM_CH7_CSR_PH_RET_OFFSET                          6u
+#define PWM_CH7_CSR_PH_RET_MASK                            0x40u
 
-#define PWM_CH7_CSR_DIVMODE_OFFSET                         4
-#define PWM_CH7_CSR_DIVMODE_MASK                           0x30
-#define PWM_CH7_CSR_DIVMODE_div                            0
-#define PWM_CH7_CSR_DIVMODE_level                          1
-#define PWM_CH7_CSR_DIVMODE_rise                           2
-#define PWM_CH7_CSR_DIVMODE_fall                           3
+#define PWM_CH7_CSR_DIVMODE_OFFSET                         4u
+#define PWM_CH7_CSR_DIVMODE_MASK                           0x30u
+#define PWM_CH7_CSR_DIVMODE_div                            0u
+#define PWM_CH7_CSR_DIVMODE_level                          1u
+#define PWM_CH7_CSR_DIVMODE_rise                           2u
+#define PWM_CH7_CSR_DIVMODE_fall                           3u
 
-#define PWM_CH7_CSR_B_INV_OFFSET                           3
-#define PWM_CH7_CSR_B_INV_MASK                             8
+#define PWM_CH7_CSR_B_INV_OFFSET                           3u
+#define PWM_CH7_CSR_B_INV_MASK                             8u
 
-#define PWM_CH7_CSR_A_INV_OFFSET                           2
-#define PWM_CH7_CSR_A_INV_MASK                             4
+#define PWM_CH7_CSR_A_INV_OFFSET                           2u
+#define PWM_CH7_CSR_A_INV_MASK                             4u
 
-#define PWM_CH7_CSR_PH_CORRECT_OFFSET                      1
-#define PWM_CH7_CSR_PH_CORRECT_MASK                        2
+#define PWM_CH7_CSR_PH_CORRECT_OFFSET                      1u
+#define PWM_CH7_CSR_PH_CORRECT_MASK                        2u
 
-#define PWM_CH7_CSR_EN_OFFSET                              0
-#define PWM_CH7_CSR_EN_MASK                                1
+#define PWM_CH7_CSR_EN_OFFSET                              0u
+#define PWM_CH7_CSR_EN_MASK                                1u
 
-#define PWM_CH7_DIV_INT_OFFSET                             4
-#define PWM_CH7_DIV_INT_MASK                               0xff0
+#define PWM_CH7_DIV_INT_OFFSET                             4u
+#define PWM_CH7_DIV_INT_MASK                               0xff0u
 
-#define PWM_CH7_DIV_FRAC_OFFSET                            0
-#define PWM_CH7_DIV_FRAC_MASK                              0xf
+#define PWM_CH7_DIV_FRAC_OFFSET                            0u
+#define PWM_CH7_DIV_FRAC_MASK                              0xfu
 
-#define PWM_CH7_CTR_CH7_CTR_OFFSET                         0
-#define PWM_CH7_CTR_CH7_CTR_MASK                           0xffff
+#define PWM_CH7_CTR_CH7_CTR_OFFSET                         0u
+#define PWM_CH7_CTR_CH7_CTR_MASK                           0xffffu
 
-#define PWM_CH7_CC_B_OFFSET                                16
-#define PWM_CH7_CC_B_MASK                                  0xffff0000
+#define PWM_CH7_CC_B_OFFSET                                16u
+#define PWM_CH7_CC_B_MASK                                  0xffff0000u
 
-#define PWM_CH7_CC_A_OFFSET                                0
-#define PWM_CH7_CC_A_MASK                                  0xffff
+#define PWM_CH7_CC_A_OFFSET                                0u
+#define PWM_CH7_CC_A_MASK                                  0xffffu
 
-#define PWM_CH7_TOP_CH7_TOP_OFFSET                         0
-#define PWM_CH7_TOP_CH7_TOP_MASK                           0xffff
+#define PWM_CH7_TOP_CH7_TOP_OFFSET                         0u
+#define PWM_CH7_TOP_CH7_TOP_MASK                           0xffffu
 
-#define PWM_EN_CH7_OFFSET                                  7
-#define PWM_EN_CH7_MASK                                    0x80
+#define PWM_EN_CH7_OFFSET                                  7u
+#define PWM_EN_CH7_MASK                                    0x80u
 
-#define PWM_EN_CH6_OFFSET                                  6
-#define PWM_EN_CH6_MASK                                    0x40
+#define PWM_EN_CH6_OFFSET                                  6u
+#define PWM_EN_CH6_MASK                                    0x40u
 
-#define PWM_EN_CH5_OFFSET                                  5
-#define PWM_EN_CH5_MASK                                    0x20
+#define PWM_EN_CH5_OFFSET                                  5u
+#define PWM_EN_CH5_MASK                                    0x20u
 
-#define PWM_EN_CH4_OFFSET                                  4
-#define PWM_EN_CH4_MASK                                    0x10
+#define PWM_EN_CH4_OFFSET                                  4u
+#define PWM_EN_CH4_MASK                                    0x10u
 
-#define PWM_EN_CH3_OFFSET                                  3
-#define PWM_EN_CH3_MASK                                    8
+#define PWM_EN_CH3_OFFSET                                  3u
+#define PWM_EN_CH3_MASK                                    8u
 
-#define PWM_EN_CH2_OFFSET                                  2
-#define PWM_EN_CH2_MASK                                    4
+#define PWM_EN_CH2_OFFSET                                  2u
+#define PWM_EN_CH2_MASK                                    4u
 
-#define PWM_EN_CH1_OFFSET                                  1
-#define PWM_EN_CH1_MASK                                    2
+#define PWM_EN_CH1_OFFSET                                  1u
+#define PWM_EN_CH1_MASK                                    2u
 
-#define PWM_EN_CH0_OFFSET                                  0
-#define PWM_EN_CH0_MASK                                    1
+#define PWM_EN_CH0_OFFSET                                  0u
+#define PWM_EN_CH0_MASK                                    1u
 
-#define PWM_INTR_CH7_OFFSET                                7
-#define PWM_INTR_CH7_MASK                                  0x80
+#define PWM_INTR_CH7_OFFSET                                7u
+#define PWM_INTR_CH7_MASK                                  0x80u
 
-#define PWM_INTR_CH6_OFFSET                                6
-#define PWM_INTR_CH6_MASK                                  0x40
+#define PWM_INTR_CH6_OFFSET                                6u
+#define PWM_INTR_CH6_MASK                                  0x40u
 
-#define PWM_INTR_CH5_OFFSET                                5
-#define PWM_INTR_CH5_MASK                                  0x20
+#define PWM_INTR_CH5_OFFSET                                5u
+#define PWM_INTR_CH5_MASK                                  0x20u
 
-#define PWM_INTR_CH4_OFFSET                                4
-#define PWM_INTR_CH4_MASK                                  0x10
+#define PWM_INTR_CH4_OFFSET                                4u
+#define PWM_INTR_CH4_MASK                                  0x10u
 
-#define PWM_INTR_CH3_OFFSET                                3
-#define PWM_INTR_CH3_MASK                                  8
+#define PWM_INTR_CH3_OFFSET                                3u
+#define PWM_INTR_CH3_MASK                                  8u
 
-#define PWM_INTR_CH2_OFFSET                                2
-#define PWM_INTR_CH2_MASK                                  4
+#define PWM_INTR_CH2_OFFSET                                2u
+#define PWM_INTR_CH2_MASK                                  4u
 
-#define PWM_INTR_CH1_OFFSET                                1
-#define PWM_INTR_CH1_MASK                                  2
+#define PWM_INTR_CH1_OFFSET                                1u
+#define PWM_INTR_CH1_MASK                                  2u
 
-#define PWM_INTR_CH0_OFFSET                                0
-#define PWM_INTR_CH0_MASK                                  1
+#define PWM_INTR_CH0_OFFSET                                0u
+#define PWM_INTR_CH0_MASK                                  1u
 
-#define PWM_INTE_CH7_OFFSET                                7
-#define PWM_INTE_CH7_MASK                                  0x80
+#define PWM_INTE_CH7_OFFSET                                7u
+#define PWM_INTE_CH7_MASK                                  0x80u
 
-#define PWM_INTE_CH6_OFFSET                                6
-#define PWM_INTE_CH6_MASK                                  0x40
+#define PWM_INTE_CH6_OFFSET                                6u
+#define PWM_INTE_CH6_MASK                                  0x40u
 
-#define PWM_INTE_CH5_OFFSET                                5
-#define PWM_INTE_CH5_MASK                                  0x20
+#define PWM_INTE_CH5_OFFSET                                5u
+#define PWM_INTE_CH5_MASK                                  0x20u
 
-#define PWM_INTE_CH4_OFFSET                                4
-#define PWM_INTE_CH4_MASK                                  0x10
+#define PWM_INTE_CH4_OFFSET                                4u
+#define PWM_INTE_CH4_MASK                                  0x10u
 
-#define PWM_INTE_CH3_OFFSET                                3
-#define PWM_INTE_CH3_MASK                                  8
+#define PWM_INTE_CH3_OFFSET                                3u
+#define PWM_INTE_CH3_MASK                                  8u
 
-#define PWM_INTE_CH2_OFFSET                                2
-#define PWM_INTE_CH2_MASK                                  4
+#define PWM_INTE_CH2_OFFSET                                2u
+#define PWM_INTE_CH2_MASK                                  4u
 
-#define PWM_INTE_CH1_OFFSET                                1
-#define PWM_INTE_CH1_MASK                                  2
+#define PWM_INTE_CH1_OFFSET                                1u
+#define PWM_INTE_CH1_MASK                                  2u
 
-#define PWM_INTE_CH0_OFFSET                                0
-#define PWM_INTE_CH0_MASK                                  1
+#define PWM_INTE_CH0_OFFSET                                0u
+#define PWM_INTE_CH0_MASK                                  1u
 
-#define PWM_INTF_CH7_OFFSET                                7
-#define PWM_INTF_CH7_MASK                                  0x80
+#define PWM_INTF_CH7_OFFSET                                7u
+#define PWM_INTF_CH7_MASK                                  0x80u
 
-#define PWM_INTF_CH6_OFFSET                                6
-#define PWM_INTF_CH6_MASK                                  0x40
+#define PWM_INTF_CH6_OFFSET                                6u
+#define PWM_INTF_CH6_MASK                                  0x40u
 
-#define PWM_INTF_CH5_OFFSET                                5
-#define PWM_INTF_CH5_MASK                                  0x20
+#define PWM_INTF_CH5_OFFSET                                5u
+#define PWM_INTF_CH5_MASK                                  0x20u
 
-#define PWM_INTF_CH4_OFFSET                                4
-#define PWM_INTF_CH4_MASK                                  0x10
+#define PWM_INTF_CH4_OFFSET                                4u
+#define PWM_INTF_CH4_MASK                                  0x10u
 
-#define PWM_INTF_CH3_OFFSET                                3
-#define PWM_INTF_CH3_MASK                                  8
+#define PWM_INTF_CH3_OFFSET                                3u
+#define PWM_INTF_CH3_MASK                                  8u
 
-#define PWM_INTF_CH2_OFFSET                                2
-#define PWM_INTF_CH2_MASK                                  4
+#define PWM_INTF_CH2_OFFSET                                2u
+#define PWM_INTF_CH2_MASK                                  4u
 
-#define PWM_INTF_CH1_OFFSET                                1
-#define PWM_INTF_CH1_MASK                                  2
+#define PWM_INTF_CH1_OFFSET                                1u
+#define PWM_INTF_CH1_MASK                                  2u
 
-#define PWM_INTF_CH0_OFFSET                                0
-#define PWM_INTF_CH0_MASK                                  1
+#define PWM_INTF_CH0_OFFSET                                0u
+#define PWM_INTF_CH0_MASK                                  1u
 
-#define PWM_INTS_CH7_OFFSET                                7
-#define PWM_INTS_CH7_MASK                                  0x80
+#define PWM_INTS_CH7_OFFSET                                7u
+#define PWM_INTS_CH7_MASK                                  0x80u
 
-#define PWM_INTS_CH6_OFFSET                                6
-#define PWM_INTS_CH6_MASK                                  0x40
+#define PWM_INTS_CH6_OFFSET                                6u
+#define PWM_INTS_CH6_MASK                                  0x40u
 
-#define PWM_INTS_CH5_OFFSET                                5
-#define PWM_INTS_CH5_MASK                                  0x20
+#define PWM_INTS_CH5_OFFSET                                5u
+#define PWM_INTS_CH5_MASK                                  0x20u
 
-#define PWM_INTS_CH4_OFFSET                                4
-#define PWM_INTS_CH4_MASK                                  0x10
+#define PWM_INTS_CH4_OFFSET                                4u
+#define PWM_INTS_CH4_MASK                                  0x10u
 
-#define PWM_INTS_CH3_OFFSET                                3
-#define PWM_INTS_CH3_MASK                                  8
+#define PWM_INTS_CH3_OFFSET                                3u
+#define PWM_INTS_CH3_MASK                                  8u
 
-#define PWM_INTS_CH2_OFFSET                                2
-#define PWM_INTS_CH2_MASK                                  4
+#define PWM_INTS_CH2_OFFSET                                2u
+#define PWM_INTS_CH2_MASK                                  4u
 
-#define PWM_INTS_CH1_OFFSET                                1
-#define PWM_INTS_CH1_MASK                                  2
+#define PWM_INTS_CH1_OFFSET                                1u
+#define PWM_INTS_CH1_MASK                                  2u
 
-#define PWM_INTS_CH0_OFFSET                                0
-#define PWM_INTS_CH0_MASK                                  1
+#define PWM_INTS_CH0_OFFSET                                0u
+#define PWM_INTS_CH0_MASK                                  1u
 
 
 typedef struct
@@ -494,7 +494,7 @@ typedef struct
  Self-clearing. Write a 1, and poll until low. Counter must be running.
   Field: DIVMODE
   offset: 4, size: 2, access: read-write
-  Enum: 
+  Enum:
   Value: 0 - div : Free-running counting at rate dictated by fractional divider
   Value: 1 - level : Fractional divider operation is gated by the PWM B pin.
   Value: 2 - rise : Counter advances with each rising edge of the PWM B pin.
@@ -581,7 +581,7 @@ volatile uint32_t CH0_TOP;
  Self-clearing. Write a 1, and poll until low. Counter must be running.
   Field: DIVMODE
   offset: 4, size: 2, access: read-write
-  Enum: 
+  Enum:
   Value: 0 - div : Free-running counting at rate dictated by fractional divider
   Value: 1 - level : Fractional divider operation is gated by the PWM B pin.
   Value: 2 - rise : Counter advances with each rising edge of the PWM B pin.
@@ -668,7 +668,7 @@ volatile uint32_t CH1_TOP;
  Self-clearing. Write a 1, and poll until low. Counter must be running.
   Field: DIVMODE
   offset: 4, size: 2, access: read-write
-  Enum: 
+  Enum:
   Value: 0 - div : Free-running counting at rate dictated by fractional divider
   Value: 1 - level : Fractional divider operation is gated by the PWM B pin.
   Value: 2 - rise : Counter advances with each rising edge of the PWM B pin.
@@ -755,7 +755,7 @@ volatile uint32_t CH2_TOP;
  Self-clearing. Write a 1, and poll until low. Counter must be running.
   Field: DIVMODE
   offset: 4, size: 2, access: read-write
-  Enum: 
+  Enum:
   Value: 0 - div : Free-running counting at rate dictated by fractional divider
   Value: 1 - level : Fractional divider operation is gated by the PWM B pin.
   Value: 2 - rise : Counter advances with each rising edge of the PWM B pin.
@@ -842,7 +842,7 @@ volatile uint32_t CH3_TOP;
  Self-clearing. Write a 1, and poll until low. Counter must be running.
   Field: DIVMODE
   offset: 4, size: 2, access: read-write
-  Enum: 
+  Enum:
   Value: 0 - div : Free-running counting at rate dictated by fractional divider
   Value: 1 - level : Fractional divider operation is gated by the PWM B pin.
   Value: 2 - rise : Counter advances with each rising edge of the PWM B pin.
@@ -929,7 +929,7 @@ volatile uint32_t CH4_TOP;
  Self-clearing. Write a 1, and poll until low. Counter must be running.
   Field: DIVMODE
   offset: 4, size: 2, access: read-write
-  Enum: 
+  Enum:
   Value: 0 - div : Free-running counting at rate dictated by fractional divider
   Value: 1 - level : Fractional divider operation is gated by the PWM B pin.
   Value: 2 - rise : Counter advances with each rising edge of the PWM B pin.
@@ -1016,7 +1016,7 @@ volatile uint32_t CH5_TOP;
  Self-clearing. Write a 1, and poll until low. Counter must be running.
   Field: DIVMODE
   offset: 4, size: 2, access: read-write
-  Enum: 
+  Enum:
   Value: 0 - div : Free-running counting at rate dictated by fractional divider
   Value: 1 - level : Fractional divider operation is gated by the PWM B pin.
   Value: 2 - rise : Counter advances with each rising edge of the PWM B pin.
@@ -1103,7 +1103,7 @@ volatile uint32_t CH6_TOP;
  Self-clearing. Write a 1, and poll until low. Counter must be running.
   Field: DIVMODE
   offset: 4, size: 2, access: read-write
-  Enum: 
+  Enum:
   Value: 0 - div : Free-running counting at rate dictated by fractional divider
   Value: 1 - level : Fractional divider operation is gated by the PWM B pin.
   Value: 2 - rise : Counter advances with each rising edge of the PWM B pin.

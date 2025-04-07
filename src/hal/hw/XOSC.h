@@ -6,42 +6,42 @@
 #include <stdint.h>
 
 
-#define XOSC_CTRL_ENABLE_OFFSET                            12
-#define XOSC_CTRL_ENABLE_MASK                              0xfff000
-#define XOSC_CTRL_ENABLE_DISABLE                           0xd1e
-#define XOSC_CTRL_ENABLE_ENABLE                            0xfab
+#define XOSC_CTRL_ENABLE_OFFSET                            12u
+#define XOSC_CTRL_ENABLE_MASK                              0xfff000u
+#define XOSC_CTRL_ENABLE_DISABLE                           0xd1eu
+#define XOSC_CTRL_ENABLE_ENABLE                            0xfabu
 
-#define XOSC_CTRL_FREQ_RANGE_OFFSET                        0
-#define XOSC_CTRL_FREQ_RANGE_MASK                          0xfff
-#define XOSC_CTRL_FREQ_RANGE_1_15MHZ                       0xaa0
-#define XOSC_CTRL_FREQ_RANGE_RESERVED_1                    0xaa1
-#define XOSC_CTRL_FREQ_RANGE_RESERVED_2                    0xaa2
-#define XOSC_CTRL_FREQ_RANGE_RESERVED_3                    0xaa3
+#define XOSC_CTRL_FREQ_RANGE_OFFSET                        0u
+#define XOSC_CTRL_FREQ_RANGE_MASK                          0xfffu
+#define XOSC_CTRL_FREQ_RANGE_1_15MHZ                       0xaa0u
+#define XOSC_CTRL_FREQ_RANGE_RESERVED_1                    0xaa1u
+#define XOSC_CTRL_FREQ_RANGE_RESERVED_2                    0xaa2u
+#define XOSC_CTRL_FREQ_RANGE_RESERVED_3                    0xaa3u
 
-#define XOSC_STATUS_STABLE_OFFSET                          31
-#define XOSC_STATUS_STABLE_MASK                            0x80000000
+#define XOSC_STATUS_STABLE_OFFSET                          31u
+#define XOSC_STATUS_STABLE_MASK                            0x80000000u
 
-#define XOSC_STATUS_BADWRITE_OFFSET                        24
-#define XOSC_STATUS_BADWRITE_MASK                          0x1000000
+#define XOSC_STATUS_BADWRITE_OFFSET                        24u
+#define XOSC_STATUS_BADWRITE_MASK                          0x1000000u
 
-#define XOSC_STATUS_ENABLED_OFFSET                         12
-#define XOSC_STATUS_ENABLED_MASK                           0x1000
+#define XOSC_STATUS_ENABLED_OFFSET                         12u
+#define XOSC_STATUS_ENABLED_MASK                           0x1000u
 
-#define XOSC_STATUS_FREQ_RANGE_OFFSET                      0
-#define XOSC_STATUS_FREQ_RANGE_MASK                        3
-#define XOSC_STATUS_FREQ_RANGE_1_15MHZ                     0
-#define XOSC_STATUS_FREQ_RANGE_RESERVED_1                  1
-#define XOSC_STATUS_FREQ_RANGE_RESERVED_2                  2
-#define XOSC_STATUS_FREQ_RANGE_RESERVED_3                  3
+#define XOSC_STATUS_FREQ_RANGE_OFFSET                      0u
+#define XOSC_STATUS_FREQ_RANGE_MASK                        3u
+#define XOSC_STATUS_FREQ_RANGE_1_15MHZ                     0u
+#define XOSC_STATUS_FREQ_RANGE_RESERVED_1                  1u
+#define XOSC_STATUS_FREQ_RANGE_RESERVED_2                  2u
+#define XOSC_STATUS_FREQ_RANGE_RESERVED_3                  3u
 
-#define XOSC_STARTUP_X4_OFFSET                             20
-#define XOSC_STARTUP_X4_MASK                               0x100000
+#define XOSC_STARTUP_X4_OFFSET                             20u
+#define XOSC_STARTUP_X4_MASK                               0x100000u
 
-#define XOSC_STARTUP_DELAY_OFFSET                          0
-#define XOSC_STARTUP_DELAY_MASK                            0x3fff
+#define XOSC_STARTUP_DELAY_OFFSET                          0u
+#define XOSC_STARTUP_DELAY_MASK                            0x3fffu
 
-#define XOSC_COUNT_COUNT_OFFSET                            0
-#define XOSC_COUNT_COUNT_MASK                              0xff
+#define XOSC_COUNT_COUNT_OFFSET                            0u
+#define XOSC_COUNT_COUNT_MASK                              0xffu
 
 
 typedef struct
@@ -59,13 +59,13 @@ typedef struct
  If the chip has subsequently been programmed to run from the XOSC then setting this field to DISABLE may lock-up the chip. If this is a concern then run the clk_ref from the ROSC and enable the clk_sys RESUS feature.
 
  The 12-bit code is intended to give some protection against accidental writes. An invalid setting will enable the oscillator.
-  Enum: 
+  Enum:
   Value: 0xd1e - DISABLE
   Value: 0xfab - ENABLE
   Field: FREQ_RANGE
   offset: 0, size: 12, access: read-write
   Frequency range. This resets to 0xAA0 and cannot be changed.
-  Enum: 
+  Enum:
   Value: 0xaa0 - 1_15MHZ
   Value: 0xaa1 - RESERVED_1
   Value: 0xaa2 - RESERVED_2
@@ -90,7 +90,7 @@ volatile uint32_t CTRL;
   Field: FREQ_RANGE
   offset: 0, size: 2, access: read-only
   The current frequency range setting, always reads 0
-  Enum: 
+  Enum:
   Value: 0 - 1_15MHZ
   Value: 1 - RESERVED_1
   Value: 2 - RESERVED_2

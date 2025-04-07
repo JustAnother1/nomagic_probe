@@ -28,65 +28,65 @@
 #include <stdint.h>
 
 
-#define TIMER_ARMED_ARMED_OFFSET                           0
-#define TIMER_ARMED_ARMED_MASK                             0xf
+#define TIMER_ARMED_ARMED_OFFSET                           0u
+#define TIMER_ARMED_ARMED_MASK                             0xfu
 
-#define TIMER_DBGPAUSE_DBG1_OFFSET                         2
-#define TIMER_DBGPAUSE_DBG1_MASK                           4
+#define TIMER_DBGPAUSE_DBG1_OFFSET                         2u
+#define TIMER_DBGPAUSE_DBG1_MASK                           4u
 
-#define TIMER_DBGPAUSE_DBG0_OFFSET                         1
-#define TIMER_DBGPAUSE_DBG0_MASK                           2
+#define TIMER_DBGPAUSE_DBG0_OFFSET                         1u
+#define TIMER_DBGPAUSE_DBG0_MASK                           2u
 
-#define TIMER_PAUSE_PAUSE_OFFSET                           0
-#define TIMER_PAUSE_PAUSE_MASK                             1
+#define TIMER_PAUSE_PAUSE_OFFSET                           0u
+#define TIMER_PAUSE_PAUSE_MASK                             1u
 
-#define TIMER_INTR_ALARM_3_OFFSET                          3
-#define TIMER_INTR_ALARM_3_MASK                            8
+#define TIMER_INTR_ALARM_3_OFFSET                          3u
+#define TIMER_INTR_ALARM_3_MASK                            8u
 
-#define TIMER_INTR_ALARM_2_OFFSET                          2
-#define TIMER_INTR_ALARM_2_MASK                            4
+#define TIMER_INTR_ALARM_2_OFFSET                          2u
+#define TIMER_INTR_ALARM_2_MASK                            4u
 
-#define TIMER_INTR_ALARM_1_OFFSET                          1
-#define TIMER_INTR_ALARM_1_MASK                            2
+#define TIMER_INTR_ALARM_1_OFFSET                          1u
+#define TIMER_INTR_ALARM_1_MASK                            2u
 
-#define TIMER_INTR_ALARM_0_OFFSET                          0
-#define TIMER_INTR_ALARM_0_MASK                            1
+#define TIMER_INTR_ALARM_0_OFFSET                          0u
+#define TIMER_INTR_ALARM_0_MASK                            1u
 
-#define TIMER_INTE_ALARM_3_OFFSET                          3
-#define TIMER_INTE_ALARM_3_MASK                            8
+#define TIMER_INTE_ALARM_3_OFFSET                          3u
+#define TIMER_INTE_ALARM_3_MASK                            8u
 
-#define TIMER_INTE_ALARM_2_OFFSET                          2
-#define TIMER_INTE_ALARM_2_MASK                            4
+#define TIMER_INTE_ALARM_2_OFFSET                          2u
+#define TIMER_INTE_ALARM_2_MASK                            4u
 
-#define TIMER_INTE_ALARM_1_OFFSET                          1
-#define TIMER_INTE_ALARM_1_MASK                            2
+#define TIMER_INTE_ALARM_1_OFFSET                          1u
+#define TIMER_INTE_ALARM_1_MASK                            2u
 
-#define TIMER_INTE_ALARM_0_OFFSET                          0
-#define TIMER_INTE_ALARM_0_MASK                            1
+#define TIMER_INTE_ALARM_0_OFFSET                          0u
+#define TIMER_INTE_ALARM_0_MASK                            1u
 
-#define TIMER_INTF_ALARM_3_OFFSET                          3
-#define TIMER_INTF_ALARM_3_MASK                            8
+#define TIMER_INTF_ALARM_3_OFFSET                          3u
+#define TIMER_INTF_ALARM_3_MASK                            8u
 
-#define TIMER_INTF_ALARM_2_OFFSET                          2
-#define TIMER_INTF_ALARM_2_MASK                            4
+#define TIMER_INTF_ALARM_2_OFFSET                          2u
+#define TIMER_INTF_ALARM_2_MASK                            4u
 
-#define TIMER_INTF_ALARM_1_OFFSET                          1
-#define TIMER_INTF_ALARM_1_MASK                            2
+#define TIMER_INTF_ALARM_1_OFFSET                          1u
+#define TIMER_INTF_ALARM_1_MASK                            2u
 
-#define TIMER_INTF_ALARM_0_OFFSET                          0
-#define TIMER_INTF_ALARM_0_MASK                            1
+#define TIMER_INTF_ALARM_0_OFFSET                          0u
+#define TIMER_INTF_ALARM_0_MASK                            1u
 
-#define TIMER_INTS_ALARM_3_OFFSET                          3
-#define TIMER_INTS_ALARM_3_MASK                            8
+#define TIMER_INTS_ALARM_3_OFFSET                          3u
+#define TIMER_INTS_ALARM_3_MASK                            8u
 
-#define TIMER_INTS_ALARM_2_OFFSET                          2
-#define TIMER_INTS_ALARM_2_MASK                            4
+#define TIMER_INTS_ALARM_2_OFFSET                          2u
+#define TIMER_INTS_ALARM_2_MASK                            4u
 
-#define TIMER_INTS_ALARM_1_OFFSET                          1
-#define TIMER_INTS_ALARM_1_MASK                            2
+#define TIMER_INTS_ALARM_1_OFFSET                          1u
+#define TIMER_INTS_ALARM_1_MASK                            2u
 
-#define TIMER_INTS_ALARM_0_OFFSET                          0
-#define TIMER_INTS_ALARM_0_MASK                            1
+#define TIMER_INTS_ALARM_0_OFFSET                          0u
+#define TIMER_INTS_ALARM_0_MASK                            1u
 
 
 typedef struct

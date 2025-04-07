@@ -5,44 +5,44 @@
 #include <stdint.h>
 
 
-#define WATCHDOG_CTRL_TRIGGER_OFFSET                       31
-#define WATCHDOG_CTRL_TRIGGER_MASK                         0x80000000
+#define WATCHDOG_CTRL_TRIGGER_OFFSET                       31u
+#define WATCHDOG_CTRL_TRIGGER_MASK                         0x80000000u
 
-#define WATCHDOG_CTRL_ENABLE_OFFSET                        30
-#define WATCHDOG_CTRL_ENABLE_MASK                          0x40000000
+#define WATCHDOG_CTRL_ENABLE_OFFSET                        30u
+#define WATCHDOG_CTRL_ENABLE_MASK                          0x40000000u
 
-#define WATCHDOG_CTRL_PAUSE_DBG1_OFFSET                    26
-#define WATCHDOG_CTRL_PAUSE_DBG1_MASK                      0x4000000
+#define WATCHDOG_CTRL_PAUSE_DBG1_OFFSET                    26u
+#define WATCHDOG_CTRL_PAUSE_DBG1_MASK                      0x4000000u
 
-#define WATCHDOG_CTRL_PAUSE_DBG0_OFFSET                    25
-#define WATCHDOG_CTRL_PAUSE_DBG0_MASK                      0x2000000
+#define WATCHDOG_CTRL_PAUSE_DBG0_OFFSET                    25u
+#define WATCHDOG_CTRL_PAUSE_DBG0_MASK                      0x2000000u
 
-#define WATCHDOG_CTRL_PAUSE_JTAG_OFFSET                    24
-#define WATCHDOG_CTRL_PAUSE_JTAG_MASK                      0x1000000
+#define WATCHDOG_CTRL_PAUSE_JTAG_OFFSET                    24u
+#define WATCHDOG_CTRL_PAUSE_JTAG_MASK                      0x1000000u
 
-#define WATCHDOG_CTRL_TIME_OFFSET                          0
-#define WATCHDOG_CTRL_TIME_MASK                            0xffffff
+#define WATCHDOG_CTRL_TIME_OFFSET                          0u
+#define WATCHDOG_CTRL_TIME_MASK                            0xffffffu
 
-#define WATCHDOG_LOAD_LOAD_OFFSET                          0
-#define WATCHDOG_LOAD_LOAD_MASK                            0xffffff
+#define WATCHDOG_LOAD_LOAD_OFFSET                          0u
+#define WATCHDOG_LOAD_LOAD_MASK                            0xffffffu
 
-#define WATCHDOG_REASON_FORCE_OFFSET                       1
-#define WATCHDOG_REASON_FORCE_MASK                         2
+#define WATCHDOG_REASON_FORCE_OFFSET                       1u
+#define WATCHDOG_REASON_FORCE_MASK                         2u
 
-#define WATCHDOG_REASON_TIMER_OFFSET                       0
-#define WATCHDOG_REASON_TIMER_MASK                         1
+#define WATCHDOG_REASON_TIMER_OFFSET                       0u
+#define WATCHDOG_REASON_TIMER_MASK                         1u
 
-#define WATCHDOG_TICK_COUNT_OFFSET                         11
-#define WATCHDOG_TICK_COUNT_MASK                           0xff800
+#define WATCHDOG_TICK_COUNT_OFFSET                         11u
+#define WATCHDOG_TICK_COUNT_MASK                           0xff800u
 
-#define WATCHDOG_TICK_RUNNING_OFFSET                       10
-#define WATCHDOG_TICK_RUNNING_MASK                         0x400
+#define WATCHDOG_TICK_RUNNING_OFFSET                       10u
+#define WATCHDOG_TICK_RUNNING_MASK                         0x400u
 
-#define WATCHDOG_TICK_ENABLE_OFFSET                        9
-#define WATCHDOG_TICK_ENABLE_MASK                          0x200
+#define WATCHDOG_TICK_ENABLE_OFFSET                        9u
+#define WATCHDOG_TICK_ENABLE_MASK                          0x200u
 
-#define WATCHDOG_TICK_CYCLES_OFFSET                        0
-#define WATCHDOG_TICK_CYCLES_MASK                          0x1ff
+#define WATCHDOG_TICK_CYCLES_OFFSET                        0u
+#define WATCHDOG_TICK_CYCLES_MASK                          0x1ffu
 
 
 typedef struct

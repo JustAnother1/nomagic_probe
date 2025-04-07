@@ -5,20 +5,20 @@
 #include <stdint.h>
 
 
-#define SYSINFO_CHIP_ID_REVISION_OFFSET                    28
-#define SYSINFO_CHIP_ID_REVISION_MASK                      0xf0000000
+#define SYSINFO_CHIP_ID_REVISION_OFFSET                    28u
+#define SYSINFO_CHIP_ID_REVISION_MASK                      0xf0000000u
 
-#define SYSINFO_CHIP_ID_PART_OFFSET                        12
-#define SYSINFO_CHIP_ID_PART_MASK                          0xffff000
+#define SYSINFO_CHIP_ID_PART_OFFSET                        12u
+#define SYSINFO_CHIP_ID_PART_MASK                          0xffff000u
 
-#define SYSINFO_CHIP_ID_MANUFACTURER_OFFSET                0
-#define SYSINFO_CHIP_ID_MANUFACTURER_MASK                  0xfff
+#define SYSINFO_CHIP_ID_MANUFACTURER_OFFSET                0u
+#define SYSINFO_CHIP_ID_MANUFACTURER_MASK                  0xfffu
 
-#define SYSINFO_PLATFORM_ASIC_OFFSET                       1
-#define SYSINFO_PLATFORM_ASIC_MASK                         2
+#define SYSINFO_PLATFORM_ASIC_OFFSET                       1u
+#define SYSINFO_PLATFORM_ASIC_MASK                         2u
 
-#define SYSINFO_PLATFORM_FPGA_OFFSET                       0
-#define SYSINFO_PLATFORM_FPGA_MASK                         1
+#define SYSINFO_PLATFORM_FPGA_OFFSET                       0u
+#define SYSINFO_PLATFORM_FPGA_MASK                         1u
 
 
 typedef struct

@@ -8,812 +8,812 @@
 #include <stdint.h>
 
 
-#define DMA_CH0_CTRL_TRIG_AHB_ERROR_OFFSET                 31
-#define DMA_CH0_CTRL_TRIG_AHB_ERROR_MASK                   0x80000000
+#define DMA_CH0_CTRL_TRIG_AHB_ERROR_OFFSET                 31u
+#define DMA_CH0_CTRL_TRIG_AHB_ERROR_MASK                   0x80000000u
 
-#define DMA_CH0_CTRL_TRIG_READ_ERROR_OFFSET                30
-#define DMA_CH0_CTRL_TRIG_READ_ERROR_MASK                  0x40000000
+#define DMA_CH0_CTRL_TRIG_READ_ERROR_OFFSET                30u
+#define DMA_CH0_CTRL_TRIG_READ_ERROR_MASK                  0x40000000u
 
-#define DMA_CH0_CTRL_TRIG_WRITE_ERROR_OFFSET               29
-#define DMA_CH0_CTRL_TRIG_WRITE_ERROR_MASK                 0x20000000
+#define DMA_CH0_CTRL_TRIG_WRITE_ERROR_OFFSET               29u
+#define DMA_CH0_CTRL_TRIG_WRITE_ERROR_MASK                 0x20000000u
 
-#define DMA_CH0_CTRL_TRIG_BUSY_OFFSET                      24
-#define DMA_CH0_CTRL_TRIG_BUSY_MASK                        0x1000000
+#define DMA_CH0_CTRL_TRIG_BUSY_OFFSET                      24u
+#define DMA_CH0_CTRL_TRIG_BUSY_MASK                        0x1000000u
 
-#define DMA_CH0_CTRL_TRIG_SNIFF_EN_OFFSET                  23
-#define DMA_CH0_CTRL_TRIG_SNIFF_EN_MASK                    0x800000
+#define DMA_CH0_CTRL_TRIG_SNIFF_EN_OFFSET                  23u
+#define DMA_CH0_CTRL_TRIG_SNIFF_EN_MASK                    0x800000u
 
-#define DMA_CH0_CTRL_TRIG_BSWAP_OFFSET                     22
-#define DMA_CH0_CTRL_TRIG_BSWAP_MASK                       0x400000
+#define DMA_CH0_CTRL_TRIG_BSWAP_OFFSET                     22u
+#define DMA_CH0_CTRL_TRIG_BSWAP_MASK                       0x400000u
 
-#define DMA_CH0_CTRL_TRIG_IRQ_QUIET_OFFSET                 21
-#define DMA_CH0_CTRL_TRIG_IRQ_QUIET_MASK                   0x200000
+#define DMA_CH0_CTRL_TRIG_IRQ_QUIET_OFFSET                 21u
+#define DMA_CH0_CTRL_TRIG_IRQ_QUIET_MASK                   0x200000u
 
-#define DMA_CH0_CTRL_TRIG_TREQ_SEL_OFFSET                  15
-#define DMA_CH0_CTRL_TRIG_TREQ_SEL_MASK                    0x1f8000
-#define DMA_CH0_CTRL_TRIG_TREQ_SEL_TIMER0                  0x3b
-#define DMA_CH0_CTRL_TRIG_TREQ_SEL_TIMER1                  0x3c
-#define DMA_CH0_CTRL_TRIG_TREQ_SEL_TIMER2                  0x3d
-#define DMA_CH0_CTRL_TRIG_TREQ_SEL_TIMER3                  0x3e
-#define DMA_CH0_CTRL_TRIG_TREQ_SEL_PERMANENT               0x3f
+#define DMA_CH0_CTRL_TRIG_TREQ_SEL_OFFSET                  15u
+#define DMA_CH0_CTRL_TRIG_TREQ_SEL_MASK                    0x1f8000u
+#define DMA_CH0_CTRL_TRIG_TREQ_SEL_TIMER0                  0x3bu
+#define DMA_CH0_CTRL_TRIG_TREQ_SEL_TIMER1                  0x3cu
+#define DMA_CH0_CTRL_TRIG_TREQ_SEL_TIMER2                  0x3du
+#define DMA_CH0_CTRL_TRIG_TREQ_SEL_TIMER3                  0x3eu
+#define DMA_CH0_CTRL_TRIG_TREQ_SEL_PERMANENT               0x3fu
 
-#define DMA_CH0_CTRL_TRIG_CHAIN_TO_OFFSET                  11
-#define DMA_CH0_CTRL_TRIG_CHAIN_TO_MASK                    0x7800
+#define DMA_CH0_CTRL_TRIG_CHAIN_TO_OFFSET                  11u
+#define DMA_CH0_CTRL_TRIG_CHAIN_TO_MASK                    0x7800u
 
-#define DMA_CH0_CTRL_TRIG_RING_SEL_OFFSET                  10
-#define DMA_CH0_CTRL_TRIG_RING_SEL_MASK                    0x400
+#define DMA_CH0_CTRL_TRIG_RING_SEL_OFFSET                  10u
+#define DMA_CH0_CTRL_TRIG_RING_SEL_MASK                    0x400u
 
-#define DMA_CH0_CTRL_TRIG_RING_SIZE_OFFSET                 6
-#define DMA_CH0_CTRL_TRIG_RING_SIZE_MASK                   0x3c0
-#define DMA_CH0_CTRL_TRIG_RING_SIZE_RING_NONE              0
+#define DMA_CH0_CTRL_TRIG_RING_SIZE_OFFSET                 6u
+#define DMA_CH0_CTRL_TRIG_RING_SIZE_MASK                   0x3c0u
+#define DMA_CH0_CTRL_TRIG_RING_SIZE_RING_NONE              0u
 
-#define DMA_CH0_CTRL_TRIG_INCR_WRITE_OFFSET                5
-#define DMA_CH0_CTRL_TRIG_INCR_WRITE_MASK                  0x20
+#define DMA_CH0_CTRL_TRIG_INCR_WRITE_OFFSET                5u
+#define DMA_CH0_CTRL_TRIG_INCR_WRITE_MASK                  0x20u
 
-#define DMA_CH0_CTRL_TRIG_INCR_READ_OFFSET                 4
-#define DMA_CH0_CTRL_TRIG_INCR_READ_MASK                   0x10
+#define DMA_CH0_CTRL_TRIG_INCR_READ_OFFSET                 4u
+#define DMA_CH0_CTRL_TRIG_INCR_READ_MASK                   0x10u
 
-#define DMA_CH0_CTRL_TRIG_DATA_SIZE_OFFSET                 2
-#define DMA_CH0_CTRL_TRIG_DATA_SIZE_MASK                   0xc
-#define DMA_CH0_CTRL_TRIG_DATA_SIZE_SIZE_BYTE              0
-#define DMA_CH0_CTRL_TRIG_DATA_SIZE_SIZE_HALFWORD          1
-#define DMA_CH0_CTRL_TRIG_DATA_SIZE_SIZE_WORD              2
+#define DMA_CH0_CTRL_TRIG_DATA_SIZE_OFFSET                 2u
+#define DMA_CH0_CTRL_TRIG_DATA_SIZE_MASK                   0xcu
+#define DMA_CH0_CTRL_TRIG_DATA_SIZE_SIZE_BYTE              0u
+#define DMA_CH0_CTRL_TRIG_DATA_SIZE_SIZE_HALFWORD          1u
+#define DMA_CH0_CTRL_TRIG_DATA_SIZE_SIZE_WORD              2u
 
-#define DMA_CH0_CTRL_TRIG_HIGH_PRIORITY_OFFSET             1
-#define DMA_CH0_CTRL_TRIG_HIGH_PRIORITY_MASK               2
+#define DMA_CH0_CTRL_TRIG_HIGH_PRIORITY_OFFSET             1u
+#define DMA_CH0_CTRL_TRIG_HIGH_PRIORITY_MASK               2u
 
-#define DMA_CH0_CTRL_TRIG_EN_OFFSET                        0
-#define DMA_CH0_CTRL_TRIG_EN_MASK                          1
+#define DMA_CH0_CTRL_TRIG_EN_OFFSET                        0u
+#define DMA_CH0_CTRL_TRIG_EN_MASK                          1u
 
-#define DMA_CH1_CTRL_TRIG_AHB_ERROR_OFFSET                 31
-#define DMA_CH1_CTRL_TRIG_AHB_ERROR_MASK                   0x80000000
+#define DMA_CH1_CTRL_TRIG_AHB_ERROR_OFFSET                 31u
+#define DMA_CH1_CTRL_TRIG_AHB_ERROR_MASK                   0x80000000u
 
-#define DMA_CH1_CTRL_TRIG_READ_ERROR_OFFSET                30
-#define DMA_CH1_CTRL_TRIG_READ_ERROR_MASK                  0x40000000
+#define DMA_CH1_CTRL_TRIG_READ_ERROR_OFFSET                30u
+#define DMA_CH1_CTRL_TRIG_READ_ERROR_MASK                  0x40000000u
 
-#define DMA_CH1_CTRL_TRIG_WRITE_ERROR_OFFSET               29
-#define DMA_CH1_CTRL_TRIG_WRITE_ERROR_MASK                 0x20000000
+#define DMA_CH1_CTRL_TRIG_WRITE_ERROR_OFFSET               29u
+#define DMA_CH1_CTRL_TRIG_WRITE_ERROR_MASK                 0x20000000u
 
-#define DMA_CH1_CTRL_TRIG_BUSY_OFFSET                      24
-#define DMA_CH1_CTRL_TRIG_BUSY_MASK                        0x1000000
+#define DMA_CH1_CTRL_TRIG_BUSY_OFFSET                      24u
+#define DMA_CH1_CTRL_TRIG_BUSY_MASK                        0x1000000u
 
-#define DMA_CH1_CTRL_TRIG_SNIFF_EN_OFFSET                  23
-#define DMA_CH1_CTRL_TRIG_SNIFF_EN_MASK                    0x800000
+#define DMA_CH1_CTRL_TRIG_SNIFF_EN_OFFSET                  23u
+#define DMA_CH1_CTRL_TRIG_SNIFF_EN_MASK                    0x800000u
 
-#define DMA_CH1_CTRL_TRIG_BSWAP_OFFSET                     22
-#define DMA_CH1_CTRL_TRIG_BSWAP_MASK                       0x400000
+#define DMA_CH1_CTRL_TRIG_BSWAP_OFFSET                     22u
+#define DMA_CH1_CTRL_TRIG_BSWAP_MASK                       0x400000u
 
-#define DMA_CH1_CTRL_TRIG_IRQ_QUIET_OFFSET                 21
-#define DMA_CH1_CTRL_TRIG_IRQ_QUIET_MASK                   0x200000
+#define DMA_CH1_CTRL_TRIG_IRQ_QUIET_OFFSET                 21u
+#define DMA_CH1_CTRL_TRIG_IRQ_QUIET_MASK                   0x200000u
 
-#define DMA_CH1_CTRL_TRIG_TREQ_SEL_OFFSET                  15
-#define DMA_CH1_CTRL_TRIG_TREQ_SEL_MASK                    0x1f8000
-#define DMA_CH1_CTRL_TRIG_TREQ_SEL_TIMER0                  0x3b
-#define DMA_CH1_CTRL_TRIG_TREQ_SEL_TIMER1                  0x3c
-#define DMA_CH1_CTRL_TRIG_TREQ_SEL_TIMER2                  0x3d
-#define DMA_CH1_CTRL_TRIG_TREQ_SEL_TIMER3                  0x3e
-#define DMA_CH1_CTRL_TRIG_TREQ_SEL_PERMANENT               0x3f
+#define DMA_CH1_CTRL_TRIG_TREQ_SEL_OFFSET                  15u
+#define DMA_CH1_CTRL_TRIG_TREQ_SEL_MASK                    0x1f8000u
+#define DMA_CH1_CTRL_TRIG_TREQ_SEL_TIMER0                  0x3bu
+#define DMA_CH1_CTRL_TRIG_TREQ_SEL_TIMER1                  0x3cu
+#define DMA_CH1_CTRL_TRIG_TREQ_SEL_TIMER2                  0x3du
+#define DMA_CH1_CTRL_TRIG_TREQ_SEL_TIMER3                  0x3eu
+#define DMA_CH1_CTRL_TRIG_TREQ_SEL_PERMANENT               0x3fu
 
-#define DMA_CH1_CTRL_TRIG_CHAIN_TO_OFFSET                  11
-#define DMA_CH1_CTRL_TRIG_CHAIN_TO_MASK                    0x7800
+#define DMA_CH1_CTRL_TRIG_CHAIN_TO_OFFSET                  11u
+#define DMA_CH1_CTRL_TRIG_CHAIN_TO_MASK                    0x7800u
 
-#define DMA_CH1_CTRL_TRIG_RING_SEL_OFFSET                  10
-#define DMA_CH1_CTRL_TRIG_RING_SEL_MASK                    0x400
+#define DMA_CH1_CTRL_TRIG_RING_SEL_OFFSET                  10u
+#define DMA_CH1_CTRL_TRIG_RING_SEL_MASK                    0x400u
 
-#define DMA_CH1_CTRL_TRIG_RING_SIZE_OFFSET                 6
-#define DMA_CH1_CTRL_TRIG_RING_SIZE_MASK                   0x3c0
-#define DMA_CH1_CTRL_TRIG_RING_SIZE_RING_NONE              0
+#define DMA_CH1_CTRL_TRIG_RING_SIZE_OFFSET                 6u
+#define DMA_CH1_CTRL_TRIG_RING_SIZE_MASK                   0x3c0u
+#define DMA_CH1_CTRL_TRIG_RING_SIZE_RING_NONE              0u
 
-#define DMA_CH1_CTRL_TRIG_INCR_WRITE_OFFSET                5
-#define DMA_CH1_CTRL_TRIG_INCR_WRITE_MASK                  0x20
+#define DMA_CH1_CTRL_TRIG_INCR_WRITE_OFFSET                5u
+#define DMA_CH1_CTRL_TRIG_INCR_WRITE_MASK                  0x20u
 
-#define DMA_CH1_CTRL_TRIG_INCR_READ_OFFSET                 4
-#define DMA_CH1_CTRL_TRIG_INCR_READ_MASK                   0x10
+#define DMA_CH1_CTRL_TRIG_INCR_READ_OFFSET                 4u
+#define DMA_CH1_CTRL_TRIG_INCR_READ_MASK                   0x10u
 
-#define DMA_CH1_CTRL_TRIG_DATA_SIZE_OFFSET                 2
-#define DMA_CH1_CTRL_TRIG_DATA_SIZE_MASK                   0xc
-#define DMA_CH1_CTRL_TRIG_DATA_SIZE_SIZE_BYTE              0
-#define DMA_CH1_CTRL_TRIG_DATA_SIZE_SIZE_HALFWORD          1
-#define DMA_CH1_CTRL_TRIG_DATA_SIZE_SIZE_WORD              2
+#define DMA_CH1_CTRL_TRIG_DATA_SIZE_OFFSET                 2u
+#define DMA_CH1_CTRL_TRIG_DATA_SIZE_MASK                   0xcu
+#define DMA_CH1_CTRL_TRIG_DATA_SIZE_SIZE_BYTE              0u
+#define DMA_CH1_CTRL_TRIG_DATA_SIZE_SIZE_HALFWORD          1u
+#define DMA_CH1_CTRL_TRIG_DATA_SIZE_SIZE_WORD              2u
 
-#define DMA_CH1_CTRL_TRIG_HIGH_PRIORITY_OFFSET             1
-#define DMA_CH1_CTRL_TRIG_HIGH_PRIORITY_MASK               2
+#define DMA_CH1_CTRL_TRIG_HIGH_PRIORITY_OFFSET             1u
+#define DMA_CH1_CTRL_TRIG_HIGH_PRIORITY_MASK               2u
 
-#define DMA_CH1_CTRL_TRIG_EN_OFFSET                        0
-#define DMA_CH1_CTRL_TRIG_EN_MASK                          1
+#define DMA_CH1_CTRL_TRIG_EN_OFFSET                        0u
+#define DMA_CH1_CTRL_TRIG_EN_MASK                          1u
 
-#define DMA_CH2_CTRL_TRIG_AHB_ERROR_OFFSET                 31
-#define DMA_CH2_CTRL_TRIG_AHB_ERROR_MASK                   0x80000000
+#define DMA_CH2_CTRL_TRIG_AHB_ERROR_OFFSET                 31u
+#define DMA_CH2_CTRL_TRIG_AHB_ERROR_MASK                   0x80000000u
 
-#define DMA_CH2_CTRL_TRIG_READ_ERROR_OFFSET                30
-#define DMA_CH2_CTRL_TRIG_READ_ERROR_MASK                  0x40000000
+#define DMA_CH2_CTRL_TRIG_READ_ERROR_OFFSET                30u
+#define DMA_CH2_CTRL_TRIG_READ_ERROR_MASK                  0x40000000u
 
-#define DMA_CH2_CTRL_TRIG_WRITE_ERROR_OFFSET               29
-#define DMA_CH2_CTRL_TRIG_WRITE_ERROR_MASK                 0x20000000
+#define DMA_CH2_CTRL_TRIG_WRITE_ERROR_OFFSET               29u
+#define DMA_CH2_CTRL_TRIG_WRITE_ERROR_MASK                 0x20000000u
 
-#define DMA_CH2_CTRL_TRIG_BUSY_OFFSET                      24
-#define DMA_CH2_CTRL_TRIG_BUSY_MASK                        0x1000000
+#define DMA_CH2_CTRL_TRIG_BUSY_OFFSET                      24u
+#define DMA_CH2_CTRL_TRIG_BUSY_MASK                        0x1000000u
 
-#define DMA_CH2_CTRL_TRIG_SNIFF_EN_OFFSET                  23
-#define DMA_CH2_CTRL_TRIG_SNIFF_EN_MASK                    0x800000
+#define DMA_CH2_CTRL_TRIG_SNIFF_EN_OFFSET                  23u
+#define DMA_CH2_CTRL_TRIG_SNIFF_EN_MASK                    0x800000u
 
-#define DMA_CH2_CTRL_TRIG_BSWAP_OFFSET                     22
-#define DMA_CH2_CTRL_TRIG_BSWAP_MASK                       0x400000
+#define DMA_CH2_CTRL_TRIG_BSWAP_OFFSET                     22u
+#define DMA_CH2_CTRL_TRIG_BSWAP_MASK                       0x400000u
 
-#define DMA_CH2_CTRL_TRIG_IRQ_QUIET_OFFSET                 21
-#define DMA_CH2_CTRL_TRIG_IRQ_QUIET_MASK                   0x200000
+#define DMA_CH2_CTRL_TRIG_IRQ_QUIET_OFFSET                 21u
+#define DMA_CH2_CTRL_TRIG_IRQ_QUIET_MASK                   0x200000u
 
-#define DMA_CH2_CTRL_TRIG_TREQ_SEL_OFFSET                  15
-#define DMA_CH2_CTRL_TRIG_TREQ_SEL_MASK                    0x1f8000
-#define DMA_CH2_CTRL_TRIG_TREQ_SEL_TIMER0                  0x3b
-#define DMA_CH2_CTRL_TRIG_TREQ_SEL_TIMER1                  0x3c
-#define DMA_CH2_CTRL_TRIG_TREQ_SEL_TIMER2                  0x3d
-#define DMA_CH2_CTRL_TRIG_TREQ_SEL_TIMER3                  0x3e
-#define DMA_CH2_CTRL_TRIG_TREQ_SEL_PERMANENT               0x3f
+#define DMA_CH2_CTRL_TRIG_TREQ_SEL_OFFSET                  15u
+#define DMA_CH2_CTRL_TRIG_TREQ_SEL_MASK                    0x1f8000u
+#define DMA_CH2_CTRL_TRIG_TREQ_SEL_TIMER0                  0x3bu
+#define DMA_CH2_CTRL_TRIG_TREQ_SEL_TIMER1                  0x3cu
+#define DMA_CH2_CTRL_TRIG_TREQ_SEL_TIMER2                  0x3du
+#define DMA_CH2_CTRL_TRIG_TREQ_SEL_TIMER3                  0x3eu
+#define DMA_CH2_CTRL_TRIG_TREQ_SEL_PERMANENT               0x3fu
 
-#define DMA_CH2_CTRL_TRIG_CHAIN_TO_OFFSET                  11
-#define DMA_CH2_CTRL_TRIG_CHAIN_TO_MASK                    0x7800
+#define DMA_CH2_CTRL_TRIG_CHAIN_TO_OFFSET                  11u
+#define DMA_CH2_CTRL_TRIG_CHAIN_TO_MASK                    0x7800u
 
-#define DMA_CH2_CTRL_TRIG_RING_SEL_OFFSET                  10
-#define DMA_CH2_CTRL_TRIG_RING_SEL_MASK                    0x400
+#define DMA_CH2_CTRL_TRIG_RING_SEL_OFFSET                  10u
+#define DMA_CH2_CTRL_TRIG_RING_SEL_MASK                    0x400u
 
-#define DMA_CH2_CTRL_TRIG_RING_SIZE_OFFSET                 6
-#define DMA_CH2_CTRL_TRIG_RING_SIZE_MASK                   0x3c0
-#define DMA_CH2_CTRL_TRIG_RING_SIZE_RING_NONE              0
+#define DMA_CH2_CTRL_TRIG_RING_SIZE_OFFSET                 6u
+#define DMA_CH2_CTRL_TRIG_RING_SIZE_MASK                   0x3c0u
+#define DMA_CH2_CTRL_TRIG_RING_SIZE_RING_NONE              0u
 
-#define DMA_CH2_CTRL_TRIG_INCR_WRITE_OFFSET                5
-#define DMA_CH2_CTRL_TRIG_INCR_WRITE_MASK                  0x20
+#define DMA_CH2_CTRL_TRIG_INCR_WRITE_OFFSET                5u
+#define DMA_CH2_CTRL_TRIG_INCR_WRITE_MASK                  0x20u
 
-#define DMA_CH2_CTRL_TRIG_INCR_READ_OFFSET                 4
-#define DMA_CH2_CTRL_TRIG_INCR_READ_MASK                   0x10
+#define DMA_CH2_CTRL_TRIG_INCR_READ_OFFSET                 4u
+#define DMA_CH2_CTRL_TRIG_INCR_READ_MASK                   0x10u
 
-#define DMA_CH2_CTRL_TRIG_DATA_SIZE_OFFSET                 2
-#define DMA_CH2_CTRL_TRIG_DATA_SIZE_MASK                   0xc
-#define DMA_CH2_CTRL_TRIG_DATA_SIZE_SIZE_BYTE              0
-#define DMA_CH2_CTRL_TRIG_DATA_SIZE_SIZE_HALFWORD          1
-#define DMA_CH2_CTRL_TRIG_DATA_SIZE_SIZE_WORD              2
+#define DMA_CH2_CTRL_TRIG_DATA_SIZE_OFFSET                 2u
+#define DMA_CH2_CTRL_TRIG_DATA_SIZE_MASK                   0xcu
+#define DMA_CH2_CTRL_TRIG_DATA_SIZE_SIZE_BYTE              0u
+#define DMA_CH2_CTRL_TRIG_DATA_SIZE_SIZE_HALFWORD          1u
+#define DMA_CH2_CTRL_TRIG_DATA_SIZE_SIZE_WORD              2u
 
-#define DMA_CH2_CTRL_TRIG_HIGH_PRIORITY_OFFSET             1
-#define DMA_CH2_CTRL_TRIG_HIGH_PRIORITY_MASK               2
+#define DMA_CH2_CTRL_TRIG_HIGH_PRIORITY_OFFSET             1u
+#define DMA_CH2_CTRL_TRIG_HIGH_PRIORITY_MASK               2u
 
-#define DMA_CH2_CTRL_TRIG_EN_OFFSET                        0
-#define DMA_CH2_CTRL_TRIG_EN_MASK                          1
+#define DMA_CH2_CTRL_TRIG_EN_OFFSET                        0u
+#define DMA_CH2_CTRL_TRIG_EN_MASK                          1u
 
-#define DMA_CH3_CTRL_TRIG_AHB_ERROR_OFFSET                 31
-#define DMA_CH3_CTRL_TRIG_AHB_ERROR_MASK                   0x80000000
+#define DMA_CH3_CTRL_TRIG_AHB_ERROR_OFFSET                 31u
+#define DMA_CH3_CTRL_TRIG_AHB_ERROR_MASK                   0x80000000u
 
-#define DMA_CH3_CTRL_TRIG_READ_ERROR_OFFSET                30
-#define DMA_CH3_CTRL_TRIG_READ_ERROR_MASK                  0x40000000
+#define DMA_CH3_CTRL_TRIG_READ_ERROR_OFFSET                30u
+#define DMA_CH3_CTRL_TRIG_READ_ERROR_MASK                  0x40000000u
 
-#define DMA_CH3_CTRL_TRIG_WRITE_ERROR_OFFSET               29
-#define DMA_CH3_CTRL_TRIG_WRITE_ERROR_MASK                 0x20000000
+#define DMA_CH3_CTRL_TRIG_WRITE_ERROR_OFFSET               29u
+#define DMA_CH3_CTRL_TRIG_WRITE_ERROR_MASK                 0x20000000u
 
-#define DMA_CH3_CTRL_TRIG_BUSY_OFFSET                      24
-#define DMA_CH3_CTRL_TRIG_BUSY_MASK                        0x1000000
+#define DMA_CH3_CTRL_TRIG_BUSY_OFFSET                      24u
+#define DMA_CH3_CTRL_TRIG_BUSY_MASK                        0x1000000u
 
-#define DMA_CH3_CTRL_TRIG_SNIFF_EN_OFFSET                  23
-#define DMA_CH3_CTRL_TRIG_SNIFF_EN_MASK                    0x800000
+#define DMA_CH3_CTRL_TRIG_SNIFF_EN_OFFSET                  23u
+#define DMA_CH3_CTRL_TRIG_SNIFF_EN_MASK                    0x800000u
 
-#define DMA_CH3_CTRL_TRIG_BSWAP_OFFSET                     22
-#define DMA_CH3_CTRL_TRIG_BSWAP_MASK                       0x400000
+#define DMA_CH3_CTRL_TRIG_BSWAP_OFFSET                     22u
+#define DMA_CH3_CTRL_TRIG_BSWAP_MASK                       0x400000u
 
-#define DMA_CH3_CTRL_TRIG_IRQ_QUIET_OFFSET                 21
-#define DMA_CH3_CTRL_TRIG_IRQ_QUIET_MASK                   0x200000
+#define DMA_CH3_CTRL_TRIG_IRQ_QUIET_OFFSET                 21u
+#define DMA_CH3_CTRL_TRIG_IRQ_QUIET_MASK                   0x200000u
 
-#define DMA_CH3_CTRL_TRIG_TREQ_SEL_OFFSET                  15
-#define DMA_CH3_CTRL_TRIG_TREQ_SEL_MASK                    0x1f8000
-#define DMA_CH3_CTRL_TRIG_TREQ_SEL_TIMER0                  0x3b
-#define DMA_CH3_CTRL_TRIG_TREQ_SEL_TIMER1                  0x3c
-#define DMA_CH3_CTRL_TRIG_TREQ_SEL_TIMER2                  0x3d
-#define DMA_CH3_CTRL_TRIG_TREQ_SEL_TIMER3                  0x3e
-#define DMA_CH3_CTRL_TRIG_TREQ_SEL_PERMANENT               0x3f
+#define DMA_CH3_CTRL_TRIG_TREQ_SEL_OFFSET                  15u
+#define DMA_CH3_CTRL_TRIG_TREQ_SEL_MASK                    0x1f8000u
+#define DMA_CH3_CTRL_TRIG_TREQ_SEL_TIMER0                  0x3bu
+#define DMA_CH3_CTRL_TRIG_TREQ_SEL_TIMER1                  0x3cu
+#define DMA_CH3_CTRL_TRIG_TREQ_SEL_TIMER2                  0x3du
+#define DMA_CH3_CTRL_TRIG_TREQ_SEL_TIMER3                  0x3eu
+#define DMA_CH3_CTRL_TRIG_TREQ_SEL_PERMANENT               0x3fu
 
-#define DMA_CH3_CTRL_TRIG_CHAIN_TO_OFFSET                  11
-#define DMA_CH3_CTRL_TRIG_CHAIN_TO_MASK                    0x7800
+#define DMA_CH3_CTRL_TRIG_CHAIN_TO_OFFSET                  11u
+#define DMA_CH3_CTRL_TRIG_CHAIN_TO_MASK                    0x7800u
 
-#define DMA_CH3_CTRL_TRIG_RING_SEL_OFFSET                  10
-#define DMA_CH3_CTRL_TRIG_RING_SEL_MASK                    0x400
+#define DMA_CH3_CTRL_TRIG_RING_SEL_OFFSET                  10u
+#define DMA_CH3_CTRL_TRIG_RING_SEL_MASK                    0x400u
 
-#define DMA_CH3_CTRL_TRIG_RING_SIZE_OFFSET                 6
-#define DMA_CH3_CTRL_TRIG_RING_SIZE_MASK                   0x3c0
-#define DMA_CH3_CTRL_TRIG_RING_SIZE_RING_NONE              0
+#define DMA_CH3_CTRL_TRIG_RING_SIZE_OFFSET                 6u
+#define DMA_CH3_CTRL_TRIG_RING_SIZE_MASK                   0x3c0u
+#define DMA_CH3_CTRL_TRIG_RING_SIZE_RING_NONE              0u
 
-#define DMA_CH3_CTRL_TRIG_INCR_WRITE_OFFSET                5
-#define DMA_CH3_CTRL_TRIG_INCR_WRITE_MASK                  0x20
+#define DMA_CH3_CTRL_TRIG_INCR_WRITE_OFFSET                5u
+#define DMA_CH3_CTRL_TRIG_INCR_WRITE_MASK                  0x20u
 
-#define DMA_CH3_CTRL_TRIG_INCR_READ_OFFSET                 4
-#define DMA_CH3_CTRL_TRIG_INCR_READ_MASK                   0x10
+#define DMA_CH3_CTRL_TRIG_INCR_READ_OFFSET                 4u
+#define DMA_CH3_CTRL_TRIG_INCR_READ_MASK                   0x10u
 
-#define DMA_CH3_CTRL_TRIG_DATA_SIZE_OFFSET                 2
-#define DMA_CH3_CTRL_TRIG_DATA_SIZE_MASK                   0xc
-#define DMA_CH3_CTRL_TRIG_DATA_SIZE_SIZE_BYTE              0
-#define DMA_CH3_CTRL_TRIG_DATA_SIZE_SIZE_HALFWORD          1
-#define DMA_CH3_CTRL_TRIG_DATA_SIZE_SIZE_WORD              2
+#define DMA_CH3_CTRL_TRIG_DATA_SIZE_OFFSET                 2u
+#define DMA_CH3_CTRL_TRIG_DATA_SIZE_MASK                   0xcu
+#define DMA_CH3_CTRL_TRIG_DATA_SIZE_SIZE_BYTE              0u
+#define DMA_CH3_CTRL_TRIG_DATA_SIZE_SIZE_HALFWORD          1u
+#define DMA_CH3_CTRL_TRIG_DATA_SIZE_SIZE_WORD              2u
 
-#define DMA_CH3_CTRL_TRIG_HIGH_PRIORITY_OFFSET             1
-#define DMA_CH3_CTRL_TRIG_HIGH_PRIORITY_MASK               2
+#define DMA_CH3_CTRL_TRIG_HIGH_PRIORITY_OFFSET             1u
+#define DMA_CH3_CTRL_TRIG_HIGH_PRIORITY_MASK               2u
 
-#define DMA_CH3_CTRL_TRIG_EN_OFFSET                        0
-#define DMA_CH3_CTRL_TRIG_EN_MASK                          1
+#define DMA_CH3_CTRL_TRIG_EN_OFFSET                        0u
+#define DMA_CH3_CTRL_TRIG_EN_MASK                          1u
 
-#define DMA_CH4_CTRL_TRIG_AHB_ERROR_OFFSET                 31
-#define DMA_CH4_CTRL_TRIG_AHB_ERROR_MASK                   0x80000000
+#define DMA_CH4_CTRL_TRIG_AHB_ERROR_OFFSET                 31u
+#define DMA_CH4_CTRL_TRIG_AHB_ERROR_MASK                   0x80000000u
 
-#define DMA_CH4_CTRL_TRIG_READ_ERROR_OFFSET                30
-#define DMA_CH4_CTRL_TRIG_READ_ERROR_MASK                  0x40000000
+#define DMA_CH4_CTRL_TRIG_READ_ERROR_OFFSET                30u
+#define DMA_CH4_CTRL_TRIG_READ_ERROR_MASK                  0x40000000u
 
-#define DMA_CH4_CTRL_TRIG_WRITE_ERROR_OFFSET               29
-#define DMA_CH4_CTRL_TRIG_WRITE_ERROR_MASK                 0x20000000
+#define DMA_CH4_CTRL_TRIG_WRITE_ERROR_OFFSET               29u
+#define DMA_CH4_CTRL_TRIG_WRITE_ERROR_MASK                 0x20000000u
 
-#define DMA_CH4_CTRL_TRIG_BUSY_OFFSET                      24
-#define DMA_CH4_CTRL_TRIG_BUSY_MASK                        0x1000000
+#define DMA_CH4_CTRL_TRIG_BUSY_OFFSET                      24u
+#define DMA_CH4_CTRL_TRIG_BUSY_MASK                        0x1000000u
 
-#define DMA_CH4_CTRL_TRIG_SNIFF_EN_OFFSET                  23
-#define DMA_CH4_CTRL_TRIG_SNIFF_EN_MASK                    0x800000
+#define DMA_CH4_CTRL_TRIG_SNIFF_EN_OFFSET                  23u
+#define DMA_CH4_CTRL_TRIG_SNIFF_EN_MASK                    0x800000u
 
-#define DMA_CH4_CTRL_TRIG_BSWAP_OFFSET                     22
-#define DMA_CH4_CTRL_TRIG_BSWAP_MASK                       0x400000
+#define DMA_CH4_CTRL_TRIG_BSWAP_OFFSET                     22u
+#define DMA_CH4_CTRL_TRIG_BSWAP_MASK                       0x400000u
 
-#define DMA_CH4_CTRL_TRIG_IRQ_QUIET_OFFSET                 21
-#define DMA_CH4_CTRL_TRIG_IRQ_QUIET_MASK                   0x200000
+#define DMA_CH4_CTRL_TRIG_IRQ_QUIET_OFFSET                 21u
+#define DMA_CH4_CTRL_TRIG_IRQ_QUIET_MASK                   0x200000u
 
-#define DMA_CH4_CTRL_TRIG_TREQ_SEL_OFFSET                  15
-#define DMA_CH4_CTRL_TRIG_TREQ_SEL_MASK                    0x1f8000
-#define DMA_CH4_CTRL_TRIG_TREQ_SEL_TIMER0                  0x3b
-#define DMA_CH4_CTRL_TRIG_TREQ_SEL_TIMER1                  0x3c
-#define DMA_CH4_CTRL_TRIG_TREQ_SEL_TIMER2                  0x3d
-#define DMA_CH4_CTRL_TRIG_TREQ_SEL_TIMER3                  0x3e
-#define DMA_CH4_CTRL_TRIG_TREQ_SEL_PERMANENT               0x3f
+#define DMA_CH4_CTRL_TRIG_TREQ_SEL_OFFSET                  15u
+#define DMA_CH4_CTRL_TRIG_TREQ_SEL_MASK                    0x1f8000u
+#define DMA_CH4_CTRL_TRIG_TREQ_SEL_TIMER0                  0x3bu
+#define DMA_CH4_CTRL_TRIG_TREQ_SEL_TIMER1                  0x3cu
+#define DMA_CH4_CTRL_TRIG_TREQ_SEL_TIMER2                  0x3du
+#define DMA_CH4_CTRL_TRIG_TREQ_SEL_TIMER3                  0x3eu
+#define DMA_CH4_CTRL_TRIG_TREQ_SEL_PERMANENT               0x3fu
 
-#define DMA_CH4_CTRL_TRIG_CHAIN_TO_OFFSET                  11
-#define DMA_CH4_CTRL_TRIG_CHAIN_TO_MASK                    0x7800
+#define DMA_CH4_CTRL_TRIG_CHAIN_TO_OFFSET                  11u
+#define DMA_CH4_CTRL_TRIG_CHAIN_TO_MASK                    0x7800u
 
-#define DMA_CH4_CTRL_TRIG_RING_SEL_OFFSET                  10
-#define DMA_CH4_CTRL_TRIG_RING_SEL_MASK                    0x400
+#define DMA_CH4_CTRL_TRIG_RING_SEL_OFFSET                  10u
+#define DMA_CH4_CTRL_TRIG_RING_SEL_MASK                    0x400u
 
-#define DMA_CH4_CTRL_TRIG_RING_SIZE_OFFSET                 6
-#define DMA_CH4_CTRL_TRIG_RING_SIZE_MASK                   0x3c0
-#define DMA_CH4_CTRL_TRIG_RING_SIZE_RING_NONE              0
+#define DMA_CH4_CTRL_TRIG_RING_SIZE_OFFSET                 6u
+#define DMA_CH4_CTRL_TRIG_RING_SIZE_MASK                   0x3c0u
+#define DMA_CH4_CTRL_TRIG_RING_SIZE_RING_NONE              0u
 
-#define DMA_CH4_CTRL_TRIG_INCR_WRITE_OFFSET                5
-#define DMA_CH4_CTRL_TRIG_INCR_WRITE_MASK                  0x20
+#define DMA_CH4_CTRL_TRIG_INCR_WRITE_OFFSET                5u
+#define DMA_CH4_CTRL_TRIG_INCR_WRITE_MASK                  0x20u
 
-#define DMA_CH4_CTRL_TRIG_INCR_READ_OFFSET                 4
-#define DMA_CH4_CTRL_TRIG_INCR_READ_MASK                   0x10
+#define DMA_CH4_CTRL_TRIG_INCR_READ_OFFSET                 4u
+#define DMA_CH4_CTRL_TRIG_INCR_READ_MASK                   0x10u
 
-#define DMA_CH4_CTRL_TRIG_DATA_SIZE_OFFSET                 2
-#define DMA_CH4_CTRL_TRIG_DATA_SIZE_MASK                   0xc
-#define DMA_CH4_CTRL_TRIG_DATA_SIZE_SIZE_BYTE              0
-#define DMA_CH4_CTRL_TRIG_DATA_SIZE_SIZE_HALFWORD          1
-#define DMA_CH4_CTRL_TRIG_DATA_SIZE_SIZE_WORD              2
+#define DMA_CH4_CTRL_TRIG_DATA_SIZE_OFFSET                 2u
+#define DMA_CH4_CTRL_TRIG_DATA_SIZE_MASK                   0xcu
+#define DMA_CH4_CTRL_TRIG_DATA_SIZE_SIZE_BYTE              0u
+#define DMA_CH4_CTRL_TRIG_DATA_SIZE_SIZE_HALFWORD          1u
+#define DMA_CH4_CTRL_TRIG_DATA_SIZE_SIZE_WORD              2u
 
-#define DMA_CH4_CTRL_TRIG_HIGH_PRIORITY_OFFSET             1
-#define DMA_CH4_CTRL_TRIG_HIGH_PRIORITY_MASK               2
+#define DMA_CH4_CTRL_TRIG_HIGH_PRIORITY_OFFSET             1u
+#define DMA_CH4_CTRL_TRIG_HIGH_PRIORITY_MASK               2u
 
-#define DMA_CH4_CTRL_TRIG_EN_OFFSET                        0
-#define DMA_CH4_CTRL_TRIG_EN_MASK                          1
+#define DMA_CH4_CTRL_TRIG_EN_OFFSET                        0u
+#define DMA_CH4_CTRL_TRIG_EN_MASK                          1u
 
-#define DMA_CH5_CTRL_TRIG_AHB_ERROR_OFFSET                 31
-#define DMA_CH5_CTRL_TRIG_AHB_ERROR_MASK                   0x80000000
+#define DMA_CH5_CTRL_TRIG_AHB_ERROR_OFFSET                 31u
+#define DMA_CH5_CTRL_TRIG_AHB_ERROR_MASK                   0x80000000u
 
-#define DMA_CH5_CTRL_TRIG_READ_ERROR_OFFSET                30
-#define DMA_CH5_CTRL_TRIG_READ_ERROR_MASK                  0x40000000
+#define DMA_CH5_CTRL_TRIG_READ_ERROR_OFFSET                30u
+#define DMA_CH5_CTRL_TRIG_READ_ERROR_MASK                  0x40000000u
 
-#define DMA_CH5_CTRL_TRIG_WRITE_ERROR_OFFSET               29
-#define DMA_CH5_CTRL_TRIG_WRITE_ERROR_MASK                 0x20000000
+#define DMA_CH5_CTRL_TRIG_WRITE_ERROR_OFFSET               29u
+#define DMA_CH5_CTRL_TRIG_WRITE_ERROR_MASK                 0x20000000u
 
-#define DMA_CH5_CTRL_TRIG_BUSY_OFFSET                      24
-#define DMA_CH5_CTRL_TRIG_BUSY_MASK                        0x1000000
+#define DMA_CH5_CTRL_TRIG_BUSY_OFFSET                      24u
+#define DMA_CH5_CTRL_TRIG_BUSY_MASK                        0x1000000u
 
-#define DMA_CH5_CTRL_TRIG_SNIFF_EN_OFFSET                  23
-#define DMA_CH5_CTRL_TRIG_SNIFF_EN_MASK                    0x800000
+#define DMA_CH5_CTRL_TRIG_SNIFF_EN_OFFSET                  23u
+#define DMA_CH5_CTRL_TRIG_SNIFF_EN_MASK                    0x800000u
 
-#define DMA_CH5_CTRL_TRIG_BSWAP_OFFSET                     22
-#define DMA_CH5_CTRL_TRIG_BSWAP_MASK                       0x400000
+#define DMA_CH5_CTRL_TRIG_BSWAP_OFFSET                     22u
+#define DMA_CH5_CTRL_TRIG_BSWAP_MASK                       0x400000u
 
-#define DMA_CH5_CTRL_TRIG_IRQ_QUIET_OFFSET                 21
-#define DMA_CH5_CTRL_TRIG_IRQ_QUIET_MASK                   0x200000
+#define DMA_CH5_CTRL_TRIG_IRQ_QUIET_OFFSET                 21u
+#define DMA_CH5_CTRL_TRIG_IRQ_QUIET_MASK                   0x200000u
 
-#define DMA_CH5_CTRL_TRIG_TREQ_SEL_OFFSET                  15
-#define DMA_CH5_CTRL_TRIG_TREQ_SEL_MASK                    0x1f8000
-#define DMA_CH5_CTRL_TRIG_TREQ_SEL_TIMER0                  0x3b
-#define DMA_CH5_CTRL_TRIG_TREQ_SEL_TIMER1                  0x3c
-#define DMA_CH5_CTRL_TRIG_TREQ_SEL_TIMER2                  0x3d
-#define DMA_CH5_CTRL_TRIG_TREQ_SEL_TIMER3                  0x3e
-#define DMA_CH5_CTRL_TRIG_TREQ_SEL_PERMANENT               0x3f
+#define DMA_CH5_CTRL_TRIG_TREQ_SEL_OFFSET                  15u
+#define DMA_CH5_CTRL_TRIG_TREQ_SEL_MASK                    0x1f8000u
+#define DMA_CH5_CTRL_TRIG_TREQ_SEL_TIMER0                  0x3bu
+#define DMA_CH5_CTRL_TRIG_TREQ_SEL_TIMER1                  0x3cu
+#define DMA_CH5_CTRL_TRIG_TREQ_SEL_TIMER2                  0x3du
+#define DMA_CH5_CTRL_TRIG_TREQ_SEL_TIMER3                  0x3eu
+#define DMA_CH5_CTRL_TRIG_TREQ_SEL_PERMANENT               0x3fu
 
-#define DMA_CH5_CTRL_TRIG_CHAIN_TO_OFFSET                  11
-#define DMA_CH5_CTRL_TRIG_CHAIN_TO_MASK                    0x7800
+#define DMA_CH5_CTRL_TRIG_CHAIN_TO_OFFSET                  11u
+#define DMA_CH5_CTRL_TRIG_CHAIN_TO_MASK                    0x7800u
 
-#define DMA_CH5_CTRL_TRIG_RING_SEL_OFFSET                  10
-#define DMA_CH5_CTRL_TRIG_RING_SEL_MASK                    0x400
+#define DMA_CH5_CTRL_TRIG_RING_SEL_OFFSET                  10u
+#define DMA_CH5_CTRL_TRIG_RING_SEL_MASK                    0x400u
 
-#define DMA_CH5_CTRL_TRIG_RING_SIZE_OFFSET                 6
-#define DMA_CH5_CTRL_TRIG_RING_SIZE_MASK                   0x3c0
-#define DMA_CH5_CTRL_TRIG_RING_SIZE_RING_NONE              0
+#define DMA_CH5_CTRL_TRIG_RING_SIZE_OFFSET                 6u
+#define DMA_CH5_CTRL_TRIG_RING_SIZE_MASK                   0x3c0u
+#define DMA_CH5_CTRL_TRIG_RING_SIZE_RING_NONE              0u
 
-#define DMA_CH5_CTRL_TRIG_INCR_WRITE_OFFSET                5
-#define DMA_CH5_CTRL_TRIG_INCR_WRITE_MASK                  0x20
+#define DMA_CH5_CTRL_TRIG_INCR_WRITE_OFFSET                5u
+#define DMA_CH5_CTRL_TRIG_INCR_WRITE_MASK                  0x20u
 
-#define DMA_CH5_CTRL_TRIG_INCR_READ_OFFSET                 4
-#define DMA_CH5_CTRL_TRIG_INCR_READ_MASK                   0x10
+#define DMA_CH5_CTRL_TRIG_INCR_READ_OFFSET                 4u
+#define DMA_CH5_CTRL_TRIG_INCR_READ_MASK                   0x10u
 
-#define DMA_CH5_CTRL_TRIG_DATA_SIZE_OFFSET                 2
-#define DMA_CH5_CTRL_TRIG_DATA_SIZE_MASK                   0xc
-#define DMA_CH5_CTRL_TRIG_DATA_SIZE_SIZE_BYTE              0
-#define DMA_CH5_CTRL_TRIG_DATA_SIZE_SIZE_HALFWORD          1
-#define DMA_CH5_CTRL_TRIG_DATA_SIZE_SIZE_WORD              2
+#define DMA_CH5_CTRL_TRIG_DATA_SIZE_OFFSET                 2u
+#define DMA_CH5_CTRL_TRIG_DATA_SIZE_MASK                   0xcu
+#define DMA_CH5_CTRL_TRIG_DATA_SIZE_SIZE_BYTE              0u
+#define DMA_CH5_CTRL_TRIG_DATA_SIZE_SIZE_HALFWORD          1u
+#define DMA_CH5_CTRL_TRIG_DATA_SIZE_SIZE_WORD              2u
 
-#define DMA_CH5_CTRL_TRIG_HIGH_PRIORITY_OFFSET             1
-#define DMA_CH5_CTRL_TRIG_HIGH_PRIORITY_MASK               2
+#define DMA_CH5_CTRL_TRIG_HIGH_PRIORITY_OFFSET             1u
+#define DMA_CH5_CTRL_TRIG_HIGH_PRIORITY_MASK               2u
 
-#define DMA_CH5_CTRL_TRIG_EN_OFFSET                        0
-#define DMA_CH5_CTRL_TRIG_EN_MASK                          1
+#define DMA_CH5_CTRL_TRIG_EN_OFFSET                        0u
+#define DMA_CH5_CTRL_TRIG_EN_MASK                          1u
 
-#define DMA_CH6_CTRL_TRIG_AHB_ERROR_OFFSET                 31
-#define DMA_CH6_CTRL_TRIG_AHB_ERROR_MASK                   0x80000000
+#define DMA_CH6_CTRL_TRIG_AHB_ERROR_OFFSET                 31u
+#define DMA_CH6_CTRL_TRIG_AHB_ERROR_MASK                   0x80000000u
 
-#define DMA_CH6_CTRL_TRIG_READ_ERROR_OFFSET                30
-#define DMA_CH6_CTRL_TRIG_READ_ERROR_MASK                  0x40000000
+#define DMA_CH6_CTRL_TRIG_READ_ERROR_OFFSET                30u
+#define DMA_CH6_CTRL_TRIG_READ_ERROR_MASK                  0x40000000u
 
-#define DMA_CH6_CTRL_TRIG_WRITE_ERROR_OFFSET               29
-#define DMA_CH6_CTRL_TRIG_WRITE_ERROR_MASK                 0x20000000
+#define DMA_CH6_CTRL_TRIG_WRITE_ERROR_OFFSET               29u
+#define DMA_CH6_CTRL_TRIG_WRITE_ERROR_MASK                 0x20000000u
 
-#define DMA_CH6_CTRL_TRIG_BUSY_OFFSET                      24
-#define DMA_CH6_CTRL_TRIG_BUSY_MASK                        0x1000000
+#define DMA_CH6_CTRL_TRIG_BUSY_OFFSET                      24u
+#define DMA_CH6_CTRL_TRIG_BUSY_MASK                        0x1000000u
 
-#define DMA_CH6_CTRL_TRIG_SNIFF_EN_OFFSET                  23
-#define DMA_CH6_CTRL_TRIG_SNIFF_EN_MASK                    0x800000
+#define DMA_CH6_CTRL_TRIG_SNIFF_EN_OFFSET                  23u
+#define DMA_CH6_CTRL_TRIG_SNIFF_EN_MASK                    0x800000u
 
-#define DMA_CH6_CTRL_TRIG_BSWAP_OFFSET                     22
-#define DMA_CH6_CTRL_TRIG_BSWAP_MASK                       0x400000
+#define DMA_CH6_CTRL_TRIG_BSWAP_OFFSET                     22u
+#define DMA_CH6_CTRL_TRIG_BSWAP_MASK                       0x400000u
 
-#define DMA_CH6_CTRL_TRIG_IRQ_QUIET_OFFSET                 21
-#define DMA_CH6_CTRL_TRIG_IRQ_QUIET_MASK                   0x200000
+#define DMA_CH6_CTRL_TRIG_IRQ_QUIET_OFFSET                 21u
+#define DMA_CH6_CTRL_TRIG_IRQ_QUIET_MASK                   0x200000u
 
-#define DMA_CH6_CTRL_TRIG_TREQ_SEL_OFFSET                  15
-#define DMA_CH6_CTRL_TRIG_TREQ_SEL_MASK                    0x1f8000
-#define DMA_CH6_CTRL_TRIG_TREQ_SEL_TIMER0                  0x3b
-#define DMA_CH6_CTRL_TRIG_TREQ_SEL_TIMER1                  0x3c
-#define DMA_CH6_CTRL_TRIG_TREQ_SEL_TIMER2                  0x3d
-#define DMA_CH6_CTRL_TRIG_TREQ_SEL_TIMER3                  0x3e
-#define DMA_CH6_CTRL_TRIG_TREQ_SEL_PERMANENT               0x3f
+#define DMA_CH6_CTRL_TRIG_TREQ_SEL_OFFSET                  15u
+#define DMA_CH6_CTRL_TRIG_TREQ_SEL_MASK                    0x1f8000u
+#define DMA_CH6_CTRL_TRIG_TREQ_SEL_TIMER0                  0x3bu
+#define DMA_CH6_CTRL_TRIG_TREQ_SEL_TIMER1                  0x3cu
+#define DMA_CH6_CTRL_TRIG_TREQ_SEL_TIMER2                  0x3du
+#define DMA_CH6_CTRL_TRIG_TREQ_SEL_TIMER3                  0x3eu
+#define DMA_CH6_CTRL_TRIG_TREQ_SEL_PERMANENT               0x3fu
 
-#define DMA_CH6_CTRL_TRIG_CHAIN_TO_OFFSET                  11
-#define DMA_CH6_CTRL_TRIG_CHAIN_TO_MASK                    0x7800
+#define DMA_CH6_CTRL_TRIG_CHAIN_TO_OFFSET                  11u
+#define DMA_CH6_CTRL_TRIG_CHAIN_TO_MASK                    0x7800u
 
-#define DMA_CH6_CTRL_TRIG_RING_SEL_OFFSET                  10
-#define DMA_CH6_CTRL_TRIG_RING_SEL_MASK                    0x400
+#define DMA_CH6_CTRL_TRIG_RING_SEL_OFFSET                  10u
+#define DMA_CH6_CTRL_TRIG_RING_SEL_MASK                    0x400u
 
-#define DMA_CH6_CTRL_TRIG_RING_SIZE_OFFSET                 6
-#define DMA_CH6_CTRL_TRIG_RING_SIZE_MASK                   0x3c0
-#define DMA_CH6_CTRL_TRIG_RING_SIZE_RING_NONE              0
+#define DMA_CH6_CTRL_TRIG_RING_SIZE_OFFSET                 6u
+#define DMA_CH6_CTRL_TRIG_RING_SIZE_MASK                   0x3c0u
+#define DMA_CH6_CTRL_TRIG_RING_SIZE_RING_NONE              0u
 
-#define DMA_CH6_CTRL_TRIG_INCR_WRITE_OFFSET                5
-#define DMA_CH6_CTRL_TRIG_INCR_WRITE_MASK                  0x20
+#define DMA_CH6_CTRL_TRIG_INCR_WRITE_OFFSET                5u
+#define DMA_CH6_CTRL_TRIG_INCR_WRITE_MASK                  0x20u
 
-#define DMA_CH6_CTRL_TRIG_INCR_READ_OFFSET                 4
-#define DMA_CH6_CTRL_TRIG_INCR_READ_MASK                   0x10
+#define DMA_CH6_CTRL_TRIG_INCR_READ_OFFSET                 4u
+#define DMA_CH6_CTRL_TRIG_INCR_READ_MASK                   0x10u
 
-#define DMA_CH6_CTRL_TRIG_DATA_SIZE_OFFSET                 2
-#define DMA_CH6_CTRL_TRIG_DATA_SIZE_MASK                   0xc
-#define DMA_CH6_CTRL_TRIG_DATA_SIZE_SIZE_BYTE              0
-#define DMA_CH6_CTRL_TRIG_DATA_SIZE_SIZE_HALFWORD          1
-#define DMA_CH6_CTRL_TRIG_DATA_SIZE_SIZE_WORD              2
+#define DMA_CH6_CTRL_TRIG_DATA_SIZE_OFFSET                 2u
+#define DMA_CH6_CTRL_TRIG_DATA_SIZE_MASK                   0xcu
+#define DMA_CH6_CTRL_TRIG_DATA_SIZE_SIZE_BYTE              0u
+#define DMA_CH6_CTRL_TRIG_DATA_SIZE_SIZE_HALFWORD          1u
+#define DMA_CH6_CTRL_TRIG_DATA_SIZE_SIZE_WORD              2u
 
-#define DMA_CH6_CTRL_TRIG_HIGH_PRIORITY_OFFSET             1
-#define DMA_CH6_CTRL_TRIG_HIGH_PRIORITY_MASK               2
+#define DMA_CH6_CTRL_TRIG_HIGH_PRIORITY_OFFSET             1u
+#define DMA_CH6_CTRL_TRIG_HIGH_PRIORITY_MASK               2u
 
-#define DMA_CH6_CTRL_TRIG_EN_OFFSET                        0
-#define DMA_CH6_CTRL_TRIG_EN_MASK                          1
+#define DMA_CH6_CTRL_TRIG_EN_OFFSET                        0u
+#define DMA_CH6_CTRL_TRIG_EN_MASK                          1u
 
-#define DMA_CH7_CTRL_TRIG_AHB_ERROR_OFFSET                 31
-#define DMA_CH7_CTRL_TRIG_AHB_ERROR_MASK                   0x80000000
+#define DMA_CH7_CTRL_TRIG_AHB_ERROR_OFFSET                 31u
+#define DMA_CH7_CTRL_TRIG_AHB_ERROR_MASK                   0x80000000u
 
-#define DMA_CH7_CTRL_TRIG_READ_ERROR_OFFSET                30
-#define DMA_CH7_CTRL_TRIG_READ_ERROR_MASK                  0x40000000
+#define DMA_CH7_CTRL_TRIG_READ_ERROR_OFFSET                30u
+#define DMA_CH7_CTRL_TRIG_READ_ERROR_MASK                  0x40000000u
 
-#define DMA_CH7_CTRL_TRIG_WRITE_ERROR_OFFSET               29
-#define DMA_CH7_CTRL_TRIG_WRITE_ERROR_MASK                 0x20000000
+#define DMA_CH7_CTRL_TRIG_WRITE_ERROR_OFFSET               29u
+#define DMA_CH7_CTRL_TRIG_WRITE_ERROR_MASK                 0x20000000u
 
-#define DMA_CH7_CTRL_TRIG_BUSY_OFFSET                      24
-#define DMA_CH7_CTRL_TRIG_BUSY_MASK                        0x1000000
+#define DMA_CH7_CTRL_TRIG_BUSY_OFFSET                      24u
+#define DMA_CH7_CTRL_TRIG_BUSY_MASK                        0x1000000u
 
-#define DMA_CH7_CTRL_TRIG_SNIFF_EN_OFFSET                  23
-#define DMA_CH7_CTRL_TRIG_SNIFF_EN_MASK                    0x800000
+#define DMA_CH7_CTRL_TRIG_SNIFF_EN_OFFSET                  23u
+#define DMA_CH7_CTRL_TRIG_SNIFF_EN_MASK                    0x800000u
 
-#define DMA_CH7_CTRL_TRIG_BSWAP_OFFSET                     22
-#define DMA_CH7_CTRL_TRIG_BSWAP_MASK                       0x400000
+#define DMA_CH7_CTRL_TRIG_BSWAP_OFFSET                     22u
+#define DMA_CH7_CTRL_TRIG_BSWAP_MASK                       0x400000u
 
-#define DMA_CH7_CTRL_TRIG_IRQ_QUIET_OFFSET                 21
-#define DMA_CH7_CTRL_TRIG_IRQ_QUIET_MASK                   0x200000
+#define DMA_CH7_CTRL_TRIG_IRQ_QUIET_OFFSET                 21u
+#define DMA_CH7_CTRL_TRIG_IRQ_QUIET_MASK                   0x200000u
 
-#define DMA_CH7_CTRL_TRIG_TREQ_SEL_OFFSET                  15
-#define DMA_CH7_CTRL_TRIG_TREQ_SEL_MASK                    0x1f8000
-#define DMA_CH7_CTRL_TRIG_TREQ_SEL_TIMER0                  0x3b
-#define DMA_CH7_CTRL_TRIG_TREQ_SEL_TIMER1                  0x3c
-#define DMA_CH7_CTRL_TRIG_TREQ_SEL_TIMER2                  0x3d
-#define DMA_CH7_CTRL_TRIG_TREQ_SEL_TIMER3                  0x3e
-#define DMA_CH7_CTRL_TRIG_TREQ_SEL_PERMANENT               0x3f
+#define DMA_CH7_CTRL_TRIG_TREQ_SEL_OFFSET                  15u
+#define DMA_CH7_CTRL_TRIG_TREQ_SEL_MASK                    0x1f8000u
+#define DMA_CH7_CTRL_TRIG_TREQ_SEL_TIMER0                  0x3bu
+#define DMA_CH7_CTRL_TRIG_TREQ_SEL_TIMER1                  0x3cu
+#define DMA_CH7_CTRL_TRIG_TREQ_SEL_TIMER2                  0x3du
+#define DMA_CH7_CTRL_TRIG_TREQ_SEL_TIMER3                  0x3eu
+#define DMA_CH7_CTRL_TRIG_TREQ_SEL_PERMANENT               0x3fu
 
-#define DMA_CH7_CTRL_TRIG_CHAIN_TO_OFFSET                  11
-#define DMA_CH7_CTRL_TRIG_CHAIN_TO_MASK                    0x7800
+#define DMA_CH7_CTRL_TRIG_CHAIN_TO_OFFSET                  11u
+#define DMA_CH7_CTRL_TRIG_CHAIN_TO_MASK                    0x7800u
 
-#define DMA_CH7_CTRL_TRIG_RING_SEL_OFFSET                  10
-#define DMA_CH7_CTRL_TRIG_RING_SEL_MASK                    0x400
+#define DMA_CH7_CTRL_TRIG_RING_SEL_OFFSET                  10u
+#define DMA_CH7_CTRL_TRIG_RING_SEL_MASK                    0x400u
 
-#define DMA_CH7_CTRL_TRIG_RING_SIZE_OFFSET                 6
-#define DMA_CH7_CTRL_TRIG_RING_SIZE_MASK                   0x3c0
-#define DMA_CH7_CTRL_TRIG_RING_SIZE_RING_NONE              0
+#define DMA_CH7_CTRL_TRIG_RING_SIZE_OFFSET                 6u
+#define DMA_CH7_CTRL_TRIG_RING_SIZE_MASK                   0x3c0u
+#define DMA_CH7_CTRL_TRIG_RING_SIZE_RING_NONE              0u
 
-#define DMA_CH7_CTRL_TRIG_INCR_WRITE_OFFSET                5
-#define DMA_CH7_CTRL_TRIG_INCR_WRITE_MASK                  0x20
+#define DMA_CH7_CTRL_TRIG_INCR_WRITE_OFFSET                5u
+#define DMA_CH7_CTRL_TRIG_INCR_WRITE_MASK                  0x20u
 
-#define DMA_CH7_CTRL_TRIG_INCR_READ_OFFSET                 4
-#define DMA_CH7_CTRL_TRIG_INCR_READ_MASK                   0x10
+#define DMA_CH7_CTRL_TRIG_INCR_READ_OFFSET                 4u
+#define DMA_CH7_CTRL_TRIG_INCR_READ_MASK                   0x10u
 
-#define DMA_CH7_CTRL_TRIG_DATA_SIZE_OFFSET                 2
-#define DMA_CH7_CTRL_TRIG_DATA_SIZE_MASK                   0xc
-#define DMA_CH7_CTRL_TRIG_DATA_SIZE_SIZE_BYTE              0
-#define DMA_CH7_CTRL_TRIG_DATA_SIZE_SIZE_HALFWORD          1
-#define DMA_CH7_CTRL_TRIG_DATA_SIZE_SIZE_WORD              2
+#define DMA_CH7_CTRL_TRIG_DATA_SIZE_OFFSET                 2u
+#define DMA_CH7_CTRL_TRIG_DATA_SIZE_MASK                   0xcu
+#define DMA_CH7_CTRL_TRIG_DATA_SIZE_SIZE_BYTE              0u
+#define DMA_CH7_CTRL_TRIG_DATA_SIZE_SIZE_HALFWORD          1u
+#define DMA_CH7_CTRL_TRIG_DATA_SIZE_SIZE_WORD              2u
 
-#define DMA_CH7_CTRL_TRIG_HIGH_PRIORITY_OFFSET             1
-#define DMA_CH7_CTRL_TRIG_HIGH_PRIORITY_MASK               2
+#define DMA_CH7_CTRL_TRIG_HIGH_PRIORITY_OFFSET             1u
+#define DMA_CH7_CTRL_TRIG_HIGH_PRIORITY_MASK               2u
 
-#define DMA_CH7_CTRL_TRIG_EN_OFFSET                        0
-#define DMA_CH7_CTRL_TRIG_EN_MASK                          1
+#define DMA_CH7_CTRL_TRIG_EN_OFFSET                        0u
+#define DMA_CH7_CTRL_TRIG_EN_MASK                          1u
 
-#define DMA_CH8_CTRL_TRIG_AHB_ERROR_OFFSET                 31
-#define DMA_CH8_CTRL_TRIG_AHB_ERROR_MASK                   0x80000000
+#define DMA_CH8_CTRL_TRIG_AHB_ERROR_OFFSET                 31u
+#define DMA_CH8_CTRL_TRIG_AHB_ERROR_MASK                   0x80000000u
 
-#define DMA_CH8_CTRL_TRIG_READ_ERROR_OFFSET                30
-#define DMA_CH8_CTRL_TRIG_READ_ERROR_MASK                  0x40000000
+#define DMA_CH8_CTRL_TRIG_READ_ERROR_OFFSET                30u
+#define DMA_CH8_CTRL_TRIG_READ_ERROR_MASK                  0x40000000u
 
-#define DMA_CH8_CTRL_TRIG_WRITE_ERROR_OFFSET               29
-#define DMA_CH8_CTRL_TRIG_WRITE_ERROR_MASK                 0x20000000
+#define DMA_CH8_CTRL_TRIG_WRITE_ERROR_OFFSET               29u
+#define DMA_CH8_CTRL_TRIG_WRITE_ERROR_MASK                 0x20000000u
 
-#define DMA_CH8_CTRL_TRIG_BUSY_OFFSET                      24
-#define DMA_CH8_CTRL_TRIG_BUSY_MASK                        0x1000000
+#define DMA_CH8_CTRL_TRIG_BUSY_OFFSET                      24u
+#define DMA_CH8_CTRL_TRIG_BUSY_MASK                        0x1000000u
 
-#define DMA_CH8_CTRL_TRIG_SNIFF_EN_OFFSET                  23
-#define DMA_CH8_CTRL_TRIG_SNIFF_EN_MASK                    0x800000
+#define DMA_CH8_CTRL_TRIG_SNIFF_EN_OFFSET                  23u
+#define DMA_CH8_CTRL_TRIG_SNIFF_EN_MASK                    0x800000u
 
-#define DMA_CH8_CTRL_TRIG_BSWAP_OFFSET                     22
-#define DMA_CH8_CTRL_TRIG_BSWAP_MASK                       0x400000
+#define DMA_CH8_CTRL_TRIG_BSWAP_OFFSET                     22u
+#define DMA_CH8_CTRL_TRIG_BSWAP_MASK                       0x400000u
 
-#define DMA_CH8_CTRL_TRIG_IRQ_QUIET_OFFSET                 21
-#define DMA_CH8_CTRL_TRIG_IRQ_QUIET_MASK                   0x200000
+#define DMA_CH8_CTRL_TRIG_IRQ_QUIET_OFFSET                 21u
+#define DMA_CH8_CTRL_TRIG_IRQ_QUIET_MASK                   0x200000u
 
-#define DMA_CH8_CTRL_TRIG_TREQ_SEL_OFFSET                  15
-#define DMA_CH8_CTRL_TRIG_TREQ_SEL_MASK                    0x1f8000
-#define DMA_CH8_CTRL_TRIG_TREQ_SEL_TIMER0                  0x3b
-#define DMA_CH8_CTRL_TRIG_TREQ_SEL_TIMER1                  0x3c
-#define DMA_CH8_CTRL_TRIG_TREQ_SEL_TIMER2                  0x3d
-#define DMA_CH8_CTRL_TRIG_TREQ_SEL_TIMER3                  0x3e
-#define DMA_CH8_CTRL_TRIG_TREQ_SEL_PERMANENT               0x3f
+#define DMA_CH8_CTRL_TRIG_TREQ_SEL_OFFSET                  15u
+#define DMA_CH8_CTRL_TRIG_TREQ_SEL_MASK                    0x1f8000u
+#define DMA_CH8_CTRL_TRIG_TREQ_SEL_TIMER0                  0x3bu
+#define DMA_CH8_CTRL_TRIG_TREQ_SEL_TIMER1                  0x3cu
+#define DMA_CH8_CTRL_TRIG_TREQ_SEL_TIMER2                  0x3du
+#define DMA_CH8_CTRL_TRIG_TREQ_SEL_TIMER3                  0x3eu
+#define DMA_CH8_CTRL_TRIG_TREQ_SEL_PERMANENT               0x3fu
 
-#define DMA_CH8_CTRL_TRIG_CHAIN_TO_OFFSET                  11
-#define DMA_CH8_CTRL_TRIG_CHAIN_TO_MASK                    0x7800
+#define DMA_CH8_CTRL_TRIG_CHAIN_TO_OFFSET                  11u
+#define DMA_CH8_CTRL_TRIG_CHAIN_TO_MASK                    0x7800u
 
-#define DMA_CH8_CTRL_TRIG_RING_SEL_OFFSET                  10
-#define DMA_CH8_CTRL_TRIG_RING_SEL_MASK                    0x400
+#define DMA_CH8_CTRL_TRIG_RING_SEL_OFFSET                  10u
+#define DMA_CH8_CTRL_TRIG_RING_SEL_MASK                    0x400u
 
-#define DMA_CH8_CTRL_TRIG_RING_SIZE_OFFSET                 6
-#define DMA_CH8_CTRL_TRIG_RING_SIZE_MASK                   0x3c0
-#define DMA_CH8_CTRL_TRIG_RING_SIZE_RING_NONE              0
+#define DMA_CH8_CTRL_TRIG_RING_SIZE_OFFSET                 6u
+#define DMA_CH8_CTRL_TRIG_RING_SIZE_MASK                   0x3c0u
+#define DMA_CH8_CTRL_TRIG_RING_SIZE_RING_NONE              0u
 
-#define DMA_CH8_CTRL_TRIG_INCR_WRITE_OFFSET                5
-#define DMA_CH8_CTRL_TRIG_INCR_WRITE_MASK                  0x20
+#define DMA_CH8_CTRL_TRIG_INCR_WRITE_OFFSET                5u
+#define DMA_CH8_CTRL_TRIG_INCR_WRITE_MASK                  0x20u
 
-#define DMA_CH8_CTRL_TRIG_INCR_READ_OFFSET                 4
-#define DMA_CH8_CTRL_TRIG_INCR_READ_MASK                   0x10
+#define DMA_CH8_CTRL_TRIG_INCR_READ_OFFSET                 4u
+#define DMA_CH8_CTRL_TRIG_INCR_READ_MASK                   0x10u
 
-#define DMA_CH8_CTRL_TRIG_DATA_SIZE_OFFSET                 2
-#define DMA_CH8_CTRL_TRIG_DATA_SIZE_MASK                   0xc
-#define DMA_CH8_CTRL_TRIG_DATA_SIZE_SIZE_BYTE              0
-#define DMA_CH8_CTRL_TRIG_DATA_SIZE_SIZE_HALFWORD          1
-#define DMA_CH8_CTRL_TRIG_DATA_SIZE_SIZE_WORD              2
+#define DMA_CH8_CTRL_TRIG_DATA_SIZE_OFFSET                 2u
+#define DMA_CH8_CTRL_TRIG_DATA_SIZE_MASK                   0xcu
+#define DMA_CH8_CTRL_TRIG_DATA_SIZE_SIZE_BYTE              0u
+#define DMA_CH8_CTRL_TRIG_DATA_SIZE_SIZE_HALFWORD          1u
+#define DMA_CH8_CTRL_TRIG_DATA_SIZE_SIZE_WORD              2u
 
-#define DMA_CH8_CTRL_TRIG_HIGH_PRIORITY_OFFSET             1
-#define DMA_CH8_CTRL_TRIG_HIGH_PRIORITY_MASK               2
+#define DMA_CH8_CTRL_TRIG_HIGH_PRIORITY_OFFSET             1u
+#define DMA_CH8_CTRL_TRIG_HIGH_PRIORITY_MASK               2u
 
-#define DMA_CH8_CTRL_TRIG_EN_OFFSET                        0
-#define DMA_CH8_CTRL_TRIG_EN_MASK                          1
+#define DMA_CH8_CTRL_TRIG_EN_OFFSET                        0u
+#define DMA_CH8_CTRL_TRIG_EN_MASK                          1u
 
-#define DMA_CH9_CTRL_TRIG_AHB_ERROR_OFFSET                 31
-#define DMA_CH9_CTRL_TRIG_AHB_ERROR_MASK                   0x80000000
+#define DMA_CH9_CTRL_TRIG_AHB_ERROR_OFFSET                 31u
+#define DMA_CH9_CTRL_TRIG_AHB_ERROR_MASK                   0x80000000u
 
-#define DMA_CH9_CTRL_TRIG_READ_ERROR_OFFSET                30
-#define DMA_CH9_CTRL_TRIG_READ_ERROR_MASK                  0x40000000
+#define DMA_CH9_CTRL_TRIG_READ_ERROR_OFFSET                30u
+#define DMA_CH9_CTRL_TRIG_READ_ERROR_MASK                  0x40000000u
 
-#define DMA_CH9_CTRL_TRIG_WRITE_ERROR_OFFSET               29
-#define DMA_CH9_CTRL_TRIG_WRITE_ERROR_MASK                 0x20000000
+#define DMA_CH9_CTRL_TRIG_WRITE_ERROR_OFFSET               29u
+#define DMA_CH9_CTRL_TRIG_WRITE_ERROR_MASK                 0x20000000u
 
-#define DMA_CH9_CTRL_TRIG_BUSY_OFFSET                      24
-#define DMA_CH9_CTRL_TRIG_BUSY_MASK                        0x1000000
+#define DMA_CH9_CTRL_TRIG_BUSY_OFFSET                      24u
+#define DMA_CH9_CTRL_TRIG_BUSY_MASK                        0x1000000u
 
-#define DMA_CH9_CTRL_TRIG_SNIFF_EN_OFFSET                  23
-#define DMA_CH9_CTRL_TRIG_SNIFF_EN_MASK                    0x800000
+#define DMA_CH9_CTRL_TRIG_SNIFF_EN_OFFSET                  23u
+#define DMA_CH9_CTRL_TRIG_SNIFF_EN_MASK                    0x800000u
 
-#define DMA_CH9_CTRL_TRIG_BSWAP_OFFSET                     22
-#define DMA_CH9_CTRL_TRIG_BSWAP_MASK                       0x400000
+#define DMA_CH9_CTRL_TRIG_BSWAP_OFFSET                     22u
+#define DMA_CH9_CTRL_TRIG_BSWAP_MASK                       0x400000u
 
-#define DMA_CH9_CTRL_TRIG_IRQ_QUIET_OFFSET                 21
-#define DMA_CH9_CTRL_TRIG_IRQ_QUIET_MASK                   0x200000
+#define DMA_CH9_CTRL_TRIG_IRQ_QUIET_OFFSET                 21u
+#define DMA_CH9_CTRL_TRIG_IRQ_QUIET_MASK                   0x200000u
 
-#define DMA_CH9_CTRL_TRIG_TREQ_SEL_OFFSET                  15
-#define DMA_CH9_CTRL_TRIG_TREQ_SEL_MASK                    0x1f8000
-#define DMA_CH9_CTRL_TRIG_TREQ_SEL_TIMER0                  0x3b
-#define DMA_CH9_CTRL_TRIG_TREQ_SEL_TIMER1                  0x3c
-#define DMA_CH9_CTRL_TRIG_TREQ_SEL_TIMER2                  0x3d
-#define DMA_CH9_CTRL_TRIG_TREQ_SEL_TIMER3                  0x3e
-#define DMA_CH9_CTRL_TRIG_TREQ_SEL_PERMANENT               0x3f
+#define DMA_CH9_CTRL_TRIG_TREQ_SEL_OFFSET                  15u
+#define DMA_CH9_CTRL_TRIG_TREQ_SEL_MASK                    0x1f8000u
+#define DMA_CH9_CTRL_TRIG_TREQ_SEL_TIMER0                  0x3bu
+#define DMA_CH9_CTRL_TRIG_TREQ_SEL_TIMER1                  0x3cu
+#define DMA_CH9_CTRL_TRIG_TREQ_SEL_TIMER2                  0x3du
+#define DMA_CH9_CTRL_TRIG_TREQ_SEL_TIMER3                  0x3eu
+#define DMA_CH9_CTRL_TRIG_TREQ_SEL_PERMANENT               0x3fu
 
-#define DMA_CH9_CTRL_TRIG_CHAIN_TO_OFFSET                  11
-#define DMA_CH9_CTRL_TRIG_CHAIN_TO_MASK                    0x7800
+#define DMA_CH9_CTRL_TRIG_CHAIN_TO_OFFSET                  11u
+#define DMA_CH9_CTRL_TRIG_CHAIN_TO_MASK                    0x7800u
 
-#define DMA_CH9_CTRL_TRIG_RING_SEL_OFFSET                  10
-#define DMA_CH9_CTRL_TRIG_RING_SEL_MASK                    0x400
+#define DMA_CH9_CTRL_TRIG_RING_SEL_OFFSET                  10u
+#define DMA_CH9_CTRL_TRIG_RING_SEL_MASK                    0x400u
 
-#define DMA_CH9_CTRL_TRIG_RING_SIZE_OFFSET                 6
-#define DMA_CH9_CTRL_TRIG_RING_SIZE_MASK                   0x3c0
-#define DMA_CH9_CTRL_TRIG_RING_SIZE_RING_NONE              0
+#define DMA_CH9_CTRL_TRIG_RING_SIZE_OFFSET                 6u
+#define DMA_CH9_CTRL_TRIG_RING_SIZE_MASK                   0x3c0u
+#define DMA_CH9_CTRL_TRIG_RING_SIZE_RING_NONE              0u
 
-#define DMA_CH9_CTRL_TRIG_INCR_WRITE_OFFSET                5
-#define DMA_CH9_CTRL_TRIG_INCR_WRITE_MASK                  0x20
+#define DMA_CH9_CTRL_TRIG_INCR_WRITE_OFFSET                5u
+#define DMA_CH9_CTRL_TRIG_INCR_WRITE_MASK                  0x20u
 
-#define DMA_CH9_CTRL_TRIG_INCR_READ_OFFSET                 4
-#define DMA_CH9_CTRL_TRIG_INCR_READ_MASK                   0x10
+#define DMA_CH9_CTRL_TRIG_INCR_READ_OFFSET                 4u
+#define DMA_CH9_CTRL_TRIG_INCR_READ_MASK                   0x10u
 
-#define DMA_CH9_CTRL_TRIG_DATA_SIZE_OFFSET                 2
-#define DMA_CH9_CTRL_TRIG_DATA_SIZE_MASK                   0xc
-#define DMA_CH9_CTRL_TRIG_DATA_SIZE_SIZE_BYTE              0
-#define DMA_CH9_CTRL_TRIG_DATA_SIZE_SIZE_HALFWORD          1
-#define DMA_CH9_CTRL_TRIG_DATA_SIZE_SIZE_WORD              2
+#define DMA_CH9_CTRL_TRIG_DATA_SIZE_OFFSET                 2u
+#define DMA_CH9_CTRL_TRIG_DATA_SIZE_MASK                   0xcu
+#define DMA_CH9_CTRL_TRIG_DATA_SIZE_SIZE_BYTE              0u
+#define DMA_CH9_CTRL_TRIG_DATA_SIZE_SIZE_HALFWORD          1u
+#define DMA_CH9_CTRL_TRIG_DATA_SIZE_SIZE_WORD              2u
 
-#define DMA_CH9_CTRL_TRIG_HIGH_PRIORITY_OFFSET             1
-#define DMA_CH9_CTRL_TRIG_HIGH_PRIORITY_MASK               2
+#define DMA_CH9_CTRL_TRIG_HIGH_PRIORITY_OFFSET             1u
+#define DMA_CH9_CTRL_TRIG_HIGH_PRIORITY_MASK               2u
 
-#define DMA_CH9_CTRL_TRIG_EN_OFFSET                        0
-#define DMA_CH9_CTRL_TRIG_EN_MASK                          1
+#define DMA_CH9_CTRL_TRIG_EN_OFFSET                        0u
+#define DMA_CH9_CTRL_TRIG_EN_MASK                          1u
 
-#define DMA_CH10_CTRL_TRIG_AHB_ERROR_OFFSET                31
-#define DMA_CH10_CTRL_TRIG_AHB_ERROR_MASK                  0x80000000
+#define DMA_CH10_CTRL_TRIG_AHB_ERROR_OFFSET                31u
+#define DMA_CH10_CTRL_TRIG_AHB_ERROR_MASK                  0x80000000u
 
-#define DMA_CH10_CTRL_TRIG_READ_ERROR_OFFSET               30
-#define DMA_CH10_CTRL_TRIG_READ_ERROR_MASK                 0x40000000
+#define DMA_CH10_CTRL_TRIG_READ_ERROR_OFFSET               30u
+#define DMA_CH10_CTRL_TRIG_READ_ERROR_MASK                 0x40000000u
 
-#define DMA_CH10_CTRL_TRIG_WRITE_ERROR_OFFSET              29
-#define DMA_CH10_CTRL_TRIG_WRITE_ERROR_MASK                0x20000000
+#define DMA_CH10_CTRL_TRIG_WRITE_ERROR_OFFSET              29u
+#define DMA_CH10_CTRL_TRIG_WRITE_ERROR_MASK                0x20000000u
 
-#define DMA_CH10_CTRL_TRIG_BUSY_OFFSET                     24
-#define DMA_CH10_CTRL_TRIG_BUSY_MASK                       0x1000000
+#define DMA_CH10_CTRL_TRIG_BUSY_OFFSET                     24u
+#define DMA_CH10_CTRL_TRIG_BUSY_MASK                       0x1000000u
 
-#define DMA_CH10_CTRL_TRIG_SNIFF_EN_OFFSET                 23
-#define DMA_CH10_CTRL_TRIG_SNIFF_EN_MASK                   0x800000
+#define DMA_CH10_CTRL_TRIG_SNIFF_EN_OFFSET                 23u
+#define DMA_CH10_CTRL_TRIG_SNIFF_EN_MASK                   0x800000u
 
-#define DMA_CH10_CTRL_TRIG_BSWAP_OFFSET                    22
-#define DMA_CH10_CTRL_TRIG_BSWAP_MASK                      0x400000
+#define DMA_CH10_CTRL_TRIG_BSWAP_OFFSET                    22u
+#define DMA_CH10_CTRL_TRIG_BSWAP_MASK                      0x400000u
 
-#define DMA_CH10_CTRL_TRIG_IRQ_QUIET_OFFSET                21
-#define DMA_CH10_CTRL_TRIG_IRQ_QUIET_MASK                  0x200000
+#define DMA_CH10_CTRL_TRIG_IRQ_QUIET_OFFSET                21u
+#define DMA_CH10_CTRL_TRIG_IRQ_QUIET_MASK                  0x200000u
 
-#define DMA_CH10_CTRL_TRIG_TREQ_SEL_OFFSET                 15
-#define DMA_CH10_CTRL_TRIG_TREQ_SEL_MASK                   0x1f8000
-#define DMA_CH10_CTRL_TRIG_TREQ_SEL_TIMER0                 0x3b
-#define DMA_CH10_CTRL_TRIG_TREQ_SEL_TIMER1                 0x3c
-#define DMA_CH10_CTRL_TRIG_TREQ_SEL_TIMER2                 0x3d
-#define DMA_CH10_CTRL_TRIG_TREQ_SEL_TIMER3                 0x3e
-#define DMA_CH10_CTRL_TRIG_TREQ_SEL_PERMANENT              0x3f
+#define DMA_CH10_CTRL_TRIG_TREQ_SEL_OFFSET                 15u
+#define DMA_CH10_CTRL_TRIG_TREQ_SEL_MASK                   0x1f8000u
+#define DMA_CH10_CTRL_TRIG_TREQ_SEL_TIMER0                 0x3bu
+#define DMA_CH10_CTRL_TRIG_TREQ_SEL_TIMER1                 0x3cu
+#define DMA_CH10_CTRL_TRIG_TREQ_SEL_TIMER2                 0x3du
+#define DMA_CH10_CTRL_TRIG_TREQ_SEL_TIMER3                 0x3eu
+#define DMA_CH10_CTRL_TRIG_TREQ_SEL_PERMANENT              0x3fu
 
-#define DMA_CH10_CTRL_TRIG_CHAIN_TO_OFFSET                 11
-#define DMA_CH10_CTRL_TRIG_CHAIN_TO_MASK                   0x7800
+#define DMA_CH10_CTRL_TRIG_CHAIN_TO_OFFSET                 11u
+#define DMA_CH10_CTRL_TRIG_CHAIN_TO_MASK                   0x7800u
 
-#define DMA_CH10_CTRL_TRIG_RING_SEL_OFFSET                 10
-#define DMA_CH10_CTRL_TRIG_RING_SEL_MASK                   0x400
+#define DMA_CH10_CTRL_TRIG_RING_SEL_OFFSET                 10u
+#define DMA_CH10_CTRL_TRIG_RING_SEL_MASK                   0x400u
 
-#define DMA_CH10_CTRL_TRIG_RING_SIZE_OFFSET                6
-#define DMA_CH10_CTRL_TRIG_RING_SIZE_MASK                  0x3c0
-#define DMA_CH10_CTRL_TRIG_RING_SIZE_RING_NONE             0
+#define DMA_CH10_CTRL_TRIG_RING_SIZE_OFFSET                6u
+#define DMA_CH10_CTRL_TRIG_RING_SIZE_MASK                  0x3c0u
+#define DMA_CH10_CTRL_TRIG_RING_SIZE_RING_NONE             0u
 
-#define DMA_CH10_CTRL_TRIG_INCR_WRITE_OFFSET               5
-#define DMA_CH10_CTRL_TRIG_INCR_WRITE_MASK                 0x20
+#define DMA_CH10_CTRL_TRIG_INCR_WRITE_OFFSET               5u
+#define DMA_CH10_CTRL_TRIG_INCR_WRITE_MASK                 0x20u
 
-#define DMA_CH10_CTRL_TRIG_INCR_READ_OFFSET                4
-#define DMA_CH10_CTRL_TRIG_INCR_READ_MASK                  0x10
+#define DMA_CH10_CTRL_TRIG_INCR_READ_OFFSET                4u
+#define DMA_CH10_CTRL_TRIG_INCR_READ_MASK                  0x10u
 
-#define DMA_CH10_CTRL_TRIG_DATA_SIZE_OFFSET                2
-#define DMA_CH10_CTRL_TRIG_DATA_SIZE_MASK                  0xc
-#define DMA_CH10_CTRL_TRIG_DATA_SIZE_SIZE_BYTE             0
-#define DMA_CH10_CTRL_TRIG_DATA_SIZE_SIZE_HALFWORD         1
-#define DMA_CH10_CTRL_TRIG_DATA_SIZE_SIZE_WORD             2
+#define DMA_CH10_CTRL_TRIG_DATA_SIZE_OFFSET                2u
+#define DMA_CH10_CTRL_TRIG_DATA_SIZE_MASK                  0xcu
+#define DMA_CH10_CTRL_TRIG_DATA_SIZE_SIZE_BYTE             0u
+#define DMA_CH10_CTRL_TRIG_DATA_SIZE_SIZE_HALFWORD         1u
+#define DMA_CH10_CTRL_TRIG_DATA_SIZE_SIZE_WORD             2u
 
-#define DMA_CH10_CTRL_TRIG_HIGH_PRIORITY_OFFSET            1
-#define DMA_CH10_CTRL_TRIG_HIGH_PRIORITY_MASK              2
+#define DMA_CH10_CTRL_TRIG_HIGH_PRIORITY_OFFSET            1u
+#define DMA_CH10_CTRL_TRIG_HIGH_PRIORITY_MASK              2u
 
-#define DMA_CH10_CTRL_TRIG_EN_OFFSET                       0
-#define DMA_CH10_CTRL_TRIG_EN_MASK                         1
+#define DMA_CH10_CTRL_TRIG_EN_OFFSET                       0u
+#define DMA_CH10_CTRL_TRIG_EN_MASK                         1u
 
-#define DMA_CH11_CTRL_TRIG_AHB_ERROR_OFFSET                31
-#define DMA_CH11_CTRL_TRIG_AHB_ERROR_MASK                  0x80000000
+#define DMA_CH11_CTRL_TRIG_AHB_ERROR_OFFSET                31u
+#define DMA_CH11_CTRL_TRIG_AHB_ERROR_MASK                  0x80000000u
 
-#define DMA_CH11_CTRL_TRIG_READ_ERROR_OFFSET               30
-#define DMA_CH11_CTRL_TRIG_READ_ERROR_MASK                 0x40000000
+#define DMA_CH11_CTRL_TRIG_READ_ERROR_OFFSET               30u
+#define DMA_CH11_CTRL_TRIG_READ_ERROR_MASK                 0x40000000u
 
-#define DMA_CH11_CTRL_TRIG_WRITE_ERROR_OFFSET              29
-#define DMA_CH11_CTRL_TRIG_WRITE_ERROR_MASK                0x20000000
+#define DMA_CH11_CTRL_TRIG_WRITE_ERROR_OFFSET              29u
+#define DMA_CH11_CTRL_TRIG_WRITE_ERROR_MASK                0x20000000u
 
-#define DMA_CH11_CTRL_TRIG_BUSY_OFFSET                     24
-#define DMA_CH11_CTRL_TRIG_BUSY_MASK                       0x1000000
+#define DMA_CH11_CTRL_TRIG_BUSY_OFFSET                     24u
+#define DMA_CH11_CTRL_TRIG_BUSY_MASK                       0x1000000u
 
-#define DMA_CH11_CTRL_TRIG_SNIFF_EN_OFFSET                 23
-#define DMA_CH11_CTRL_TRIG_SNIFF_EN_MASK                   0x800000
+#define DMA_CH11_CTRL_TRIG_SNIFF_EN_OFFSET                 23u
+#define DMA_CH11_CTRL_TRIG_SNIFF_EN_MASK                   0x800000u
 
-#define DMA_CH11_CTRL_TRIG_BSWAP_OFFSET                    22
-#define DMA_CH11_CTRL_TRIG_BSWAP_MASK                      0x400000
+#define DMA_CH11_CTRL_TRIG_BSWAP_OFFSET                    22u
+#define DMA_CH11_CTRL_TRIG_BSWAP_MASK                      0x400000u
 
-#define DMA_CH11_CTRL_TRIG_IRQ_QUIET_OFFSET                21
-#define DMA_CH11_CTRL_TRIG_IRQ_QUIET_MASK                  0x200000
+#define DMA_CH11_CTRL_TRIG_IRQ_QUIET_OFFSET                21u
+#define DMA_CH11_CTRL_TRIG_IRQ_QUIET_MASK                  0x200000u
 
-#define DMA_CH11_CTRL_TRIG_TREQ_SEL_OFFSET                 15
-#define DMA_CH11_CTRL_TRIG_TREQ_SEL_MASK                   0x1f8000
-#define DMA_CH11_CTRL_TRIG_TREQ_SEL_TIMER0                 0x3b
-#define DMA_CH11_CTRL_TRIG_TREQ_SEL_TIMER1                 0x3c
-#define DMA_CH11_CTRL_TRIG_TREQ_SEL_TIMER2                 0x3d
-#define DMA_CH11_CTRL_TRIG_TREQ_SEL_TIMER3                 0x3e
-#define DMA_CH11_CTRL_TRIG_TREQ_SEL_PERMANENT              0x3f
+#define DMA_CH11_CTRL_TRIG_TREQ_SEL_OFFSET                 15u
+#define DMA_CH11_CTRL_TRIG_TREQ_SEL_MASK                   0x1f8000u
+#define DMA_CH11_CTRL_TRIG_TREQ_SEL_TIMER0                 0x3bu
+#define DMA_CH11_CTRL_TRIG_TREQ_SEL_TIMER1                 0x3cu
+#define DMA_CH11_CTRL_TRIG_TREQ_SEL_TIMER2                 0x3du
+#define DMA_CH11_CTRL_TRIG_TREQ_SEL_TIMER3                 0x3eu
+#define DMA_CH11_CTRL_TRIG_TREQ_SEL_PERMANENT              0x3fu
 
-#define DMA_CH11_CTRL_TRIG_CHAIN_TO_OFFSET                 11
-#define DMA_CH11_CTRL_TRIG_CHAIN_TO_MASK                   0x7800
+#define DMA_CH11_CTRL_TRIG_CHAIN_TO_OFFSET                 11u
+#define DMA_CH11_CTRL_TRIG_CHAIN_TO_MASK                   0x7800u
 
-#define DMA_CH11_CTRL_TRIG_RING_SEL_OFFSET                 10
-#define DMA_CH11_CTRL_TRIG_RING_SEL_MASK                   0x400
+#define DMA_CH11_CTRL_TRIG_RING_SEL_OFFSET                 10u
+#define DMA_CH11_CTRL_TRIG_RING_SEL_MASK                   0x400u
 
-#define DMA_CH11_CTRL_TRIG_RING_SIZE_OFFSET                6
-#define DMA_CH11_CTRL_TRIG_RING_SIZE_MASK                  0x3c0
-#define DMA_CH11_CTRL_TRIG_RING_SIZE_RING_NONE             0
+#define DMA_CH11_CTRL_TRIG_RING_SIZE_OFFSET                6u
+#define DMA_CH11_CTRL_TRIG_RING_SIZE_MASK                  0x3c0u
+#define DMA_CH11_CTRL_TRIG_RING_SIZE_RING_NONE             0u
 
-#define DMA_CH11_CTRL_TRIG_INCR_WRITE_OFFSET               5
-#define DMA_CH11_CTRL_TRIG_INCR_WRITE_MASK                 0x20
+#define DMA_CH11_CTRL_TRIG_INCR_WRITE_OFFSET               5u
+#define DMA_CH11_CTRL_TRIG_INCR_WRITE_MASK                 0x20u
 
-#define DMA_CH11_CTRL_TRIG_INCR_READ_OFFSET                4
-#define DMA_CH11_CTRL_TRIG_INCR_READ_MASK                  0x10
+#define DMA_CH11_CTRL_TRIG_INCR_READ_OFFSET                4u
+#define DMA_CH11_CTRL_TRIG_INCR_READ_MASK                  0x10u
 
-#define DMA_CH11_CTRL_TRIG_DATA_SIZE_OFFSET                2
-#define DMA_CH11_CTRL_TRIG_DATA_SIZE_MASK                  0xc
-#define DMA_CH11_CTRL_TRIG_DATA_SIZE_SIZE_BYTE             0
-#define DMA_CH11_CTRL_TRIG_DATA_SIZE_SIZE_HALFWORD         1
-#define DMA_CH11_CTRL_TRIG_DATA_SIZE_SIZE_WORD             2
+#define DMA_CH11_CTRL_TRIG_DATA_SIZE_OFFSET                2u
+#define DMA_CH11_CTRL_TRIG_DATA_SIZE_MASK                  0xcu
+#define DMA_CH11_CTRL_TRIG_DATA_SIZE_SIZE_BYTE             0u
+#define DMA_CH11_CTRL_TRIG_DATA_SIZE_SIZE_HALFWORD         1u
+#define DMA_CH11_CTRL_TRIG_DATA_SIZE_SIZE_WORD             2u
 
-#define DMA_CH11_CTRL_TRIG_HIGH_PRIORITY_OFFSET            1
-#define DMA_CH11_CTRL_TRIG_HIGH_PRIORITY_MASK              2
+#define DMA_CH11_CTRL_TRIG_HIGH_PRIORITY_OFFSET            1u
+#define DMA_CH11_CTRL_TRIG_HIGH_PRIORITY_MASK              2u
 
-#define DMA_CH11_CTRL_TRIG_EN_OFFSET                       0
-#define DMA_CH11_CTRL_TRIG_EN_MASK                         1
+#define DMA_CH11_CTRL_TRIG_EN_OFFSET                       0u
+#define DMA_CH11_CTRL_TRIG_EN_MASK                         1u
 
-#define DMA_INTR_INTR_OFFSET                               0
-#define DMA_INTR_INTR_MASK                                 0xffff
+#define DMA_INTR_INTR_OFFSET                               0u
+#define DMA_INTR_INTR_MASK                                 0xffffu
 
-#define DMA_INTE0_INTE0_OFFSET                             0
-#define DMA_INTE0_INTE0_MASK                               0xffff
+#define DMA_INTE0_INTE0_OFFSET                             0u
+#define DMA_INTE0_INTE0_MASK                               0xffffu
 
-#define DMA_INTF0_INTF0_OFFSET                             0
-#define DMA_INTF0_INTF0_MASK                               0xffff
+#define DMA_INTF0_INTF0_OFFSET                             0u
+#define DMA_INTF0_INTF0_MASK                               0xffffu
 
-#define DMA_INTS0_INTS0_OFFSET                             0
-#define DMA_INTS0_INTS0_MASK                               0xffff
+#define DMA_INTS0_INTS0_OFFSET                             0u
+#define DMA_INTS0_INTS0_MASK                               0xffffu
 
-#define DMA_INTE1_INTE1_OFFSET                             0
-#define DMA_INTE1_INTE1_MASK                               0xffff
+#define DMA_INTE1_INTE1_OFFSET                             0u
+#define DMA_INTE1_INTE1_MASK                               0xffffu
 
-#define DMA_INTF1_INTF1_OFFSET                             0
-#define DMA_INTF1_INTF1_MASK                               0xffff
+#define DMA_INTF1_INTF1_OFFSET                             0u
+#define DMA_INTF1_INTF1_MASK                               0xffffu
 
-#define DMA_INTS1_INTS1_OFFSET                             0
-#define DMA_INTS1_INTS1_MASK                               0xffff
+#define DMA_INTS1_INTS1_OFFSET                             0u
+#define DMA_INTS1_INTS1_MASK                               0xffffu
 
-#define DMA_TIMER0_X_OFFSET                                16
-#define DMA_TIMER0_X_MASK                                  0xffff0000
+#define DMA_TIMER0_X_OFFSET                                16u
+#define DMA_TIMER0_X_MASK                                  0xffff0000u
 
-#define DMA_TIMER0_Y_OFFSET                                0
-#define DMA_TIMER0_Y_MASK                                  0xffff
+#define DMA_TIMER0_Y_OFFSET                                0u
+#define DMA_TIMER0_Y_MASK                                  0xffffu
 
-#define DMA_TIMER1_X_OFFSET                                16
-#define DMA_TIMER1_X_MASK                                  0xffff0000
+#define DMA_TIMER1_X_OFFSET                                16u
+#define DMA_TIMER1_X_MASK                                  0xffff0000u
 
-#define DMA_TIMER1_Y_OFFSET                                0
-#define DMA_TIMER1_Y_MASK                                  0xffff
+#define DMA_TIMER1_Y_OFFSET                                0u
+#define DMA_TIMER1_Y_MASK                                  0xffffu
 
-#define DMA_TIMER2_X_OFFSET                                16
-#define DMA_TIMER2_X_MASK                                  0xffff0000
+#define DMA_TIMER2_X_OFFSET                                16u
+#define DMA_TIMER2_X_MASK                                  0xffff0000u
 
-#define DMA_TIMER2_Y_OFFSET                                0
-#define DMA_TIMER2_Y_MASK                                  0xffff
+#define DMA_TIMER2_Y_OFFSET                                0u
+#define DMA_TIMER2_Y_MASK                                  0xffffu
 
-#define DMA_TIMER3_X_OFFSET                                16
-#define DMA_TIMER3_X_MASK                                  0xffff0000
+#define DMA_TIMER3_X_OFFSET                                16u
+#define DMA_TIMER3_X_MASK                                  0xffff0000u
 
-#define DMA_TIMER3_Y_OFFSET                                0
-#define DMA_TIMER3_Y_MASK                                  0xffff
+#define DMA_TIMER3_Y_OFFSET                                0u
+#define DMA_TIMER3_Y_MASK                                  0xffffu
 
-#define DMA_MULTI_CHAN_TRIGGER_MULTI_CHAN_TRIGGER_OFFSET   0
-#define DMA_MULTI_CHAN_TRIGGER_MULTI_CHAN_TRIGGER_MASK     0xffff
+#define DMA_MULTI_CHAN_TRIGGER_MULTI_CHAN_TRIGGER_OFFSET   0u
+#define DMA_MULTI_CHAN_TRIGGER_MULTI_CHAN_TRIGGER_MASK     0xffffu
 
-#define DMA_SNIFF_CTRL_OUT_INV_OFFSET                      11
-#define DMA_SNIFF_CTRL_OUT_INV_MASK                        0x800
+#define DMA_SNIFF_CTRL_OUT_INV_OFFSET                      11u
+#define DMA_SNIFF_CTRL_OUT_INV_MASK                        0x800u
 
-#define DMA_SNIFF_CTRL_OUT_REV_OFFSET                      10
-#define DMA_SNIFF_CTRL_OUT_REV_MASK                        0x400
+#define DMA_SNIFF_CTRL_OUT_REV_OFFSET                      10u
+#define DMA_SNIFF_CTRL_OUT_REV_MASK                        0x400u
 
-#define DMA_SNIFF_CTRL_BSWAP_OFFSET                        9
-#define DMA_SNIFF_CTRL_BSWAP_MASK                          0x200
+#define DMA_SNIFF_CTRL_BSWAP_OFFSET                        9u
+#define DMA_SNIFF_CTRL_BSWAP_MASK                          0x200u
 
-#define DMA_SNIFF_CTRL_CALC_OFFSET                         5
-#define DMA_SNIFF_CTRL_CALC_MASK                           0x1e0
-#define DMA_SNIFF_CTRL_CALC_CRC32                          0
-#define DMA_SNIFF_CTRL_CALC_CRC32R                         1
-#define DMA_SNIFF_CTRL_CALC_CRC16                          2
-#define DMA_SNIFF_CTRL_CALC_CRC16R                         3
-#define DMA_SNIFF_CTRL_CALC_EVEN                           0xe
-#define DMA_SNIFF_CTRL_CALC_SUM                            0xf
+#define DMA_SNIFF_CTRL_CALC_OFFSET                         5u
+#define DMA_SNIFF_CTRL_CALC_MASK                           0x1e0u
+#define DMA_SNIFF_CTRL_CALC_CRC32                          0u
+#define DMA_SNIFF_CTRL_CALC_CRC32R                         1u
+#define DMA_SNIFF_CTRL_CALC_CRC16                          2u
+#define DMA_SNIFF_CTRL_CALC_CRC16R                         3u
+#define DMA_SNIFF_CTRL_CALC_EVEN                           0xeu
+#define DMA_SNIFF_CTRL_CALC_SUM                            0xfu
 
-#define DMA_SNIFF_CTRL_DMACH_OFFSET                        1
-#define DMA_SNIFF_CTRL_DMACH_MASK                          0x1e
+#define DMA_SNIFF_CTRL_DMACH_OFFSET                        1u
+#define DMA_SNIFF_CTRL_DMACH_MASK                          0x1eu
 
-#define DMA_SNIFF_CTRL_EN_OFFSET                           0
-#define DMA_SNIFF_CTRL_EN_MASK                             1
+#define DMA_SNIFF_CTRL_EN_OFFSET                           0u
+#define DMA_SNIFF_CTRL_EN_MASK                             1u
 
-#define DMA_FIFO_LEVELS_RAF_LVL_OFFSET                     16
-#define DMA_FIFO_LEVELS_RAF_LVL_MASK                       0xff0000
+#define DMA_FIFO_LEVELS_RAF_LVL_OFFSET                     16u
+#define DMA_FIFO_LEVELS_RAF_LVL_MASK                       0xff0000u
 
-#define DMA_FIFO_LEVELS_WAF_LVL_OFFSET                     8
-#define DMA_FIFO_LEVELS_WAF_LVL_MASK                       0xff00
+#define DMA_FIFO_LEVELS_WAF_LVL_OFFSET                     8u
+#define DMA_FIFO_LEVELS_WAF_LVL_MASK                       0xff00u
 
-#define DMA_FIFO_LEVELS_TDF_LVL_OFFSET                     0
-#define DMA_FIFO_LEVELS_TDF_LVL_MASK                       0xff
+#define DMA_FIFO_LEVELS_TDF_LVL_OFFSET                     0u
+#define DMA_FIFO_LEVELS_TDF_LVL_MASK                       0xffu
 
-#define DMA_CHAN_ABORT_CHAN_ABORT_OFFSET                   0
-#define DMA_CHAN_ABORT_CHAN_ABORT_MASK                     0xffff
+#define DMA_CHAN_ABORT_CHAN_ABORT_OFFSET                   0u
+#define DMA_CHAN_ABORT_CHAN_ABORT_MASK                     0xffffu
 
-#define DMA_N_CHANNELS_N_CHANNELS_OFFSET                   0
-#define DMA_N_CHANNELS_N_CHANNELS_MASK                     0x1f
+#define DMA_N_CHANNELS_N_CHANNELS_OFFSET                   0u
+#define DMA_N_CHANNELS_N_CHANNELS_MASK                     0x1fu
 
-#define DMA_CH0_DBG_CTDREQ_CH0_DBG_CTDREQ_OFFSET           0
-#define DMA_CH0_DBG_CTDREQ_CH0_DBG_CTDREQ_MASK             0x3f
+#define DMA_CH0_DBG_CTDREQ_CH0_DBG_CTDREQ_OFFSET           0u
+#define DMA_CH0_DBG_CTDREQ_CH0_DBG_CTDREQ_MASK             0x3fu
 
-#define DMA_CH1_DBG_CTDREQ_CH1_DBG_CTDREQ_OFFSET           0
-#define DMA_CH1_DBG_CTDREQ_CH1_DBG_CTDREQ_MASK             0x3f
+#define DMA_CH1_DBG_CTDREQ_CH1_DBG_CTDREQ_OFFSET           0u
+#define DMA_CH1_DBG_CTDREQ_CH1_DBG_CTDREQ_MASK             0x3fu
 
-#define DMA_CH2_DBG_CTDREQ_CH2_DBG_CTDREQ_OFFSET           0
-#define DMA_CH2_DBG_CTDREQ_CH2_DBG_CTDREQ_MASK             0x3f
+#define DMA_CH2_DBG_CTDREQ_CH2_DBG_CTDREQ_OFFSET           0u
+#define DMA_CH2_DBG_CTDREQ_CH2_DBG_CTDREQ_MASK             0x3fu
 
-#define DMA_CH3_DBG_CTDREQ_CH3_DBG_CTDREQ_OFFSET           0
-#define DMA_CH3_DBG_CTDREQ_CH3_DBG_CTDREQ_MASK             0x3f
+#define DMA_CH3_DBG_CTDREQ_CH3_DBG_CTDREQ_OFFSET           0u
+#define DMA_CH3_DBG_CTDREQ_CH3_DBG_CTDREQ_MASK             0x3fu
 
-#define DMA_CH4_DBG_CTDREQ_CH4_DBG_CTDREQ_OFFSET           0
-#define DMA_CH4_DBG_CTDREQ_CH4_DBG_CTDREQ_MASK             0x3f
+#define DMA_CH4_DBG_CTDREQ_CH4_DBG_CTDREQ_OFFSET           0u
+#define DMA_CH4_DBG_CTDREQ_CH4_DBG_CTDREQ_MASK             0x3fu
 
-#define DMA_CH5_DBG_CTDREQ_CH5_DBG_CTDREQ_OFFSET           0
-#define DMA_CH5_DBG_CTDREQ_CH5_DBG_CTDREQ_MASK             0x3f
+#define DMA_CH5_DBG_CTDREQ_CH5_DBG_CTDREQ_OFFSET           0u
+#define DMA_CH5_DBG_CTDREQ_CH5_DBG_CTDREQ_MASK             0x3fu
 
-#define DMA_CH6_DBG_CTDREQ_CH6_DBG_CTDREQ_OFFSET           0
-#define DMA_CH6_DBG_CTDREQ_CH6_DBG_CTDREQ_MASK             0x3f
+#define DMA_CH6_DBG_CTDREQ_CH6_DBG_CTDREQ_OFFSET           0u
+#define DMA_CH6_DBG_CTDREQ_CH6_DBG_CTDREQ_MASK             0x3fu
 
-#define DMA_CH7_DBG_CTDREQ_CH7_DBG_CTDREQ_OFFSET           0
-#define DMA_CH7_DBG_CTDREQ_CH7_DBG_CTDREQ_MASK             0x3f
+#define DMA_CH7_DBG_CTDREQ_CH7_DBG_CTDREQ_OFFSET           0u
+#define DMA_CH7_DBG_CTDREQ_CH7_DBG_CTDREQ_MASK             0x3fu
 
-#define DMA_CH8_DBG_CTDREQ_CH8_DBG_CTDREQ_OFFSET           0
-#define DMA_CH8_DBG_CTDREQ_CH8_DBG_CTDREQ_MASK             0x3f
+#define DMA_CH8_DBG_CTDREQ_CH8_DBG_CTDREQ_OFFSET           0u
+#define DMA_CH8_DBG_CTDREQ_CH8_DBG_CTDREQ_MASK             0x3fu
 
-#define DMA_CH9_DBG_CTDREQ_CH9_DBG_CTDREQ_OFFSET           0
-#define DMA_CH9_DBG_CTDREQ_CH9_DBG_CTDREQ_MASK             0x3f
+#define DMA_CH9_DBG_CTDREQ_CH9_DBG_CTDREQ_OFFSET           0u
+#define DMA_CH9_DBG_CTDREQ_CH9_DBG_CTDREQ_MASK             0x3fu
 
-#define DMA_CH10_DBG_CTDREQ_CH10_DBG_CTDREQ_OFFSET         0
-#define DMA_CH10_DBG_CTDREQ_CH10_DBG_CTDREQ_MASK           0x3f
+#define DMA_CH10_DBG_CTDREQ_CH10_DBG_CTDREQ_OFFSET         0u
+#define DMA_CH10_DBG_CTDREQ_CH10_DBG_CTDREQ_MASK           0x3fu
 
-#define DMA_CH11_DBG_CTDREQ_CH11_DBG_CTDREQ_OFFSET         0
-#define DMA_CH11_DBG_CTDREQ_CH11_DBG_CTDREQ_MASK           0x3f
+#define DMA_CH11_DBG_CTDREQ_CH11_DBG_CTDREQ_OFFSET         0u
+#define DMA_CH11_DBG_CTDREQ_CH11_DBG_CTDREQ_MASK           0x3fu
 
 
 typedef struct
@@ -906,7 +906,7 @@ volatile uint32_t CH0_TRANS_COUNT;
  The channel uses the transfer request signal to pace its data transfer rate. Sources for TREQ signals are internal (TIMERS) or external (DREQ, a Data Request from the system).
 
  0x0 to 0x3a -&gt; select DREQ n as TREQ
-  Enum: 
+  Enum:
   Value: 0x3b - TIMER0 : Select Timer 0 as TREQ
   Value: 0x3c - TIMER1 : Select Timer 1 as TREQ
   Value: 0x3d - TIMER2 : Select Timer 2 as TREQ (Optional)
@@ -926,7 +926,7 @@ volatile uint32_t CH0_TRANS_COUNT;
 
 
  Ring sizes between 2 and 32768 bytes are possible. This can apply to either read or write addresses, based on value of RING_SEL.
-  Enum: 
+  Enum:
   Value: 0 - RING_NONE
   Field: INCR_WRITE
   offset: 5, size: 1, access: read-write
@@ -943,7 +943,7 @@ volatile uint32_t CH0_TRANS_COUNT;
   Field: DATA_SIZE
   offset: 2, size: 2, access: read-write
   Set the size of each bus transfer (byte/halfword/word). READ_ADDR and WRITE_ADDR advance by this amount (1/2/4 bytes) with each transfer.
-  Enum: 
+  Enum:
   Value: 0 - SIZE_BYTE
   Value: 1 - SIZE_HALFWORD
   Value: 2 - SIZE_WORD
@@ -1156,7 +1156,7 @@ volatile uint32_t CH1_TRANS_COUNT;
  The channel uses the transfer request signal to pace its data transfer rate. Sources for TREQ signals are internal (TIMERS) or external (DREQ, a Data Request from the system).
 
  0x0 to 0x3a -&gt; select DREQ n as TREQ
-  Enum: 
+  Enum:
   Value: 0x3b - TIMER0 : Select Timer 0 as TREQ
   Value: 0x3c - TIMER1 : Select Timer 1 as TREQ
   Value: 0x3d - TIMER2 : Select Timer 2 as TREQ (Optional)
@@ -1176,7 +1176,7 @@ volatile uint32_t CH1_TRANS_COUNT;
 
 
  Ring sizes between 2 and 32768 bytes are possible. This can apply to either read or write addresses, based on value of RING_SEL.
-  Enum: 
+  Enum:
   Value: 0 - RING_NONE
   Field: INCR_WRITE
   offset: 5, size: 1, access: read-write
@@ -1193,7 +1193,7 @@ volatile uint32_t CH1_TRANS_COUNT;
   Field: DATA_SIZE
   offset: 2, size: 2, access: read-write
   Set the size of each bus transfer (byte/halfword/word). READ_ADDR and WRITE_ADDR advance by this amount (1/2/4 bytes) with each transfer.
-  Enum: 
+  Enum:
   Value: 0 - SIZE_BYTE
   Value: 1 - SIZE_HALFWORD
   Value: 2 - SIZE_WORD
@@ -1406,7 +1406,7 @@ volatile uint32_t CH2_TRANS_COUNT;
  The channel uses the transfer request signal to pace its data transfer rate. Sources for TREQ signals are internal (TIMERS) or external (DREQ, a Data Request from the system).
 
  0x0 to 0x3a -&gt; select DREQ n as TREQ
-  Enum: 
+  Enum:
   Value: 0x3b - TIMER0 : Select Timer 0 as TREQ
   Value: 0x3c - TIMER1 : Select Timer 1 as TREQ
   Value: 0x3d - TIMER2 : Select Timer 2 as TREQ (Optional)
@@ -1426,7 +1426,7 @@ volatile uint32_t CH2_TRANS_COUNT;
 
 
  Ring sizes between 2 and 32768 bytes are possible. This can apply to either read or write addresses, based on value of RING_SEL.
-  Enum: 
+  Enum:
   Value: 0 - RING_NONE
   Field: INCR_WRITE
   offset: 5, size: 1, access: read-write
@@ -1443,7 +1443,7 @@ volatile uint32_t CH2_TRANS_COUNT;
   Field: DATA_SIZE
   offset: 2, size: 2, access: read-write
   Set the size of each bus transfer (byte/halfword/word). READ_ADDR and WRITE_ADDR advance by this amount (1/2/4 bytes) with each transfer.
-  Enum: 
+  Enum:
   Value: 0 - SIZE_BYTE
   Value: 1 - SIZE_HALFWORD
   Value: 2 - SIZE_WORD
@@ -1656,7 +1656,7 @@ volatile uint32_t CH3_TRANS_COUNT;
  The channel uses the transfer request signal to pace its data transfer rate. Sources for TREQ signals are internal (TIMERS) or external (DREQ, a Data Request from the system).
 
  0x0 to 0x3a -&gt; select DREQ n as TREQ
-  Enum: 
+  Enum:
   Value: 0x3b - TIMER0 : Select Timer 0 as TREQ
   Value: 0x3c - TIMER1 : Select Timer 1 as TREQ
   Value: 0x3d - TIMER2 : Select Timer 2 as TREQ (Optional)
@@ -1676,7 +1676,7 @@ volatile uint32_t CH3_TRANS_COUNT;
 
 
  Ring sizes between 2 and 32768 bytes are possible. This can apply to either read or write addresses, based on value of RING_SEL.
-  Enum: 
+  Enum:
   Value: 0 - RING_NONE
   Field: INCR_WRITE
   offset: 5, size: 1, access: read-write
@@ -1693,7 +1693,7 @@ volatile uint32_t CH3_TRANS_COUNT;
   Field: DATA_SIZE
   offset: 2, size: 2, access: read-write
   Set the size of each bus transfer (byte/halfword/word). READ_ADDR and WRITE_ADDR advance by this amount (1/2/4 bytes) with each transfer.
-  Enum: 
+  Enum:
   Value: 0 - SIZE_BYTE
   Value: 1 - SIZE_HALFWORD
   Value: 2 - SIZE_WORD
@@ -1906,7 +1906,7 @@ volatile uint32_t CH4_TRANS_COUNT;
  The channel uses the transfer request signal to pace its data transfer rate. Sources for TREQ signals are internal (TIMERS) or external (DREQ, a Data Request from the system).
 
  0x0 to 0x3a -&gt; select DREQ n as TREQ
-  Enum: 
+  Enum:
   Value: 0x3b - TIMER0 : Select Timer 0 as TREQ
   Value: 0x3c - TIMER1 : Select Timer 1 as TREQ
   Value: 0x3d - TIMER2 : Select Timer 2 as TREQ (Optional)
@@ -1926,7 +1926,7 @@ volatile uint32_t CH4_TRANS_COUNT;
 
 
  Ring sizes between 2 and 32768 bytes are possible. This can apply to either read or write addresses, based on value of RING_SEL.
-  Enum: 
+  Enum:
   Value: 0 - RING_NONE
   Field: INCR_WRITE
   offset: 5, size: 1, access: read-write
@@ -1943,7 +1943,7 @@ volatile uint32_t CH4_TRANS_COUNT;
   Field: DATA_SIZE
   offset: 2, size: 2, access: read-write
   Set the size of each bus transfer (byte/halfword/word). READ_ADDR and WRITE_ADDR advance by this amount (1/2/4 bytes) with each transfer.
-  Enum: 
+  Enum:
   Value: 0 - SIZE_BYTE
   Value: 1 - SIZE_HALFWORD
   Value: 2 - SIZE_WORD
@@ -2156,7 +2156,7 @@ volatile uint32_t CH5_TRANS_COUNT;
  The channel uses the transfer request signal to pace its data transfer rate. Sources for TREQ signals are internal (TIMERS) or external (DREQ, a Data Request from the system).
 
  0x0 to 0x3a -&gt; select DREQ n as TREQ
-  Enum: 
+  Enum:
   Value: 0x3b - TIMER0 : Select Timer 0 as TREQ
   Value: 0x3c - TIMER1 : Select Timer 1 as TREQ
   Value: 0x3d - TIMER2 : Select Timer 2 as TREQ (Optional)
@@ -2176,7 +2176,7 @@ volatile uint32_t CH5_TRANS_COUNT;
 
 
  Ring sizes between 2 and 32768 bytes are possible. This can apply to either read or write addresses, based on value of RING_SEL.
-  Enum: 
+  Enum:
   Value: 0 - RING_NONE
   Field: INCR_WRITE
   offset: 5, size: 1, access: read-write
@@ -2193,7 +2193,7 @@ volatile uint32_t CH5_TRANS_COUNT;
   Field: DATA_SIZE
   offset: 2, size: 2, access: read-write
   Set the size of each bus transfer (byte/halfword/word). READ_ADDR and WRITE_ADDR advance by this amount (1/2/4 bytes) with each transfer.
-  Enum: 
+  Enum:
   Value: 0 - SIZE_BYTE
   Value: 1 - SIZE_HALFWORD
   Value: 2 - SIZE_WORD
@@ -2406,7 +2406,7 @@ volatile uint32_t CH6_TRANS_COUNT;
  The channel uses the transfer request signal to pace its data transfer rate. Sources for TREQ signals are internal (TIMERS) or external (DREQ, a Data Request from the system).
 
  0x0 to 0x3a -&gt; select DREQ n as TREQ
-  Enum: 
+  Enum:
   Value: 0x3b - TIMER0 : Select Timer 0 as TREQ
   Value: 0x3c - TIMER1 : Select Timer 1 as TREQ
   Value: 0x3d - TIMER2 : Select Timer 2 as TREQ (Optional)
@@ -2426,7 +2426,7 @@ volatile uint32_t CH6_TRANS_COUNT;
 
 
  Ring sizes between 2 and 32768 bytes are possible. This can apply to either read or write addresses, based on value of RING_SEL.
-  Enum: 
+  Enum:
   Value: 0 - RING_NONE
   Field: INCR_WRITE
   offset: 5, size: 1, access: read-write
@@ -2443,7 +2443,7 @@ volatile uint32_t CH6_TRANS_COUNT;
   Field: DATA_SIZE
   offset: 2, size: 2, access: read-write
   Set the size of each bus transfer (byte/halfword/word). READ_ADDR and WRITE_ADDR advance by this amount (1/2/4 bytes) with each transfer.
-  Enum: 
+  Enum:
   Value: 0 - SIZE_BYTE
   Value: 1 - SIZE_HALFWORD
   Value: 2 - SIZE_WORD
@@ -2656,7 +2656,7 @@ volatile uint32_t CH7_TRANS_COUNT;
  The channel uses the transfer request signal to pace its data transfer rate. Sources for TREQ signals are internal (TIMERS) or external (DREQ, a Data Request from the system).
 
  0x0 to 0x3a -&gt; select DREQ n as TREQ
-  Enum: 
+  Enum:
   Value: 0x3b - TIMER0 : Select Timer 0 as TREQ
   Value: 0x3c - TIMER1 : Select Timer 1 as TREQ
   Value: 0x3d - TIMER2 : Select Timer 2 as TREQ (Optional)
@@ -2676,7 +2676,7 @@ volatile uint32_t CH7_TRANS_COUNT;
 
 
  Ring sizes between 2 and 32768 bytes are possible. This can apply to either read or write addresses, based on value of RING_SEL.
-  Enum: 
+  Enum:
   Value: 0 - RING_NONE
   Field: INCR_WRITE
   offset: 5, size: 1, access: read-write
@@ -2693,7 +2693,7 @@ volatile uint32_t CH7_TRANS_COUNT;
   Field: DATA_SIZE
   offset: 2, size: 2, access: read-write
   Set the size of each bus transfer (byte/halfword/word). READ_ADDR and WRITE_ADDR advance by this amount (1/2/4 bytes) with each transfer.
-  Enum: 
+  Enum:
   Value: 0 - SIZE_BYTE
   Value: 1 - SIZE_HALFWORD
   Value: 2 - SIZE_WORD
@@ -2906,7 +2906,7 @@ volatile uint32_t CH8_TRANS_COUNT;
  The channel uses the transfer request signal to pace its data transfer rate. Sources for TREQ signals are internal (TIMERS) or external (DREQ, a Data Request from the system).
 
  0x0 to 0x3a -&gt; select DREQ n as TREQ
-  Enum: 
+  Enum:
   Value: 0x3b - TIMER0 : Select Timer 0 as TREQ
   Value: 0x3c - TIMER1 : Select Timer 1 as TREQ
   Value: 0x3d - TIMER2 : Select Timer 2 as TREQ (Optional)
@@ -2926,7 +2926,7 @@ volatile uint32_t CH8_TRANS_COUNT;
 
 
  Ring sizes between 2 and 32768 bytes are possible. This can apply to either read or write addresses, based on value of RING_SEL.
-  Enum: 
+  Enum:
   Value: 0 - RING_NONE
   Field: INCR_WRITE
   offset: 5, size: 1, access: read-write
@@ -2943,7 +2943,7 @@ volatile uint32_t CH8_TRANS_COUNT;
   Field: DATA_SIZE
   offset: 2, size: 2, access: read-write
   Set the size of each bus transfer (byte/halfword/word). READ_ADDR and WRITE_ADDR advance by this amount (1/2/4 bytes) with each transfer.
-  Enum: 
+  Enum:
   Value: 0 - SIZE_BYTE
   Value: 1 - SIZE_HALFWORD
   Value: 2 - SIZE_WORD
@@ -3156,7 +3156,7 @@ volatile uint32_t CH9_TRANS_COUNT;
  The channel uses the transfer request signal to pace its data transfer rate. Sources for TREQ signals are internal (TIMERS) or external (DREQ, a Data Request from the system).
 
  0x0 to 0x3a -&gt; select DREQ n as TREQ
-  Enum: 
+  Enum:
   Value: 0x3b - TIMER0 : Select Timer 0 as TREQ
   Value: 0x3c - TIMER1 : Select Timer 1 as TREQ
   Value: 0x3d - TIMER2 : Select Timer 2 as TREQ (Optional)
@@ -3176,7 +3176,7 @@ volatile uint32_t CH9_TRANS_COUNT;
 
 
  Ring sizes between 2 and 32768 bytes are possible. This can apply to either read or write addresses, based on value of RING_SEL.
-  Enum: 
+  Enum:
   Value: 0 - RING_NONE
   Field: INCR_WRITE
   offset: 5, size: 1, access: read-write
@@ -3193,7 +3193,7 @@ volatile uint32_t CH9_TRANS_COUNT;
   Field: DATA_SIZE
   offset: 2, size: 2, access: read-write
   Set the size of each bus transfer (byte/halfword/word). READ_ADDR and WRITE_ADDR advance by this amount (1/2/4 bytes) with each transfer.
-  Enum: 
+  Enum:
   Value: 0 - SIZE_BYTE
   Value: 1 - SIZE_HALFWORD
   Value: 2 - SIZE_WORD
@@ -3406,7 +3406,7 @@ volatile uint32_t CH10_TRANS_COUNT;
  The channel uses the transfer request signal to pace its data transfer rate. Sources for TREQ signals are internal (TIMERS) or external (DREQ, a Data Request from the system).
 
  0x0 to 0x3a -&gt; select DREQ n as TREQ
-  Enum: 
+  Enum:
   Value: 0x3b - TIMER0 : Select Timer 0 as TREQ
   Value: 0x3c - TIMER1 : Select Timer 1 as TREQ
   Value: 0x3d - TIMER2 : Select Timer 2 as TREQ (Optional)
@@ -3426,7 +3426,7 @@ volatile uint32_t CH10_TRANS_COUNT;
 
 
  Ring sizes between 2 and 32768 bytes are possible. This can apply to either read or write addresses, based on value of RING_SEL.
-  Enum: 
+  Enum:
   Value: 0 - RING_NONE
   Field: INCR_WRITE
   offset: 5, size: 1, access: read-write
@@ -3443,7 +3443,7 @@ volatile uint32_t CH10_TRANS_COUNT;
   Field: DATA_SIZE
   offset: 2, size: 2, access: read-write
   Set the size of each bus transfer (byte/halfword/word). READ_ADDR and WRITE_ADDR advance by this amount (1/2/4 bytes) with each transfer.
-  Enum: 
+  Enum:
   Value: 0 - SIZE_BYTE
   Value: 1 - SIZE_HALFWORD
   Value: 2 - SIZE_WORD
@@ -3656,7 +3656,7 @@ volatile uint32_t CH11_TRANS_COUNT;
  The channel uses the transfer request signal to pace its data transfer rate. Sources for TREQ signals are internal (TIMERS) or external (DREQ, a Data Request from the system).
 
  0x0 to 0x3a -&gt; select DREQ n as TREQ
-  Enum: 
+  Enum:
   Value: 0x3b - TIMER0 : Select Timer 0 as TREQ
   Value: 0x3c - TIMER1 : Select Timer 1 as TREQ
   Value: 0x3d - TIMER2 : Select Timer 2 as TREQ (Optional)
@@ -3676,7 +3676,7 @@ volatile uint32_t CH11_TRANS_COUNT;
 
 
  Ring sizes between 2 and 32768 bytes are possible. This can apply to either read or write addresses, based on value of RING_SEL.
-  Enum: 
+  Enum:
   Value: 0 - RING_NONE
   Field: INCR_WRITE
   offset: 5, size: 1, access: read-write
@@ -3693,7 +3693,7 @@ volatile uint32_t CH11_TRANS_COUNT;
   Field: DATA_SIZE
   offset: 2, size: 2, access: read-write
   Set the size of each bus transfer (byte/halfword/word). READ_ADDR and WRITE_ADDR advance by this amount (1/2/4 bytes) with each transfer.
-  Enum: 
+  Enum:
   Value: 0 - SIZE_BYTE
   Value: 1 - SIZE_HALFWORD
   Value: 2 - SIZE_WORD
@@ -4003,7 +4003,7 @@ volatile uint32_t MULTI_CHAN_TRIGGER;
  Note that the sniff hardware is downstream of the DMA channel byteswap performed in the read master: if channel CTRL_BSWAP and SNIFF_CTRL_BSWAP are both enabled, their effects cancel from the sniffer&apos;s point of view.
   Field: CALC
   offset: 5, size: 4, access: read-write
-  Enum: 
+  Enum:
   Value: 0 - CRC32 : Calculate a CRC-32 (IEEE802.3 polynomial)
   Value: 1 - CRC32R : Calculate a CRC-32 (IEEE802.3 polynomial) with bit reversed data
   Value: 2 - CRC16 : Calculate a CRC-16-CCITT

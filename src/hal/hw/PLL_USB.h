@@ -5,35 +5,35 @@
 #include <stdint.h>
 
 
-#define PLL_USB_CS_LOCK_OFFSET                             31
-#define PLL_USB_CS_LOCK_MASK                               0x80000000
+#define PLL_USB_CS_LOCK_OFFSET                             31u
+#define PLL_USB_CS_LOCK_MASK                               0x80000000u
 
-#define PLL_USB_CS_BYPASS_OFFSET                           8
-#define PLL_USB_CS_BYPASS_MASK                             0x100
+#define PLL_USB_CS_BYPASS_OFFSET                           8u
+#define PLL_USB_CS_BYPASS_MASK                             0x100u
 
-#define PLL_USB_CS_REFDIV_OFFSET                           0
-#define PLL_USB_CS_REFDIV_MASK                             0x3f
+#define PLL_USB_CS_REFDIV_OFFSET                           0u
+#define PLL_USB_CS_REFDIV_MASK                             0x3fu
 
-#define PLL_USB_PWR_VCOPD_OFFSET                           5
-#define PLL_USB_PWR_VCOPD_MASK                             0x20
+#define PLL_USB_PWR_VCOPD_OFFSET                           5u
+#define PLL_USB_PWR_VCOPD_MASK                             0x20u
 
-#define PLL_USB_PWR_POSTDIVPD_OFFSET                       3
-#define PLL_USB_PWR_POSTDIVPD_MASK                         8
+#define PLL_USB_PWR_POSTDIVPD_OFFSET                       3u
+#define PLL_USB_PWR_POSTDIVPD_MASK                         8u
 
-#define PLL_USB_PWR_DSMPD_OFFSET                           2
-#define PLL_USB_PWR_DSMPD_MASK                             4
+#define PLL_USB_PWR_DSMPD_OFFSET                           2u
+#define PLL_USB_PWR_DSMPD_MASK                             4u
 
-#define PLL_USB_PWR_PD_OFFSET                              0
-#define PLL_USB_PWR_PD_MASK                                1
+#define PLL_USB_PWR_PD_OFFSET                              0u
+#define PLL_USB_PWR_PD_MASK                                1u
 
-#define PLL_USB_FBDIV_INT_FBDIV_INT_OFFSET                 0
-#define PLL_USB_FBDIV_INT_FBDIV_INT_MASK                   0xfff
+#define PLL_USB_FBDIV_INT_FBDIV_INT_OFFSET                 0u
+#define PLL_USB_FBDIV_INT_FBDIV_INT_MASK                   0xfffu
 
-#define PLL_USB_PRIM_POSTDIV1_OFFSET                       16
-#define PLL_USB_PRIM_POSTDIV1_MASK                         0x70000
+#define PLL_USB_PRIM_POSTDIV1_OFFSET                       16u
+#define PLL_USB_PRIM_POSTDIV1_MASK                         0x70000u
 
-#define PLL_USB_PRIM_POSTDIV2_OFFSET                       12
-#define PLL_USB_PRIM_POSTDIV2_MASK                         0x7000
+#define PLL_USB_PRIM_POSTDIV2_OFFSET                       12u
+#define PLL_USB_PRIM_POSTDIV2_MASK                         0x7000u
 
 
 typedef struct

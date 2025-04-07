@@ -5,83 +5,83 @@
 #include <stdint.h>
 
 
-#define ROSC_CTRL_ENABLE_OFFSET                            12
-#define ROSC_CTRL_ENABLE_MASK                              0xfff000
-#define ROSC_CTRL_ENABLE_DISABLE                           0xd1e
-#define ROSC_CTRL_ENABLE_ENABLE                            0xfab
+#define ROSC_CTRL_ENABLE_OFFSET                            12u
+#define ROSC_CTRL_ENABLE_MASK                              0xfff000u
+#define ROSC_CTRL_ENABLE_DISABLE                           0xd1eu
+#define ROSC_CTRL_ENABLE_ENABLE                            0xfabu
 
-#define ROSC_CTRL_FREQ_RANGE_OFFSET                        0
-#define ROSC_CTRL_FREQ_RANGE_MASK                          0xfff
-#define ROSC_CTRL_FREQ_RANGE_LOW                           0xfa4
-#define ROSC_CTRL_FREQ_RANGE_MEDIUM                        0xfa5
-#define ROSC_CTRL_FREQ_RANGE_HIGH                          0xfa7
-#define ROSC_CTRL_FREQ_RANGE_TOOHIGH                       0xfa6
+#define ROSC_CTRL_FREQ_RANGE_OFFSET                        0u
+#define ROSC_CTRL_FREQ_RANGE_MASK                          0xfffu
+#define ROSC_CTRL_FREQ_RANGE_LOW                           0xfa4u
+#define ROSC_CTRL_FREQ_RANGE_MEDIUM                        0xfa5u
+#define ROSC_CTRL_FREQ_RANGE_HIGH                          0xfa7u
+#define ROSC_CTRL_FREQ_RANGE_TOOHIGH                       0xfa6u
 
-#define ROSC_FREQA_PASSWD_OFFSET                           16
-#define ROSC_FREQA_PASSWD_MASK                             0xffff0000
-#define ROSC_FREQA_PASSWD_PASS                             0x9696
+#define ROSC_FREQA_PASSWD_OFFSET                           16u
+#define ROSC_FREQA_PASSWD_MASK                             0xffff0000u
+#define ROSC_FREQA_PASSWD_PASS                             0x9696u
 
-#define ROSC_FREQA_DS3_OFFSET                              12
-#define ROSC_FREQA_DS3_MASK                                0x7000
+#define ROSC_FREQA_DS3_OFFSET                              12u
+#define ROSC_FREQA_DS3_MASK                                0x7000u
 
-#define ROSC_FREQA_DS2_OFFSET                              8
-#define ROSC_FREQA_DS2_MASK                                0x700
+#define ROSC_FREQA_DS2_OFFSET                              8u
+#define ROSC_FREQA_DS2_MASK                                0x700u
 
-#define ROSC_FREQA_DS1_OFFSET                              4
-#define ROSC_FREQA_DS1_MASK                                0x70
+#define ROSC_FREQA_DS1_OFFSET                              4u
+#define ROSC_FREQA_DS1_MASK                                0x70u
 
-#define ROSC_FREQA_DS0_OFFSET                              0
-#define ROSC_FREQA_DS0_MASK                                7
+#define ROSC_FREQA_DS0_OFFSET                              0u
+#define ROSC_FREQA_DS0_MASK                                7u
 
-#define ROSC_FREQB_PASSWD_OFFSET                           16
-#define ROSC_FREQB_PASSWD_MASK                             0xffff0000
-#define ROSC_FREQB_PASSWD_PASS                             0x9696
+#define ROSC_FREQB_PASSWD_OFFSET                           16u
+#define ROSC_FREQB_PASSWD_MASK                             0xffff0000u
+#define ROSC_FREQB_PASSWD_PASS                             0x9696u
 
-#define ROSC_FREQB_DS7_OFFSET                              12
-#define ROSC_FREQB_DS7_MASK                                0x7000
+#define ROSC_FREQB_DS7_OFFSET                              12u
+#define ROSC_FREQB_DS7_MASK                                0x7000u
 
-#define ROSC_FREQB_DS6_OFFSET                              8
-#define ROSC_FREQB_DS6_MASK                                0x700
+#define ROSC_FREQB_DS6_OFFSET                              8u
+#define ROSC_FREQB_DS6_MASK                                0x700u
 
-#define ROSC_FREQB_DS5_OFFSET                              4
-#define ROSC_FREQB_DS5_MASK                                0x70
+#define ROSC_FREQB_DS5_OFFSET                              4u
+#define ROSC_FREQB_DS5_MASK                                0x70u
 
-#define ROSC_FREQB_DS4_OFFSET                              0
-#define ROSC_FREQB_DS4_MASK                                7
+#define ROSC_FREQB_DS4_OFFSET                              0u
+#define ROSC_FREQB_DS4_MASK                                7u
 
-#define ROSC_DIV_DIV_OFFSET                                0
-#define ROSC_DIV_DIV_MASK                                  0xfff
-#define ROSC_DIV_DIV_PASS                                  0xaa0
+#define ROSC_DIV_DIV_OFFSET                                0u
+#define ROSC_DIV_DIV_MASK                                  0xfffu
+#define ROSC_DIV_DIV_PASS                                  0xaa0u
 
-#define ROSC_PHASE_PASSWD_OFFSET                           4
-#define ROSC_PHASE_PASSWD_MASK                             0xff0
+#define ROSC_PHASE_PASSWD_OFFSET                           4u
+#define ROSC_PHASE_PASSWD_MASK                             0xff0u
 
-#define ROSC_PHASE_ENABLE_OFFSET                           3
-#define ROSC_PHASE_ENABLE_MASK                             8
+#define ROSC_PHASE_ENABLE_OFFSET                           3u
+#define ROSC_PHASE_ENABLE_MASK                             8u
 
-#define ROSC_PHASE_FLIP_OFFSET                             2
-#define ROSC_PHASE_FLIP_MASK                               4
+#define ROSC_PHASE_FLIP_OFFSET                             2u
+#define ROSC_PHASE_FLIP_MASK                               4u
 
-#define ROSC_PHASE_SHIFT_OFFSET                            0
-#define ROSC_PHASE_SHIFT_MASK                              3
+#define ROSC_PHASE_SHIFT_OFFSET                            0u
+#define ROSC_PHASE_SHIFT_MASK                              3u
 
-#define ROSC_STATUS_STABLE_OFFSET                          31
-#define ROSC_STATUS_STABLE_MASK                            0x80000000
+#define ROSC_STATUS_STABLE_OFFSET                          31u
+#define ROSC_STATUS_STABLE_MASK                            0x80000000u
 
-#define ROSC_STATUS_BADWRITE_OFFSET                        24
-#define ROSC_STATUS_BADWRITE_MASK                          0x1000000
+#define ROSC_STATUS_BADWRITE_OFFSET                        24u
+#define ROSC_STATUS_BADWRITE_MASK                          0x1000000u
 
-#define ROSC_STATUS_DIV_RUNNING_OFFSET                     16
-#define ROSC_STATUS_DIV_RUNNING_MASK                       0x10000
+#define ROSC_STATUS_DIV_RUNNING_OFFSET                     16u
+#define ROSC_STATUS_DIV_RUNNING_MASK                       0x10000u
 
-#define ROSC_STATUS_ENABLED_OFFSET                         12
-#define ROSC_STATUS_ENABLED_MASK                           0x1000
+#define ROSC_STATUS_ENABLED_OFFSET                         12u
+#define ROSC_STATUS_ENABLED_MASK                           0x1000u
 
-#define ROSC_RANDOMBIT_RANDOMBIT_OFFSET                    0
-#define ROSC_RANDOMBIT_RANDOMBIT_MASK                      1
+#define ROSC_RANDOMBIT_RANDOMBIT_OFFSET                    0u
+#define ROSC_RANDOMBIT_RANDOMBIT_MASK                      1u
 
-#define ROSC_COUNT_COUNT_OFFSET                            0
-#define ROSC_COUNT_COUNT_MASK                              0xff
+#define ROSC_COUNT_COUNT_OFFSET                            0u
+#define ROSC_COUNT_COUNT_MASK                              0xffu
 
 
 typedef struct
@@ -99,7 +99,7 @@ typedef struct
  The system clock must be switched to another source before setting this field to DISABLE otherwise the chip will lock up
 
  The 12-bit code is intended to give some protection against accidental writes. An invalid setting will enable the oscillator.
-  Enum: 
+  Enum:
   Value: 0xd1e - DISABLE
   Value: 0xfab - ENABLE
   Field: FREQ_RANGE
@@ -119,7 +119,7 @@ typedef struct
  The clock output will glitch when changing the range down
 
  Note: the values here are gray coded which is why HIGH comes before TOOHIGH
-  Enum: 
+  Enum:
   Value: 0xfa4 - LOW
   Value: 0xfa5 - MEDIUM
   Value: 0xfa7 - HIGH
@@ -149,7 +149,7 @@ volatile uint32_t CTRL;
   Set to 0x9696 to apply the settings
 
  Any other value in this field will set all drive strengths to 0
-  Enum: 
+  Enum:
   Value: 0x9696 - PASS
   Field: DS3
   offset: 12, size: 3, access: read-write
@@ -176,7 +176,7 @@ volatile uint32_t FREQA;
   Set to 0x9696 to apply the settings
 
  Any other value in this field will set all drive strengths to 0
-  Enum: 
+  Enum:
   Value: 0x9696 - PASS
   Field: DS7
   offset: 12, size: 3, access: read-write
@@ -225,7 +225,7 @@ volatile uint32_t DORMANT;
  any other value sets div=31
 
  this register resets to div=16
-  Enum: 
+  Enum:
   Value: 0xaa0 - PASS
 */
 volatile uint32_t DIV;

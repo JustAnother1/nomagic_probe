@@ -6,302 +6,302 @@
 #include <stdint.h>
 
 
-#define UART0_UARTDR_OE_OFFSET                             11
-#define UART0_UARTDR_OE_MASK                               0x800
+#define UART0_UARTDR_OE_OFFSET                             11u
+#define UART0_UARTDR_OE_MASK                               0x800u
 
-#define UART0_UARTDR_BE_OFFSET                             10
-#define UART0_UARTDR_BE_MASK                               0x400
+#define UART0_UARTDR_BE_OFFSET                             10u
+#define UART0_UARTDR_BE_MASK                               0x400u
 
-#define UART0_UARTDR_PE_OFFSET                             9
-#define UART0_UARTDR_PE_MASK                               0x200
+#define UART0_UARTDR_PE_OFFSET                             9u
+#define UART0_UARTDR_PE_MASK                               0x200u
 
-#define UART0_UARTDR_FE_OFFSET                             8
-#define UART0_UARTDR_FE_MASK                               0x100
+#define UART0_UARTDR_FE_OFFSET                             8u
+#define UART0_UARTDR_FE_MASK                               0x100u
 
-#define UART0_UARTDR_DATA_OFFSET                           0
-#define UART0_UARTDR_DATA_MASK                             0xff
+#define UART0_UARTDR_DATA_OFFSET                           0u
+#define UART0_UARTDR_DATA_MASK                             0xffu
 
-#define UART0_UARTRSR_OE_OFFSET                            3
-#define UART0_UARTRSR_OE_MASK                              8
+#define UART0_UARTRSR_OE_OFFSET                            3u
+#define UART0_UARTRSR_OE_MASK                              8u
 
-#define UART0_UARTRSR_BE_OFFSET                            2
-#define UART0_UARTRSR_BE_MASK                              4
+#define UART0_UARTRSR_BE_OFFSET                            2u
+#define UART0_UARTRSR_BE_MASK                              4u
 
-#define UART0_UARTRSR_PE_OFFSET                            1
-#define UART0_UARTRSR_PE_MASK                              2
+#define UART0_UARTRSR_PE_OFFSET                            1u
+#define UART0_UARTRSR_PE_MASK                              2u
 
-#define UART0_UARTRSR_FE_OFFSET                            0
-#define UART0_UARTRSR_FE_MASK                              1
+#define UART0_UARTRSR_FE_OFFSET                            0u
+#define UART0_UARTRSR_FE_MASK                              1u
 
-#define UART0_UARTFR_RI_OFFSET                             8
-#define UART0_UARTFR_RI_MASK                               0x100
+#define UART0_UARTFR_RI_OFFSET                             8u
+#define UART0_UARTFR_RI_MASK                               0x100u
 
-#define UART0_UARTFR_TXFE_OFFSET                           7
-#define UART0_UARTFR_TXFE_MASK                             0x80
+#define UART0_UARTFR_TXFE_OFFSET                           7u
+#define UART0_UARTFR_TXFE_MASK                             0x80u
 
-#define UART0_UARTFR_RXFF_OFFSET                           6
-#define UART0_UARTFR_RXFF_MASK                             0x40
+#define UART0_UARTFR_RXFF_OFFSET                           6u
+#define UART0_UARTFR_RXFF_MASK                             0x40u
 
-#define UART0_UARTFR_TXFF_OFFSET                           5
-#define UART0_UARTFR_TXFF_MASK                             0x20
+#define UART0_UARTFR_TXFF_OFFSET                           5u
+#define UART0_UARTFR_TXFF_MASK                             0x20u
 
-#define UART0_UARTFR_RXFE_OFFSET                           4
-#define UART0_UARTFR_RXFE_MASK                             0x10
+#define UART0_UARTFR_RXFE_OFFSET                           4u
+#define UART0_UARTFR_RXFE_MASK                             0x10u
 
-#define UART0_UARTFR_BUSY_OFFSET                           3
-#define UART0_UARTFR_BUSY_MASK                             8
+#define UART0_UARTFR_BUSY_OFFSET                           3u
+#define UART0_UARTFR_BUSY_MASK                             8u
 
-#define UART0_UARTFR_DCD_OFFSET                            2
-#define UART0_UARTFR_DCD_MASK                              4
+#define UART0_UARTFR_DCD_OFFSET                            2u
+#define UART0_UARTFR_DCD_MASK                              4u
 
-#define UART0_UARTFR_DSR_OFFSET                            1
-#define UART0_UARTFR_DSR_MASK                              2
+#define UART0_UARTFR_DSR_OFFSET                            1u
+#define UART0_UARTFR_DSR_MASK                              2u
 
-#define UART0_UARTFR_CTS_OFFSET                            0
-#define UART0_UARTFR_CTS_MASK                              1
+#define UART0_UARTFR_CTS_OFFSET                            0u
+#define UART0_UARTFR_CTS_MASK                              1u
 
-#define UART0_UARTILPR_ILPDVSR_OFFSET                      0
-#define UART0_UARTILPR_ILPDVSR_MASK                        0xff
+#define UART0_UARTILPR_ILPDVSR_OFFSET                      0u
+#define UART0_UARTILPR_ILPDVSR_MASK                        0xffu
 
-#define UART0_UARTIBRD_BAUD_DIVINT_OFFSET                  0
-#define UART0_UARTIBRD_BAUD_DIVINT_MASK                    0xffff
+#define UART0_UARTIBRD_BAUD_DIVINT_OFFSET                  0u
+#define UART0_UARTIBRD_BAUD_DIVINT_MASK                    0xffffu
 
-#define UART0_UARTFBRD_BAUD_DIVFRAC_OFFSET                 0
-#define UART0_UARTFBRD_BAUD_DIVFRAC_MASK                   0x3f
+#define UART0_UARTFBRD_BAUD_DIVFRAC_OFFSET                 0u
+#define UART0_UARTFBRD_BAUD_DIVFRAC_MASK                   0x3fu
 
-#define UART0_UARTLCR_H_SPS_OFFSET                         7
-#define UART0_UARTLCR_H_SPS_MASK                           0x80
+#define UART0_UARTLCR_H_SPS_OFFSET                         7u
+#define UART0_UARTLCR_H_SPS_MASK                           0x80u
 
-#define UART0_UARTLCR_H_WLEN_OFFSET                        5
-#define UART0_UARTLCR_H_WLEN_MASK                          0x60
+#define UART0_UARTLCR_H_WLEN_OFFSET                        5u
+#define UART0_UARTLCR_H_WLEN_MASK                          0x60u
 
-#define UART0_UARTLCR_H_FEN_OFFSET                         4
-#define UART0_UARTLCR_H_FEN_MASK                           0x10
+#define UART0_UARTLCR_H_FEN_OFFSET                         4u
+#define UART0_UARTLCR_H_FEN_MASK                           0x10u
 
-#define UART0_UARTLCR_H_STP2_OFFSET                        3
-#define UART0_UARTLCR_H_STP2_MASK                          8
+#define UART0_UARTLCR_H_STP2_OFFSET                        3u
+#define UART0_UARTLCR_H_STP2_MASK                          8u
 
-#define UART0_UARTLCR_H_EPS_OFFSET                         2
-#define UART0_UARTLCR_H_EPS_MASK                           4
+#define UART0_UARTLCR_H_EPS_OFFSET                         2u
+#define UART0_UARTLCR_H_EPS_MASK                           4u
 
-#define UART0_UARTLCR_H_PEN_OFFSET                         1
-#define UART0_UARTLCR_H_PEN_MASK                           2
+#define UART0_UARTLCR_H_PEN_OFFSET                         1u
+#define UART0_UARTLCR_H_PEN_MASK                           2u
 
-#define UART0_UARTLCR_H_BRK_OFFSET                         0
-#define UART0_UARTLCR_H_BRK_MASK                           1
+#define UART0_UARTLCR_H_BRK_OFFSET                         0u
+#define UART0_UARTLCR_H_BRK_MASK                           1u
 
-#define UART0_UARTCR_CTSEN_OFFSET                          15
-#define UART0_UARTCR_CTSEN_MASK                            0x8000
+#define UART0_UARTCR_CTSEN_OFFSET                          15u
+#define UART0_UARTCR_CTSEN_MASK                            0x8000u
 
-#define UART0_UARTCR_RTSEN_OFFSET                          14
-#define UART0_UARTCR_RTSEN_MASK                            0x4000
+#define UART0_UARTCR_RTSEN_OFFSET                          14u
+#define UART0_UARTCR_RTSEN_MASK                            0x4000u
 
-#define UART0_UARTCR_OUT2_OFFSET                           13
-#define UART0_UARTCR_OUT2_MASK                             0x2000
+#define UART0_UARTCR_OUT2_OFFSET                           13u
+#define UART0_UARTCR_OUT2_MASK                             0x2000u
 
-#define UART0_UARTCR_OUT1_OFFSET                           12
-#define UART0_UARTCR_OUT1_MASK                             0x1000
+#define UART0_UARTCR_OUT1_OFFSET                           12u
+#define UART0_UARTCR_OUT1_MASK                             0x1000u
 
-#define UART0_UARTCR_RTS_OFFSET                            11
-#define UART0_UARTCR_RTS_MASK                              0x800
+#define UART0_UARTCR_RTS_OFFSET                            11u
+#define UART0_UARTCR_RTS_MASK                              0x800u
 
-#define UART0_UARTCR_DTR_OFFSET                            10
-#define UART0_UARTCR_DTR_MASK                              0x400
+#define UART0_UARTCR_DTR_OFFSET                            10u
+#define UART0_UARTCR_DTR_MASK                              0x400u
 
-#define UART0_UARTCR_RXE_OFFSET                            9
-#define UART0_UARTCR_RXE_MASK                              0x200
+#define UART0_UARTCR_RXE_OFFSET                            9u
+#define UART0_UARTCR_RXE_MASK                              0x200u
 
-#define UART0_UARTCR_TXE_OFFSET                            8
-#define UART0_UARTCR_TXE_MASK                              0x100
+#define UART0_UARTCR_TXE_OFFSET                            8u
+#define UART0_UARTCR_TXE_MASK                              0x100u
 
-#define UART0_UARTCR_LBE_OFFSET                            7
-#define UART0_UARTCR_LBE_MASK                              0x80
+#define UART0_UARTCR_LBE_OFFSET                            7u
+#define UART0_UARTCR_LBE_MASK                              0x80u
 
-#define UART0_UARTCR_SIRLP_OFFSET                          2
-#define UART0_UARTCR_SIRLP_MASK                            4
+#define UART0_UARTCR_SIRLP_OFFSET                          2u
+#define UART0_UARTCR_SIRLP_MASK                            4u
 
-#define UART0_UARTCR_SIREN_OFFSET                          1
-#define UART0_UARTCR_SIREN_MASK                            2
+#define UART0_UARTCR_SIREN_OFFSET                          1u
+#define UART0_UARTCR_SIREN_MASK                            2u
 
-#define UART0_UARTCR_UARTEN_OFFSET                         0
-#define UART0_UARTCR_UARTEN_MASK                           1
+#define UART0_UARTCR_UARTEN_OFFSET                         0u
+#define UART0_UARTCR_UARTEN_MASK                           1u
 
-#define UART0_UARTIFLS_RXIFLSEL_OFFSET                     3
-#define UART0_UARTIFLS_RXIFLSEL_MASK                       0x38
+#define UART0_UARTIFLS_RXIFLSEL_OFFSET                     3u
+#define UART0_UARTIFLS_RXIFLSEL_MASK                       0x38u
 
-#define UART0_UARTIFLS_TXIFLSEL_OFFSET                     0
-#define UART0_UARTIFLS_TXIFLSEL_MASK                       7
+#define UART0_UARTIFLS_TXIFLSEL_OFFSET                     0u
+#define UART0_UARTIFLS_TXIFLSEL_MASK                       7u
 
-#define UART0_UARTIMSC_OEIM_OFFSET                         10
-#define UART0_UARTIMSC_OEIM_MASK                           0x400
+#define UART0_UARTIMSC_OEIM_OFFSET                         10u
+#define UART0_UARTIMSC_OEIM_MASK                           0x400u
 
-#define UART0_UARTIMSC_BEIM_OFFSET                         9
-#define UART0_UARTIMSC_BEIM_MASK                           0x200
+#define UART0_UARTIMSC_BEIM_OFFSET                         9u
+#define UART0_UARTIMSC_BEIM_MASK                           0x200u
 
-#define UART0_UARTIMSC_PEIM_OFFSET                         8
-#define UART0_UARTIMSC_PEIM_MASK                           0x100
+#define UART0_UARTIMSC_PEIM_OFFSET                         8u
+#define UART0_UARTIMSC_PEIM_MASK                           0x100u
 
-#define UART0_UARTIMSC_FEIM_OFFSET                         7
-#define UART0_UARTIMSC_FEIM_MASK                           0x80
+#define UART0_UARTIMSC_FEIM_OFFSET                         7u
+#define UART0_UARTIMSC_FEIM_MASK                           0x80u
 
-#define UART0_UARTIMSC_RTIM_OFFSET                         6
-#define UART0_UARTIMSC_RTIM_MASK                           0x40
+#define UART0_UARTIMSC_RTIM_OFFSET                         6u
+#define UART0_UARTIMSC_RTIM_MASK                           0x40u
 
-#define UART0_UARTIMSC_TXIM_OFFSET                         5
-#define UART0_UARTIMSC_TXIM_MASK                           0x20
+#define UART0_UARTIMSC_TXIM_OFFSET                         5u
+#define UART0_UARTIMSC_TXIM_MASK                           0x20u
 
-#define UART0_UARTIMSC_RXIM_OFFSET                         4
-#define UART0_UARTIMSC_RXIM_MASK                           0x10
+#define UART0_UARTIMSC_RXIM_OFFSET                         4u
+#define UART0_UARTIMSC_RXIM_MASK                           0x10u
 
-#define UART0_UARTIMSC_DSRMIM_OFFSET                       3
-#define UART0_UARTIMSC_DSRMIM_MASK                         8
+#define UART0_UARTIMSC_DSRMIM_OFFSET                       3u
+#define UART0_UARTIMSC_DSRMIM_MASK                         8u
 
-#define UART0_UARTIMSC_DCDMIM_OFFSET                       2
-#define UART0_UARTIMSC_DCDMIM_MASK                         4
+#define UART0_UARTIMSC_DCDMIM_OFFSET                       2u
+#define UART0_UARTIMSC_DCDMIM_MASK                         4u
 
-#define UART0_UARTIMSC_CTSMIM_OFFSET                       1
-#define UART0_UARTIMSC_CTSMIM_MASK                         2
+#define UART0_UARTIMSC_CTSMIM_OFFSET                       1u
+#define UART0_UARTIMSC_CTSMIM_MASK                         2u
 
-#define UART0_UARTIMSC_RIMIM_OFFSET                        0
-#define UART0_UARTIMSC_RIMIM_MASK                          1
+#define UART0_UARTIMSC_RIMIM_OFFSET                        0u
+#define UART0_UARTIMSC_RIMIM_MASK                          1u
 
-#define UART0_UARTRIS_OERIS_OFFSET                         10
-#define UART0_UARTRIS_OERIS_MASK                           0x400
+#define UART0_UARTRIS_OERIS_OFFSET                         10u
+#define UART0_UARTRIS_OERIS_MASK                           0x400u
 
-#define UART0_UARTRIS_BERIS_OFFSET                         9
-#define UART0_UARTRIS_BERIS_MASK                           0x200
+#define UART0_UARTRIS_BERIS_OFFSET                         9u
+#define UART0_UARTRIS_BERIS_MASK                           0x200u
 
-#define UART0_UARTRIS_PERIS_OFFSET                         8
-#define UART0_UARTRIS_PERIS_MASK                           0x100
+#define UART0_UARTRIS_PERIS_OFFSET                         8u
+#define UART0_UARTRIS_PERIS_MASK                           0x100u
 
-#define UART0_UARTRIS_FERIS_OFFSET                         7
-#define UART0_UARTRIS_FERIS_MASK                           0x80
+#define UART0_UARTRIS_FERIS_OFFSET                         7u
+#define UART0_UARTRIS_FERIS_MASK                           0x80u
 
-#define UART0_UARTRIS_RTRIS_OFFSET                         6
-#define UART0_UARTRIS_RTRIS_MASK                           0x40
+#define UART0_UARTRIS_RTRIS_OFFSET                         6u
+#define UART0_UARTRIS_RTRIS_MASK                           0x40u
 
-#define UART0_UARTRIS_TXRIS_OFFSET                         5
-#define UART0_UARTRIS_TXRIS_MASK                           0x20
+#define UART0_UARTRIS_TXRIS_OFFSET                         5u
+#define UART0_UARTRIS_TXRIS_MASK                           0x20u
 
-#define UART0_UARTRIS_RXRIS_OFFSET                         4
-#define UART0_UARTRIS_RXRIS_MASK                           0x10
+#define UART0_UARTRIS_RXRIS_OFFSET                         4u
+#define UART0_UARTRIS_RXRIS_MASK                           0x10u
 
-#define UART0_UARTRIS_DSRRMIS_OFFSET                       3
-#define UART0_UARTRIS_DSRRMIS_MASK                         8
+#define UART0_UARTRIS_DSRRMIS_OFFSET                       3u
+#define UART0_UARTRIS_DSRRMIS_MASK                         8u
 
-#define UART0_UARTRIS_DCDRMIS_OFFSET                       2
-#define UART0_UARTRIS_DCDRMIS_MASK                         4
+#define UART0_UARTRIS_DCDRMIS_OFFSET                       2u
+#define UART0_UARTRIS_DCDRMIS_MASK                         4u
 
-#define UART0_UARTRIS_CTSRMIS_OFFSET                       1
-#define UART0_UARTRIS_CTSRMIS_MASK                         2
+#define UART0_UARTRIS_CTSRMIS_OFFSET                       1u
+#define UART0_UARTRIS_CTSRMIS_MASK                         2u
 
-#define UART0_UARTRIS_RIRMIS_OFFSET                        0
-#define UART0_UARTRIS_RIRMIS_MASK                          1
+#define UART0_UARTRIS_RIRMIS_OFFSET                        0u
+#define UART0_UARTRIS_RIRMIS_MASK                          1u
 
-#define UART0_UARTMIS_OEMIS_OFFSET                         10
-#define UART0_UARTMIS_OEMIS_MASK                           0x400
+#define UART0_UARTMIS_OEMIS_OFFSET                         10u
+#define UART0_UARTMIS_OEMIS_MASK                           0x400u
 
-#define UART0_UARTMIS_BEMIS_OFFSET                         9
-#define UART0_UARTMIS_BEMIS_MASK                           0x200
+#define UART0_UARTMIS_BEMIS_OFFSET                         9u
+#define UART0_UARTMIS_BEMIS_MASK                           0x200u
 
-#define UART0_UARTMIS_PEMIS_OFFSET                         8
-#define UART0_UARTMIS_PEMIS_MASK                           0x100
+#define UART0_UARTMIS_PEMIS_OFFSET                         8u
+#define UART0_UARTMIS_PEMIS_MASK                           0x100u
 
-#define UART0_UARTMIS_FEMIS_OFFSET                         7
-#define UART0_UARTMIS_FEMIS_MASK                           0x80
+#define UART0_UARTMIS_FEMIS_OFFSET                         7u
+#define UART0_UARTMIS_FEMIS_MASK                           0x80u
 
-#define UART0_UARTMIS_RTMIS_OFFSET                         6
-#define UART0_UARTMIS_RTMIS_MASK                           0x40
+#define UART0_UARTMIS_RTMIS_OFFSET                         6u
+#define UART0_UARTMIS_RTMIS_MASK                           0x40u
 
-#define UART0_UARTMIS_TXMIS_OFFSET                         5
-#define UART0_UARTMIS_TXMIS_MASK                           0x20
+#define UART0_UARTMIS_TXMIS_OFFSET                         5u
+#define UART0_UARTMIS_TXMIS_MASK                           0x20u
 
-#define UART0_UARTMIS_RXMIS_OFFSET                         4
-#define UART0_UARTMIS_RXMIS_MASK                           0x10
+#define UART0_UARTMIS_RXMIS_OFFSET                         4u
+#define UART0_UARTMIS_RXMIS_MASK                           0x10u
 
-#define UART0_UARTMIS_DSRMMIS_OFFSET                       3
-#define UART0_UARTMIS_DSRMMIS_MASK                         8
+#define UART0_UARTMIS_DSRMMIS_OFFSET                       3u
+#define UART0_UARTMIS_DSRMMIS_MASK                         8u
 
-#define UART0_UARTMIS_DCDMMIS_OFFSET                       2
-#define UART0_UARTMIS_DCDMMIS_MASK                         4
+#define UART0_UARTMIS_DCDMMIS_OFFSET                       2u
+#define UART0_UARTMIS_DCDMMIS_MASK                         4u
 
-#define UART0_UARTMIS_CTSMMIS_OFFSET                       1
-#define UART0_UARTMIS_CTSMMIS_MASK                         2
+#define UART0_UARTMIS_CTSMMIS_OFFSET                       1u
+#define UART0_UARTMIS_CTSMMIS_MASK                         2u
 
-#define UART0_UARTMIS_RIMMIS_OFFSET                        0
-#define UART0_UARTMIS_RIMMIS_MASK                          1
+#define UART0_UARTMIS_RIMMIS_OFFSET                        0u
+#define UART0_UARTMIS_RIMMIS_MASK                          1u
 
-#define UART0_UARTICR_OEIC_OFFSET                          10
-#define UART0_UARTICR_OEIC_MASK                            0x400
+#define UART0_UARTICR_OEIC_OFFSET                          10u
+#define UART0_UARTICR_OEIC_MASK                            0x400u
 
-#define UART0_UARTICR_BEIC_OFFSET                          9
-#define UART0_UARTICR_BEIC_MASK                            0x200
+#define UART0_UARTICR_BEIC_OFFSET                          9u
+#define UART0_UARTICR_BEIC_MASK                            0x200u
 
-#define UART0_UARTICR_PEIC_OFFSET                          8
-#define UART0_UARTICR_PEIC_MASK                            0x100
+#define UART0_UARTICR_PEIC_OFFSET                          8u
+#define UART0_UARTICR_PEIC_MASK                            0x100u
 
-#define UART0_UARTICR_FEIC_OFFSET                          7
-#define UART0_UARTICR_FEIC_MASK                            0x80
+#define UART0_UARTICR_FEIC_OFFSET                          7u
+#define UART0_UARTICR_FEIC_MASK                            0x80u
 
-#define UART0_UARTICR_RTIC_OFFSET                          6
-#define UART0_UARTICR_RTIC_MASK                            0x40
+#define UART0_UARTICR_RTIC_OFFSET                          6u
+#define UART0_UARTICR_RTIC_MASK                            0x40u
 
-#define UART0_UARTICR_TXIC_OFFSET                          5
-#define UART0_UARTICR_TXIC_MASK                            0x20
+#define UART0_UARTICR_TXIC_OFFSET                          5u
+#define UART0_UARTICR_TXIC_MASK                            0x20u
 
-#define UART0_UARTICR_RXIC_OFFSET                          4
-#define UART0_UARTICR_RXIC_MASK                            0x10
+#define UART0_UARTICR_RXIC_OFFSET                          4u
+#define UART0_UARTICR_RXIC_MASK                            0x10u
 
-#define UART0_UARTICR_DSRMIC_OFFSET                        3
-#define UART0_UARTICR_DSRMIC_MASK                          8
+#define UART0_UARTICR_DSRMIC_OFFSET                        3u
+#define UART0_UARTICR_DSRMIC_MASK                          8u
 
-#define UART0_UARTICR_DCDMIC_OFFSET                        2
-#define UART0_UARTICR_DCDMIC_MASK                          4
+#define UART0_UARTICR_DCDMIC_OFFSET                        2u
+#define UART0_UARTICR_DCDMIC_MASK                          4u
 
-#define UART0_UARTICR_CTSMIC_OFFSET                        1
-#define UART0_UARTICR_CTSMIC_MASK                          2
+#define UART0_UARTICR_CTSMIC_OFFSET                        1u
+#define UART0_UARTICR_CTSMIC_MASK                          2u
 
-#define UART0_UARTICR_RIMIC_OFFSET                         0
-#define UART0_UARTICR_RIMIC_MASK                           1
+#define UART0_UARTICR_RIMIC_OFFSET                         0u
+#define UART0_UARTICR_RIMIC_MASK                           1u
 
-#define UART0_UARTDMACR_DMAONERR_OFFSET                    2
-#define UART0_UARTDMACR_DMAONERR_MASK                      4
+#define UART0_UARTDMACR_DMAONERR_OFFSET                    2u
+#define UART0_UARTDMACR_DMAONERR_MASK                      4u
 
-#define UART0_UARTDMACR_TXDMAE_OFFSET                      1
-#define UART0_UARTDMACR_TXDMAE_MASK                        2
+#define UART0_UARTDMACR_TXDMAE_OFFSET                      1u
+#define UART0_UARTDMACR_TXDMAE_MASK                        2u
 
-#define UART0_UARTDMACR_RXDMAE_OFFSET                      0
-#define UART0_UARTDMACR_RXDMAE_MASK                        1
+#define UART0_UARTDMACR_RXDMAE_OFFSET                      0u
+#define UART0_UARTDMACR_RXDMAE_MASK                        1u
 
-#define UART0_UARTPERIPHID0_PARTNUMBER0_OFFSET             0
-#define UART0_UARTPERIPHID0_PARTNUMBER0_MASK               0xff
+#define UART0_UARTPERIPHID0_PARTNUMBER0_OFFSET             0u
+#define UART0_UARTPERIPHID0_PARTNUMBER0_MASK               0xffu
 
-#define UART0_UARTPERIPHID1_DESIGNER0_OFFSET               4
-#define UART0_UARTPERIPHID1_DESIGNER0_MASK                 0xf0
+#define UART0_UARTPERIPHID1_DESIGNER0_OFFSET               4u
+#define UART0_UARTPERIPHID1_DESIGNER0_MASK                 0xf0u
 
-#define UART0_UARTPERIPHID1_PARTNUMBER1_OFFSET             0
-#define UART0_UARTPERIPHID1_PARTNUMBER1_MASK               0xf
+#define UART0_UARTPERIPHID1_PARTNUMBER1_OFFSET             0u
+#define UART0_UARTPERIPHID1_PARTNUMBER1_MASK               0xfu
 
-#define UART0_UARTPERIPHID2_REVISION_OFFSET                4
-#define UART0_UARTPERIPHID2_REVISION_MASK                  0xf0
+#define UART0_UARTPERIPHID2_REVISION_OFFSET                4u
+#define UART0_UARTPERIPHID2_REVISION_MASK                  0xf0u
 
-#define UART0_UARTPERIPHID2_DESIGNER1_OFFSET               0
-#define UART0_UARTPERIPHID2_DESIGNER1_MASK                 0xf
+#define UART0_UARTPERIPHID2_DESIGNER1_OFFSET               0u
+#define UART0_UARTPERIPHID2_DESIGNER1_MASK                 0xfu
 
-#define UART0_UARTPERIPHID3_CONFIGURATION_OFFSET           0
-#define UART0_UARTPERIPHID3_CONFIGURATION_MASK             0xff
+#define UART0_UARTPERIPHID3_CONFIGURATION_OFFSET           0u
+#define UART0_UARTPERIPHID3_CONFIGURATION_MASK             0xffu
 
-#define UART0_UARTPCELLID0_UARTPCELLID0_OFFSET             0
-#define UART0_UARTPCELLID0_UARTPCELLID0_MASK               0xff
+#define UART0_UARTPCELLID0_UARTPCELLID0_OFFSET             0u
+#define UART0_UARTPCELLID0_UARTPCELLID0_MASK               0xffu
 
-#define UART0_UARTPCELLID1_UARTPCELLID1_OFFSET             0
-#define UART0_UARTPCELLID1_UARTPCELLID1_MASK               0xff
+#define UART0_UARTPCELLID1_UARTPCELLID1_OFFSET             0u
+#define UART0_UARTPCELLID1_UARTPCELLID1_MASK               0xffu
 
-#define UART0_UARTPCELLID2_UARTPCELLID2_OFFSET             0
-#define UART0_UARTPCELLID2_UARTPCELLID2_MASK               0xff
+#define UART0_UARTPCELLID2_UARTPCELLID2_OFFSET             0u
+#define UART0_UARTPCELLID2_UARTPCELLID2_MASK               0xffu
 
-#define UART0_UARTPCELLID3_UARTPCELLID3_OFFSET             0
-#define UART0_UARTPCELLID3_UARTPCELLID3_MASK               0xff
+#define UART0_UARTPCELLID3_UARTPCELLID3_OFFSET             0u
+#define UART0_UARTPCELLID3_UARTPCELLID3_MASK               0xffu
 
 
 typedef struct

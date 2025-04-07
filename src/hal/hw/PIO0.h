@@ -8,793 +8,793 @@
 #include <stdint.h>
 
 
-#define PIO0_CTRL_CLKDIV_RESTART_OFFSET                    8
-#define PIO0_CTRL_CLKDIV_RESTART_MASK                      0xf00
+#define PIO0_CTRL_CLKDIV_RESTART_OFFSET                    8u
+#define PIO0_CTRL_CLKDIV_RESTART_MASK                      0xf00u
 
-#define PIO0_CTRL_SM_RESTART_OFFSET                        4
-#define PIO0_CTRL_SM_RESTART_MASK                          0xf0
+#define PIO0_CTRL_SM_RESTART_OFFSET                        4u
+#define PIO0_CTRL_SM_RESTART_MASK                          0xf0u
 
-#define PIO0_CTRL_SM_ENABLE_OFFSET                         0
-#define PIO0_CTRL_SM_ENABLE_MASK                           0xf
+#define PIO0_CTRL_SM_ENABLE_OFFSET                         0u
+#define PIO0_CTRL_SM_ENABLE_MASK                           0xfu
 
-#define PIO0_FSTAT_TXEMPTY_OFFSET                          24
-#define PIO0_FSTAT_TXEMPTY_MASK                            0xf000000
+#define PIO0_FSTAT_TXEMPTY_OFFSET                          24u
+#define PIO0_FSTAT_TXEMPTY_MASK                            0xf000000u
 
-#define PIO0_FSTAT_TXFULL_OFFSET                           16
-#define PIO0_FSTAT_TXFULL_MASK                             0xf0000
+#define PIO0_FSTAT_TXFULL_OFFSET                           16u
+#define PIO0_FSTAT_TXFULL_MASK                             0xf0000u
 
-#define PIO0_FSTAT_RXEMPTY_OFFSET                          8
-#define PIO0_FSTAT_RXEMPTY_MASK                            0xf00
+#define PIO0_FSTAT_RXEMPTY_OFFSET                          8u
+#define PIO0_FSTAT_RXEMPTY_MASK                            0xf00u
 
-#define PIO0_FSTAT_RXFULL_OFFSET                           0
-#define PIO0_FSTAT_RXFULL_MASK                             0xf
+#define PIO0_FSTAT_RXFULL_OFFSET                           0u
+#define PIO0_FSTAT_RXFULL_MASK                             0xfu
 
-#define PIO0_FDEBUG_TXSTALL_OFFSET                         24
-#define PIO0_FDEBUG_TXSTALL_MASK                           0xf000000
+#define PIO0_FDEBUG_TXSTALL_OFFSET                         24u
+#define PIO0_FDEBUG_TXSTALL_MASK                           0xf000000u
 
-#define PIO0_FDEBUG_TXOVER_OFFSET                          16
-#define PIO0_FDEBUG_TXOVER_MASK                            0xf0000
+#define PIO0_FDEBUG_TXOVER_OFFSET                          16u
+#define PIO0_FDEBUG_TXOVER_MASK                            0xf0000u
 
-#define PIO0_FDEBUG_RXUNDER_OFFSET                         8
-#define PIO0_FDEBUG_RXUNDER_MASK                           0xf00
+#define PIO0_FDEBUG_RXUNDER_OFFSET                         8u
+#define PIO0_FDEBUG_RXUNDER_MASK                           0xf00u
 
-#define PIO0_FDEBUG_RXSTALL_OFFSET                         0
-#define PIO0_FDEBUG_RXSTALL_MASK                           0xf
+#define PIO0_FDEBUG_RXSTALL_OFFSET                         0u
+#define PIO0_FDEBUG_RXSTALL_MASK                           0xfu
 
-#define PIO0_FLEVEL_RX3_OFFSET                             28
-#define PIO0_FLEVEL_RX3_MASK                               0xf0000000
+#define PIO0_FLEVEL_RX3_OFFSET                             28u
+#define PIO0_FLEVEL_RX3_MASK                               0xf0000000u
 
-#define PIO0_FLEVEL_TX3_OFFSET                             24
-#define PIO0_FLEVEL_TX3_MASK                               0xf000000
+#define PIO0_FLEVEL_TX3_OFFSET                             24u
+#define PIO0_FLEVEL_TX3_MASK                               0xf000000u
 
-#define PIO0_FLEVEL_RX2_OFFSET                             20
-#define PIO0_FLEVEL_RX2_MASK                               0xf00000
+#define PIO0_FLEVEL_RX2_OFFSET                             20u
+#define PIO0_FLEVEL_RX2_MASK                               0xf00000u
 
-#define PIO0_FLEVEL_TX2_OFFSET                             16
-#define PIO0_FLEVEL_TX2_MASK                               0xf0000
+#define PIO0_FLEVEL_TX2_OFFSET                             16u
+#define PIO0_FLEVEL_TX2_MASK                               0xf0000u
 
-#define PIO0_FLEVEL_RX1_OFFSET                             12
-#define PIO0_FLEVEL_RX1_MASK                               0xf000
+#define PIO0_FLEVEL_RX1_OFFSET                             12u
+#define PIO0_FLEVEL_RX1_MASK                               0xf000u
 
-#define PIO0_FLEVEL_TX1_OFFSET                             8
-#define PIO0_FLEVEL_TX1_MASK                               0xf00
+#define PIO0_FLEVEL_TX1_OFFSET                             8u
+#define PIO0_FLEVEL_TX1_MASK                               0xf00u
 
-#define PIO0_FLEVEL_RX0_OFFSET                             4
-#define PIO0_FLEVEL_RX0_MASK                               0xf0
+#define PIO0_FLEVEL_RX0_OFFSET                             4u
+#define PIO0_FLEVEL_RX0_MASK                               0xf0u
 
-#define PIO0_FLEVEL_TX0_OFFSET                             0
-#define PIO0_FLEVEL_TX0_MASK                               0xf
+#define PIO0_FLEVEL_TX0_OFFSET                             0u
+#define PIO0_FLEVEL_TX0_MASK                               0xfu
 
-#define PIO0_IRQ_IRQ_OFFSET                                0
-#define PIO0_IRQ_IRQ_MASK                                  0xff
+#define PIO0_IRQ_IRQ_OFFSET                                0u
+#define PIO0_IRQ_IRQ_MASK                                  0xffu
 
-#define PIO0_IRQ_FORCE_IRQ_FORCE_OFFSET                    0
-#define PIO0_IRQ_FORCE_IRQ_FORCE_MASK                      0xff
+#define PIO0_IRQ_FORCE_IRQ_FORCE_OFFSET                    0u
+#define PIO0_IRQ_FORCE_IRQ_FORCE_MASK                      0xffu
 
-#define PIO0_DBG_CFGINFO_IMEM_SIZE_OFFSET                  16
-#define PIO0_DBG_CFGINFO_IMEM_SIZE_MASK                    0x3f0000
+#define PIO0_DBG_CFGINFO_IMEM_SIZE_OFFSET                  16u
+#define PIO0_DBG_CFGINFO_IMEM_SIZE_MASK                    0x3f0000u
 
-#define PIO0_DBG_CFGINFO_SM_COUNT_OFFSET                   8
-#define PIO0_DBG_CFGINFO_SM_COUNT_MASK                     0xf00
+#define PIO0_DBG_CFGINFO_SM_COUNT_OFFSET                   8u
+#define PIO0_DBG_CFGINFO_SM_COUNT_MASK                     0xf00u
 
-#define PIO0_DBG_CFGINFO_FIFO_DEPTH_OFFSET                 0
-#define PIO0_DBG_CFGINFO_FIFO_DEPTH_MASK                   0x3f
+#define PIO0_DBG_CFGINFO_FIFO_DEPTH_OFFSET                 0u
+#define PIO0_DBG_CFGINFO_FIFO_DEPTH_MASK                   0x3fu
 
-#define PIO0_INSTR_MEM0_INSTR_MEM0_OFFSET                  0
-#define PIO0_INSTR_MEM0_INSTR_MEM0_MASK                    0xffff
+#define PIO0_INSTR_MEM0_INSTR_MEM0_OFFSET                  0u
+#define PIO0_INSTR_MEM0_INSTR_MEM0_MASK                    0xffffu
 
-#define PIO0_INSTR_MEM1_INSTR_MEM1_OFFSET                  0
-#define PIO0_INSTR_MEM1_INSTR_MEM1_MASK                    0xffff
+#define PIO0_INSTR_MEM1_INSTR_MEM1_OFFSET                  0u
+#define PIO0_INSTR_MEM1_INSTR_MEM1_MASK                    0xffffu
 
-#define PIO0_INSTR_MEM2_INSTR_MEM2_OFFSET                  0
-#define PIO0_INSTR_MEM2_INSTR_MEM2_MASK                    0xffff
+#define PIO0_INSTR_MEM2_INSTR_MEM2_OFFSET                  0u
+#define PIO0_INSTR_MEM2_INSTR_MEM2_MASK                    0xffffu
 
-#define PIO0_INSTR_MEM3_INSTR_MEM3_OFFSET                  0
-#define PIO0_INSTR_MEM3_INSTR_MEM3_MASK                    0xffff
+#define PIO0_INSTR_MEM3_INSTR_MEM3_OFFSET                  0u
+#define PIO0_INSTR_MEM3_INSTR_MEM3_MASK                    0xffffu
 
-#define PIO0_INSTR_MEM4_INSTR_MEM4_OFFSET                  0
-#define PIO0_INSTR_MEM4_INSTR_MEM4_MASK                    0xffff
+#define PIO0_INSTR_MEM4_INSTR_MEM4_OFFSET                  0u
+#define PIO0_INSTR_MEM4_INSTR_MEM4_MASK                    0xffffu
 
-#define PIO0_INSTR_MEM5_INSTR_MEM5_OFFSET                  0
-#define PIO0_INSTR_MEM5_INSTR_MEM5_MASK                    0xffff
+#define PIO0_INSTR_MEM5_INSTR_MEM5_OFFSET                  0u
+#define PIO0_INSTR_MEM5_INSTR_MEM5_MASK                    0xffffu
 
-#define PIO0_INSTR_MEM6_INSTR_MEM6_OFFSET                  0
-#define PIO0_INSTR_MEM6_INSTR_MEM6_MASK                    0xffff
+#define PIO0_INSTR_MEM6_INSTR_MEM6_OFFSET                  0u
+#define PIO0_INSTR_MEM6_INSTR_MEM6_MASK                    0xffffu
 
-#define PIO0_INSTR_MEM7_INSTR_MEM7_OFFSET                  0
-#define PIO0_INSTR_MEM7_INSTR_MEM7_MASK                    0xffff
+#define PIO0_INSTR_MEM7_INSTR_MEM7_OFFSET                  0u
+#define PIO0_INSTR_MEM7_INSTR_MEM7_MASK                    0xffffu
 
-#define PIO0_INSTR_MEM8_INSTR_MEM8_OFFSET                  0
-#define PIO0_INSTR_MEM8_INSTR_MEM8_MASK                    0xffff
+#define PIO0_INSTR_MEM8_INSTR_MEM8_OFFSET                  0u
+#define PIO0_INSTR_MEM8_INSTR_MEM8_MASK                    0xffffu
 
-#define PIO0_INSTR_MEM9_INSTR_MEM9_OFFSET                  0
-#define PIO0_INSTR_MEM9_INSTR_MEM9_MASK                    0xffff
+#define PIO0_INSTR_MEM9_INSTR_MEM9_OFFSET                  0u
+#define PIO0_INSTR_MEM9_INSTR_MEM9_MASK                    0xffffu
 
-#define PIO0_INSTR_MEM10_INSTR_MEM10_OFFSET                0
-#define PIO0_INSTR_MEM10_INSTR_MEM10_MASK                  0xffff
+#define PIO0_INSTR_MEM10_INSTR_MEM10_OFFSET                0u
+#define PIO0_INSTR_MEM10_INSTR_MEM10_MASK                  0xffffu
 
-#define PIO0_INSTR_MEM11_INSTR_MEM11_OFFSET                0
-#define PIO0_INSTR_MEM11_INSTR_MEM11_MASK                  0xffff
+#define PIO0_INSTR_MEM11_INSTR_MEM11_OFFSET                0u
+#define PIO0_INSTR_MEM11_INSTR_MEM11_MASK                  0xffffu
 
-#define PIO0_INSTR_MEM12_INSTR_MEM12_OFFSET                0
-#define PIO0_INSTR_MEM12_INSTR_MEM12_MASK                  0xffff
+#define PIO0_INSTR_MEM12_INSTR_MEM12_OFFSET                0u
+#define PIO0_INSTR_MEM12_INSTR_MEM12_MASK                  0xffffu
 
-#define PIO0_INSTR_MEM13_INSTR_MEM13_OFFSET                0
-#define PIO0_INSTR_MEM13_INSTR_MEM13_MASK                  0xffff
+#define PIO0_INSTR_MEM13_INSTR_MEM13_OFFSET                0u
+#define PIO0_INSTR_MEM13_INSTR_MEM13_MASK                  0xffffu
 
-#define PIO0_INSTR_MEM14_INSTR_MEM14_OFFSET                0
-#define PIO0_INSTR_MEM14_INSTR_MEM14_MASK                  0xffff
+#define PIO0_INSTR_MEM14_INSTR_MEM14_OFFSET                0u
+#define PIO0_INSTR_MEM14_INSTR_MEM14_MASK                  0xffffu
 
-#define PIO0_INSTR_MEM15_INSTR_MEM15_OFFSET                0
-#define PIO0_INSTR_MEM15_INSTR_MEM15_MASK                  0xffff
+#define PIO0_INSTR_MEM15_INSTR_MEM15_OFFSET                0u
+#define PIO0_INSTR_MEM15_INSTR_MEM15_MASK                  0xffffu
 
-#define PIO0_INSTR_MEM16_INSTR_MEM16_OFFSET                0
-#define PIO0_INSTR_MEM16_INSTR_MEM16_MASK                  0xffff
+#define PIO0_INSTR_MEM16_INSTR_MEM16_OFFSET                0u
+#define PIO0_INSTR_MEM16_INSTR_MEM16_MASK                  0xffffu
 
-#define PIO0_INSTR_MEM17_INSTR_MEM17_OFFSET                0
-#define PIO0_INSTR_MEM17_INSTR_MEM17_MASK                  0xffff
+#define PIO0_INSTR_MEM17_INSTR_MEM17_OFFSET                0u
+#define PIO0_INSTR_MEM17_INSTR_MEM17_MASK                  0xffffu
 
-#define PIO0_INSTR_MEM18_INSTR_MEM18_OFFSET                0
-#define PIO0_INSTR_MEM18_INSTR_MEM18_MASK                  0xffff
+#define PIO0_INSTR_MEM18_INSTR_MEM18_OFFSET                0u
+#define PIO0_INSTR_MEM18_INSTR_MEM18_MASK                  0xffffu
 
-#define PIO0_INSTR_MEM19_INSTR_MEM19_OFFSET                0
-#define PIO0_INSTR_MEM19_INSTR_MEM19_MASK                  0xffff
+#define PIO0_INSTR_MEM19_INSTR_MEM19_OFFSET                0u
+#define PIO0_INSTR_MEM19_INSTR_MEM19_MASK                  0xffffu
 
-#define PIO0_INSTR_MEM20_INSTR_MEM20_OFFSET                0
-#define PIO0_INSTR_MEM20_INSTR_MEM20_MASK                  0xffff
+#define PIO0_INSTR_MEM20_INSTR_MEM20_OFFSET                0u
+#define PIO0_INSTR_MEM20_INSTR_MEM20_MASK                  0xffffu
 
-#define PIO0_INSTR_MEM21_INSTR_MEM21_OFFSET                0
-#define PIO0_INSTR_MEM21_INSTR_MEM21_MASK                  0xffff
+#define PIO0_INSTR_MEM21_INSTR_MEM21_OFFSET                0u
+#define PIO0_INSTR_MEM21_INSTR_MEM21_MASK                  0xffffu
 
-#define PIO0_INSTR_MEM22_INSTR_MEM22_OFFSET                0
-#define PIO0_INSTR_MEM22_INSTR_MEM22_MASK                  0xffff
+#define PIO0_INSTR_MEM22_INSTR_MEM22_OFFSET                0u
+#define PIO0_INSTR_MEM22_INSTR_MEM22_MASK                  0xffffu
 
-#define PIO0_INSTR_MEM23_INSTR_MEM23_OFFSET                0
-#define PIO0_INSTR_MEM23_INSTR_MEM23_MASK                  0xffff
+#define PIO0_INSTR_MEM23_INSTR_MEM23_OFFSET                0u
+#define PIO0_INSTR_MEM23_INSTR_MEM23_MASK                  0xffffu
 
-#define PIO0_INSTR_MEM24_INSTR_MEM24_OFFSET                0
-#define PIO0_INSTR_MEM24_INSTR_MEM24_MASK                  0xffff
+#define PIO0_INSTR_MEM24_INSTR_MEM24_OFFSET                0u
+#define PIO0_INSTR_MEM24_INSTR_MEM24_MASK                  0xffffu
 
-#define PIO0_INSTR_MEM25_INSTR_MEM25_OFFSET                0
-#define PIO0_INSTR_MEM25_INSTR_MEM25_MASK                  0xffff
+#define PIO0_INSTR_MEM25_INSTR_MEM25_OFFSET                0u
+#define PIO0_INSTR_MEM25_INSTR_MEM25_MASK                  0xffffu
 
-#define PIO0_INSTR_MEM26_INSTR_MEM26_OFFSET                0
-#define PIO0_INSTR_MEM26_INSTR_MEM26_MASK                  0xffff
+#define PIO0_INSTR_MEM26_INSTR_MEM26_OFFSET                0u
+#define PIO0_INSTR_MEM26_INSTR_MEM26_MASK                  0xffffu
 
-#define PIO0_INSTR_MEM27_INSTR_MEM27_OFFSET                0
-#define PIO0_INSTR_MEM27_INSTR_MEM27_MASK                  0xffff
+#define PIO0_INSTR_MEM27_INSTR_MEM27_OFFSET                0u
+#define PIO0_INSTR_MEM27_INSTR_MEM27_MASK                  0xffffu
 
-#define PIO0_INSTR_MEM28_INSTR_MEM28_OFFSET                0
-#define PIO0_INSTR_MEM28_INSTR_MEM28_MASK                  0xffff
+#define PIO0_INSTR_MEM28_INSTR_MEM28_OFFSET                0u
+#define PIO0_INSTR_MEM28_INSTR_MEM28_MASK                  0xffffu
 
-#define PIO0_INSTR_MEM29_INSTR_MEM29_OFFSET                0
-#define PIO0_INSTR_MEM29_INSTR_MEM29_MASK                  0xffff
+#define PIO0_INSTR_MEM29_INSTR_MEM29_OFFSET                0u
+#define PIO0_INSTR_MEM29_INSTR_MEM29_MASK                  0xffffu
 
-#define PIO0_INSTR_MEM30_INSTR_MEM30_OFFSET                0
-#define PIO0_INSTR_MEM30_INSTR_MEM30_MASK                  0xffff
+#define PIO0_INSTR_MEM30_INSTR_MEM30_OFFSET                0u
+#define PIO0_INSTR_MEM30_INSTR_MEM30_MASK                  0xffffu
 
-#define PIO0_INSTR_MEM31_INSTR_MEM31_OFFSET                0
-#define PIO0_INSTR_MEM31_INSTR_MEM31_MASK                  0xffff
+#define PIO0_INSTR_MEM31_INSTR_MEM31_OFFSET                0u
+#define PIO0_INSTR_MEM31_INSTR_MEM31_MASK                  0xffffu
 
-#define PIO0_SM0_CLKDIV_INT_OFFSET                         16
-#define PIO0_SM0_CLKDIV_INT_MASK                           0xffff0000
+#define PIO0_SM0_CLKDIV_INT_OFFSET                         16u
+#define PIO0_SM0_CLKDIV_INT_MASK                           0xffff0000u
 
-#define PIO0_SM0_CLKDIV_FRAC_OFFSET                        8
-#define PIO0_SM0_CLKDIV_FRAC_MASK                          0xff00
+#define PIO0_SM0_CLKDIV_FRAC_OFFSET                        8u
+#define PIO0_SM0_CLKDIV_FRAC_MASK                          0xff00u
 
-#define PIO0_SM0_EXECCTRL_EXEC_STALLED_OFFSET              31
-#define PIO0_SM0_EXECCTRL_EXEC_STALLED_MASK                0x80000000
+#define PIO0_SM0_EXECCTRL_EXEC_STALLED_OFFSET              31u
+#define PIO0_SM0_EXECCTRL_EXEC_STALLED_MASK                0x80000000u
 
-#define PIO0_SM0_EXECCTRL_SIDE_EN_OFFSET                   30
-#define PIO0_SM0_EXECCTRL_SIDE_EN_MASK                     0x40000000
+#define PIO0_SM0_EXECCTRL_SIDE_EN_OFFSET                   30u
+#define PIO0_SM0_EXECCTRL_SIDE_EN_MASK                     0x40000000u
 
-#define PIO0_SM0_EXECCTRL_SIDE_PINDIR_OFFSET               29
-#define PIO0_SM0_EXECCTRL_SIDE_PINDIR_MASK                 0x20000000
+#define PIO0_SM0_EXECCTRL_SIDE_PINDIR_OFFSET               29u
+#define PIO0_SM0_EXECCTRL_SIDE_PINDIR_MASK                 0x20000000u
 
-#define PIO0_SM0_EXECCTRL_JMP_PIN_OFFSET                   24
-#define PIO0_SM0_EXECCTRL_JMP_PIN_MASK                     0x1f000000
+#define PIO0_SM0_EXECCTRL_JMP_PIN_OFFSET                   24u
+#define PIO0_SM0_EXECCTRL_JMP_PIN_MASK                     0x1f000000u
 
-#define PIO0_SM0_EXECCTRL_OUT_EN_SEL_OFFSET                19
-#define PIO0_SM0_EXECCTRL_OUT_EN_SEL_MASK                  0xf80000
+#define PIO0_SM0_EXECCTRL_OUT_EN_SEL_OFFSET                19u
+#define PIO0_SM0_EXECCTRL_OUT_EN_SEL_MASK                  0xf80000u
 
-#define PIO0_SM0_EXECCTRL_INLINE_OUT_EN_OFFSET             18
-#define PIO0_SM0_EXECCTRL_INLINE_OUT_EN_MASK               0x40000
+#define PIO0_SM0_EXECCTRL_INLINE_OUT_EN_OFFSET             18u
+#define PIO0_SM0_EXECCTRL_INLINE_OUT_EN_MASK               0x40000u
 
-#define PIO0_SM0_EXECCTRL_OUT_STICKY_OFFSET                17
-#define PIO0_SM0_EXECCTRL_OUT_STICKY_MASK                  0x20000
+#define PIO0_SM0_EXECCTRL_OUT_STICKY_OFFSET                17u
+#define PIO0_SM0_EXECCTRL_OUT_STICKY_MASK                  0x20000u
 
-#define PIO0_SM0_EXECCTRL_WRAP_TOP_OFFSET                  12
-#define PIO0_SM0_EXECCTRL_WRAP_TOP_MASK                    0x1f000
+#define PIO0_SM0_EXECCTRL_WRAP_TOP_OFFSET                  12u
+#define PIO0_SM0_EXECCTRL_WRAP_TOP_MASK                    0x1f000u
 
-#define PIO0_SM0_EXECCTRL_WRAP_BOTTOM_OFFSET               7
-#define PIO0_SM0_EXECCTRL_WRAP_BOTTOM_MASK                 0xf80
+#define PIO0_SM0_EXECCTRL_WRAP_BOTTOM_OFFSET               7u
+#define PIO0_SM0_EXECCTRL_WRAP_BOTTOM_MASK                 0xf80u
 
-#define PIO0_SM0_EXECCTRL_STATUS_SEL_OFFSET                4
-#define PIO0_SM0_EXECCTRL_STATUS_SEL_MASK                  0x10
-#define PIO0_SM0_EXECCTRL_STATUS_SEL_TXLEVEL               0
-#define PIO0_SM0_EXECCTRL_STATUS_SEL_RXLEVEL               1
+#define PIO0_SM0_EXECCTRL_STATUS_SEL_OFFSET                4u
+#define PIO0_SM0_EXECCTRL_STATUS_SEL_MASK                  0x10u
+#define PIO0_SM0_EXECCTRL_STATUS_SEL_TXLEVEL               0u
+#define PIO0_SM0_EXECCTRL_STATUS_SEL_RXLEVEL               1u
 
-#define PIO0_SM0_EXECCTRL_STATUS_N_OFFSET                  0
-#define PIO0_SM0_EXECCTRL_STATUS_N_MASK                    0xf
+#define PIO0_SM0_EXECCTRL_STATUS_N_OFFSET                  0u
+#define PIO0_SM0_EXECCTRL_STATUS_N_MASK                    0xfu
 
-#define PIO0_SM0_SHIFTCTRL_FJOIN_RX_OFFSET                 31
-#define PIO0_SM0_SHIFTCTRL_FJOIN_RX_MASK                   0x80000000
+#define PIO0_SM0_SHIFTCTRL_FJOIN_RX_OFFSET                 31u
+#define PIO0_SM0_SHIFTCTRL_FJOIN_RX_MASK                   0x80000000u
 
-#define PIO0_SM0_SHIFTCTRL_FJOIN_TX_OFFSET                 30
-#define PIO0_SM0_SHIFTCTRL_FJOIN_TX_MASK                   0x40000000
+#define PIO0_SM0_SHIFTCTRL_FJOIN_TX_OFFSET                 30u
+#define PIO0_SM0_SHIFTCTRL_FJOIN_TX_MASK                   0x40000000u
 
-#define PIO0_SM0_SHIFTCTRL_PULL_THRESH_OFFSET              25
-#define PIO0_SM0_SHIFTCTRL_PULL_THRESH_MASK                0x3e000000
+#define PIO0_SM0_SHIFTCTRL_PULL_THRESH_OFFSET              25u
+#define PIO0_SM0_SHIFTCTRL_PULL_THRESH_MASK                0x3e000000u
 
-#define PIO0_SM0_SHIFTCTRL_PUSH_THRESH_OFFSET              20
-#define PIO0_SM0_SHIFTCTRL_PUSH_THRESH_MASK                0x1f00000
+#define PIO0_SM0_SHIFTCTRL_PUSH_THRESH_OFFSET              20u
+#define PIO0_SM0_SHIFTCTRL_PUSH_THRESH_MASK                0x1f00000u
 
-#define PIO0_SM0_SHIFTCTRL_OUT_SHIFTDIR_OFFSET             19
-#define PIO0_SM0_SHIFTCTRL_OUT_SHIFTDIR_MASK               0x80000
+#define PIO0_SM0_SHIFTCTRL_OUT_SHIFTDIR_OFFSET             19u
+#define PIO0_SM0_SHIFTCTRL_OUT_SHIFTDIR_MASK               0x80000u
 
-#define PIO0_SM0_SHIFTCTRL_IN_SHIFTDIR_OFFSET              18
-#define PIO0_SM0_SHIFTCTRL_IN_SHIFTDIR_MASK                0x40000
+#define PIO0_SM0_SHIFTCTRL_IN_SHIFTDIR_OFFSET              18u
+#define PIO0_SM0_SHIFTCTRL_IN_SHIFTDIR_MASK                0x40000u
 
-#define PIO0_SM0_SHIFTCTRL_AUTOPULL_OFFSET                 17
-#define PIO0_SM0_SHIFTCTRL_AUTOPULL_MASK                   0x20000
+#define PIO0_SM0_SHIFTCTRL_AUTOPULL_OFFSET                 17u
+#define PIO0_SM0_SHIFTCTRL_AUTOPULL_MASK                   0x20000u
 
-#define PIO0_SM0_SHIFTCTRL_AUTOPUSH_OFFSET                 16
-#define PIO0_SM0_SHIFTCTRL_AUTOPUSH_MASK                   0x10000
+#define PIO0_SM0_SHIFTCTRL_AUTOPUSH_OFFSET                 16u
+#define PIO0_SM0_SHIFTCTRL_AUTOPUSH_MASK                   0x10000u
 
-#define PIO0_SM0_ADDR_SM0_ADDR_OFFSET                      0
-#define PIO0_SM0_ADDR_SM0_ADDR_MASK                        0x1f
+#define PIO0_SM0_ADDR_SM0_ADDR_OFFSET                      0u
+#define PIO0_SM0_ADDR_SM0_ADDR_MASK                        0x1fu
 
-#define PIO0_SM0_INSTR_SM0_INSTR_OFFSET                    0
-#define PIO0_SM0_INSTR_SM0_INSTR_MASK                      0xffff
+#define PIO0_SM0_INSTR_SM0_INSTR_OFFSET                    0u
+#define PIO0_SM0_INSTR_SM0_INSTR_MASK                      0xffffu
 
-#define PIO0_SM0_PINCTRL_SIDESET_COUNT_OFFSET              29
-#define PIO0_SM0_PINCTRL_SIDESET_COUNT_MASK                0xe0000000
+#define PIO0_SM0_PINCTRL_SIDESET_COUNT_OFFSET              29u
+#define PIO0_SM0_PINCTRL_SIDESET_COUNT_MASK                0xe0000000u
 
-#define PIO0_SM0_PINCTRL_SET_COUNT_OFFSET                  26
-#define PIO0_SM0_PINCTRL_SET_COUNT_MASK                    0x1c000000
+#define PIO0_SM0_PINCTRL_SET_COUNT_OFFSET                  26u
+#define PIO0_SM0_PINCTRL_SET_COUNT_MASK                    0x1c000000u
 
-#define PIO0_SM0_PINCTRL_OUT_COUNT_OFFSET                  20
-#define PIO0_SM0_PINCTRL_OUT_COUNT_MASK                    0x3f00000
+#define PIO0_SM0_PINCTRL_OUT_COUNT_OFFSET                  20u
+#define PIO0_SM0_PINCTRL_OUT_COUNT_MASK                    0x3f00000u
 
-#define PIO0_SM0_PINCTRL_IN_BASE_OFFSET                    15
-#define PIO0_SM0_PINCTRL_IN_BASE_MASK                      0xf8000
+#define PIO0_SM0_PINCTRL_IN_BASE_OFFSET                    15u
+#define PIO0_SM0_PINCTRL_IN_BASE_MASK                      0xf8000u
 
-#define PIO0_SM0_PINCTRL_SIDESET_BASE_OFFSET               10
-#define PIO0_SM0_PINCTRL_SIDESET_BASE_MASK                 0x7c00
+#define PIO0_SM0_PINCTRL_SIDESET_BASE_OFFSET               10u
+#define PIO0_SM0_PINCTRL_SIDESET_BASE_MASK                 0x7c00u
 
-#define PIO0_SM0_PINCTRL_SET_BASE_OFFSET                   5
-#define PIO0_SM0_PINCTRL_SET_BASE_MASK                     0x3e0
+#define PIO0_SM0_PINCTRL_SET_BASE_OFFSET                   5u
+#define PIO0_SM0_PINCTRL_SET_BASE_MASK                     0x3e0u
 
-#define PIO0_SM0_PINCTRL_OUT_BASE_OFFSET                   0
-#define PIO0_SM0_PINCTRL_OUT_BASE_MASK                     0x1f
+#define PIO0_SM0_PINCTRL_OUT_BASE_OFFSET                   0u
+#define PIO0_SM0_PINCTRL_OUT_BASE_MASK                     0x1fu
 
-#define PIO0_SM1_CLKDIV_INT_OFFSET                         16
-#define PIO0_SM1_CLKDIV_INT_MASK                           0xffff0000
+#define PIO0_SM1_CLKDIV_INT_OFFSET                         16u
+#define PIO0_SM1_CLKDIV_INT_MASK                           0xffff0000u
 
-#define PIO0_SM1_CLKDIV_FRAC_OFFSET                        8
-#define PIO0_SM1_CLKDIV_FRAC_MASK                          0xff00
+#define PIO0_SM1_CLKDIV_FRAC_OFFSET                        8u
+#define PIO0_SM1_CLKDIV_FRAC_MASK                          0xff00u
 
-#define PIO0_SM1_EXECCTRL_EXEC_STALLED_OFFSET              31
-#define PIO0_SM1_EXECCTRL_EXEC_STALLED_MASK                0x80000000
+#define PIO0_SM1_EXECCTRL_EXEC_STALLED_OFFSET              31u
+#define PIO0_SM1_EXECCTRL_EXEC_STALLED_MASK                0x80000000u
 
-#define PIO0_SM1_EXECCTRL_SIDE_EN_OFFSET                   30
-#define PIO0_SM1_EXECCTRL_SIDE_EN_MASK                     0x40000000
+#define PIO0_SM1_EXECCTRL_SIDE_EN_OFFSET                   30u
+#define PIO0_SM1_EXECCTRL_SIDE_EN_MASK                     0x40000000u
 
-#define PIO0_SM1_EXECCTRL_SIDE_PINDIR_OFFSET               29
-#define PIO0_SM1_EXECCTRL_SIDE_PINDIR_MASK                 0x20000000
+#define PIO0_SM1_EXECCTRL_SIDE_PINDIR_OFFSET               29u
+#define PIO0_SM1_EXECCTRL_SIDE_PINDIR_MASK                 0x20000000u
 
-#define PIO0_SM1_EXECCTRL_JMP_PIN_OFFSET                   24
-#define PIO0_SM1_EXECCTRL_JMP_PIN_MASK                     0x1f000000
+#define PIO0_SM1_EXECCTRL_JMP_PIN_OFFSET                   24u
+#define PIO0_SM1_EXECCTRL_JMP_PIN_MASK                     0x1f000000u
 
-#define PIO0_SM1_EXECCTRL_OUT_EN_SEL_OFFSET                19
-#define PIO0_SM1_EXECCTRL_OUT_EN_SEL_MASK                  0xf80000
+#define PIO0_SM1_EXECCTRL_OUT_EN_SEL_OFFSET                19u
+#define PIO0_SM1_EXECCTRL_OUT_EN_SEL_MASK                  0xf80000u
 
-#define PIO0_SM1_EXECCTRL_INLINE_OUT_EN_OFFSET             18
-#define PIO0_SM1_EXECCTRL_INLINE_OUT_EN_MASK               0x40000
+#define PIO0_SM1_EXECCTRL_INLINE_OUT_EN_OFFSET             18u
+#define PIO0_SM1_EXECCTRL_INLINE_OUT_EN_MASK               0x40000u
 
-#define PIO0_SM1_EXECCTRL_OUT_STICKY_OFFSET                17
-#define PIO0_SM1_EXECCTRL_OUT_STICKY_MASK                  0x20000
+#define PIO0_SM1_EXECCTRL_OUT_STICKY_OFFSET                17u
+#define PIO0_SM1_EXECCTRL_OUT_STICKY_MASK                  0x20000u
 
-#define PIO0_SM1_EXECCTRL_WRAP_TOP_OFFSET                  12
-#define PIO0_SM1_EXECCTRL_WRAP_TOP_MASK                    0x1f000
+#define PIO0_SM1_EXECCTRL_WRAP_TOP_OFFSET                  12u
+#define PIO0_SM1_EXECCTRL_WRAP_TOP_MASK                    0x1f000u
 
-#define PIO0_SM1_EXECCTRL_WRAP_BOTTOM_OFFSET               7
-#define PIO0_SM1_EXECCTRL_WRAP_BOTTOM_MASK                 0xf80
+#define PIO0_SM1_EXECCTRL_WRAP_BOTTOM_OFFSET               7u
+#define PIO0_SM1_EXECCTRL_WRAP_BOTTOM_MASK                 0xf80u
 
-#define PIO0_SM1_EXECCTRL_STATUS_SEL_OFFSET                4
-#define PIO0_SM1_EXECCTRL_STATUS_SEL_MASK                  0x10
-#define PIO0_SM1_EXECCTRL_STATUS_SEL_TXLEVEL               0
-#define PIO0_SM1_EXECCTRL_STATUS_SEL_RXLEVEL               1
+#define PIO0_SM1_EXECCTRL_STATUS_SEL_OFFSET                4u
+#define PIO0_SM1_EXECCTRL_STATUS_SEL_MASK                  0x10u
+#define PIO0_SM1_EXECCTRL_STATUS_SEL_TXLEVEL               0u
+#define PIO0_SM1_EXECCTRL_STATUS_SEL_RXLEVEL               1u
 
-#define PIO0_SM1_EXECCTRL_STATUS_N_OFFSET                  0
-#define PIO0_SM1_EXECCTRL_STATUS_N_MASK                    0xf
+#define PIO0_SM1_EXECCTRL_STATUS_N_OFFSET                  0u
+#define PIO0_SM1_EXECCTRL_STATUS_N_MASK                    0xfu
 
-#define PIO0_SM1_SHIFTCTRL_FJOIN_RX_OFFSET                 31
-#define PIO0_SM1_SHIFTCTRL_FJOIN_RX_MASK                   0x80000000
+#define PIO0_SM1_SHIFTCTRL_FJOIN_RX_OFFSET                 31u
+#define PIO0_SM1_SHIFTCTRL_FJOIN_RX_MASK                   0x80000000u
 
-#define PIO0_SM1_SHIFTCTRL_FJOIN_TX_OFFSET                 30
-#define PIO0_SM1_SHIFTCTRL_FJOIN_TX_MASK                   0x40000000
+#define PIO0_SM1_SHIFTCTRL_FJOIN_TX_OFFSET                 30u
+#define PIO0_SM1_SHIFTCTRL_FJOIN_TX_MASK                   0x40000000u
 
-#define PIO0_SM1_SHIFTCTRL_PULL_THRESH_OFFSET              25
-#define PIO0_SM1_SHIFTCTRL_PULL_THRESH_MASK                0x3e000000
+#define PIO0_SM1_SHIFTCTRL_PULL_THRESH_OFFSET              25u
+#define PIO0_SM1_SHIFTCTRL_PULL_THRESH_MASK                0x3e000000u
 
-#define PIO0_SM1_SHIFTCTRL_PUSH_THRESH_OFFSET              20
-#define PIO0_SM1_SHIFTCTRL_PUSH_THRESH_MASK                0x1f00000
+#define PIO0_SM1_SHIFTCTRL_PUSH_THRESH_OFFSET              20u
+#define PIO0_SM1_SHIFTCTRL_PUSH_THRESH_MASK                0x1f00000u
 
-#define PIO0_SM1_SHIFTCTRL_OUT_SHIFTDIR_OFFSET             19
-#define PIO0_SM1_SHIFTCTRL_OUT_SHIFTDIR_MASK               0x80000
+#define PIO0_SM1_SHIFTCTRL_OUT_SHIFTDIR_OFFSET             19u
+#define PIO0_SM1_SHIFTCTRL_OUT_SHIFTDIR_MASK               0x80000u
 
-#define PIO0_SM1_SHIFTCTRL_IN_SHIFTDIR_OFFSET              18
-#define PIO0_SM1_SHIFTCTRL_IN_SHIFTDIR_MASK                0x40000
+#define PIO0_SM1_SHIFTCTRL_IN_SHIFTDIR_OFFSET              18u
+#define PIO0_SM1_SHIFTCTRL_IN_SHIFTDIR_MASK                0x40000u
 
-#define PIO0_SM1_SHIFTCTRL_AUTOPULL_OFFSET                 17
-#define PIO0_SM1_SHIFTCTRL_AUTOPULL_MASK                   0x20000
+#define PIO0_SM1_SHIFTCTRL_AUTOPULL_OFFSET                 17u
+#define PIO0_SM1_SHIFTCTRL_AUTOPULL_MASK                   0x20000u
 
-#define PIO0_SM1_SHIFTCTRL_AUTOPUSH_OFFSET                 16
-#define PIO0_SM1_SHIFTCTRL_AUTOPUSH_MASK                   0x10000
+#define PIO0_SM1_SHIFTCTRL_AUTOPUSH_OFFSET                 16u
+#define PIO0_SM1_SHIFTCTRL_AUTOPUSH_MASK                   0x10000u
 
-#define PIO0_SM1_ADDR_SM1_ADDR_OFFSET                      0
-#define PIO0_SM1_ADDR_SM1_ADDR_MASK                        0x1f
+#define PIO0_SM1_ADDR_SM1_ADDR_OFFSET                      0u
+#define PIO0_SM1_ADDR_SM1_ADDR_MASK                        0x1fu
 
-#define PIO0_SM1_INSTR_SM1_INSTR_OFFSET                    0
-#define PIO0_SM1_INSTR_SM1_INSTR_MASK                      0xffff
+#define PIO0_SM1_INSTR_SM1_INSTR_OFFSET                    0u
+#define PIO0_SM1_INSTR_SM1_INSTR_MASK                      0xffffu
 
-#define PIO0_SM1_PINCTRL_SIDESET_COUNT_OFFSET              29
-#define PIO0_SM1_PINCTRL_SIDESET_COUNT_MASK                0xe0000000
+#define PIO0_SM1_PINCTRL_SIDESET_COUNT_OFFSET              29u
+#define PIO0_SM1_PINCTRL_SIDESET_COUNT_MASK                0xe0000000u
 
-#define PIO0_SM1_PINCTRL_SET_COUNT_OFFSET                  26
-#define PIO0_SM1_PINCTRL_SET_COUNT_MASK                    0x1c000000
+#define PIO0_SM1_PINCTRL_SET_COUNT_OFFSET                  26u
+#define PIO0_SM1_PINCTRL_SET_COUNT_MASK                    0x1c000000u
 
-#define PIO0_SM1_PINCTRL_OUT_COUNT_OFFSET                  20
-#define PIO0_SM1_PINCTRL_OUT_COUNT_MASK                    0x3f00000
+#define PIO0_SM1_PINCTRL_OUT_COUNT_OFFSET                  20u
+#define PIO0_SM1_PINCTRL_OUT_COUNT_MASK                    0x3f00000u
 
-#define PIO0_SM1_PINCTRL_IN_BASE_OFFSET                    15
-#define PIO0_SM1_PINCTRL_IN_BASE_MASK                      0xf8000
+#define PIO0_SM1_PINCTRL_IN_BASE_OFFSET                    15u
+#define PIO0_SM1_PINCTRL_IN_BASE_MASK                      0xf8000u
 
-#define PIO0_SM1_PINCTRL_SIDESET_BASE_OFFSET               10
-#define PIO0_SM1_PINCTRL_SIDESET_BASE_MASK                 0x7c00
+#define PIO0_SM1_PINCTRL_SIDESET_BASE_OFFSET               10u
+#define PIO0_SM1_PINCTRL_SIDESET_BASE_MASK                 0x7c00u
 
-#define PIO0_SM1_PINCTRL_SET_BASE_OFFSET                   5
-#define PIO0_SM1_PINCTRL_SET_BASE_MASK                     0x3e0
+#define PIO0_SM1_PINCTRL_SET_BASE_OFFSET                   5u
+#define PIO0_SM1_PINCTRL_SET_BASE_MASK                     0x3e0u
 
-#define PIO0_SM1_PINCTRL_OUT_BASE_OFFSET                   0
-#define PIO0_SM1_PINCTRL_OUT_BASE_MASK                     0x1f
+#define PIO0_SM1_PINCTRL_OUT_BASE_OFFSET                   0u
+#define PIO0_SM1_PINCTRL_OUT_BASE_MASK                     0x1fu
 
-#define PIO0_SM2_CLKDIV_INT_OFFSET                         16
-#define PIO0_SM2_CLKDIV_INT_MASK                           0xffff0000
+#define PIO0_SM2_CLKDIV_INT_OFFSET                         16u
+#define PIO0_SM2_CLKDIV_INT_MASK                           0xffff0000u
 
-#define PIO0_SM2_CLKDIV_FRAC_OFFSET                        8
-#define PIO0_SM2_CLKDIV_FRAC_MASK                          0xff00
+#define PIO0_SM2_CLKDIV_FRAC_OFFSET                        8u
+#define PIO0_SM2_CLKDIV_FRAC_MASK                          0xff00u
 
-#define PIO0_SM2_EXECCTRL_EXEC_STALLED_OFFSET              31
-#define PIO0_SM2_EXECCTRL_EXEC_STALLED_MASK                0x80000000
+#define PIO0_SM2_EXECCTRL_EXEC_STALLED_OFFSET              31u
+#define PIO0_SM2_EXECCTRL_EXEC_STALLED_MASK                0x80000000u
 
-#define PIO0_SM2_EXECCTRL_SIDE_EN_OFFSET                   30
-#define PIO0_SM2_EXECCTRL_SIDE_EN_MASK                     0x40000000
+#define PIO0_SM2_EXECCTRL_SIDE_EN_OFFSET                   30u
+#define PIO0_SM2_EXECCTRL_SIDE_EN_MASK                     0x40000000u
 
-#define PIO0_SM2_EXECCTRL_SIDE_PINDIR_OFFSET               29
-#define PIO0_SM2_EXECCTRL_SIDE_PINDIR_MASK                 0x20000000
+#define PIO0_SM2_EXECCTRL_SIDE_PINDIR_OFFSET               29u
+#define PIO0_SM2_EXECCTRL_SIDE_PINDIR_MASK                 0x20000000u
 
-#define PIO0_SM2_EXECCTRL_JMP_PIN_OFFSET                   24
-#define PIO0_SM2_EXECCTRL_JMP_PIN_MASK                     0x1f000000
+#define PIO0_SM2_EXECCTRL_JMP_PIN_OFFSET                   24u
+#define PIO0_SM2_EXECCTRL_JMP_PIN_MASK                     0x1f000000u
 
-#define PIO0_SM2_EXECCTRL_OUT_EN_SEL_OFFSET                19
-#define PIO0_SM2_EXECCTRL_OUT_EN_SEL_MASK                  0xf80000
+#define PIO0_SM2_EXECCTRL_OUT_EN_SEL_OFFSET                19u
+#define PIO0_SM2_EXECCTRL_OUT_EN_SEL_MASK                  0xf80000u
 
-#define PIO0_SM2_EXECCTRL_INLINE_OUT_EN_OFFSET             18
-#define PIO0_SM2_EXECCTRL_INLINE_OUT_EN_MASK               0x40000
+#define PIO0_SM2_EXECCTRL_INLINE_OUT_EN_OFFSET             18u
+#define PIO0_SM2_EXECCTRL_INLINE_OUT_EN_MASK               0x40000u
 
-#define PIO0_SM2_EXECCTRL_OUT_STICKY_OFFSET                17
-#define PIO0_SM2_EXECCTRL_OUT_STICKY_MASK                  0x20000
+#define PIO0_SM2_EXECCTRL_OUT_STICKY_OFFSET                17u
+#define PIO0_SM2_EXECCTRL_OUT_STICKY_MASK                  0x20000u
 
-#define PIO0_SM2_EXECCTRL_WRAP_TOP_OFFSET                  12
-#define PIO0_SM2_EXECCTRL_WRAP_TOP_MASK                    0x1f000
+#define PIO0_SM2_EXECCTRL_WRAP_TOP_OFFSET                  12u
+#define PIO0_SM2_EXECCTRL_WRAP_TOP_MASK                    0x1f000u
 
-#define PIO0_SM2_EXECCTRL_WRAP_BOTTOM_OFFSET               7
-#define PIO0_SM2_EXECCTRL_WRAP_BOTTOM_MASK                 0xf80
+#define PIO0_SM2_EXECCTRL_WRAP_BOTTOM_OFFSET               7u
+#define PIO0_SM2_EXECCTRL_WRAP_BOTTOM_MASK                 0xf80u
 
-#define PIO0_SM2_EXECCTRL_STATUS_SEL_OFFSET                4
-#define PIO0_SM2_EXECCTRL_STATUS_SEL_MASK                  0x10
-#define PIO0_SM2_EXECCTRL_STATUS_SEL_TXLEVEL               0
-#define PIO0_SM2_EXECCTRL_STATUS_SEL_RXLEVEL               1
+#define PIO0_SM2_EXECCTRL_STATUS_SEL_OFFSET                4u
+#define PIO0_SM2_EXECCTRL_STATUS_SEL_MASK                  0x10u
+#define PIO0_SM2_EXECCTRL_STATUS_SEL_TXLEVEL               0u
+#define PIO0_SM2_EXECCTRL_STATUS_SEL_RXLEVEL               1u
 
-#define PIO0_SM2_EXECCTRL_STATUS_N_OFFSET                  0
-#define PIO0_SM2_EXECCTRL_STATUS_N_MASK                    0xf
+#define PIO0_SM2_EXECCTRL_STATUS_N_OFFSET                  0u
+#define PIO0_SM2_EXECCTRL_STATUS_N_MASK                    0xfu
 
-#define PIO0_SM2_SHIFTCTRL_FJOIN_RX_OFFSET                 31
-#define PIO0_SM2_SHIFTCTRL_FJOIN_RX_MASK                   0x80000000
+#define PIO0_SM2_SHIFTCTRL_FJOIN_RX_OFFSET                 31u
+#define PIO0_SM2_SHIFTCTRL_FJOIN_RX_MASK                   0x80000000u
 
-#define PIO0_SM2_SHIFTCTRL_FJOIN_TX_OFFSET                 30
-#define PIO0_SM2_SHIFTCTRL_FJOIN_TX_MASK                   0x40000000
+#define PIO0_SM2_SHIFTCTRL_FJOIN_TX_OFFSET                 30u
+#define PIO0_SM2_SHIFTCTRL_FJOIN_TX_MASK                   0x40000000u
 
-#define PIO0_SM2_SHIFTCTRL_PULL_THRESH_OFFSET              25
-#define PIO0_SM2_SHIFTCTRL_PULL_THRESH_MASK                0x3e000000
+#define PIO0_SM2_SHIFTCTRL_PULL_THRESH_OFFSET              25u
+#define PIO0_SM2_SHIFTCTRL_PULL_THRESH_MASK                0x3e000000u
 
-#define PIO0_SM2_SHIFTCTRL_PUSH_THRESH_OFFSET              20
-#define PIO0_SM2_SHIFTCTRL_PUSH_THRESH_MASK                0x1f00000
+#define PIO0_SM2_SHIFTCTRL_PUSH_THRESH_OFFSET              20u
+#define PIO0_SM2_SHIFTCTRL_PUSH_THRESH_MASK                0x1f00000u
 
-#define PIO0_SM2_SHIFTCTRL_OUT_SHIFTDIR_OFFSET             19
-#define PIO0_SM2_SHIFTCTRL_OUT_SHIFTDIR_MASK               0x80000
+#define PIO0_SM2_SHIFTCTRL_OUT_SHIFTDIR_OFFSET             19u
+#define PIO0_SM2_SHIFTCTRL_OUT_SHIFTDIR_MASK               0x80000u
 
-#define PIO0_SM2_SHIFTCTRL_IN_SHIFTDIR_OFFSET              18
-#define PIO0_SM2_SHIFTCTRL_IN_SHIFTDIR_MASK                0x40000
+#define PIO0_SM2_SHIFTCTRL_IN_SHIFTDIR_OFFSET              18u
+#define PIO0_SM2_SHIFTCTRL_IN_SHIFTDIR_MASK                0x40000u
 
-#define PIO0_SM2_SHIFTCTRL_AUTOPULL_OFFSET                 17
-#define PIO0_SM2_SHIFTCTRL_AUTOPULL_MASK                   0x20000
+#define PIO0_SM2_SHIFTCTRL_AUTOPULL_OFFSET                 17u
+#define PIO0_SM2_SHIFTCTRL_AUTOPULL_MASK                   0x20000u
 
-#define PIO0_SM2_SHIFTCTRL_AUTOPUSH_OFFSET                 16
-#define PIO0_SM2_SHIFTCTRL_AUTOPUSH_MASK                   0x10000
+#define PIO0_SM2_SHIFTCTRL_AUTOPUSH_OFFSET                 16u
+#define PIO0_SM2_SHIFTCTRL_AUTOPUSH_MASK                   0x10000u
 
-#define PIO0_SM2_ADDR_SM2_ADDR_OFFSET                      0
-#define PIO0_SM2_ADDR_SM2_ADDR_MASK                        0x1f
+#define PIO0_SM2_ADDR_SM2_ADDR_OFFSET                      0u
+#define PIO0_SM2_ADDR_SM2_ADDR_MASK                        0x1fu
 
-#define PIO0_SM2_INSTR_SM2_INSTR_OFFSET                    0
-#define PIO0_SM2_INSTR_SM2_INSTR_MASK                      0xffff
+#define PIO0_SM2_INSTR_SM2_INSTR_OFFSET                    0u
+#define PIO0_SM2_INSTR_SM2_INSTR_MASK                      0xffffu
 
-#define PIO0_SM2_PINCTRL_SIDESET_COUNT_OFFSET              29
-#define PIO0_SM2_PINCTRL_SIDESET_COUNT_MASK                0xe0000000
+#define PIO0_SM2_PINCTRL_SIDESET_COUNT_OFFSET              29u
+#define PIO0_SM2_PINCTRL_SIDESET_COUNT_MASK                0xe0000000u
 
-#define PIO0_SM2_PINCTRL_SET_COUNT_OFFSET                  26
-#define PIO0_SM2_PINCTRL_SET_COUNT_MASK                    0x1c000000
+#define PIO0_SM2_PINCTRL_SET_COUNT_OFFSET                  26u
+#define PIO0_SM2_PINCTRL_SET_COUNT_MASK                    0x1c000000u
 
-#define PIO0_SM2_PINCTRL_OUT_COUNT_OFFSET                  20
-#define PIO0_SM2_PINCTRL_OUT_COUNT_MASK                    0x3f00000
+#define PIO0_SM2_PINCTRL_OUT_COUNT_OFFSET                  20u
+#define PIO0_SM2_PINCTRL_OUT_COUNT_MASK                    0x3f00000u
 
-#define PIO0_SM2_PINCTRL_IN_BASE_OFFSET                    15
-#define PIO0_SM2_PINCTRL_IN_BASE_MASK                      0xf8000
+#define PIO0_SM2_PINCTRL_IN_BASE_OFFSET                    15u
+#define PIO0_SM2_PINCTRL_IN_BASE_MASK                      0xf8000u
 
-#define PIO0_SM2_PINCTRL_SIDESET_BASE_OFFSET               10
-#define PIO0_SM2_PINCTRL_SIDESET_BASE_MASK                 0x7c00
+#define PIO0_SM2_PINCTRL_SIDESET_BASE_OFFSET               10u
+#define PIO0_SM2_PINCTRL_SIDESET_BASE_MASK                 0x7c00u
 
-#define PIO0_SM2_PINCTRL_SET_BASE_OFFSET                   5
-#define PIO0_SM2_PINCTRL_SET_BASE_MASK                     0x3e0
+#define PIO0_SM2_PINCTRL_SET_BASE_OFFSET                   5u
+#define PIO0_SM2_PINCTRL_SET_BASE_MASK                     0x3e0u
 
-#define PIO0_SM2_PINCTRL_OUT_BASE_OFFSET                   0
-#define PIO0_SM2_PINCTRL_OUT_BASE_MASK                     0x1f
+#define PIO0_SM2_PINCTRL_OUT_BASE_OFFSET                   0u
+#define PIO0_SM2_PINCTRL_OUT_BASE_MASK                     0x1fu
 
-#define PIO0_SM3_CLKDIV_INT_OFFSET                         16
-#define PIO0_SM3_CLKDIV_INT_MASK                           0xffff0000
+#define PIO0_SM3_CLKDIV_INT_OFFSET                         16u
+#define PIO0_SM3_CLKDIV_INT_MASK                           0xffff0000u
 
-#define PIO0_SM3_CLKDIV_FRAC_OFFSET                        8
-#define PIO0_SM3_CLKDIV_FRAC_MASK                          0xff00
+#define PIO0_SM3_CLKDIV_FRAC_OFFSET                        8u
+#define PIO0_SM3_CLKDIV_FRAC_MASK                          0xff00u
 
-#define PIO0_SM3_EXECCTRL_EXEC_STALLED_OFFSET              31
-#define PIO0_SM3_EXECCTRL_EXEC_STALLED_MASK                0x80000000
+#define PIO0_SM3_EXECCTRL_EXEC_STALLED_OFFSET              31u
+#define PIO0_SM3_EXECCTRL_EXEC_STALLED_MASK                0x80000000u
 
-#define PIO0_SM3_EXECCTRL_SIDE_EN_OFFSET                   30
-#define PIO0_SM3_EXECCTRL_SIDE_EN_MASK                     0x40000000
+#define PIO0_SM3_EXECCTRL_SIDE_EN_OFFSET                   30u
+#define PIO0_SM3_EXECCTRL_SIDE_EN_MASK                     0x40000000u
 
-#define PIO0_SM3_EXECCTRL_SIDE_PINDIR_OFFSET               29
-#define PIO0_SM3_EXECCTRL_SIDE_PINDIR_MASK                 0x20000000
+#define PIO0_SM3_EXECCTRL_SIDE_PINDIR_OFFSET               29u
+#define PIO0_SM3_EXECCTRL_SIDE_PINDIR_MASK                 0x20000000u
 
-#define PIO0_SM3_EXECCTRL_JMP_PIN_OFFSET                   24
-#define PIO0_SM3_EXECCTRL_JMP_PIN_MASK                     0x1f000000
+#define PIO0_SM3_EXECCTRL_JMP_PIN_OFFSET                   24u
+#define PIO0_SM3_EXECCTRL_JMP_PIN_MASK                     0x1f000000u
 
-#define PIO0_SM3_EXECCTRL_OUT_EN_SEL_OFFSET                19
-#define PIO0_SM3_EXECCTRL_OUT_EN_SEL_MASK                  0xf80000
+#define PIO0_SM3_EXECCTRL_OUT_EN_SEL_OFFSET                19u
+#define PIO0_SM3_EXECCTRL_OUT_EN_SEL_MASK                  0xf80000u
 
-#define PIO0_SM3_EXECCTRL_INLINE_OUT_EN_OFFSET             18
-#define PIO0_SM3_EXECCTRL_INLINE_OUT_EN_MASK               0x40000
+#define PIO0_SM3_EXECCTRL_INLINE_OUT_EN_OFFSET             18u
+#define PIO0_SM3_EXECCTRL_INLINE_OUT_EN_MASK               0x40000u
 
-#define PIO0_SM3_EXECCTRL_OUT_STICKY_OFFSET                17
-#define PIO0_SM3_EXECCTRL_OUT_STICKY_MASK                  0x20000
+#define PIO0_SM3_EXECCTRL_OUT_STICKY_OFFSET                17u
+#define PIO0_SM3_EXECCTRL_OUT_STICKY_MASK                  0x20000u
 
-#define PIO0_SM3_EXECCTRL_WRAP_TOP_OFFSET                  12
-#define PIO0_SM3_EXECCTRL_WRAP_TOP_MASK                    0x1f000
+#define PIO0_SM3_EXECCTRL_WRAP_TOP_OFFSET                  12u
+#define PIO0_SM3_EXECCTRL_WRAP_TOP_MASK                    0x1f000u
 
-#define PIO0_SM3_EXECCTRL_WRAP_BOTTOM_OFFSET               7
-#define PIO0_SM3_EXECCTRL_WRAP_BOTTOM_MASK                 0xf80
+#define PIO0_SM3_EXECCTRL_WRAP_BOTTOM_OFFSET               7u
+#define PIO0_SM3_EXECCTRL_WRAP_BOTTOM_MASK                 0xf80u
 
-#define PIO0_SM3_EXECCTRL_STATUS_SEL_OFFSET                4
-#define PIO0_SM3_EXECCTRL_STATUS_SEL_MASK                  0x10
-#define PIO0_SM3_EXECCTRL_STATUS_SEL_TXLEVEL               0
-#define PIO0_SM3_EXECCTRL_STATUS_SEL_RXLEVEL               1
+#define PIO0_SM3_EXECCTRL_STATUS_SEL_OFFSET                4u
+#define PIO0_SM3_EXECCTRL_STATUS_SEL_MASK                  0x10u
+#define PIO0_SM3_EXECCTRL_STATUS_SEL_TXLEVEL               0u
+#define PIO0_SM3_EXECCTRL_STATUS_SEL_RXLEVEL               1u
 
-#define PIO0_SM3_EXECCTRL_STATUS_N_OFFSET                  0
-#define PIO0_SM3_EXECCTRL_STATUS_N_MASK                    0xf
+#define PIO0_SM3_EXECCTRL_STATUS_N_OFFSET                  0u
+#define PIO0_SM3_EXECCTRL_STATUS_N_MASK                    0xfu
 
-#define PIO0_SM3_SHIFTCTRL_FJOIN_RX_OFFSET                 31
-#define PIO0_SM3_SHIFTCTRL_FJOIN_RX_MASK                   0x80000000
+#define PIO0_SM3_SHIFTCTRL_FJOIN_RX_OFFSET                 31u
+#define PIO0_SM3_SHIFTCTRL_FJOIN_RX_MASK                   0x80000000u
 
-#define PIO0_SM3_SHIFTCTRL_FJOIN_TX_OFFSET                 30
-#define PIO0_SM3_SHIFTCTRL_FJOIN_TX_MASK                   0x40000000
+#define PIO0_SM3_SHIFTCTRL_FJOIN_TX_OFFSET                 30u
+#define PIO0_SM3_SHIFTCTRL_FJOIN_TX_MASK                   0x40000000u
 
-#define PIO0_SM3_SHIFTCTRL_PULL_THRESH_OFFSET              25
-#define PIO0_SM3_SHIFTCTRL_PULL_THRESH_MASK                0x3e000000
+#define PIO0_SM3_SHIFTCTRL_PULL_THRESH_OFFSET              25u
+#define PIO0_SM3_SHIFTCTRL_PULL_THRESH_MASK                0x3e000000u
 
-#define PIO0_SM3_SHIFTCTRL_PUSH_THRESH_OFFSET              20
-#define PIO0_SM3_SHIFTCTRL_PUSH_THRESH_MASK                0x1f00000
+#define PIO0_SM3_SHIFTCTRL_PUSH_THRESH_OFFSET              20u
+#define PIO0_SM3_SHIFTCTRL_PUSH_THRESH_MASK                0x1f00000u
 
-#define PIO0_SM3_SHIFTCTRL_OUT_SHIFTDIR_OFFSET             19
-#define PIO0_SM3_SHIFTCTRL_OUT_SHIFTDIR_MASK               0x80000
+#define PIO0_SM3_SHIFTCTRL_OUT_SHIFTDIR_OFFSET             19u
+#define PIO0_SM3_SHIFTCTRL_OUT_SHIFTDIR_MASK               0x80000u
 
-#define PIO0_SM3_SHIFTCTRL_IN_SHIFTDIR_OFFSET              18
-#define PIO0_SM3_SHIFTCTRL_IN_SHIFTDIR_MASK                0x40000
+#define PIO0_SM3_SHIFTCTRL_IN_SHIFTDIR_OFFSET              18u
+#define PIO0_SM3_SHIFTCTRL_IN_SHIFTDIR_MASK                0x40000u
 
-#define PIO0_SM3_SHIFTCTRL_AUTOPULL_OFFSET                 17
-#define PIO0_SM3_SHIFTCTRL_AUTOPULL_MASK                   0x20000
+#define PIO0_SM3_SHIFTCTRL_AUTOPULL_OFFSET                 17u
+#define PIO0_SM3_SHIFTCTRL_AUTOPULL_MASK                   0x20000u
 
-#define PIO0_SM3_SHIFTCTRL_AUTOPUSH_OFFSET                 16
-#define PIO0_SM3_SHIFTCTRL_AUTOPUSH_MASK                   0x10000
+#define PIO0_SM3_SHIFTCTRL_AUTOPUSH_OFFSET                 16u
+#define PIO0_SM3_SHIFTCTRL_AUTOPUSH_MASK                   0x10000u
 
-#define PIO0_SM3_ADDR_SM3_ADDR_OFFSET                      0
-#define PIO0_SM3_ADDR_SM3_ADDR_MASK                        0x1f
+#define PIO0_SM3_ADDR_SM3_ADDR_OFFSET                      0u
+#define PIO0_SM3_ADDR_SM3_ADDR_MASK                        0x1fu
 
-#define PIO0_SM3_INSTR_SM3_INSTR_OFFSET                    0
-#define PIO0_SM3_INSTR_SM3_INSTR_MASK                      0xffff
+#define PIO0_SM3_INSTR_SM3_INSTR_OFFSET                    0u
+#define PIO0_SM3_INSTR_SM3_INSTR_MASK                      0xffffu
 
-#define PIO0_SM3_PINCTRL_SIDESET_COUNT_OFFSET              29
-#define PIO0_SM3_PINCTRL_SIDESET_COUNT_MASK                0xe0000000
+#define PIO0_SM3_PINCTRL_SIDESET_COUNT_OFFSET              29u
+#define PIO0_SM3_PINCTRL_SIDESET_COUNT_MASK                0xe0000000u
 
-#define PIO0_SM3_PINCTRL_SET_COUNT_OFFSET                  26
-#define PIO0_SM3_PINCTRL_SET_COUNT_MASK                    0x1c000000
+#define PIO0_SM3_PINCTRL_SET_COUNT_OFFSET                  26u
+#define PIO0_SM3_PINCTRL_SET_COUNT_MASK                    0x1c000000u
 
-#define PIO0_SM3_PINCTRL_OUT_COUNT_OFFSET                  20
-#define PIO0_SM3_PINCTRL_OUT_COUNT_MASK                    0x3f00000
+#define PIO0_SM3_PINCTRL_OUT_COUNT_OFFSET                  20u
+#define PIO0_SM3_PINCTRL_OUT_COUNT_MASK                    0x3f00000u
 
-#define PIO0_SM3_PINCTRL_IN_BASE_OFFSET                    15
-#define PIO0_SM3_PINCTRL_IN_BASE_MASK                      0xf8000
+#define PIO0_SM3_PINCTRL_IN_BASE_OFFSET                    15u
+#define PIO0_SM3_PINCTRL_IN_BASE_MASK                      0xf8000u
 
-#define PIO0_SM3_PINCTRL_SIDESET_BASE_OFFSET               10
-#define PIO0_SM3_PINCTRL_SIDESET_BASE_MASK                 0x7c00
+#define PIO0_SM3_PINCTRL_SIDESET_BASE_OFFSET               10u
+#define PIO0_SM3_PINCTRL_SIDESET_BASE_MASK                 0x7c00u
 
-#define PIO0_SM3_PINCTRL_SET_BASE_OFFSET                   5
-#define PIO0_SM3_PINCTRL_SET_BASE_MASK                     0x3e0
+#define PIO0_SM3_PINCTRL_SET_BASE_OFFSET                   5u
+#define PIO0_SM3_PINCTRL_SET_BASE_MASK                     0x3e0u
 
-#define PIO0_SM3_PINCTRL_OUT_BASE_OFFSET                   0
-#define PIO0_SM3_PINCTRL_OUT_BASE_MASK                     0x1f
+#define PIO0_SM3_PINCTRL_OUT_BASE_OFFSET                   0u
+#define PIO0_SM3_PINCTRL_OUT_BASE_MASK                     0x1fu
 
-#define PIO0_INTR_SM3_OFFSET                               11
-#define PIO0_INTR_SM3_MASK                                 0x800
+#define PIO0_INTR_SM3_OFFSET                               11u
+#define PIO0_INTR_SM3_MASK                                 0x800u
 
-#define PIO0_INTR_SM2_OFFSET                               10
-#define PIO0_INTR_SM2_MASK                                 0x400
+#define PIO0_INTR_SM2_OFFSET                               10u
+#define PIO0_INTR_SM2_MASK                                 0x400u
 
-#define PIO0_INTR_SM1_OFFSET                               9
-#define PIO0_INTR_SM1_MASK                                 0x200
+#define PIO0_INTR_SM1_OFFSET                               9u
+#define PIO0_INTR_SM1_MASK                                 0x200u
 
-#define PIO0_INTR_SM0_OFFSET                               8
-#define PIO0_INTR_SM0_MASK                                 0x100
+#define PIO0_INTR_SM0_OFFSET                               8u
+#define PIO0_INTR_SM0_MASK                                 0x100u
 
-#define PIO0_INTR_SM3_TXNFULL_OFFSET                       7
-#define PIO0_INTR_SM3_TXNFULL_MASK                         0x80
+#define PIO0_INTR_SM3_TXNFULL_OFFSET                       7u
+#define PIO0_INTR_SM3_TXNFULL_MASK                         0x80u
 
-#define PIO0_INTR_SM2_TXNFULL_OFFSET                       6
-#define PIO0_INTR_SM2_TXNFULL_MASK                         0x40
+#define PIO0_INTR_SM2_TXNFULL_OFFSET                       6u
+#define PIO0_INTR_SM2_TXNFULL_MASK                         0x40u
 
-#define PIO0_INTR_SM1_TXNFULL_OFFSET                       5
-#define PIO0_INTR_SM1_TXNFULL_MASK                         0x20
+#define PIO0_INTR_SM1_TXNFULL_OFFSET                       5u
+#define PIO0_INTR_SM1_TXNFULL_MASK                         0x20u
 
-#define PIO0_INTR_SM0_TXNFULL_OFFSET                       4
-#define PIO0_INTR_SM0_TXNFULL_MASK                         0x10
+#define PIO0_INTR_SM0_TXNFULL_OFFSET                       4u
+#define PIO0_INTR_SM0_TXNFULL_MASK                         0x10u
 
-#define PIO0_INTR_SM3_RXNEMPTY_OFFSET                      3
-#define PIO0_INTR_SM3_RXNEMPTY_MASK                        8
+#define PIO0_INTR_SM3_RXNEMPTY_OFFSET                      3u
+#define PIO0_INTR_SM3_RXNEMPTY_MASK                        8u
 
-#define PIO0_INTR_SM2_RXNEMPTY_OFFSET                      2
-#define PIO0_INTR_SM2_RXNEMPTY_MASK                        4
+#define PIO0_INTR_SM2_RXNEMPTY_OFFSET                      2u
+#define PIO0_INTR_SM2_RXNEMPTY_MASK                        4u
 
-#define PIO0_INTR_SM1_RXNEMPTY_OFFSET                      1
-#define PIO0_INTR_SM1_RXNEMPTY_MASK                        2
+#define PIO0_INTR_SM1_RXNEMPTY_OFFSET                      1u
+#define PIO0_INTR_SM1_RXNEMPTY_MASK                        2u
 
-#define PIO0_INTR_SM0_RXNEMPTY_OFFSET                      0
-#define PIO0_INTR_SM0_RXNEMPTY_MASK                        1
+#define PIO0_INTR_SM0_RXNEMPTY_OFFSET                      0u
+#define PIO0_INTR_SM0_RXNEMPTY_MASK                        1u
 
-#define PIO0_IRQ0_INTE_SM3_OFFSET                          11
-#define PIO0_IRQ0_INTE_SM3_MASK                            0x800
+#define PIO0_IRQ0_INTE_SM3_OFFSET                          11u
+#define PIO0_IRQ0_INTE_SM3_MASK                            0x800u
 
-#define PIO0_IRQ0_INTE_SM2_OFFSET                          10
-#define PIO0_IRQ0_INTE_SM2_MASK                            0x400
+#define PIO0_IRQ0_INTE_SM2_OFFSET                          10u
+#define PIO0_IRQ0_INTE_SM2_MASK                            0x400u
 
-#define PIO0_IRQ0_INTE_SM1_OFFSET                          9
-#define PIO0_IRQ0_INTE_SM1_MASK                            0x200
+#define PIO0_IRQ0_INTE_SM1_OFFSET                          9u
+#define PIO0_IRQ0_INTE_SM1_MASK                            0x200u
 
-#define PIO0_IRQ0_INTE_SM0_OFFSET                          8
-#define PIO0_IRQ0_INTE_SM0_MASK                            0x100
+#define PIO0_IRQ0_INTE_SM0_OFFSET                          8u
+#define PIO0_IRQ0_INTE_SM0_MASK                            0x100u
 
-#define PIO0_IRQ0_INTE_SM3_TXNFULL_OFFSET                  7
-#define PIO0_IRQ0_INTE_SM3_TXNFULL_MASK                    0x80
+#define PIO0_IRQ0_INTE_SM3_TXNFULL_OFFSET                  7u
+#define PIO0_IRQ0_INTE_SM3_TXNFULL_MASK                    0x80u
 
-#define PIO0_IRQ0_INTE_SM2_TXNFULL_OFFSET                  6
-#define PIO0_IRQ0_INTE_SM2_TXNFULL_MASK                    0x40
+#define PIO0_IRQ0_INTE_SM2_TXNFULL_OFFSET                  6u
+#define PIO0_IRQ0_INTE_SM2_TXNFULL_MASK                    0x40u
 
-#define PIO0_IRQ0_INTE_SM1_TXNFULL_OFFSET                  5
-#define PIO0_IRQ0_INTE_SM1_TXNFULL_MASK                    0x20
+#define PIO0_IRQ0_INTE_SM1_TXNFULL_OFFSET                  5u
+#define PIO0_IRQ0_INTE_SM1_TXNFULL_MASK                    0x20u
 
-#define PIO0_IRQ0_INTE_SM0_TXNFULL_OFFSET                  4
-#define PIO0_IRQ0_INTE_SM0_TXNFULL_MASK                    0x10
+#define PIO0_IRQ0_INTE_SM0_TXNFULL_OFFSET                  4u
+#define PIO0_IRQ0_INTE_SM0_TXNFULL_MASK                    0x10u
 
-#define PIO0_IRQ0_INTE_SM3_RXNEMPTY_OFFSET                 3
-#define PIO0_IRQ0_INTE_SM3_RXNEMPTY_MASK                   8
+#define PIO0_IRQ0_INTE_SM3_RXNEMPTY_OFFSET                 3u
+#define PIO0_IRQ0_INTE_SM3_RXNEMPTY_MASK                   8u
 
-#define PIO0_IRQ0_INTE_SM2_RXNEMPTY_OFFSET                 2
-#define PIO0_IRQ0_INTE_SM2_RXNEMPTY_MASK                   4
+#define PIO0_IRQ0_INTE_SM2_RXNEMPTY_OFFSET                 2u
+#define PIO0_IRQ0_INTE_SM2_RXNEMPTY_MASK                   4u
 
-#define PIO0_IRQ0_INTE_SM1_RXNEMPTY_OFFSET                 1
-#define PIO0_IRQ0_INTE_SM1_RXNEMPTY_MASK                   2
+#define PIO0_IRQ0_INTE_SM1_RXNEMPTY_OFFSET                 1u
+#define PIO0_IRQ0_INTE_SM1_RXNEMPTY_MASK                   2u
 
-#define PIO0_IRQ0_INTE_SM0_RXNEMPTY_OFFSET                 0
-#define PIO0_IRQ0_INTE_SM0_RXNEMPTY_MASK                   1
+#define PIO0_IRQ0_INTE_SM0_RXNEMPTY_OFFSET                 0u
+#define PIO0_IRQ0_INTE_SM0_RXNEMPTY_MASK                   1u
 
-#define PIO0_IRQ0_INTF_SM3_OFFSET                          11
-#define PIO0_IRQ0_INTF_SM3_MASK                            0x800
+#define PIO0_IRQ0_INTF_SM3_OFFSET                          11u
+#define PIO0_IRQ0_INTF_SM3_MASK                            0x800u
 
-#define PIO0_IRQ0_INTF_SM2_OFFSET                          10
-#define PIO0_IRQ0_INTF_SM2_MASK                            0x400
+#define PIO0_IRQ0_INTF_SM2_OFFSET                          10u
+#define PIO0_IRQ0_INTF_SM2_MASK                            0x400u
 
-#define PIO0_IRQ0_INTF_SM1_OFFSET                          9
-#define PIO0_IRQ0_INTF_SM1_MASK                            0x200
+#define PIO0_IRQ0_INTF_SM1_OFFSET                          9u
+#define PIO0_IRQ0_INTF_SM1_MASK                            0x200u
 
-#define PIO0_IRQ0_INTF_SM0_OFFSET                          8
-#define PIO0_IRQ0_INTF_SM0_MASK                            0x100
+#define PIO0_IRQ0_INTF_SM0_OFFSET                          8u
+#define PIO0_IRQ0_INTF_SM0_MASK                            0x100u
 
-#define PIO0_IRQ0_INTF_SM3_TXNFULL_OFFSET                  7
-#define PIO0_IRQ0_INTF_SM3_TXNFULL_MASK                    0x80
+#define PIO0_IRQ0_INTF_SM3_TXNFULL_OFFSET                  7u
+#define PIO0_IRQ0_INTF_SM3_TXNFULL_MASK                    0x80u
 
-#define PIO0_IRQ0_INTF_SM2_TXNFULL_OFFSET                  6
-#define PIO0_IRQ0_INTF_SM2_TXNFULL_MASK                    0x40
+#define PIO0_IRQ0_INTF_SM2_TXNFULL_OFFSET                  6u
+#define PIO0_IRQ0_INTF_SM2_TXNFULL_MASK                    0x40u
 
-#define PIO0_IRQ0_INTF_SM1_TXNFULL_OFFSET                  5
-#define PIO0_IRQ0_INTF_SM1_TXNFULL_MASK                    0x20
+#define PIO0_IRQ0_INTF_SM1_TXNFULL_OFFSET                  5u
+#define PIO0_IRQ0_INTF_SM1_TXNFULL_MASK                    0x20u
 
-#define PIO0_IRQ0_INTF_SM0_TXNFULL_OFFSET                  4
-#define PIO0_IRQ0_INTF_SM0_TXNFULL_MASK                    0x10
+#define PIO0_IRQ0_INTF_SM0_TXNFULL_OFFSET                  4u
+#define PIO0_IRQ0_INTF_SM0_TXNFULL_MASK                    0x10u
 
-#define PIO0_IRQ0_INTF_SM3_RXNEMPTY_OFFSET                 3
-#define PIO0_IRQ0_INTF_SM3_RXNEMPTY_MASK                   8
+#define PIO0_IRQ0_INTF_SM3_RXNEMPTY_OFFSET                 3u
+#define PIO0_IRQ0_INTF_SM3_RXNEMPTY_MASK                   8u
 
-#define PIO0_IRQ0_INTF_SM2_RXNEMPTY_OFFSET                 2
-#define PIO0_IRQ0_INTF_SM2_RXNEMPTY_MASK                   4
+#define PIO0_IRQ0_INTF_SM2_RXNEMPTY_OFFSET                 2u
+#define PIO0_IRQ0_INTF_SM2_RXNEMPTY_MASK                   4u
 
-#define PIO0_IRQ0_INTF_SM1_RXNEMPTY_OFFSET                 1
-#define PIO0_IRQ0_INTF_SM1_RXNEMPTY_MASK                   2
+#define PIO0_IRQ0_INTF_SM1_RXNEMPTY_OFFSET                 1u
+#define PIO0_IRQ0_INTF_SM1_RXNEMPTY_MASK                   2u
 
-#define PIO0_IRQ0_INTF_SM0_RXNEMPTY_OFFSET                 0
-#define PIO0_IRQ0_INTF_SM0_RXNEMPTY_MASK                   1
+#define PIO0_IRQ0_INTF_SM0_RXNEMPTY_OFFSET                 0u
+#define PIO0_IRQ0_INTF_SM0_RXNEMPTY_MASK                   1u
 
-#define PIO0_IRQ0_INTS_SM3_OFFSET                          11
-#define PIO0_IRQ0_INTS_SM3_MASK                            0x800
+#define PIO0_IRQ0_INTS_SM3_OFFSET                          11u
+#define PIO0_IRQ0_INTS_SM3_MASK                            0x800u
 
-#define PIO0_IRQ0_INTS_SM2_OFFSET                          10
-#define PIO0_IRQ0_INTS_SM2_MASK                            0x400
+#define PIO0_IRQ0_INTS_SM2_OFFSET                          10u
+#define PIO0_IRQ0_INTS_SM2_MASK                            0x400u
 
-#define PIO0_IRQ0_INTS_SM1_OFFSET                          9
-#define PIO0_IRQ0_INTS_SM1_MASK                            0x200
+#define PIO0_IRQ0_INTS_SM1_OFFSET                          9u
+#define PIO0_IRQ0_INTS_SM1_MASK                            0x200u
 
-#define PIO0_IRQ0_INTS_SM0_OFFSET                          8
-#define PIO0_IRQ0_INTS_SM0_MASK                            0x100
+#define PIO0_IRQ0_INTS_SM0_OFFSET                          8u
+#define PIO0_IRQ0_INTS_SM0_MASK                            0x100u
 
-#define PIO0_IRQ0_INTS_SM3_TXNFULL_OFFSET                  7
-#define PIO0_IRQ0_INTS_SM3_TXNFULL_MASK                    0x80
+#define PIO0_IRQ0_INTS_SM3_TXNFULL_OFFSET                  7u
+#define PIO0_IRQ0_INTS_SM3_TXNFULL_MASK                    0x80u
 
-#define PIO0_IRQ0_INTS_SM2_TXNFULL_OFFSET                  6
-#define PIO0_IRQ0_INTS_SM2_TXNFULL_MASK                    0x40
+#define PIO0_IRQ0_INTS_SM2_TXNFULL_OFFSET                  6u
+#define PIO0_IRQ0_INTS_SM2_TXNFULL_MASK                    0x40u
 
-#define PIO0_IRQ0_INTS_SM1_TXNFULL_OFFSET                  5
-#define PIO0_IRQ0_INTS_SM1_TXNFULL_MASK                    0x20
+#define PIO0_IRQ0_INTS_SM1_TXNFULL_OFFSET                  5u
+#define PIO0_IRQ0_INTS_SM1_TXNFULL_MASK                    0x20u
 
-#define PIO0_IRQ0_INTS_SM0_TXNFULL_OFFSET                  4
-#define PIO0_IRQ0_INTS_SM0_TXNFULL_MASK                    0x10
+#define PIO0_IRQ0_INTS_SM0_TXNFULL_OFFSET                  4u
+#define PIO0_IRQ0_INTS_SM0_TXNFULL_MASK                    0x10u
 
-#define PIO0_IRQ0_INTS_SM3_RXNEMPTY_OFFSET                 3
-#define PIO0_IRQ0_INTS_SM3_RXNEMPTY_MASK                   8
+#define PIO0_IRQ0_INTS_SM3_RXNEMPTY_OFFSET                 3u
+#define PIO0_IRQ0_INTS_SM3_RXNEMPTY_MASK                   8u
 
-#define PIO0_IRQ0_INTS_SM2_RXNEMPTY_OFFSET                 2
-#define PIO0_IRQ0_INTS_SM2_RXNEMPTY_MASK                   4
+#define PIO0_IRQ0_INTS_SM2_RXNEMPTY_OFFSET                 2u
+#define PIO0_IRQ0_INTS_SM2_RXNEMPTY_MASK                   4u
 
-#define PIO0_IRQ0_INTS_SM1_RXNEMPTY_OFFSET                 1
-#define PIO0_IRQ0_INTS_SM1_RXNEMPTY_MASK                   2
+#define PIO0_IRQ0_INTS_SM1_RXNEMPTY_OFFSET                 1u
+#define PIO0_IRQ0_INTS_SM1_RXNEMPTY_MASK                   2u
 
-#define PIO0_IRQ0_INTS_SM0_RXNEMPTY_OFFSET                 0
-#define PIO0_IRQ0_INTS_SM0_RXNEMPTY_MASK                   1
+#define PIO0_IRQ0_INTS_SM0_RXNEMPTY_OFFSET                 0u
+#define PIO0_IRQ0_INTS_SM0_RXNEMPTY_MASK                   1u
 
-#define PIO0_IRQ1_INTE_SM3_OFFSET                          11
-#define PIO0_IRQ1_INTE_SM3_MASK                            0x800
+#define PIO0_IRQ1_INTE_SM3_OFFSET                          11u
+#define PIO0_IRQ1_INTE_SM3_MASK                            0x800u
 
-#define PIO0_IRQ1_INTE_SM2_OFFSET                          10
-#define PIO0_IRQ1_INTE_SM2_MASK                            0x400
+#define PIO0_IRQ1_INTE_SM2_OFFSET                          10u
+#define PIO0_IRQ1_INTE_SM2_MASK                            0x400u
 
-#define PIO0_IRQ1_INTE_SM1_OFFSET                          9
-#define PIO0_IRQ1_INTE_SM1_MASK                            0x200
+#define PIO0_IRQ1_INTE_SM1_OFFSET                          9u
+#define PIO0_IRQ1_INTE_SM1_MASK                            0x200u
 
-#define PIO0_IRQ1_INTE_SM0_OFFSET                          8
-#define PIO0_IRQ1_INTE_SM0_MASK                            0x100
+#define PIO0_IRQ1_INTE_SM0_OFFSET                          8u
+#define PIO0_IRQ1_INTE_SM0_MASK                            0x100u
 
-#define PIO0_IRQ1_INTE_SM3_TXNFULL_OFFSET                  7
-#define PIO0_IRQ1_INTE_SM3_TXNFULL_MASK                    0x80
+#define PIO0_IRQ1_INTE_SM3_TXNFULL_OFFSET                  7u
+#define PIO0_IRQ1_INTE_SM3_TXNFULL_MASK                    0x80u
 
-#define PIO0_IRQ1_INTE_SM2_TXNFULL_OFFSET                  6
-#define PIO0_IRQ1_INTE_SM2_TXNFULL_MASK                    0x40
+#define PIO0_IRQ1_INTE_SM2_TXNFULL_OFFSET                  6u
+#define PIO0_IRQ1_INTE_SM2_TXNFULL_MASK                    0x40u
 
-#define PIO0_IRQ1_INTE_SM1_TXNFULL_OFFSET                  5
-#define PIO0_IRQ1_INTE_SM1_TXNFULL_MASK                    0x20
+#define PIO0_IRQ1_INTE_SM1_TXNFULL_OFFSET                  5u
+#define PIO0_IRQ1_INTE_SM1_TXNFULL_MASK                    0x20u
 
-#define PIO0_IRQ1_INTE_SM0_TXNFULL_OFFSET                  4
-#define PIO0_IRQ1_INTE_SM0_TXNFULL_MASK                    0x10
+#define PIO0_IRQ1_INTE_SM0_TXNFULL_OFFSET                  4u
+#define PIO0_IRQ1_INTE_SM0_TXNFULL_MASK                    0x10u
 
-#define PIO0_IRQ1_INTE_SM3_RXNEMPTY_OFFSET                 3
-#define PIO0_IRQ1_INTE_SM3_RXNEMPTY_MASK                   8
+#define PIO0_IRQ1_INTE_SM3_RXNEMPTY_OFFSET                 3u
+#define PIO0_IRQ1_INTE_SM3_RXNEMPTY_MASK                   8u
 
-#define PIO0_IRQ1_INTE_SM2_RXNEMPTY_OFFSET                 2
-#define PIO0_IRQ1_INTE_SM2_RXNEMPTY_MASK                   4
+#define PIO0_IRQ1_INTE_SM2_RXNEMPTY_OFFSET                 2u
+#define PIO0_IRQ1_INTE_SM2_RXNEMPTY_MASK                   4u
 
-#define PIO0_IRQ1_INTE_SM1_RXNEMPTY_OFFSET                 1
-#define PIO0_IRQ1_INTE_SM1_RXNEMPTY_MASK                   2
+#define PIO0_IRQ1_INTE_SM1_RXNEMPTY_OFFSET                 1u
+#define PIO0_IRQ1_INTE_SM1_RXNEMPTY_MASK                   2u
 
-#define PIO0_IRQ1_INTE_SM0_RXNEMPTY_OFFSET                 0
-#define PIO0_IRQ1_INTE_SM0_RXNEMPTY_MASK                   1
+#define PIO0_IRQ1_INTE_SM0_RXNEMPTY_OFFSET                 0u
+#define PIO0_IRQ1_INTE_SM0_RXNEMPTY_MASK                   1u
 
-#define PIO0_IRQ1_INTF_SM3_OFFSET                          11
-#define PIO0_IRQ1_INTF_SM3_MASK                            0x800
+#define PIO0_IRQ1_INTF_SM3_OFFSET                          11u
+#define PIO0_IRQ1_INTF_SM3_MASK                            0x800u
 
-#define PIO0_IRQ1_INTF_SM2_OFFSET                          10
-#define PIO0_IRQ1_INTF_SM2_MASK                            0x400
+#define PIO0_IRQ1_INTF_SM2_OFFSET                          10u
+#define PIO0_IRQ1_INTF_SM2_MASK                            0x400u
 
-#define PIO0_IRQ1_INTF_SM1_OFFSET                          9
-#define PIO0_IRQ1_INTF_SM1_MASK                            0x200
+#define PIO0_IRQ1_INTF_SM1_OFFSET                          9u
+#define PIO0_IRQ1_INTF_SM1_MASK                            0x200u
 
-#define PIO0_IRQ1_INTF_SM0_OFFSET                          8
-#define PIO0_IRQ1_INTF_SM0_MASK                            0x100
+#define PIO0_IRQ1_INTF_SM0_OFFSET                          8u
+#define PIO0_IRQ1_INTF_SM0_MASK                            0x100u
 
-#define PIO0_IRQ1_INTF_SM3_TXNFULL_OFFSET                  7
-#define PIO0_IRQ1_INTF_SM3_TXNFULL_MASK                    0x80
+#define PIO0_IRQ1_INTF_SM3_TXNFULL_OFFSET                  7u
+#define PIO0_IRQ1_INTF_SM3_TXNFULL_MASK                    0x80u
 
-#define PIO0_IRQ1_INTF_SM2_TXNFULL_OFFSET                  6
-#define PIO0_IRQ1_INTF_SM2_TXNFULL_MASK                    0x40
+#define PIO0_IRQ1_INTF_SM2_TXNFULL_OFFSET                  6u
+#define PIO0_IRQ1_INTF_SM2_TXNFULL_MASK                    0x40u
 
-#define PIO0_IRQ1_INTF_SM1_TXNFULL_OFFSET                  5
-#define PIO0_IRQ1_INTF_SM1_TXNFULL_MASK                    0x20
+#define PIO0_IRQ1_INTF_SM1_TXNFULL_OFFSET                  5u
+#define PIO0_IRQ1_INTF_SM1_TXNFULL_MASK                    0x20u
 
-#define PIO0_IRQ1_INTF_SM0_TXNFULL_OFFSET                  4
-#define PIO0_IRQ1_INTF_SM0_TXNFULL_MASK                    0x10
+#define PIO0_IRQ1_INTF_SM0_TXNFULL_OFFSET                  4u
+#define PIO0_IRQ1_INTF_SM0_TXNFULL_MASK                    0x10u
 
-#define PIO0_IRQ1_INTF_SM3_RXNEMPTY_OFFSET                 3
-#define PIO0_IRQ1_INTF_SM3_RXNEMPTY_MASK                   8
+#define PIO0_IRQ1_INTF_SM3_RXNEMPTY_OFFSET                 3u
+#define PIO0_IRQ1_INTF_SM3_RXNEMPTY_MASK                   8u
 
-#define PIO0_IRQ1_INTF_SM2_RXNEMPTY_OFFSET                 2
-#define PIO0_IRQ1_INTF_SM2_RXNEMPTY_MASK                   4
+#define PIO0_IRQ1_INTF_SM2_RXNEMPTY_OFFSET                 2u
+#define PIO0_IRQ1_INTF_SM2_RXNEMPTY_MASK                   4u
 
-#define PIO0_IRQ1_INTF_SM1_RXNEMPTY_OFFSET                 1
-#define PIO0_IRQ1_INTF_SM1_RXNEMPTY_MASK                   2
+#define PIO0_IRQ1_INTF_SM1_RXNEMPTY_OFFSET                 1u
+#define PIO0_IRQ1_INTF_SM1_RXNEMPTY_MASK                   2u
 
-#define PIO0_IRQ1_INTF_SM0_RXNEMPTY_OFFSET                 0
-#define PIO0_IRQ1_INTF_SM0_RXNEMPTY_MASK                   1
+#define PIO0_IRQ1_INTF_SM0_RXNEMPTY_OFFSET                 0u
+#define PIO0_IRQ1_INTF_SM0_RXNEMPTY_MASK                   1u
 
-#define PIO0_IRQ1_INTS_SM3_OFFSET                          11
-#define PIO0_IRQ1_INTS_SM3_MASK                            0x800
+#define PIO0_IRQ1_INTS_SM3_OFFSET                          11u
+#define PIO0_IRQ1_INTS_SM3_MASK                            0x800u
 
-#define PIO0_IRQ1_INTS_SM2_OFFSET                          10
-#define PIO0_IRQ1_INTS_SM2_MASK                            0x400
+#define PIO0_IRQ1_INTS_SM2_OFFSET                          10u
+#define PIO0_IRQ1_INTS_SM2_MASK                            0x400u
 
-#define PIO0_IRQ1_INTS_SM1_OFFSET                          9
-#define PIO0_IRQ1_INTS_SM1_MASK                            0x200
+#define PIO0_IRQ1_INTS_SM1_OFFSET                          9u
+#define PIO0_IRQ1_INTS_SM1_MASK                            0x200u
 
-#define PIO0_IRQ1_INTS_SM0_OFFSET                          8
-#define PIO0_IRQ1_INTS_SM0_MASK                            0x100
+#define PIO0_IRQ1_INTS_SM0_OFFSET                          8u
+#define PIO0_IRQ1_INTS_SM0_MASK                            0x100u
 
-#define PIO0_IRQ1_INTS_SM3_TXNFULL_OFFSET                  7
-#define PIO0_IRQ1_INTS_SM3_TXNFULL_MASK                    0x80
+#define PIO0_IRQ1_INTS_SM3_TXNFULL_OFFSET                  7u
+#define PIO0_IRQ1_INTS_SM3_TXNFULL_MASK                    0x80u
 
-#define PIO0_IRQ1_INTS_SM2_TXNFULL_OFFSET                  6
-#define PIO0_IRQ1_INTS_SM2_TXNFULL_MASK                    0x40
+#define PIO0_IRQ1_INTS_SM2_TXNFULL_OFFSET                  6u
+#define PIO0_IRQ1_INTS_SM2_TXNFULL_MASK                    0x40u
 
-#define PIO0_IRQ1_INTS_SM1_TXNFULL_OFFSET                  5
-#define PIO0_IRQ1_INTS_SM1_TXNFULL_MASK                    0x20
+#define PIO0_IRQ1_INTS_SM1_TXNFULL_OFFSET                  5u
+#define PIO0_IRQ1_INTS_SM1_TXNFULL_MASK                    0x20u
 
-#define PIO0_IRQ1_INTS_SM0_TXNFULL_OFFSET                  4
-#define PIO0_IRQ1_INTS_SM0_TXNFULL_MASK                    0x10
+#define PIO0_IRQ1_INTS_SM0_TXNFULL_OFFSET                  4u
+#define PIO0_IRQ1_INTS_SM0_TXNFULL_MASK                    0x10u
 
-#define PIO0_IRQ1_INTS_SM3_RXNEMPTY_OFFSET                 3
-#define PIO0_IRQ1_INTS_SM3_RXNEMPTY_MASK                   8
+#define PIO0_IRQ1_INTS_SM3_RXNEMPTY_OFFSET                 3u
+#define PIO0_IRQ1_INTS_SM3_RXNEMPTY_MASK                   8u
 
-#define PIO0_IRQ1_INTS_SM2_RXNEMPTY_OFFSET                 2
-#define PIO0_IRQ1_INTS_SM2_RXNEMPTY_MASK                   4
+#define PIO0_IRQ1_INTS_SM2_RXNEMPTY_OFFSET                 2u
+#define PIO0_IRQ1_INTS_SM2_RXNEMPTY_MASK                   4u
 
-#define PIO0_IRQ1_INTS_SM1_RXNEMPTY_OFFSET                 1
-#define PIO0_IRQ1_INTS_SM1_RXNEMPTY_MASK                   2
+#define PIO0_IRQ1_INTS_SM1_RXNEMPTY_OFFSET                 1u
+#define PIO0_IRQ1_INTS_SM1_RXNEMPTY_MASK                   2u
 
-#define PIO0_IRQ1_INTS_SM0_RXNEMPTY_OFFSET                 0
-#define PIO0_IRQ1_INTS_SM0_RXNEMPTY_MASK                   1
+#define PIO0_IRQ1_INTS_SM0_RXNEMPTY_OFFSET                 0u
+#define PIO0_IRQ1_INTS_SM0_RXNEMPTY_MASK                   1u
 
 
 typedef struct
@@ -1411,7 +1411,7 @@ volatile uint32_t SM0_CLKDIV;
   Field: STATUS_SEL
   offset: 4, size: 1, access: read-write
   Comparison used for the MOV x, STATUS instruction.
-  Enum: 
+  Enum:
   Value: 0 - TXLEVEL : All-ones if TX FIFO level &lt; N, otherwise all-zeroes
   Value: 1 - RXLEVEL : All-ones if RX FIFO level &lt; N, otherwise all-zeroes
   Field: STATUS_N
@@ -1576,7 +1576,7 @@ volatile uint32_t SM1_CLKDIV;
   Field: STATUS_SEL
   offset: 4, size: 1, access: read-write
   Comparison used for the MOV x, STATUS instruction.
-  Enum: 
+  Enum:
   Value: 0 - TXLEVEL : All-ones if TX FIFO level &lt; N, otherwise all-zeroes
   Value: 1 - RXLEVEL : All-ones if RX FIFO level &lt; N, otherwise all-zeroes
   Field: STATUS_N
@@ -1741,7 +1741,7 @@ volatile uint32_t SM2_CLKDIV;
   Field: STATUS_SEL
   offset: 4, size: 1, access: read-write
   Comparison used for the MOV x, STATUS instruction.
-  Enum: 
+  Enum:
   Value: 0 - TXLEVEL : All-ones if TX FIFO level &lt; N, otherwise all-zeroes
   Value: 1 - RXLEVEL : All-ones if RX FIFO level &lt; N, otherwise all-zeroes
   Field: STATUS_N
@@ -1906,7 +1906,7 @@ volatile uint32_t SM3_CLKDIV;
   Field: STATUS_SEL
   offset: 4, size: 1, access: read-write
   Comparison used for the MOV x, STATUS instruction.
-  Enum: 
+  Enum:
   Value: 0 - TXLEVEL : All-ones if TX FIFO level &lt; N, otherwise all-zeroes
   Value: 1 - RXLEVEL : All-ones if RX FIFO level &lt; N, otherwise all-zeroes
   Field: STATUS_N

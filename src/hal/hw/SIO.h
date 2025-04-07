@@ -10,209 +10,209 @@
 #include <stdint.h>
 
 
-#define SIO_GPIO_IN_GPIO_IN_OFFSET                         0
-#define SIO_GPIO_IN_GPIO_IN_MASK                           0x3fffffff
+#define SIO_GPIO_IN_GPIO_IN_OFFSET                         0u
+#define SIO_GPIO_IN_GPIO_IN_MASK                           0x3fffffffu
 
-#define SIO_GPIO_HI_IN_GPIO_HI_IN_OFFSET                   0
-#define SIO_GPIO_HI_IN_GPIO_HI_IN_MASK                     0x3f
+#define SIO_GPIO_HI_IN_GPIO_HI_IN_OFFSET                   0u
+#define SIO_GPIO_HI_IN_GPIO_HI_IN_MASK                     0x3fu
 
-#define SIO_GPIO_OUT_GPIO_OUT_OFFSET                       0
-#define SIO_GPIO_OUT_GPIO_OUT_MASK                         0x3fffffff
+#define SIO_GPIO_OUT_GPIO_OUT_OFFSET                       0u
+#define SIO_GPIO_OUT_GPIO_OUT_MASK                         0x3fffffffu
 
-#define SIO_GPIO_OUT_SET_GPIO_OUT_SET_OFFSET               0
-#define SIO_GPIO_OUT_SET_GPIO_OUT_SET_MASK                 0x3fffffff
+#define SIO_GPIO_OUT_SET_GPIO_OUT_SET_OFFSET               0u
+#define SIO_GPIO_OUT_SET_GPIO_OUT_SET_MASK                 0x3fffffffu
 
-#define SIO_GPIO_OUT_CLR_GPIO_OUT_CLR_OFFSET               0
-#define SIO_GPIO_OUT_CLR_GPIO_OUT_CLR_MASK                 0x3fffffff
+#define SIO_GPIO_OUT_CLR_GPIO_OUT_CLR_OFFSET               0u
+#define SIO_GPIO_OUT_CLR_GPIO_OUT_CLR_MASK                 0x3fffffffu
 
-#define SIO_GPIO_OUT_XOR_GPIO_OUT_XOR_OFFSET               0
-#define SIO_GPIO_OUT_XOR_GPIO_OUT_XOR_MASK                 0x3fffffff
+#define SIO_GPIO_OUT_XOR_GPIO_OUT_XOR_OFFSET               0u
+#define SIO_GPIO_OUT_XOR_GPIO_OUT_XOR_MASK                 0x3fffffffu
 
-#define SIO_GPIO_OE_GPIO_OE_OFFSET                         0
-#define SIO_GPIO_OE_GPIO_OE_MASK                           0x3fffffff
+#define SIO_GPIO_OE_GPIO_OE_OFFSET                         0u
+#define SIO_GPIO_OE_GPIO_OE_MASK                           0x3fffffffu
 
-#define SIO_GPIO_OE_SET_GPIO_OE_SET_OFFSET                 0
-#define SIO_GPIO_OE_SET_GPIO_OE_SET_MASK                   0x3fffffff
+#define SIO_GPIO_OE_SET_GPIO_OE_SET_OFFSET                 0u
+#define SIO_GPIO_OE_SET_GPIO_OE_SET_MASK                   0x3fffffffu
 
-#define SIO_GPIO_OE_CLR_GPIO_OE_CLR_OFFSET                 0
-#define SIO_GPIO_OE_CLR_GPIO_OE_CLR_MASK                   0x3fffffff
+#define SIO_GPIO_OE_CLR_GPIO_OE_CLR_OFFSET                 0u
+#define SIO_GPIO_OE_CLR_GPIO_OE_CLR_MASK                   0x3fffffffu
 
-#define SIO_GPIO_OE_XOR_GPIO_OE_XOR_OFFSET                 0
-#define SIO_GPIO_OE_XOR_GPIO_OE_XOR_MASK                   0x3fffffff
+#define SIO_GPIO_OE_XOR_GPIO_OE_XOR_OFFSET                 0u
+#define SIO_GPIO_OE_XOR_GPIO_OE_XOR_MASK                   0x3fffffffu
 
-#define SIO_GPIO_HI_OUT_GPIO_HI_OUT_OFFSET                 0
-#define SIO_GPIO_HI_OUT_GPIO_HI_OUT_MASK                   0x3f
+#define SIO_GPIO_HI_OUT_GPIO_HI_OUT_OFFSET                 0u
+#define SIO_GPIO_HI_OUT_GPIO_HI_OUT_MASK                   0x3fu
 
-#define SIO_GPIO_HI_OUT_SET_GPIO_HI_OUT_SET_OFFSET         0
-#define SIO_GPIO_HI_OUT_SET_GPIO_HI_OUT_SET_MASK           0x3f
+#define SIO_GPIO_HI_OUT_SET_GPIO_HI_OUT_SET_OFFSET         0u
+#define SIO_GPIO_HI_OUT_SET_GPIO_HI_OUT_SET_MASK           0x3fu
 
-#define SIO_GPIO_HI_OUT_CLR_GPIO_HI_OUT_CLR_OFFSET         0
-#define SIO_GPIO_HI_OUT_CLR_GPIO_HI_OUT_CLR_MASK           0x3f
+#define SIO_GPIO_HI_OUT_CLR_GPIO_HI_OUT_CLR_OFFSET         0u
+#define SIO_GPIO_HI_OUT_CLR_GPIO_HI_OUT_CLR_MASK           0x3fu
 
-#define SIO_GPIO_HI_OUT_XOR_GPIO_HI_OUT_XOR_OFFSET         0
-#define SIO_GPIO_HI_OUT_XOR_GPIO_HI_OUT_XOR_MASK           0x3f
+#define SIO_GPIO_HI_OUT_XOR_GPIO_HI_OUT_XOR_OFFSET         0u
+#define SIO_GPIO_HI_OUT_XOR_GPIO_HI_OUT_XOR_MASK           0x3fu
 
-#define SIO_GPIO_HI_OE_GPIO_HI_OE_OFFSET                   0
-#define SIO_GPIO_HI_OE_GPIO_HI_OE_MASK                     0x3f
+#define SIO_GPIO_HI_OE_GPIO_HI_OE_OFFSET                   0u
+#define SIO_GPIO_HI_OE_GPIO_HI_OE_MASK                     0x3fu
 
-#define SIO_GPIO_HI_OE_SET_GPIO_HI_OE_SET_OFFSET           0
-#define SIO_GPIO_HI_OE_SET_GPIO_HI_OE_SET_MASK             0x3f
+#define SIO_GPIO_HI_OE_SET_GPIO_HI_OE_SET_OFFSET           0u
+#define SIO_GPIO_HI_OE_SET_GPIO_HI_OE_SET_MASK             0x3fu
 
-#define SIO_GPIO_HI_OE_CLR_GPIO_HI_OE_CLR_OFFSET           0
-#define SIO_GPIO_HI_OE_CLR_GPIO_HI_OE_CLR_MASK             0x3f
+#define SIO_GPIO_HI_OE_CLR_GPIO_HI_OE_CLR_OFFSET           0u
+#define SIO_GPIO_HI_OE_CLR_GPIO_HI_OE_CLR_MASK             0x3fu
 
-#define SIO_GPIO_HI_OE_XOR_GPIO_HI_OE_XOR_OFFSET           0
-#define SIO_GPIO_HI_OE_XOR_GPIO_HI_OE_XOR_MASK             0x3f
+#define SIO_GPIO_HI_OE_XOR_GPIO_HI_OE_XOR_OFFSET           0u
+#define SIO_GPIO_HI_OE_XOR_GPIO_HI_OE_XOR_MASK             0x3fu
 
-#define SIO_FIFO_ST_ROE_OFFSET                             3
-#define SIO_FIFO_ST_ROE_MASK                               8
+#define SIO_FIFO_ST_ROE_OFFSET                             3u
+#define SIO_FIFO_ST_ROE_MASK                               8u
 
-#define SIO_FIFO_ST_WOF_OFFSET                             2
-#define SIO_FIFO_ST_WOF_MASK                               4
+#define SIO_FIFO_ST_WOF_OFFSET                             2u
+#define SIO_FIFO_ST_WOF_MASK                               4u
 
-#define SIO_FIFO_ST_RDY_OFFSET                             1
-#define SIO_FIFO_ST_RDY_MASK                               2
+#define SIO_FIFO_ST_RDY_OFFSET                             1u
+#define SIO_FIFO_ST_RDY_MASK                               2u
 
-#define SIO_FIFO_ST_VLD_OFFSET                             0
-#define SIO_FIFO_ST_VLD_MASK                               1
+#define SIO_FIFO_ST_VLD_OFFSET                             0u
+#define SIO_FIFO_ST_VLD_MASK                               1u
 
-#define SIO_DIV_CSR_DIRTY_OFFSET                           1
-#define SIO_DIV_CSR_DIRTY_MASK                             2
+#define SIO_DIV_CSR_DIRTY_OFFSET                           1u
+#define SIO_DIV_CSR_DIRTY_MASK                             2u
 
-#define SIO_DIV_CSR_READY_OFFSET                           0
-#define SIO_DIV_CSR_READY_MASK                             1
+#define SIO_DIV_CSR_READY_OFFSET                           0u
+#define SIO_DIV_CSR_READY_MASK                             1u
 
-#define SIO_INTERP0_CTRL_LANE0_OVERF_OFFSET                25
-#define SIO_INTERP0_CTRL_LANE0_OVERF_MASK                  0x2000000
+#define SIO_INTERP0_CTRL_LANE0_OVERF_OFFSET                25u
+#define SIO_INTERP0_CTRL_LANE0_OVERF_MASK                  0x2000000u
 
-#define SIO_INTERP0_CTRL_LANE0_OVERF1_OFFSET               24
-#define SIO_INTERP0_CTRL_LANE0_OVERF1_MASK                 0x1000000
+#define SIO_INTERP0_CTRL_LANE0_OVERF1_OFFSET               24u
+#define SIO_INTERP0_CTRL_LANE0_OVERF1_MASK                 0x1000000u
 
-#define SIO_INTERP0_CTRL_LANE0_OVERF0_OFFSET               23
-#define SIO_INTERP0_CTRL_LANE0_OVERF0_MASK                 0x800000
+#define SIO_INTERP0_CTRL_LANE0_OVERF0_OFFSET               23u
+#define SIO_INTERP0_CTRL_LANE0_OVERF0_MASK                 0x800000u
 
-#define SIO_INTERP0_CTRL_LANE0_BLEND_OFFSET                21
-#define SIO_INTERP0_CTRL_LANE0_BLEND_MASK                  0x200000
+#define SIO_INTERP0_CTRL_LANE0_BLEND_OFFSET                21u
+#define SIO_INTERP0_CTRL_LANE0_BLEND_MASK                  0x200000u
 
-#define SIO_INTERP0_CTRL_LANE0_FORCE_MSB_OFFSET            19
-#define SIO_INTERP0_CTRL_LANE0_FORCE_MSB_MASK              0x180000
+#define SIO_INTERP0_CTRL_LANE0_FORCE_MSB_OFFSET            19u
+#define SIO_INTERP0_CTRL_LANE0_FORCE_MSB_MASK              0x180000u
 
-#define SIO_INTERP0_CTRL_LANE0_ADD_RAW_OFFSET              18
-#define SIO_INTERP0_CTRL_LANE0_ADD_RAW_MASK                0x40000
+#define SIO_INTERP0_CTRL_LANE0_ADD_RAW_OFFSET              18u
+#define SIO_INTERP0_CTRL_LANE0_ADD_RAW_MASK                0x40000u
 
-#define SIO_INTERP0_CTRL_LANE0_CROSS_RESULT_OFFSET         17
-#define SIO_INTERP0_CTRL_LANE0_CROSS_RESULT_MASK           0x20000
+#define SIO_INTERP0_CTRL_LANE0_CROSS_RESULT_OFFSET         17u
+#define SIO_INTERP0_CTRL_LANE0_CROSS_RESULT_MASK           0x20000u
 
-#define SIO_INTERP0_CTRL_LANE0_CROSS_INPUT_OFFSET          16
-#define SIO_INTERP0_CTRL_LANE0_CROSS_INPUT_MASK            0x10000
+#define SIO_INTERP0_CTRL_LANE0_CROSS_INPUT_OFFSET          16u
+#define SIO_INTERP0_CTRL_LANE0_CROSS_INPUT_MASK            0x10000u
 
-#define SIO_INTERP0_CTRL_LANE0_SIGNED_OFFSET               15
-#define SIO_INTERP0_CTRL_LANE0_SIGNED_MASK                 0x8000
+#define SIO_INTERP0_CTRL_LANE0_SIGNED_OFFSET               15u
+#define SIO_INTERP0_CTRL_LANE0_SIGNED_MASK                 0x8000u
 
-#define SIO_INTERP0_CTRL_LANE0_MASK_MSB_OFFSET             10
-#define SIO_INTERP0_CTRL_LANE0_MASK_MSB_MASK               0x7c00
+#define SIO_INTERP0_CTRL_LANE0_MASK_MSB_OFFSET             10u
+#define SIO_INTERP0_CTRL_LANE0_MASK_MSB_MASK               0x7c00u
 
-#define SIO_INTERP0_CTRL_LANE0_MASK_LSB_OFFSET             5
-#define SIO_INTERP0_CTRL_LANE0_MASK_LSB_MASK               0x3e0
+#define SIO_INTERP0_CTRL_LANE0_MASK_LSB_OFFSET             5u
+#define SIO_INTERP0_CTRL_LANE0_MASK_LSB_MASK               0x3e0u
 
-#define SIO_INTERP0_CTRL_LANE0_SHIFT_OFFSET                0
-#define SIO_INTERP0_CTRL_LANE0_SHIFT_MASK                  0x1f
+#define SIO_INTERP0_CTRL_LANE0_SHIFT_OFFSET                0u
+#define SIO_INTERP0_CTRL_LANE0_SHIFT_MASK                  0x1fu
 
-#define SIO_INTERP0_CTRL_LANE1_FORCE_MSB_OFFSET            19
-#define SIO_INTERP0_CTRL_LANE1_FORCE_MSB_MASK              0x180000
+#define SIO_INTERP0_CTRL_LANE1_FORCE_MSB_OFFSET            19u
+#define SIO_INTERP0_CTRL_LANE1_FORCE_MSB_MASK              0x180000u
 
-#define SIO_INTERP0_CTRL_LANE1_ADD_RAW_OFFSET              18
-#define SIO_INTERP0_CTRL_LANE1_ADD_RAW_MASK                0x40000
+#define SIO_INTERP0_CTRL_LANE1_ADD_RAW_OFFSET              18u
+#define SIO_INTERP0_CTRL_LANE1_ADD_RAW_MASK                0x40000u
 
-#define SIO_INTERP0_CTRL_LANE1_CROSS_RESULT_OFFSET         17
-#define SIO_INTERP0_CTRL_LANE1_CROSS_RESULT_MASK           0x20000
+#define SIO_INTERP0_CTRL_LANE1_CROSS_RESULT_OFFSET         17u
+#define SIO_INTERP0_CTRL_LANE1_CROSS_RESULT_MASK           0x20000u
 
-#define SIO_INTERP0_CTRL_LANE1_CROSS_INPUT_OFFSET          16
-#define SIO_INTERP0_CTRL_LANE1_CROSS_INPUT_MASK            0x10000
+#define SIO_INTERP0_CTRL_LANE1_CROSS_INPUT_OFFSET          16u
+#define SIO_INTERP0_CTRL_LANE1_CROSS_INPUT_MASK            0x10000u
 
-#define SIO_INTERP0_CTRL_LANE1_SIGNED_OFFSET               15
-#define SIO_INTERP0_CTRL_LANE1_SIGNED_MASK                 0x8000
+#define SIO_INTERP0_CTRL_LANE1_SIGNED_OFFSET               15u
+#define SIO_INTERP0_CTRL_LANE1_SIGNED_MASK                 0x8000u
 
-#define SIO_INTERP0_CTRL_LANE1_MASK_MSB_OFFSET             10
-#define SIO_INTERP0_CTRL_LANE1_MASK_MSB_MASK               0x7c00
+#define SIO_INTERP0_CTRL_LANE1_MASK_MSB_OFFSET             10u
+#define SIO_INTERP0_CTRL_LANE1_MASK_MSB_MASK               0x7c00u
 
-#define SIO_INTERP0_CTRL_LANE1_MASK_LSB_OFFSET             5
-#define SIO_INTERP0_CTRL_LANE1_MASK_LSB_MASK               0x3e0
+#define SIO_INTERP0_CTRL_LANE1_MASK_LSB_OFFSET             5u
+#define SIO_INTERP0_CTRL_LANE1_MASK_LSB_MASK               0x3e0u
 
-#define SIO_INTERP0_CTRL_LANE1_SHIFT_OFFSET                0
-#define SIO_INTERP0_CTRL_LANE1_SHIFT_MASK                  0x1f
+#define SIO_INTERP0_CTRL_LANE1_SHIFT_OFFSET                0u
+#define SIO_INTERP0_CTRL_LANE1_SHIFT_MASK                  0x1fu
 
-#define SIO_INTERP0_ACCUM0_ADD_INTERP0_ACCUM0_ADD_OFFSET   0
-#define SIO_INTERP0_ACCUM0_ADD_INTERP0_ACCUM0_ADD_MASK     0xffffff
+#define SIO_INTERP0_ACCUM0_ADD_INTERP0_ACCUM0_ADD_OFFSET   0u
+#define SIO_INTERP0_ACCUM0_ADD_INTERP0_ACCUM0_ADD_MASK     0xffffffu
 
-#define SIO_INTERP0_ACCUM1_ADD_INTERP0_ACCUM1_ADD_OFFSET   0
-#define SIO_INTERP0_ACCUM1_ADD_INTERP0_ACCUM1_ADD_MASK     0xffffff
+#define SIO_INTERP0_ACCUM1_ADD_INTERP0_ACCUM1_ADD_OFFSET   0u
+#define SIO_INTERP0_ACCUM1_ADD_INTERP0_ACCUM1_ADD_MASK     0xffffffu
 
-#define SIO_INTERP1_CTRL_LANE0_OVERF_OFFSET                25
-#define SIO_INTERP1_CTRL_LANE0_OVERF_MASK                  0x2000000
+#define SIO_INTERP1_CTRL_LANE0_OVERF_OFFSET                25u
+#define SIO_INTERP1_CTRL_LANE0_OVERF_MASK                  0x2000000u
 
-#define SIO_INTERP1_CTRL_LANE0_OVERF1_OFFSET               24
-#define SIO_INTERP1_CTRL_LANE0_OVERF1_MASK                 0x1000000
+#define SIO_INTERP1_CTRL_LANE0_OVERF1_OFFSET               24u
+#define SIO_INTERP1_CTRL_LANE0_OVERF1_MASK                 0x1000000u
 
-#define SIO_INTERP1_CTRL_LANE0_OVERF0_OFFSET               23
-#define SIO_INTERP1_CTRL_LANE0_OVERF0_MASK                 0x800000
+#define SIO_INTERP1_CTRL_LANE0_OVERF0_OFFSET               23u
+#define SIO_INTERP1_CTRL_LANE0_OVERF0_MASK                 0x800000u
 
-#define SIO_INTERP1_CTRL_LANE0_CLAMP_OFFSET                22
-#define SIO_INTERP1_CTRL_LANE0_CLAMP_MASK                  0x400000
+#define SIO_INTERP1_CTRL_LANE0_CLAMP_OFFSET                22u
+#define SIO_INTERP1_CTRL_LANE0_CLAMP_MASK                  0x400000u
 
-#define SIO_INTERP1_CTRL_LANE0_FORCE_MSB_OFFSET            19
-#define SIO_INTERP1_CTRL_LANE0_FORCE_MSB_MASK              0x180000
+#define SIO_INTERP1_CTRL_LANE0_FORCE_MSB_OFFSET            19u
+#define SIO_INTERP1_CTRL_LANE0_FORCE_MSB_MASK              0x180000u
 
-#define SIO_INTERP1_CTRL_LANE0_ADD_RAW_OFFSET              18
-#define SIO_INTERP1_CTRL_LANE0_ADD_RAW_MASK                0x40000
+#define SIO_INTERP1_CTRL_LANE0_ADD_RAW_OFFSET              18u
+#define SIO_INTERP1_CTRL_LANE0_ADD_RAW_MASK                0x40000u
 
-#define SIO_INTERP1_CTRL_LANE0_CROSS_RESULT_OFFSET         17
-#define SIO_INTERP1_CTRL_LANE0_CROSS_RESULT_MASK           0x20000
+#define SIO_INTERP1_CTRL_LANE0_CROSS_RESULT_OFFSET         17u
+#define SIO_INTERP1_CTRL_LANE0_CROSS_RESULT_MASK           0x20000u
 
-#define SIO_INTERP1_CTRL_LANE0_CROSS_INPUT_OFFSET          16
-#define SIO_INTERP1_CTRL_LANE0_CROSS_INPUT_MASK            0x10000
+#define SIO_INTERP1_CTRL_LANE0_CROSS_INPUT_OFFSET          16u
+#define SIO_INTERP1_CTRL_LANE0_CROSS_INPUT_MASK            0x10000u
 
-#define SIO_INTERP1_CTRL_LANE0_SIGNED_OFFSET               15
-#define SIO_INTERP1_CTRL_LANE0_SIGNED_MASK                 0x8000
+#define SIO_INTERP1_CTRL_LANE0_SIGNED_OFFSET               15u
+#define SIO_INTERP1_CTRL_LANE0_SIGNED_MASK                 0x8000u
 
-#define SIO_INTERP1_CTRL_LANE0_MASK_MSB_OFFSET             10
-#define SIO_INTERP1_CTRL_LANE0_MASK_MSB_MASK               0x7c00
+#define SIO_INTERP1_CTRL_LANE0_MASK_MSB_OFFSET             10u
+#define SIO_INTERP1_CTRL_LANE0_MASK_MSB_MASK               0x7c00u
 
-#define SIO_INTERP1_CTRL_LANE0_MASK_LSB_OFFSET             5
-#define SIO_INTERP1_CTRL_LANE0_MASK_LSB_MASK               0x3e0
+#define SIO_INTERP1_CTRL_LANE0_MASK_LSB_OFFSET             5u
+#define SIO_INTERP1_CTRL_LANE0_MASK_LSB_MASK               0x3e0u
 
-#define SIO_INTERP1_CTRL_LANE0_SHIFT_OFFSET                0
-#define SIO_INTERP1_CTRL_LANE0_SHIFT_MASK                  0x1f
+#define SIO_INTERP1_CTRL_LANE0_SHIFT_OFFSET                0u
+#define SIO_INTERP1_CTRL_LANE0_SHIFT_MASK                  0x1fu
 
-#define SIO_INTERP1_CTRL_LANE1_FORCE_MSB_OFFSET            19
-#define SIO_INTERP1_CTRL_LANE1_FORCE_MSB_MASK              0x180000
+#define SIO_INTERP1_CTRL_LANE1_FORCE_MSB_OFFSET            19u
+#define SIO_INTERP1_CTRL_LANE1_FORCE_MSB_MASK              0x180000u
 
-#define SIO_INTERP1_CTRL_LANE1_ADD_RAW_OFFSET              18
-#define SIO_INTERP1_CTRL_LANE1_ADD_RAW_MASK                0x40000
+#define SIO_INTERP1_CTRL_LANE1_ADD_RAW_OFFSET              18u
+#define SIO_INTERP1_CTRL_LANE1_ADD_RAW_MASK                0x40000u
 
-#define SIO_INTERP1_CTRL_LANE1_CROSS_RESULT_OFFSET         17
-#define SIO_INTERP1_CTRL_LANE1_CROSS_RESULT_MASK           0x20000
+#define SIO_INTERP1_CTRL_LANE1_CROSS_RESULT_OFFSET         17u
+#define SIO_INTERP1_CTRL_LANE1_CROSS_RESULT_MASK           0x20000u
 
-#define SIO_INTERP1_CTRL_LANE1_CROSS_INPUT_OFFSET          16
-#define SIO_INTERP1_CTRL_LANE1_CROSS_INPUT_MASK            0x10000
+#define SIO_INTERP1_CTRL_LANE1_CROSS_INPUT_OFFSET          16u
+#define SIO_INTERP1_CTRL_LANE1_CROSS_INPUT_MASK            0x10000u
 
-#define SIO_INTERP1_CTRL_LANE1_SIGNED_OFFSET               15
-#define SIO_INTERP1_CTRL_LANE1_SIGNED_MASK                 0x8000
+#define SIO_INTERP1_CTRL_LANE1_SIGNED_OFFSET               15u
+#define SIO_INTERP1_CTRL_LANE1_SIGNED_MASK                 0x8000u
 
-#define SIO_INTERP1_CTRL_LANE1_MASK_MSB_OFFSET             10
-#define SIO_INTERP1_CTRL_LANE1_MASK_MSB_MASK               0x7c00
+#define SIO_INTERP1_CTRL_LANE1_MASK_MSB_OFFSET             10u
+#define SIO_INTERP1_CTRL_LANE1_MASK_MSB_MASK               0x7c00u
 
-#define SIO_INTERP1_CTRL_LANE1_MASK_LSB_OFFSET             5
-#define SIO_INTERP1_CTRL_LANE1_MASK_LSB_MASK               0x3e0
+#define SIO_INTERP1_CTRL_LANE1_MASK_LSB_OFFSET             5u
+#define SIO_INTERP1_CTRL_LANE1_MASK_LSB_MASK               0x3e0u
 
-#define SIO_INTERP1_CTRL_LANE1_SHIFT_OFFSET                0
-#define SIO_INTERP1_CTRL_LANE1_SHIFT_MASK                  0x1f
+#define SIO_INTERP1_CTRL_LANE1_SHIFT_OFFSET                0u
+#define SIO_INTERP1_CTRL_LANE1_SHIFT_MASK                  0x1fu
 
-#define SIO_INTERP1_ACCUM0_ADD_INTERP1_ACCUM0_ADD_OFFSET   0
-#define SIO_INTERP1_ACCUM0_ADD_INTERP1_ACCUM0_ADD_MASK     0xffffff
+#define SIO_INTERP1_ACCUM0_ADD_INTERP1_ACCUM0_ADD_OFFSET   0u
+#define SIO_INTERP1_ACCUM0_ADD_INTERP1_ACCUM0_ADD_MASK     0xffffffu
 
-#define SIO_INTERP1_ACCUM1_ADD_INTERP1_ACCUM1_ADD_OFFSET   0
-#define SIO_INTERP1_ACCUM1_ADD_INTERP1_ACCUM1_ADD_MASK     0xffffff
+#define SIO_INTERP1_ACCUM1_ADD_INTERP1_ACCUM1_ADD_OFFSET   0u
+#define SIO_INTERP1_ACCUM1_ADD_INTERP1_ACCUM1_ADD_MASK     0xffffffu
 
 
 typedef struct
