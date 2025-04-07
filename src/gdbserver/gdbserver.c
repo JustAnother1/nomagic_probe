@@ -223,8 +223,8 @@ void reply_packet_send(void)
         debug_line("ERROR: reply too long !");
     }
     reply_buffer[reply_length] = '#';
-    reply_buffer[reply_length + 1] = (uint8_t)reply_checksum[1]; // high nibble
-    reply_buffer[reply_length + 2] = (uint8_t)reply_checksum[0]; // low nibble
+    reply_buffer[reply_length + 1] = (uint8_t)reply_checksum[0]; // high nibble
+    reply_buffer[reply_length + 2] = (uint8_t)reply_checksum[1]; // low nibble
     reply_buffer[reply_length + 3]  = 0;
     debug_line("gdbs sending: %s", reply_buffer);
     serial_gdb_send_bytes(&(reply_buffer[reply_length]), 3);

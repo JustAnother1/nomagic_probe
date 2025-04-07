@@ -79,35 +79,6 @@ uint32_t hex_to_int(char* hex, uint32_t num_digits)
 void byte_to_hex(char* hex, uint32_t value)
 {
     uint32_t i;
-    for(i = 0; i < 2; i++)
-    {
-        switch(value&0xf)
-        {
-        case  0: *hex = '0'; break;
-        case  1: *hex = '1'; break;
-        case  2: *hex = '2'; break;
-        case  3: *hex = '3'; break;
-        case  4: *hex = '4'; break;
-        case  5: *hex = '5'; break;
-        case  6: *hex = '6'; break;
-        case  7: *hex = '7'; break;
-        case  8: *hex = '8'; break;
-        case  9: *hex = '9'; break;
-        case 10: *hex = 'a'; break;
-        case 11: *hex = 'b'; break;
-        case 12: *hex = 'c'; break;
-        case 13: *hex = 'd'; break;
-        case 14: *hex = 'e'; break;
-        case 15: *hex = 'f'; break;
-        }
-        value = (value>>4);
-        hex++;
-    }
-}
-
-void byte_to_hex_endian(char* hex, uint32_t value)
-{
-    uint32_t i;
     hex++;
     for(i = 0; i < 2; i++)
     {
@@ -140,6 +111,7 @@ void int_to_hex(char* hex, uint32_t value, uint32_t num_digits)
     // -> little-endian
     if(0 == num_digits)
     {
+        num_digits = 2;
         if(0xff < value)
         {
             num_digits = 4;
@@ -156,23 +128,36 @@ void int_to_hex(char* hex, uint32_t value, uint32_t num_digits)
     // the value is uint32_t so num_digits can not be more than 8
     if(num_digits > 6)
     {
-        byte_to_hex(hex, (value>>24) & 0xff);
+        // 7 or 8 digits -> 8 digits
+        byte_to_hex(hex, (value)     & 0xff);
         hex = hex + 2;
+        byte_to_hex(hex, (value>>8)  & 0xff);
+        hex = hex + 2;
+        byte_to_hex(hex, (value>>16) & 0xff);
+        hex = hex + 2;
+        byte_to_hex(hex, (value>>24) & 0xff);
     }
-    if(num_digits > 4)
+    else if(num_digits > 4)
     {
+        // 5 or 6 digits -> 6 digits
         byte_to_hex(hex, (value>>16) & 0xff);
         hex = hex + 2;
         byte_to_hex(hex, (value>>8)  & 0xff);
         hex = hex + 2;
         byte_to_hex(hex, (value)     & 0xff);
     }
-    if(num_digits > 2)
+    else if(num_digits > 2)
     {
-        byte_to_hex(hex, (value>>8)  & 0xff);
+        // 3 or 4 digits -> 4 digits
+        byte_to_hex(hex, (value)    & 0xff);
         hex = hex + 2;
+        byte_to_hex(hex, (value>>8) & 0xff);
     }
-    byte_to_hex(hex, (value)     & 0xff);
+    else
+    {
+        // 1 or 2 digits -> 2 digits
+        byte_to_hex(hex, (value)     & 0xff);
+    }
 }
 
 void decode_hex_string_to_text(char * hex, uint32_t buf_length, char * buf)
@@ -261,7 +246,7 @@ void encode_text_to_hex_string(char * text, uint32_t buf_length, char * buf)
         }
         else
         {
-            byte_to_hex_endian(&(buf[pos]), val);
+            byte_to_hex(&(buf[pos]), val);
             pos = pos + 2;
         }
         text++;
