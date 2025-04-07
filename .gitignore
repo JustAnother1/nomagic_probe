@@ -7,3 +7,6 @@
 /bin
 /.settings/
 /*.ods
+/src/mbsp_report.txt
+/src/.project
+/src/.cproject

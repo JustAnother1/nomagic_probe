@@ -1,6 +1,7 @@
 {
     "vendor_name": "Raspberry Pi",
     "chip_name": "RP2040",
+    "project_type": "hal only",
     "digital_output": {
         "led_pin": {
             "type": "push pull",
