@@ -23,9 +23,9 @@ SECTIONS
     .third_stage_boot : {
         . = ALIGN(4);
         __third_boot_start = .;
-        
+
         *(.third_stage_boot .third_stage_boot.*)
-        
+
         . = ALIGN(4);
         __third_boot_end = .;
     } > FLASH
@@ -34,11 +34,11 @@ SECTIONS
     .code : {
         . = ALIGN(4);
         __code_start = .;
-        
+
         *(.text)
         *(.text.*)
         *(.time_critical.*)
-        
+
         . = ALIGN(4);
         __code_end = .;
     }  >RAM AT> FLASH
@@ -50,10 +50,10 @@ SECTIONS
     .rodata : {
         . = ALIGN(4);
         __ro_data_start = .;
-        
+
         *(.rodata)
         *(.rodata.*)
-        
+
         . = ALIGN(4);
         __ro_data_end = .;
     } >RAM AT> FLASH
@@ -65,10 +65,10 @@ SECTIONS
     .data : {
         . = ALIGN(4);
         __data_start = .;
-    
+
         *(.data)
         *(.data.*)
-    
+
         . = ALIGN(4);
         __data_end = .;
     } >RAM AT> FLASH
@@ -80,13 +80,15 @@ SECTIONS
     .bss (NOLOAD) : {
         . = ALIGN(4);
         __bss_start = .;
-    
+
         *(.bss)
         *(.bss.*)
         *(COMMON)
-    
+
         . = ALIGN(4);
         __bss_end = .;
+        _end = __bss_end;
+        end = _end;
     }> RAM
 
 }

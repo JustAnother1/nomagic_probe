@@ -1,11 +1,14 @@
 {
-    "vendor_name": "Raspberry Pi",
-    "chip_name": "RP2040",
-    "project_type": "hal only",
-    "digital_output": {
-        "led_pin": {
-            "type": "push pull",
-            "pad": "25"
+    "vendor_name" : "Raspberry Pi",
+    "chip_name" : "RP2040",
+    "project_type" : "hal only",
+    "file_comment" : "minimal",
+    "run_from" : "flash2ram",
+    "path_prefix" : "nomagic_probe/src/",
+    "digital_output" : {
+        "led_pin" : {
+            "type" : "push pull",
+            "pad" : "25"
         }
     }
 }

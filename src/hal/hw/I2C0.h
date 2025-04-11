@@ -1051,7 +1051,7 @@ volatile uint32_t reserved1[2];
   Field: R_MASTER_ON_HOLD
   offset: 13, size: 14, access: read-only
   See IC_RAW_INTR_STAT for a detailed description of R_MASTER_ON_HOLD bit.
-  
+
    Reset value: 0x0
   Enum:
   Value: 0 - INACTIVE : R_MASTER_ON_HOLD interrupt is inactive
@@ -1187,7 +1187,7 @@ volatile uint32_t IC_INTR_STAT;
   Field: M_MASTER_ON_HOLD_READ_ONLY
   offset: 13, size: 14, access: read-only
   This M_MASTER_ON_HOLD_read_only bit masks the R_MASTER_ON_HOLD interrupt in IC_INTR_STAT register.
-  
+
    Reset value: 0x0
   Enum:
   Value: 0 - ENABLED : MASTER_ON_HOLD interrupt is masked
@@ -1323,7 +1323,7 @@ volatile uint32_t IC_INTR_MASK;
   Field: MASTER_ON_HOLD
   offset: 13, size: 14, access: read-only
   Indicates whether master is holding the bus and TX FIFO is empty. Enabled only when I2C_DYNAMIC_TAR_UPDATE=1 and IC_EMPTYFIFO_HOLD_MASTER_EN=1.
-  
+
    Reset value: 0x0
   Enum:
   Value: 0 - INACTIVE : MASTER_ON_HOLD interrupt is inactive
@@ -2183,7 +2183,7 @@ volatile uint32_t IC_ACK_GENERAL_CALL;
   Slave Disabled While Busy (Transmit, Receive). This bit indicates if a potential or active Slave operation has been aborted due to the setting bit 0 of the IC_ENABLE register from 1 to 0. This bit is set when the CPU writes a 0 to the IC_ENABLE register while:
 
 
- (a) DW_apb_i2c is receiving the address byte of the Slave-Transmitter operation from a remote master 
+ (a) DW_apb_i2c is receiving the address byte of the Slave-Transmitter operation from a remote master
 
 
  OR,
