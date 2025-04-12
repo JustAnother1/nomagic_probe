@@ -140,6 +140,15 @@ void test_gdbserver_util_int_to_hex_32bit(void)
     TEST_ASSERT_EQUAL_STRING("12345678yy", string_val);
 }
 
+void test_gdbserver_util_binary_to_ascii_dump(void)
+{
+    uint32_t i;
+    char binary[11] = {'A', '\n', '\r', 'h', 31, 12, 127, '1', '2', 0};
+
+    binary_to_ascii_dump(&binary[0], 10);
+    TEST_ASSERT_EQUAL_STRING("A..h... 12", binary);
+}
+
 int main(void)
 {
     UNITY_BEGIN();
@@ -151,5 +160,6 @@ int main(void)
     RUN_TEST(test_gdbserver_util_int_to_hex_8bit);
     RUN_TEST(test_gdbserver_util_int_to_hex_8bit_numDigits0);
     RUN_TEST(test_gdbserver_util_int_to_hex_32bit);
+    RUN_TEST(test_gdbserver_util_binary_to_ascii_dump);
     return UNITY_END();
 }
