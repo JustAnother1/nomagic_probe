@@ -142,12 +142,91 @@ void test_gdbserver_util_int_to_hex_32bit(void)
 
 void test_gdbserver_util_binary_to_ascii_dump(void)
 {
-    uint32_t i;
-    char binary[11] = {'A', '\n', '\r', 'h', 31, 12, 127, '1', '2', 0};
+    char binary[11] = {'A', '\n', '\r', 'h', 31, 12, 127, ' ', '1', '2', 0};
 
     binary_to_ascii_dump(&binary[0], 10);
     TEST_ASSERT_EQUAL_STRING("A..h... 12", binary);
 }
+
+void test_gdbserver_util_encode_text_to_hex_string(void)
+{
+    char hex[20];
+
+    encode_text_to_hex_string("bla", 20, hex);
+    TEST_ASSERT_EQUAL_STRING("626c61", hex);
+}
+
+void test_gdbserver_util_encode_text_to_hex_string_buf_is_null(void)
+{
+    char hex[20];
+
+    hex[0] = 'a';
+    hex[1] = 0;
+    encode_text_to_hex_string("bla", 20, NULL);
+    TEST_ASSERT_EQUAL_STRING("a", hex);
+}
+
+void test_gdbserver_util_encode_text_to_hex_string_text_is_null(void)
+{
+    char hex[20];
+
+    hex[0] = 'a';
+    hex[1] = 0;
+    encode_text_to_hex_string(NULL, 20, hex);
+    TEST_ASSERT_EQUAL_STRING("", hex);
+}
+
+void test_gdbserver_util_encode_text_to_hex_string_buffer_too_short(void)
+{
+    char hex[20];
+
+    hex[0] = 'a';
+    hex[1] = 0;
+    encode_text_to_hex_string("foobar", 7, hex);
+    TEST_ASSERT_EQUAL_STRING("666f6f", hex);
+}
+
+void test_gdbserver_util_decode_hex_string_to_text(void)
+{
+    char text[20];
+
+    decode_hex_string_to_text("626c61", 20, text);
+
+    TEST_ASSERT_EQUAL_STRING("bla", text);
+}
+
+void test_gdbserver_util_decode_hex_string_to_text_hex_is_null(void)
+{
+    char text[20];
+    text[0] = 'a';
+    text[1] = 0;
+
+    decode_hex_string_to_text(NULL, 20, text);
+
+    TEST_ASSERT_EQUAL_STRING("", text);
+}
+
+void test_gdbserver_util_decode_hex_string_to_text_buf_is_null(void)
+{
+    char text[20];
+    text[0] = 'a';
+    text[1] = 0;
+
+    decode_hex_string_to_text("626c61", 20, NULL);
+
+    TEST_ASSERT_EQUAL_STRING("a", text);
+}
+
+void test_gdbserver_util_decode_hex_string_to_text_buffer_too_short(void)
+{
+    char text[20];
+
+    text[0] = 'a';
+    text[1] = 0;
+    decode_hex_string_to_text("666f6f626172", 4, text); // 4 = 3 characters + \0
+    TEST_ASSERT_EQUAL_STRING("foo", text);
+}
+
 
 int main(void)
 {
@@ -161,5 +240,13 @@ int main(void)
     RUN_TEST(test_gdbserver_util_int_to_hex_8bit_numDigits0);
     RUN_TEST(test_gdbserver_util_int_to_hex_32bit);
     RUN_TEST(test_gdbserver_util_binary_to_ascii_dump);
+    RUN_TEST(test_gdbserver_util_encode_text_to_hex_string);
+    RUN_TEST(test_gdbserver_util_encode_text_to_hex_string_buf_is_null);
+    RUN_TEST(test_gdbserver_util_encode_text_to_hex_string_text_is_null);
+    RUN_TEST(test_gdbserver_util_encode_text_to_hex_string_buffer_too_short);
+    // RUN_TEST(test_gdbserver_util_decode_hex_string_to_text);
+    // RUN_TEST(test_gdbserver_util_decode_hex_string_to_text_hex_is_null);
+    // RUN_TEST(test_gdbserver_util_decode_hex_string_to_text_buf_is_null);
+    RUN_TEST(test_gdbserver_util_decode_hex_string_to_text_buffer_too_short);
     return UNITY_END();
 }

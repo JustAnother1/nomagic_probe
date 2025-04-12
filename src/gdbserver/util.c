@@ -160,6 +160,7 @@ void int_to_hex(char* hex, uint32_t value, uint32_t num_digits)
     }
 }
 
+// convert hex string as defined by gdb-server protocol to normal string.
 void decode_hex_string_to_text(char * hex, uint32_t buf_length, char * buf)
 {
     char c = 0;
@@ -176,7 +177,7 @@ void decode_hex_string_to_text(char * hex, uint32_t buf_length, char * buf)
         return;
     }
 
-    while(pos < buf_length)
+    while(pos < buf_length-1) // -1 necessary to end string with \0
     {
         switch(*hex)
         {
@@ -205,10 +206,7 @@ void decode_hex_string_to_text(char * hex, uint32_t buf_length, char * buf)
         case 0:
             buf[pos] = c;
             pos++;
-            if(pos < buf_length)
-            {
-                buf[pos] = 0;
-            }
+            buf[pos] = 0;
             return;
 
         default:
@@ -221,6 +219,7 @@ void decode_hex_string_to_text(char * hex, uint32_t buf_length, char * buf)
     buf[pos] = 0;
 }
 
+// convert text string into hex string as defined by gdb-server protocol.
 void encode_text_to_hex_string(char * text, uint32_t buf_length, char * buf)
 {
     uint32_t pos = 0;
