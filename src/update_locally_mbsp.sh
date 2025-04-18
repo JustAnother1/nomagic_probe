@@ -5,11 +5,22 @@
 # https://mbsp.nomagic.de/
 
 # 'http://localhost:2323/mbsp'
+rm hal/hw/ -r 2>/dev/null
+rm hal/2ndstage.bin 2>/dev/null
+rm  hal/RP2040.ld 2>/dev/null
+rm  hal/debug_uart.h 2>/dev/null
+rm  hal/debug_uart.c 2>/dev/null
+rm  hal/target_uart.h 2>/dev/null
+rm  hal/target_uart.c 2>/dev/null
+rm  hal/digital_out.h 2>/dev/null
+rm hal/irq.c 2>/dev/null
+rm hal/startup.c 2>/dev/null
+rm mbsp_report.txt 2>/dev/null
 
 wget --post-file cfg.json \
  --header='Content-Type:application/json' \
  --output-document=mbsp.zip \
- 'https://mbsp.nomagic.de:2323/mbsp'
+ 'http://localhost:2323/mbsp'
 
 returnCode=$?
 echo "res: $returnCode"
@@ -20,7 +31,6 @@ else
   echo "Failed !"
   exit 1
 fi
-
 
 unzip -o mbsp.zip
 

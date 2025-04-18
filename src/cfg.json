@@ -8,7 +8,57 @@
     "digital_output" : {
         "led_pin" : {
             "type" : "push pull",
-            "pad" : "25"
+            "pad" : "25",
+        },
+        "loop_monitor_pin" : {
+            "type" : "push pull",
+            "pad" : "22",
         }
-    }
+    },
+    "clock": {
+        "cpu": {
+            "source" : "hse",
+            "frequency" : "12 MHz",
+            "FBDIV" : "100",
+            "POSTDIV1" : "6",
+            "POSTDIV2" : "1",
+        }
+    },
+    "timer": {
+        "time_ms": {
+            "peripheral" : "systick",
+            "mode" : "count overflows",
+            "frequency" : "1 kHz",
+        }
+    },
+    "UART": {
+        "debug_uart": {
+            "pad_tx": "16",
+            "pad_rx": "17",
+            "bits_per_packet": "8",
+            "parity": "None",
+            "stop_bits": "1",
+            "baud_rate": "115200",
+            "hardware_flow_control": "no",
+            "receive_buffer_size": "100",
+            "send_buffer_size": "500",
+            "peripheral" : "UART0",
+            "IRQ" : "20",
+            "IRQ_priority" : "0",
+        },
+        "target_uart": {
+            "pad_tx": "4",
+            "pad_rx": "5",
+            "bits_per_packet": "8",
+            "parity": "None",
+            "stop_bits": "1",
+            "baud_rate": "115200",
+            "hardware_flow_control": "no",
+            "receive_buffer_size": "100",
+            "send_buffer_size": "500",
+            "peripheral" : "UART1",
+            "IRQ" : "21",
+            "IRQ_priority" : "3",
+        },
+    },
 }
