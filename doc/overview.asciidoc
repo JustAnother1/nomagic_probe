@@ -8,7 +8,7 @@ Documentation overview
 | Word
 | description
 
-| gdb 
+| gdb
 | The GNU Debugger. A software running on the PC of the firmware developer.
 
 | gdb-server
@@ -60,7 +60,7 @@ https://openocd.org/[OpenOCD]
 
 openOCD (since 0.12)
 <code>
-sudo openocd  -f interface/cmsis-dap.cfg -f target/rp2040.cfg -c "adapter speed 5000" 
+sudo openocd  -f interface/cmsis-dap.cfg -f target/rp2040.cfg -c "adapter speed 5000"
 </code>
 
 == USB
@@ -85,3 +85,7 @@ https://de.wikipedia.org/wiki/File_Allocation_Table
 == SWD
 
 link:swd/swd.asciidoc[SWD]
+
+== Linker File
+
+https://blog.thea.codes/the-most-thoroughly-commented-linker-script/
