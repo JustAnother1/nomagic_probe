@@ -226,7 +226,19 @@ void reply_packet_send(void)
     reply_buffer[reply_length + 1] = (uint8_t)reply_checksum[0]; // high nibble
     reply_buffer[reply_length + 2] = (uint8_t)reply_checksum[1]; // low nibble
     reply_buffer[reply_length + 3]  = 0;
-    debug_line("gdbs sending: %s", reply_buffer);
+
+    if(reply_length < 50)
+    {
+        debug_line("gdbs sending: %s", reply_buffer);
+    }
+    else
+    {
+        char buf[30];
+        memcpy(buf, reply_buffer, sizeof(buf));
+        binary_to_ascii_dump(buf, sizeof(buf));
+        buf[29] = 0;
+        debug_line("gdbs sending: %s ... (something really long)", buf);
+    }
     serial_gdb_send_bytes(&(reply_buffer[reply_length]), 3);
     serial_gdb_flush();
 }
