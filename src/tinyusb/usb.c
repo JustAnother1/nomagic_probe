@@ -44,7 +44,7 @@
 #include "hal/hw/RESETS.h"
 #include "hal/hw/USBCTRL_REGS.h"
 #include "hal/hw/USBCTRL_DPRAM.h"
-#include "hal/startup.h"
+#include "hal/irq.h"
 #include "usb_cdc.h"
 #include "cli/cli_priv.h"
 #include "usb_descriptors.h"
@@ -54,6 +54,9 @@
 #include "common/tusb_types.h"
 #include "device/dcd.h"
 #include "device/usbd.h"
+
+#define USBCTRL_IRQ_NUMBER           5
+#define USBCTRL_IRQ_PRIORITY         3
 
 
 #define FORCE_VBUS_DETECT             1

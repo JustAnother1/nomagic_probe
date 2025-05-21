@@ -16,8 +16,9 @@
 #ifndef NOMAGIC_PROBE_SRC_LWIP_ARCH_CC_H_
 #define NOMAGIC_PROBE_SRC_LWIP_ARCH_CC_H_
 
-#include "hal/startup.h"
+#include "hal/irq.h"
 #include "hal/random.h"
+#include "lib/printf.h"
 
 #define LWIP_NO_CTYPE_H  1
 #define LWIP_ERR_T       int32_t
@@ -43,6 +44,8 @@
 
 
 // TODO
+
+extern __attribute__((__noreturn__)) void error_state(void);
 
 #define LWIP_CONST_CAST(target_type, val) ((target_type)val)
 

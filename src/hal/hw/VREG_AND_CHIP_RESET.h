@@ -1,3 +1,6 @@
+/*
+  automatically created from data available on https://chipselect.org/
+*/
 #ifndef HW_VREG_AND_CHIP_RESET_H
 #define HW_VREG_AND_CHIP_RESET_H
 /** control and status for on-chip voltage regulator and chip level reset subsystem */

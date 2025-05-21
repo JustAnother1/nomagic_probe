@@ -1,3 +1,6 @@
+/*
+  automatically created from data available on https://chipselect.org/
+*/
 #ifndef HW_TIMER_H
 #define HW_TIMER_H
 /** Controls time and alarms

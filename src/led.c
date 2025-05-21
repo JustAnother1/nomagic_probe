@@ -14,10 +14,7 @@
  */
 
 #include "led.h"
-#include "hal/led_pin.h"
-#ifdef LOOP_MONITOR
-#include "hal/loop_monitor_pin.h"
-#endif
+#include "hal/digital_out.h"
 #include "hal/time_base.h"
 
 #define NUM_MAX_STEPS  2
@@ -38,16 +35,18 @@ typedef struct {
 static const pattern_typ patterns[] = {
         // 0 : Normal Operation
         {
-                2,
+                2, // num_steps
                 {
+                        // duration, action
                         { 600, LED_ON_ACTION},
                         { 400, LED_OFF_ACTION},
                 }
         },
         // 1 : Error Situation
         {
-                2,
+                2, // num_steps
                 {
+                        // duration, action
                         { 100, LED_ON_ACTION},
                         { 100, LED_OFF_ACTION},
                 }
@@ -61,15 +60,9 @@ static uint32_t curPattern;
 static uint32_t next_step;
 
 
-// on pico the LED is connected to GPIO 25
-
 void led_init(void)
 {
-    led_pin_init();
     led_set_pattern(PATTERN_NORMAL);
-#ifdef LOOP_MONITOR
-    loop_monitor_pin_init();
-#endif
 }
 
 void led_set_pattern(uint32_t pattern)

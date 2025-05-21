@@ -1,3 +1,6 @@
+/*
+  automatically created from data available on https://chipselect.org/
+*/
 #ifndef HW_UART1_H
 #define HW_UART1_H
 /** Interrupt : UART1_IRQ (Vector: 21)  */

@@ -1,3 +1,6 @@
+/*
+  automatically created from data available on https://chipselect.org/
+*/
 #ifndef HW_CLOCKS_H
 #define HW_CLOCKS_H
 /** Interrupt : CLOCKS_IRQ (Vector: 17)  */
@@ -23,17 +26,17 @@
 
 #define CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_OFFSET               5u
 #define CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_MASK                 0x1e0u
-#define CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_clksrc_pll_sys       0u
-#define CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_clksrc_gpin0         1u
-#define CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_clksrc_gpin1         2u
-#define CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_clksrc_pll_usb       3u
-#define CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_rosc_clksrc          4u
-#define CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_xosc_clksrc          5u
-#define CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_clk_sys              6u
-#define CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_clk_usb              7u
-#define CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_clk_adc              8u
-#define CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_clk_rtc              9u
-#define CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_clk_ref              0xau
+#define CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_CLKSRC_PLL_SYS       0u
+#define CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_CLKSRC_GPIN0         1u
+#define CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_CLKSRC_GPIN1         2u
+#define CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_CLKSRC_PLL_USB       3u
+#define CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_ROSC_CLKSRC          4u
+#define CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_XOSC_CLKSRC          5u
+#define CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_CLK_SYS              6u
+#define CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_CLK_USB              7u
+#define CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_CLK_ADC              8u
+#define CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_CLK_RTC              9u
+#define CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_CLK_REF              0xau
 
 #define CLOCKS_CLK_GPOUT0_DIV_INT_OFFSET                   8u
 #define CLOCKS_CLK_GPOUT0_DIV_INT_MASK                     0xffffff00u
@@ -58,17 +61,17 @@
 
 #define CLOCKS_CLK_GPOUT1_CTRL_AUXSRC_OFFSET               5u
 #define CLOCKS_CLK_GPOUT1_CTRL_AUXSRC_MASK                 0x1e0u
-#define CLOCKS_CLK_GPOUT1_CTRL_AUXSRC_clksrc_pll_sys       0u
-#define CLOCKS_CLK_GPOUT1_CTRL_AUXSRC_clksrc_gpin0         1u
-#define CLOCKS_CLK_GPOUT1_CTRL_AUXSRC_clksrc_gpin1         2u
-#define CLOCKS_CLK_GPOUT1_CTRL_AUXSRC_clksrc_pll_usb       3u
-#define CLOCKS_CLK_GPOUT1_CTRL_AUXSRC_rosc_clksrc          4u
-#define CLOCKS_CLK_GPOUT1_CTRL_AUXSRC_xosc_clksrc          5u
-#define CLOCKS_CLK_GPOUT1_CTRL_AUXSRC_clk_sys              6u
-#define CLOCKS_CLK_GPOUT1_CTRL_AUXSRC_clk_usb              7u
-#define CLOCKS_CLK_GPOUT1_CTRL_AUXSRC_clk_adc              8u
-#define CLOCKS_CLK_GPOUT1_CTRL_AUXSRC_clk_rtc              9u
-#define CLOCKS_CLK_GPOUT1_CTRL_AUXSRC_clk_ref              0xau
+#define CLOCKS_CLK_GPOUT1_CTRL_AUXSRC_CLKSRC_PLL_SYS       0u
+#define CLOCKS_CLK_GPOUT1_CTRL_AUXSRC_CLKSRC_GPIN0         1u
+#define CLOCKS_CLK_GPOUT1_CTRL_AUXSRC_CLKSRC_GPIN1         2u
+#define CLOCKS_CLK_GPOUT1_CTRL_AUXSRC_CLKSRC_PLL_USB       3u
+#define CLOCKS_CLK_GPOUT1_CTRL_AUXSRC_ROSC_CLKSRC          4u
+#define CLOCKS_CLK_GPOUT1_CTRL_AUXSRC_XOSC_CLKSRC          5u
+#define CLOCKS_CLK_GPOUT1_CTRL_AUXSRC_CLK_SYS              6u
+#define CLOCKS_CLK_GPOUT1_CTRL_AUXSRC_CLK_USB              7u
+#define CLOCKS_CLK_GPOUT1_CTRL_AUXSRC_CLK_ADC              8u
+#define CLOCKS_CLK_GPOUT1_CTRL_AUXSRC_CLK_RTC              9u
+#define CLOCKS_CLK_GPOUT1_CTRL_AUXSRC_CLK_REF              0xau
 
 #define CLOCKS_CLK_GPOUT1_DIV_INT_OFFSET                   8u
 #define CLOCKS_CLK_GPOUT1_DIV_INT_MASK                     0xffffff00u
@@ -93,17 +96,17 @@
 
 #define CLOCKS_CLK_GPOUT2_CTRL_AUXSRC_OFFSET               5u
 #define CLOCKS_CLK_GPOUT2_CTRL_AUXSRC_MASK                 0x1e0u
-#define CLOCKS_CLK_GPOUT2_CTRL_AUXSRC_clksrc_pll_sys       0u
-#define CLOCKS_CLK_GPOUT2_CTRL_AUXSRC_clksrc_gpin0         1u
-#define CLOCKS_CLK_GPOUT2_CTRL_AUXSRC_clksrc_gpin1         2u
-#define CLOCKS_CLK_GPOUT2_CTRL_AUXSRC_clksrc_pll_usb       3u
-#define CLOCKS_CLK_GPOUT2_CTRL_AUXSRC_rosc_clksrc_ph       4u
-#define CLOCKS_CLK_GPOUT2_CTRL_AUXSRC_xosc_clksrc          5u
-#define CLOCKS_CLK_GPOUT2_CTRL_AUXSRC_clk_sys              6u
-#define CLOCKS_CLK_GPOUT2_CTRL_AUXSRC_clk_usb              7u
-#define CLOCKS_CLK_GPOUT2_CTRL_AUXSRC_clk_adc              8u
-#define CLOCKS_CLK_GPOUT2_CTRL_AUXSRC_clk_rtc              9u
-#define CLOCKS_CLK_GPOUT2_CTRL_AUXSRC_clk_ref              0xau
+#define CLOCKS_CLK_GPOUT2_CTRL_AUXSRC_CLKSRC_PLL_SYS       0u
+#define CLOCKS_CLK_GPOUT2_CTRL_AUXSRC_CLKSRC_GPIN0         1u
+#define CLOCKS_CLK_GPOUT2_CTRL_AUXSRC_CLKSRC_GPIN1         2u
+#define CLOCKS_CLK_GPOUT2_CTRL_AUXSRC_CLKSRC_PLL_USB       3u
+#define CLOCKS_CLK_GPOUT2_CTRL_AUXSRC_ROSC_CLKSRC_PH       4u
+#define CLOCKS_CLK_GPOUT2_CTRL_AUXSRC_XOSC_CLKSRC          5u
+#define CLOCKS_CLK_GPOUT2_CTRL_AUXSRC_CLK_SYS              6u
+#define CLOCKS_CLK_GPOUT2_CTRL_AUXSRC_CLK_USB              7u
+#define CLOCKS_CLK_GPOUT2_CTRL_AUXSRC_CLK_ADC              8u
+#define CLOCKS_CLK_GPOUT2_CTRL_AUXSRC_CLK_RTC              9u
+#define CLOCKS_CLK_GPOUT2_CTRL_AUXSRC_CLK_REF              0xau
 
 #define CLOCKS_CLK_GPOUT2_DIV_INT_OFFSET                   8u
 #define CLOCKS_CLK_GPOUT2_DIV_INT_MASK                     0xffffff00u
@@ -128,17 +131,17 @@
 
 #define CLOCKS_CLK_GPOUT3_CTRL_AUXSRC_OFFSET               5u
 #define CLOCKS_CLK_GPOUT3_CTRL_AUXSRC_MASK                 0x1e0u
-#define CLOCKS_CLK_GPOUT3_CTRL_AUXSRC_clksrc_pll_sys       0u
-#define CLOCKS_CLK_GPOUT3_CTRL_AUXSRC_clksrc_gpin0         1u
-#define CLOCKS_CLK_GPOUT3_CTRL_AUXSRC_clksrc_gpin1         2u
-#define CLOCKS_CLK_GPOUT3_CTRL_AUXSRC_clksrc_pll_usb       3u
-#define CLOCKS_CLK_GPOUT3_CTRL_AUXSRC_rosc_clksrc_ph       4u
-#define CLOCKS_CLK_GPOUT3_CTRL_AUXSRC_xosc_clksrc          5u
-#define CLOCKS_CLK_GPOUT3_CTRL_AUXSRC_clk_sys              6u
-#define CLOCKS_CLK_GPOUT3_CTRL_AUXSRC_clk_usb              7u
-#define CLOCKS_CLK_GPOUT3_CTRL_AUXSRC_clk_adc              8u
-#define CLOCKS_CLK_GPOUT3_CTRL_AUXSRC_clk_rtc              9u
-#define CLOCKS_CLK_GPOUT3_CTRL_AUXSRC_clk_ref              0xau
+#define CLOCKS_CLK_GPOUT3_CTRL_AUXSRC_CLKSRC_PLL_SYS       0u
+#define CLOCKS_CLK_GPOUT3_CTRL_AUXSRC_CLKSRC_GPIN0         1u
+#define CLOCKS_CLK_GPOUT3_CTRL_AUXSRC_CLKSRC_GPIN1         2u
+#define CLOCKS_CLK_GPOUT3_CTRL_AUXSRC_CLKSRC_PLL_USB       3u
+#define CLOCKS_CLK_GPOUT3_CTRL_AUXSRC_ROSC_CLKSRC_PH       4u
+#define CLOCKS_CLK_GPOUT3_CTRL_AUXSRC_XOSC_CLKSRC          5u
+#define CLOCKS_CLK_GPOUT3_CTRL_AUXSRC_CLK_SYS              6u
+#define CLOCKS_CLK_GPOUT3_CTRL_AUXSRC_CLK_USB              7u
+#define CLOCKS_CLK_GPOUT3_CTRL_AUXSRC_CLK_ADC              8u
+#define CLOCKS_CLK_GPOUT3_CTRL_AUXSRC_CLK_RTC              9u
+#define CLOCKS_CLK_GPOUT3_CTRL_AUXSRC_CLK_REF              0xau
 
 #define CLOCKS_CLK_GPOUT3_DIV_INT_OFFSET                   8u
 #define CLOCKS_CLK_GPOUT3_DIV_INT_MASK                     0xffffff00u
@@ -148,32 +151,32 @@
 
 #define CLOCKS_CLK_REF_CTRL_AUXSRC_OFFSET                  5u
 #define CLOCKS_CLK_REF_CTRL_AUXSRC_MASK                    0x60u
-#define CLOCKS_CLK_REF_CTRL_AUXSRC_clksrc_pll_usb          0u
-#define CLOCKS_CLK_REF_CTRL_AUXSRC_clksrc_gpin0            1u
-#define CLOCKS_CLK_REF_CTRL_AUXSRC_clksrc_gpin1            2u
+#define CLOCKS_CLK_REF_CTRL_AUXSRC_CLKSRC_PLL_USB          0u
+#define CLOCKS_CLK_REF_CTRL_AUXSRC_CLKSRC_GPIN0            1u
+#define CLOCKS_CLK_REF_CTRL_AUXSRC_CLKSRC_GPIN1            2u
 
 #define CLOCKS_CLK_REF_CTRL_SRC_OFFSET                     0u
 #define CLOCKS_CLK_REF_CTRL_SRC_MASK                       3u
-#define CLOCKS_CLK_REF_CTRL_SRC_rosc_clksrc_ph             0u
-#define CLOCKS_CLK_REF_CTRL_SRC_clksrc_clk_ref_aux         1u
-#define CLOCKS_CLK_REF_CTRL_SRC_xosc_clksrc                2u
+#define CLOCKS_CLK_REF_CTRL_SRC_ROSC_CLKSRC_PH             0u
+#define CLOCKS_CLK_REF_CTRL_SRC_CLKSRC_CLK_REF_AUX         1u
+#define CLOCKS_CLK_REF_CTRL_SRC_XOSC_CLKSRC                2u
 
 #define CLOCKS_CLK_REF_DIV_INT_OFFSET                      8u
 #define CLOCKS_CLK_REF_DIV_INT_MASK                        0x300u
 
 #define CLOCKS_CLK_SYS_CTRL_AUXSRC_OFFSET                  5u
 #define CLOCKS_CLK_SYS_CTRL_AUXSRC_MASK                    0xe0u
-#define CLOCKS_CLK_SYS_CTRL_AUXSRC_clksrc_pll_sys          0u
-#define CLOCKS_CLK_SYS_CTRL_AUXSRC_clksrc_pll_usb          1u
-#define CLOCKS_CLK_SYS_CTRL_AUXSRC_rosc_clksrc             2u
-#define CLOCKS_CLK_SYS_CTRL_AUXSRC_xosc_clksrc             3u
-#define CLOCKS_CLK_SYS_CTRL_AUXSRC_clksrc_gpin0            4u
-#define CLOCKS_CLK_SYS_CTRL_AUXSRC_clksrc_gpin1            5u
+#define CLOCKS_CLK_SYS_CTRL_AUXSRC_CLKSRC_PLL_SYS          0u
+#define CLOCKS_CLK_SYS_CTRL_AUXSRC_CLKSRC_PLL_USB          1u
+#define CLOCKS_CLK_SYS_CTRL_AUXSRC_ROSC_CLKSRC             2u
+#define CLOCKS_CLK_SYS_CTRL_AUXSRC_XOSC_CLKSRC             3u
+#define CLOCKS_CLK_SYS_CTRL_AUXSRC_CLKSRC_GPIN0            4u
+#define CLOCKS_CLK_SYS_CTRL_AUXSRC_CLKSRC_GPIN1            5u
 
 #define CLOCKS_CLK_SYS_CTRL_SRC_OFFSET                     0u
 #define CLOCKS_CLK_SYS_CTRL_SRC_MASK                       1u
-#define CLOCKS_CLK_SYS_CTRL_SRC_clk_ref                    0u
-#define CLOCKS_CLK_SYS_CTRL_SRC_clksrc_clk_sys_aux         1u
+#define CLOCKS_CLK_SYS_CTRL_SRC_CLK_REF                    0u
+#define CLOCKS_CLK_SYS_CTRL_SRC_CLKSRC_CLK_SYS_AUX         1u
 
 #define CLOCKS_CLK_SYS_DIV_INT_OFFSET                      8u
 #define CLOCKS_CLK_SYS_DIV_INT_MASK                        0xffffff00u
@@ -189,13 +192,13 @@
 
 #define CLOCKS_CLK_PERI_CTRL_AUXSRC_OFFSET                 5u
 #define CLOCKS_CLK_PERI_CTRL_AUXSRC_MASK                   0xe0u
-#define CLOCKS_CLK_PERI_CTRL_AUXSRC_clk_sys                0u
-#define CLOCKS_CLK_PERI_CTRL_AUXSRC_clksrc_pll_sys         1u
-#define CLOCKS_CLK_PERI_CTRL_AUXSRC_clksrc_pll_usb         2u
-#define CLOCKS_CLK_PERI_CTRL_AUXSRC_rosc_clksrc_ph         3u
-#define CLOCKS_CLK_PERI_CTRL_AUXSRC_xosc_clksrc            4u
-#define CLOCKS_CLK_PERI_CTRL_AUXSRC_clksrc_gpin0           5u
-#define CLOCKS_CLK_PERI_CTRL_AUXSRC_clksrc_gpin1           6u
+#define CLOCKS_CLK_PERI_CTRL_AUXSRC_CLK_SYS                0u
+#define CLOCKS_CLK_PERI_CTRL_AUXSRC_CLKSRC_PLL_SYS         1u
+#define CLOCKS_CLK_PERI_CTRL_AUXSRC_CLKSRC_PLL_USB         2u
+#define CLOCKS_CLK_PERI_CTRL_AUXSRC_ROSC_CLKSRC_PH         3u
+#define CLOCKS_CLK_PERI_CTRL_AUXSRC_XOSC_CLKSRC            4u
+#define CLOCKS_CLK_PERI_CTRL_AUXSRC_CLKSRC_GPIN0           5u
+#define CLOCKS_CLK_PERI_CTRL_AUXSRC_CLKSRC_GPIN1           6u
 
 #define CLOCKS_CLK_USB_CTRL_NUDGE_OFFSET                   20u
 #define CLOCKS_CLK_USB_CTRL_NUDGE_MASK                     0x100000u
@@ -211,12 +214,12 @@
 
 #define CLOCKS_CLK_USB_CTRL_AUXSRC_OFFSET                  5u
 #define CLOCKS_CLK_USB_CTRL_AUXSRC_MASK                    0xe0u
-#define CLOCKS_CLK_USB_CTRL_AUXSRC_clksrc_pll_usb          0u
-#define CLOCKS_CLK_USB_CTRL_AUXSRC_clksrc_pll_sys          1u
-#define CLOCKS_CLK_USB_CTRL_AUXSRC_rosc_clksrc_ph          2u
-#define CLOCKS_CLK_USB_CTRL_AUXSRC_xosc_clksrc             3u
-#define CLOCKS_CLK_USB_CTRL_AUXSRC_clksrc_gpin0            4u
-#define CLOCKS_CLK_USB_CTRL_AUXSRC_clksrc_gpin1            5u
+#define CLOCKS_CLK_USB_CTRL_AUXSRC_CLKSRC_PLL_USB          0u
+#define CLOCKS_CLK_USB_CTRL_AUXSRC_CLKSRC_PLL_SYS          1u
+#define CLOCKS_CLK_USB_CTRL_AUXSRC_ROSC_CLKSRC_PH          2u
+#define CLOCKS_CLK_USB_CTRL_AUXSRC_XOSC_CLKSRC             3u
+#define CLOCKS_CLK_USB_CTRL_AUXSRC_CLKSRC_GPIN0            4u
+#define CLOCKS_CLK_USB_CTRL_AUXSRC_CLKSRC_GPIN1            5u
 
 #define CLOCKS_CLK_USB_DIV_INT_OFFSET                      8u
 #define CLOCKS_CLK_USB_DIV_INT_MASK                        0x300u
@@ -235,12 +238,12 @@
 
 #define CLOCKS_CLK_ADC_CTRL_AUXSRC_OFFSET                  5u
 #define CLOCKS_CLK_ADC_CTRL_AUXSRC_MASK                    0xe0u
-#define CLOCKS_CLK_ADC_CTRL_AUXSRC_clksrc_pll_usb          0u
-#define CLOCKS_CLK_ADC_CTRL_AUXSRC_clksrc_pll_sys          1u
-#define CLOCKS_CLK_ADC_CTRL_AUXSRC_rosc_clksrc_ph          2u
-#define CLOCKS_CLK_ADC_CTRL_AUXSRC_xosc_clksrc             3u
-#define CLOCKS_CLK_ADC_CTRL_AUXSRC_clksrc_gpin0            4u
-#define CLOCKS_CLK_ADC_CTRL_AUXSRC_clksrc_gpin1            5u
+#define CLOCKS_CLK_ADC_CTRL_AUXSRC_CLKSRC_PLL_USB          0u
+#define CLOCKS_CLK_ADC_CTRL_AUXSRC_CLKSRC_PLL_SYS          1u
+#define CLOCKS_CLK_ADC_CTRL_AUXSRC_ROSC_CLKSRC_PH          2u
+#define CLOCKS_CLK_ADC_CTRL_AUXSRC_XOSC_CLKSRC             3u
+#define CLOCKS_CLK_ADC_CTRL_AUXSRC_CLKSRC_GPIN0            4u
+#define CLOCKS_CLK_ADC_CTRL_AUXSRC_CLKSRC_GPIN1            5u
 
 #define CLOCKS_CLK_ADC_DIV_INT_OFFSET                      8u
 #define CLOCKS_CLK_ADC_DIV_INT_MASK                        0x300u
@@ -259,12 +262,12 @@
 
 #define CLOCKS_CLK_RTC_CTRL_AUXSRC_OFFSET                  5u
 #define CLOCKS_CLK_RTC_CTRL_AUXSRC_MASK                    0xe0u
-#define CLOCKS_CLK_RTC_CTRL_AUXSRC_clksrc_pll_usb          0u
-#define CLOCKS_CLK_RTC_CTRL_AUXSRC_clksrc_pll_sys          1u
-#define CLOCKS_CLK_RTC_CTRL_AUXSRC_rosc_clksrc_ph          2u
-#define CLOCKS_CLK_RTC_CTRL_AUXSRC_xosc_clksrc             3u
-#define CLOCKS_CLK_RTC_CTRL_AUXSRC_clksrc_gpin0            4u
-#define CLOCKS_CLK_RTC_CTRL_AUXSRC_clksrc_gpin1            5u
+#define CLOCKS_CLK_RTC_CTRL_AUXSRC_CLKSRC_PLL_USB          0u
+#define CLOCKS_CLK_RTC_CTRL_AUXSRC_CLKSRC_PLL_SYS          1u
+#define CLOCKS_CLK_RTC_CTRL_AUXSRC_ROSC_CLKSRC_PH          2u
+#define CLOCKS_CLK_RTC_CTRL_AUXSRC_XOSC_CLKSRC             3u
+#define CLOCKS_CLK_RTC_CTRL_AUXSRC_CLKSRC_GPIN0            4u
+#define CLOCKS_CLK_RTC_CTRL_AUXSRC_CLKSRC_GPIN1            5u
 
 #define CLOCKS_CLK_RTC_DIV_INT_OFFSET                      8u
 #define CLOCKS_CLK_RTC_DIV_INT_MASK                        0xffffff00u
@@ -305,19 +308,19 @@
 #define CLOCKS_FC0_SRC_FC0_SRC_OFFSET                      0u
 #define CLOCKS_FC0_SRC_FC0_SRC_MASK                        0xffu
 #define CLOCKS_FC0_SRC_FC0_SRC_NULL                        0u
-#define CLOCKS_FC0_SRC_FC0_SRC_pll_sys_clksrc_primary      1u
-#define CLOCKS_FC0_SRC_FC0_SRC_pll_usb_clksrc_primary      2u
-#define CLOCKS_FC0_SRC_FC0_SRC_rosc_clksrc                 3u
-#define CLOCKS_FC0_SRC_FC0_SRC_rosc_clksrc_ph              4u
-#define CLOCKS_FC0_SRC_FC0_SRC_xosc_clksrc                 5u
-#define CLOCKS_FC0_SRC_FC0_SRC_clksrc_gpin0                6u
-#define CLOCKS_FC0_SRC_FC0_SRC_clksrc_gpin1                7u
-#define CLOCKS_FC0_SRC_FC0_SRC_clk_ref                     8u
-#define CLOCKS_FC0_SRC_FC0_SRC_clk_sys                     9u
-#define CLOCKS_FC0_SRC_FC0_SRC_clk_peri                    0xau
-#define CLOCKS_FC0_SRC_FC0_SRC_clk_usb                     0xbu
-#define CLOCKS_FC0_SRC_FC0_SRC_clk_adc                     0xcu
-#define CLOCKS_FC0_SRC_FC0_SRC_clk_rtc                     0xdu
+#define CLOCKS_FC0_SRC_FC0_SRC_PLL_SYS_CLKSRC_PRIMARY      1u
+#define CLOCKS_FC0_SRC_FC0_SRC_PLL_USB_CLKSRC_PRIMARY      2u
+#define CLOCKS_FC0_SRC_FC0_SRC_ROSC_CLKSRC                 3u
+#define CLOCKS_FC0_SRC_FC0_SRC_ROSC_CLKSRC_PH              4u
+#define CLOCKS_FC0_SRC_FC0_SRC_XOSC_CLKSRC                 5u
+#define CLOCKS_FC0_SRC_FC0_SRC_CLKSRC_GPIN0                6u
+#define CLOCKS_FC0_SRC_FC0_SRC_CLKSRC_GPIN1                7u
+#define CLOCKS_FC0_SRC_FC0_SRC_CLK_REF                     8u
+#define CLOCKS_FC0_SRC_FC0_SRC_CLK_SYS                     9u
+#define CLOCKS_FC0_SRC_FC0_SRC_CLK_PERI                    0xau
+#define CLOCKS_FC0_SRC_FC0_SRC_CLK_USB                     0xbu
+#define CLOCKS_FC0_SRC_FC0_SRC_CLK_ADC                     0xcu
+#define CLOCKS_FC0_SRC_FC0_SRC_CLK_RTC                     0xdu
 
 #define CLOCKS_FC0_STATUS_DIED_OFFSET                      28u
 #define CLOCKS_FC0_STATUS_DIED_MASK                        0x10000000u

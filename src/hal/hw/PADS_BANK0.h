@@ -1,3 +1,6 @@
+/*
+  automatically created from data available on https://chipselect.org/
+*/
 #ifndef HW_PADS_BANK0_H
 #define HW_PADS_BANK0_H
 /** Memory Block starting at 0x4001C000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
@@ -7,8 +10,8 @@
 
 #define PADS_BANK0_VOLTAGE_SELECT_VOLTAGE_SELECT_OFFSET    0u
 #define PADS_BANK0_VOLTAGE_SELECT_VOLTAGE_SELECT_MASK      1u
-#define PADS_BANK0_VOLTAGE_SELECT_VOLTAGE_SELECT_3v3       0u
-#define PADS_BANK0_VOLTAGE_SELECT_VOLTAGE_SELECT_1v8       1u
+#define PADS_BANK0_VOLTAGE_SELECT_VOLTAGE_SELECT_3V3       0u
+#define PADS_BANK0_VOLTAGE_SELECT_VOLTAGE_SELECT_1V8       1u
 
 #define PADS_BANK0_GPIO0_OD_OFFSET                         7u
 #define PADS_BANK0_GPIO0_OD_MASK                           0x80u
@@ -18,10 +21,10 @@
 
 #define PADS_BANK0_GPIO0_DRIVE_OFFSET                      4u
 #define PADS_BANK0_GPIO0_DRIVE_MASK                        0x30u
-#define PADS_BANK0_GPIO0_DRIVE_2mA                         0u
-#define PADS_BANK0_GPIO0_DRIVE_4mA                         1u
-#define PADS_BANK0_GPIO0_DRIVE_8mA                         2u
-#define PADS_BANK0_GPIO0_DRIVE_12mA                        3u
+#define PADS_BANK0_GPIO0_DRIVE_2MA                         0u
+#define PADS_BANK0_GPIO0_DRIVE_4MA                         1u
+#define PADS_BANK0_GPIO0_DRIVE_8MA                         2u
+#define PADS_BANK0_GPIO0_DRIVE_12MA                        3u
 
 #define PADS_BANK0_GPIO0_PUE_OFFSET                        3u
 #define PADS_BANK0_GPIO0_PUE_MASK                          8u
@@ -43,10 +46,10 @@
 
 #define PADS_BANK0_GPIO1_DRIVE_OFFSET                      4u
 #define PADS_BANK0_GPIO1_DRIVE_MASK                        0x30u
-#define PADS_BANK0_GPIO1_DRIVE_2mA                         0u
-#define PADS_BANK0_GPIO1_DRIVE_4mA                         1u
-#define PADS_BANK0_GPIO1_DRIVE_8mA                         2u
-#define PADS_BANK0_GPIO1_DRIVE_12mA                        3u
+#define PADS_BANK0_GPIO1_DRIVE_2MA                         0u
+#define PADS_BANK0_GPIO1_DRIVE_4MA                         1u
+#define PADS_BANK0_GPIO1_DRIVE_8MA                         2u
+#define PADS_BANK0_GPIO1_DRIVE_12MA                        3u
 
 #define PADS_BANK0_GPIO1_PUE_OFFSET                        3u
 #define PADS_BANK0_GPIO1_PUE_MASK                          8u
@@ -68,10 +71,10 @@
 
 #define PADS_BANK0_GPIO2_DRIVE_OFFSET                      4u
 #define PADS_BANK0_GPIO2_DRIVE_MASK                        0x30u
-#define PADS_BANK0_GPIO2_DRIVE_2mA                         0u
-#define PADS_BANK0_GPIO2_DRIVE_4mA                         1u
-#define PADS_BANK0_GPIO2_DRIVE_8mA                         2u
-#define PADS_BANK0_GPIO2_DRIVE_12mA                        3u
+#define PADS_BANK0_GPIO2_DRIVE_2MA                         0u
+#define PADS_BANK0_GPIO2_DRIVE_4MA                         1u
+#define PADS_BANK0_GPIO2_DRIVE_8MA                         2u
+#define PADS_BANK0_GPIO2_DRIVE_12MA                        3u
 
 #define PADS_BANK0_GPIO2_PUE_OFFSET                        3u
 #define PADS_BANK0_GPIO2_PUE_MASK                          8u
@@ -93,10 +96,10 @@
 
 #define PADS_BANK0_GPIO3_DRIVE_OFFSET                      4u
 #define PADS_BANK0_GPIO3_DRIVE_MASK                        0x30u
-#define PADS_BANK0_GPIO3_DRIVE_2mA                         0u
-#define PADS_BANK0_GPIO3_DRIVE_4mA                         1u
-#define PADS_BANK0_GPIO3_DRIVE_8mA                         2u
-#define PADS_BANK0_GPIO3_DRIVE_12mA                        3u
+#define PADS_BANK0_GPIO3_DRIVE_2MA                         0u
+#define PADS_BANK0_GPIO3_DRIVE_4MA                         1u
+#define PADS_BANK0_GPIO3_DRIVE_8MA                         2u
+#define PADS_BANK0_GPIO3_DRIVE_12MA                        3u
 
 #define PADS_BANK0_GPIO3_PUE_OFFSET                        3u
 #define PADS_BANK0_GPIO3_PUE_MASK                          8u
@@ -118,10 +121,10 @@
 
 #define PADS_BANK0_GPIO4_DRIVE_OFFSET                      4u
 #define PADS_BANK0_GPIO4_DRIVE_MASK                        0x30u
-#define PADS_BANK0_GPIO4_DRIVE_2mA                         0u
-#define PADS_BANK0_GPIO4_DRIVE_4mA                         1u
-#define PADS_BANK0_GPIO4_DRIVE_8mA                         2u
-#define PADS_BANK0_GPIO4_DRIVE_12mA                        3u
+#define PADS_BANK0_GPIO4_DRIVE_2MA                         0u
+#define PADS_BANK0_GPIO4_DRIVE_4MA                         1u
+#define PADS_BANK0_GPIO4_DRIVE_8MA                         2u
+#define PADS_BANK0_GPIO4_DRIVE_12MA                        3u
 
 #define PADS_BANK0_GPIO4_PUE_OFFSET                        3u
 #define PADS_BANK0_GPIO4_PUE_MASK                          8u
@@ -143,10 +146,10 @@
 
 #define PADS_BANK0_GPIO5_DRIVE_OFFSET                      4u
 #define PADS_BANK0_GPIO5_DRIVE_MASK                        0x30u
-#define PADS_BANK0_GPIO5_DRIVE_2mA                         0u
-#define PADS_BANK0_GPIO5_DRIVE_4mA                         1u
-#define PADS_BANK0_GPIO5_DRIVE_8mA                         2u
-#define PADS_BANK0_GPIO5_DRIVE_12mA                        3u
+#define PADS_BANK0_GPIO5_DRIVE_2MA                         0u
+#define PADS_BANK0_GPIO5_DRIVE_4MA                         1u
+#define PADS_BANK0_GPIO5_DRIVE_8MA                         2u
+#define PADS_BANK0_GPIO5_DRIVE_12MA                        3u
 
 #define PADS_BANK0_GPIO5_PUE_OFFSET                        3u
 #define PADS_BANK0_GPIO5_PUE_MASK                          8u
@@ -168,10 +171,10 @@
 
 #define PADS_BANK0_GPIO6_DRIVE_OFFSET                      4u
 #define PADS_BANK0_GPIO6_DRIVE_MASK                        0x30u
-#define PADS_BANK0_GPIO6_DRIVE_2mA                         0u
-#define PADS_BANK0_GPIO6_DRIVE_4mA                         1u
-#define PADS_BANK0_GPIO6_DRIVE_8mA                         2u
-#define PADS_BANK0_GPIO6_DRIVE_12mA                        3u
+#define PADS_BANK0_GPIO6_DRIVE_2MA                         0u
+#define PADS_BANK0_GPIO6_DRIVE_4MA                         1u
+#define PADS_BANK0_GPIO6_DRIVE_8MA                         2u
+#define PADS_BANK0_GPIO6_DRIVE_12MA                        3u
 
 #define PADS_BANK0_GPIO6_PUE_OFFSET                        3u
 #define PADS_BANK0_GPIO6_PUE_MASK                          8u
@@ -193,10 +196,10 @@
 
 #define PADS_BANK0_GPIO7_DRIVE_OFFSET                      4u
 #define PADS_BANK0_GPIO7_DRIVE_MASK                        0x30u
-#define PADS_BANK0_GPIO7_DRIVE_2mA                         0u
-#define PADS_BANK0_GPIO7_DRIVE_4mA                         1u
-#define PADS_BANK0_GPIO7_DRIVE_8mA                         2u
-#define PADS_BANK0_GPIO7_DRIVE_12mA                        3u
+#define PADS_BANK0_GPIO7_DRIVE_2MA                         0u
+#define PADS_BANK0_GPIO7_DRIVE_4MA                         1u
+#define PADS_BANK0_GPIO7_DRIVE_8MA                         2u
+#define PADS_BANK0_GPIO7_DRIVE_12MA                        3u
 
 #define PADS_BANK0_GPIO7_PUE_OFFSET                        3u
 #define PADS_BANK0_GPIO7_PUE_MASK                          8u
@@ -218,10 +221,10 @@
 
 #define PADS_BANK0_GPIO8_DRIVE_OFFSET                      4u
 #define PADS_BANK0_GPIO8_DRIVE_MASK                        0x30u
-#define PADS_BANK0_GPIO8_DRIVE_2mA                         0u
-#define PADS_BANK0_GPIO8_DRIVE_4mA                         1u
-#define PADS_BANK0_GPIO8_DRIVE_8mA                         2u
-#define PADS_BANK0_GPIO8_DRIVE_12mA                        3u
+#define PADS_BANK0_GPIO8_DRIVE_2MA                         0u
+#define PADS_BANK0_GPIO8_DRIVE_4MA                         1u
+#define PADS_BANK0_GPIO8_DRIVE_8MA                         2u
+#define PADS_BANK0_GPIO8_DRIVE_12MA                        3u
 
 #define PADS_BANK0_GPIO8_PUE_OFFSET                        3u
 #define PADS_BANK0_GPIO8_PUE_MASK                          8u
@@ -243,10 +246,10 @@
 
 #define PADS_BANK0_GPIO9_DRIVE_OFFSET                      4u
 #define PADS_BANK0_GPIO9_DRIVE_MASK                        0x30u
-#define PADS_BANK0_GPIO9_DRIVE_2mA                         0u
-#define PADS_BANK0_GPIO9_DRIVE_4mA                         1u
-#define PADS_BANK0_GPIO9_DRIVE_8mA                         2u
-#define PADS_BANK0_GPIO9_DRIVE_12mA                        3u
+#define PADS_BANK0_GPIO9_DRIVE_2MA                         0u
+#define PADS_BANK0_GPIO9_DRIVE_4MA                         1u
+#define PADS_BANK0_GPIO9_DRIVE_8MA                         2u
+#define PADS_BANK0_GPIO9_DRIVE_12MA                        3u
 
 #define PADS_BANK0_GPIO9_PUE_OFFSET                        3u
 #define PADS_BANK0_GPIO9_PUE_MASK                          8u
@@ -268,10 +271,10 @@
 
 #define PADS_BANK0_GPIO10_DRIVE_OFFSET                     4u
 #define PADS_BANK0_GPIO10_DRIVE_MASK                       0x30u
-#define PADS_BANK0_GPIO10_DRIVE_2mA                        0u
-#define PADS_BANK0_GPIO10_DRIVE_4mA                        1u
-#define PADS_BANK0_GPIO10_DRIVE_8mA                        2u
-#define PADS_BANK0_GPIO10_DRIVE_12mA                       3u
+#define PADS_BANK0_GPIO10_DRIVE_2MA                        0u
+#define PADS_BANK0_GPIO10_DRIVE_4MA                        1u
+#define PADS_BANK0_GPIO10_DRIVE_8MA                        2u
+#define PADS_BANK0_GPIO10_DRIVE_12MA                       3u
 
 #define PADS_BANK0_GPIO10_PUE_OFFSET                       3u
 #define PADS_BANK0_GPIO10_PUE_MASK                         8u
@@ -293,10 +296,10 @@
 
 #define PADS_BANK0_GPIO11_DRIVE_OFFSET                     4u
 #define PADS_BANK0_GPIO11_DRIVE_MASK                       0x30u
-#define PADS_BANK0_GPIO11_DRIVE_2mA                        0u
-#define PADS_BANK0_GPIO11_DRIVE_4mA                        1u
-#define PADS_BANK0_GPIO11_DRIVE_8mA                        2u
-#define PADS_BANK0_GPIO11_DRIVE_12mA                       3u
+#define PADS_BANK0_GPIO11_DRIVE_2MA                        0u
+#define PADS_BANK0_GPIO11_DRIVE_4MA                        1u
+#define PADS_BANK0_GPIO11_DRIVE_8MA                        2u
+#define PADS_BANK0_GPIO11_DRIVE_12MA                       3u
 
 #define PADS_BANK0_GPIO11_PUE_OFFSET                       3u
 #define PADS_BANK0_GPIO11_PUE_MASK                         8u
@@ -318,10 +321,10 @@
 
 #define PADS_BANK0_GPIO12_DRIVE_OFFSET                     4u
 #define PADS_BANK0_GPIO12_DRIVE_MASK                       0x30u
-#define PADS_BANK0_GPIO12_DRIVE_2mA                        0u
-#define PADS_BANK0_GPIO12_DRIVE_4mA                        1u
-#define PADS_BANK0_GPIO12_DRIVE_8mA                        2u
-#define PADS_BANK0_GPIO12_DRIVE_12mA                       3u
+#define PADS_BANK0_GPIO12_DRIVE_2MA                        0u
+#define PADS_BANK0_GPIO12_DRIVE_4MA                        1u
+#define PADS_BANK0_GPIO12_DRIVE_8MA                        2u
+#define PADS_BANK0_GPIO12_DRIVE_12MA                       3u
 
 #define PADS_BANK0_GPIO12_PUE_OFFSET                       3u
 #define PADS_BANK0_GPIO12_PUE_MASK                         8u
@@ -343,10 +346,10 @@
 
 #define PADS_BANK0_GPIO13_DRIVE_OFFSET                     4u
 #define PADS_BANK0_GPIO13_DRIVE_MASK                       0x30u
-#define PADS_BANK0_GPIO13_DRIVE_2mA                        0u
-#define PADS_BANK0_GPIO13_DRIVE_4mA                        1u
-#define PADS_BANK0_GPIO13_DRIVE_8mA                        2u
-#define PADS_BANK0_GPIO13_DRIVE_12mA                       3u
+#define PADS_BANK0_GPIO13_DRIVE_2MA                        0u
+#define PADS_BANK0_GPIO13_DRIVE_4MA                        1u
+#define PADS_BANK0_GPIO13_DRIVE_8MA                        2u
+#define PADS_BANK0_GPIO13_DRIVE_12MA                       3u
 
 #define PADS_BANK0_GPIO13_PUE_OFFSET                       3u
 #define PADS_BANK0_GPIO13_PUE_MASK                         8u
@@ -368,10 +371,10 @@
 
 #define PADS_BANK0_GPIO14_DRIVE_OFFSET                     4u
 #define PADS_BANK0_GPIO14_DRIVE_MASK                       0x30u
-#define PADS_BANK0_GPIO14_DRIVE_2mA                        0u
-#define PADS_BANK0_GPIO14_DRIVE_4mA                        1u
-#define PADS_BANK0_GPIO14_DRIVE_8mA                        2u
-#define PADS_BANK0_GPIO14_DRIVE_12mA                       3u
+#define PADS_BANK0_GPIO14_DRIVE_2MA                        0u
+#define PADS_BANK0_GPIO14_DRIVE_4MA                        1u
+#define PADS_BANK0_GPIO14_DRIVE_8MA                        2u
+#define PADS_BANK0_GPIO14_DRIVE_12MA                       3u
 
 #define PADS_BANK0_GPIO14_PUE_OFFSET                       3u
 #define PADS_BANK0_GPIO14_PUE_MASK                         8u
@@ -393,10 +396,10 @@
 
 #define PADS_BANK0_GPIO15_DRIVE_OFFSET                     4u
 #define PADS_BANK0_GPIO15_DRIVE_MASK                       0x30u
-#define PADS_BANK0_GPIO15_DRIVE_2mA                        0u
-#define PADS_BANK0_GPIO15_DRIVE_4mA                        1u
-#define PADS_BANK0_GPIO15_DRIVE_8mA                        2u
-#define PADS_BANK0_GPIO15_DRIVE_12mA                       3u
+#define PADS_BANK0_GPIO15_DRIVE_2MA                        0u
+#define PADS_BANK0_GPIO15_DRIVE_4MA                        1u
+#define PADS_BANK0_GPIO15_DRIVE_8MA                        2u
+#define PADS_BANK0_GPIO15_DRIVE_12MA                       3u
 
 #define PADS_BANK0_GPIO15_PUE_OFFSET                       3u
 #define PADS_BANK0_GPIO15_PUE_MASK                         8u
@@ -418,10 +421,10 @@
 
 #define PADS_BANK0_GPIO16_DRIVE_OFFSET                     4u
 #define PADS_BANK0_GPIO16_DRIVE_MASK                       0x30u
-#define PADS_BANK0_GPIO16_DRIVE_2mA                        0u
-#define PADS_BANK0_GPIO16_DRIVE_4mA                        1u
-#define PADS_BANK0_GPIO16_DRIVE_8mA                        2u
-#define PADS_BANK0_GPIO16_DRIVE_12mA                       3u
+#define PADS_BANK0_GPIO16_DRIVE_2MA                        0u
+#define PADS_BANK0_GPIO16_DRIVE_4MA                        1u
+#define PADS_BANK0_GPIO16_DRIVE_8MA                        2u
+#define PADS_BANK0_GPIO16_DRIVE_12MA                       3u
 
 #define PADS_BANK0_GPIO16_PUE_OFFSET                       3u
 #define PADS_BANK0_GPIO16_PUE_MASK                         8u
@@ -443,10 +446,10 @@
 
 #define PADS_BANK0_GPIO17_DRIVE_OFFSET                     4u
 #define PADS_BANK0_GPIO17_DRIVE_MASK                       0x30u
-#define PADS_BANK0_GPIO17_DRIVE_2mA                        0u
-#define PADS_BANK0_GPIO17_DRIVE_4mA                        1u
-#define PADS_BANK0_GPIO17_DRIVE_8mA                        2u
-#define PADS_BANK0_GPIO17_DRIVE_12mA                       3u
+#define PADS_BANK0_GPIO17_DRIVE_2MA                        0u
+#define PADS_BANK0_GPIO17_DRIVE_4MA                        1u
+#define PADS_BANK0_GPIO17_DRIVE_8MA                        2u
+#define PADS_BANK0_GPIO17_DRIVE_12MA                       3u
 
 #define PADS_BANK0_GPIO17_PUE_OFFSET                       3u
 #define PADS_BANK0_GPIO17_PUE_MASK                         8u
@@ -468,10 +471,10 @@
 
 #define PADS_BANK0_GPIO18_DRIVE_OFFSET                     4u
 #define PADS_BANK0_GPIO18_DRIVE_MASK                       0x30u
-#define PADS_BANK0_GPIO18_DRIVE_2mA                        0u
-#define PADS_BANK0_GPIO18_DRIVE_4mA                        1u
-#define PADS_BANK0_GPIO18_DRIVE_8mA                        2u
-#define PADS_BANK0_GPIO18_DRIVE_12mA                       3u
+#define PADS_BANK0_GPIO18_DRIVE_2MA                        0u
+#define PADS_BANK0_GPIO18_DRIVE_4MA                        1u
+#define PADS_BANK0_GPIO18_DRIVE_8MA                        2u
+#define PADS_BANK0_GPIO18_DRIVE_12MA                       3u
 
 #define PADS_BANK0_GPIO18_PUE_OFFSET                       3u
 #define PADS_BANK0_GPIO18_PUE_MASK                         8u
@@ -493,10 +496,10 @@
 
 #define PADS_BANK0_GPIO19_DRIVE_OFFSET                     4u
 #define PADS_BANK0_GPIO19_DRIVE_MASK                       0x30u
-#define PADS_BANK0_GPIO19_DRIVE_2mA                        0u
-#define PADS_BANK0_GPIO19_DRIVE_4mA                        1u
-#define PADS_BANK0_GPIO19_DRIVE_8mA                        2u
-#define PADS_BANK0_GPIO19_DRIVE_12mA                       3u
+#define PADS_BANK0_GPIO19_DRIVE_2MA                        0u
+#define PADS_BANK0_GPIO19_DRIVE_4MA                        1u
+#define PADS_BANK0_GPIO19_DRIVE_8MA                        2u
+#define PADS_BANK0_GPIO19_DRIVE_12MA                       3u
 
 #define PADS_BANK0_GPIO19_PUE_OFFSET                       3u
 #define PADS_BANK0_GPIO19_PUE_MASK                         8u
@@ -518,10 +521,10 @@
 
 #define PADS_BANK0_GPIO20_DRIVE_OFFSET                     4u
 #define PADS_BANK0_GPIO20_DRIVE_MASK                       0x30u
-#define PADS_BANK0_GPIO20_DRIVE_2mA                        0u
-#define PADS_BANK0_GPIO20_DRIVE_4mA                        1u
-#define PADS_BANK0_GPIO20_DRIVE_8mA                        2u
-#define PADS_BANK0_GPIO20_DRIVE_12mA                       3u
+#define PADS_BANK0_GPIO20_DRIVE_2MA                        0u
+#define PADS_BANK0_GPIO20_DRIVE_4MA                        1u
+#define PADS_BANK0_GPIO20_DRIVE_8MA                        2u
+#define PADS_BANK0_GPIO20_DRIVE_12MA                       3u
 
 #define PADS_BANK0_GPIO20_PUE_OFFSET                       3u
 #define PADS_BANK0_GPIO20_PUE_MASK                         8u
@@ -543,10 +546,10 @@
 
 #define PADS_BANK0_GPIO21_DRIVE_OFFSET                     4u
 #define PADS_BANK0_GPIO21_DRIVE_MASK                       0x30u
-#define PADS_BANK0_GPIO21_DRIVE_2mA                        0u
-#define PADS_BANK0_GPIO21_DRIVE_4mA                        1u
-#define PADS_BANK0_GPIO21_DRIVE_8mA                        2u
-#define PADS_BANK0_GPIO21_DRIVE_12mA                       3u
+#define PADS_BANK0_GPIO21_DRIVE_2MA                        0u
+#define PADS_BANK0_GPIO21_DRIVE_4MA                        1u
+#define PADS_BANK0_GPIO21_DRIVE_8MA                        2u
+#define PADS_BANK0_GPIO21_DRIVE_12MA                       3u
 
 #define PADS_BANK0_GPIO21_PUE_OFFSET                       3u
 #define PADS_BANK0_GPIO21_PUE_MASK                         8u
@@ -568,10 +571,10 @@
 
 #define PADS_BANK0_GPIO22_DRIVE_OFFSET                     4u
 #define PADS_BANK0_GPIO22_DRIVE_MASK                       0x30u
-#define PADS_BANK0_GPIO22_DRIVE_2mA                        0u
-#define PADS_BANK0_GPIO22_DRIVE_4mA                        1u
-#define PADS_BANK0_GPIO22_DRIVE_8mA                        2u
-#define PADS_BANK0_GPIO22_DRIVE_12mA                       3u
+#define PADS_BANK0_GPIO22_DRIVE_2MA                        0u
+#define PADS_BANK0_GPIO22_DRIVE_4MA                        1u
+#define PADS_BANK0_GPIO22_DRIVE_8MA                        2u
+#define PADS_BANK0_GPIO22_DRIVE_12MA                       3u
 
 #define PADS_BANK0_GPIO22_PUE_OFFSET                       3u
 #define PADS_BANK0_GPIO22_PUE_MASK                         8u
@@ -593,10 +596,10 @@
 
 #define PADS_BANK0_GPIO23_DRIVE_OFFSET                     4u
 #define PADS_BANK0_GPIO23_DRIVE_MASK                       0x30u
-#define PADS_BANK0_GPIO23_DRIVE_2mA                        0u
-#define PADS_BANK0_GPIO23_DRIVE_4mA                        1u
-#define PADS_BANK0_GPIO23_DRIVE_8mA                        2u
-#define PADS_BANK0_GPIO23_DRIVE_12mA                       3u
+#define PADS_BANK0_GPIO23_DRIVE_2MA                        0u
+#define PADS_BANK0_GPIO23_DRIVE_4MA                        1u
+#define PADS_BANK0_GPIO23_DRIVE_8MA                        2u
+#define PADS_BANK0_GPIO23_DRIVE_12MA                       3u
 
 #define PADS_BANK0_GPIO23_PUE_OFFSET                       3u
 #define PADS_BANK0_GPIO23_PUE_MASK                         8u
@@ -618,10 +621,10 @@
 
 #define PADS_BANK0_GPIO24_DRIVE_OFFSET                     4u
 #define PADS_BANK0_GPIO24_DRIVE_MASK                       0x30u
-#define PADS_BANK0_GPIO24_DRIVE_2mA                        0u
-#define PADS_BANK0_GPIO24_DRIVE_4mA                        1u
-#define PADS_BANK0_GPIO24_DRIVE_8mA                        2u
-#define PADS_BANK0_GPIO24_DRIVE_12mA                       3u
+#define PADS_BANK0_GPIO24_DRIVE_2MA                        0u
+#define PADS_BANK0_GPIO24_DRIVE_4MA                        1u
+#define PADS_BANK0_GPIO24_DRIVE_8MA                        2u
+#define PADS_BANK0_GPIO24_DRIVE_12MA                       3u
 
 #define PADS_BANK0_GPIO24_PUE_OFFSET                       3u
 #define PADS_BANK0_GPIO24_PUE_MASK                         8u
@@ -643,10 +646,10 @@
 
 #define PADS_BANK0_GPIO25_DRIVE_OFFSET                     4u
 #define PADS_BANK0_GPIO25_DRIVE_MASK                       0x30u
-#define PADS_BANK0_GPIO25_DRIVE_2mA                        0u
-#define PADS_BANK0_GPIO25_DRIVE_4mA                        1u
-#define PADS_BANK0_GPIO25_DRIVE_8mA                        2u
-#define PADS_BANK0_GPIO25_DRIVE_12mA                       3u
+#define PADS_BANK0_GPIO25_DRIVE_2MA                        0u
+#define PADS_BANK0_GPIO25_DRIVE_4MA                        1u
+#define PADS_BANK0_GPIO25_DRIVE_8MA                        2u
+#define PADS_BANK0_GPIO25_DRIVE_12MA                       3u
 
 #define PADS_BANK0_GPIO25_PUE_OFFSET                       3u
 #define PADS_BANK0_GPIO25_PUE_MASK                         8u
@@ -668,10 +671,10 @@
 
 #define PADS_BANK0_GPIO26_DRIVE_OFFSET                     4u
 #define PADS_BANK0_GPIO26_DRIVE_MASK                       0x30u
-#define PADS_BANK0_GPIO26_DRIVE_2mA                        0u
-#define PADS_BANK0_GPIO26_DRIVE_4mA                        1u
-#define PADS_BANK0_GPIO26_DRIVE_8mA                        2u
-#define PADS_BANK0_GPIO26_DRIVE_12mA                       3u
+#define PADS_BANK0_GPIO26_DRIVE_2MA                        0u
+#define PADS_BANK0_GPIO26_DRIVE_4MA                        1u
+#define PADS_BANK0_GPIO26_DRIVE_8MA                        2u
+#define PADS_BANK0_GPIO26_DRIVE_12MA                       3u
 
 #define PADS_BANK0_GPIO26_PUE_OFFSET                       3u
 #define PADS_BANK0_GPIO26_PUE_MASK                         8u
@@ -693,10 +696,10 @@
 
 #define PADS_BANK0_GPIO27_DRIVE_OFFSET                     4u
 #define PADS_BANK0_GPIO27_DRIVE_MASK                       0x30u
-#define PADS_BANK0_GPIO27_DRIVE_2mA                        0u
-#define PADS_BANK0_GPIO27_DRIVE_4mA                        1u
-#define PADS_BANK0_GPIO27_DRIVE_8mA                        2u
-#define PADS_BANK0_GPIO27_DRIVE_12mA                       3u
+#define PADS_BANK0_GPIO27_DRIVE_2MA                        0u
+#define PADS_BANK0_GPIO27_DRIVE_4MA                        1u
+#define PADS_BANK0_GPIO27_DRIVE_8MA                        2u
+#define PADS_BANK0_GPIO27_DRIVE_12MA                       3u
 
 #define PADS_BANK0_GPIO27_PUE_OFFSET                       3u
 #define PADS_BANK0_GPIO27_PUE_MASK                         8u
@@ -718,10 +721,10 @@
 
 #define PADS_BANK0_GPIO28_DRIVE_OFFSET                     4u
 #define PADS_BANK0_GPIO28_DRIVE_MASK                       0x30u
-#define PADS_BANK0_GPIO28_DRIVE_2mA                        0u
-#define PADS_BANK0_GPIO28_DRIVE_4mA                        1u
-#define PADS_BANK0_GPIO28_DRIVE_8mA                        2u
-#define PADS_BANK0_GPIO28_DRIVE_12mA                       3u
+#define PADS_BANK0_GPIO28_DRIVE_2MA                        0u
+#define PADS_BANK0_GPIO28_DRIVE_4MA                        1u
+#define PADS_BANK0_GPIO28_DRIVE_8MA                        2u
+#define PADS_BANK0_GPIO28_DRIVE_12MA                       3u
 
 #define PADS_BANK0_GPIO28_PUE_OFFSET                       3u
 #define PADS_BANK0_GPIO28_PUE_MASK                         8u
@@ -743,10 +746,10 @@
 
 #define PADS_BANK0_GPIO29_DRIVE_OFFSET                     4u
 #define PADS_BANK0_GPIO29_DRIVE_MASK                       0x30u
-#define PADS_BANK0_GPIO29_DRIVE_2mA                        0u
-#define PADS_BANK0_GPIO29_DRIVE_4mA                        1u
-#define PADS_BANK0_GPIO29_DRIVE_8mA                        2u
-#define PADS_BANK0_GPIO29_DRIVE_12mA                       3u
+#define PADS_BANK0_GPIO29_DRIVE_2MA                        0u
+#define PADS_BANK0_GPIO29_DRIVE_4MA                        1u
+#define PADS_BANK0_GPIO29_DRIVE_8MA                        2u
+#define PADS_BANK0_GPIO29_DRIVE_12MA                       3u
 
 #define PADS_BANK0_GPIO29_PUE_OFFSET                       3u
 #define PADS_BANK0_GPIO29_PUE_MASK                         8u
@@ -768,10 +771,10 @@
 
 #define PADS_BANK0_SWCLK_DRIVE_OFFSET                      4u
 #define PADS_BANK0_SWCLK_DRIVE_MASK                        0x30u
-#define PADS_BANK0_SWCLK_DRIVE_2mA                         0u
-#define PADS_BANK0_SWCLK_DRIVE_4mA                         1u
-#define PADS_BANK0_SWCLK_DRIVE_8mA                         2u
-#define PADS_BANK0_SWCLK_DRIVE_12mA                        3u
+#define PADS_BANK0_SWCLK_DRIVE_2MA                         0u
+#define PADS_BANK0_SWCLK_DRIVE_4MA                         1u
+#define PADS_BANK0_SWCLK_DRIVE_8MA                         2u
+#define PADS_BANK0_SWCLK_DRIVE_12MA                        3u
 
 #define PADS_BANK0_SWCLK_PUE_OFFSET                        3u
 #define PADS_BANK0_SWCLK_PUE_MASK                          8u
@@ -793,10 +796,10 @@
 
 #define PADS_BANK0_SWD_DRIVE_OFFSET                        4u
 #define PADS_BANK0_SWD_DRIVE_MASK                          0x30u
-#define PADS_BANK0_SWD_DRIVE_2mA                           0u
-#define PADS_BANK0_SWD_DRIVE_4mA                           1u
-#define PADS_BANK0_SWD_DRIVE_8mA                           2u
-#define PADS_BANK0_SWD_DRIVE_12mA                          3u
+#define PADS_BANK0_SWD_DRIVE_2MA                           0u
+#define PADS_BANK0_SWD_DRIVE_4MA                           1u
+#define PADS_BANK0_SWD_DRIVE_8MA                           2u
+#define PADS_BANK0_SWD_DRIVE_12MA                          3u
 
 #define PADS_BANK0_SWD_PUE_OFFSET                          3u
 #define PADS_BANK0_SWD_PUE_MASK                            8u

@@ -1,3 +1,6 @@
+/*
+  automatically created from data available on https://chipselect.org/
+*/
 #ifndef HW_ROSC_H
 #define HW_ROSC_H
 /** Memory Block starting at 0x40060000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */

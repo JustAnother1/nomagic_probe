@@ -1,3 +1,6 @@
+/*
+  automatically created from data available on https://chipselect.org/
+*/
 #ifndef HW_PADS_QSPI_H
 #define HW_PADS_QSPI_H
 /** Memory Block starting at 0x40020000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
@@ -7,8 +10,8 @@
 
 #define PADS_QSPI_VOLTAGE_SELECT_VOLTAGE_SELECT_OFFSET     0u
 #define PADS_QSPI_VOLTAGE_SELECT_VOLTAGE_SELECT_MASK       1u
-#define PADS_QSPI_VOLTAGE_SELECT_VOLTAGE_SELECT_3v3        0u
-#define PADS_QSPI_VOLTAGE_SELECT_VOLTAGE_SELECT_1v8        1u
+#define PADS_QSPI_VOLTAGE_SELECT_VOLTAGE_SELECT_3V3        0u
+#define PADS_QSPI_VOLTAGE_SELECT_VOLTAGE_SELECT_1V8        1u
 
 #define PADS_QSPI_GPIO_QSPI_SCLK_OD_OFFSET                 7u
 #define PADS_QSPI_GPIO_QSPI_SCLK_OD_MASK                   0x80u
@@ -18,10 +21,10 @@
 
 #define PADS_QSPI_GPIO_QSPI_SCLK_DRIVE_OFFSET              4u
 #define PADS_QSPI_GPIO_QSPI_SCLK_DRIVE_MASK                0x30u
-#define PADS_QSPI_GPIO_QSPI_SCLK_DRIVE_2mA                 0u
-#define PADS_QSPI_GPIO_QSPI_SCLK_DRIVE_4mA                 1u
-#define PADS_QSPI_GPIO_QSPI_SCLK_DRIVE_8mA                 2u
-#define PADS_QSPI_GPIO_QSPI_SCLK_DRIVE_12mA                3u
+#define PADS_QSPI_GPIO_QSPI_SCLK_DRIVE_2MA                 0u
+#define PADS_QSPI_GPIO_QSPI_SCLK_DRIVE_4MA                 1u
+#define PADS_QSPI_GPIO_QSPI_SCLK_DRIVE_8MA                 2u
+#define PADS_QSPI_GPIO_QSPI_SCLK_DRIVE_12MA                3u
 
 #define PADS_QSPI_GPIO_QSPI_SCLK_PUE_OFFSET                3u
 #define PADS_QSPI_GPIO_QSPI_SCLK_PUE_MASK                  8u
@@ -43,10 +46,10 @@
 
 #define PADS_QSPI_GPIO_QSPI_SD0_DRIVE_OFFSET               4u
 #define PADS_QSPI_GPIO_QSPI_SD0_DRIVE_MASK                 0x30u
-#define PADS_QSPI_GPIO_QSPI_SD0_DRIVE_2mA                  0u
-#define PADS_QSPI_GPIO_QSPI_SD0_DRIVE_4mA                  1u
-#define PADS_QSPI_GPIO_QSPI_SD0_DRIVE_8mA                  2u
-#define PADS_QSPI_GPIO_QSPI_SD0_DRIVE_12mA                 3u
+#define PADS_QSPI_GPIO_QSPI_SD0_DRIVE_2MA                  0u
+#define PADS_QSPI_GPIO_QSPI_SD0_DRIVE_4MA                  1u
+#define PADS_QSPI_GPIO_QSPI_SD0_DRIVE_8MA                  2u
+#define PADS_QSPI_GPIO_QSPI_SD0_DRIVE_12MA                 3u
 
 #define PADS_QSPI_GPIO_QSPI_SD0_PUE_OFFSET                 3u
 #define PADS_QSPI_GPIO_QSPI_SD0_PUE_MASK                   8u
@@ -68,10 +71,10 @@
 
 #define PADS_QSPI_GPIO_QSPI_SD1_DRIVE_OFFSET               4u
 #define PADS_QSPI_GPIO_QSPI_SD1_DRIVE_MASK                 0x30u
-#define PADS_QSPI_GPIO_QSPI_SD1_DRIVE_2mA                  0u
-#define PADS_QSPI_GPIO_QSPI_SD1_DRIVE_4mA                  1u
-#define PADS_QSPI_GPIO_QSPI_SD1_DRIVE_8mA                  2u
-#define PADS_QSPI_GPIO_QSPI_SD1_DRIVE_12mA                 3u
+#define PADS_QSPI_GPIO_QSPI_SD1_DRIVE_2MA                  0u
+#define PADS_QSPI_GPIO_QSPI_SD1_DRIVE_4MA                  1u
+#define PADS_QSPI_GPIO_QSPI_SD1_DRIVE_8MA                  2u
+#define PADS_QSPI_GPIO_QSPI_SD1_DRIVE_12MA                 3u
 
 #define PADS_QSPI_GPIO_QSPI_SD1_PUE_OFFSET                 3u
 #define PADS_QSPI_GPIO_QSPI_SD1_PUE_MASK                   8u
@@ -93,10 +96,10 @@
 
 #define PADS_QSPI_GPIO_QSPI_SD2_DRIVE_OFFSET               4u
 #define PADS_QSPI_GPIO_QSPI_SD2_DRIVE_MASK                 0x30u
-#define PADS_QSPI_GPIO_QSPI_SD2_DRIVE_2mA                  0u
-#define PADS_QSPI_GPIO_QSPI_SD2_DRIVE_4mA                  1u
-#define PADS_QSPI_GPIO_QSPI_SD2_DRIVE_8mA                  2u
-#define PADS_QSPI_GPIO_QSPI_SD2_DRIVE_12mA                 3u
+#define PADS_QSPI_GPIO_QSPI_SD2_DRIVE_2MA                  0u
+#define PADS_QSPI_GPIO_QSPI_SD2_DRIVE_4MA                  1u
+#define PADS_QSPI_GPIO_QSPI_SD2_DRIVE_8MA                  2u
+#define PADS_QSPI_GPIO_QSPI_SD2_DRIVE_12MA                 3u
 
 #define PADS_QSPI_GPIO_QSPI_SD2_PUE_OFFSET                 3u
 #define PADS_QSPI_GPIO_QSPI_SD2_PUE_MASK                   8u
@@ -118,10 +121,10 @@
 
 #define PADS_QSPI_GPIO_QSPI_SD3_DRIVE_OFFSET               4u
 #define PADS_QSPI_GPIO_QSPI_SD3_DRIVE_MASK                 0x30u
-#define PADS_QSPI_GPIO_QSPI_SD3_DRIVE_2mA                  0u
-#define PADS_QSPI_GPIO_QSPI_SD3_DRIVE_4mA                  1u
-#define PADS_QSPI_GPIO_QSPI_SD3_DRIVE_8mA                  2u
-#define PADS_QSPI_GPIO_QSPI_SD3_DRIVE_12mA                 3u
+#define PADS_QSPI_GPIO_QSPI_SD3_DRIVE_2MA                  0u
+#define PADS_QSPI_GPIO_QSPI_SD3_DRIVE_4MA                  1u
+#define PADS_QSPI_GPIO_QSPI_SD3_DRIVE_8MA                  2u
+#define PADS_QSPI_GPIO_QSPI_SD3_DRIVE_12MA                 3u
 
 #define PADS_QSPI_GPIO_QSPI_SD3_PUE_OFFSET                 3u
 #define PADS_QSPI_GPIO_QSPI_SD3_PUE_MASK                   8u
@@ -143,10 +146,10 @@
 
 #define PADS_QSPI_GPIO_QSPI_SS_DRIVE_OFFSET                4u
 #define PADS_QSPI_GPIO_QSPI_SS_DRIVE_MASK                  0x30u
-#define PADS_QSPI_GPIO_QSPI_SS_DRIVE_2mA                   0u
-#define PADS_QSPI_GPIO_QSPI_SS_DRIVE_4mA                   1u
-#define PADS_QSPI_GPIO_QSPI_SS_DRIVE_8mA                   2u
-#define PADS_QSPI_GPIO_QSPI_SS_DRIVE_12mA                  3u
+#define PADS_QSPI_GPIO_QSPI_SS_DRIVE_2MA                   0u
+#define PADS_QSPI_GPIO_QSPI_SS_DRIVE_4MA                   1u
+#define PADS_QSPI_GPIO_QSPI_SS_DRIVE_8MA                   2u
+#define PADS_QSPI_GPIO_QSPI_SS_DRIVE_12MA                  3u
 
 #define PADS_QSPI_GPIO_QSPI_SS_PUE_OFFSET                  3u
 #define PADS_QSPI_GPIO_QSPI_SS_PUE_MASK                    8u

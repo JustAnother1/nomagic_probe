@@ -1,3 +1,6 @@
+/*
+  automatically created from data available on https://chipselect.org/
+*/
 #ifndef HW_IO_BANK0_H
 #define HW_IO_BANK0_H
 /** Interrupt : IO_IRQ_BANK0 (Vector: 13)  */
@@ -60,16 +63,16 @@
 
 #define IO_BANK0_GPIO0_CTRL_FUNCSEL_OFFSET                 0u
 #define IO_BANK0_GPIO0_CTRL_FUNCSEL_MASK                   0x1fu
-#define IO_BANK0_GPIO0_CTRL_FUNCSEL_jtag_tck               0u
-#define IO_BANK0_GPIO0_CTRL_FUNCSEL_spi0_rx                1u
-#define IO_BANK0_GPIO0_CTRL_FUNCSEL_uart0_tx               2u
-#define IO_BANK0_GPIO0_CTRL_FUNCSEL_i2c0_sda               3u
-#define IO_BANK0_GPIO0_CTRL_FUNCSEL_pwm_a_0                4u
-#define IO_BANK0_GPIO0_CTRL_FUNCSEL_sio_0                  5u
-#define IO_BANK0_GPIO0_CTRL_FUNCSEL_pio0_0                 6u
-#define IO_BANK0_GPIO0_CTRL_FUNCSEL_pio1_0                 7u
-#define IO_BANK0_GPIO0_CTRL_FUNCSEL_usb_muxing_overcurr_detect   9
-#define IO_BANK0_GPIO0_CTRL_FUNCSEL_null                   0x1fu
+#define IO_BANK0_GPIO0_CTRL_FUNCSEL_JTAG_TCK               0u
+#define IO_BANK0_GPIO0_CTRL_FUNCSEL_SPI0_RX                1u
+#define IO_BANK0_GPIO0_CTRL_FUNCSEL_UART0_TX               2u
+#define IO_BANK0_GPIO0_CTRL_FUNCSEL_I2C0_SDA               3u
+#define IO_BANK0_GPIO0_CTRL_FUNCSEL_PWM_A_0                4u
+#define IO_BANK0_GPIO0_CTRL_FUNCSEL_SIO_0                  5u
+#define IO_BANK0_GPIO0_CTRL_FUNCSEL_PIO0_0                 6u
+#define IO_BANK0_GPIO0_CTRL_FUNCSEL_PIO1_0                 7u
+#define IO_BANK0_GPIO0_CTRL_FUNCSEL_USB_MUXING_OVERCURR_DETECT   9
+#define IO_BANK0_GPIO0_CTRL_FUNCSEL_NULL                   0x1fu
 
 #define IO_BANK0_GPIO1_STATUS_IRQTOPROC_OFFSET             26u
 #define IO_BANK0_GPIO1_STATUS_IRQTOPROC_MASK               0x4000000u
@@ -125,16 +128,16 @@
 
 #define IO_BANK0_GPIO1_CTRL_FUNCSEL_OFFSET                 0u
 #define IO_BANK0_GPIO1_CTRL_FUNCSEL_MASK                   0x1fu
-#define IO_BANK0_GPIO1_CTRL_FUNCSEL_jtag_tms               0u
-#define IO_BANK0_GPIO1_CTRL_FUNCSEL_spi0_ss_n              1u
-#define IO_BANK0_GPIO1_CTRL_FUNCSEL_uart0_rx               2u
-#define IO_BANK0_GPIO1_CTRL_FUNCSEL_i2c0_scl               3u
-#define IO_BANK0_GPIO1_CTRL_FUNCSEL_pwm_b_0                4u
-#define IO_BANK0_GPIO1_CTRL_FUNCSEL_sio_1                  5u
-#define IO_BANK0_GPIO1_CTRL_FUNCSEL_pio0_1                 6u
-#define IO_BANK0_GPIO1_CTRL_FUNCSEL_pio1_1                 7u
-#define IO_BANK0_GPIO1_CTRL_FUNCSEL_usb_muxing_vbus_detect   9
-#define IO_BANK0_GPIO1_CTRL_FUNCSEL_null                   0x1fu
+#define IO_BANK0_GPIO1_CTRL_FUNCSEL_JTAG_TMS               0u
+#define IO_BANK0_GPIO1_CTRL_FUNCSEL_SPI0_SS_N              1u
+#define IO_BANK0_GPIO1_CTRL_FUNCSEL_UART0_RX               2u
+#define IO_BANK0_GPIO1_CTRL_FUNCSEL_I2C0_SCL               3u
+#define IO_BANK0_GPIO1_CTRL_FUNCSEL_PWM_B_0                4u
+#define IO_BANK0_GPIO1_CTRL_FUNCSEL_SIO_1                  5u
+#define IO_BANK0_GPIO1_CTRL_FUNCSEL_PIO0_1                 6u
+#define IO_BANK0_GPIO1_CTRL_FUNCSEL_PIO1_1                 7u
+#define IO_BANK0_GPIO1_CTRL_FUNCSEL_USB_MUXING_VBUS_DETECT   9
+#define IO_BANK0_GPIO1_CTRL_FUNCSEL_NULL                   0x1fu
 
 #define IO_BANK0_GPIO2_STATUS_IRQTOPROC_OFFSET             26u
 #define IO_BANK0_GPIO2_STATUS_IRQTOPROC_MASK               0x4000000u
@@ -190,16 +193,16 @@
 
 #define IO_BANK0_GPIO2_CTRL_FUNCSEL_OFFSET                 0u
 #define IO_BANK0_GPIO2_CTRL_FUNCSEL_MASK                   0x1fu
-#define IO_BANK0_GPIO2_CTRL_FUNCSEL_jtag_tdi               0u
-#define IO_BANK0_GPIO2_CTRL_FUNCSEL_spi0_sclk              1u
-#define IO_BANK0_GPIO2_CTRL_FUNCSEL_uart0_cts              2u
-#define IO_BANK0_GPIO2_CTRL_FUNCSEL_i2c1_sda               3u
-#define IO_BANK0_GPIO2_CTRL_FUNCSEL_pwm_a_1                4u
-#define IO_BANK0_GPIO2_CTRL_FUNCSEL_sio_2                  5u
-#define IO_BANK0_GPIO2_CTRL_FUNCSEL_pio0_2                 6u
-#define IO_BANK0_GPIO2_CTRL_FUNCSEL_pio1_2                 7u
-#define IO_BANK0_GPIO2_CTRL_FUNCSEL_usb_muxing_vbus_en     9u
-#define IO_BANK0_GPIO2_CTRL_FUNCSEL_null                   0x1fu
+#define IO_BANK0_GPIO2_CTRL_FUNCSEL_JTAG_TDI               0u
+#define IO_BANK0_GPIO2_CTRL_FUNCSEL_SPI0_SCLK              1u
+#define IO_BANK0_GPIO2_CTRL_FUNCSEL_UART0_CTS              2u
+#define IO_BANK0_GPIO2_CTRL_FUNCSEL_I2C1_SDA               3u
+#define IO_BANK0_GPIO2_CTRL_FUNCSEL_PWM_A_1                4u
+#define IO_BANK0_GPIO2_CTRL_FUNCSEL_SIO_2                  5u
+#define IO_BANK0_GPIO2_CTRL_FUNCSEL_PIO0_2                 6u
+#define IO_BANK0_GPIO2_CTRL_FUNCSEL_PIO1_2                 7u
+#define IO_BANK0_GPIO2_CTRL_FUNCSEL_USB_MUXING_VBUS_EN     9u
+#define IO_BANK0_GPIO2_CTRL_FUNCSEL_NULL                   0x1fu
 
 #define IO_BANK0_GPIO3_STATUS_IRQTOPROC_OFFSET             26u
 #define IO_BANK0_GPIO3_STATUS_IRQTOPROC_MASK               0x4000000u
@@ -255,16 +258,16 @@
 
 #define IO_BANK0_GPIO3_CTRL_FUNCSEL_OFFSET                 0u
 #define IO_BANK0_GPIO3_CTRL_FUNCSEL_MASK                   0x1fu
-#define IO_BANK0_GPIO3_CTRL_FUNCSEL_jtag_tdo               0u
-#define IO_BANK0_GPIO3_CTRL_FUNCSEL_spi0_tx                1u
-#define IO_BANK0_GPIO3_CTRL_FUNCSEL_uart0_rts              2u
-#define IO_BANK0_GPIO3_CTRL_FUNCSEL_i2c1_scl               3u
-#define IO_BANK0_GPIO3_CTRL_FUNCSEL_pwm_b_1                4u
-#define IO_BANK0_GPIO3_CTRL_FUNCSEL_sio_3                  5u
-#define IO_BANK0_GPIO3_CTRL_FUNCSEL_pio0_3                 6u
-#define IO_BANK0_GPIO3_CTRL_FUNCSEL_pio1_3                 7u
-#define IO_BANK0_GPIO3_CTRL_FUNCSEL_usb_muxing_overcurr_detect   9
-#define IO_BANK0_GPIO3_CTRL_FUNCSEL_null                   0x1fu
+#define IO_BANK0_GPIO3_CTRL_FUNCSEL_JTAG_TDO               0u
+#define IO_BANK0_GPIO3_CTRL_FUNCSEL_SPI0_TX                1u
+#define IO_BANK0_GPIO3_CTRL_FUNCSEL_UART0_RTS              2u
+#define IO_BANK0_GPIO3_CTRL_FUNCSEL_I2C1_SCL               3u
+#define IO_BANK0_GPIO3_CTRL_FUNCSEL_PWM_B_1                4u
+#define IO_BANK0_GPIO3_CTRL_FUNCSEL_SIO_3                  5u
+#define IO_BANK0_GPIO3_CTRL_FUNCSEL_PIO0_3                 6u
+#define IO_BANK0_GPIO3_CTRL_FUNCSEL_PIO1_3                 7u
+#define IO_BANK0_GPIO3_CTRL_FUNCSEL_USB_MUXING_OVERCURR_DETECT   9
+#define IO_BANK0_GPIO3_CTRL_FUNCSEL_NULL                   0x1fu
 
 #define IO_BANK0_GPIO4_STATUS_IRQTOPROC_OFFSET             26u
 #define IO_BANK0_GPIO4_STATUS_IRQTOPROC_MASK               0x4000000u
@@ -320,15 +323,15 @@
 
 #define IO_BANK0_GPIO4_CTRL_FUNCSEL_OFFSET                 0u
 #define IO_BANK0_GPIO4_CTRL_FUNCSEL_MASK                   0x1fu
-#define IO_BANK0_GPIO4_CTRL_FUNCSEL_spi0_rx                1u
-#define IO_BANK0_GPIO4_CTRL_FUNCSEL_uart1_tx               2u
-#define IO_BANK0_GPIO4_CTRL_FUNCSEL_i2c0_sda               3u
-#define IO_BANK0_GPIO4_CTRL_FUNCSEL_pwm_a_2                4u
-#define IO_BANK0_GPIO4_CTRL_FUNCSEL_sio_4                  5u
-#define IO_BANK0_GPIO4_CTRL_FUNCSEL_pio0_4                 6u
-#define IO_BANK0_GPIO4_CTRL_FUNCSEL_pio1_4                 7u
-#define IO_BANK0_GPIO4_CTRL_FUNCSEL_usb_muxing_vbus_detect   9
-#define IO_BANK0_GPIO4_CTRL_FUNCSEL_null                   0x1fu
+#define IO_BANK0_GPIO4_CTRL_FUNCSEL_SPI0_RX                1u
+#define IO_BANK0_GPIO4_CTRL_FUNCSEL_UART1_TX               2u
+#define IO_BANK0_GPIO4_CTRL_FUNCSEL_I2C0_SDA               3u
+#define IO_BANK0_GPIO4_CTRL_FUNCSEL_PWM_A_2                4u
+#define IO_BANK0_GPIO4_CTRL_FUNCSEL_SIO_4                  5u
+#define IO_BANK0_GPIO4_CTRL_FUNCSEL_PIO0_4                 6u
+#define IO_BANK0_GPIO4_CTRL_FUNCSEL_PIO1_4                 7u
+#define IO_BANK0_GPIO4_CTRL_FUNCSEL_USB_MUXING_VBUS_DETECT   9
+#define IO_BANK0_GPIO4_CTRL_FUNCSEL_NULL                   0x1fu
 
 #define IO_BANK0_GPIO5_STATUS_IRQTOPROC_OFFSET             26u
 #define IO_BANK0_GPIO5_STATUS_IRQTOPROC_MASK               0x4000000u
@@ -384,15 +387,15 @@
 
 #define IO_BANK0_GPIO5_CTRL_FUNCSEL_OFFSET                 0u
 #define IO_BANK0_GPIO5_CTRL_FUNCSEL_MASK                   0x1fu
-#define IO_BANK0_GPIO5_CTRL_FUNCSEL_spi0_ss_n              1u
-#define IO_BANK0_GPIO5_CTRL_FUNCSEL_uart1_rx               2u
-#define IO_BANK0_GPIO5_CTRL_FUNCSEL_i2c0_scl               3u
-#define IO_BANK0_GPIO5_CTRL_FUNCSEL_pwm_b_2                4u
-#define IO_BANK0_GPIO5_CTRL_FUNCSEL_sio_5                  5u
-#define IO_BANK0_GPIO5_CTRL_FUNCSEL_pio0_5                 6u
-#define IO_BANK0_GPIO5_CTRL_FUNCSEL_pio1_5                 7u
-#define IO_BANK0_GPIO5_CTRL_FUNCSEL_usb_muxing_vbus_en     9u
-#define IO_BANK0_GPIO5_CTRL_FUNCSEL_null                   0x1fu
+#define IO_BANK0_GPIO5_CTRL_FUNCSEL_SPI0_SS_N              1u
+#define IO_BANK0_GPIO5_CTRL_FUNCSEL_UART1_RX               2u
+#define IO_BANK0_GPIO5_CTRL_FUNCSEL_I2C0_SCL               3u
+#define IO_BANK0_GPIO5_CTRL_FUNCSEL_PWM_B_2                4u
+#define IO_BANK0_GPIO5_CTRL_FUNCSEL_SIO_5                  5u
+#define IO_BANK0_GPIO5_CTRL_FUNCSEL_PIO0_5                 6u
+#define IO_BANK0_GPIO5_CTRL_FUNCSEL_PIO1_5                 7u
+#define IO_BANK0_GPIO5_CTRL_FUNCSEL_USB_MUXING_VBUS_EN     9u
+#define IO_BANK0_GPIO5_CTRL_FUNCSEL_NULL                   0x1fu
 
 #define IO_BANK0_GPIO6_STATUS_IRQTOPROC_OFFSET             26u
 #define IO_BANK0_GPIO6_STATUS_IRQTOPROC_MASK               0x4000000u
@@ -448,16 +451,16 @@
 
 #define IO_BANK0_GPIO6_CTRL_FUNCSEL_OFFSET                 0u
 #define IO_BANK0_GPIO6_CTRL_FUNCSEL_MASK                   0x1fu
-#define IO_BANK0_GPIO6_CTRL_FUNCSEL_spi0_sclk              1u
-#define IO_BANK0_GPIO6_CTRL_FUNCSEL_uart1_cts              2u
-#define IO_BANK0_GPIO6_CTRL_FUNCSEL_i2c1_sda               3u
-#define IO_BANK0_GPIO6_CTRL_FUNCSEL_pwm_a_3                4u
-#define IO_BANK0_GPIO6_CTRL_FUNCSEL_sio_6                  5u
-#define IO_BANK0_GPIO6_CTRL_FUNCSEL_pio0_6                 6u
-#define IO_BANK0_GPIO6_CTRL_FUNCSEL_pio1_6                 7u
-#define IO_BANK0_GPIO6_CTRL_FUNCSEL_usb_muxing_extphy_softcon   8
-#define IO_BANK0_GPIO6_CTRL_FUNCSEL_usb_muxing_overcurr_detect   9
-#define IO_BANK0_GPIO6_CTRL_FUNCSEL_null                   0x1fu
+#define IO_BANK0_GPIO6_CTRL_FUNCSEL_SPI0_SCLK              1u
+#define IO_BANK0_GPIO6_CTRL_FUNCSEL_UART1_CTS              2u
+#define IO_BANK0_GPIO6_CTRL_FUNCSEL_I2C1_SDA               3u
+#define IO_BANK0_GPIO6_CTRL_FUNCSEL_PWM_A_3                4u
+#define IO_BANK0_GPIO6_CTRL_FUNCSEL_SIO_6                  5u
+#define IO_BANK0_GPIO6_CTRL_FUNCSEL_PIO0_6                 6u
+#define IO_BANK0_GPIO6_CTRL_FUNCSEL_PIO1_6                 7u
+#define IO_BANK0_GPIO6_CTRL_FUNCSEL_USB_MUXING_EXTPHY_SOFTCON   8
+#define IO_BANK0_GPIO6_CTRL_FUNCSEL_USB_MUXING_OVERCURR_DETECT   9
+#define IO_BANK0_GPIO6_CTRL_FUNCSEL_NULL                   0x1fu
 
 #define IO_BANK0_GPIO7_STATUS_IRQTOPROC_OFFSET             26u
 #define IO_BANK0_GPIO7_STATUS_IRQTOPROC_MASK               0x4000000u
@@ -513,16 +516,16 @@
 
 #define IO_BANK0_GPIO7_CTRL_FUNCSEL_OFFSET                 0u
 #define IO_BANK0_GPIO7_CTRL_FUNCSEL_MASK                   0x1fu
-#define IO_BANK0_GPIO7_CTRL_FUNCSEL_spi0_tx                1u
-#define IO_BANK0_GPIO7_CTRL_FUNCSEL_uart1_rts              2u
-#define IO_BANK0_GPIO7_CTRL_FUNCSEL_i2c1_scl               3u
-#define IO_BANK0_GPIO7_CTRL_FUNCSEL_pwm_b_3                4u
-#define IO_BANK0_GPIO7_CTRL_FUNCSEL_sio_7                  5u
-#define IO_BANK0_GPIO7_CTRL_FUNCSEL_pio0_7                 6u
-#define IO_BANK0_GPIO7_CTRL_FUNCSEL_pio1_7                 7u
-#define IO_BANK0_GPIO7_CTRL_FUNCSEL_usb_muxing_extphy_oe_n   8
-#define IO_BANK0_GPIO7_CTRL_FUNCSEL_usb_muxing_vbus_detect   9
-#define IO_BANK0_GPIO7_CTRL_FUNCSEL_null                   0x1fu
+#define IO_BANK0_GPIO7_CTRL_FUNCSEL_SPI0_TX                1u
+#define IO_BANK0_GPIO7_CTRL_FUNCSEL_UART1_RTS              2u
+#define IO_BANK0_GPIO7_CTRL_FUNCSEL_I2C1_SCL               3u
+#define IO_BANK0_GPIO7_CTRL_FUNCSEL_PWM_B_3                4u
+#define IO_BANK0_GPIO7_CTRL_FUNCSEL_SIO_7                  5u
+#define IO_BANK0_GPIO7_CTRL_FUNCSEL_PIO0_7                 6u
+#define IO_BANK0_GPIO7_CTRL_FUNCSEL_PIO1_7                 7u
+#define IO_BANK0_GPIO7_CTRL_FUNCSEL_USB_MUXING_EXTPHY_OE_N   8
+#define IO_BANK0_GPIO7_CTRL_FUNCSEL_USB_MUXING_VBUS_DETECT   9
+#define IO_BANK0_GPIO7_CTRL_FUNCSEL_NULL                   0x1fu
 
 #define IO_BANK0_GPIO8_STATUS_IRQTOPROC_OFFSET             26u
 #define IO_BANK0_GPIO8_STATUS_IRQTOPROC_MASK               0x4000000u
@@ -578,16 +581,16 @@
 
 #define IO_BANK0_GPIO8_CTRL_FUNCSEL_OFFSET                 0u
 #define IO_BANK0_GPIO8_CTRL_FUNCSEL_MASK                   0x1fu
-#define IO_BANK0_GPIO8_CTRL_FUNCSEL_spi1_rx                1u
-#define IO_BANK0_GPIO8_CTRL_FUNCSEL_uart1_tx               2u
-#define IO_BANK0_GPIO8_CTRL_FUNCSEL_i2c0_sda               3u
-#define IO_BANK0_GPIO8_CTRL_FUNCSEL_pwm_a_4                4u
-#define IO_BANK0_GPIO8_CTRL_FUNCSEL_sio_8                  5u
-#define IO_BANK0_GPIO8_CTRL_FUNCSEL_pio0_8                 6u
-#define IO_BANK0_GPIO8_CTRL_FUNCSEL_pio1_8                 7u
-#define IO_BANK0_GPIO8_CTRL_FUNCSEL_usb_muxing_extphy_rcv  8u
-#define IO_BANK0_GPIO8_CTRL_FUNCSEL_usb_muxing_vbus_en     9u
-#define IO_BANK0_GPIO8_CTRL_FUNCSEL_null                   0x1fu
+#define IO_BANK0_GPIO8_CTRL_FUNCSEL_SPI1_RX                1u
+#define IO_BANK0_GPIO8_CTRL_FUNCSEL_UART1_TX               2u
+#define IO_BANK0_GPIO8_CTRL_FUNCSEL_I2C0_SDA               3u
+#define IO_BANK0_GPIO8_CTRL_FUNCSEL_PWM_A_4                4u
+#define IO_BANK0_GPIO8_CTRL_FUNCSEL_SIO_8                  5u
+#define IO_BANK0_GPIO8_CTRL_FUNCSEL_PIO0_8                 6u
+#define IO_BANK0_GPIO8_CTRL_FUNCSEL_PIO1_8                 7u
+#define IO_BANK0_GPIO8_CTRL_FUNCSEL_USB_MUXING_EXTPHY_RCV  8u
+#define IO_BANK0_GPIO8_CTRL_FUNCSEL_USB_MUXING_VBUS_EN     9u
+#define IO_BANK0_GPIO8_CTRL_FUNCSEL_NULL                   0x1fu
 
 #define IO_BANK0_GPIO9_STATUS_IRQTOPROC_OFFSET             26u
 #define IO_BANK0_GPIO9_STATUS_IRQTOPROC_MASK               0x4000000u
@@ -643,16 +646,16 @@
 
 #define IO_BANK0_GPIO9_CTRL_FUNCSEL_OFFSET                 0u
 #define IO_BANK0_GPIO9_CTRL_FUNCSEL_MASK                   0x1fu
-#define IO_BANK0_GPIO9_CTRL_FUNCSEL_spi1_ss_n              1u
-#define IO_BANK0_GPIO9_CTRL_FUNCSEL_uart1_rx               2u
-#define IO_BANK0_GPIO9_CTRL_FUNCSEL_i2c0_scl               3u
-#define IO_BANK0_GPIO9_CTRL_FUNCSEL_pwm_b_4                4u
-#define IO_BANK0_GPIO9_CTRL_FUNCSEL_sio_9                  5u
-#define IO_BANK0_GPIO9_CTRL_FUNCSEL_pio0_9                 6u
-#define IO_BANK0_GPIO9_CTRL_FUNCSEL_pio1_9                 7u
-#define IO_BANK0_GPIO9_CTRL_FUNCSEL_usb_muxing_extphy_vp   8u
-#define IO_BANK0_GPIO9_CTRL_FUNCSEL_usb_muxing_overcurr_detect   9
-#define IO_BANK0_GPIO9_CTRL_FUNCSEL_null                   0x1fu
+#define IO_BANK0_GPIO9_CTRL_FUNCSEL_SPI1_SS_N              1u
+#define IO_BANK0_GPIO9_CTRL_FUNCSEL_UART1_RX               2u
+#define IO_BANK0_GPIO9_CTRL_FUNCSEL_I2C0_SCL               3u
+#define IO_BANK0_GPIO9_CTRL_FUNCSEL_PWM_B_4                4u
+#define IO_BANK0_GPIO9_CTRL_FUNCSEL_SIO_9                  5u
+#define IO_BANK0_GPIO9_CTRL_FUNCSEL_PIO0_9                 6u
+#define IO_BANK0_GPIO9_CTRL_FUNCSEL_PIO1_9                 7u
+#define IO_BANK0_GPIO9_CTRL_FUNCSEL_USB_MUXING_EXTPHY_VP   8u
+#define IO_BANK0_GPIO9_CTRL_FUNCSEL_USB_MUXING_OVERCURR_DETECT   9
+#define IO_BANK0_GPIO9_CTRL_FUNCSEL_NULL                   0x1fu
 
 #define IO_BANK0_GPIO10_STATUS_IRQTOPROC_OFFSET            26u
 #define IO_BANK0_GPIO10_STATUS_IRQTOPROC_MASK              0x4000000u
@@ -708,16 +711,16 @@
 
 #define IO_BANK0_GPIO10_CTRL_FUNCSEL_OFFSET                0u
 #define IO_BANK0_GPIO10_CTRL_FUNCSEL_MASK                  0x1fu
-#define IO_BANK0_GPIO10_CTRL_FUNCSEL_spi1_sclk             1u
-#define IO_BANK0_GPIO10_CTRL_FUNCSEL_uart1_cts             2u
-#define IO_BANK0_GPIO10_CTRL_FUNCSEL_i2c1_sda              3u
-#define IO_BANK0_GPIO10_CTRL_FUNCSEL_pwm_a_5               4u
-#define IO_BANK0_GPIO10_CTRL_FUNCSEL_sio_10                5u
-#define IO_BANK0_GPIO10_CTRL_FUNCSEL_pio0_10               6u
-#define IO_BANK0_GPIO10_CTRL_FUNCSEL_pio1_10               7u
-#define IO_BANK0_GPIO10_CTRL_FUNCSEL_usb_muxing_extphy_vm  8u
-#define IO_BANK0_GPIO10_CTRL_FUNCSEL_usb_muxing_vbus_detect   9
-#define IO_BANK0_GPIO10_CTRL_FUNCSEL_null                  0x1fu
+#define IO_BANK0_GPIO10_CTRL_FUNCSEL_SPI1_SCLK             1u
+#define IO_BANK0_GPIO10_CTRL_FUNCSEL_UART1_CTS             2u
+#define IO_BANK0_GPIO10_CTRL_FUNCSEL_I2C1_SDA              3u
+#define IO_BANK0_GPIO10_CTRL_FUNCSEL_PWM_A_5               4u
+#define IO_BANK0_GPIO10_CTRL_FUNCSEL_SIO_10                5u
+#define IO_BANK0_GPIO10_CTRL_FUNCSEL_PIO0_10               6u
+#define IO_BANK0_GPIO10_CTRL_FUNCSEL_PIO1_10               7u
+#define IO_BANK0_GPIO10_CTRL_FUNCSEL_USB_MUXING_EXTPHY_VM  8u
+#define IO_BANK0_GPIO10_CTRL_FUNCSEL_USB_MUXING_VBUS_DETECT   9
+#define IO_BANK0_GPIO10_CTRL_FUNCSEL_NULL                  0x1fu
 
 #define IO_BANK0_GPIO11_STATUS_IRQTOPROC_OFFSET            26u
 #define IO_BANK0_GPIO11_STATUS_IRQTOPROC_MASK              0x4000000u
@@ -773,16 +776,16 @@
 
 #define IO_BANK0_GPIO11_CTRL_FUNCSEL_OFFSET                0u
 #define IO_BANK0_GPIO11_CTRL_FUNCSEL_MASK                  0x1fu
-#define IO_BANK0_GPIO11_CTRL_FUNCSEL_spi1_tx               1u
-#define IO_BANK0_GPIO11_CTRL_FUNCSEL_uart1_rts             2u
-#define IO_BANK0_GPIO11_CTRL_FUNCSEL_i2c1_scl              3u
-#define IO_BANK0_GPIO11_CTRL_FUNCSEL_pwm_b_5               4u
-#define IO_BANK0_GPIO11_CTRL_FUNCSEL_sio_11                5u
-#define IO_BANK0_GPIO11_CTRL_FUNCSEL_pio0_11               6u
-#define IO_BANK0_GPIO11_CTRL_FUNCSEL_pio1_11               7u
-#define IO_BANK0_GPIO11_CTRL_FUNCSEL_usb_muxing_extphy_suspnd   8
-#define IO_BANK0_GPIO11_CTRL_FUNCSEL_usb_muxing_vbus_en    9u
-#define IO_BANK0_GPIO11_CTRL_FUNCSEL_null                  0x1fu
+#define IO_BANK0_GPIO11_CTRL_FUNCSEL_SPI1_TX               1u
+#define IO_BANK0_GPIO11_CTRL_FUNCSEL_UART1_RTS             2u
+#define IO_BANK0_GPIO11_CTRL_FUNCSEL_I2C1_SCL              3u
+#define IO_BANK0_GPIO11_CTRL_FUNCSEL_PWM_B_5               4u
+#define IO_BANK0_GPIO11_CTRL_FUNCSEL_SIO_11                5u
+#define IO_BANK0_GPIO11_CTRL_FUNCSEL_PIO0_11               6u
+#define IO_BANK0_GPIO11_CTRL_FUNCSEL_PIO1_11               7u
+#define IO_BANK0_GPIO11_CTRL_FUNCSEL_USB_MUXING_EXTPHY_SUSPND   8
+#define IO_BANK0_GPIO11_CTRL_FUNCSEL_USB_MUXING_VBUS_EN    9u
+#define IO_BANK0_GPIO11_CTRL_FUNCSEL_NULL                  0x1fu
 
 #define IO_BANK0_GPIO12_STATUS_IRQTOPROC_OFFSET            26u
 #define IO_BANK0_GPIO12_STATUS_IRQTOPROC_MASK              0x4000000u
@@ -838,16 +841,16 @@
 
 #define IO_BANK0_GPIO12_CTRL_FUNCSEL_OFFSET                0u
 #define IO_BANK0_GPIO12_CTRL_FUNCSEL_MASK                  0x1fu
-#define IO_BANK0_GPIO12_CTRL_FUNCSEL_spi1_rx               1u
-#define IO_BANK0_GPIO12_CTRL_FUNCSEL_uart0_tx              2u
-#define IO_BANK0_GPIO12_CTRL_FUNCSEL_i2c0_sda              3u
-#define IO_BANK0_GPIO12_CTRL_FUNCSEL_pwm_a_6               4u
-#define IO_BANK0_GPIO12_CTRL_FUNCSEL_sio_12                5u
-#define IO_BANK0_GPIO12_CTRL_FUNCSEL_pio0_12               6u
-#define IO_BANK0_GPIO12_CTRL_FUNCSEL_pio1_12               7u
-#define IO_BANK0_GPIO12_CTRL_FUNCSEL_usb_muxing_extphy_speed   8
-#define IO_BANK0_GPIO12_CTRL_FUNCSEL_usb_muxing_overcurr_detect   9
-#define IO_BANK0_GPIO12_CTRL_FUNCSEL_null                  0x1fu
+#define IO_BANK0_GPIO12_CTRL_FUNCSEL_SPI1_RX               1u
+#define IO_BANK0_GPIO12_CTRL_FUNCSEL_UART0_TX              2u
+#define IO_BANK0_GPIO12_CTRL_FUNCSEL_I2C0_SDA              3u
+#define IO_BANK0_GPIO12_CTRL_FUNCSEL_PWM_A_6               4u
+#define IO_BANK0_GPIO12_CTRL_FUNCSEL_SIO_12                5u
+#define IO_BANK0_GPIO12_CTRL_FUNCSEL_PIO0_12               6u
+#define IO_BANK0_GPIO12_CTRL_FUNCSEL_PIO1_12               7u
+#define IO_BANK0_GPIO12_CTRL_FUNCSEL_USB_MUXING_EXTPHY_SPEED   8
+#define IO_BANK0_GPIO12_CTRL_FUNCSEL_USB_MUXING_OVERCURR_DETECT   9
+#define IO_BANK0_GPIO12_CTRL_FUNCSEL_NULL                  0x1fu
 
 #define IO_BANK0_GPIO13_STATUS_IRQTOPROC_OFFSET            26u
 #define IO_BANK0_GPIO13_STATUS_IRQTOPROC_MASK              0x4000000u
@@ -903,16 +906,16 @@
 
 #define IO_BANK0_GPIO13_CTRL_FUNCSEL_OFFSET                0u
 #define IO_BANK0_GPIO13_CTRL_FUNCSEL_MASK                  0x1fu
-#define IO_BANK0_GPIO13_CTRL_FUNCSEL_spi1_ss_n             1u
-#define IO_BANK0_GPIO13_CTRL_FUNCSEL_uart0_rx              2u
-#define IO_BANK0_GPIO13_CTRL_FUNCSEL_i2c0_scl              3u
-#define IO_BANK0_GPIO13_CTRL_FUNCSEL_pwm_b_6               4u
-#define IO_BANK0_GPIO13_CTRL_FUNCSEL_sio_13                5u
-#define IO_BANK0_GPIO13_CTRL_FUNCSEL_pio0_13               6u
-#define IO_BANK0_GPIO13_CTRL_FUNCSEL_pio1_13               7u
-#define IO_BANK0_GPIO13_CTRL_FUNCSEL_usb_muxing_extphy_vpo   8
-#define IO_BANK0_GPIO13_CTRL_FUNCSEL_usb_muxing_vbus_detect   9
-#define IO_BANK0_GPIO13_CTRL_FUNCSEL_null                  0x1fu
+#define IO_BANK0_GPIO13_CTRL_FUNCSEL_SPI1_SS_N             1u
+#define IO_BANK0_GPIO13_CTRL_FUNCSEL_UART0_RX              2u
+#define IO_BANK0_GPIO13_CTRL_FUNCSEL_I2C0_SCL              3u
+#define IO_BANK0_GPIO13_CTRL_FUNCSEL_PWM_B_6               4u
+#define IO_BANK0_GPIO13_CTRL_FUNCSEL_SIO_13                5u
+#define IO_BANK0_GPIO13_CTRL_FUNCSEL_PIO0_13               6u
+#define IO_BANK0_GPIO13_CTRL_FUNCSEL_PIO1_13               7u
+#define IO_BANK0_GPIO13_CTRL_FUNCSEL_USB_MUXING_EXTPHY_VPO   8
+#define IO_BANK0_GPIO13_CTRL_FUNCSEL_USB_MUXING_VBUS_DETECT   9
+#define IO_BANK0_GPIO13_CTRL_FUNCSEL_NULL                  0x1fu
 
 #define IO_BANK0_GPIO14_STATUS_IRQTOPROC_OFFSET            26u
 #define IO_BANK0_GPIO14_STATUS_IRQTOPROC_MASK              0x4000000u
@@ -968,16 +971,16 @@
 
 #define IO_BANK0_GPIO14_CTRL_FUNCSEL_OFFSET                0u
 #define IO_BANK0_GPIO14_CTRL_FUNCSEL_MASK                  0x1fu
-#define IO_BANK0_GPIO14_CTRL_FUNCSEL_spi1_sclk             1u
-#define IO_BANK0_GPIO14_CTRL_FUNCSEL_uart0_cts             2u
-#define IO_BANK0_GPIO14_CTRL_FUNCSEL_i2c1_sda              3u
-#define IO_BANK0_GPIO14_CTRL_FUNCSEL_pwm_a_7               4u
-#define IO_BANK0_GPIO14_CTRL_FUNCSEL_sio_14                5u
-#define IO_BANK0_GPIO14_CTRL_FUNCSEL_pio0_14               6u
-#define IO_BANK0_GPIO14_CTRL_FUNCSEL_pio1_14               7u
-#define IO_BANK0_GPIO14_CTRL_FUNCSEL_usb_muxing_extphy_vmo   8
-#define IO_BANK0_GPIO14_CTRL_FUNCSEL_usb_muxing_vbus_en    9u
-#define IO_BANK0_GPIO14_CTRL_FUNCSEL_null                  0x1fu
+#define IO_BANK0_GPIO14_CTRL_FUNCSEL_SPI1_SCLK             1u
+#define IO_BANK0_GPIO14_CTRL_FUNCSEL_UART0_CTS             2u
+#define IO_BANK0_GPIO14_CTRL_FUNCSEL_I2C1_SDA              3u
+#define IO_BANK0_GPIO14_CTRL_FUNCSEL_PWM_A_7               4u
+#define IO_BANK0_GPIO14_CTRL_FUNCSEL_SIO_14                5u
+#define IO_BANK0_GPIO14_CTRL_FUNCSEL_PIO0_14               6u
+#define IO_BANK0_GPIO14_CTRL_FUNCSEL_PIO1_14               7u
+#define IO_BANK0_GPIO14_CTRL_FUNCSEL_USB_MUXING_EXTPHY_VMO   8
+#define IO_BANK0_GPIO14_CTRL_FUNCSEL_USB_MUXING_VBUS_EN    9u
+#define IO_BANK0_GPIO14_CTRL_FUNCSEL_NULL                  0x1fu
 
 #define IO_BANK0_GPIO15_STATUS_IRQTOPROC_OFFSET            26u
 #define IO_BANK0_GPIO15_STATUS_IRQTOPROC_MASK              0x4000000u
@@ -1033,16 +1036,16 @@
 
 #define IO_BANK0_GPIO15_CTRL_FUNCSEL_OFFSET                0u
 #define IO_BANK0_GPIO15_CTRL_FUNCSEL_MASK                  0x1fu
-#define IO_BANK0_GPIO15_CTRL_FUNCSEL_spi1_tx               1u
-#define IO_BANK0_GPIO15_CTRL_FUNCSEL_uart0_rts             2u
-#define IO_BANK0_GPIO15_CTRL_FUNCSEL_i2c1_scl              3u
-#define IO_BANK0_GPIO15_CTRL_FUNCSEL_pwm_b_7               4u
-#define IO_BANK0_GPIO15_CTRL_FUNCSEL_sio_15                5u
-#define IO_BANK0_GPIO15_CTRL_FUNCSEL_pio0_15               6u
-#define IO_BANK0_GPIO15_CTRL_FUNCSEL_pio1_15               7u
-#define IO_BANK0_GPIO15_CTRL_FUNCSEL_usb_muxing_digital_dp   8
-#define IO_BANK0_GPIO15_CTRL_FUNCSEL_usb_muxing_overcurr_detect   9
-#define IO_BANK0_GPIO15_CTRL_FUNCSEL_null                  0x1fu
+#define IO_BANK0_GPIO15_CTRL_FUNCSEL_SPI1_TX               1u
+#define IO_BANK0_GPIO15_CTRL_FUNCSEL_UART0_RTS             2u
+#define IO_BANK0_GPIO15_CTRL_FUNCSEL_I2C1_SCL              3u
+#define IO_BANK0_GPIO15_CTRL_FUNCSEL_PWM_B_7               4u
+#define IO_BANK0_GPIO15_CTRL_FUNCSEL_SIO_15                5u
+#define IO_BANK0_GPIO15_CTRL_FUNCSEL_PIO0_15               6u
+#define IO_BANK0_GPIO15_CTRL_FUNCSEL_PIO1_15               7u
+#define IO_BANK0_GPIO15_CTRL_FUNCSEL_USB_MUXING_DIGITAL_DP   8
+#define IO_BANK0_GPIO15_CTRL_FUNCSEL_USB_MUXING_OVERCURR_DETECT   9
+#define IO_BANK0_GPIO15_CTRL_FUNCSEL_NULL                  0x1fu
 
 #define IO_BANK0_GPIO16_STATUS_IRQTOPROC_OFFSET            26u
 #define IO_BANK0_GPIO16_STATUS_IRQTOPROC_MASK              0x4000000u
@@ -1098,16 +1101,16 @@
 
 #define IO_BANK0_GPIO16_CTRL_FUNCSEL_OFFSET                0u
 #define IO_BANK0_GPIO16_CTRL_FUNCSEL_MASK                  0x1fu
-#define IO_BANK0_GPIO16_CTRL_FUNCSEL_spi0_rx               1u
-#define IO_BANK0_GPIO16_CTRL_FUNCSEL_uart0_tx              2u
-#define IO_BANK0_GPIO16_CTRL_FUNCSEL_i2c0_sda              3u
-#define IO_BANK0_GPIO16_CTRL_FUNCSEL_pwm_a_0               4u
-#define IO_BANK0_GPIO16_CTRL_FUNCSEL_sio_16                5u
-#define IO_BANK0_GPIO16_CTRL_FUNCSEL_pio0_16               6u
-#define IO_BANK0_GPIO16_CTRL_FUNCSEL_pio1_16               7u
-#define IO_BANK0_GPIO16_CTRL_FUNCSEL_usb_muxing_digital_dm   8
-#define IO_BANK0_GPIO16_CTRL_FUNCSEL_usb_muxing_vbus_detect   9
-#define IO_BANK0_GPIO16_CTRL_FUNCSEL_null                  0x1fu
+#define IO_BANK0_GPIO16_CTRL_FUNCSEL_SPI0_RX               1u
+#define IO_BANK0_GPIO16_CTRL_FUNCSEL_UART0_TX              2u
+#define IO_BANK0_GPIO16_CTRL_FUNCSEL_I2C0_SDA              3u
+#define IO_BANK0_GPIO16_CTRL_FUNCSEL_PWM_A_0               4u
+#define IO_BANK0_GPIO16_CTRL_FUNCSEL_SIO_16                5u
+#define IO_BANK0_GPIO16_CTRL_FUNCSEL_PIO0_16               6u
+#define IO_BANK0_GPIO16_CTRL_FUNCSEL_PIO1_16               7u
+#define IO_BANK0_GPIO16_CTRL_FUNCSEL_USB_MUXING_DIGITAL_DM   8
+#define IO_BANK0_GPIO16_CTRL_FUNCSEL_USB_MUXING_VBUS_DETECT   9
+#define IO_BANK0_GPIO16_CTRL_FUNCSEL_NULL                  0x1fu
 
 #define IO_BANK0_GPIO17_STATUS_IRQTOPROC_OFFSET            26u
 #define IO_BANK0_GPIO17_STATUS_IRQTOPROC_MASK              0x4000000u
@@ -1163,15 +1166,15 @@
 
 #define IO_BANK0_GPIO17_CTRL_FUNCSEL_OFFSET                0u
 #define IO_BANK0_GPIO17_CTRL_FUNCSEL_MASK                  0x1fu
-#define IO_BANK0_GPIO17_CTRL_FUNCSEL_spi0_ss_n             1u
-#define IO_BANK0_GPIO17_CTRL_FUNCSEL_uart0_rx              2u
-#define IO_BANK0_GPIO17_CTRL_FUNCSEL_i2c0_scl              3u
-#define IO_BANK0_GPIO17_CTRL_FUNCSEL_pwm_b_0               4u
-#define IO_BANK0_GPIO17_CTRL_FUNCSEL_sio_17                5u
-#define IO_BANK0_GPIO17_CTRL_FUNCSEL_pio0_17               6u
-#define IO_BANK0_GPIO17_CTRL_FUNCSEL_pio1_17               7u
-#define IO_BANK0_GPIO17_CTRL_FUNCSEL_usb_muxing_vbus_en    9u
-#define IO_BANK0_GPIO17_CTRL_FUNCSEL_null                  0x1fu
+#define IO_BANK0_GPIO17_CTRL_FUNCSEL_SPI0_SS_N             1u
+#define IO_BANK0_GPIO17_CTRL_FUNCSEL_UART0_RX              2u
+#define IO_BANK0_GPIO17_CTRL_FUNCSEL_I2C0_SCL              3u
+#define IO_BANK0_GPIO17_CTRL_FUNCSEL_PWM_B_0               4u
+#define IO_BANK0_GPIO17_CTRL_FUNCSEL_SIO_17                5u
+#define IO_BANK0_GPIO17_CTRL_FUNCSEL_PIO0_17               6u
+#define IO_BANK0_GPIO17_CTRL_FUNCSEL_PIO1_17               7u
+#define IO_BANK0_GPIO17_CTRL_FUNCSEL_USB_MUXING_VBUS_EN    9u
+#define IO_BANK0_GPIO17_CTRL_FUNCSEL_NULL                  0x1fu
 
 #define IO_BANK0_GPIO18_STATUS_IRQTOPROC_OFFSET            26u
 #define IO_BANK0_GPIO18_STATUS_IRQTOPROC_MASK              0x4000000u
@@ -1227,15 +1230,15 @@
 
 #define IO_BANK0_GPIO18_CTRL_FUNCSEL_OFFSET                0u
 #define IO_BANK0_GPIO18_CTRL_FUNCSEL_MASK                  0x1fu
-#define IO_BANK0_GPIO18_CTRL_FUNCSEL_spi0_sclk             1u
-#define IO_BANK0_GPIO18_CTRL_FUNCSEL_uart0_cts             2u
-#define IO_BANK0_GPIO18_CTRL_FUNCSEL_i2c1_sda              3u
-#define IO_BANK0_GPIO18_CTRL_FUNCSEL_pwm_a_1               4u
-#define IO_BANK0_GPIO18_CTRL_FUNCSEL_sio_18                5u
-#define IO_BANK0_GPIO18_CTRL_FUNCSEL_pio0_18               6u
-#define IO_BANK0_GPIO18_CTRL_FUNCSEL_pio1_18               7u
-#define IO_BANK0_GPIO18_CTRL_FUNCSEL_usb_muxing_overcurr_detect   9
-#define IO_BANK0_GPIO18_CTRL_FUNCSEL_null                  0x1fu
+#define IO_BANK0_GPIO18_CTRL_FUNCSEL_SPI0_SCLK             1u
+#define IO_BANK0_GPIO18_CTRL_FUNCSEL_UART0_CTS             2u
+#define IO_BANK0_GPIO18_CTRL_FUNCSEL_I2C1_SDA              3u
+#define IO_BANK0_GPIO18_CTRL_FUNCSEL_PWM_A_1               4u
+#define IO_BANK0_GPIO18_CTRL_FUNCSEL_SIO_18                5u
+#define IO_BANK0_GPIO18_CTRL_FUNCSEL_PIO0_18               6u
+#define IO_BANK0_GPIO18_CTRL_FUNCSEL_PIO1_18               7u
+#define IO_BANK0_GPIO18_CTRL_FUNCSEL_USB_MUXING_OVERCURR_DETECT   9
+#define IO_BANK0_GPIO18_CTRL_FUNCSEL_NULL                  0x1fu
 
 #define IO_BANK0_GPIO19_STATUS_IRQTOPROC_OFFSET            26u
 #define IO_BANK0_GPIO19_STATUS_IRQTOPROC_MASK              0x4000000u
@@ -1291,15 +1294,15 @@
 
 #define IO_BANK0_GPIO19_CTRL_FUNCSEL_OFFSET                0u
 #define IO_BANK0_GPIO19_CTRL_FUNCSEL_MASK                  0x1fu
-#define IO_BANK0_GPIO19_CTRL_FUNCSEL_spi0_tx               1u
-#define IO_BANK0_GPIO19_CTRL_FUNCSEL_uart0_rts             2u
-#define IO_BANK0_GPIO19_CTRL_FUNCSEL_i2c1_scl              3u
-#define IO_BANK0_GPIO19_CTRL_FUNCSEL_pwm_b_1               4u
-#define IO_BANK0_GPIO19_CTRL_FUNCSEL_sio_19                5u
-#define IO_BANK0_GPIO19_CTRL_FUNCSEL_pio0_19               6u
-#define IO_BANK0_GPIO19_CTRL_FUNCSEL_pio1_19               7u
-#define IO_BANK0_GPIO19_CTRL_FUNCSEL_usb_muxing_vbus_detect   9
-#define IO_BANK0_GPIO19_CTRL_FUNCSEL_null                  0x1fu
+#define IO_BANK0_GPIO19_CTRL_FUNCSEL_SPI0_TX               1u
+#define IO_BANK0_GPIO19_CTRL_FUNCSEL_UART0_RTS             2u
+#define IO_BANK0_GPIO19_CTRL_FUNCSEL_I2C1_SCL              3u
+#define IO_BANK0_GPIO19_CTRL_FUNCSEL_PWM_B_1               4u
+#define IO_BANK0_GPIO19_CTRL_FUNCSEL_SIO_19                5u
+#define IO_BANK0_GPIO19_CTRL_FUNCSEL_PIO0_19               6u
+#define IO_BANK0_GPIO19_CTRL_FUNCSEL_PIO1_19               7u
+#define IO_BANK0_GPIO19_CTRL_FUNCSEL_USB_MUXING_VBUS_DETECT   9
+#define IO_BANK0_GPIO19_CTRL_FUNCSEL_NULL                  0x1fu
 
 #define IO_BANK0_GPIO20_STATUS_IRQTOPROC_OFFSET            26u
 #define IO_BANK0_GPIO20_STATUS_IRQTOPROC_MASK              0x4000000u
@@ -1355,16 +1358,16 @@
 
 #define IO_BANK0_GPIO20_CTRL_FUNCSEL_OFFSET                0u
 #define IO_BANK0_GPIO20_CTRL_FUNCSEL_MASK                  0x1fu
-#define IO_BANK0_GPIO20_CTRL_FUNCSEL_spi0_rx               1u
-#define IO_BANK0_GPIO20_CTRL_FUNCSEL_uart1_tx              2u
-#define IO_BANK0_GPIO20_CTRL_FUNCSEL_i2c0_sda              3u
-#define IO_BANK0_GPIO20_CTRL_FUNCSEL_pwm_a_2               4u
-#define IO_BANK0_GPIO20_CTRL_FUNCSEL_sio_20                5u
-#define IO_BANK0_GPIO20_CTRL_FUNCSEL_pio0_20               6u
-#define IO_BANK0_GPIO20_CTRL_FUNCSEL_pio1_20               7u
-#define IO_BANK0_GPIO20_CTRL_FUNCSEL_clocks_gpin_0         8u
-#define IO_BANK0_GPIO20_CTRL_FUNCSEL_usb_muxing_vbus_en    9u
-#define IO_BANK0_GPIO20_CTRL_FUNCSEL_null                  0x1fu
+#define IO_BANK0_GPIO20_CTRL_FUNCSEL_SPI0_RX               1u
+#define IO_BANK0_GPIO20_CTRL_FUNCSEL_UART1_TX              2u
+#define IO_BANK0_GPIO20_CTRL_FUNCSEL_I2C0_SDA              3u
+#define IO_BANK0_GPIO20_CTRL_FUNCSEL_PWM_A_2               4u
+#define IO_BANK0_GPIO20_CTRL_FUNCSEL_SIO_20                5u
+#define IO_BANK0_GPIO20_CTRL_FUNCSEL_PIO0_20               6u
+#define IO_BANK0_GPIO20_CTRL_FUNCSEL_PIO1_20               7u
+#define IO_BANK0_GPIO20_CTRL_FUNCSEL_CLOCKS_GPIN_0         8u
+#define IO_BANK0_GPIO20_CTRL_FUNCSEL_USB_MUXING_VBUS_EN    9u
+#define IO_BANK0_GPIO20_CTRL_FUNCSEL_NULL                  0x1fu
 
 #define IO_BANK0_GPIO21_STATUS_IRQTOPROC_OFFSET            26u
 #define IO_BANK0_GPIO21_STATUS_IRQTOPROC_MASK              0x4000000u
@@ -1420,16 +1423,16 @@
 
 #define IO_BANK0_GPIO21_CTRL_FUNCSEL_OFFSET                0u
 #define IO_BANK0_GPIO21_CTRL_FUNCSEL_MASK                  0x1fu
-#define IO_BANK0_GPIO21_CTRL_FUNCSEL_spi0_ss_n             1u
-#define IO_BANK0_GPIO21_CTRL_FUNCSEL_uart1_rx              2u
-#define IO_BANK0_GPIO21_CTRL_FUNCSEL_i2c0_scl              3u
-#define IO_BANK0_GPIO21_CTRL_FUNCSEL_pwm_b_2               4u
-#define IO_BANK0_GPIO21_CTRL_FUNCSEL_sio_21                5u
-#define IO_BANK0_GPIO21_CTRL_FUNCSEL_pio0_21               6u
-#define IO_BANK0_GPIO21_CTRL_FUNCSEL_pio1_21               7u
-#define IO_BANK0_GPIO21_CTRL_FUNCSEL_clocks_gpout_0        8u
-#define IO_BANK0_GPIO21_CTRL_FUNCSEL_usb_muxing_overcurr_detect   9
-#define IO_BANK0_GPIO21_CTRL_FUNCSEL_null                  0x1fu
+#define IO_BANK0_GPIO21_CTRL_FUNCSEL_SPI0_SS_N             1u
+#define IO_BANK0_GPIO21_CTRL_FUNCSEL_UART1_RX              2u
+#define IO_BANK0_GPIO21_CTRL_FUNCSEL_I2C0_SCL              3u
+#define IO_BANK0_GPIO21_CTRL_FUNCSEL_PWM_B_2               4u
+#define IO_BANK0_GPIO21_CTRL_FUNCSEL_SIO_21                5u
+#define IO_BANK0_GPIO21_CTRL_FUNCSEL_PIO0_21               6u
+#define IO_BANK0_GPIO21_CTRL_FUNCSEL_PIO1_21               7u
+#define IO_BANK0_GPIO21_CTRL_FUNCSEL_CLOCKS_GPOUT_0        8u
+#define IO_BANK0_GPIO21_CTRL_FUNCSEL_USB_MUXING_OVERCURR_DETECT   9
+#define IO_BANK0_GPIO21_CTRL_FUNCSEL_NULL                  0x1fu
 
 #define IO_BANK0_GPIO22_STATUS_IRQTOPROC_OFFSET            26u
 #define IO_BANK0_GPIO22_STATUS_IRQTOPROC_MASK              0x4000000u
@@ -1485,16 +1488,16 @@
 
 #define IO_BANK0_GPIO22_CTRL_FUNCSEL_OFFSET                0u
 #define IO_BANK0_GPIO22_CTRL_FUNCSEL_MASK                  0x1fu
-#define IO_BANK0_GPIO22_CTRL_FUNCSEL_spi0_sclk             1u
-#define IO_BANK0_GPIO22_CTRL_FUNCSEL_uart1_cts             2u
-#define IO_BANK0_GPIO22_CTRL_FUNCSEL_i2c1_sda              3u
-#define IO_BANK0_GPIO22_CTRL_FUNCSEL_pwm_a_3               4u
-#define IO_BANK0_GPIO22_CTRL_FUNCSEL_sio_22                5u
-#define IO_BANK0_GPIO22_CTRL_FUNCSEL_pio0_22               6u
-#define IO_BANK0_GPIO22_CTRL_FUNCSEL_pio1_22               7u
-#define IO_BANK0_GPIO22_CTRL_FUNCSEL_clocks_gpin_1         8u
-#define IO_BANK0_GPIO22_CTRL_FUNCSEL_usb_muxing_vbus_detect   9
-#define IO_BANK0_GPIO22_CTRL_FUNCSEL_null                  0x1fu
+#define IO_BANK0_GPIO22_CTRL_FUNCSEL_SPI0_SCLK             1u
+#define IO_BANK0_GPIO22_CTRL_FUNCSEL_UART1_CTS             2u
+#define IO_BANK0_GPIO22_CTRL_FUNCSEL_I2C1_SDA              3u
+#define IO_BANK0_GPIO22_CTRL_FUNCSEL_PWM_A_3               4u
+#define IO_BANK0_GPIO22_CTRL_FUNCSEL_SIO_22                5u
+#define IO_BANK0_GPIO22_CTRL_FUNCSEL_PIO0_22               6u
+#define IO_BANK0_GPIO22_CTRL_FUNCSEL_PIO1_22               7u
+#define IO_BANK0_GPIO22_CTRL_FUNCSEL_CLOCKS_GPIN_1         8u
+#define IO_BANK0_GPIO22_CTRL_FUNCSEL_USB_MUXING_VBUS_DETECT   9
+#define IO_BANK0_GPIO22_CTRL_FUNCSEL_NULL                  0x1fu
 
 #define IO_BANK0_GPIO23_STATUS_IRQTOPROC_OFFSET            26u
 #define IO_BANK0_GPIO23_STATUS_IRQTOPROC_MASK              0x4000000u
@@ -1550,16 +1553,16 @@
 
 #define IO_BANK0_GPIO23_CTRL_FUNCSEL_OFFSET                0u
 #define IO_BANK0_GPIO23_CTRL_FUNCSEL_MASK                  0x1fu
-#define IO_BANK0_GPIO23_CTRL_FUNCSEL_spi0_tx               1u
-#define IO_BANK0_GPIO23_CTRL_FUNCSEL_uart1_rts             2u
-#define IO_BANK0_GPIO23_CTRL_FUNCSEL_i2c1_scl              3u
-#define IO_BANK0_GPIO23_CTRL_FUNCSEL_pwm_b_3               4u
-#define IO_BANK0_GPIO23_CTRL_FUNCSEL_sio_23                5u
-#define IO_BANK0_GPIO23_CTRL_FUNCSEL_pio0_23               6u
-#define IO_BANK0_GPIO23_CTRL_FUNCSEL_pio1_23               7u
-#define IO_BANK0_GPIO23_CTRL_FUNCSEL_clocks_gpout_1        8u
-#define IO_BANK0_GPIO23_CTRL_FUNCSEL_usb_muxing_vbus_en    9u
-#define IO_BANK0_GPIO23_CTRL_FUNCSEL_null                  0x1fu
+#define IO_BANK0_GPIO23_CTRL_FUNCSEL_SPI0_TX               1u
+#define IO_BANK0_GPIO23_CTRL_FUNCSEL_UART1_RTS             2u
+#define IO_BANK0_GPIO23_CTRL_FUNCSEL_I2C1_SCL              3u
+#define IO_BANK0_GPIO23_CTRL_FUNCSEL_PWM_B_3               4u
+#define IO_BANK0_GPIO23_CTRL_FUNCSEL_SIO_23                5u
+#define IO_BANK0_GPIO23_CTRL_FUNCSEL_PIO0_23               6u
+#define IO_BANK0_GPIO23_CTRL_FUNCSEL_PIO1_23               7u
+#define IO_BANK0_GPIO23_CTRL_FUNCSEL_CLOCKS_GPOUT_1        8u
+#define IO_BANK0_GPIO23_CTRL_FUNCSEL_USB_MUXING_VBUS_EN    9u
+#define IO_BANK0_GPIO23_CTRL_FUNCSEL_NULL                  0x1fu
 
 #define IO_BANK0_GPIO24_STATUS_IRQTOPROC_OFFSET            26u
 #define IO_BANK0_GPIO24_STATUS_IRQTOPROC_MASK              0x4000000u
@@ -1615,16 +1618,16 @@
 
 #define IO_BANK0_GPIO24_CTRL_FUNCSEL_OFFSET                0u
 #define IO_BANK0_GPIO24_CTRL_FUNCSEL_MASK                  0x1fu
-#define IO_BANK0_GPIO24_CTRL_FUNCSEL_spi1_rx               1u
-#define IO_BANK0_GPIO24_CTRL_FUNCSEL_uart1_tx              2u
-#define IO_BANK0_GPIO24_CTRL_FUNCSEL_i2c0_sda              3u
-#define IO_BANK0_GPIO24_CTRL_FUNCSEL_pwm_a_4               4u
-#define IO_BANK0_GPIO24_CTRL_FUNCSEL_sio_24                5u
-#define IO_BANK0_GPIO24_CTRL_FUNCSEL_pio0_24               6u
-#define IO_BANK0_GPIO24_CTRL_FUNCSEL_pio1_24               7u
-#define IO_BANK0_GPIO24_CTRL_FUNCSEL_clocks_gpout_2        8u
-#define IO_BANK0_GPIO24_CTRL_FUNCSEL_usb_muxing_overcurr_detect   9
-#define IO_BANK0_GPIO24_CTRL_FUNCSEL_null                  0x1fu
+#define IO_BANK0_GPIO24_CTRL_FUNCSEL_SPI1_RX               1u
+#define IO_BANK0_GPIO24_CTRL_FUNCSEL_UART1_TX              2u
+#define IO_BANK0_GPIO24_CTRL_FUNCSEL_I2C0_SDA              3u
+#define IO_BANK0_GPIO24_CTRL_FUNCSEL_PWM_A_4               4u
+#define IO_BANK0_GPIO24_CTRL_FUNCSEL_SIO_24                5u
+#define IO_BANK0_GPIO24_CTRL_FUNCSEL_PIO0_24               6u
+#define IO_BANK0_GPIO24_CTRL_FUNCSEL_PIO1_24               7u
+#define IO_BANK0_GPIO24_CTRL_FUNCSEL_CLOCKS_GPOUT_2        8u
+#define IO_BANK0_GPIO24_CTRL_FUNCSEL_USB_MUXING_OVERCURR_DETECT   9
+#define IO_BANK0_GPIO24_CTRL_FUNCSEL_NULL                  0x1fu
 
 #define IO_BANK0_GPIO25_STATUS_IRQTOPROC_OFFSET            26u
 #define IO_BANK0_GPIO25_STATUS_IRQTOPROC_MASK              0x4000000u
@@ -1680,16 +1683,16 @@
 
 #define IO_BANK0_GPIO25_CTRL_FUNCSEL_OFFSET                0u
 #define IO_BANK0_GPIO25_CTRL_FUNCSEL_MASK                  0x1fu
-#define IO_BANK0_GPIO25_CTRL_FUNCSEL_spi1_ss_n             1u
-#define IO_BANK0_GPIO25_CTRL_FUNCSEL_uart1_rx              2u
-#define IO_BANK0_GPIO25_CTRL_FUNCSEL_i2c0_scl              3u
-#define IO_BANK0_GPIO25_CTRL_FUNCSEL_pwm_b_4               4u
-#define IO_BANK0_GPIO25_CTRL_FUNCSEL_sio_25                5u
-#define IO_BANK0_GPIO25_CTRL_FUNCSEL_pio0_25               6u
-#define IO_BANK0_GPIO25_CTRL_FUNCSEL_pio1_25               7u
-#define IO_BANK0_GPIO25_CTRL_FUNCSEL_clocks_gpout_3        8u
-#define IO_BANK0_GPIO25_CTRL_FUNCSEL_usb_muxing_vbus_detect   9
-#define IO_BANK0_GPIO25_CTRL_FUNCSEL_null                  0x1fu
+#define IO_BANK0_GPIO25_CTRL_FUNCSEL_SPI1_SS_N             1u
+#define IO_BANK0_GPIO25_CTRL_FUNCSEL_UART1_RX              2u
+#define IO_BANK0_GPIO25_CTRL_FUNCSEL_I2C0_SCL              3u
+#define IO_BANK0_GPIO25_CTRL_FUNCSEL_PWM_B_4               4u
+#define IO_BANK0_GPIO25_CTRL_FUNCSEL_SIO_25                5u
+#define IO_BANK0_GPIO25_CTRL_FUNCSEL_PIO0_25               6u
+#define IO_BANK0_GPIO25_CTRL_FUNCSEL_PIO1_25               7u
+#define IO_BANK0_GPIO25_CTRL_FUNCSEL_CLOCKS_GPOUT_3        8u
+#define IO_BANK0_GPIO25_CTRL_FUNCSEL_USB_MUXING_VBUS_DETECT   9
+#define IO_BANK0_GPIO25_CTRL_FUNCSEL_NULL                  0x1fu
 
 #define IO_BANK0_GPIO26_STATUS_IRQTOPROC_OFFSET            26u
 #define IO_BANK0_GPIO26_STATUS_IRQTOPROC_MASK              0x4000000u
@@ -1745,15 +1748,15 @@
 
 #define IO_BANK0_GPIO26_CTRL_FUNCSEL_OFFSET                0u
 #define IO_BANK0_GPIO26_CTRL_FUNCSEL_MASK                  0x1fu
-#define IO_BANK0_GPIO26_CTRL_FUNCSEL_spi1_sclk             1u
-#define IO_BANK0_GPIO26_CTRL_FUNCSEL_uart1_cts             2u
-#define IO_BANK0_GPIO26_CTRL_FUNCSEL_i2c1_sda              3u
-#define IO_BANK0_GPIO26_CTRL_FUNCSEL_pwm_a_5               4u
-#define IO_BANK0_GPIO26_CTRL_FUNCSEL_sio_26                5u
-#define IO_BANK0_GPIO26_CTRL_FUNCSEL_pio0_26               6u
-#define IO_BANK0_GPIO26_CTRL_FUNCSEL_pio1_26               7u
-#define IO_BANK0_GPIO26_CTRL_FUNCSEL_usb_muxing_vbus_en    9u
-#define IO_BANK0_GPIO26_CTRL_FUNCSEL_null                  0x1fu
+#define IO_BANK0_GPIO26_CTRL_FUNCSEL_SPI1_SCLK             1u
+#define IO_BANK0_GPIO26_CTRL_FUNCSEL_UART1_CTS             2u
+#define IO_BANK0_GPIO26_CTRL_FUNCSEL_I2C1_SDA              3u
+#define IO_BANK0_GPIO26_CTRL_FUNCSEL_PWM_A_5               4u
+#define IO_BANK0_GPIO26_CTRL_FUNCSEL_SIO_26                5u
+#define IO_BANK0_GPIO26_CTRL_FUNCSEL_PIO0_26               6u
+#define IO_BANK0_GPIO26_CTRL_FUNCSEL_PIO1_26               7u
+#define IO_BANK0_GPIO26_CTRL_FUNCSEL_USB_MUXING_VBUS_EN    9u
+#define IO_BANK0_GPIO26_CTRL_FUNCSEL_NULL                  0x1fu
 
 #define IO_BANK0_GPIO27_STATUS_IRQTOPROC_OFFSET            26u
 #define IO_BANK0_GPIO27_STATUS_IRQTOPROC_MASK              0x4000000u
@@ -1809,15 +1812,15 @@
 
 #define IO_BANK0_GPIO27_CTRL_FUNCSEL_OFFSET                0u
 #define IO_BANK0_GPIO27_CTRL_FUNCSEL_MASK                  0x1fu
-#define IO_BANK0_GPIO27_CTRL_FUNCSEL_spi1_tx               1u
-#define IO_BANK0_GPIO27_CTRL_FUNCSEL_uart1_rts             2u
-#define IO_BANK0_GPIO27_CTRL_FUNCSEL_i2c1_scl              3u
-#define IO_BANK0_GPIO27_CTRL_FUNCSEL_pwm_b_5               4u
-#define IO_BANK0_GPIO27_CTRL_FUNCSEL_sio_27                5u
-#define IO_BANK0_GPIO27_CTRL_FUNCSEL_pio0_27               6u
-#define IO_BANK0_GPIO27_CTRL_FUNCSEL_pio1_27               7u
-#define IO_BANK0_GPIO27_CTRL_FUNCSEL_usb_muxing_overcurr_detect   9
-#define IO_BANK0_GPIO27_CTRL_FUNCSEL_null                  0x1fu
+#define IO_BANK0_GPIO27_CTRL_FUNCSEL_SPI1_TX               1u
+#define IO_BANK0_GPIO27_CTRL_FUNCSEL_UART1_RTS             2u
+#define IO_BANK0_GPIO27_CTRL_FUNCSEL_I2C1_SCL              3u
+#define IO_BANK0_GPIO27_CTRL_FUNCSEL_PWM_B_5               4u
+#define IO_BANK0_GPIO27_CTRL_FUNCSEL_SIO_27                5u
+#define IO_BANK0_GPIO27_CTRL_FUNCSEL_PIO0_27               6u
+#define IO_BANK0_GPIO27_CTRL_FUNCSEL_PIO1_27               7u
+#define IO_BANK0_GPIO27_CTRL_FUNCSEL_USB_MUXING_OVERCURR_DETECT   9
+#define IO_BANK0_GPIO27_CTRL_FUNCSEL_NULL                  0x1fu
 
 #define IO_BANK0_GPIO28_STATUS_IRQTOPROC_OFFSET            26u
 #define IO_BANK0_GPIO28_STATUS_IRQTOPROC_MASK              0x4000000u
@@ -1873,15 +1876,15 @@
 
 #define IO_BANK0_GPIO28_CTRL_FUNCSEL_OFFSET                0u
 #define IO_BANK0_GPIO28_CTRL_FUNCSEL_MASK                  0x1fu
-#define IO_BANK0_GPIO28_CTRL_FUNCSEL_spi1_rx               1u
-#define IO_BANK0_GPIO28_CTRL_FUNCSEL_uart0_tx              2u
-#define IO_BANK0_GPIO28_CTRL_FUNCSEL_i2c0_sda              3u
-#define IO_BANK0_GPIO28_CTRL_FUNCSEL_pwm_a_6               4u
-#define IO_BANK0_GPIO28_CTRL_FUNCSEL_sio_28                5u
-#define IO_BANK0_GPIO28_CTRL_FUNCSEL_pio0_28               6u
-#define IO_BANK0_GPIO28_CTRL_FUNCSEL_pio1_28               7u
-#define IO_BANK0_GPIO28_CTRL_FUNCSEL_usb_muxing_vbus_detect   9
-#define IO_BANK0_GPIO28_CTRL_FUNCSEL_null                  0x1fu
+#define IO_BANK0_GPIO28_CTRL_FUNCSEL_SPI1_RX               1u
+#define IO_BANK0_GPIO28_CTRL_FUNCSEL_UART0_TX              2u
+#define IO_BANK0_GPIO28_CTRL_FUNCSEL_I2C0_SDA              3u
+#define IO_BANK0_GPIO28_CTRL_FUNCSEL_PWM_A_6               4u
+#define IO_BANK0_GPIO28_CTRL_FUNCSEL_SIO_28                5u
+#define IO_BANK0_GPIO28_CTRL_FUNCSEL_PIO0_28               6u
+#define IO_BANK0_GPIO28_CTRL_FUNCSEL_PIO1_28               7u
+#define IO_BANK0_GPIO28_CTRL_FUNCSEL_USB_MUXING_VBUS_DETECT   9
+#define IO_BANK0_GPIO28_CTRL_FUNCSEL_NULL                  0x1fu
 
 #define IO_BANK0_GPIO29_STATUS_IRQTOPROC_OFFSET            26u
 #define IO_BANK0_GPIO29_STATUS_IRQTOPROC_MASK              0x4000000u
@@ -1937,15 +1940,15 @@
 
 #define IO_BANK0_GPIO29_CTRL_FUNCSEL_OFFSET                0u
 #define IO_BANK0_GPIO29_CTRL_FUNCSEL_MASK                  0x1fu
-#define IO_BANK0_GPIO29_CTRL_FUNCSEL_spi1_ss_n             1u
-#define IO_BANK0_GPIO29_CTRL_FUNCSEL_uart0_rx              2u
-#define IO_BANK0_GPIO29_CTRL_FUNCSEL_i2c0_scl              3u
-#define IO_BANK0_GPIO29_CTRL_FUNCSEL_pwm_b_6               4u
-#define IO_BANK0_GPIO29_CTRL_FUNCSEL_sio_29                5u
-#define IO_BANK0_GPIO29_CTRL_FUNCSEL_pio0_29               6u
-#define IO_BANK0_GPIO29_CTRL_FUNCSEL_pio1_29               7u
-#define IO_BANK0_GPIO29_CTRL_FUNCSEL_usb_muxing_vbus_en    9u
-#define IO_BANK0_GPIO29_CTRL_FUNCSEL_null                  0x1fu
+#define IO_BANK0_GPIO29_CTRL_FUNCSEL_SPI1_SS_N             1u
+#define IO_BANK0_GPIO29_CTRL_FUNCSEL_UART0_RX              2u
+#define IO_BANK0_GPIO29_CTRL_FUNCSEL_I2C0_SCL              3u
+#define IO_BANK0_GPIO29_CTRL_FUNCSEL_PWM_B_6               4u
+#define IO_BANK0_GPIO29_CTRL_FUNCSEL_SIO_29                5u
+#define IO_BANK0_GPIO29_CTRL_FUNCSEL_PIO0_29               6u
+#define IO_BANK0_GPIO29_CTRL_FUNCSEL_PIO1_29               7u
+#define IO_BANK0_GPIO29_CTRL_FUNCSEL_USB_MUXING_VBUS_EN    9u
+#define IO_BANK0_GPIO29_CTRL_FUNCSEL_NULL                  0x1fu
 
 #define IO_BANK0_INTR0_GPIO7_EDGE_HIGH_OFFSET              31u
 #define IO_BANK0_INTR0_GPIO7_EDGE_HIGH_MASK                0x80000000u

@@ -1,3 +1,6 @@
+/*
+  automatically created from data available on https://chipselect.org/
+*/
 #ifndef HW_USBCTRL_REGS_H
 #define HW_USBCTRL_REGS_H
 /** USB FS/LS controller device registers */

@@ -1,3 +1,6 @@
+/*
+  automatically created from data available on https://chipselect.org/
+*/
 #ifndef HW_RTC_H
 #define HW_RTC_H
 /** Register block to control RTC */

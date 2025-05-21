@@ -72,7 +72,7 @@ static inline void switch_SWDIO_to_Output(void)
 {
     // SWDIO
     SIO->GPIO_OE_SET = 1ul << PIN_SWDIO;
-    PADS_BANK0->PADS_GPIO_SWDIO = (PADS_BANK0_GPIO0_DRIVE_2mA << PADS_BANK0_GPIO0_DRIVE_OFFSET)
+    PADS_BANK0->PADS_GPIO_SWDIO = (PADS_BANK0_GPIO0_DRIVE_2MA << PADS_BANK0_GPIO0_DRIVE_OFFSET)
                                 | (0 << PADS_BANK0_GPIO0_PUE_OFFSET) // pull up
                                 | (0 << PADS_BANK0_GPIO0_PDE_OFFSET) // pull down
                                 | (1 << PADS_BANK0_GPIO0_SLEWFAST_OFFSET)

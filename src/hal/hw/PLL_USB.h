@@ -1,3 +1,6 @@
+/*
+  automatically created from data available on https://chipselect.org/
+*/
 #ifndef HW_PLL_USB_H
 #define HW_PLL_USB_H
 /** Memory Block starting at 0x4002C000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */

@@ -1,3 +1,6 @@
+/*
+  automatically created from data available on https://chipselect.org/
+*/
 #ifndef HW_SIO_H
 #define HW_SIO_H
 /** Single-cycle IO block

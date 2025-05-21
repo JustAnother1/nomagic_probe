@@ -30,6 +30,7 @@
 #include "hal/target_uart.h"
 #include "hal/watchdog.h"
 #include "led.h"
+#include "lib/printf.h"
 #include "swd/swd_engine.h"
 #include "target.h"
 #include "target/target_uart_handler.h"
@@ -70,11 +71,6 @@ static void init_0(void)
 
     task_list = ALL_SUPERVISED_TASKS;
     watchdog_enable();
-    init_time();
-
-#ifdef FEAT_DEBUG_UART
-    debug_uart_initialize();
-#endif
 
 init_printf(NULL, serial_debug_putc);
 
@@ -194,12 +190,75 @@ int main1(void)
     }
 }
 
+static void wake_up_core1(void)
+{
+    // if you are using the SDK then you can simply use the multicore_launch_core1 function to launch code on processor core 1.
+
+    // values to be sent in order over the FIFO from core 0 to core 1
+    //
+    // vector_table is value for VTOR register
+    // sp is initial stack pointer (SP)
+    // entry is the initial program counter (PC) (don't forget to set the thumb bit!)
+    const uint32_t cmd_sequence[6] = {0, 0, 1, (uintptr_t) &__VECTOR_TABLE, (uintptr_t) 0x20040fff, (uintptr_t) ((uint32_t)(&main1) | 1)};
+    uint32_t seq = 0;
+    uint32_t response = 0;
+    uint32_t tries = 0;
+    do {
+        uint32_t cmd = cmd_sequence[seq];
+        // always drain the READ FIFO (from core 1) before sending a 0
+        if (!cmd)
+        {
+            // discard data from read FIFO until empty
+            while (0 != (SIO->FIFO_ST & 1))
+            {
+                response = SIO->FIFO_RD;
+            }
+            // execute a SEV as core 1 may be waiting for FIFO space
+            __asm volatile ("sev");
+        }
+        // write 32 bit value to write FIFO
+        // We wait for the fifo to have some space
+        while (0 == (SIO->FIFO_ST & 2))
+            ;
+
+        SIO->FIFO_WR = cmd;
+
+        // Fire off an event to the other core
+        __asm volatile ("sev");
+
+        // read 32 bit value from read FIFO once available
+        // If nothing there yet, we wait for an event first,
+        // to try and avoid too much busy waiting
+        while (1 == (SIO->FIFO_ST & 1))
+        {
+            response = SIO->FIFO_RD;
+        }
+
+        response = SIO->FIFO_RD;
+
+        // move to next state on correct response (echo-d value) otherwise start over
+        if(cmd == response)
+        {
+            seq = seq +1;
+        }
+        else
+        {
+            seq = 0;
+            tries++;
+        }
+    } while ((seq < 6) && (tries < 6));
+}
 #endif
 
 int main(void)
 {
     watchdog_enter_section(SECTION_INIT);
 #ifdef ENABLE_CORE_1
+    if(0 != SIO->CPUID)
+    {
+        // soft reset with core1 active ?
+        main1();
+    }
     init_0();
 #else
     init_0();

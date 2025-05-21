@@ -1,3 +1,6 @@
+/*
+  automatically created from data available on https://chipselect.org/
+*/
 #ifndef HW_TBMAN_H
 #define HW_TBMAN_H
 /** Testbench manager. Allows the programmer to know what platform their software is running on. */

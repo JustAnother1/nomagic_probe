@@ -1,3 +1,6 @@
+/*
+  automatically created from data available on https://chipselect.org/
+*/
 #ifndef HW_SPI1_H
 #define HW_SPI1_H
 /** Interrupt : SPI1_IRQ (Vector: 19)  */

@@ -1,3 +1,6 @@
+/*
+  automatically created from data available on https://chipselect.org/
+*/
 #ifndef HW_ADC_H
 #define HW_ADC_H
 /** Control and data interface to SAR ADC */

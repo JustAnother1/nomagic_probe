@@ -1,3 +1,6 @@
+/*
+  automatically created from data available on https://chipselect.org/
+*/
 #ifndef HW_DMA_H
 #define HW_DMA_H
 /** DMA with separate read and write masters */

@@ -1,3 +1,6 @@
+/*
+  automatically created from data available on https://chipselect.org/
+*/
 #ifndef HW_SYSCFG_H
 #define HW_SYSCFG_H
 /** Register block for various chip control signals */

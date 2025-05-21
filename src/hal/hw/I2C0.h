@@ -1,3 +1,6 @@
+/*
+  automatically created from data available on https://chipselect.org/
+*/
 #ifndef HW_I2C0_H
 #define HW_I2C0_H
 /** DW_apb_i2c address block

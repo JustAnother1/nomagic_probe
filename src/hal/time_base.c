@@ -26,8 +26,6 @@
 // -> we want to avoid 0xffffffff as end time of timeout
 #define MAX_SAFE_COUNT        0xfffffff0
 
-volatile uint32_t ms_since_boot;
-
 void delay_us(uint32_t usec)
 {
     uint32_t loops = usec;
@@ -40,23 +38,6 @@ void delay_us(uint32_t usec)
         }
         loops--;
     }
-}
-
-void SysTick_Handler(void)
-{
-    ms_since_boot++;
-}
-
-void init_time(void)
-{
-    ms_since_boot = 0;
-    PPB->SYST_CSR = 0x7;  // SysTick on
-    PPB->SYST_RVR = 125000;  // reload value
-}
-
-uint32_t time_get_ms(void)
-{
-    return ms_since_boot;
 }
 
 void start_timeout(timeout_typ* to, const uint32_t time_ms)

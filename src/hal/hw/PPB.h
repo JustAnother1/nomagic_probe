@@ -1,3 +1,6 @@
+/*
+  automatically created from data available on https://chipselect.org/
+*/
 #ifndef HW_PPB_H
 #define HW_PPB_H
 /** Memory Block starting at 0xE0000000 + 0x0 is 0x10000 bytes in size. It is used for registers. Protection: n */

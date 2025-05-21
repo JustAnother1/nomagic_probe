@@ -67,6 +67,7 @@ SRC += $(NOMAGIC_SRC_FOLDER)hal/debug_uart.c
 endif
 SRC += $(NOMAGIC_SRC_FOLDER)hal/target_uart.c
 SRC += $(NOMAGIC_SRC_FOLDER)hal/startup.c
+SRC += $(NOMAGIC_SRC_FOLDER)hal/irq.c
 SRC += $(NOMAGIC_SRC_FOLDER)hal/hw_divider.c
 SRC += $(NOMAGIC_SRC_FOLDER)hal/watchdog.c
 ifeq ($(USE_BOOT_ROM), yes)

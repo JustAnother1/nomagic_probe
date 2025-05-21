@@ -238,7 +238,7 @@ static bool null_is_buffer_full_function(void)
 void serial_debug_send_string(char * str)
 {
 #ifdef FEAT_DEBUG_UART
-        debug_uart_send_String(str);
+        debug_uart_send_string(str);
 #endif
 #ifdef FEAT_DEBUG_CDC
         usb_cdc_send_string(str);
@@ -280,7 +280,7 @@ uint8_t serial_debug_get_next_received_byte(void)
 void serial_debug_putc(void* p, char c)
 {
 #ifdef FEAT_DEBUG_UART
-    debug_putc(p, c);
+    debug_uart_putc(p, c);
 #endif
 #ifdef FEAT_DEBUG_CDC
     usb_cdc_putc(p, c);

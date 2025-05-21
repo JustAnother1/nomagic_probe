@@ -33,7 +33,20 @@
 // do not erase sectors as long as this many sectors remain empty
 #define MIN_FREE_SECTORS          10
 
-extern uint32_t file_system_start;
+extern uint32_t __data_start;
+extern uint32_t __data_end;
+extern uint32_t __data_in_flash;
+
+extern uint32_t __code_start;
+extern uint32_t __code_end;
+extern uint32_t __code_in_flash;
+
+extern uint32_t __ro_data_start;
+extern uint32_t __ro_data_end;
+extern uint32_t __ro_data_in_flash;
+
+
+uint32_t file_system_start;
 
 union buf_type
 {
@@ -66,6 +79,22 @@ static void mark_as_used(const uint32_t sector);
 
 void file_system_init(void)
 {
+    file_system_start = 0;
+    if((uint32_t)(&__code_in_flash + (&__code_end - &__code_start)) > file_system_start)
+    {
+        file_system_start = (uint32_t)(&__code_in_flash + (&__code_end - &__code_start));
+    }
+    if((uint32_t)(&__ro_data_in_flash + (&__ro_data_end - &__ro_data_start)) > file_system_start)
+    {
+        file_system_start = (uint32_t)(&__ro_data_in_flash + (&__ro_data_end - &__ro_data_start));
+    }
+    if((uint32_t)(&__data_in_flash + (&__data_end - &__data_start)) > file_system_start)
+    {
+        file_system_start = (uint32_t)(&__data_in_flash + (&__data_end - &__data_start));
+    }
+    file_system_start = (file_system_start + 0x1000) & 0xfffff000; // file system needs to start at a 4k sector.
+
+
     flash_init();
     block_count = (uint32_t)(1024*1024*1) / file_storage_getblock_size(); // TODO 1MB for now
     sector_offset = (0x00ffffff & file_system_start) >>12;

@@ -28,9 +28,9 @@
 #include "hal/debug_uart.h"
 #include "hal/time_base.h"
 #include "probe_api/debug_log.h"
-#include "qspi.h"
-#include "qspi_flash.h"
-#include "startup.h"
+#include "hal/qspi.h"
+#include "hal/qspi_flash.h"
+#include "hal/irq.h"
 
 
 // Make sure there is never more data in flight than the depth of the RX
@@ -130,33 +130,33 @@ static void init_qspi_pads(void)
 {
     PADS_QSPI->VOLTAGE_SELECT = 0;  // 3.3V
     PADS_QSPI->GPIO_QSPI_SCLK = (1<< PADS_QSPI_GPIO_QSPI_SCLK_IE_OFFSET)         // Input enable
-                              | (PADS_QSPI_GPIO_QSPI_SCLK_DRIVE_4mA << PADS_QSPI_GPIO_QSPI_SCLK_DRIVE_OFFSET)
+                              | (PADS_QSPI_GPIO_QSPI_SCLK_DRIVE_4MA << PADS_QSPI_GPIO_QSPI_SCLK_DRIVE_OFFSET)
                               | (1 << PADS_QSPI_GPIO_QSPI_SCLK_PDE_OFFSET)       // Pull down enable
                               | (1 << PADS_QSPI_GPIO_QSPI_SCLK_SCHMITT_OFFSET)   // enable schmitt trigger
                               | (1 << PADS_QSPI_GPIO_QSPI_SCLK_SLEWFAST_OFFSET); // slew rate fast
     PADS_QSPI->GPIO_QSPI_SD0 = (1<< PADS_QSPI_GPIO_QSPI_SD0_IE_OFFSET)           // Input enable
-                              | (PADS_QSPI_GPIO_QSPI_SD0_DRIVE_4mA << PADS_QSPI_GPIO_QSPI_SD0_DRIVE_OFFSET)
+                              | (PADS_QSPI_GPIO_QSPI_SD0_DRIVE_4MA << PADS_QSPI_GPIO_QSPI_SD0_DRIVE_OFFSET)
                               | (1 << PADS_QSPI_GPIO_QSPI_SD0_PDE_OFFSET)        // Pull down enable
                               | (1 << PADS_QSPI_GPIO_QSPI_SD0_SCHMITT_OFFSET)    // enable schmitt trigger
                               | (1 << PADS_QSPI_GPIO_QSPI_SD0_SLEWFAST_OFFSET);  // slew rate fast
     PADS_QSPI->GPIO_QSPI_SD1 = (1<< PADS_QSPI_GPIO_QSPI_SD1_IE_OFFSET)           // Input enable
-                              | (PADS_QSPI_GPIO_QSPI_SD1_DRIVE_4mA << PADS_QSPI_GPIO_QSPI_SD1_DRIVE_OFFSET)
+                              | (PADS_QSPI_GPIO_QSPI_SD1_DRIVE_4MA << PADS_QSPI_GPIO_QSPI_SD1_DRIVE_OFFSET)
                               | (1 << PADS_QSPI_GPIO_QSPI_SD1_PDE_OFFSET)        // Pull down enable
                               | (1 << PADS_QSPI_GPIO_QSPI_SD1_SCHMITT_OFFSET)    // enable schmitt trigger
                               | (1 << PADS_QSPI_GPIO_QSPI_SD1_SLEWFAST_OFFSET);  // slew rate fast
 // put pull-up on SD2/SD3 as these may be used as WPn/HOLDn
     PADS_QSPI->GPIO_QSPI_SD2 =  (1<< PADS_QSPI_GPIO_QSPI_SD2_IE_OFFSET)          // Input enable
-                              | (PADS_QSPI_GPIO_QSPI_SD2_DRIVE_4mA << PADS_QSPI_GPIO_QSPI_SD2_DRIVE_OFFSET)
+                              | (PADS_QSPI_GPIO_QSPI_SD2_DRIVE_4MA << PADS_QSPI_GPIO_QSPI_SD2_DRIVE_OFFSET)
                               | (1 << PADS_QSPI_GPIO_QSPI_SD2_PUE_OFFSET)        // Pull up enable
                               | (1 << PADS_QSPI_GPIO_QSPI_SD2_SCHMITT_OFFSET)    // enable schmitt trigger
                               | (1 << PADS_QSPI_GPIO_QSPI_SD2_SLEWFAST_OFFSET);  // slew rate fast
     PADS_QSPI->GPIO_QSPI_SD3 =  (1<< PADS_QSPI_GPIO_QSPI_SD3_IE_OFFSET)          // Input enable
-                              | (PADS_QSPI_GPIO_QSPI_SD3_DRIVE_4mA << PADS_QSPI_GPIO_QSPI_SD3_DRIVE_OFFSET)
+                              | (PADS_QSPI_GPIO_QSPI_SD3_DRIVE_4MA << PADS_QSPI_GPIO_QSPI_SD3_DRIVE_OFFSET)
                               | (1 << PADS_QSPI_GPIO_QSPI_SD3_PUE_OFFSET)        // Pull up enable
                               | (1 << PADS_QSPI_GPIO_QSPI_SD3_SCHMITT_OFFSET)    // enable schmitt trigger
                               | (1 << PADS_QSPI_GPIO_QSPI_SD3_SLEWFAST_OFFSET);  // slew rate fast
     PADS_QSPI->GPIO_QSPI_SS = (1<< PADS_QSPI_GPIO_QSPI_SS_IE_OFFSET)             // Input enable
-                              | (PADS_QSPI_GPIO_QSPI_SS_DRIVE_4mA << PADS_QSPI_GPIO_QSPI_SS_DRIVE_OFFSET)
+                              | (PADS_QSPI_GPIO_QSPI_SS_DRIVE_4MA << PADS_QSPI_GPIO_QSPI_SS_DRIVE_OFFSET)
                               | (1 << PADS_QSPI_GPIO_QSPI_SS_PUE_OFFSET)         // Pull up enable
                               | (1 << PADS_QSPI_GPIO_QSPI_SS_SCHMITT_OFFSET)     // enable schmitt trigger
                               | (1 << PADS_QSPI_GPIO_QSPI_SS_SLEWFAST_OFFSET);   // slew rate fast
@@ -166,7 +166,7 @@ static void pads_qspi_output_disabled_pull_up(void)
 {
     uint32_t val = (1 < PADS_QSPI_GPIO_QSPI_SD0_OD_OFFSET)            // output disabled
                  | (1<< PADS_QSPI_GPIO_QSPI_SD0_IE_OFFSET)           // Input enable
-                 | (PADS_QSPI_GPIO_QSPI_SD0_DRIVE_4mA << PADS_QSPI_GPIO_QSPI_SD0_DRIVE_OFFSET)
+                 | (PADS_QSPI_GPIO_QSPI_SD0_DRIVE_4MA << PADS_QSPI_GPIO_QSPI_SD0_DRIVE_OFFSET)
                  | (1 << PADS_QSPI_GPIO_QSPI_SD0_PUE_OFFSET)        // Pull up enable
                  | (1 << PADS_QSPI_GPIO_QSPI_SD0_SCHMITT_OFFSET)    // enable schmitt trigger
                  | (1 << PADS_QSPI_GPIO_QSPI_SD0_SLEWFAST_OFFSET);  // slew rate fast
@@ -181,7 +181,7 @@ static void pads_qspi_output_disabled_pull_down(void)
 {
     uint32_t val = (1 < PADS_QSPI_GPIO_QSPI_SD0_OD_OFFSET)          // output disabled
                  | (1<< PADS_QSPI_GPIO_QSPI_SD0_IE_OFFSET)          // Input enable
-                 | (PADS_QSPI_GPIO_QSPI_SD0_DRIVE_4mA << PADS_QSPI_GPIO_QSPI_SD0_DRIVE_OFFSET)
+                 | (PADS_QSPI_GPIO_QSPI_SD0_DRIVE_4MA << PADS_QSPI_GPIO_QSPI_SD0_DRIVE_OFFSET)
                  | (1 << PADS_QSPI_GPIO_QSPI_SD0_PDE_OFFSET)        // Pull down enable
                  | (1 << PADS_QSPI_GPIO_QSPI_SD0_SCHMITT_OFFSET)    // enable schmitt trigger
                  | (1 << PADS_QSPI_GPIO_QSPI_SD0_SLEWFAST_OFFSET);  // slew rate fast

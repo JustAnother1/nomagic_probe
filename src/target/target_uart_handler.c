@@ -35,7 +35,7 @@ void target_uart_handler_init(void)
     {
         baudrate = 7812500;
     }
-    target_uart_initialize(baudrate);
+    target_uart_init(baudrate);
     from_pc = 0;
     to_pc = 0;
 }

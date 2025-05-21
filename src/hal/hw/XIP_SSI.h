@@ -1,3 +1,6 @@
+/*
+  automatically created from data available on https://chipselect.org/
+*/
 #ifndef HW_XIP_SSI_H
 #define HW_XIP_SSI_H
 /** DW_apb_ssi has the following features:

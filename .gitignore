@@ -10,3 +10,8 @@
 /src/mbsp_report.txt
 /src/.project
 /src/.cproject
+/src/*.jar
+/src/*.py
+/src/*.sh
+/src/*.bin
+/src/*.txt

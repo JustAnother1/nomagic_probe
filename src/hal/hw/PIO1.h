@@ -1,3 +1,6 @@
+/*
+  automatically created from data available on https://chipselect.org/
+*/
 #ifndef HW_PIO1_H
 #define HW_PIO1_H
 /** Programmable IO block */

@@ -1,3 +1,6 @@
+/*
+  automatically created from data available on https://chipselect.org/
+*/
 #ifndef HW_XIP_CTRL_H
 #define HW_XIP_CTRL_H
 /** QSPI flash execute-in-place block */

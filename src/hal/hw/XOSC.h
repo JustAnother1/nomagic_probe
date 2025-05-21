@@ -1,3 +1,6 @@
+/*
+  automatically created from data available on https://chipselect.org/
+*/
 #ifndef HW_XOSC_H
 #define HW_XOSC_H
 /** Controls the crystal oscillator */

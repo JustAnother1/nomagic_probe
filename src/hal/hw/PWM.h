@@ -1,3 +1,6 @@
+/*
+  automatically created from data available on https://chipselect.org/
+*/
 #ifndef HW_PWM_H
 #define HW_PWM_H
 /** Simple PWM */
@@ -15,10 +18,10 @@
 
 #define PWM_CH0_CSR_DIVMODE_OFFSET                         4u
 #define PWM_CH0_CSR_DIVMODE_MASK                           0x30u
-#define PWM_CH0_CSR_DIVMODE_div                            0u
-#define PWM_CH0_CSR_DIVMODE_level                          1u
-#define PWM_CH0_CSR_DIVMODE_rise                           2u
-#define PWM_CH0_CSR_DIVMODE_fall                           3u
+#define PWM_CH0_CSR_DIVMODE_DIV                            0u
+#define PWM_CH0_CSR_DIVMODE_LEVEL                          1u
+#define PWM_CH0_CSR_DIVMODE_RISE                           2u
+#define PWM_CH0_CSR_DIVMODE_FALL                           3u
 
 #define PWM_CH0_CSR_B_INV_OFFSET                           3u
 #define PWM_CH0_CSR_B_INV_MASK                             8u
@@ -58,10 +61,10 @@
 
 #define PWM_CH1_CSR_DIVMODE_OFFSET                         4u
 #define PWM_CH1_CSR_DIVMODE_MASK                           0x30u
-#define PWM_CH1_CSR_DIVMODE_div                            0u
-#define PWM_CH1_CSR_DIVMODE_level                          1u
-#define PWM_CH1_CSR_DIVMODE_rise                           2u
-#define PWM_CH1_CSR_DIVMODE_fall                           3u
+#define PWM_CH1_CSR_DIVMODE_DIV                            0u
+#define PWM_CH1_CSR_DIVMODE_LEVEL                          1u
+#define PWM_CH1_CSR_DIVMODE_RISE                           2u
+#define PWM_CH1_CSR_DIVMODE_FALL                           3u
 
 #define PWM_CH1_CSR_B_INV_OFFSET                           3u
 #define PWM_CH1_CSR_B_INV_MASK                             8u
@@ -101,10 +104,10 @@
 
 #define PWM_CH2_CSR_DIVMODE_OFFSET                         4u
 #define PWM_CH2_CSR_DIVMODE_MASK                           0x30u
-#define PWM_CH2_CSR_DIVMODE_div                            0u
-#define PWM_CH2_CSR_DIVMODE_level                          1u
-#define PWM_CH2_CSR_DIVMODE_rise                           2u
-#define PWM_CH2_CSR_DIVMODE_fall                           3u
+#define PWM_CH2_CSR_DIVMODE_DIV                            0u
+#define PWM_CH2_CSR_DIVMODE_LEVEL                          1u
+#define PWM_CH2_CSR_DIVMODE_RISE                           2u
+#define PWM_CH2_CSR_DIVMODE_FALL                           3u
 
 #define PWM_CH2_CSR_B_INV_OFFSET                           3u
 #define PWM_CH2_CSR_B_INV_MASK                             8u
@@ -144,10 +147,10 @@
 
 #define PWM_CH3_CSR_DIVMODE_OFFSET                         4u
 #define PWM_CH3_CSR_DIVMODE_MASK                           0x30u
-#define PWM_CH3_CSR_DIVMODE_div                            0u
-#define PWM_CH3_CSR_DIVMODE_level                          1u
-#define PWM_CH3_CSR_DIVMODE_rise                           2u
-#define PWM_CH3_CSR_DIVMODE_fall                           3u
+#define PWM_CH3_CSR_DIVMODE_DIV                            0u
+#define PWM_CH3_CSR_DIVMODE_LEVEL                          1u
+#define PWM_CH3_CSR_DIVMODE_RISE                           2u
+#define PWM_CH3_CSR_DIVMODE_FALL                           3u
 
 #define PWM_CH3_CSR_B_INV_OFFSET                           3u
 #define PWM_CH3_CSR_B_INV_MASK                             8u
@@ -187,10 +190,10 @@
 
 #define PWM_CH4_CSR_DIVMODE_OFFSET                         4u
 #define PWM_CH4_CSR_DIVMODE_MASK                           0x30u
-#define PWM_CH4_CSR_DIVMODE_div                            0u
-#define PWM_CH4_CSR_DIVMODE_level                          1u
-#define PWM_CH4_CSR_DIVMODE_rise                           2u
-#define PWM_CH4_CSR_DIVMODE_fall                           3u
+#define PWM_CH4_CSR_DIVMODE_DIV                            0u
+#define PWM_CH4_CSR_DIVMODE_LEVEL                          1u
+#define PWM_CH4_CSR_DIVMODE_RISE                           2u
+#define PWM_CH4_CSR_DIVMODE_FALL                           3u
 
 #define PWM_CH4_CSR_B_INV_OFFSET                           3u
 #define PWM_CH4_CSR_B_INV_MASK                             8u
@@ -230,10 +233,10 @@
 
 #define PWM_CH5_CSR_DIVMODE_OFFSET                         4u
 #define PWM_CH5_CSR_DIVMODE_MASK                           0x30u
-#define PWM_CH5_CSR_DIVMODE_div                            0u
-#define PWM_CH5_CSR_DIVMODE_level                          1u
-#define PWM_CH5_CSR_DIVMODE_rise                           2u
-#define PWM_CH5_CSR_DIVMODE_fall                           3u
+#define PWM_CH5_CSR_DIVMODE_DIV                            0u
+#define PWM_CH5_CSR_DIVMODE_LEVEL                          1u
+#define PWM_CH5_CSR_DIVMODE_RISE                           2u
+#define PWM_CH5_CSR_DIVMODE_FALL                           3u
 
 #define PWM_CH5_CSR_B_INV_OFFSET                           3u
 #define PWM_CH5_CSR_B_INV_MASK                             8u
@@ -273,10 +276,10 @@
 
 #define PWM_CH6_CSR_DIVMODE_OFFSET                         4u
 #define PWM_CH6_CSR_DIVMODE_MASK                           0x30u
-#define PWM_CH6_CSR_DIVMODE_div                            0u
-#define PWM_CH6_CSR_DIVMODE_level                          1u
-#define PWM_CH6_CSR_DIVMODE_rise                           2u
-#define PWM_CH6_CSR_DIVMODE_fall                           3u
+#define PWM_CH6_CSR_DIVMODE_DIV                            0u
+#define PWM_CH6_CSR_DIVMODE_LEVEL                          1u
+#define PWM_CH6_CSR_DIVMODE_RISE                           2u
+#define PWM_CH6_CSR_DIVMODE_FALL                           3u
 
 #define PWM_CH6_CSR_B_INV_OFFSET                           3u
 #define PWM_CH6_CSR_B_INV_MASK                             8u
@@ -316,10 +319,10 @@
 
 #define PWM_CH7_CSR_DIVMODE_OFFSET                         4u
 #define PWM_CH7_CSR_DIVMODE_MASK                           0x30u
-#define PWM_CH7_CSR_DIVMODE_div                            0u
-#define PWM_CH7_CSR_DIVMODE_level                          1u
-#define PWM_CH7_CSR_DIVMODE_rise                           2u
-#define PWM_CH7_CSR_DIVMODE_fall                           3u
+#define PWM_CH7_CSR_DIVMODE_DIV                            0u
+#define PWM_CH7_CSR_DIVMODE_LEVEL                          1u
+#define PWM_CH7_CSR_DIVMODE_RISE                           2u
+#define PWM_CH7_CSR_DIVMODE_FALL                           3u
 
 #define PWM_CH7_CSR_B_INV_OFFSET                           3u
 #define PWM_CH7_CSR_B_INV_MASK                             8u

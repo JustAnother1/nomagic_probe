@@ -24,7 +24,7 @@
 #include "hal/flash.h"
 #include "hal/hw_divider.h"
 #include "hal/hw/TIMER.h"
-#include "hal/startup.h"
+#include "hal/irq.h"
 #include "hal/time_base.h"
 #include "hal/watchdog.h"
 #include "probe_api/cli.h"
@@ -32,6 +32,24 @@
 #include "probe_api/swd.h"
 #include "target/target_uart_handler.h"
 
+extern uint32_t __bss_start;
+extern uint32_t __bss_end;
+
+extern uint32_t __data_start;
+extern uint32_t __data_end;
+extern uint32_t __data_in_flash;
+
+extern uint32_t __code_start;
+extern uint32_t __code_end;
+extern uint32_t __code_in_flash;
+
+extern uint32_t __ro_data_start;
+extern uint32_t __ro_data_end;
+extern uint32_t __ro_data_in_flash;
+
+extern uint32_t file_system_start;
+
+static bool startup_report(const uint32_t loop);
 
 bool cmd_time(const uint32_t loop)
 {
@@ -165,6 +183,34 @@ bool cmd_hil_test(const uint32_t loop)
 
     debug_line("\r\nDone!");
     return true;  // we are done
+}
+
+static bool startup_report(const uint32_t loop)
+{
+    switch(loop)
+    {
+    case 0:  debug_line(".code start:            0x%08lx", (uint32_t)&__code_start); break;
+    case 1:  debug_line(".code end:              0x%08lx", (uint32_t)&__code_end); break;
+    case 2:  debug_line(".code start in flash:   0x%08lx", (uint32_t)&__code_in_flash); break;
+    case 3:  debug_line(".code end in flash:     0x%08lx", (uint32_t)(&__code_in_flash + (&__code_end - &__code_start))); break;
+
+    case 4:  debug_line(".bss start:             0x%08lx", (uint32_t)&__bss_start); break;
+    case 5:  debug_line(".bss end:               0x%08lx", (uint32_t)&__bss_end); break;
+
+    case 6:  debug_line(".data start:            0x%08lx", (uint32_t)&__data_start); break;
+    case 7:  debug_line(".data end:              0x%08lx", (uint32_t)&__data_end); break;
+    case 8: debug_line(".data start in flash:   0x%08lx", (uint32_t)&__data_in_flash); break;
+    case 9: debug_line(".data end in flash:     0x%08lx", (uint32_t)(&__data_in_flash + (&__data_end - &__data_start))); break;
+
+    case 10: debug_line(".rodata start:          0x%08lx", (uint32_t)&__ro_data_start); break;
+    case 11: debug_line(".rodata end:            0x%08lx", (uint32_t)&__ro_data_end); break;
+    case 12: debug_line(".rodata start in flash: 0x%08lx", (uint32_t)&__ro_data_in_flash); break;
+    case 13: debug_line(".rodata end in flash:   0x%08lx", (uint32_t)(&__ro_data_in_flash + (&__ro_data_end - &__ro_data_start))); break;
+
+    case 14: debug_line("file system start:      0x%08lx", file_system_start); break;
+    default: return true;
+    }
+    return false;
 }
 
 bool cmd_info_overview(const uint32_t loop)
