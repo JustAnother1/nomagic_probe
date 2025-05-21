@@ -192,13 +192,13 @@ Result handle_target_close_connection(action_data_typ* const action)
     {
         debug_line("closing SWD connection !");
         action->cur_phase = 0;
-        action->first_call = false;
 
         Result res = swd_disconnect();
         if(RESULT_OK < res)
         {
             action->intern[0] = (uint32_t)res;
             action->cur_phase = 1;
+            action->first_call = false;
             return ERR_NOT_COMPLETED;
         }
         else if(ERR_QUEUE_FULL_TRY_AGAIN == res)
@@ -233,6 +233,11 @@ Result handle_target_close_connection(action_data_typ* const action)
         else
         {
             if(ERR_QUEUE_FULL_TRY_AGAIN == res)
+            {
+                // try again
+                return ERR_NOT_COMPLETED;
+            }
+            else if(ERR_NOT_COMPLETED == res)
             {
                 // try again
                 return ERR_NOT_COMPLETED;
