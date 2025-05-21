@@ -11,7 +11,7 @@
 #include <stdbool.h>
 
 static uint8_t UART0_recv_buf[100];
-static uint8_t UART0_send_buf[1000];
+static uint8_t UART0_send_buf[500];
 static volatile bool UART0_is_sending;
 static volatile uint32_t UART0_recv_read_pos;
 static volatile uint32_t UART0_recv_write_pos;
@@ -168,7 +168,7 @@ void debug_uart_tick(void)
                 UART0_is_sending = true;
                 UART0->UARTDR = UART0_send_buf[UART0_send_read_pos];
                 UART0_send_read_pos++;
-                if(1000 == UART0_send_read_pos)
+                if(500 == UART0_send_read_pos)
                 {
                     UART0_send_read_pos = 0;
                 }
@@ -199,7 +199,7 @@ void debug_uart_send_bytes(const uint8_t *data, const uint32_t length)
     {
         uint32_t next_write = UART0_send_write_pos;
         next_write++;
-        if(1000 <= next_write)
+        if(500 <= next_write)
         {
             next_write = 0;
         }
@@ -221,7 +221,7 @@ void debug_uart_send_string(char* str)
     {
         uint32_t next_write = UART0_send_write_pos;
         next_write++;
-        if(1000 <= next_write)
+        if(500 <= next_write)
         {
             next_write = 0;
         }
