@@ -19,6 +19,7 @@
 
 #include "probe_api/cortex-m.h"
 #include "probe_api/debug_log.h"
+#include "probe_api/flash_write_buffer.h"
 #include "probe_api/gdb_error_codes.h"
 #include "probe_api/gdb_packets.h"
 #include "probe_api/hex.h"
@@ -55,6 +56,8 @@ Result handle_target_connect(action_data_typ* const action)
     {
         debug_line("resetting error condition!");
         swd_reset_error_condition();
+        // connection just opened, we know nothing about the targets state -> initialize
+        target_re_init();
 
         action->cur_phase = 0;
         action->first_call = false;

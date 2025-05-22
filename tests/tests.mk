@@ -99,6 +99,8 @@ TINYUSB_USB_MSC_OBJS =                           \
 TEST_EXECUTEABLES += $(TEST_BIN_FOLDER)flash_write_buffer
 FLASH_WRITE_BUFFER_OBJS =                             \
  $(TEST_BIN_FOLDER)target/flash_write_buffer_tests.o  \
+ $(TEST_BIN_FOLDER)src/lib/printf.o                   \
+ $(TEST_BIN_FOLDER)mock/hal/hw_divider_mock.o         \
  $(TEST_BIN_FOLDER)src/target/flash_write_buffer.o
 
 

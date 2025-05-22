@@ -20,10 +20,16 @@
 #include <stdint.h>
 #include "probe_api/result.h"
 
+/* The problem is that gdb sends data packets in odd sizes, but the flash want to be written in pages.
+ * The flash_write_buffer should solve that. The data from gdb is put in and then flash page by flash page is read back out.
+ */
+
+
 void flash_write_buffer_init(uint32_t block_size_bytes);
+// remove all data from buffer
+void flash_write_buffer_clear(void);
 // new data arrived from gdb
 Result flash_write_buffer_add_data(uint32_t start_address, uint32_t length, uint8_t* data);
-
 // is there enough contiguous data in the buffer to write length bytes?
 bool flash_write_buffer_has_data_block(void);
 // get address of next byte available

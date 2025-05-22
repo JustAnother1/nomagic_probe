@@ -28,6 +28,11 @@ void target_init(void)
 
 }
 
+void target_re_init(void)
+{
+
+}
+
 void target_tick(void)
 {
 

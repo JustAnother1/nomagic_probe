@@ -40,6 +40,7 @@ static const mon_cmd_typ mon_commands[] = {
 };
 
 void target_init(void);
+void target_re_init(void);
 void target_tick(void);
 bool target_is_SWDv2(void);
 uint32_t target_get_SWD_core_id(uint32_t core_num); // only required for SWDv2 (TARGETSEL)

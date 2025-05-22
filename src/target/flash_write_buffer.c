@@ -15,6 +15,7 @@
 
 #include <stddef.h>
 #include <string.h>
+#include "probe_api/debug_log.h"
 #include "probe_api/flash_write_buffer.h"
 
 static uint32_t block_size;
@@ -35,6 +36,11 @@ void flash_write_buffer_init(uint32_t block_size_bytes)
     memset(write_buffer, 0x23, sizeof(write_buffer));
     num_blocks = sizeof(write_buffer)/block_size;
     first_invalid_idx = num_blocks * block_size;
+    flash_write_buffer_clear();
+}
+
+void flash_write_buffer_clear(void)
+{
     gdb_length = 0;
     gdb_start_address = 0;
     buffer_start_address = 0;
@@ -102,6 +108,10 @@ Result flash_write_buffer_add_data(uint32_t start_address, uint32_t length, uint
         }
         else
         {
+            debug_line("ERROR: too long!");
+            debug_line("start_address : 0x%08lx, length : %ld", start_address, length);
+            debug_line("write_idx = %ld, first_invalid_idx = %ld", write_idx, first_invalid_idx);
+            debug_line("overlap = %ld, read_idx = %ld", overlap, read_idx);
             return ERR_TOO_LONG;
         }
     }
