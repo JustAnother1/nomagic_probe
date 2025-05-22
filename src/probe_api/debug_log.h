@@ -21,21 +21,29 @@
     #define debug_msg(...)         my_printf(__VA_ARGS__)
     #define debug_line(...)        my_printf(__VA_ARGS__); my_printf("\r\n")
     #define debug_flush()
+    #define cli_msg(...)           my_printf(__VA_ARGS__)
+    #define cli_line(...)          my_printf(__VA_ARGS__); my_printf("\r\n")
 #else
     #if (defined FEAT_DEBUG_UART)
         #define debug_msg(...)     printf(__VA_ARGS__)
         #define debug_line(...)    printf(__VA_ARGS__); printf("\r\n")
         #define debug_flush()      debug_uart_flush()
+        #define cli_msg(...)       printf(__VA_ARGS__)
+        #define cli_line(...)      printf(__VA_ARGS__); printf("\r\n")
     #elif (defined FEAT_DEBUG_CDC)
         // #include "tinyusb/src/class/cdc/cdc_device.h"
         // #include "tinyusb/usb_cdc.h"
         #define debug_msg(...)     printf(__VA_ARGS__)
         #define debug_line(...)    printf(__VA_ARGS__); printf("\r\n")
         #define debug_flush()      // tud_cdc_n_write_flush(INTERFACE)
+        #define cli_msg(...)       printf(__VA_ARGS__)
+        #define cli_line(...)      printf(__VA_ARGS__); printf("\r\n")
     #else
         #define debug_msg(...)
         #define debug_line(...)
         #define debug_flush()
+       #define cli_msg(...)
+        #define cli_line(...)
     #endif // (defined FEAT_DEBUG_UART) || (defined FEAT_DEBUG_CDC)
 #endif // UNIT_TEST
 

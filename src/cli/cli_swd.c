@@ -62,7 +62,7 @@ bool cmd_swd_read_memory(const uint32_t loop)
             else
             {
                 // some error
-                debug_line("ERROR: failed to read target memory (%ld)!", res);
+                cli_line("ERROR: failed to read target memory (%ld)!", res);
                 return true;
             }
         }
@@ -77,9 +77,9 @@ bool cmd_swd_read_memory(const uint32_t loop)
                 {
                     if(0 == ((addr + i) & 0xf))
                     {
-                        debug_msg("\r\nAddress 0x%08lx :", addr + i);
+                        cli_msg("\r\nAddress 0x%08lx :", addr + i);
                     }
-                    debug_msg(" %02lx", data & 0xff);
+                    cli_msg(" %02lx", data & 0xff);
                     data = data>>8;
                 }
                 // debug_line("addr: 0x%08lx, read : 0x%08lx", addr, data);
@@ -105,7 +105,7 @@ bool cmd_swd_read_memory(const uint32_t loop)
                 else
                 {
                     // some error
-                    debug_line("ERROR: failed to receive read value from target memory (%ld)!", res);
+                    cli_line("ERROR: failed to receive read value from target memory (%ld)!", res);
                     return true;
                 }
             }
@@ -145,7 +145,7 @@ bool cmd_swd_write_memory(const uint32_t loop)
             else
             {
                 // some error
-                debug_line("ERROR: failed to write to target memory (%ld)!", res);
+                cli_line("ERROR: failed to write to target memory (%ld)!", res);
                 return true;
             }
         }
@@ -157,12 +157,12 @@ bool cmd_swd_write_memory(const uint32_t loop)
             {
                 if(RESULT_OK == data)
                 {
-                    debug_line("OK");
+                    cli_line("OK");
                     return true;
                 }
                 else
                 {
-                    debug_line("ERROR: SWD write to target memory failed ! (%ld)", data);
+                    cli_line("ERROR: SWD write to target memory failed ! (%ld)", data);
                     return true;
                 }
             }
@@ -175,7 +175,7 @@ bool cmd_swd_write_memory(const uint32_t loop)
                 else
                 {
                     // some error
-                    debug_line("ERROR: failed to write to target memory, reported %ld !", res);
+                    cli_line("ERROR: failed to write to target memory, reported %ld !", res);
                 }
             }
         }

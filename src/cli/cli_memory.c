@@ -55,7 +55,7 @@ bool cmd_memory_display(const uint32_t loop)
             flash_read(addr & 0xffffff, (uint8_t*)line, 16);
             for(i = 0; i < 4; i++)
             {
-                debug_msg("Address 0x%08lx : 0x%08lx (%ld)\r\n", addr, line[i], line[i]);
+                cli_msg("Address 0x%08lx : 0x%08lx (%ld)\r\n", addr, line[i], line[i]);
                 addr = addr + 4;
                 num_loops--;
                 if(0 == num_loops)
@@ -75,7 +75,7 @@ bool cmd_memory_display(const uint32_t loop)
                     break;
                 }
                 val = *((uint32_t*)addr);
-                debug_msg("Address 0x%08lx : 0x%08lx (%ld)\r\n", addr, val, val);
+                cli_msg("Address 0x%08lx : 0x%08lx (%ld)\r\n", addr, val, val);
                 addr = addr + 4;
                 num_loops--;
             }
@@ -116,20 +116,20 @@ bool cmd_memory_dump(const uint32_t loop)
             line = ((uint8_t*)addr);
         }
 
-        debug_msg("Address 0x%08lx :", addr);
+        cli_msg("Address 0x%08lx :", addr);
         for(i = 0; i < 16; i++)
         {
             if(0 == num_loops)
             {
                 break;
             }
-            debug_msg(" %02x", line[i]);
+            cli_msg(" %02x", line[i]);
             num_loops --;
             addr++;
         }
     }
 
-    debug_msg("\r\n");
+    cli_msg("\r\n");
 
     if(0 == num_loops)
     {
@@ -150,7 +150,7 @@ bool cmd_flash_memory_erase(const uint32_t loop)
     diff = TIMER->TIMERAWL;
     flash_erase_page(number);
     diff = TIMER->TIMERAWL - diff;
-    debug_line("operation took %lu µs", diff);
+    cli_line("operation took %lu µs", diff);
     return true; // we are done
 }
 
@@ -178,13 +178,13 @@ bool cmd_flash_memory_write(const uint32_t loop)
         data[i] = (uint8_t)(i & 0xff);
     }
 
-    debug_line("writing to address: 0x%lx", address);
-    debug_line("writing %lu bytes", numBytes);
+    cli_line("writing to address: 0x%lx", address);
+    cli_line("writing %lu bytes", numBytes);
     // write data
     diff = TIMER->TIMERAWL;
     flash_write_block(address, data, numBytes);
     diff = TIMER->TIMERAWL - diff;
-    debug_line("operation took %lu µs", diff);
+    cli_line("operation took %lu µs", diff);
     return true; // we are done
 }
 
@@ -201,7 +201,7 @@ bool cmd_flash_disable_XIP(const uint32_t loop)
         flash_funcs->_connect_internal_flash();
         flash_funcs->_flash_exit_xip();
         diff = TIMER->TIMERAWL - diff;
-        debug_line("operation took %lu µs", diff);
+        cli_line("operation took %lu µs", diff);
     }
     return true; // we are done
 }
@@ -218,7 +218,7 @@ bool cmd_flash_enable_XIP(const uint32_t loop)
         flash_funcs->_flash_flush_cache();
         flash_funcs->_flash_enter_cmd_xip();
         diff = TIMER->TIMERAWL - diff;
-        debug_line("operation took %lu µs", diff);
+        cli_line("operation took %lu µs", diff);
     }
     return true; // we are done
 }
@@ -252,16 +252,16 @@ bool cmd_file_dump(const uint32_t loop)
         fat_entry* entry = fake_root_get_entry_of_file_named(filename);
         if(NULL == entry)
         {
-            debug_line("file(%s) not found !", filename);
+            cli_line("file(%s) not found !", filename);
             num_loops = 0;
         }
         else
         {
-            debug_line("The file %s  has %ld bytes. Attributes 0x%02x.", filename, entry->file_size, entry->attributes);
-            debug_line("created: date 0x%04x, time 0x%04x", entry->creation_date, entry->creation_time);
-            debug_line("last write: date 0x%04x, time 0x%04x", entry->last_write_date, entry->last_write_time);
-            debug_line("last access date 0x%04x.", entry->last_access_date);
-            debug_line("first cluster 0x%04x.", entry->first_logical_cluster);
+            cli_line("The file %s  has %ld bytes. Attributes 0x%02x.", filename, entry->file_size, entry->attributes);
+            cli_line("created: date 0x%04x, time 0x%04x", entry->creation_date, entry->creation_time);
+            cli_line("last write: date 0x%04x, time 0x%04x", entry->last_write_date, entry->last_write_time);
+            cli_line("last access date 0x%04x.", entry->last_access_date);
+            cli_line("first cluster 0x%04x.", entry->first_logical_cluster);
             num_loops = entry->first_logical_cluster;
             file_size = entry->file_size;
             addr = 0;
@@ -277,7 +277,7 @@ bool cmd_file_dump(const uint32_t loop)
         int32_t res = fake_fs_read_fat_sector(num_loops, addr, buf, 256);
         if(0 > res)
         {
-            debug_line("ERROR: failed to read content(%ld)", res);
+            cli_line("ERROR: failed to read content(%ld)", res);
             return true;
         }
         if(chunk_size + addr > file_size)
@@ -291,13 +291,13 @@ bool cmd_file_dump(const uint32_t loop)
             if((i != 0) && (i%16 == 0))
             {
                 uint32_t j;
-                debug_line(" %s", ascii_line);
+                cli_line(" %s", ascii_line);
                 for(j = 0; j < 16; j++)
                 {
                     ascii_line[j] = 0;
                 }
             }
-            debug_msg(" %02x", buf[i]);
+            cli_msg(" %02x", buf[i]);
             if((buf[i] > 31) && (buf[i] < 127))
             {
                 ascii_line[i%16] = (char)buf[i];
@@ -317,7 +317,7 @@ bool cmd_file_dump(const uint32_t loop)
                 debug_msg("   ");
                 chunk_size++;
             }
-            debug_line(" %s", ascii_line);
+            cli_line(" %s", ascii_line);
         }
     }
 
@@ -340,14 +340,14 @@ bool cmd_file_ls(const uint32_t loop)
     fat_entry* entry =fake_root_get_entry_of_file_idx(loop);
     if(NULL == entry)
     {
-        debug_line("%ld files.", loop);
+        cli_line("%ld files.", loop);
         return true; // we are done
     }
     else
     {
         if(0 == entry->name[0])
         {
-            debug_line("%ld files.", num_loops);
+            cli_line("%ld files.", num_loops);
             return true; // we are done
         }
         else
@@ -356,15 +356,15 @@ bool cmd_file_ls(const uint32_t loop)
             {
                 if(0xe5 == entry->name[0])
                 {
-                    debug_line("%ld : deleted %c%c%c%c%c%c%c%c.%c%c%c", loop,
-                               '_', entry->name[1], entry->name[2], entry->name[3], entry->name[4], entry->name[5], entry->name[6], entry->name[7],
-                               entry->extension[0], entry->extension[1], entry->extension[2]);
+                    cli_line("%ld : deleted %c%c%c%c%c%c%c%c.%c%c%c", loop,
+                             '_', entry->name[1], entry->name[2], entry->name[3], entry->name[4], entry->name[5], entry->name[6], entry->name[7],
+                             entry->extension[0], entry->extension[1], entry->extension[2]);
                 }
                 else
                 {
-                    debug_line("%ld : %c%c%c%c%c%c%c%c.%c%c%c", loop,
-                               entry->name[0], entry->name[1], entry->name[2], entry->name[3], entry->name[4], entry->name[5], entry->name[6], entry->name[7],
-                               entry->extension[0], entry->extension[1], entry->extension[2]);
+                    cli_line("%ld : %c%c%c%c%c%c%c%c.%c%c%c", loop,
+                             entry->name[0], entry->name[1], entry->name[2], entry->name[3], entry->name[4], entry->name[5], entry->name[6], entry->name[7],
+                             entry->extension[0], entry->extension[1], entry->extension[2]);
                 }
                 num_loops++;
             }

@@ -250,7 +250,7 @@ static void execute(const char* line)
     {
         uint32_t i;
         bool found = false;
-        debug_line("\r\n");
+        cli_line("\r\n");
         if(len > (MAX_LINE_LENGTH -1))
         {
             len = MAX_LINE_LENGTH -1;
@@ -271,13 +271,13 @@ static void execute(const char* line)
         if((false == found) || (i >= NUM_COMMANDS))
         {
             uint8_t* c = (uint8_t*)line;
-            debug_msg("Invalid command (%s) [", line);
+            cli_msg("Invalid command (%s) [", line);
             while(*c != 0)
             {
-                debug_msg(" %02x", *c);
+                cli_msg(" %02x", *c);
                 c++;
             }
-            debug_line(" ] type 'help' for list of available commands");
+            cli_line(" ] type 'help' for list of available commands");
         }
         else
         {
@@ -321,12 +321,12 @@ bool cmd_help(const uint32_t loop)
     // help command
     if(0 == loop)
     {
-        debug_line("nomagic probe cli version %s", VERSION);
-        debug_line("available commands :");
+        cli_line("nomagic probe cli version %s", VERSION);
+        cli_line("available commands :");
     }
     if(loop < NUM_COMMANDS)
     {
-        debug_line("%15s : %s", commands[loop].name, commands[loop].help);
+        cli_line("%15s : %s", commands[loop].name, commands[loop].help);
     }
     else
     {

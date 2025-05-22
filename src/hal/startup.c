@@ -16,6 +16,7 @@
 #include <hal/hw/XOSC.h>
 #include <hal/irq.h>
 #include <hal/target_uart.h>
+#include "probe_api/debug_log.h"
 
 volatile uint32_t ms_since_boot;
 
@@ -60,10 +61,6 @@ extern uint32_t __ro_data_in_flash;
 
 extern const VECTOR_FUNCTION_Type __VECTOR_TABLE_RAM[64] __attribute__((aligned(0x100u)));
 
-
-__attribute__((weak))  void debug_flush(void)
-{
-}
 
 __attribute__((__noreturn__)) void error_state(void)
 {

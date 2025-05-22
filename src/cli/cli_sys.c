@@ -57,14 +57,14 @@ bool cmd_time(const uint32_t loop)
     uint32_t now = time_get_ms();
 
     uint32_t micro_now = TIMER->TIMERAWL;
-    debug_line("micro seconds: %lu µs", micro_now);
+    cli_line("micro seconds: %lu µs", micro_now);
     // as you can see above the micro second time will always be a bit "later"
     // then the time in milliseconds, just because it is read after the
     // millisecond time is read.
-    debug_msg("time since boot up : ");
+    cli_msg("time since boot up : ");
     if(now < 1000)
     {
-        debug_line("%ld ms", now);
+        cli_line("%ld ms", now);
     }
     else
     {
@@ -77,7 +77,7 @@ bool cmd_time(const uint32_t loop)
         // debug_line(STR("seconds : %lu"), seconds);
         if(seconds < 60)
         {
-            debug_line("%lu.%03lu s", seconds, millis);
+            cli_line("%lu.%03lu s", seconds, millis);
         }
         else
         {
@@ -90,7 +90,7 @@ bool cmd_time(const uint32_t loop)
             // debug_line(STR("minutes : %lu"), minutes);
             if(minutes < 60)
             {
-                debug_line("%lu:%02lu.%03lu mm:ss",minutes, seconds, millis);
+                cli_line("%lu:%02lu.%03lu mm:ss",minutes, seconds, millis);
             }
             else
             {
@@ -100,7 +100,7 @@ bool cmd_time(const uint32_t loop)
                 // minutes = minutes % 60;
                 // debug_line(STR("minutes : %u"), minutes);
                 // hours = now / 60;
-                debug_line("%lu:%02lu:%02lu.%03lu hh:mm:ss", hours, minutes, seconds, millis);
+                cli_line("%lu:%02lu:%02lu.%03lu hh:mm:ss", hours, minutes, seconds, millis);
             }
         }
     }
@@ -114,17 +114,17 @@ bool cmd_parameter_raw(const uint32_t loop)
     uint8_t* c = cli_get_parameter(i);
     while(c != NULL)
     {
-        debug_msg("Parameter %ld :", i);
+        cli_msg("Parameter %ld :", i);
         while(*c != 0)
         {
-            debug_msg(" %02x", *c);
+            cli_msg(" %02x", *c);
             c++;
         }
-        debug_msg("\r\n");
+        cli_msg("\r\n");
         i++;
         c = cli_get_parameter(i);
     }
-    debug_line("\r\nDone!");
+    cli_line("\r\nDone!");
     return true;  // we are done
 }
 
@@ -149,39 +149,39 @@ bool cmd_hil_test(const uint32_t loop)
     a = 40;
     b = 5;
     c = a%b;
-    debug_line("40 mod 5 = %ld", c);
+    cli_line("40 mod 5 = %ld", c);
     a = 0;
     b = 512;
     c = a%b;
-    debug_line("0 mod 512 = %ld", c);
+    cli_line("0 mod 512 = %ld", c);
     a = 512;
     b = 512;
     c = a%b;
-    debug_line("512 mod 512 = %ld", c);
+    cli_line("512 mod 512 = %ld", c);
     a = 1024;
     b = 512;
     c = a%b;
-    debug_line("%ld mod %ld = %ld", a, b, c);
+    cli_line("%ld mod %ld = %ld", a, b, c);
     a = 0;
     b = 1;
     c = a%b;
-    debug_line("%ld mod %ld = %ld", a, b, c);
+    cli_line("%ld mod %ld = %ld", a, b, c);
     a = 0;
     b = 2;
     c = a%b;
-    debug_line("%ld mod %ld = %ld", a, b, c);
+    cli_line("%ld mod %ld = %ld", a, b, c);
     a = 2;
     b = 4;
     c = a%b;
-    debug_line("%ld mod %ld = %ld", a, b, c);
+    cli_line("%ld mod %ld = %ld", a, b, c);
 
     // logic
     a = 0x44;
     b = 0xf;
     c = a&b;
-    debug_line("0x44 & 0xf  = %ld (0x4)", c);
+    cli_line("0x44 & 0xf  = %ld (0x4)", c);
 
-    debug_line("\r\nDone!");
+    cli_line("\r\nDone!");
     return true;  // we are done
 }
 
@@ -189,25 +189,25 @@ static bool startup_report(const uint32_t loop)
 {
     switch(loop)
     {
-    case 0:  debug_line(".code start:            0x%08lx", (uint32_t)&__code_start); break;
-    case 1:  debug_line(".code end:              0x%08lx", (uint32_t)&__code_end); break;
-    case 2:  debug_line(".code start in flash:   0x%08lx", (uint32_t)&__code_in_flash); break;
-    case 3:  debug_line(".code end in flash:     0x%08lx", (uint32_t)(&__code_in_flash + (&__code_end - &__code_start))); break;
+    case 0:  cli_line(".code start:            0x%08lx", (uint32_t)&__code_start); break;
+    case 1:  cli_line(".code end:              0x%08lx", (uint32_t)&__code_end); break;
+    case 2:  cli_line(".code start in flash:   0x%08lx", (uint32_t)&__code_in_flash); break;
+    case 3:  cli_line(".code end in flash:     0x%08lx", (uint32_t)(&__code_in_flash + (&__code_end - &__code_start))); break;
 
-    case 4:  debug_line(".bss start:             0x%08lx", (uint32_t)&__bss_start); break;
-    case 5:  debug_line(".bss end:               0x%08lx", (uint32_t)&__bss_end); break;
+    case 4:  cli_line(".bss start:             0x%08lx", (uint32_t)&__bss_start); break;
+    case 5:  cli_line(".bss end:               0x%08lx", (uint32_t)&__bss_end); break;
 
-    case 6:  debug_line(".data start:            0x%08lx", (uint32_t)&__data_start); break;
-    case 7:  debug_line(".data end:              0x%08lx", (uint32_t)&__data_end); break;
-    case 8: debug_line(".data start in flash:   0x%08lx", (uint32_t)&__data_in_flash); break;
-    case 9: debug_line(".data end in flash:     0x%08lx", (uint32_t)(&__data_in_flash + (&__data_end - &__data_start))); break;
+    case 6:  cli_line(".data start:            0x%08lx", (uint32_t)&__data_start); break;
+    case 7:  cli_line(".data end:              0x%08lx", (uint32_t)&__data_end); break;
+    case 8:  cli_line(".data start in flash:   0x%08lx", (uint32_t)&__data_in_flash); break;
+    case 9:  cli_line(".data end in flash:     0x%08lx", (uint32_t)(&__data_in_flash + (&__data_end - &__data_start))); break;
 
-    case 10: debug_line(".rodata start:          0x%08lx", (uint32_t)&__ro_data_start); break;
-    case 11: debug_line(".rodata end:            0x%08lx", (uint32_t)&__ro_data_end); break;
-    case 12: debug_line(".rodata start in flash: 0x%08lx", (uint32_t)&__ro_data_in_flash); break;
-    case 13: debug_line(".rodata end in flash:   0x%08lx", (uint32_t)(&__ro_data_in_flash + (&__ro_data_end - &__ro_data_start))); break;
+    case 10: cli_line(".rodata start:          0x%08lx", (uint32_t)&__ro_data_start); break;
+    case 11: cli_line(".rodata end:            0x%08lx", (uint32_t)&__ro_data_end); break;
+    case 12: cli_line(".rodata start in flash: 0x%08lx", (uint32_t)&__ro_data_in_flash); break;
+    case 13: cli_line(".rodata end in flash:   0x%08lx", (uint32_t)(&__ro_data_in_flash + (&__ro_data_end - &__ro_data_start))); break;
 
-    case 14: debug_line("file system start:      0x%08lx", file_system_start); break;
+    case 14: cli_line("file system start:      0x%08lx", file_system_start); break;
     default: return true;
     }
     return false;
@@ -217,29 +217,29 @@ bool cmd_info_overview(const uint32_t loop)
 {
     switch(loop)
     {
-        case 0: debug_line("choose the information to show:"); break;
-        case 1: debug_line("1: Startup"); break;
-        case 2: debug_line("2: Watchdog"); break;
+        case 0: cli_line("choose the information to show:"); break;
+        case 1: cli_line("1: Startup"); break;
+        case 2: cli_line("2: Watchdog"); break;
 #ifdef BOOT_ROM_ENABLED
-        case 3: debug_line("3: boot ROM"); break;
+        case 3: cli_line("3: boot ROM"); break;
 #else
         case 3: break;
 #endif
-        case 4: debug_line("4: QSPI"); break;
+        case 4: cli_line("4: QSPI"); break;
 #ifdef FEAT_USB_MSC
-        case 5: debug_line("5: file system"); break;
+        case 5: cli_line("5: file system"); break;
 #else
         case 5: break;
 #endif
-        case 6: debug_line("6: SWD"); break;
-        case 7: debug_line("7: USB"); break;
+        case 6: cli_line("6: SWD"); break;
+        case 7: cli_line("7: USB"); break;
 #ifdef FEAT_GDB_SERVER
-        case 8: debug_line("8: gdb-server"); break;
+        case 8: cli_line("8: gdb-server"); break;
 #else
         case 8: break;
 #endif
-        case 9: debug_line("9: target UART"); break;
-        default: debug_line("Done"); return true;  // we are done
+        case 9: cli_line("9: target UART"); break;
+        default: cli_line("Done"); return true;  // we are done
     }
     return false;
 }
@@ -262,25 +262,25 @@ bool cmd_info(const uint32_t loop)
 #ifdef BOOT_ROM_ENABLED
         case 3: return boot_rom_report(loop);
 #else
-        case 3: debug_line("Boot ROM not used !"); return true;
+        case 3: cli_line("Boot ROM not used !"); return true;
 #endif
         case 4: return flash_report(loop);
 #ifdef FEAT_USB_MSC
         case 5: return file_system_report(loop);
 #else
-        case 5: debug_line("no file system! target = fixed single"); return true;
+        case 5: cli_line("no file system! target = fixed single"); return true;
 #endif
         case 6: return swd_info(loop);
         case 7: return cmd_usb_info(loop);
 #ifdef FEAT_GDB_SERVER
         case 8: return gdbs_info(loop);
 #else
-        case 8: debug_line("gdb server not active !"); return true;
+        case 8: cli_line("gdb server not active !"); return true;
 #endif
         case 9: return target_handler_cmd_info(loop);
 
         default:
-            debug_line("ERROR: invalid information selector(%ld) !", which_info);
+            cli_line("ERROR: invalid information selector(%ld) !", which_info);
             return true;
     }
     return false;
