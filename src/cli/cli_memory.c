@@ -314,7 +314,7 @@ bool cmd_file_dump(const uint32_t loop)
             // -> fill it up
             while(0 != chunk_size%16)
             {
-                debug_msg("   ");
+                cli_msg("   ");
                 chunk_size++;
             }
             cli_line(" %s", ascii_line);

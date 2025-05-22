@@ -124,51 +124,51 @@ bool swd_info(uint32_t which)
     {
     case 0: if(true == state.is_connected)
             {
-                debug_line("swd:                  connected");
+                cli_line("swd:                  connected");
             }
             else
             {
-                debug_line("swd: not connected");
+                cli_line("swd: not connected");
                 done = true;  // do not print other data as it can not be valid
             }
             break;
 
     case 1: if(true == state.is_minimal_debug_port)
             {
-                debug_line("debug port:           minimal");
+                cli_line("debug port:           minimal");
             }
             else
             {
-                debug_line("debug port:           normal");
+                cli_line("debug port:           normal");
             }
             break;
 
-    case  2: debug_line("debug port version    %ld", state.dp_version); break;
-    case  3: debug_line("DPIDR                 0x%08lx", state.reg_DPIDR); break;
-    case  4: debug_line("SELECT                0x%08lx", state.reg_SELECT); break;
-    case  5: debug_line("CTRL/STAT             0x%08lx", state.reg_CTRL_STAT); break;
-    case  6: debug_line("APSEL                 %ld", state.mem_ap.ap_sel); break;
-    case  7: debug_line("AP version            %ld", state.mem_ap.version); break;
-    case  8: debug_line("BASE                  0x%08lx", state.mem_ap.reg_BASE); break;
-    case  9: debug_line("CSW                   0x%08lx", state.mem_ap.reg_CSW); break;
+    case  2: cli_line("debug port version    %ld", state.dp_version); break;
+    case  3: cli_line("DPIDR                 0x%08lx", state.reg_DPIDR); break;
+    case  4: cli_line("SELECT                0x%08lx", state.reg_SELECT); break;
+    case  5: cli_line("CTRL/STAT             0x%08lx", state.reg_CTRL_STAT); break;
+    case  6: cli_line("APSEL                 %ld", state.mem_ap.ap_sel); break;
+    case  7: cli_line("AP version            %ld", state.mem_ap.version); break;
+    case  8: cli_line("BASE                  0x%08lx", state.mem_ap.reg_BASE); break;
+    case  9: cli_line("CSW                   0x%08lx", state.mem_ap.reg_CSW); break;
 
     case 10: if(true == state.mem_ap.large_data_support)
             {
-                debug_line("large data support:   enabled");
+                cli_line("large data support:   enabled");
             }
             else
             {
-                debug_line("large data support:   not enabled");
+                cli_line("large data support:   not enabled");
             }
             break;
 
     case 11: if(true == state.mem_ap.long_address_support)
             {
-                debug_line("long address support: enabled");
+                cli_line("long address support: enabled");
             }
             else
             {
-                debug_line("long address support: not enabled");
+                cli_line("long address support: not enabled");
             }
             break;
 
@@ -182,11 +182,11 @@ bool swd_info(uint32_t which)
         Result res = swd_get_result((Result)(which - 11), &read);
         if(ERR_NOT_COMPLETED == res)
         {
-            debug_line("Result %ld : not ready !", which - 11);
+            cli_line("Result %ld : not ready !", which - 11);
         }
         else if(RESULT_OK == res)
         {
-            debug_line("Result %ld : 0x%08lx !", which - 11, read);
+            cli_line("Result %ld : 0x%08lx !", which - 11, read);
         }
     }
     break;

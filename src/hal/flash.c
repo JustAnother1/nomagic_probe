@@ -244,15 +244,15 @@ bool flash_report(uint32_t loop)
     switch(loop)
     {
 #ifdef BOOT_ROM_ENABLED
-    case 0: debug_line("using BOOT ROM functions !"); break;
+    case 0: cli_line("using BOOT ROM functions !"); break;
     case 1:
         if(NULL == flash_funcs)
         {
-            debug_line("ERROR: failed to read BOOT ROM functions !"); break;
+            cli_line("ERROR: failed to read BOOT ROM functions !"); break;
         }
         else
         {
-            debug_line("BOOT ROM functions have been discovered !"); break;
+            cli_line("BOOT ROM functions have been discovered !"); break;
         }
         break;
 #else

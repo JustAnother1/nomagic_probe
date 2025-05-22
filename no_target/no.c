@@ -42,9 +42,9 @@ bool cmd_target_info(uint32_t loop)
 {
     if(0 == loop)
     {
-        debug_line("Target Status");
-        debug_line("=============");
-        debug_line("target: no");
+        cli_line("Target Status");
+        cli_line("=============");
+        cli_line("target: no");
     }
     else
     {

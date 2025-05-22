@@ -49,6 +49,8 @@ extern uint32_t __ro_data_in_flash;
 
 extern uint32_t file_system_start;
 
+uint32_t log_state = 0;
+
 static bool startup_report(const uint32_t loop);
 
 bool cmd_time(const uint32_t loop)
@@ -71,10 +73,6 @@ bool cmd_time(const uint32_t loop)
         uint32_t millis;
         uint32_t seconds;
         div_and_mod(now, 1000, &seconds, &millis);
-        // millis = now % 1000;
-        // debug_line(STR("millis : %u"), millis);
-        // seconds = now / 1000;
-        // debug_line(STR("seconds : %lu"), seconds);
         if(seconds < 60)
         {
             cli_line("%lu.%03lu s", seconds, millis);
@@ -83,11 +81,6 @@ bool cmd_time(const uint32_t loop)
         {
             uint32_t minutes;
             div_and_mod(seconds, 60, &minutes, &seconds);
-            // now = seconds;
-            // seconds = seconds % 60;
-            // debug_line(STR("seconds : %lu"), seconds);
-            // minutes = now / 60;
-            // debug_line(STR("minutes : %lu"), minutes);
             if(minutes < 60)
             {
                 cli_line("%lu:%02lu.%03lu mm:ss",minutes, seconds, millis);
@@ -96,10 +89,6 @@ bool cmd_time(const uint32_t loop)
             {
                 uint32_t hours;
                 div_and_mod(minutes, 60, &hours, &minutes);
-                // now = minutes;
-                // minutes = minutes % 60;
-                // debug_line(STR("minutes : %u"), minutes);
-                // hours = now / 60;
                 cli_line("%lu:%02lu:%02lu.%03lu hh:mm:ss", hours, minutes, seconds, millis);
             }
         }
@@ -286,3 +275,25 @@ bool cmd_info(const uint32_t loop)
     return false;
 }
 
+bool cmd_log(const uint32_t loop)
+{
+    (void) loop;
+    uint8_t* type_str = cli_get_parameter(0);
+    if(0 == strncmp("off", type_str, 3))
+    {
+        // turn logging off
+        log_state = 0;
+        cli_line("Logging is now disabled!");
+    }
+    else if(0 == strncmp("on", type_str, 2))
+    {
+        // turn logging on
+        log_state = 1;
+        cli_line("Logging is now enabled!");
+    }
+    else
+    {
+        cli_line("ERROR: invalid switch %s ! (use : 'on' or 'off')", type_str);
+    }
+    return true;
+}

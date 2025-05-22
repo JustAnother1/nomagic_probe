@@ -423,37 +423,37 @@ bool qspi_detect(uint32_t loop)
         flash_put_cmd_addr(FLASHCMD_MANUFACTURER_DEVICE_ID, 0);
         flash_put_get(NULL, data, 2, 4);
         manual_nCS_deselect();
-        debug_line("Manufacturer      : 0x%02x", data[0]);
-        debug_line("Device            : 0x%02x", data[1]);
+        cli_line("Manufacturer      : 0x%02x", data[0]);
+        cli_line("Device            : 0x%02x", data[1]);
         break;
 
     case 1:
         flash_do_cmd(FLASHCMD_READ_JEDEC_ID, NULL, data, 3);
-        debug_line("JEDEC ID          : 0x%02x %02x %02x", data[0], data[1], data[2]);
-        debug_line("manufacturer      : 0x%02x", data[0]);
-        debug_line("memory type       : 0x%02x", data[1]);
-        debug_line("capacity          : 0x%02x", data[2]);
+        cli_line("JEDEC ID          : 0x%02x %02x %02x", data[0], data[1], data[2]);
+        cli_line("manufacturer      : 0x%02x", data[0]);
+        cli_line("memory type       : 0x%02x", data[1]);
+        cli_line("capacity          : 0x%02x", data[2]);
         break;
 
     case 2:
         flash_do_cmd(FLASHCMD_READ_UNIQUE_ID, NULL, data, 12);
-        debug_line("unique ID         : 0x%02x %02x %02x %02x %02x %02x %02x %02x",
+        cli_line("unique ID         : 0x%02x %02x %02x %02x %02x %02x %02x %02x",
                    data[4], data[5], data[6], data[7], data[8], data[9], data[10], data[11]);
         break;
 
     case 3:
         flash_do_cmd(FLASHCMD_READ_STATUS, NULL, data, 1);
-        debug_line("status register 1 : 0x%02x", data[0]);
+        cli_line("status register 1 : 0x%02x", data[0]);
         break;
 
     case 4:
         flash_do_cmd(FLASHCMD_READ_STATUS_2, NULL, data, 1);
-        debug_line("status register 2 : 0x%02x", data[0]);
+        cli_line("status register 2 : 0x%02x", data[0]);
         break;
 
     case 5:
         flash_do_cmd(FLASHCMD_READ_STATUS_3, NULL, data, 1);
-        debug_line("status register 3 : 0x%02x", data[0]);
+        cli_line("status register 3 : 0x%02x", data[0]);
         break;
 
     // TODO : read SFDP (FLASHCMD_READ_SFDP) and parse data (256 Bytes)

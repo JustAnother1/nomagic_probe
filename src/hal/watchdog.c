@@ -65,11 +65,11 @@ bool watchdog_report(const uint32_t loop)
         i = WATCHDOG->REASON;
         switch(i)
         {
-            case 0:  debug_line("watch dog : normal reset"); break;
-            case 1:  debug_line("watch dog : timer reset"); break;
-            case 2:  debug_line("watch dog : forced reset"); break;
-            case 3:  debug_line("watch dog : timer + forced reset"); break;
-            default: debug_line("watch dog : undocumented reset (%ld)", i); break;
+            case 0:  cli_line("watch dog : normal reset"); break;
+            case 1:  cli_line("watch dog : timer reset"); break;
+            case 2:  cli_line("watch dog : forced reset"); break;
+            case 3:  cli_line("watch dog : timer + forced reset"); break;
+            default: cli_line("watch dog : undocumented reset (%ld)", i); break;
         }
         break;
 
@@ -77,7 +77,7 @@ bool watchdog_report(const uint32_t loop)
         i = WATCHDOG->SCRATCH0;
         if(0 != i)
         {
-            debug_line("data in scratch0 : 0x%08lx", i);
+            cli_line("data in scratch0 : 0x%08lx", i);
         }
         break;
 
@@ -85,7 +85,7 @@ bool watchdog_report(const uint32_t loop)
         i = WATCHDOG->SCRATCH1;
         if(0 != i)
         {
-            debug_line("data in scratch1 : 0x%08lx", i);
+            cli_line("data in scratch1 : 0x%08lx", i);
         }
         break;
 
@@ -93,7 +93,7 @@ bool watchdog_report(const uint32_t loop)
         i = WATCHDOG->SCRATCH2;
         if(0 != i)
         {
-            debug_line("data in scratch2 : 0x%08lx", i);
+            cli_line("data in scratch2 : 0x%08lx", i);
         }
         break;
 
@@ -101,7 +101,7 @@ bool watchdog_report(const uint32_t loop)
         i = WATCHDOG->SCRATCH3;
         if(0 != i)
         {
-            debug_line("data in scratch3 : 0x%08lx", i);
+            cli_line("data in scratch3 : 0x%08lx", i);
         }
         break;
 
@@ -109,7 +109,7 @@ bool watchdog_report(const uint32_t loop)
         i = WATCHDOG->SCRATCH4;
         if(0 != i)
         {
-            debug_line("data in scratch4 : 0x%08lx", i);
+            cli_line("data in scratch4 : 0x%08lx", i);
         }
         break;
 
@@ -117,8 +117,8 @@ bool watchdog_report(const uint32_t loop)
         i = WATCHDOG->SCRATCH5;
         if(0 != i)
         {
-            // debug_line("data in scratch5 : 0x%08lx", i);
-            debug_line("Core 1 was in section : 0x%08lx", i);
+            // cli_line("data in scratch5 : 0x%08lx", i);
+            cli_line("Core 1 was in section : 0x%08lx", i);
             WATCHDOG->SCRATCH5 = 0;
         }
         break;
@@ -127,8 +127,8 @@ bool watchdog_report(const uint32_t loop)
         i = WATCHDOG->SCRATCH6;
         if(0 != i)
         {
-            // debug_line("data in scratch6 : 0x%08lx", i);
-            debug_line("Core 0 was in section : 0x%08lx", i);
+            // cli_line("data in scratch6 : 0x%08lx", i);
+            cli_line("Core 0 was in section : 0x%08lx", i);
             WATCHDOG->SCRATCH6 = 0;
         }
         break;
@@ -137,8 +137,8 @@ bool watchdog_report(const uint32_t loop)
         i = WATCHDOG->SCRATCH7;
         if(0 != i)
         {
-            // debug_line("data in scratch7 : 0x%08lx", i);
-            debug_line("reported reset reason : 0x%08lx", i);
+            // cli_line("data in scratch7 : 0x%08lx", i);
+            cli_line("reported reset reason : 0x%08lx", i);
             WATCHDOG->SCRATCH7 = 0;
         }
         break;
@@ -147,15 +147,15 @@ bool watchdog_report(const uint32_t loop)
         i = VREG_AND_CHIP_RESET->CHIP_RESET;
         if(0 != (i & 0x100000))
         {
-            debug_line("chip reset: debugger reset");
+            cli_line("chip reset: debugger reset");
         }
         if(0 != (i & 0x1000))
         {
-            debug_line("chip reset: RUN pin reset");
+            cli_line("chip reset: RUN pin reset");
         }
         if(0 != (i & 0x100))
         {
-            debug_line("chip reset: power on or brown out reset");
+            cli_line("chip reset: power on or brown out reset");
         }
         break;
 

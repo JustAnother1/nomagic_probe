@@ -20,6 +20,7 @@
 bool cmd_die(const uint32_t loop);
 bool cmd_hil_test(const uint32_t loop);
 bool cmd_info(const uint32_t loop);
+bool cmd_log(const uint32_t loop);
 bool cmd_parameter_raw(const uint32_t loop);
 bool cmd_time(const uint32_t loop);
 

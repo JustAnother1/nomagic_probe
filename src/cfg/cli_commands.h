@@ -37,6 +37,7 @@ cmd_typ commands[] = {
         {"hil",         "hardware in the loop tests", cmd_hil_test},
         {"die",         "test the watch dog", cmd_die},
         {"info",        "low level firmware information", cmd_info},
+        {"log",         "control log messages", cmd_log},
         {"fl_write",    "write to flash memory <address> <length>", cmd_flash_memory_write},
         {"fl_erase",    "erase one flash memory sector <index>", cmd_flash_memory_erase},
 #ifdef BOOT_ROM_ENABLED

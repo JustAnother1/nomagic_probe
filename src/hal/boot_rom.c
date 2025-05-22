@@ -123,28 +123,28 @@ bool boot_rom_report(uint32_t loop)
         uint32_t val = *(uint32_t*)0x10;
 #pragma GCC diagnostic pop
         val = (val >> 24) & 0xff;
-        debug_line("boot ROM version : %lu", val);
+        cli_line("boot ROM version : %lu", val);
     }
         break;
 
     case 1:
         if(true == valid)
         {
-            debug_line("boot ROM is valid : true");
+            cli_line("boot ROM is valid : true");
         }
         else
         {
-            debug_line("boot ROM is valid : false");
+            cli_line("boot ROM is valid : false");
         }
         break;
 
-    case 2: debug_line("address of function lookup function :           0x%08lx", (uint32_t)rom_table_lookup); break;
-    case 3: debug_line("address of function _connect_internal_flash() : 0x%08lx", (uint32_t)flash_funcs._connect_internal_flash); break;
-    case 4: debug_line("address of function _flash_exit_xip() :         0x%08lx", (uint32_t)flash_funcs._flash_exit_xip); break;
-    case 5: debug_line("address of function _flash_range_erase() :      0x%08lx", (uint32_t)flash_funcs._flash_range_erase); break;
-    case 6: debug_line("address of function flash_range_program() :     0x%08lx", (uint32_t)flash_funcs.flash_range_program); break;
-    case 7: debug_line("address of function _flash_flush_cache() :      0x%08lx", (uint32_t)flash_funcs._flash_flush_cache); break;
-    case 8: debug_line("address of function _flash_enter_cmd_xip() :    0x%08lx", (uint32_t)flash_funcs._flash_enter_cmd_xip); break;
+    case 2: cli_line("address of function lookup function :           0x%08lx", (uint32_t)rom_table_lookup); break;
+    case 3: cli_line("address of function _connect_internal_flash() : 0x%08lx", (uint32_t)flash_funcs._connect_internal_flash); break;
+    case 4: cli_line("address of function _flash_exit_xip() :         0x%08lx", (uint32_t)flash_funcs._flash_exit_xip); break;
+    case 5: cli_line("address of function _flash_range_erase() :      0x%08lx", (uint32_t)flash_funcs._flash_range_erase); break;
+    case 6: cli_line("address of function flash_range_program() :     0x%08lx", (uint32_t)flash_funcs.flash_range_program); break;
+    case 7: cli_line("address of function _flash_flush_cache() :      0x%08lx", (uint32_t)flash_funcs._flash_flush_cache); break;
+    case 8: cli_line("address of function _flash_enter_cmd_xip() :    0x%08lx", (uint32_t)flash_funcs._flash_enter_cmd_xip); break;
     default: return true;
     }
     return false;

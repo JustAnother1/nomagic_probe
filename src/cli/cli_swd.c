@@ -82,7 +82,7 @@ bool cmd_swd_read_memory(const uint32_t loop)
                     cli_msg(" %02lx", data & 0xff);
                     data = data>>8;
                 }
-                // debug_line("addr: 0x%08lx, read : 0x%08lx", addr, data);
+                // cli_line("addr: 0x%08lx, read : 0x%08lx", addr, data);
                 if(len < 4)
                 {
                     // we are done

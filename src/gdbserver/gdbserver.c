@@ -309,22 +309,22 @@ bool gdbs_info(const uint32_t loop)
     case 0:
         if(true == busy_processing_cmd)
         {
-            debug_line("gdb-server is busy !");
+            cli_line("gdb-server is busy !");
         }
         else
         {
-            debug_line("gdb-server is not busy.");
+            cli_line("gdb-server is not busy.");
         }
         break;
 
     case 1:
         if(true == connected)
         {
-            debug_line("gdb-server is connected to gdb.");
+            cli_line("gdb-server is connected to gdb.");
         }
         else
         {
-            debug_line("gdb-server is not connected.");
+            cli_line("gdb-server is not connected.");
         }
         break;
 
@@ -332,20 +332,20 @@ bool gdbs_info(const uint32_t loop)
         switch(state)
         {
         default:
-        case UNKNOWN:       debug_line("state is unknown.");        break;
-        case IN_PACKET:     debug_line("state is 'in packet'.");    break;
-        case FOUND_END:     debug_line("state is 'found end'.");    break;
-        case CHECKSUM_HIGH: debug_line("state is checksum(high)."); break;
-        case CHECKSUM_LOW:  debug_line("state is checksum(low).");  break;
+        case UNKNOWN:       cli_line("state is unknown.");        break;
+        case IN_PACKET:     cli_line("state is 'in packet'.");    break;
+        case FOUND_END:     cli_line("state is 'found end'.");    break;
+        case CHECKSUM_HIGH: cli_line("state is checksum(high)."); break;
+        case CHECKSUM_LOW:  cli_line("state is checksum(low).");  break;
         }
         break;
 
     case 3:
-        debug_line("line_pos : %ld", line_pos);
+        cli_line("line_pos : %ld", line_pos);
         break;
 
     case 4:
-        debug_line("reply_length : %ld", reply_length);
+        cli_line("reply_length : %ld", reply_length);
         break;
 
     case 5:
@@ -356,12 +356,12 @@ bool gdbs_info(const uint32_t loop)
         {
             max = reply_length;
         }
-        debug_msg("reply_buffer[");
+        cli_msg("reply_buffer[");
         for(i = 0; i < max; i++)
         {
-            debug_msg(" %02x", reply_buffer[i]);
+            cli_msg(" %02x", reply_buffer[i]);
         }
-        debug_line(" ]");
+        cli_line(" ]");
     }
         break;
 
@@ -373,19 +373,19 @@ bool gdbs_info(const uint32_t loop)
         {
             max = line_pos;
         }
-        debug_msg("line_buffer[");
+        cli_msg("line_buffer[");
         for(i = 0; i < max; i++)
         {
             if((line_buffer[i] > 31) && (line_buffer[i] < 127))
             {
-                debug_msg(" %2c", line_buffer[i]);
+                cli_msg(" %2c", line_buffer[i]);
             }
             else
             {
-                debug_msg(" %02x", line_buffer[i]);
+                cli_msg(" %02x", line_buffer[i]);
             }
         }
-        debug_line(" ]");
+        cli_line(" ]");
     }
         break;
 

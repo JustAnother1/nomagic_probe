@@ -63,12 +63,12 @@ void cli_welcome(void)
 {
     uint32_t loop = 0;
     bool res = false;
-    debug_msg(WELCOME);
+    cli_msg(WELCOME);
     do{
         res = watchdog_report(loop);
         loop++;
     } while (false == res);
-    debug_msg(PROMPT);
+    cli_msg(PROMPT);
 }
 
 void cli_tick(void)
@@ -101,7 +101,7 @@ void cli_tick(void)
         found_end = false;
         still_executing = false;
         cur_func = NULL;
-        debug_msg(PROMPT);
+        cli_msg(PROMPT);
     }
 
     // now we can check if new data arrived
@@ -144,7 +144,7 @@ void cli_tick(void)
             }
             else
             {
-                debug_msg(ERROR_LINE_TOO_LONG);
+                cli_msg(ERROR_LINE_TOO_LONG);
                 line_pos = 0;
             }
         }
@@ -313,7 +313,7 @@ static void execute(const char* line)
     found_end = false;
     still_executing = false;
     cur_func = NULL;
-    debug_msg(PROMPT);
+    cli_msg(PROMPT);
 }
 
 bool cmd_help(const uint32_t loop)

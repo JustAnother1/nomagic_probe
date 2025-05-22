@@ -64,12 +64,12 @@ bool target_handler_cmd_info(const uint32_t loop)
 {
     switch(loop)
     {
-        case 0: debug_line("Target UART status:"); break;
-        case 1: debug_line("received %ld Bytes from target", to_pc); break;
-        case 2: debug_line("send %ld Bytes to the target", from_pc); break;
-        case 3: debug_line("baudrate: %ld bit/s", baudrate); break;
-        case 4: debug_line("baudrate register : %ld ", UART1->UARTIBRD); break;
-        case 5: debug_line("fraction register : %ld ", UART1->UARTFBRD); break;
+        case 0: cli_line("Target UART status:"); break;
+        case 1: cli_line("received %ld Bytes from target", to_pc); break;
+        case 2: cli_line("send %ld Bytes to the target", from_pc); break;
+        case 3: cli_line("baudrate: %ld bit/s", baudrate); break;
+        case 4: cli_line("baudrate register : %ld ", UART1->UARTIBRD); break;
+        case 5: cli_line("fraction register : %ld ", UART1->UARTFBRD); break;
         default:
             return true;  // we are done
     }

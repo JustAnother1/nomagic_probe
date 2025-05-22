@@ -158,17 +158,17 @@ bool common_action_info(uint32_t loop)
 {
     if(0 == loop)
     {
-        debug_line("available actions:");
+        cli_line("available actions:");
         return false;
     }
     if(loop > NUM_ACTIONS)
     {
-        debug_line("Done!");
+        cli_line("Done!");
         return true;
     }
     else
     {
-        debug_line("%3ld : %20s", loop-1, action_names[loop -1]);
+        cli_line("%3ld : %20s", loop-1, action_names[loop -1]);
         return false;
     }
 }
@@ -180,31 +180,31 @@ bool common_cmd_target_info(uint32_t loop)
         // walk state
         if(NULL == cur_action)
         {
-            debug_line("SWD state: idle");
+            cli_line("SWD state: idle");
             return true; // true == Done; false = call me again
         }
         else
         {
-            debug_line("SWD state: active");
+            cli_line("SWD state: active");
         }
     }
     else if(1 == loop)
     {
-        debug_line("action type: %d", action_queue[action_read].action);
-        debug_line("cur_phase: %ld", action_queue[action_read].cur_phase);
-        debug_line("can run : %d", action_queue[action_read].can_run);
-        debug_line("action_write : %ld", action_write);
-        debug_line("action_read : %ld", action_read);
+        cli_line("action type: %d", action_queue[action_read].action);
+        cli_line("cur_phase: %ld", action_queue[action_read].cur_phase);
+        cli_line("can run : %d", action_queue[action_read].can_run);
+        cli_line("action_write : %ld", action_write);
+        cli_line("action_read : %ld", action_read);
     }
     else
     {
         if(loop -2 < ACTION_QUEUE_LENGTH)
         {
-            debug_line("action_queue[%ld].action = %d", loop -2, action_queue[loop-2].action);
-            debug_line(".cur_phase = %ld, .intern[0] = %ld, .parameter[0] = %ld",
-                       action_queue[loop-2].cur_phase,
-                       action_queue[loop-2].intern[0],
-                       action_queue[loop-2].parameter[0]);
+            cli_line("action_queue[%ld].action = %d", loop -2, action_queue[loop-2].action);
+            cli_line(".cur_phase = %ld, .intern[0] = %ld, .parameter[0] = %ld",
+                     action_queue[loop-2].cur_phase,
+                     action_queue[loop-2].intern[0],
+                     action_queue[loop-2].parameter[0]);
         }
         else
         {
@@ -219,8 +219,8 @@ bool cmd_target_trace(uint32_t loop)
 {
     if(0 == loop)
     {
-        debug_line("trace end : %ld", trace_end);
-        debug_line("num, action(newest last), phase,   result");
+        cli_line("trace end : %ld", trace_end);
+        cli_line("num, action(newest last), phase,   result");
     }
     else
     {
@@ -240,20 +240,20 @@ bool cmd_target_trace(uint32_t loop)
         if(0 != trace_buf[idx].action)
         {
             // print entry
-            debug_line("%3ld, %20s,     %ld,   %ld",
-                       idx,
-                       action_names[trace_buf[idx].action -1], // 0 is a valid action
-                       trace_buf[idx].phase_in,
-                       trace_buf[idx].result);
+            cli_line("%3ld, %20s,     %ld,   %ld",
+                     idx,
+                     action_names[trace_buf[idx].action -1], // 0 is a valid action
+                     trace_buf[idx].phase_in,
+                     trace_buf[idx].result);
         }
         else
         {
             // unused entries (not yet wrapped around)
-            debug_line("%3ld, %20s,     %ld,   %ld",
-                       idx,
-                       "not used",
-                       trace_buf[idx].phase_in,
-                       trace_buf[idx].result);
+            cli_line("%3ld, %20s,     %ld,   %ld",
+                     idx,
+                     "not used",
+                     trace_buf[idx].phase_in,
+                     trace_buf[idx].result);
         }
     }
     return false; // true == Done; false = call me again

@@ -122,29 +122,29 @@ bool file_system_report(const uint32_t loop)
 {
     if(0 == loop)
     {
-        debug_line("file system starts at address 0x%08lx (sector %ld)", file_system_start, sector_offset);
+        cli_line("file system starts at address 0x%08lx (sector %ld)", file_system_start, sector_offset);
     }
     else if(loop < (FLASH_MAX_SECTORS + 1))
     {
         uint32_t i = loop -1;
         if((i > 0) && (i %10 == 0))
         {
-            debug_line("|");
+            cli_line("|");
         }
         switch(sector_map[i])
         {
-            default:                       debug_msg("| %4d", sector_map[i]); break;
-            case SECTOR_TYPE_EMPTY:        debug_msg("|empty"); break;
-            case SECTOR_TYPE_UNKNOWN_USED: debug_msg("| used"); break;
-            case SECTOR_TYPE_UNAVAILABLE:  debug_msg("|     "); break;
+            default:                       cli_msg("| %4d", sector_map[i]); break;
+            case SECTOR_TYPE_EMPTY:        cli_msg("|empty"); break;
+            case SECTOR_TYPE_UNKNOWN_USED: cli_msg("| used"); break;
+            case SECTOR_TYPE_UNAVAILABLE:  cli_msg("|     "); break;
         }
     }
     else
     {
-        debug_line("|");
-        debug_line("super block in sector: %ld", super_sector);
-        debug_line("free sectors:          %ld", num_empty_sectors);
-        debug_line("last sector:           %ld", last_sector);
+        cli_line("|");
+        cli_line("super block in sector: %ld", super_sector);
+        cli_line("free sectors:          %ld", num_empty_sectors);
+        cli_line("last sector:           %ld", last_sector);
         return true;
     }
     return false;
