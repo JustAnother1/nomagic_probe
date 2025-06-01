@@ -90,20 +90,20 @@ bool dhcp_server_init(void)
     udp_server_handle = udp_new();
     if(NULL == udp_server_handle)
     {
-        debug_line("ERROR: could not create DHCP server UDP handle (no memory?) !");
+        debug_error("ERROR: could not create DHCP server UDP handle (no memory?) !");
         return false;
     }
 
     if(ERR_OK != udp_bind(udp_server_handle, IP_ADDR_ANY, DHCP_SERVER_PORT))
     {
-        debug_line("ERROR: could not bind DHCP server UDP handle !");
+        debug_error("ERROR: could not bind DHCP server UDP handle !");
         return false;
     }
 
     udp_client_handle = udp_new();
     if(NULL == udp_client_handle)
     {
-        debug_line("ERROR: could not create DHCP client UDP handle (no memory?) !");
+        debug_error("ERROR: could not create DHCP client UDP handle (no memory?) !");
         return false;
     }
 
@@ -112,7 +112,7 @@ bool dhcp_server_init(void)
     reply = pbuf_alloc(PBUF_RAW, sizeof(dhcp_packet_typ) + REPLY_OPTIONS_LENGTH, PBUF_RAM);
     if(NULL == reply)
     {
-        debug_line("ERROR: could not allocate DHCP reply packet (no memory?) !");
+        debug_error("ERROR: could not allocate DHCP reply packet (no memory?) !");
         return false;
     }
     // probe-IP from network configuration
@@ -229,13 +229,13 @@ static void recieve_cb(void *arg, struct udp_pcb *pcb, struct pbuf *p, const ip_
     // send reply
     if(ERR_OK != udp_connect(udp_client_handle, &(udp_client_handle->remote_ip), DHCP_CLIENT_PORT))
     {
-        debug_line("ERROR: could not connect to DHCP client !");
+        debug_error("ERROR: could not connect to DHCP client !");
         udp_disconnect(udp_client_handle);
         return;
     }
     if(ERR_OK != udp_send(udp_client_handle, reply))
     {
-        debug_line("ERROR: could not reply to DHCP client !");
+        debug_error("ERROR: could not reply to DHCP client !");
     }
     udp_disconnect(udp_client_handle);
 }

@@ -535,7 +535,7 @@ static void write_super_sector(const uint32_t sector_number)
         if(FLASH_BLOCKS_PER_SECTOR == block)
         {
             // this may not happen !
-            debug_line("FS: sectorMap does not fit the super block ! Check your configuration!");
+            debug_error("FS: sectorMap does not fit the super block ! Check your configuration!");
             return;
         }
         if(len > FLASH_BLOCK_SIZE)

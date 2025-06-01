@@ -58,7 +58,7 @@ Result target_execute(progs_typ prog)
         res = RESULT_OK; // TODO
         // write Start address of code to Register15 (PC)
         // write parameters to Registers first parameter goes into R0, second in R1,...
-        // switch CPu from halt to run
+        // switch CPU from halt to run
         // start timeout
         return res;
 

@@ -76,7 +76,7 @@ void flash_init(void)
     }
     else
     {
-        debug_line("Flash: get boot ROM functions failed !");
+        debug_error("Flash: get boot ROM functions failed !");
     }
 #else
     qspi_init();
@@ -105,20 +105,20 @@ void flash_write_block(uint32_t start_address, uint8_t* data, uint32_t length)
         }
         else
         {
-            debug_line("Flash: parameters invalid !");
+            debug_error("Flash: parameters invalid !");
             if(0 != (start_address && 0xff))
             {
-                debug_line("Flash: start address(0x%08lx)[0x%08x] must be aligned to 256 !", start_address, (start_address && 0xff));
+                debug_error("Flash: start address(0x%08lx)[0x%08x] must be aligned to 256 !", start_address, (start_address && 0xff));
             }
             if(0 != (length & 0xff))
             {
-                debug_line("Flash: length must be multiple of 256 !");
+                debug_error("Flash: length must be multiple of 256 !");
             }
         }
     }
     else
     {
-        debug_line("Flash: get boot ROM functions failed !");
+        debug_error("Flash: get boot ROM functions failed !");
     }
 #else
 
@@ -134,7 +134,7 @@ void flash_write_block(uint32_t start_address, uint8_t* data, uint32_t length)
     }
     else
     {
-        debug_line("Flash: start address(0x%08lx)[0x%08x] must be aligned to 256 !", start_address, (start_address && 0xff));
+        debug_error("Flash: start address(0x%08lx)[0x%08x] must be aligned to 256 !", start_address, (start_address && 0xff));
     }
 
     /*  TODO
@@ -187,7 +187,7 @@ void flash_erase_page(uint32_t number)
     }
     else
     {
-        debug_line("Flash: get boot ROM functions failed !");
+        debug_error("Flash: get boot ROM functions failed !");
     }
 #else
     /// erase (set to 0xff) a sector (4096 Bytes)
@@ -204,7 +204,7 @@ void flash_read(uint32_t start_address, uint8_t* data, uint32_t length)
 #ifdef BOOT_ROM_ENABLED
     if(NULL == flash_funcs)
     {
-        debug_line("Flash: get boot ROM functions failed !");
+        debug_error("Flash: get boot ROM functions failed !");
     }
     // XIP ON
     while(0 != (1& XIP_SSI->SR))

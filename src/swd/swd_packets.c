@@ -42,7 +42,7 @@ Result swd_packet_line_reset(void)
 {
     if(false == swd_packet_bits_is_operational())
     {
-        debug_line("swd_packet_line_reset(): not operational !");
+        debug_error("swd_packet_line_reset(): not operational !");
         return ERR_WRONG_STATE;
     }
     // else:
@@ -63,7 +63,7 @@ Result swd_packet_disconnect(void)
 {
     if(false == swd_packet_bits_is_operational())
     {
-        debug_line("swd_packet_disconnect(): not operational !");
+        debug_error("swd_packet_disconnect(): not operational !");
         return ERR_WRONG_STATE;
     }
     // else:
@@ -90,7 +90,7 @@ Result swd_packet_write(uint32_t APnotDP, uint32_t address, uint32_t data)
 {
     if(false == swd_packet_bits_is_operational())
     {
-        debug_line("swd_packet_write(): not operational !");
+        debug_error("swd_packet_write(): not operational !");
         return ERR_WRONG_STATE;
     }
     // else:
@@ -114,7 +114,7 @@ Result swd_packet_read(uint32_t APnotDP, uint32_t address)
 {
     if(false == swd_packet_bits_is_operational())
     {
-        debug_line("swd_packet_read(): not operational !");
+        debug_error("swd_packet_read(): not operational !");
         return ERR_WRONG_STATE;
     }
     // else:
@@ -140,7 +140,7 @@ Result jtag_to_dormant_state_sequence(void)
 {
     if(false == swd_packet_bits_is_operational())
     {
-        debug_line("jtag_to_dormant_state_sequence(): not operational !");
+        debug_error("jtag_to_dormant_state_sequence(): not operational !");
         return ERR_WRONG_STATE;
     }
     // else:
@@ -161,7 +161,7 @@ Result leave_dormant_state_to_swd_sequence(void)
 {
     if(false == swd_packet_bits_is_operational())
     {
-        debug_line("leave_dormant_state_to_swd_sequence(): not operational !");
+        debug_error("leave_dormant_state_to_swd_sequence(): not operational !");
         return ERR_WRONG_STATE;
     }
     // else:
@@ -182,7 +182,7 @@ Result swd_to_dormant_state_sequence(void)
 {
     if(false == swd_packet_bits_is_operational())
     {
-        debug_line("swd_to_dormant_state_sequence(): not operational !");
+        debug_error("swd_to_dormant_state_sequence(): not operational !");
         return ERR_WRONG_STATE;
     }
     // else:

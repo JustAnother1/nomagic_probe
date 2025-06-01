@@ -43,6 +43,7 @@ static void send_stopped_reply(void);
 
 #endif
 
+// SWD_CONNECT
 Result handle_target_connect(action_data_typ* const action)
 {
     Result res;
@@ -184,6 +185,7 @@ Result handle_target_connect(action_data_typ* const action)
     return ERR_WRONG_STATE;
 }
 
+// SWD_CLOSE_CONNECTION
 Result handle_target_close_connection(action_data_typ* const action)
 {
     if(NULL == action)
@@ -229,7 +231,7 @@ Result handle_target_close_connection(action_data_typ* const action)
             }
             else
             {
-                debug_line("target: SWD disconnect failed ! (Res: %ld)", data);
+                debug_error("target: SWD disconnect failed ! (Res: %ld)", data);
                 return ERR_WRONG_VALUE;
             }
         }
@@ -248,7 +250,7 @@ Result handle_target_close_connection(action_data_typ* const action)
             else
             {
                 // some error
-                debug_line("target: SWD disconnect failed ! (%ld)", res);
+                debug_error("target: SWD disconnect failed ! (%ld)", res);
                 return res;
             }
         }
@@ -258,6 +260,7 @@ Result handle_target_close_connection(action_data_typ* const action)
 
 #ifdef FEAT_GDB_SERVER
 
+// GDB_CMD_G
 Result handle_target_reply_g(action_data_typ* const action)
 {
     // ‘g’
@@ -361,7 +364,7 @@ Result handle_target_reply_g(action_data_typ* const action)
             }
             else
             {
-                debug_line("ERROR: gdb 'g' : too many retries !");
+                debug_error("ERROR: gdb 'g' : too many retries !");
                 reply_packet_send();
                 return ERR_TIMEOUT;
             }
@@ -482,7 +485,7 @@ Result handle_target_reply_write_g(action_data_typ* const action)
         if(MEMORY != action->gdb_parameter.type)
         {
             // wrong parameter type
-            debug_line("ERROR: wrong parameter type !");
+            debug_error("ERROR: wrong parameter type !");
             reply_packet_add(ERROR_CODE_INVALID_PARAMETER_FORMAT_TYPE);
             reply_packet_send();
             return ERR_WRONG_VALUE;
@@ -598,7 +601,7 @@ Result handle_target_reply_write_g(action_data_typ* const action)
             }
             else
             {
-                debug_line("ERROR: gdb 'G' : too many retries !");
+                debug_error("ERROR: gdb 'G' : too many retries !");
                 reply_packet_add("E23");
                 reply_packet_send();
                 return ERR_TIMEOUT;
@@ -615,6 +618,7 @@ Result handle_target_reply_write_g(action_data_typ* const action)
     return ERR_WRONG_STATE;
 }
 
+// GDB_CMD_QUESTIONMARK
 Result handle_target_reply_questionmark(action_data_typ* const action)
 {
     if(NULL == action)
@@ -626,6 +630,7 @@ Result handle_target_reply_questionmark(action_data_typ* const action)
     return RESULT_OK;
 }
 
+// GDB_CMD_CONTINUE
 Result handle_target_reply_continue(action_data_typ* const action)
 {
     Result res;
@@ -699,7 +704,7 @@ Result handle_target_reply_continue(action_data_typ* const action)
             {
                 // *(action->cur_phase) = 1;
                 action->intern[INTERN_RETRY_COUNTER] = 0;
-                debug_line("ERROR: releasing Halt did not work !");
+                debug_error("ERROR: releasing Halt did not work !");
                 return ERR_TARGET_ERROR;
             }
         }
@@ -745,7 +750,7 @@ Result handle_target_reply_write_memory(action_data_typ* const action)
         if(ADDRESS_LENGTH_MEMORY != action->gdb_parameter.type)
         {
             // wrong parameter type
-            debug_line("ERROR: wrong parameter type !");
+            debug_error("ERROR: wrong parameter type !");
             reply_packet_add(ERROR_CODE_INVALID_PARAMETER_FORMAT_TYPE);
             reply_packet_send();
             return ERR_WRONG_VALUE;
@@ -808,6 +813,7 @@ Result handle_target_reply_write_memory(action_data_typ* const action)
     return ERR_WRONG_STATE;
 }
 
+// GDB_CMD_STEP
 Result handle_target_reply_step(action_data_typ* const action)
 {
     if(NULL == action)
@@ -819,6 +825,7 @@ Result handle_target_reply_step(action_data_typ* const action)
     return RESULT_OK;
 }
 
+// CHECK_RUNNING
 Result handle_check_target_running(action_data_typ* const action)
 {
     Result res;
@@ -904,7 +911,7 @@ Result handle_monitor_reg(action_data_typ* const action)
         if(HAS_VALUE != action->gdb_parameter.type)
         {
             // wrong parameter type
-            debug_line("ERROR: wrong parameter type !");
+            debug_error("ERROR: wrong parameter type !");
             reply_packet_prepare();
             reply_packet_add(ERROR_CODE_INVALID_PARAMETER_FORMAT_TYPE);
             reply_packet_send();
@@ -985,7 +992,7 @@ Result handle_monitor_reg(action_data_typ* const action)
             }
             else
             {
-                debug_line("ERROR: gdm 'mon reg' : too many retries !");
+                debug_error("ERROR: gdm 'mon reg' : too many retries !");
                 reply_packet_send();
                 return ERR_TIMEOUT;
             }
@@ -1209,7 +1216,7 @@ Result handle_monitor_halt(action_data_typ* const action)
         if(HAS_VALUE != action->gdb_parameter.type)
         {
             // wrong parameter type
-            debug_line("ERROR: wrong parameter type !");
+            debug_error("ERROR: wrong parameter type !");
             reply_packet_add(ERROR_CODE_INVALID_PARAMETER_FORMAT_TYPE);
             reply_packet_send();
             return ERR_WRONG_VALUE;
@@ -1218,7 +1225,7 @@ Result handle_monitor_halt(action_data_typ* const action)
         {
             if(true == action->gdb_parameter.has_value.valid)
             {
-                debug_line("DELAY: %ldms", action->gdb_parameter.has_value.value);
+                debug_error("DELAY: %ldms", action->gdb_parameter.has_value.value);
                 // TODO implement pause
             }
             action->first_call = false;
@@ -1247,7 +1254,7 @@ Result handle_monitor_reset(action_data_typ* const action)
         if(HAS_VALUE != action->gdb_parameter.type)
         {
             // wrong parameter type
-            debug_line("ERROR: wrong parameter type !");
+            debug_error("ERROR: wrong parameter type !");
             reply_packet_add(ERROR_CODE_INVALID_PARAMETER_FORMAT_TYPE);
             reply_packet_send();
             return ERR_WRONG_VALUE;
@@ -1358,7 +1365,7 @@ Result cortex_m_halt_cpu(bool first_call)
             {
                 if(100 > retries)
                 {
-                    debug_line("TIMEOUT: when setting halt bit!");
+                    debug_error("TIMEOUT: when setting halt bit!");
                     return ERR_TIMEOUT;
                 }
                 else
@@ -1386,7 +1393,7 @@ Result cortex_m_halt_cpu(bool first_call)
         return RESULT_OK;
     }
 
-    debug_line("halt cpu: invalid phase (%ld)!", phase);
+    debug_error("halt cpu: invalid phase (%ld)!", phase);
     return ERR_WRONG_STATE;
 }
 */

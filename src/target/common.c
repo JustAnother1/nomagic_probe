@@ -279,7 +279,7 @@ static action_data_typ * book_action_slot(void)
     else
     {
         // queue is full
-        debug_line("ERROR: target action queue full !");
+        debug_error("ERROR: target action queue full !");
         return NULL;
     }
 }
@@ -297,14 +297,14 @@ bool add_action(action_typ act)
     action_data_typ* const action =  book_action_slot();
     if(NULL == action)
     {
-        debug_line("ERROR: could not add %s ! Action queue full!", action_names[act]);
+        debug_error("ERROR: could not add %s ! Action queue full!", action_names[act]);
         return false;
     }
     action->action = act;
     res = add_target_action(action);
     if(RESULT_OK != res)
     {
-        debug_line("ERROR: could not add %s ! adding action failed(%ld)!", action_names[act], res);
+        debug_error("ERROR: could not add %s ! adding action failed(%ld)!", action_names[act], res);
         return false;
     }
     return true;
@@ -316,7 +316,7 @@ bool add_action_with_parameter(action_typ act, parameter_typ* parsed_parameter)
     action_data_typ* const action =  book_action_slot();
     if(NULL == action)
     {
-        debug_line("ERROR: could not add %s ! Action queue full!", action_names[act]);
+        debug_error("ERROR: could not add %s ! Action queue full!", action_names[act]);
         return false;
     }
     action->action = act;
@@ -324,7 +324,7 @@ bool add_action_with_parameter(action_typ act, parameter_typ* parsed_parameter)
     res = add_target_action(action);
     if(RESULT_OK != res)
     {
-        debug_line("ERROR: could not add %s ! adding action failed(%ld)!", action_names[act], res);
+        debug_error("ERROR: could not add %s ! adding action failed(%ld)!", action_names[act], res);
         return false;
     }
     return true;
@@ -421,7 +421,7 @@ static void handle_actions(void)
         // order not done
         if(true == timeout_expired(&action_to))
         {
-            debug_line("ERROR: target: SWD: timeout in running '%s' phase %ld !",
+            debug_error("ERROR: target: SWD: timeout in running '%s' phase %ld !",
                        action_names[action_queue[action_read].action],
                        action_queue[action_read].cur_phase);
             // TODO can we do something better than to just skip this command?
@@ -450,7 +450,7 @@ static void handle_actions(void)
         if(RESULT_OK > res)
         {
             // error
-            debug_line("target: error %ld on action %s.%ld",
+            debug_error("target: error %ld on action %s.%ld",
                        res,
                        action_names[action_queue[action_read].action],
                        action_queue[action_read].cur_phase);

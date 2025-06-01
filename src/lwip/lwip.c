@@ -279,7 +279,7 @@ bool tud_network_recv_cb(const uint8_t *src, uint16_t size)
         {
             if(NULL == p->payload)
             {
-                debug_line("ERROR: no payload buffer !");
+                debug_error("ERROR: no payload buffer !");
                 return false;
             }
             // pbuf_alloc() has already initialized struct; all we need to do is copy the data
@@ -331,7 +331,7 @@ void network_gdb_send_bytes(const uint8_t * data, const uint32_t length)
     if((NULL == gdb_def.connection_pcb) || (false == gdb_def.is_connected))
     {
         // not connected
-        debug_line("LWIP: could not send bytes as connection is closed!");
+        debug_error("LWIP: could not send bytes as connection is closed!");
         return;
     }
 
@@ -419,7 +419,7 @@ void network_target_uart_send_bytes(const uint8_t * data, const uint32_t length)
     if((NULL == target_uart_def.connection_pcb) || (false == target_uart_def.is_connected))
     {
         // not connected
-        debug_line("LWIP: could not send bytes as connection is closed!");
+        debug_error("LWIP: could not send bytes as connection is closed!");
         return;
     }
 

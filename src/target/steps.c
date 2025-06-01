@@ -158,7 +158,7 @@ Result step_get_Result_OK(void)
         }
         else
         {
-            debug_line("target: step failed (0x%08lx)", data);
+            debug_error("target: step failed (0x%08lx)", data);
             return ERR_WRONG_VALUE;
         }
     }

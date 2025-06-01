@@ -13,6 +13,7 @@
  *
  */
 #include <stdlib.h>
+#include <string.h>
 #include "cfg/cli_cfg.h"
 #include "cli_sys.h"
 #include "cli_usb.h"
@@ -278,7 +279,7 @@ bool cmd_info(const uint32_t loop)
 bool cmd_log(const uint32_t loop)
 {
     (void) loop;
-    uint8_t* type_str = cli_get_parameter(0);
+    char* type_str = (char*)cli_get_parameter(0);
     if(0 == strncmp("off", type_str, 3))
     {
         // turn logging off
@@ -293,7 +294,23 @@ bool cmd_log(const uint32_t loop)
     }
     else
     {
-        cli_line("ERROR: invalid switch %s ! (use : 'on' or 'off')", type_str);
+        if(0 < strlen(type_str))
+        {
+            cli_line("ERROR: invalid switch %s ! (use : 'on' or 'off')", type_str);
+        }
+        if(0 == log_state)
+        {
+            cli_line("Logging is disabled!");
+        }
+        else if(1 == log_state)
+        {
+            cli_line("Logging is enabled!");
+        }
+        else
+        {
+            cli_line("Logging was confused! -> now disabled!");
+            log_state = 0;
+        }
     }
     return true;
 }

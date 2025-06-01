@@ -318,7 +318,7 @@ Result connect_handler(command_typ* cmd, bool first_call)
         else if(RESULT_OK == phase_result)
         {
             // this should not happen
-            debug_line("ERROR: Invalid ID received for SWD read!");
+            debug_error("ERROR: Invalid ID received for SWD read!");
             return ERR_INVALID_TRANSACTION_ID;
         }
         else
@@ -405,7 +405,7 @@ Result connect_handler(command_typ* cmd, bool first_call)
         else if(RESULT_OK == phase_result)
         {
             // this should not happen
-            debug_line("ERROR: Invalid ID received for SWD read!");
+            debug_error("ERROR: Invalid ID received for SWD read!");
             return ERR_INVALID_TRANSACTION_ID;
         }
         else
@@ -442,7 +442,7 @@ Result connect_handler(command_typ* cmd, bool first_call)
                 }
                 else
                 {
-                    debug_line("TIMEOUT: when powering on the debug peripheral!");
+                    debug_error("TIMEOUT: when powering on the debug peripheral!");
                     return ERR_TIMEOUT;
                 }
             }
@@ -535,7 +535,7 @@ Result connect_handler(command_typ* cmd, bool first_call)
         return RESULT_OK;
     }
 
-    debug_line("connect handler: invalid phase(%ld)!", cmd->phase);
+    debug_error("connect handler: invalid phase(%ld)!", cmd->phase);
     return ERR_WRONG_STATE;
 }
 
@@ -593,7 +593,7 @@ Result write_handler(command_typ* cmd, bool first_call)
         return res;
     }
 
-    debug_line("write handler: invalid phase!");
+    debug_error("write handler: invalid phase!");
     return ERR_WRONG_STATE;
 }
 
@@ -655,7 +655,7 @@ Result read_handler(command_typ* cmd, bool first_call)
         return res;
     }
 
-    debug_line("read handler: invalid phase!");
+    debug_error("read handler: invalid phase!");
     return ERR_WRONG_STATE;
 }
 
@@ -755,7 +755,7 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
         else if(RESULT_OK == phase_result)
         {
             // this should not happen
-            debug_line("ERROR: Invalid ID received for SWD read!");
+            debug_error("ERROR: Invalid ID received for SWD read!");
             return ERR_INVALID_TRANSACTION_ID;
         }
         else
@@ -796,7 +796,7 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
         else if(RESULT_OK == phase_result)
         {
             // this should not happen
-            debug_line("ERROR: Invalid ID received for SWD read!");
+            debug_error("ERROR: Invalid ID received for SWD read!");
             return ERR_INVALID_TRANSACTION_ID;
         }
         else
@@ -818,8 +818,8 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
         {
             if(0 == (state.reg_CTRL_STAT & 0x40))
             {
-                debug_line("CTRL/STAT 0x%08lx", state.reg_CTRL_STAT);
-                debug_line("SWD:AP(%ld): AP read failed", state.mem_ap.ap_sel);
+                debug_error("CTRL/STAT 0x%08lx", state.reg_CTRL_STAT);
+                debug_error("SWD:AP(%ld): AP read failed", state.mem_ap.ap_sel);
                 return ERR_TARGET_ERROR;
             }
             cmd->sub_phase = 6;
@@ -844,7 +844,7 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
         else if(RESULT_OK == phase_result)
         {
             // this should not happen
-            debug_line("ERROR: Invalid ID received for SWD read!");
+            debug_error("ERROR: Invalid ID received for SWD read!");
             return ERR_INVALID_TRANSACTION_ID;
         }
         else
@@ -873,7 +873,7 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
         else
         {
             // some other error
-            debug_line("swd:read_result failed err:%ld, trID:%ld ", phase_result, cmd->sub_transaction_id);
+            debug_error("swd:read_result failed err:%ld, trID:%ld ", phase_result, cmd->sub_transaction_id);
             return phase_result;
         }
     }
@@ -885,7 +885,7 @@ static Result read_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint3
         return RESULT_OK;
     }
 
-    debug_line("read ap register: invalid phase!");
+    debug_error("read ap register: invalid phase!");
     return ERR_WRONG_STATE;
 }
 
@@ -943,6 +943,6 @@ static Result write_ap_register(uint32_t ap_bank_reg, uint32_t ap_register, uint
         return RESULT_OK;
     }
 
-    debug_line("write ap register: invalid phase!");
+    debug_error("write ap register: invalid phase!");
     return ERR_WRONG_STATE;
 }

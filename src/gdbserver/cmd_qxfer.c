@@ -75,9 +75,9 @@ void handle_cmd_qXfer(char* parameter, uint32_t length)
             target_send_file(parts[OBJECT_PART], offset, len);
             return;
         }
-        debug_line("xfer:object invalid");
+        debug_error("xfer:object invalid");
     }
-    debug_line("xfer:invalid");
+    debug_error("xfer:invalid");
     // if we reach this, then the request was invalid
     reply_packet_prepare();
     reply_packet_add(ERROR_CODE_INVALID_TRANSFERE_REQUEST);

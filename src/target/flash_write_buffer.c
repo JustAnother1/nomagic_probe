@@ -108,10 +108,10 @@ Result flash_write_buffer_add_data(uint32_t start_address, uint32_t length, uint
         }
         else
         {
-            debug_line("ERROR: too long!");
-            debug_line("start_address : 0x%08lx, length : %ld", start_address, length);
-            debug_line("write_idx = %ld, first_invalid_idx = %ld", write_idx, first_invalid_idx);
-            debug_line("overlap = %ld, read_idx = %ld", overlap, read_idx);
+            debug_error("ERROR: too long!");
+            debug_error("start_address : 0x%08lx, length : %ld", start_address, length);
+            debug_error("write_idx = %ld, first_invalid_idx = %ld", write_idx, first_invalid_idx);
+            debug_error("overlap = %ld, read_idx = %ld", overlap, read_idx);
             return ERR_TOO_LONG;
         }
     }

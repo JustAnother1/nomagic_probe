@@ -123,7 +123,7 @@ void reply_packet_add(char* data)
     }
     if( ! (reply_length + length < MAX_REPLY_LENGTH))
     {
-        debug_line("ERROR: add: reply too long !");
+        debug_error("ERROR: add: reply too long !");
     }
     serial_gdb_send_bytes(&(reply_buffer[reply_length]), length);
     reply_length = reply_length + length;
@@ -146,7 +146,7 @@ void reply_packet_add_max(char* data, uint32_t length)
     }
     else
     {
-        debug_line("ERROR: add max: reply too long !");
+        debug_error("ERROR: add max: reply too long !");
     }
 }
 
@@ -220,7 +220,7 @@ void reply_packet_send(void)
     {
         // should never happen -> if it happens increase the MAX_REPLY_LENGTH
         reply_length = MAX_REPLY_LENGTH - 4;
-        debug_line("ERROR: reply too long !");
+        debug_error("ERROR: reply too long !");
     }
     reply_buffer[reply_length] = '#';
     reply_buffer[reply_length + 1] = (uint8_t)reply_checksum[0]; // high nibble
@@ -405,7 +405,7 @@ static void communicate_with_gdb(void)
         // and if there were we would not be ready to work on it
         if(true == timeout_expired(&busy_to))
         {
-            debug_line("ERROR: gdb-server command timeout !");
+            debug_error("ERROR: gdb-server command timeout !");
             gdb_is_not_busy_anymore();
         }
         return;
@@ -434,7 +434,7 @@ static void communicate_with_gdb(void)
                     {
                         // notification from Host
                         // -> ignore
-                        debug_line("ERROR: notification not implemented !");
+                        debug_error("ERROR: notification not implemented !");
                         // TODO Notification is "% data # checksum"
                     }
                     else if('+' == data)
@@ -461,7 +461,7 @@ static void communicate_with_gdb(void)
                     {
                         // BREAK
                         // is optional. Application is the GDB user pressed CTRL-C.
-                        debug_line("INFO: break not implemented !");
+                        debug_error("INFO: break not implemented !");
                     }
                     else
                     {
@@ -469,11 +469,11 @@ static void communicate_with_gdb(void)
                         {
                             if((32 > data) || (126 < data))
                             {
-                                debug_line("skipping 0x%02x !", data);
+                                debug_error("skipping 0x%02x !", data);
                             }
                             else
                             {
-                                debug_line("skipping %s(0x%02x) !", (char*)&data, data);
+                                debug_error("skipping %s(0x%02x) !", (char*)&data, data);
                             }
                         }
                     }

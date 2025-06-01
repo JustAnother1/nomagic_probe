@@ -143,7 +143,7 @@ Result swd_packet_bits_get_data_value(uint32_t idx, uint32_t* data)
 {
     if(false == operational)
     {
-        debug_line("swd_packet_bits_get_data_value(): not operational !");
+        debug_error("swd_packet_bits_get_data_value(): not operational !");
         return ERR_WRONG_STATE;
     }
     idx = idx -1; // 0 (=RESULT_OK) can not be a valid index -> -1
@@ -216,7 +216,7 @@ void swd_packet_bits_tick(void)
                 // report this error !
                 operational = false;
                 // something went wrong!
-                debug_line("ERROR: Failed to send packet! Result: %ld", res);
+                debug_error("ERROR: Failed to send packet! Result: %ld", res);
             }
         }
         // else not operational ! -> wait for ack to error
@@ -291,11 +291,11 @@ static Result write_package_handler(packet_definition_typ* pkg)
             operational = false;
             if(DP == APnotDP)
             {
-                debug_line("ERROR: write DP addr: %ld, data: 0x%lx, ack: %ld", address, data, ack);
+                debug_error("ERROR: write DP addr: %ld, data: 0x%lx, ack: %ld", address, data, ack);
             }
             else
             {
-                debug_line("ERROR: write AP addr: %ld, data: 0x%lx, ack: %ld", address, data, ack);
+                debug_error("ERROR: write AP addr: %ld, data: 0x%lx, ack: %ld", address, data, ack);
             }
             // handle "Sticky overrun"
             if(false == sticky_overrun)
@@ -304,27 +304,27 @@ static Result write_package_handler(packet_definition_typ* pkg)
                 switch(ack)
                 {
                 case ACK_PROTOCOL_ERROR_0:   // on wire: line not driven -> read as low
-                    debug_line("ERROR: SWD ACK was 0 (target not connected?) !");
+                    debug_error("ERROR: SWD ACK was 0 (target not connected?) !");
                     break;
 
                 case ACK_OK:                 // on wire: 1 0 0
-                    debug_line("ERROR: SWD ACK was OK !?!");
+                    debug_error("ERROR: SWD ACK was OK !?!");
                     break;
 
                 case ACK_WAIT:               // on wire: 0 1 0
-                    debug_line("ERROR: SWD ACK was WAIT !");
+                    debug_error("ERROR: SWD ACK was WAIT !");
                     break;
 
                 case ACK_FAULT:              // on wire: 0 0 1
-                    debug_line("ERROR: SWD ACK was FAULT !");
+                    debug_error("ERROR: SWD ACK was FAULT !");
                     break;
 
                 case ACK_PROTOCOL_ERROR_1:   // on wire: line not driven -> read as high
-                    debug_line("ERROR: SWD ACK was 7 (target not connected?) !");
+                    debug_error("ERROR: SWD ACK was 7 (target not connected?) !");
                     break;
 
                 default:
-                    debug_line("ERROR: SWD ACK was %ld !", ack);
+                    debug_error("ERROR: SWD ACK was %ld !", ack);
                     break;
                 }
                 return ERR_TARGET_ERROR;
@@ -333,7 +333,7 @@ static Result write_package_handler(packet_definition_typ* pkg)
             {
                 // else we need the data phase
                 // TODO Handle WAIT and Failure ACK
-                debug_line("ERROR: SWD(SO) ACK was %ld !", ack);
+                debug_error("ERROR: SWD(SO) ACK was %ld !", ack);
                 return ERR_TARGET_ERROR;
             }
         }
@@ -384,7 +384,7 @@ static Result read_package_handler(packet_definition_typ* pkg)
     if(ACK_OK != ack)
     {
         operational = false;
-        debug_line("ERROR: read ap/dp: %ld, addr: %ld, ack: %ld", APnotDP, address, ack);
+        debug_error("ERROR: read ap/dp: %ld, addr: %ld, ack: %ld", APnotDP, address, ack);
         // handle "Sticky overrun"
         if(true == sticky_overrun)
         {
@@ -398,27 +398,27 @@ static Result read_package_handler(packet_definition_typ* pkg)
         switch(ack)
         {
         case ACK_PROTOCOL_ERROR_0:   // on wire: line not driven -> read as low
-            debug_line("ERROR: SWD ACK was 0 (target not connected?) !");
+            debug_error("ERROR: SWD ACK was 0 (target not connected?) !");
             break;
 
         case ACK_OK:                 // on wire: 1 0 0
-            debug_line("ERROR: SWD ACK was OK !?!");
+            debug_error("ERROR: SWD ACK was OK !?!");
             break;
 
         case ACK_WAIT:               // on wire: 0 1 0
-            debug_line("ERROR: SWD ACK was WAIT !");
+            debug_error("ERROR: SWD ACK was WAIT !");
             break;
 
         case ACK_FAULT:              // on wire: 0 0 1
-            debug_line("ERROR: SWD ACK was FAULT !");
+            debug_error("ERROR: SWD ACK was FAULT !");
             break;
 
         case ACK_PROTOCOL_ERROR_1:   // on wire: line not driven -> read as high
-            debug_line("ERROR: SWD ACK was 7 (target not connected?) !");
+            debug_error("ERROR: SWD ACK was 7 (target not connected?) !");
             break;
 
         default:
-            debug_line("ERROR: SWD ACK was %ld !", ack);
+            debug_error("ERROR: SWD ACK was %ld !", ack);
             break;
         }
         result_data_error[res_idx] = true;
@@ -450,7 +450,7 @@ static Result read_package_handler(packet_definition_typ* pkg)
         {
             // parity error !
             ack = ERROR_PARITY;
-            debug_line("SWD: parity error !");
+            debug_error("SWD: parity error !");
             return ERR_TARGET_ERROR;
         }
     }

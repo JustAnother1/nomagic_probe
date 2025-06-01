@@ -96,7 +96,7 @@ Result swd_connect(bool multi, uint32_t target, uint32_t AP_sel)
     // TODO protect against concurrent access (cmdq_write)
     if(true == has_error)
     {
-        debug_line("called swd_connect() in error state!");
+        debug_error("called swd_connect() in error state!");
         return ERR_WRONG_STATE;
     }
     uint32_t next_idx = cmdq_write + 1;
@@ -126,7 +126,7 @@ Result swd_write_ap(uint32_t addr, uint32_t data)
     // TODO protect against concurrent access (cmdq_write)
     if(true == has_error)
     {
-        debug_line("swd_write_ap(): not operational !");
+        debug_error("swd_write_ap(): not operational !");
         return ERR_WRONG_STATE;
     }
     uint32_t next_idx = cmdq_write + 1;
@@ -154,7 +154,7 @@ Result swd_read_ap(uint32_t addr)
     // TODO protect against concurrent access (cmdq_write)
     if(true == has_error)
     {
-        debug_line("swd_read_ap(): not operational !");
+        debug_error("swd_read_ap(): not operational !");
         return ERR_WRONG_STATE;
     }
     uint32_t next_idx = cmdq_write + 1;
@@ -182,7 +182,7 @@ Result swd_read_ap_reg(uint32_t bank, uint32_t reg)
     // TODO protect against concurrent access (cmdq_write)
     if(true == has_error)
     {
-        debug_line("swd_read_ap_reg(): not operational !");
+        debug_error("swd_read_ap_reg(): not operational !");
         return ERR_WRONG_STATE;
     }
     uint32_t next_idx = cmdq_write + 1;
@@ -211,7 +211,7 @@ Result swd_write_ap_reg(uint32_t bank, uint32_t reg, uint32_t data)
     // TODO protect against concurrent access (cmdq_write)
     if(true == has_error)
     {
-        debug_line("swd_write_ap_reg(): not operational !");
+        debug_error("swd_write_ap_reg(): not operational !");
         return ERR_WRONG_STATE;
     }
     uint32_t next_idx = cmdq_write + 1;
@@ -240,7 +240,7 @@ Result swd_disconnect(void)
     // TODO protect against concurrent access (cmdq_write)
     if(true == has_error)
     {
-        debug_line("called swd_disconnect() in error state!");
+        debug_error("called swd_disconnect() in error state!");
         return ERR_WRONG_STATE;
     }
     uint32_t next_idx = cmdq_write + 1;
@@ -298,7 +298,7 @@ void swd_eingine_add_cmd_result(Result idx, uint32_t data)
     if((idx < 1) || (idx > CMD_QUEUE_LENGTH))
     {
         // 0 or negative values are not valid
-        debug_line("swd_eingine_add_cmd_result() : ERR_INVALID_TRANSACTION_ID");
+        debug_error("swd_eingine_add_cmd_result() : ERR_INVALID_TRANSACTION_ID");
         return;
     }
     idx = idx -1;
@@ -356,7 +356,7 @@ static void handle_order(void)
         // order not done
         if(true == timeout_expired(&to))
         {
-            debug_line("ERROR: SWD: timeout in running %s order !", order_names[cmd_queue[cmdq_read].order]);
+            debug_error("ERROR: SWD: timeout in running %s order !", order_names[cmd_queue[cmdq_read].order]);
             // do not try anymore
             if(0 < cmd_queue[cmdq_read].transaction_id)
             {
@@ -372,7 +372,7 @@ static void handle_order(void)
         if(RESULT_OK > order_state)
         {
             // error
-            debug_line("swd: error %ld on order %s", order_state, order_names[cmd_queue[cmdq_read].order]);
+            debug_error("swd: error %ld on order %s", order_state, order_names[cmd_queue[cmdq_read].order]);
             if(0 < cmd_queue[cmdq_read].transaction_id)
             {
                 swd_eingine_add_cmd_result(cmd_queue[cmdq_read].transaction_id, (uint32_t)ERR_TARGET_ERROR);
@@ -385,7 +385,7 @@ static void handle_order(void)
         }
         else
         {
-            debug_line("swd: error %ld on order %s", order_state, order_names[cmd_queue[cmdq_read].order]);
+            debug_error("swd: error %ld on order %s", order_state, order_names[cmd_queue[cmdq_read].order]);
             has_error = true;
         }
         // debug_line("swd: order %s done (%ld)", order_names[cmd_queue[cmdq_read].order], last_phase);

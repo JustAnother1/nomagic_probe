@@ -1,5 +1,22 @@
 = GDB Server
 
+== implemented features
+
+[cols="1,1"]
+|===
+| Feature
+| Status
+
+| Non-Stop Mode
+| not implemented
+
+| extended mode
+| implemented
+
+|===
+
+
+
 == Packets
 
 all packets: "$packet-data#checksum"
@@ -62,7 +79,7 @@ https://github.com/llvm/llvm-project/blob/master/lldb/docs/lldb-gdb-remote.txt
 
 == Dictionary
 
-There are some GDB specific words used that only make sense in the GDB contet. These words are defined here.
+There are some GDB specific words used that only make sense in the GDB context. These words are defined here.
 
 [cols="1,1"]
 |===

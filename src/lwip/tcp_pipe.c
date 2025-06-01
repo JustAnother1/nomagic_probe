@@ -31,21 +31,21 @@ bool tcp_pipe_activate(tcp_pipe_def* pipe)
     struct tcp_pcb* my_pcb;
     if(NULL == pipe)
     {
-        debug_line("ERROR: could not create TCP Pipe, no definition! !");
+        debug_error("ERROR: could not create TCP Pipe, no definition! !");
         return false;
     }
 
     my_pcb = tcp_new();
     if(NULL == my_pcb)
     {
-        debug_line("ERROR: could not create TCP Pipe handle for %d (no memory?) !", pipe->port);
+        debug_error("ERROR: could not create TCP Pipe handle for %d (no memory?) !", pipe->port);
         return false;
     }
 
     debug_line("NCM: binding to TCP port %d !", pipe->port);
     if(ERR_OK != tcp_bind(my_pcb, IP_ADDR_ANY, pipe->port))
     {
-        debug_line("ERROR: could not bind TCP Pipe to port %d (port in use?) !", pipe->port);
+        debug_error("ERROR: could not bind TCP Pipe to port %d (port in use?) !", pipe->port);
         tcp_close(my_pcb);
         return false;
     }
@@ -53,7 +53,7 @@ bool tcp_pipe_activate(tcp_pipe_def* pipe)
     my_pcb = tcp_listen_with_backlog(my_pcb, 1);
     if(NULL == my_pcb)
     {
-        debug_line("ERROR: could not switch to listen on TCP Pipe handle for %d (no memory?) !", pipe->port);
+        debug_error("ERROR: could not switch to listen on TCP Pipe handle for %d (no memory?) !", pipe->port);
         tcp_close(my_pcb);
         return false;
     }

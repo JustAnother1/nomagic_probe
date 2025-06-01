@@ -1,0 +1,25 @@
+= ARM
+:toc:
+:toclevels: 4
+
+== external documentation
+
+link:DDI0419C_ARMv6-m_Architecture_Reference_Manual.pdf[ARMv6-m Architecture Reference Manual] (436 pages)
+
+link:DUI0662B_cortex_m0p_r0p1_dgug.pdf[Cortex-M0+ Devices Generic User Guide] (113 pages)
+
+link:Arm_Cortex-M0+_Processor_Datasheet.pdf[Arm Cortex-M0+ Processor Datasheet] (8 pages)
+
+link:DDI0484C_cortex_m0p_r0p1_trm-1.pdf[Cortex M0+ Revision: r0p1 Technical Reference Manual] (51 pages)
+
+link:How To Debug A Fault Exception On ARM Cortex-M(V7M) MCU(S32K3XX).pdf[How To Debug A Fault Exception On ARM Cortex-M(V7M)] (NXP presentation)
+
+link:Arm_Cortex-M_Processor_Comparison_Table.pdf[ARM Cortex-M Processor Comparison Table] (2 pages)
+
+link:DDI0486B_coresight_mtb_m0p_r0p1_trm.pdf[CoreSight MTB-M0+ Revision: r0p1 Technical Reference Manual] (Trace, 55 pages)
+
+link:ROM_Table.png[ROM table] (screen shot)
+
+== run controll
+
+

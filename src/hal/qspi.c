@@ -392,7 +392,7 @@ void qspi_read(uint32_t start_address, uint8_t* data, uint32_t length)
     // debug_line("QSPI read");
     if(NULL == data)
     {
-        debug_line("ERROR: QSPI read: no data pointer");
+        debug_error("ERROR: QSPI read: no data pointer");
         return;
     }
     memset(data, 0x23, length);  // for testing

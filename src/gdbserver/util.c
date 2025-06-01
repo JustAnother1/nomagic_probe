@@ -67,7 +67,7 @@ uint32_t hex_to_int(char* hex, uint32_t num_digits)
         case 'f':
         case 'F': digit_val = 15; break;
         default:
-            debug_line("gdbs: to int: invalid hex char %d / 0x%02x / %c !", *hex, *hex, *hex);
+            debug_error("gdbs: to int: invalid hex char %d / 0x%02x / %c !", *hex, *hex, *hex);
             return 0;
         }
         res = res + digit_val;
@@ -210,7 +210,7 @@ void decode_hex_string_to_text(char * hex, uint32_t buf_length, char * buf)
             return;
 
         default:
-            debug_line("gdbs: to text invalid hex char %d / 0x%02x / %c !", *hex, *hex, *hex);
+            debug_error("gdbs: to text invalid hex char %d / 0x%02x / %c !", *hex, *hex, *hex);
             buf[pos] = 0;
             return;
         }

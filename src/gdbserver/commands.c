@@ -90,7 +90,7 @@ void commands_execute(char* received, uint32_t length, char* checksum)
 {
     if((NULL == received) || (NULL == checksum))
     {
-        debug_line("ERROR: gdbs received: NULL !");
+        debug_error("ERROR: gdbs received: NULL !");
         return;
     }
     if(length < 50)
@@ -107,7 +107,7 @@ void commands_execute(char* received, uint32_t length, char* checksum)
     }
     if(false == checksumOK(received, length, checksum))
     {
-        debug_line("checksum is wrong($%s#%s)!", received, checksum);
+        debug_error("checksum is wrong($%s#%s)!", received, checksum);
         send_error_packet();
         return;
     }
@@ -396,7 +396,7 @@ static bool checksumOK(char* received, uint32_t length, char* checksum)
     }
     else
     {
-        debug_line("gdbs: CRC expected: 0x%02lx received : 0x%02lx", calculated_sum, recieved_sum);
+        debug_error("gdbs: CRC expected: 0x%02lx received : 0x%02lx", calculated_sum, recieved_sum);
         return false;
     }
 }
@@ -438,134 +438,145 @@ static uint32_t cmd_length(char* received, uint32_t length)
 
 static void handle_vee(char* received, uint32_t length)
 {
-    uint32_t cmd_len = cmd_length(received, length);
+    // uint32_t cmd_len = cmd_length(received, length);
     bool found_cmd = false;
-    if(1 == cmd_len)
+
+    if(0 == strncmp(received, "vCont", 5))
     {
-        if('v' == *received)
+        // command start with "vCont"
+        if('?' == received[5])
         {
+            // "vCont?"
+            // report the supported vCont actions
             found_cmd = true;
-            // Report the features supported by the server.
-            // TODO parse parameters
             reply_packet_prepare();
-            // TODO add supported features
-            reply_packet_add("hwbreak+");
+            reply_packet_add("vCont;c;C;s;S");
             reply_packet_send();
+            found_cmd = true;
+        }
+        else if(';' == received[5])
+        {
+            // specify step or continue actions specific to one or more threads
+            if(('c' == received[6]) || ('C' == received[6]))
+            {
+                // vCont;c  -> continue
+                found_cmd = true;
+                if(true == add_action(GDB_CMD_CONTINUE))
+                {
+                    found_cmd = true;
+                }
+            }
+            else if(('s' == received[6]) || ('S' == received[6]))
+            {
+                // vCont;s -> single step
+                found_cmd = true;
+                if(true == parse_parameter(PARAM_OPT_ADDR, &(received[7]), length - 7))
+                {
+                    gdb_is_now_busy();
+                    if(false == add_action_with_parameter(GDB_CMD_STEP, &parsed_parameter))
+                    {
+                        // failed to add command
+                        send_unknown_command_reply();
+                    }
+                    // else OK. Reply packet ends busy state.
+                }
+            }
         }
     }
-    else
+    else if(0 == strncmp(received, "vRun", 4))
     {
-        if(0 == strncmp(received, "vCont", 5))
+        // command start with "vRun"
+        found_cmd = true;
+        // run program
+        // TODO implement
+        send_unknown_command_reply();
+    }
+    else if(0 == strncmp(received, "vAttach", 7))
+    {
+        // command start with "vAttach"
+        found_cmd = true;
+        // Attach to (new) process
+        // TODO implement
+        send_unknown_command_reply();
+    }
+    else if(0 == strncmp(received, "vFlashDone", 10))
+    {
+        // command start with "vFlashDone"
+        found_cmd = true;
+        gdb_is_now_busy();
+        if(false == add_action(GDB_CMD_VFLASH_DONE))
         {
-            // command start with "vCont"
-            if('?' == received[5])
-            {
-                // "vCont?"
-                // report the supported vCont actions
-                found_cmd = true;
-                reply_packet_prepare();
-                reply_packet_add("vCont;c;C;s;S");
-                reply_packet_send();
-                found_cmd = true;
-            }
-            else if(';' == received[5])
-            {
-                // specify step or continue actions specific to one or more threads
-                if(('c' == received[6]) || ('C' == received[6]))
-                {
-                    // vCont;c  -> continue
-                    found_cmd = true;
-                    if(true == add_action(GDB_CMD_CONTINUE))
-                    {
-                        found_cmd = true;
-                    }
-                }
-                else if(('s' == received[6]) || ('S' == received[6]))
-                {
-                    // vCont;s -> single step
-                    found_cmd = true;
-                    if(true == parse_parameter(PARAM_OPT_ADDR, &(received[7]), length - 7))
-                    {
-                        gdb_is_now_busy();
-                        if(false == add_action_with_parameter(GDB_CMD_STEP, &parsed_parameter))
-                        {
-                            // failed to add command
-                            send_unknown_command_reply();
-                        }
-                        // else OK. Reply packet ends busy state.
-                    }
-                }
-            }
-        }
-        else if(0 == strncmp(received, "vRun", 4))
-        {
-            // command start with "vRun"
-            found_cmd = true;
-            // run program
-            // TODO implement
+            // failed to add command
             send_unknown_command_reply();
         }
-        else if(0 == strncmp(received, "vAttach", 7))
+        // else OK. target reply packet ends busy state.
+    }
+    else if(0 == strncmp(received, "vFlashErase", 11))
+    {
+        // command start with "vFlashErase"
+        found_cmd = true;
+        if(true == parse_parameter(PARAM_ADDR_LENGTH, &(received[12]), length -12))
         {
-            // command start with "vAttach"
-            found_cmd = true;
-            // Attach to (new) process
-            // TODO implement
-            send_unknown_command_reply();
-        }
-        else if(0 == strncmp(received, "vFlashDone", 10))
-        {
-            // command start with "vFlashDone"
-            found_cmd = true;
             gdb_is_now_busy();
-            if(false == add_action(GDB_CMD_VFLASH_DONE))
+            if(false == add_action_with_parameter(GDB_CMD_VFLASH_ERASE, &parsed_parameter))
             {
                 // failed to add command
                 send_unknown_command_reply();
             }
-            // else OK. target reply packet ends busy state.
+            // else OK. Reply packet ends busy state.
         }
-        else if(0 == strncmp(received, "vFlashErase", 11))
+    }
+    else if(0 == strncmp(received, "vFlashWrite", 11))
+    {
+        // command start with "vFlashWrite"
+        found_cmd = true;
+        if(true == parse_parameter(PARAM_ADDR_BINARY, &(received[12]), length - 12))
         {
-            // command start with "vFlashErase"
-            found_cmd = true;
-            if(true == parse_parameter(PARAM_ADDR_LENGTH, &(received[12]), length -12))
+            gdb_is_now_busy();
+            if(false == add_action_with_parameter(GDB_CMD_VFLASH_WRITE, &parsed_parameter))
             {
-                gdb_is_now_busy();
-                if(false == add_action_with_parameter(GDB_CMD_VFLASH_ERASE, &parsed_parameter))
-                {
-                    // failed to add command
-                    send_unknown_command_reply();
-                }
-                // else OK. Reply packet ends busy state.
+                // failed to add command
+                send_unknown_command_reply();
             }
+            // else OK. Reply packet ends busy state.
         }
-        else if(0 == strncmp(received, "vFlashWrite", 11))
+    }
+    else if(0 == strncmp(received, "vKill", 5))
+    {
+        gdbserver_disconnect();
+        reply_packet_prepare();
+        reply_packet_add("OK");
+        reply_packet_send();
+    }
+    else if(0 == strncmp(received, "vStopped", 7))
+    {
+        found_cmd = true;
+        // TODO implement
+        gdb_is_now_busy();
+        if(false == add_action(GDB_CMD_QUESTIONMARK))
         {
-            // command start with "vFlashWrite"
-            found_cmd = true;
-            if(true == parse_parameter(PARAM_ADDR_BINARY, &(received[12]), length - 12))
-            {
-                gdb_is_now_busy();
-                if(false == add_action_with_parameter(GDB_CMD_VFLASH_WRITE, &parsed_parameter))
-                {
-                    // failed to add command
-                    send_unknown_command_reply();
-                }
-                // else OK. Reply packet ends busy state.
-            }
+            // failed to add command
+            send_unknown_command_reply();
         }
-        else if(0 == strncmp(received, "vKill", 5))
-        {
-            gdbserver_disconnect();
-            reply_packet_prepare();
-            reply_packet_add("OK");
-            reply_packet_send();
-        }
+        // else OK. Reply packet ends busy state.
+    }
+    else if(0 == strncmp(received, "vCtrlC", 6))
+    {
+        found_cmd = true;
+        // TODO implement
+        send_unknown_command_reply();
+    }
+
+    else if(0 == strncmp(received, "vFile", 5))
+    {
+        found_cmd = true;
+        // TODO implement
+        send_unknown_command_reply();
     }
 
     if(false == found_cmd)
     {
+        // "vMustReplyEmpty"
         send_unknown_command_reply();
     }
 }

@@ -50,6 +50,8 @@ vfork-events+            x
 vContSupported+          x         x           x
 */
 
+// if we implement Non stop Mode then we should add ‘QNonStop+’
+
 
 void handle_cmd_qSupported(char* parameter, uint32_t length)
 {
