@@ -316,6 +316,7 @@ void commands_execute(char* received, uint32_t length, char* checksum)
         case 'P':  // read  or write specific Register
         case 'p':  // read  or write specific Register
             // TODO implement
+            debug_error("ERROR: gdb p and P command not implemented !");
             send_unknown_command_reply();
             break;
 
@@ -359,6 +360,7 @@ void commands_execute(char* received, uint32_t length, char* checksum)
 
         case 'T':  // report if a particular Thread is alive
             // TODO implement
+            debug_error("ERROR: gdb T command not implemented !");
             send_unknown_command_reply();
             break;
 
@@ -373,6 +375,7 @@ void commands_execute(char* received, uint32_t length, char* checksum)
         case 'X':  // load binary data
         case 'Z':  // clear or set breakpoints or watch points
             // TODO implement
+            debug_error("ERROR: gdb X and Z command not implemented !");
             send_unknown_command_reply();
             break;
 
@@ -489,6 +492,7 @@ static void handle_vee(char* received, uint32_t length)
         found_cmd = true;
         // run program
         // TODO implement
+        debug_error("ERROR: gdb vRun command not implemented !");
         send_unknown_command_reply();
     }
     else if(0 == strncmp(received, "vAttach", 7))
@@ -497,6 +501,7 @@ static void handle_vee(char* received, uint32_t length)
         found_cmd = true;
         // Attach to (new) process
         // TODO implement
+        debug_error("ERROR: gdb vAttach command not implemented !");
         send_unknown_command_reply();
     }
     else if(0 == strncmp(received, "vFlashDone", 10))
@@ -564,6 +569,7 @@ static void handle_vee(char* received, uint32_t length)
     {
         found_cmd = true;
         // TODO implement
+        debug_error("ERROR: gdb cCtrlC command not implemented !");
         send_unknown_command_reply();
     }
 
@@ -571,6 +577,7 @@ static void handle_vee(char* received, uint32_t length)
     {
         found_cmd = true;
         // TODO implement
+        debug_error("ERROR: gdb vFile command not implemented !");
         send_unknown_command_reply();
     }
 
@@ -593,6 +600,7 @@ static void handle_tee(char* received, uint32_t length)
             found_cmd = true;
             // debug with other core running
             // TODO implement
+            debug_error("ERROR: gdb target async command not implemented !");
             send_unknown_command_reply();
         }
     }
@@ -603,6 +611,7 @@ static void handle_tee(char* received, uint32_t length)
             found_cmd = true;
             // debug with other core running
             // TODO implement
+            debug_error("ERROR: gdb target extended-async command not implemented !");
             send_unknown_command_reply();
         }
     }
@@ -750,6 +759,7 @@ static void handle_general_query(char* received, uint32_t length)
             found_cmd = true;
             // report the current tread
             // TODO
+            debug_error("ERROR: gdb qGetTLSAddr command not implemented !");
             send_unknown_command_reply();
         }
     }
@@ -775,6 +785,7 @@ static void handle_general_query(char* received, uint32_t length)
             found_cmd = true;
             // report the current tread
             // TODO
+            debug_error("ERROR: gdb qThreadExtraInfo command not implemented !");
             send_unknown_command_reply();
         }
     }

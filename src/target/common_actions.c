@@ -821,6 +821,7 @@ Result handle_target_reply_step(action_data_typ* const action)
         return ERR_ACTION_NULL;
     }
 
+    debug_error("ERROR: gdb step command not implemented !");
     send_unknown_command_reply();
     return RESULT_OK;
 }
