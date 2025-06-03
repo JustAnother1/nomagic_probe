@@ -36,3 +36,13 @@ void target_send_file(char* filename, uint32_t offset, uint32_t len)
     (void) offset;
     (void) len;
 }
+
+bool target_command_halt_cpu(void)
+{
+    return true;
+}
+
+void target_re_init(void)
+{
+
+}

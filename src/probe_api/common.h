@@ -160,7 +160,6 @@ typedef struct{
     bool first_call;
 } action_data_typ;
 
-
 typedef Result (*action_handler)(action_data_typ * const action);
 
 void common_target_init(void);
@@ -174,6 +173,8 @@ void target_restart_action_timeout(void);
 
 void target_set_status(target_status_typ new_status);
 bool common_cmd_target_info(uint32_t loop);
+
+void target_interrupt_execution(void);
 
 
 #endif /* COMMON_H_ */

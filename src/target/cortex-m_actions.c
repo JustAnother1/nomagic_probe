@@ -12,17 +12,22 @@
  * with this program; if not, see <http://www.gnu.org/licenses/>
  *
  */
-#ifndef GDBSERVER_H_
-#define GDBSERVER_H_
 
-#include <stdint.h>
-#include <stdbool.h>
+#include "cfg/target_specific_actions.h"
+#include "probe_api/cortex-m_actions.h"
+#include "probe_api/common.h"
+#include "probe_api/result.h"
 
-void gdbserver_init(void);
-void gdbserver_tick(void);
-bool gdbs_info(const uint32_t loop);
-void gdbserver_connect(void);
-void gdbserver_disconnect(void);
-void gdbserver_received_ctrl_c(void);
 
-#endif /* GDBSERVER_H_ */
+bool target_command_halt_cortex_m_cpu(void)
+{
+    return add_action(HALT_CORTEX_M_CPU);
+}
+
+
+Result handle_cortex_m_halt(action_data_typ* const action)
+{
+    // TODO
+    (void)action;
+    return ERR_WRONG_STATE;
+}

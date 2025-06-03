@@ -25,6 +25,7 @@
 #include "probe_api/result.h"
 #include "probe_api/time.h"
 #include "probe_api/util.h"
+#include "target/common_actions.h"
 
 
 #define GDB_BUSY_TIMEOUT_MS      5000
@@ -36,7 +37,8 @@ typedef enum parseState {
     IN_PACKET,
     FOUND_END,
     CHECKSUM_HIGH,
-    CHECKSUM_LOW
+    CHECKSUM_LOW,
+    TELNET,
 } state_typ;
 
 static void communicate_with_gdb(void);
@@ -101,7 +103,6 @@ void gdbserver_disconnect(void)
     // reset settings from this session so that next session is the same as the first session
     commands_init();
 }
-
 
 void reply_packet_prepare(void)
 {
@@ -394,6 +395,12 @@ bool gdbs_info(const uint32_t loop)
     return false;
 }
 
+void gdbserver_received_ctrl_c(void)
+{
+    debug_error("received CTRL-C!");
+
+}
+
 static void communicate_with_gdb(void)
 {
     uint32_t num_bytes_received;
@@ -422,6 +429,16 @@ static void communicate_with_gdb(void)
             uint8_t data = serial_gdb_get_next_received_byte();
             switch(state)
             {
+                case TELNET:
+                    if(0xf3 == data)
+                    {
+                        // BREAK
+                        // TCP gdb can send telnet BREAK sequence (IAC(255) + BREAK(243))
+                        gdbserver_received_ctrl_c();
+                    }
+                    state = UNKNOWN;
+                    break;
+
                 case CHECKSUM_LOW:
                 case UNKNOWN:
                     // Between packets:
@@ -457,11 +474,16 @@ static void communicate_with_gdb(void)
                         serial_gdb_flush();
                         */
                     }
+                    else if(0xff == data)
+                    {
+                        // Start of Telnet command
+                        state = TELNET;
+                    }
                     else if(0x03 == data)
                     {
                         // BREAK
                         // is optional. Application is the GDB user pressed CTRL-C.
-                        debug_error("INFO: break not implemented !");
+                        gdbserver_received_ctrl_c();
                     }
                     else
                     {

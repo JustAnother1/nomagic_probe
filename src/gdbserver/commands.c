@@ -568,9 +568,10 @@ static void handle_vee(char* received, uint32_t length)
     else if(0 == strncmp(received, "vCtrlC", 6))
     {
         found_cmd = true;
-        // TODO implement
-        debug_error("ERROR: gdb cCtrlC command not implemented !");
-        send_unknown_command_reply();
+        gdbserver_received_ctrl_c();
+        reply_packet_prepare();
+        reply_packet_add("OK");
+        reply_packet_send();
     }
 
     else if(0 == strncmp(received, "vFile", 5))

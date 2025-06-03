@@ -13,12 +13,12 @@
  *
  */
 
-#ifndef PROBE_API_ACTIONS_H_
-#define PROBE_API_ACTIONS_H_
+#ifndef TARGET_CORTEX_M_ACTIONS_H_
+#define TARGET_CORTEX_M_ACTIONS_H_
 
-#include "common.h"
-#include "target/common_actions.h"
-#include "cfg/target_actions.h"
+#include "probe_api/common.h"
 
+bool target_command_halt_cortex_m_cpu(void);
+Result handle_cortex_m_halt(action_data_typ* const action);
 
-#endif /* PROBE_API_ACTIONS_H_ */
+#endif /* TARGET_CORTEX_M_ACTIONS_H_ */

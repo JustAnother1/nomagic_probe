@@ -108,3 +108,8 @@ Result target_write(uint32_t start_address, uint8_t* data, uint32_t length)
     (void) length;
     return RESULT_OK;
 }
+
+bool target_command_halt_cpu(void)
+{
+    return true;
+}

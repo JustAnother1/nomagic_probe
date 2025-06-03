@@ -18,7 +18,6 @@
 #include <stddef.h>
 #include <string.h>
 #include "cfg/serial_cfg.h"
-#include "probe_api/actions.h"
 #include "probe_api/common.h"
 #include "probe_api/debug_log.h"
 #include "probe_api/gdb_error_codes.h"
@@ -28,6 +27,11 @@
 #include "probe_api/swd.h"
 #include "probe_api/time.h"
 #include "target.h"
+#include "target/common_actions.h"
+
+//action definitions must be after "probe_api/common.h"
+#include "cfg/target_actions.h"
+#include "probe_api/cortex-m_actions.h"
 
 #define ACTION_TRACE_LENGTH           30
 #define ACTION_QUEUE_LENGTH           5
@@ -124,6 +128,16 @@ void target_set_status(target_status_typ new_status)
         target_status = new_status;
     }
     // else no change
+}
+
+void target_interrupt_execution(void)
+{
+    if(CONNECTED_RUNNING == target_status)
+    {
+        target_set_status(CONNECTED_HALTED);
+    }
+    target_command_halt_cpu();
+    send_stopped_reply();
 }
 
 void common_target_tick(void)

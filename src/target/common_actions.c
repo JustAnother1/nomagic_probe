@@ -39,8 +39,6 @@
 #define MAX_MONITOR_LINE_LENGTH         50
 static char msg_buf[MAX_MONITOR_LINE_LENGTH];
 
-static void send_stopped_reply(void);
-
 #endif
 
 // SWD_CONNECT
@@ -889,7 +887,7 @@ Result handle_check_target_running(action_data_typ* const action)
     return ERR_WRONG_STATE;
 }
 
-static void send_stopped_reply(void)
+void send_stopped_reply(void)
 {
     reply_packet_prepare();
     // S = Signal; 05 = SIGTRAP

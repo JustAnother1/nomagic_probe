@@ -17,6 +17,7 @@
 
 #include "probe_api/common.h"
 
+void send_stopped_reply(void);
 Result handle_target_connect(action_data_typ* const action);
 Result handle_target_close_connection(action_data_typ* const action);
 #ifdef FEAT_GDB_SERVER
