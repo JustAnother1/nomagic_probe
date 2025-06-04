@@ -28,6 +28,7 @@ uint16_t file_storage_getblock_size(void)
     return BLOCK_SIZE;
 }
 
+//! entry point from USB
 int32_t  file_storage_read(const uint32_t block, const uint32_t offset, uint8_t* buffer, const uint32_t bufsize)
 {
     uint32_t start = offset;

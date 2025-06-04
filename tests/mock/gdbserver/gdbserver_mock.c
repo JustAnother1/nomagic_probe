@@ -42,6 +42,21 @@ char* mock_gdbserver_get_reply(uint32_t idx)
     return (char*)&reply_buffer[idx][0];
 }
 
+void gdbserver_connect(void)
+{
+
+}
+
+void gdbserver_disconnect(void)
+{
+
+}
+
+void gdbserver_received_ctrl_c(void)
+{
+
+}
+
 void reply_packet_prepare(void)
 {
     reply_buffer[reply_idx][0] = '(';

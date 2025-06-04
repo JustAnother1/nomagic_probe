@@ -45,6 +45,10 @@ From the pc the wholedisc can be read as a linear address area. The followinf th
 
 Unused areas will be reported to be all bytes = 0xff.
 
+The MBR is not part of the partition. Therefore reading the first partition will start with the boot sector of the FAT partition.
+I that case all addresses are 0x200 lower.
+To read everything use /dev/sdb instead of /dev/sdb1 !
+
 [cols="1,1,1,5"]
 |===
 |start address | end address | fake? | usage

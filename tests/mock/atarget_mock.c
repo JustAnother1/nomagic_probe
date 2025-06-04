@@ -21,3 +21,8 @@ bool cmd_target_info(uint32_t loop)
     (void) loop;
     return true;
 }
+
+bool target_command_halt_cpu(void)
+{
+    return false;
+}

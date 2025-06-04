@@ -14,6 +14,16 @@ TST_INCDIRS += src/tinyusb/src/
 TST_INCDIRS += src/probe_api/
 TST_INCDIR = $(patsubst %,-I%, $(TST_INCDIRS))
 
+# TESTS
+# =====
+
+# FOLDER cfg
+
+#TODO
+
+
+# FOLDER cli
+
 #cli/cli
 TEST_EXECUTEABLES += $(TEST_BIN_FOLDER)cli_cli
 CLI_CLI_OBJS =                                \
@@ -29,12 +39,32 @@ CLI_CLI_OBJS =                                \
  $(TEST_BIN_FOLDER)mock/target/common_mock.o  \
  $(TEST_BIN_FOLDER)mock/atarget_mock.o
 
+# FOLDER file
+
+#file/fake_boot_sector
+TEST_EXECUTEABLES += $(TEST_BIN_FOLDER)file_fake_boot_sector
+FILE_FAKE_BOOT_SECTOR_OBJS =                                 \
+ $(TEST_BIN_FOLDER)file/fake_boot_sector_tests.o             \
+ $(TEST_BIN_FOLDER)src/file/fake_boot_sector.o
+
+#file/fake_fat
+TEST_EXECUTEABLES += $(TEST_BIN_FOLDER)file_fake_fat
+FILE_FAKE_FAT_OBJS =                                 \
+ $(TEST_BIN_FOLDER)file/fake_fat_tests.o             \
+ $(TEST_BIN_FOLDER)src/file/fake_fat.o               \
+  $(TEST_BIN_FOLDER)mock/file/file_system_mock.o 
+
+
+# FOLDER gdbserver
+
 #gdbserver/commands
 TEST_EXECUTEABLES += $(TEST_BIN_FOLDER)gdbserver_commands
 GDBSERVER_COMMANDS_OBJS =                                 \
  $(TEST_BIN_FOLDER)gdbserver/commands_tests.o             \
+ $(TEST_BIN_FOLDER)src/lib/printf.o                       \
  $(TEST_BIN_FOLDER)src/gdbserver/commands.o               \
  $(TEST_BIN_FOLDER)src/gdbserver/util.o                   \
+ $(TEST_BIN_FOLDER)mock/hal/hw_divider_mock.o             \
  $(TEST_BIN_FOLDER)mock/lib/printf_mock.o                 \
  $(TEST_BIN_FOLDER)mock/gdbserver/gdbserver_mock.o        \
  $(TEST_BIN_FOLDER)mock/gdbserver/threads_mock.o          \
@@ -49,20 +79,30 @@ GDBSERVER_GDBSERVER_OBJS =                        \
  $(TEST_BIN_FOLDER)gdbserver/gdbserver_tests.o    \
  $(TEST_BIN_FOLDER)src/gdbserver/gdbserver.o      \
  $(TEST_BIN_FOLDER)src/gdbserver/util.o           \
+ $(TEST_BIN_FOLDER)src/lib/printf.o               \
+  $(TEST_BIN_FOLDER)mock/atarget_mock.o           \
  $(TEST_BIN_FOLDER)mock/gdbserver/serial_gdb.o    \
  $(TEST_BIN_FOLDER)mock/gdbserver/commands_mock.o \
  $(TEST_BIN_FOLDER)mock/target/common_mock.o      \
  $(TEST_BIN_FOLDER)mock/hal/time_base_mock.o      \
+ $(TEST_BIN_FOLDER)mock/hal/hw_divider_mock.o     \
  $(TEST_BIN_FOLDER)mock/lib/printf_mock.o
 
 #gdbserver/util
-TEST_EXECUTEABLES = $(TEST_BIN_FOLDER)gdbserver_util
+TEST_EXECUTEABLES += $(TEST_BIN_FOLDER)gdbserver_util
 GDBSERVER_UTIL_OBJS =                         \
  $(TEST_BIN_FOLDER)gdbserver/util_tests.o     \
  $(TEST_BIN_FOLDER)src/gdbserver/util.o       \
  $(TEST_BIN_FOLDER)src/lib/printf.o           \
  $(TEST_BIN_FOLDER)mock/hal/hw_divider_mock.o \
  $(TEST_BIN_FOLDER)mock/lib/printf_mock.o
+
+# FOLDER hal
+
+# TODO
+
+
+# FOLDEER lib
 
 #lib/printf
 TEST_EXECUTEABLES += $(TEST_BIN_FOLDER)lib_printf
@@ -71,6 +111,18 @@ LIB_PRINTF_OBJS =                             \
  $(TEST_BIN_FOLDER)src/lib/printf.o           \
  $(TEST_BIN_FOLDER)mock/lib/printf_mock.o     \
  $(TEST_BIN_FOLDER)mock/hal/hw_divider_mock.o
+
+# FOLDER lwip
+
+# TODO
+
+
+# FOLDER swd
+
+# TODO
+
+
+# FOLDER target
 
 #target/common_actions.c
 TEST_EXECUTEABLES += $(TEST_BIN_FOLDER)target_common_actions
@@ -87,6 +139,17 @@ TARGET_COMMON_ACTIONS_OBJS =                       \
  $(TEST_BIN_FOLDER)mock/hal/hw_divider_mock.o      \
  $(TEST_BIN_FOLDER)mock/lib/printf_mock.o
 
+#target/flash_write_buffer
+TEST_EXECUTEABLES += $(TEST_BIN_FOLDER)target_flash_write_buffer
+FLASH_WRITE_BUFFER_OBJS =                             \
+ $(TEST_BIN_FOLDER)target/flash_write_buffer_tests.o  \
+ $(TEST_BIN_FOLDER)src/lib/printf.o                   \
+ $(TEST_BIN_FOLDER)mock/hal/hw_divider_mock.o         \
+ $(TEST_BIN_FOLDER)src/target/flash_write_buffer.o
+
+
+# FOLDEER tinyusb
+
 #tinyusb/usb_msc
 TEST_EXECUTEABLES += $(TEST_BIN_FOLDER)tinyusb_usb_msc
 TINYUSB_USB_MSC_OBJS =                           \
@@ -94,14 +157,6 @@ TINYUSB_USB_MSC_OBJS =                           \
  $(TEST_BIN_FOLDER)src/tinyusb/usb_msc.o         \
  $(TEST_BIN_FOLDER)mock/file/file_storage_mock.o \
  $(TEST_BIN_FOLDER)mock/tinyusb/tinyusb_mock.o
-
-# flash_write_buffer
-TEST_EXECUTEABLES += $(TEST_BIN_FOLDER)flash_write_buffer
-FLASH_WRITE_BUFFER_OBJS =                             \
- $(TEST_BIN_FOLDER)target/flash_write_buffer_tests.o  \
- $(TEST_BIN_FOLDER)src/lib/printf.o                   \
- $(TEST_BIN_FOLDER)mock/hal/hw_divider_mock.o         \
- $(TEST_BIN_FOLDER)src/target/flash_write_buffer.o
 
 
 
@@ -141,6 +196,26 @@ $(TEST_BIN_FOLDER)src/%.o: src/%.c
 
 
 # Test executeables
+# =================
+
+$(TEST_BIN_FOLDER)cli_cli: $(CLI_CLI_OBJS) $(FRAMEWORK_OBJS)
+	@echo ""
+	@echo "linking test: cli/cli"
+	@echo "====================="
+	$(TST_LD) $(TST_LFLAGS) -o $(TEST_BIN_FOLDER)cli_cli $(CLI_CLI_OBJS) $(FRAMEWORK_OBJS)
+
+$(TEST_BIN_FOLDER)file_fake_boot_sector: $(FILE_FAKE_BOOT_SECTOR_OBJS) $(FRAMEWORK_OBJS)
+	@echo ""
+	@echo "linking test: file/fake_boot_sector"
+	@echo "==================================="
+	$(TST_LD) $(TST_LFLAGS) -o $(TEST_BIN_FOLDER)file_fake_boot_sector $(FILE_FAKE_BOOT_SECTOR_OBJS) $(FRAMEWORK_OBJS)
+
+$(TEST_BIN_FOLDER)file_fake_fat: $(FILE_FAKE_FAT_OBJS) $(FRAMEWORK_OBJS)
+	@echo ""
+	@echo "linking test: file/fake_fat"
+	@echo "==========================="
+	$(TST_LD) $(TST_LFLAGS) -o $(TEST_BIN_FOLDER)file_fake_fat $(FILE_FAKE_FAT_OBJS) $(FRAMEWORK_OBJS)
+
 $(TEST_BIN_FOLDER)gdbserver_util: $(GDBSERVER_UTIL_OBJS) $(FRAMEWORK_OBJS)
 	@echo ""
 	@echo "linking test: gdbserver/util"
@@ -156,39 +231,32 @@ $(TEST_BIN_FOLDER)gdbserver_gdbserver: $(GDBSERVER_GDBSERVER_OBJS) $(FRAMEWORK_O
 $(TEST_BIN_FOLDER)gdbserver_commands: $(GDBSERVER_COMMANDS_OBJS) $(FRAMEWORK_OBJS)
 	@echo ""
 	@echo "linking test: gdbserver/commands"
-	@echo "================================="
+	@echo "================================"
 	$(TST_LD) $(TST_LFLAGS) -o $(TEST_BIN_FOLDER)gdbserver_commands $(GDBSERVER_COMMANDS_OBJS) $(FRAMEWORK_OBJS)
+
+$(TEST_BIN_FOLDER)lib_printf: $(LIB_PRINTF_OBJS) $(FRAMEWORK_OBJS)
+	@echo ""
+	@echo "linking test: lib/printf"
+	@echo "========================"
+	$(TST_LD) $(TST_LFLAGS) -o $(TEST_BIN_FOLDER)lib_printf $(LIB_PRINTF_OBJS) $(FRAMEWORK_OBJS)
+
+$(TEST_BIN_FOLDER)target_common_actions: $(TARGET_COMMON_ACTIONS_OBJS) $(FRAMEWORK_OBJS)
+	@echo ""
+	@echo "linking test: target/common_actions"
+	@echo "==================================="
+	$(TST_LD) $(TST_LFLAGS) -o $(TEST_BIN_FOLDER)target_common_actions $(TARGET_COMMON_ACTIONS_OBJS) $(FRAMEWORK_OBJS)
+
+$(TEST_BIN_FOLDER)target_flash_write_buffer: $(FLASH_WRITE_BUFFER_OBJS) $(FRAMEWORK_OBJS)
+	@echo ""
+	@echo "linking test: target/flash_write_buffer"
+	@echo "======================================="
+	$(TST_LD) $(TST_LFLAGS) -o $(TEST_BIN_FOLDER)target_flash_write_buffer $(FLASH_WRITE_BUFFER_OBJS) $(FRAMEWORK_OBJS)
 
 $(TEST_BIN_FOLDER)tinyusb_usb_msc: $(TINYUSB_USB_MSC_OBJS) $(FRAMEWORK_OBJS)
 	@echo ""
 	@echo "linking test: tinyusb/usb_msc"
 	@echo "============================="
 	$(TST_LD) $(TST_LFLAGS) -o $(TEST_BIN_FOLDER)tinyusb_usb_msc $(TINYUSB_USB_MSC_OBJS) $(FRAMEWORK_OBJS)
-
-$(TEST_BIN_FOLDER)lib_printf: $(LIB_PRINTF_OBJS) $(FRAMEWORK_OBJS)
-	@echo ""
-	@echo "linking test: lib/printf"
-	@echo "============================="
-	$(TST_LD) $(TST_LFLAGS) -o $(TEST_BIN_FOLDER)lib_printf $(LIB_PRINTF_OBJS) $(FRAMEWORK_OBJS)
-
-$(TEST_BIN_FOLDER)cli_cli: $(CLI_CLI_OBJS) $(FRAMEWORK_OBJS)
-	@echo ""
-	@echo "linking test: cli/cli"
-	@echo "============================="
-	$(TST_LD) $(TST_LFLAGS) -o $(TEST_BIN_FOLDER)cli_cli $(CLI_CLI_OBJS) $(FRAMEWORK_OBJS)
-
-$(TEST_BIN_FOLDER)target_common_actions: $(TARGET_COMMON_ACTIONS_OBJS) $(FRAMEWORK_OBJS)
-	@echo ""
-	@echo "linking test: target/common_actions"
-	@echo "================================="
-	$(TST_LD) $(TST_LFLAGS) -o $(TEST_BIN_FOLDER)target_common_actions $(TARGET_COMMON_ACTIONS_OBJS) $(FRAMEWORK_OBJS)
-
-$(TEST_BIN_FOLDER)flash_write_buffer: $(FLASH_WRITE_BUFFER_OBJS) $(FRAMEWORK_OBJS)
-	@echo ""
-	@echo "linking test: target/flash_write_buffer"
-	@echo "============================"
-	$(TST_LD) $(TST_LFLAGS) -o $(TEST_BIN_FOLDER)flash_write_buffer $(FLASH_WRITE_BUFFER_OBJS) $(FRAMEWORK_OBJS)
-
 
 # run all tests
 $(TEST_BIN_FOLDER)%.txt: $(TEST_BIN_FOLDER)%
@@ -200,12 +268,12 @@ $(TEST_BIN_FOLDER)%.txt: $(TEST_BIN_FOLDER)%
 # report results
 test: $(TEST_LOGS)
 	@echo ""
+	@echo "-----------------------\nPASSED:\n-----------------------"
+	@echo "$(PASSED)"
 	@echo "-----------------------\nIGNORES:\n-----------------------"
 	@echo "$(IGNORES)"
 	@echo "-----------------------\nFAILURES:\n-----------------------"
 	@echo "$(FAILURES)"
-	@echo "-----------------------\nPASSED:\n-----------------------"
-	@echo "$(PASSED)"
 	@echo "\nDONE"
 
 
