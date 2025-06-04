@@ -19,10 +19,10 @@ No dynamic memory allocation, no malloc!
 == targets
 this is only the parent repository. The seperate use cases / target have their own repositories:
 
- - https://github.com/JustAnother1/detect_nomagic_probe[DETECT]
+ - https://codeberg.org/JustAnother1/detect_nomagic_probe[DETECT]
 command line interface on USB serial port. This allows analysis of unsupported chips.
 
- - https://github.com/JustAnother1/rp2040_nomagic_probe[RP2040]
+ - https://codeberg.org/JustAnother1/rp2040_nomagic_probe[RP2040]
 SWD connection to a RaspberryPi RP2040
 
 
