@@ -137,7 +137,6 @@ void target_interrupt_execution(void)
         target_set_status(CONNECTED_HALTED);
     }
     target_command_halt_cpu();
-    send_stopped_reply();
 }
 
 void common_target_tick(void)
@@ -348,6 +347,7 @@ bool add_action_with_parameter(action_typ act, parameter_typ* parsed_parameter)
 void target_connect(void)
 {
     add_action(SWD_CONNECT);
+    target_command_halt_cpu();  // TODO
 }
 
 void target_close_connection(void)

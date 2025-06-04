@@ -25,6 +25,7 @@
 #include "probe_api/result.h"
 #include "probe_api/time.h"
 #include "probe_api/util.h"
+#include "target.h"
 #include "target/common_actions.h"
 
 
@@ -398,7 +399,7 @@ bool gdbs_info(const uint32_t loop)
 void gdbserver_received_ctrl_c(void)
 {
     debug_error("received CTRL-C!");
-
+    target_command_halt_cpu();
 }
 
 static void communicate_with_gdb(void)
