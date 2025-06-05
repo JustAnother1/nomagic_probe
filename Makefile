@@ -186,6 +186,7 @@ doc:
 	@echo "doxygen"
 	@echo "========"
 	doxygen
+	firefox bin/doxygen/html/index.html
 
 clean:
 	@rm -rf $(BIN_FOLDER)/* tests/$(PROJECT)_tests tests/bin/ $(CLEAN_RM)
