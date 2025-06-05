@@ -331,7 +331,17 @@ void network_gdb_send_bytes(const uint8_t * data, const uint32_t length)
     if((NULL == gdb_def.connection_pcb) || (false == gdb_def.is_connected))
     {
         // not connected
-        debug_error("LWIP: could not send bytes as connection is closed!");
+        char buf[30];
+        uint32_t len = length;
+        if(len > 30)
+        {
+            len = 30;
+        }
+        memset(buf, 0, 30);
+        memcpy(buf, data, len);
+        binary_to_ascii_dump(buf, len);
+        buf[29] = 0;  // better safe than sorry
+        debug_error("LWIP: could not send bytes (%s) as connection is closed!", buf);
         return;
     }
 
@@ -419,7 +429,17 @@ void network_target_uart_send_bytes(const uint8_t * data, const uint32_t length)
     if((NULL == target_uart_def.connection_pcb) || (false == target_uart_def.is_connected))
     {
         // not connected
-        debug_error("LWIP: could not send bytes as connection is closed!");
+        char buf[30];
+        uint32_t len = length;
+        if(len > 30)
+        {
+            len = 30;
+        }
+        memset(buf, 0, 30);
+        memcpy(buf, data, len);
+        binary_to_ascii_dump(buf, len);
+        buf[29] = 0;  // better safe than sorry
+        debug_error("LWIP: could not send bytes (%s) as connection is closed!", buf);
         return;
     }
 
