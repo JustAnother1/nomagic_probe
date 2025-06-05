@@ -399,6 +399,7 @@ bool gdbs_info(const uint32_t loop)
 void gdbserver_received_ctrl_c(void)
 {
     debug_error("received CTRL-C!");
+    target_interrupt_execution();
     target_command_halt_cpu();
 }
 

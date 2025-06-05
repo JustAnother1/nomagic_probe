@@ -124,7 +124,15 @@ void target_set_status(target_status_typ new_status)
         {
             start_timeout(&report_to, GDB_RUNNING_REPORT_TIMEOUT_MS);
         }
-
+        debug_msg("target status changed to ");
+        switch(new_status)
+        {
+        case NOT_CONNECTED:     debug_line("not connected"); break;
+        case CONNECTING:        debug_line("connecting"); break;
+        case CONNECTED_HALTED:  debug_line("connected halted"); break;
+        case CONNECTED_RUNNING: debug_line("connected running"); break;
+        default:                debug_line("unknown"); break;
+        }
         target_status = new_status;
     }
     // else no change
@@ -162,7 +170,7 @@ void common_target_tick(void)
 
         default:
             // should not happen
-            target_status = NOT_CONNECTED;
+            target_set_status(NOT_CONNECTED);
             break;
     }
 }
@@ -493,14 +501,17 @@ static void handle_actions(void)
 static void report_to_gdb(void)
 {
 #ifdef FEAT_GDB_SERVER
-    if(true == timeout_expired(&report_to))
+    if(CONNECTED_RUNNING == target_status)
     {
-        reply_packet_prepare();
-        reply_packet_add("O");  // No Output
-        reply_packet_send();
-        start_timeout(&report_to, GDB_RUNNING_REPORT_TIMEOUT_MS);
+        if(true == timeout_expired(&report_to))
+        {
+            reply_packet_prepare();
+            reply_packet_add("O");  // No Output
+            reply_packet_send();
+            start_timeout(&report_to, GDB_RUNNING_REPORT_TIMEOUT_MS);
+        }
+        // else  wait
     }
-    // else  wait
 #endif
 }
 
