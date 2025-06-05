@@ -52,8 +52,26 @@ TEST_EXECUTEABLES += $(TEST_BIN_FOLDER)file_fake_fat
 FILE_FAKE_FAT_OBJS =                                 \
  $(TEST_BIN_FOLDER)file/fake_fat_tests.o             \
  $(TEST_BIN_FOLDER)src/file/fake_fat.o               \
-  $(TEST_BIN_FOLDER)mock/file/file_system_mock.o 
+ $(TEST_BIN_FOLDER)mock/file/file_system_mock.o 
 
+#file/fake_favicon
+TEST_EXECUTEABLES += $(TEST_BIN_FOLDER)file_fake_favicon
+FILE_FAKE_FAVICON_OBJS =                                 \
+ $(TEST_BIN_FOLDER)file/fake_favicon_tests.o             \
+ $(TEST_BIN_FOLDER)src/file/fake_favicon.o
+
+#file/fake_mbr
+TEST_EXECUTEABLES += $(TEST_BIN_FOLDER)file_fake_mbr
+FILE_FAKE_MBR_OBJS =                                 \
+ $(TEST_BIN_FOLDER)file/fake_mbr_tests.o             \
+ $(TEST_BIN_FOLDER)src/file/fake_mbr.o
+ 
+ #file/fake_root_folder
+TEST_EXECUTEABLES += $(TEST_BIN_FOLDER)file_fake_root_folder
+FILE_FAKE_ROOT_FOLDER_OBJS =                                 \
+ $(TEST_BIN_FOLDER)file/fake_root_folder_tests.o             \
+ $(TEST_BIN_FOLDER)src/file/fake_root_folder.o               \
+ $(TEST_BIN_FOLDER)mock/file/file_system_mock.o 
 
 # FOLDER gdbserver
 
@@ -215,6 +233,24 @@ $(TEST_BIN_FOLDER)file_fake_fat: $(FILE_FAKE_FAT_OBJS) $(FRAMEWORK_OBJS)
 	@echo "linking test: file/fake_fat"
 	@echo "==========================="
 	$(TST_LD) $(TST_LFLAGS) -o $(TEST_BIN_FOLDER)file_fake_fat $(FILE_FAKE_FAT_OBJS) $(FRAMEWORK_OBJS)
+
+$(TEST_BIN_FOLDER)file_fake_favicon: $(FILE_FAKE_FAVICON_OBJS) $(FRAMEWORK_OBJS)
+	@echo ""
+	@echo "linking test: file/fake_favicon"
+	@echo "==============================="
+	$(TST_LD) $(TST_LFLAGS) -o $(TEST_BIN_FOLDER)file_fake_favicon $(FILE_FAKE_FAVICON_OBJS) $(FRAMEWORK_OBJS)
+
+$(TEST_BIN_FOLDER)file_fake_mbr: $(FILE_FAKE_MBR_OBJS) $(FRAMEWORK_OBJS)
+	@echo ""
+	@echo "linking test: file/fake_mbr"
+	@echo "==========================="
+	$(TST_LD) $(TST_LFLAGS) -o $(TEST_BIN_FOLDER)file_fake_mbr $(FILE_FAKE_MBR_OBJS) $(FRAMEWORK_OBJS)
+
+$(TEST_BIN_FOLDER)file_fake_root_folder: $(FILE_FAKE_ROOT_FOLDER_OBJS) $(FRAMEWORK_OBJS)
+	@echo ""
+	@echo "linking test: file/fake_root_folder"
+	@echo "==================================="
+	$(TST_LD) $(TST_LFLAGS) -o $(TEST_BIN_FOLDER)file_fake_root_folder $(FILE_FAKE_ROOT_FOLDER_OBJS) $(FRAMEWORK_OBJS)
 
 $(TEST_BIN_FOLDER)gdbserver_util: $(GDBSERVER_UTIL_OBJS) $(FRAMEWORK_OBJS)
 	@echo ""
