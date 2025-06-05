@@ -13,6 +13,7 @@
  *
  */
 
+#include <stddef.h>
 #include <assert.h>
 #include <string.h>
 #include "fake_root_folder.h"

@@ -49,48 +49,64 @@ The MBR is not part of the partition. Therefore reading the first partition will
 I that case all addresses are 0x200 lower.
 To read everything use /dev/sdb instead of /dev/sdb1 !
 
-[cols="1,1,1,5"]
+[cols="1,1,1,1,1,5"]
 |===
-|start address | end address | fake? | usage
+|start address | end address | fake? | stored in flash| size | usage
 
 | 0x0
 | 0x200
 | Y
+| N
+| 512 Bytes
 | Master Boot Record (MBR)
 
 | 0x200
 | 0x400
 | Y
+| N
+| 512 Bytes
 | boot sector (of FAT partition)
 
 | 0x400
 | 0x2400
 | Y
+| Y
+| 8 kBytes
 | FAT
 
 | 0x2400
 | 0x3400
 | Y
+| Y
+| 4 kBytes
 | FAT: root folder
 
 | 0x3400
 | 0x4400
 | Y
+| N
+| 4 kBytes
 | readme
 
 | 0x4400
 | 0x5400
 | Y
+| N
+| 4 kBytes
 | autorun.inf
 
 | 0x5400
 | 0x7400
 | Y
+| N
+| 8 kBytes
 | favicon.ico
 
 | 0x7400
 | 0x1f000
 | N
+| Y
+| x kBytes
 | files written by PC
 
 |===
