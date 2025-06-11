@@ -24,6 +24,19 @@
 
 
 // TODO dynamic size
+/* Idea of how to implement dynamic size:
+ * if there is a working file system, then use that. If we need to format the file-system then do this:
+ * 1.) scan Flash
+ *     The addresses loop. If a Flash has2MB and we read the first block after
+ *     the 2MB then the flash will report back the first block of data it has.
+ *     We know that the first block of the flash contains the  boot loader.
+ *     If we read the flash at higher addresses until we find the boot loader
+ *     again then we know when the flash wraps around and the size it really has.
+ *     or
+ *     we could try to read the Flash Registers for the size information.
+ * 2.) adopt MBR + boot sector
+ *     The mbr and the boot sector both need to be patched to the new size values.
+ */
 #define FLASH_MAX_SECTORS         512
 
 // TODO detect flash size

@@ -10,8 +10,8 @@
 #include <hal/target_uart.h>
 #include <stdbool.h>
 
-static uint8_t UART1_recv_buf[100];
-static uint8_t UART1_send_buf[500];
+static uint8_t UART1_recv_buf[50];
+static uint8_t UART1_send_buf[50];
 static volatile bool UART1_is_sending;
 static volatile uint32_t UART1_recv_read_pos;
 static volatile uint32_t UART1_recv_write_pos;
@@ -61,7 +61,7 @@ void UART1_IRQ(void)
             uint32_t nextWrite;
             UART1_recv_buf[UART1_recv_write_pos] = (uint8_t)(data & 0xff);
             nextWrite = UART1_recv_write_pos + 1;
-            if (100 == nextWrite)
+            if (50 == nextWrite)
             {
                 nextWrite = 0;
             }
@@ -168,7 +168,7 @@ void target_uart_tick(void)
                 UART1_is_sending = true;
                 UART1->UARTDR = UART1_send_buf[UART1_send_read_pos];
                 UART1_send_read_pos++;
-                if(500 == UART1_send_read_pos)
+                if(50 == UART1_send_read_pos)
                 {
                     UART1_send_read_pos = 0;
                 }
@@ -199,7 +199,7 @@ void target_uart_send_bytes(const uint8_t *data, const uint32_t length)
     {
         uint32_t next_write = UART1_send_write_pos;
         next_write++;
-        if(500 <= next_write)
+        if(50 <= next_write)
         {
             next_write = 0;
         }
@@ -221,7 +221,7 @@ void target_uart_send_string(char* str)
     {
         uint32_t next_write = UART1_send_write_pos;
         next_write++;
-        if(500 <= next_write)
+        if(50 <= next_write)
         {
             next_write = 0;
         }
@@ -258,7 +258,7 @@ uint32_t target_uart_get_num_received_bytes(void)
     else
     {
         // wrap around
-        return (100 - UART1_recv_read_pos) + UART1_recv_write_pos;
+        return (50 - UART1_recv_read_pos) + UART1_recv_write_pos;
     }
 }
 
@@ -272,7 +272,7 @@ uint8_t target_uart_get_next_received_byte(void)
     }
     res = UART1_recv_buf[UART1_recv_read_pos];
     UART1_recv_read_pos++;
-    if(100 == UART1_recv_read_pos)
+    if(50 == UART1_recv_read_pos)
     {
         UART1_recv_read_pos = 0;
     }

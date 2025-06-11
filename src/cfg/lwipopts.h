@@ -51,7 +51,7 @@
 #define TCP_SNDQUEUELOWAT                      (TCP_SND_QUEUELEN / 2)
 #define MEMP_NUM_TCP_SEG                       32
 
-#define MEM_SIZE                               20000
+#define MEM_SIZE                               10000
 
 // DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG
 

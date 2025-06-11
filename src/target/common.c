@@ -72,6 +72,7 @@ static const action_handler action_look_up[NUM_ACTIONS] = {
         handle_target_reply_vFlashDone,       // GDB_CMD_VFLASH_DONE
         handle_target_reply_vFlashErase,      // GDB_CMD_VFLASH_ERASE
         handle_target_reply_vFlashWrite,      // GDB_CMD_VFLASH_WRITE
+        handle_target_reply_write_register,   // GDB_CMD_WRITE_REGISTER
 #endif
         TARGET_SPECIFIC_ACTION_HANDLERS
 };

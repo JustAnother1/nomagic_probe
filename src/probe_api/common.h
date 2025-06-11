@@ -77,6 +77,10 @@ typedef struct {
 //  uint32_t data_length; <- number of bytes in data[]
 //  uint32_t data[MAX_BINARY_SIZE]; <- the data bytes (4 byte aligned)
 
+#define MEMORY_LOCATION       7
+// memory_locationcontains:
+//  uint32_t idx;    <- register number or address of memory
+//  uint32_t value;  <- value to write to that location
 
 
 typedef struct {
@@ -113,6 +117,11 @@ typedef struct {
             uint32_t data[MAX_BINARY_SIZE_BYTES/4];
         } address_binary;
 
+        struct{
+            uint32_t idx;
+            uint32_t value;
+        }memory_location;
+
     };
 } parameter_typ;
 
@@ -142,6 +151,7 @@ typedef enum {
     GDB_CMD_VFLASH_DONE,
     GDB_CMD_VFLASH_ERASE,
     GDB_CMD_VFLASH_WRITE,
+    GDB_CMD_WRITE_REGISTER,
 #endif
     TARGET_SPECIFIC_ACTIONS_ENUM
     // new actions go here
@@ -154,7 +164,7 @@ typedef struct{
     uint32_t activity_phase;
     uint32_t intern[MAX_INTERN_VALUES];
     uint32_t read_0;
-    parameter_typ gdb_parameter;
+    parameter_typ gdb_parameter; // TODO this is rather big, is this the best way to do it?
     action_typ action;
     bool can_run;
     bool first_call;

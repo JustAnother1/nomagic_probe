@@ -31,6 +31,7 @@ Result handle_check_target_running(action_data_typ* const action);
 Result handle_monitor_halt(action_data_typ* const action);
 Result handle_monitor_reset(action_data_typ* const action);
 Result handle_monitor_reg(action_data_typ* const action);
+Result handle_target_reply_write_register(action_data_typ* const action);
 #endif
 
 #endif /* TARGET_COMMON_ACTIONS_H_ */

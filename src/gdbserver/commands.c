@@ -313,10 +313,30 @@ void commands_execute(char* received, uint32_t length, char* checksum)
             }
             break;
 
-        case 'P':  // read  or write specific Register
-        case 'p':  // read  or write specific Register
+        case 'P':  // write specific Register
+            // example parameter : "Pf=00020010"
+        {
+            char* split_pos = strchr(received, '=');
+            *split_pos = '\0';
+            split_pos++;
+            received++;
+            parsed_parameter.type = MEMORY_LOCATION;
+            parsed_parameter.memory_location.idx = hex_to_int(received, 0);
+            parsed_parameter.memory_location.value= hex_to_int(split_pos, 0);
+            gdb_is_now_busy();
+            if(false == add_action_with_parameter(GDB_CMD_WRITE_REGISTER, &parsed_parameter))
+            {
+                // failed to add command
+                send_unknown_command_reply();
+            }
+            // else OK. Reply packet ends busy state.
+        }
+            break;
+
+        case 'p':  // read specific Register
             // TODO implement
             debug_error("ERROR: gdb p and P command not implemented !");
+            debug_error("Parameter: %s", received);
             send_unknown_command_reply();
             break;
 

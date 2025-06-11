@@ -21,7 +21,7 @@
 static uint32_t block_size;
 static uint32_t num_blocks;
 static uint32_t first_invalid_idx;
-static uint8_t write_buffer[2048]; // the stored bytes to write
+static uint8_t write_buffer[2048]; // the stored bytes to write  // TODO define size to fix it as x buffers ?
 static uint32_t gdb_start_address;
 static uint32_t gdb_length;
 static uint32_t buffer_start_address;

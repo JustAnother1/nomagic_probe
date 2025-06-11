@@ -625,6 +625,125 @@ Result handle_target_reply_write_g(action_data_typ* const action)
     return ERR_WRONG_STATE;
 }
 
+Result handle_target_reply_write_register(action_data_typ* const action)
+{
+    Result res;
+
+    if(NULL == action)
+    {
+        return ERR_ACTION_NULL;
+    }
+
+    if(true == action->first_call)
+    {
+        reply_packet_prepare();
+        if( (MEMORY_LOCATION != action->gdb_parameter.type)
+           || (MAX_MEMORY_POSITIONS < action->gdb_parameter.memory_location.idx) )
+        {
+            // wrong parameter type
+            debug_error("ERROR: wrong parameter type !");
+            reply_packet_add(ERROR_CODE_INVALID_PARAMETER_FORMAT_TYPE);
+            reply_packet_send();
+            return ERR_WRONG_VALUE;
+        }
+        else
+        {
+            action->cur_phase = 1;
+            action->intern[INTERN_RETRY_COUNTER] = 0;
+        }
+        action->first_call = false;
+    }
+
+    // TODO remove ARM specific code
+    // TODO move ARM specific code into an activity
+
+    // 1. write value to DCRDR.
+    if(1 == action->cur_phase)
+    {
+        res = step_write_ap(DCRDR, action->gdb_parameter.memory_location.value);
+        if(RESULT_OK == res)
+        {
+            action->cur_phase++;
+        }
+        else
+        {
+            return res;
+        }
+    }
+
+    // 2. write to DCRSR the REGSEL value and REGWnR = 1
+    if(2 == action->cur_phase)
+    {
+        res = step_write_ap(DCRSR, action->gdb_parameter.memory_location.idx | (1 << DCRSR_REGWNR_OFFSET) );
+        if(RESULT_OK == res)
+        {
+            action->cur_phase++;
+        }
+        else
+        {
+            return res;
+        }
+    }
+
+    // 2. read DHCSR until S_REGRDY is 1
+    if(3 == action->cur_phase)
+    {
+        res = step_read_ap(DHCSR);
+        if(RESULT_OK == res)
+        {
+            action->cur_phase++;
+        }
+        else
+        {
+            return res;
+        }
+    }
+
+    if(4 == action->cur_phase)
+    {
+        res = step_get_Result_data(&action->read_0);
+        if(RESULT_OK == res)
+        {
+            action->cur_phase++;
+        }
+        else
+        {
+            return res;
+        }
+    }
+
+    if(5 == action->cur_phase)
+    {
+        if(0 == (action->read_0 & (1<<DHCSR_S_REGRDY_OFFSET)))
+        {
+            // write not finished
+            action->intern[INTERN_RETRY_COUNTER] ++;
+            if(100 < action->intern[INTERN_RETRY_COUNTER])
+            {
+                // write not finished -> read again
+                action->cur_phase = 3;
+                return ERR_NOT_COMPLETED;
+            }
+            else
+            {
+                debug_error("ERROR: gdb 'P' : too many retries !");
+                reply_packet_add("E23");
+                reply_packet_send();
+                return ERR_TIMEOUT;
+            }
+        }
+        else
+        {
+            // write finished
+            reply_packet_add("OK");
+            reply_packet_send();
+            return RESULT_OK;
+        }
+    }
+
+    return ERR_WRONG_STATE;
+}
+
 // GDB_CMD_QUESTIONMARK
 Result handle_target_reply_questionmark(action_data_typ* const action)
 {

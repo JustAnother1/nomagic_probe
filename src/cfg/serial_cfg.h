@@ -37,8 +37,8 @@ uint8_t serial_debug_get_next_received_byte(void);
 void serial_debug_putc(void* p, char c);
 
 // GDB Interface
-#define MAX_COMMAND_LENGTH    1025
-#define MAX_REPLY_LENGTH      2000
+#define MAX_COMMAND_LENGTH    1025 // TODO check if size is appropriate
+#define MAX_REPLY_LENGTH      2000 // TODO check if size is appropriate
 
 void serial_gdb_send_string(char * str);
 void serial_gdb_send_bytes(const uint8_t * data, const uint32_t length);
