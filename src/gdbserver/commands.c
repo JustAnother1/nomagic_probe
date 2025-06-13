@@ -748,6 +748,7 @@ static void handle_general_query(char* received, uint32_t length)
             found_cmd = true;
             // report the offsets to use when relocating downloaded code
             reply_packet_prepare();
+            reply_packet_add("Text=0;Data=0;Bss=0");  // this is what OpenOCD sends.
             // reply_packet_add("Text=0;Data=0;"); // Bss value will be ignored and Data value will be used
             // warning: Target reported unsupported offsets: Text=0;Data=0;Bss=0;
             reply_packet_send();

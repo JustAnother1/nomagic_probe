@@ -49,7 +49,7 @@ static uint8_t line_buffer[MAX_COMMAND_LENGTH];
 static uint32_t line_pos;
 static uint32_t reply_length;
 static uint8_t reply_buffer[MAX_REPLY_LENGTH];
-static uint32_t sum;
+static uint32_t sum; //! checksum of response packet
 static state_typ state;
 static char checksum[2];
 static bool connected;
@@ -198,9 +198,10 @@ bool reply_packet_add_hex(uint32_t data, uint32_t digits)
     {
         for(i = 0; i < report; i++)
         {
-            reply_buffer[reply_length + i] = (uint8_t)(buf[(report - 1) -i]);
-            sum = sum + (uint8_t)(buf[(report - 1) -i]);
-            serial_gdb_send_bytes(&(reply_buffer[reply_length + i]), 1);
+            uint8_t digit =  (uint8_t)(buf[i]);
+            reply_buffer[reply_length + i] = digit;
+            sum = sum + digit;  // update checksum
+            serial_gdb_send_bytes(&(reply_buffer[reply_length + i]), 1); // send that digit
         }
         reply_length = reply_length + report;
         return true;
