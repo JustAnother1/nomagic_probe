@@ -91,7 +91,7 @@ LFLAGS += -specs=nosys.specs
 LFLAGS += -fno-builtin -fno-builtin-function
 # https://wiki.osdev.org/Libgcc : All code compiled with GCC must be linked with libgcc. 
 #LFLAGS += -lgcc
-LFLAGS += -Wl,--gc-sections,-Map=$(BIN_FOLDER)$(PROJECT).map -g
+LFLAGS += -Wl,--gc-sections,-Map=$(BIN_FOLDER)$(PROJECT).map,--print-memory-usage -g
 LFLAGS += -fno-common -T$(LKR_SCRIPT)
 
 include nomagic_probe.mk
