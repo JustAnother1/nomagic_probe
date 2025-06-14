@@ -62,7 +62,7 @@ Result handle_cortex_m_halt(action_data_typ* const action)
                          | (1 << DHCSR_C_DEBUGEN_OFFSET) );
         if(RESULT_OK == res)
         {
-            send_stopped_reply();
+            send_stopped_reply();  // TODO this action gets "called" from the SWD connect -> stop reply not necessary in that situation.
             return RESULT_OK;
         }
         else

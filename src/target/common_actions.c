@@ -945,14 +945,45 @@ Result handle_target_reply_write_memory(action_data_typ* const action)
 // GDB_CMD_STEP
 Result handle_target_reply_step(action_data_typ* const action)
 {
+    Result res;
+
     if(NULL == action)
     {
         return ERR_ACTION_NULL;
     }
 
-    debug_error("ERROR: gdb step command not implemented !");
-    send_unknown_command_reply();
-    return RESULT_OK;
+    if(true == action->first_call)
+    {
+        action->cur_phase = 0;
+        action->first_call = false;
+    }
+
+    // TODO remove ARM specific code
+    // TODO move ARM specific code into an activity
+
+    // DHCSR
+    // bit 3: C_MASKINTS: 0= do not mask;                       1= Mask PendSV, SysTick and external configurable interrupts.
+    // bit 2: C_STEP:     0= single stepping disabled;          1= single stepping enabled.
+    // bit 1: C_HALT:     0= Request a halted processor to run; 1= Request a running processor to halt.
+    // bit 0: C_DEBUGEN:  0= Halting debug disabled;            1= Halting debug enabled.
+    if(0 == action->cur_phase)
+    {
+        res = step_write_ap(DHCSR, DBGKEY
+                         | (1 << DHCSR_C_MASKINTS_OFFSET)   // TODO "s" vs "S"
+                         | (1 << DHCSR_C_STEP_OFFSET)
+                         | (1 << DHCSR_C_DEBUGEN_OFFSET) );
+        if(RESULT_OK == res)
+        {
+            send_stopped_reply();
+            return RESULT_OK;
+        }
+        else
+        {
+            return res;
+        }
+    }
+
+    return ERR_WRONG_STATE;
 }
 
 // CHECK_RUNNING
