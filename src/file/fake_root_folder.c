@@ -259,7 +259,7 @@ fat_entry* fake_root_get_entry_of_file_named(const char* filename)
                     // -> we found the file
                     return &(buf[i]);
                 }
-                else if((0xe5 == buf[i].name[0]) && ('_' == name[0]))
+                else if(((char)(0xe5) == buf[i].name[0]) && ('_' == name[0]))
                 {
                     // deleted file
                     if(0 == strncmp(to_lower_case(&(buf[i].name[1])), &(name[1]), 7))

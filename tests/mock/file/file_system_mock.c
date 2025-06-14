@@ -15,6 +15,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <string.h>
 
 void file_system_init(void)
 {
@@ -23,6 +24,7 @@ void file_system_init(void)
 
 bool file_system_report(const uint32_t loop)
 {
+    (void) loop;
     return false;
 }
 
@@ -34,6 +36,7 @@ uint32_t file_system_block_count(void)
 // returns the number of bytes read or a negative number to indicate an error
 int32_t file_system_read(const uint32_t offset, uint8_t* buffer, const uint32_t bufsize)
 {
+    (void) offset;
     if(NULL == buffer)
     {
         return 0;
@@ -45,6 +48,7 @@ int32_t file_system_read(const uint32_t offset, uint8_t* buffer, const uint32_t 
 // returns the number of bytes read or a negative number to indicate an error
 int32_t file_system_write(const uint32_t offset, uint8_t* buffer, const uint32_t bufsize)
 {
+    (void) offset;
     if(NULL == buffer)
     {
         return 0;

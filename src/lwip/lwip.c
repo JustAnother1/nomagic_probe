@@ -89,6 +89,7 @@ udp_send() or tcp_write()!
 #include "cfg/network_cfg.h"
 #include "hal/time_base.h"
 #include "probe_api/debug_log.h"
+#include "probe_api/util.h"
 #include "dhcp_server.h"
 #include "tcp_pipe.h"
 // lwip

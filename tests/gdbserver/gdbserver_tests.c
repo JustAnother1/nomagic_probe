@@ -67,7 +67,7 @@ void test_gdbserver_hex(void)
     TEST_ASSERT_EQUAL_UINT32(0, mock_commands_get_call_counter_of(CALL_IDX_COMMANDS_EXECUTE));
     TEST_ASSERT_EQUAL_UINT32(6, gdb_get_num_bytes_in_send_buffer());
     TEST_ASSERT_EQUAL_UINT32(0, gdb_get_num_bytes_in_recv_buffer());
-    TEST_ASSERT_EQUAL_STRING ("$a2#93", gdb_send_buf);
+    TEST_ASSERT_EQUAL_STRING ("$2a#93", gdb_send_buf);
     TEST_ASSERT_EQUAL_UINT32(0, mock_commands_get_num_received_commands());
 }
 
@@ -83,7 +83,7 @@ void test_gdbserver_hex_sqish(void)
     TEST_ASSERT_EQUAL_UINT32(0, mock_commands_get_call_counter_of(CALL_IDX_COMMANDS_EXECUTE));
     TEST_ASSERT_EQUAL_UINT32(8, gdb_get_num_bytes_in_send_buffer());
     TEST_ASSERT_EQUAL_UINT32(0, gdb_get_num_bytes_in_recv_buffer());
-    TEST_ASSERT_EQUAL_STRING ("$104f#fb", gdb_send_buf);
+    TEST_ASSERT_EQUAL_STRING ("$f401#fb", gdb_send_buf);
     TEST_ASSERT_EQUAL_UINT32(0, mock_commands_get_num_received_commands());
 }
 

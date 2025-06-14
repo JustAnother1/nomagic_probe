@@ -479,6 +479,14 @@ static void handle_vee(char* received, uint32_t length)
         }
         else if(';' == received[5])
         {
+            // Example : "vCont;s:1;c"
+            // -> two commands:
+            //     -> "s:1" -> step on thread 1
+            //     -> "c" -> continue on all threads
+            // BUT: "For each inferior thread, the leftmost action with a matching thread-id is applied."
+            // therefore:
+            // -> step on thread 1
+            // -> continue on all threads except thread 1
             // specify step or continue actions specific to one or more threads
             if(('c' == received[6]) || ('C' == received[6]))
             {
@@ -493,15 +501,14 @@ static void handle_vee(char* received, uint32_t length)
             {
                 // vCont;s -> single step
                 found_cmd = true;
-                if(true == parse_parameter(PARAM_OPT_ADDR, &(received[7]), length - 7))
+                gdb_is_now_busy();
+                // The optional argument addr normally associated with the ‘c’, ‘C’, ‘s’, and ‘S’ packets is not supported in ‘vCont’.
+                parsed_parameter.type = HAS_VALUE;
+                parsed_parameter.has_value.valid = false;
+                if(false == add_action_with_parameter(GDB_CMD_STEP, &parsed_parameter))
                 {
-                    gdb_is_now_busy();
-                    if(false == add_action_with_parameter(GDB_CMD_STEP, &parsed_parameter))
-                    {
-                        // failed to add command
-                        send_unknown_command_reply();
-                    }
-                    // else OK. Reply packet ends busy state.
+                    // failed to add command
+                    send_unknown_command_reply();
                 }
             }
         }

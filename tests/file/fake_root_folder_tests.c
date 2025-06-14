@@ -115,15 +115,10 @@ void test_fake_fat_write_OK(void)
 {
     // Objective: correct request writes the FAT
     int32_t res = 0;
-    uint8_t res_buf[512] = { 0
-
-    };
-
     uint8_t buffer[512];
     memset(buffer, 0x23, 512);
     res = fake_root_folder_write(0, buffer, 512);
     TEST_ASSERT_EQUAL_INT32(res, 512);
-    // TEST_ASSERT_EQUAL_MEMORY(res_buf, buffer, 512);  TODO
 }
 
 // fat_entry* fake_root_get_entry_of_file_named(const char* filename);

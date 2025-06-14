@@ -56,10 +56,6 @@ void test_fake_fat_write_OK(void)
 {
     // Objective: correct request writes the FAT
     int32_t res = 0;
-    uint8_t res_buf[512] = { 0
-
-    };
-
     uint8_t buffer[512];
     memset(buffer, 0x23, 512);
     res = fake_fat_write(0, buffer, 512);

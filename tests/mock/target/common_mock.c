@@ -51,6 +51,11 @@ void common_target_tick(void)
 
 }
 
+void target_interrupt_execution(void)
+{
+
+}
+
 bool common_cmd_target_info(uint32_t loop)
 {
     (void) loop;
