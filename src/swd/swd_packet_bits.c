@@ -207,7 +207,7 @@ void swd_packet_bits_tick(void)
                     read_idx = 0;
                 }
             }
-            else if(ERR_QUEUE_FULL_TRY_AGAIN == res)
+            else if((ERR_QUEUE_FULL_TRY_AGAIN == res) || (ERR_NOT_COMPLETED == res))
             {
                 // try again next tick
             }
@@ -298,7 +298,15 @@ static Result write_package_handler(packet_definition_typ* pkg)
                 debug_error("ERROR: write AP addr: %ld, data: 0x%lx, ack: %ld", address, data, ack);
             }
             // handle "Sticky overrun"
-            if(false == sticky_overrun)
+            if(true == sticky_overrun)
+            {
+                // we need to not drive the line for 33 clocks (32 data + parity)
+                for(i = 0; i < 33; i++)
+                {
+                    write_bit(0);
+                }
+            }
+            else
             {
                 // TODO if this fails there is nothing I could do, also this should not fail ever, right?
                 switch(ack)
@@ -313,7 +321,9 @@ static Result write_package_handler(packet_definition_typ* pkg)
 
                 case ACK_WAIT:               // on wire: 0 1 0
                     debug_error("ERROR: SWD ACK was WAIT !");
-                    break;
+                    turn_to_output();
+                    operational = true;
+                    return ERR_NOT_COMPLETED; // try again
 
                 case ACK_FAULT:              // on wire: 0 0 1
                     debug_error("ERROR: SWD ACK was FAULT !");
@@ -327,13 +337,6 @@ static Result write_package_handler(packet_definition_typ* pkg)
                     debug_error("ERROR: SWD ACK was %ld !", ack);
                     break;
                 }
-                return ERR_TARGET_ERROR;
-            }
-            else
-            {
-                // else we need the data phase
-                // TODO Handle WAIT and Failure ACK
-                debug_error("ERROR: SWD(SO) ACK was %ld !", ack);
                 return ERR_TARGET_ERROR;
             }
         }
@@ -407,7 +410,9 @@ static Result read_package_handler(packet_definition_typ* pkg)
 
         case ACK_WAIT:               // on wire: 0 1 0
             debug_error("ERROR: SWD ACK was WAIT !");
-            break;
+            turn_to_output();
+            operational = true;
+            return ERR_NOT_COMPLETED; // try again
 
         case ACK_FAULT:              // on wire: 0 0 1
             debug_error("ERROR: SWD ACK was FAULT !");
