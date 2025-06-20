@@ -18,7 +18,14 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+typedef struct {
+    bool extended_mode;
+    bool noAckMode;
+} config_typ;
+
+extern config_typ gdb_cfg;
+
 void commands_init(void);
-void commands_execute(char* received, uint32_t length, char* checksum);
+void commands_execute(char* received, uint32_t length);
 
 #endif /* COMMANDS_H_ */

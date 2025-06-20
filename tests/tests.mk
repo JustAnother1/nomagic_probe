@@ -98,7 +98,7 @@ GDBSERVER_GDBSERVER_OBJS =                        \
  $(TEST_BIN_FOLDER)src/gdbserver/gdbserver.o      \
  $(TEST_BIN_FOLDER)src/gdbserver/util.o           \
  $(TEST_BIN_FOLDER)src/lib/printf.o               \
-  $(TEST_BIN_FOLDER)mock/atarget_mock.o           \
+ $(TEST_BIN_FOLDER)mock/atarget_mock.o            \
  $(TEST_BIN_FOLDER)mock/gdbserver/serial_gdb.o    \
  $(TEST_BIN_FOLDER)mock/gdbserver/commands_mock.o \
  $(TEST_BIN_FOLDER)mock/target/common_mock.o      \

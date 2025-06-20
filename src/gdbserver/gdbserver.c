@@ -44,6 +44,8 @@ typedef enum parseState {
 
 static void communicate_with_gdb(void);
 static void add_clean_end(void);
+static void execute(char* received, uint32_t length, char* checksum);
+static bool checksumOK(char* received, uint32_t length, char* checksum);
 
 static uint8_t line_buffer[MAX_COMMAND_LENGTH];
 static uint32_t line_pos;
@@ -51,7 +53,7 @@ static uint32_t reply_length;
 static uint8_t reply_buffer[MAX_REPLY_LENGTH];
 static uint32_t sum; //! checksum of response packet
 static state_typ state;
-static char checksum[2];
+static char checksum_buf[2];
 static bool connected;
 static bool connection_failed;
 static uint32_t retry_counter;
@@ -468,7 +470,7 @@ static void communicate_with_gdb(void)
                         // host is not happy with what we send -> probably some error on our side
                         // data from last command is still valid -> retry doing it
                         add_clean_end();
-                        commands_execute((char*)line_buffer, line_pos, (char*)checksum);
+                        execute((char*)line_buffer, line_pos, (char*)checksum_buf);
                         /*
                         // Transmit error
                         // -> Resent last message
@@ -526,15 +528,15 @@ static void communicate_with_gdb(void)
                     break;
 
                 case FOUND_END:
-                    checksum[0] = data;
+                    checksum_buf[0] = data;
                     state = CHECKSUM_HIGH;
                     break;
 
                 case CHECKSUM_HIGH:
-                    checksum[1] = data;
+                    checksum_buf[1] = data;
                     state = CHECKSUM_LOW;
                     add_clean_end();
-                    commands_execute((char*)line_buffer, line_pos, (char*)checksum);
+                    execute((char*)line_buffer, line_pos, (char*)checksum_buf);
                     break;
             }
         }
@@ -556,5 +558,57 @@ static void add_clean_end(void)
     for(i = 0; i < len; i++)
     {
         line_buffer[line_pos + i] = 0;
+    }
+}
+
+static void execute(char* received, uint32_t length, char* checksum)
+{
+    if((NULL == received) || (NULL == checksum))
+    {
+        debug_error("ERROR: gdbs received: NULL !");
+        return;
+    }
+    if(length < 50)
+    {
+        debug_line("gdbs received: %s", received);
+    }
+    else
+    {
+        char buf[30];
+        memcpy(buf, received, sizeof(buf));
+        binary_to_ascii_dump(buf, sizeof(buf));
+        buf[29] = 0;
+        debug_line("gdbs received: %s ... (something really long)", buf);
+    }
+    if(false == checksumOK(received, length, checksum))
+    {
+        debug_error("checksum is wrong($%s#%s)!", received, checksum);
+        send_error_packet();
+        return;
+    }
+    // else OK
+    if(false == gdb_cfg.noAckMode)
+    {
+        send_ack_packet();  // ack the received packet
+    }
+    commands_execute(received, length);
+}
+
+static bool checksumOK(char* received, uint32_t length, char* checksum)
+{
+    uint32_t calculated_sum = 0;
+    uint32_t recieved_sum;
+
+    calculated_sum = calculateChecksum(received, length);
+    recieved_sum = hex_to_int(checksum, 2);
+
+    if(calculated_sum == recieved_sum)
+    {
+        return true;
+    }
+    else
+    {
+        debug_error("gdbs: CRC expected: 0x%02lx received : 0x%02lx", calculated_sum, recieved_sum);
+        return false;
     }
 }

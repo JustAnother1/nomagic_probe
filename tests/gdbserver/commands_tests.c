@@ -17,6 +17,7 @@
 #include "gdbserver/commands.h"
 #include "mock/gdbserver/gdbserver_mock.h"
 
+
 void setUp(void)
 {
     mock_gdbserver_reset_replies();
@@ -30,18 +31,40 @@ void tearDown(void)
 
 void test_commands_execute_null(void)
 {
-    commands_execute(NULL, 0, NULL);
+    commands_execute(NULL, 0);
 }
 
 void test_commands_execute_enable_extended_mode(void)
 {
     // $!#21
     char cmd[] = "!";
-    char checksum[] = "21";
-    commands_execute(cmd, 1, checksum);
-    TEST_ASSERT_EQUAL_UINT32(2, mock_gdbserver_get_num_send_replies());
-    TEST_ASSERT_EQUAL_STRING("+", mock_gdbserver_get_reply(0));
-    TEST_ASSERT_EQUAL_STRING("(OK)", mock_gdbserver_get_reply(1));
+    commands_execute(cmd, 1);
+    TEST_ASSERT_EQUAL_UINT32(1, mock_gdbserver_get_num_send_replies());
+    TEST_ASSERT_EQUAL_STRING("(OK)", mock_gdbserver_get_reply(0));
+}
+
+void test_commands_execute_enable_extended_mode_parameter(void)
+{
+    char cmd[] = "!!";
+    commands_execute(cmd, 2);
+    TEST_ASSERT_EQUAL_UINT32(1, mock_gdbserver_get_num_send_replies());
+    TEST_ASSERT_EQUAL_STRING("()", mock_gdbserver_get_reply(0));
+}
+
+void test_commands_execute_questionmark(void)
+{
+    char cmd[] = "?";
+    commands_execute(cmd, 1);
+    TEST_ASSERT_EQUAL_UINT32(0, mock_gdbserver_get_num_send_replies());
+    TEST_ASSERT_TRUE(is_gdb_busy());
+}
+
+void test_commands_execute_vKill(void)
+{
+    char cmd[] = "vKill";
+    commands_execute(cmd, 5);
+    TEST_ASSERT_EQUAL_UINT32(1, mock_gdbserver_get_num_send_replies());
+    TEST_ASSERT_EQUAL_STRING("(OK)", mock_gdbserver_get_reply(0));
 }
 
 
@@ -118,11 +141,8 @@ void test_commands_execute_FlashWrite(void)
              0x01, 0x02, 0x00, 0x10, 0x01, 0x02, 0x00, 0x10,
     };
 
-    char checksum[] = "79";
-
-    commands_execute((char*)cmd, 533, checksum);
-    TEST_ASSERT_EQUAL_UINT32(1, mock_gdbserver_get_num_send_replies());
-    TEST_ASSERT_EQUAL_STRING("+", mock_gdbserver_get_reply(0));
+    commands_execute((char*)cmd, 533);
+    TEST_ASSERT_EQUAL_UINT32(0, mock_gdbserver_get_num_send_replies());
     TEST_ASSERT_TRUE(is_gdb_busy());
 }
 
@@ -132,6 +152,9 @@ int main(void)
     UNITY_BEGIN();
     RUN_TEST(test_commands_execute_null);
     RUN_TEST(test_commands_execute_enable_extended_mode);
+    RUN_TEST(test_commands_execute_enable_extended_mode_parameter);
+    RUN_TEST(test_commands_execute_questionmark);
+    RUN_TEST(test_commands_execute_vKill);
     RUN_TEST(test_commands_execute_FlashWrite);
     return UNITY_END();
 }

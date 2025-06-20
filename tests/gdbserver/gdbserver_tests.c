@@ -25,6 +25,8 @@
 
 extern uint8_t gdb_send_buf[TST_GDB_SEND_BUFFER_SIZE];
 
+static void getChecksumFor(char* data, uint32_t length, char* hex);
+
 void setUp(void)
 {
     // reset test environment
@@ -40,6 +42,41 @@ void setUp(void)
 void tearDown(void)
 {
 
+}
+
+static void getChecksumFor(char* data, uint32_t length, char* hex)
+{
+    uint32_t sum = 0;
+    uint32_t i;
+    for(i = 0; i < length; i++)
+    {
+        sum = sum + (uint8_t)(data[i]);  // unsigned !
+    }
+    hex++;
+    for(i = 0; i < 2; i++)
+    {
+        switch(sum&0xf)
+        {
+        case  0: *hex = '0'; break;
+        case  1: *hex = '1'; break;
+        case  2: *hex = '2'; break;
+        case  3: *hex = '3'; break;
+        case  4: *hex = '4'; break;
+        case  5: *hex = '5'; break;
+        case  6: *hex = '6'; break;
+        case  7: *hex = '7'; break;
+        case  8: *hex = '8'; break;
+        case  9: *hex = '9'; break;
+        case 10: *hex = 'a'; break;
+        case 11: *hex = 'b'; break;
+        case 12: *hex = 'c'; break;
+        case 13: *hex = 'd'; break;
+        case 14: *hex = 'e'; break;
+        case 15: *hex = 'f'; break;
+        }
+        sum = (sum>>4);
+        hex--;
+    }
 }
 
 void test_gdbserver_empty_packet(void)
@@ -142,9 +179,9 @@ void test_gdbserver_tick_simple_commands(void)
     TEST_ASSERT_EQUAL_UINT32(1, mock_commands_get_call_counter_of(CALL_IDX_COMMANDS_INIT));
     TEST_ASSERT_EQUAL_UINT32(3, mock_commands_get_call_counter_of(CALL_IDX_COMMANDS_EXECUTE));
     TEST_ASSERT_EQUAL_UINT32(3, mock_commands_get_num_received_commands());
-    TEST_ASSERT_EQUAL_STRING ("vMustReplyEmpty#3a", mock_commands_get_command(0));
-    TEST_ASSERT_EQUAL_STRING ("QStartNoAckMode#b0", mock_commands_get_command(1));
-    TEST_ASSERT_EQUAL_STRING ("!#21", mock_commands_get_command(2));
+    TEST_ASSERT_EQUAL_STRING ("vMustReplyEmpty", mock_commands_get_command(0));
+    TEST_ASSERT_EQUAL_STRING ("QStartNoAckMode", mock_commands_get_command(1));
+    TEST_ASSERT_EQUAL_STRING ("!", mock_commands_get_command(2));
 }
 
 void test_gdbserver_tick_FlashWrite(void)

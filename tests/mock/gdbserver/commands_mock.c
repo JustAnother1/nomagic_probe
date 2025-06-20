@@ -14,6 +14,7 @@
  */
 
 #include <stdint.h>
+#include "gdbserver/commands.h"
 #include "commands_mock.h"
 #include "cfg/serial_cfg.h"
 
@@ -24,6 +25,8 @@ static uint32_t num_calls[NUM_COMMANDS_CALL_COUNTER];
 static uint32_t cmd_idx;
 static char commands[MAX_NUM_COMMANDS][MAX_COMMAND_LENGTH + 5];
 static uint32_t cmd_lengths[MAX_NUM_COMMANDS];
+
+config_typ gdb_cfg;
 
 void mock_commands_reset_call_counts(void)
 {
@@ -67,7 +70,7 @@ void commands_init(void)
     num_calls[CALL_IDX_COMMANDS_INIT]++;
 }
 
-void commands_execute(char* received, uint32_t length, char* checksum)
+void commands_execute(char* received, uint32_t length)
 {
     num_calls[CALL_IDX_COMMANDS_EXECUTE]++;
     cmd_lengths[cmd_idx] = length;
@@ -82,17 +85,6 @@ void commands_execute(char* received, uint32_t length, char* checksum)
             commands[cmd_idx][i] = *received;
             received++;
         }
-    }
-    if(NULL == checksum)
-    {
-        commands[cmd_idx][length] = 'N';
-    }
-    else
-    {
-        commands[cmd_idx][length] = '#';
-        commands[cmd_idx][length + 1] = *checksum;
-        checksum++;
-        commands[cmd_idx][length + 2] = *checksum;
     }
     cmd_idx++;
 }

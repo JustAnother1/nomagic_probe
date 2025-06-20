@@ -31,10 +31,6 @@
 // replies:
 #include "threads.h"
 
-typedef struct {
-    bool extended_mode;
-    bool noAckMode;
-} config_typ;
 
 typedef enum parameter_pattern {
     PARAM_XX,
@@ -45,12 +41,10 @@ typedef enum parameter_pattern {
     PARAM_ADDR_BINARY,
 } param_pattern_typ;
 
+config_typ gdb_cfg;
 
-
-static config_typ cfg;
 static parameter_typ parsed_parameter;
 
-static bool checksumOK(char* received, uint32_t length, char* checksum);
 static uint32_t cmd_length(char* received, uint32_t length);
 static void handle_general_query(char* received, uint32_t length);
 static void handle_general_set(char* received, uint32_t length);
@@ -61,8 +55,8 @@ static bool parse_memory(char* parameter, mem_val_typ* memory);
 
 void commands_init(void)
 {
-    cfg.extended_mode = false;
-    cfg.noAckMode = false;
+    gdb_cfg.extended_mode = false;
+    gdb_cfg.noAckMode = false;
     threads_init();
 }
 
@@ -86,43 +80,19 @@ void commands_init(void)
 // Runs of six repeats (‘#’) or seven repeats (‘$’) can be expanded using a repeat count of only five (‘"’). For example, ‘00000000’ can be encoded as ‘0*"00’.
 
 // received is guaranteed to end with zeros
-void commands_execute(char* received, uint32_t length, char* checksum)
+void commands_execute(char* received, uint32_t length)
 {
-    if((NULL == received) || (NULL == checksum))
+    if(NULL == received)
     {
-        debug_error("ERROR: gdbs received: NULL !");
+        debug_error("ERROR: gdbs-c received: NULL !");
         return;
     }
-    if(length < 50)
-    {
-        debug_line("gdbs received: %s", received);
-    }
-    else
-    {
-        char buf[30];
-        memcpy(buf, received, sizeof(buf));
-        binary_to_ascii_dump(buf, sizeof(buf));
-        buf[29] = 0;
-        debug_line("gdbs received: %s ... (something really long)", buf);
-    }
-    if(false == checksumOK(received, length, checksum))
-    {
-        debug_error("checksum is wrong($%s#%s)!", received, checksum);
-        send_error_packet();
-        return;
-    }
-    // else OK
-    if(false == cfg.noAckMode)
-    {
-        send_ack_packet();  // ack the received packet
-    }
-
     switch(*received)  // this only looks at the first character of the received string
     {
         case '!': // enable extended mode
             if(1 == length)
             {
-                cfg.extended_mode = true;
+                gdb_cfg.extended_mode = true;
                 reply_packet_prepare();
                 reply_packet_add("OK");
                 reply_packet_send();
@@ -400,27 +370,9 @@ void commands_execute(char* received, uint32_t length, char* checksum)
             break;
 
         default : // unknown or unsupported command
+            debug_error("ERROR: gdb %s command not implemented !", received);
             send_unknown_command_reply();
             break;
-    }
-}
-
-static bool checksumOK(char* received, uint32_t length, char* checksum)
-{
-    uint32_t calculated_sum = 0;
-    uint32_t recieved_sum;
-
-    calculated_sum = calculateChecksum(received, length);
-    recieved_sum = hex_to_int(checksum, 2);
-
-    if(calculated_sum == recieved_sum)
-    {
-        return true;
-    }
-    else
-    {
-        debug_error("gdbs: CRC expected: 0x%02lx received : 0x%02lx", calculated_sum, recieved_sum);
-        return false;
     }
 }
 
@@ -575,6 +527,7 @@ static void handle_vee(char* received, uint32_t length)
     }
     else if(0 == strncmp(received, "vKill", 5))
     {
+        found_cmd = true;
         gdbserver_disconnect();
         reply_packet_prepare();
         reply_packet_add("OK");
@@ -608,10 +561,16 @@ static void handle_vee(char* received, uint32_t length)
         debug_error("ERROR: gdb vFile command not implemented !");
         send_unknown_command_reply();
     }
+    else if(0 == strncmp(received, "vMustReplyEmpty", 15))
+    {
+        found_cmd = true;
+        send_unknown_command_reply();
+    }
 
     if(false == found_cmd)
     {
         // "vMustReplyEmpty"
+        debug_error("ERROR: v* command %s not implemented !", received);
         send_unknown_command_reply();
     }
 }
@@ -646,6 +605,7 @@ static void handle_tee(char* received, uint32_t length)
 
     if(false == found_cmd)
     {
+        debug_error("ERROR: t* command %s not implemented !", received);
         send_unknown_command_reply();
     }
 }
@@ -821,6 +781,7 @@ static void handle_general_query(char* received, uint32_t length)
 
     if(false == found_cmd)
     {
+        debug_error("ERROR: general query %s not implemented !", received);
         send_unknown_command_reply();
     }
 }
@@ -836,7 +797,7 @@ static void handle_general_set(char* received, uint32_t length)
         {
             found_cmd = true;
             // QStartNoAckMode
-            cfg.noAckMode = true;
+            gdb_cfg.noAckMode = true;
             reply_packet_prepare();
             reply_packet_add("OK");
             reply_packet_send();
@@ -845,6 +806,7 @@ static void handle_general_set(char* received, uint32_t length)
 
     if(false == found_cmd)
     {
+        debug_error("ERROR: general set %s not implemented !", received);
         send_unknown_command_reply();
     }
 }

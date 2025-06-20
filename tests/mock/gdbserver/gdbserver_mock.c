@@ -111,7 +111,7 @@ void send_ack_packet(void)
 void send_unknown_command_reply(void)
 {
     reply_buffer[reply_idx][0] = '(';
-    reply_buffer[reply_idx][0] = ')';
+    reply_buffer[reply_idx][1] = ')';
     reply_idx++;
 }
 
