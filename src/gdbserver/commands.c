@@ -720,6 +720,16 @@ static void handle_general_query(char* received, uint32_t length)
             // warning: Target reported unsupported offsets: Text=0;Data=0;Bss=0;
             reply_packet_send();
         }
+
+        if(0 == strncmp(received, "qTStatus", 8))
+        {
+#ifdef TRACE_ENABLED
+            found_cmd = true;
+            TODO implement
+#else
+            send_unknown_command_reply();
+#endif
+        }
     }
     else if(9 == cmd_len)
     {
