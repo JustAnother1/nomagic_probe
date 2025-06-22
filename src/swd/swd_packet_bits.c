@@ -84,13 +84,13 @@ static Result swd_to_dormant_handler(packet_definition_typ* pkg);
 
 
 static const packet_handler packet_handler_look_up[NUM_PAKETS] = {
-        line_reset_handler,
-        disconnect_handler,
-        write_package_handler,
-        read_package_handler,
-        jtag_to_dormant_handler,
-        dormant_to_swd_handler,
-        swd_to_dormant_handler
+        line_reset_handler,      // LINE_RESET
+        disconnect_handler,      // DISCONNECT
+        write_package_handler,   // WRITE
+        read_package_handler,    // READ
+        jtag_to_dormant_handler, // JTAG_TO_DORMANT
+        dormant_to_swd_handler,  // DORMANT_TO_SWD
+        swd_to_dormant_handler   // SWD_TO_DORMANT
 };
 static volatile bool operational;
 volatile uint32_t read_idx;
