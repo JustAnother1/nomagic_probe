@@ -321,7 +321,7 @@ bool cmd_help(const uint32_t loop)
     // help command
     if(0 == loop)
     {
-        cli_line("nomagic probe cli version %s", VERSION);
+        cli_line("nomagic probe cli version %s (%s ; %s)", VERSION, __DATE__, __TIME__);
         cli_line("available commands :");
     }
     if(loop < NUM_COMMANDS)
