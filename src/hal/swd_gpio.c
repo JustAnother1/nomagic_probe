@@ -25,7 +25,7 @@ void swd_gpio_init(void)
     RESETS->RESET = RESETS->RESET & ~0x00000020lu; // take IO_BANK0 out of Reset
     PSM->FRCE_ON = PSM->FRCE_ON | 0x00000400; // make sure that SIO is powered on
 
-    swd_freq_delay = 1;  // TODO make configurable
+    swd_freq_delay = 5;  // TODO make configurable
     // with for()nop :
     // 0 -> more than 5 MHz
     // 1 = 2,35 MHz
