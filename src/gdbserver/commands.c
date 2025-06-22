@@ -113,7 +113,7 @@ void commands_execute(char* received, uint32_t length)
             // else OK. Reply packet ends busy state.
             break;
 
-        case 'c':  // continue
+        case 'c':  // continue  TODO
         case 'C':  // continue
             gdb_is_now_busy();
             // TODO continue at address ? if(true == parse_parameter(PARAM_XX, received))
@@ -303,13 +303,6 @@ void commands_execute(char* received, uint32_t length)
         }
             break;
 
-        case 'p':  // read specific Register
-            // TODO implement
-            debug_error("ERROR: gdb p and P command not implemented !");
-            debug_error("Parameter: %s", received);
-            send_unknown_command_reply();
-            break;
-
         case 'q': // general query
             if(1 < length)
             {
@@ -332,8 +325,7 @@ void commands_execute(char* received, uint32_t length)
             }
             break;
 
-        case 'R':  // Restart the program being run
-        case 's':  // step
+        case 's':  // step  TODO
         case 'S':  // step
             received++;
             if(true == parse_parameter(PARAM_OPT_ADDR, received, length))
@@ -348,12 +340,6 @@ void commands_execute(char* received, uint32_t length)
             }
             break;
 
-        case 'T':  // report if a particular Thread is alive
-            // TODO implement
-            debug_error("ERROR: gdb T command not implemented !");
-            send_unknown_command_reply();
-            break;
-
         case 't':
             handle_tee(received, length);
             break;
@@ -362,13 +348,12 @@ void commands_execute(char* received, uint32_t length)
             handle_vee(received, length);
             break;
 
+        case 'p':  // read specific Register
+        case 'r':  // reset entire system (Do not use -> use 'R' instead!)
+        case 'R':  // Restart the program being run
+        case 'T':  // report if a particular Thread is alive
         case 'X':  // load binary data
         case 'Z':  // clear or set breakpoints or watch points
-            // TODO implement
-            debug_error("ERROR: gdb X and Z command not implemented !");
-            send_unknown_command_reply();
-            break;
-
         default : // unknown or unsupported command
             debug_error("ERROR: gdb %s command not implemented !", received);
             send_unknown_command_reply();
