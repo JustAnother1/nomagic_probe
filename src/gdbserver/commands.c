@@ -723,8 +723,8 @@ static void handle_general_query(char* received, uint32_t length)
 
         if(0 == strncmp(received, "qTStatus", 8))
         {
-#ifdef TRACE_ENABLED
             found_cmd = true;
+#ifdef TRACE_ENABLED
             TODO implement
 #else
             send_unknown_command_reply();
