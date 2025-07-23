@@ -86,23 +86,51 @@ The pico has 40 pins (1..40) Numbered counter clock wise starting at the USB con
                    K     O
 ----
 
+[cols="1,1,1,2"]
+|===
+|Pin |GPIO |Signal |description
 
-Pin 2:  (GPIO 1)  SWDIR (High = from Probe to target; Low= from Target to probe)
+|2
+|1
+|SWDIR
+|High = from Probe to target; Low = from Target to probe
 
-Pin 4:  (GPIO 2)  SWCLK
+|4
+|2
+|SWCLK
+|SWD interface to target
 
-Pin 5:  (GPIO 3)  SWDIO
+|5
+|3
+|SWDIO
+|SWD interface to target
 
-Pin 6:  (GPIO 4)  Target Uart TX (UART1) - output from PC - connect to target RX
+|6
+|4
+|Target Uart TX (UART1)
+|output from PC - connect to target RX
 
-Pin 7:  (GPIO 5)  Target Uart RX (UART1) - input to PC - connect to target TX
+|7
+|5
+|Target Uart RX (UART1)
+|input to PC - connect to target TX
 
-Pin 9:  (GPIO 6)  Run  = /Reset
+|9
+|6
+|Run
+| /Reset
 
-Pin 21: (GPIO 16) Debug Uart TX (UART0)
+|21
+|16
+|Debug Uart TX (UART0)
+|output
 
-Pin 22: (GPIO 17) Debug Uart RX (UART0)
+|22
+|17
+|Debug Uart RX (UART0)
+|input
 
+|===
 
 == Acknowledgments
 
