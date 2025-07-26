@@ -827,15 +827,14 @@ Result handle_target_reply_continue(action_data_typ* const action)
         else
         {
             // Still in Halt
-            action->cur_phase = 2;
             action->intern[INTERN_RETRY_COUNTER] = action->intern[INTERN_RETRY_COUNTER] + 1;
-            if(10 > action->intern[INTERN_RETRY_COUNTER])
+            if(1000 > action->intern[INTERN_RETRY_COUNTER])
             {
-                // *(action->cur_phase) = 1;
                 action->intern[INTERN_RETRY_COUNTER] = 0;
                 debug_error("ERROR: releasing Halt did not work !");
                 return ERR_TARGET_ERROR;
             }
+            action->cur_phase = 2; // TODO
         }
     }
 
