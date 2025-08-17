@@ -625,6 +625,7 @@ Result handle_target_reply_write_g(action_data_typ* const action)
     return ERR_WRONG_STATE;
 }
 
+// GDB_CMD_WRITE_REGISTER
 Result handle_target_reply_write_register(action_data_typ* const action)
 {
     Result res;
