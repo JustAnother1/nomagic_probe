@@ -76,18 +76,32 @@ These are the modules that make up the firmware:
 - target
 - gdbserver
 - file system
-
-The swd module provides the functionality of the SWD Interface (defined in probe_api/swd.h) to the target module.
-
-The target module executes the functionality requested by the gdbserver module.
-
-The gdbserver module implements the GDB-Server protocoll and uses the target module to aquire the requested information and to execute the commanded actions.
-
-The file system provides the mass storage interface.
+- configuration (cfg)
+- command line interface (cli)
+- hardware abstraction layer (hal)
+- library functions (lib)
+- lwip (TCP/IP stack)
+- tinyusb (USB stack)
 
 === SWD
 
+[cols="1,1"]
+|===
+| Files
+| swd/swd_*
+
+| API
+| probe_api/swd.h
+
+| depends on
+| hal
+
+|===
+
+
 The SWD module implements the ARM specified two wire debug protocol. It does this in a layered approach.
+The swd module provides the functionality of the SWD Interface (defined in probe_api/swd.h) to the target module.
+
 
 ==== bit layer
 The first and lowest layer is the bit layer. It is implemented in swd_gpio.c and deals with the SWDIO and SWCLK signals. It handles the single bits on the wires. So high, Low Input Output,..
@@ -100,17 +114,162 @@ On top of the packet layer is the protocol layer. It is implemented in swd_proto
 
 === Target
 
-The target module implements the interface to exactly one chip.
+[cols="1,1"]
+|===
+| Files
+| target/*
+
+| API
+| target.h, probe_api/flash_write_buffer.h
+
+| depends on
+| 
+
+|===
+
+The target module implements the interface to exactly one chip. The target module executes the functionality requested by the gdbserver module.
+
 
 === GDB Server
 
-The gdbserver module implements the remote protocoll as specified for GDB.
+[cols="1,1"]
+|===
+| Files
+| gdbserver/*
+
+| API
+| probe_api/gdb_packets.h, probe_api/gdb_monitor_defs.h, probe_api/gdb_monitor_copmmands.h, probe_api/gdb_error_codes.h
+
+| depends on
+| swd
+
+|===
+
+The gdbserver module implements the gdb server (extended) remote protocoll as specified for GDB.
 
 === file system
+
+[cols="1,1"]
+|===
+| Files
+| fie/*
+
+| API
+| file/file_system.h, file/file_storage.h
+
+| depends on
+| hal, tinyUSB
+
+|===
 
 The file system module provides the USB Mass Storage device as well as the real and faked files inside it.
 
 link:filesystem.asciidoc[filesystem documentation]
+
+=== configuration
+
+[cols="1,1"]
+|===
+| Files
+| cfg/*
+
+| API
+| cfg/*
+
+| depends on
+| 
+
+|===
+
+todo
+
+=== command line interface
+
+[cols="1,1"]
+|===
+| Files
+| cli/*
+
+| API
+| probe_api/cli.h, cli/*
+
+| depends on
+| hal
+
+|===
+
+todo
+
+=== hardware abstraction layer
+
+[cols="1,1"]
+|===
+| Files
+| hal/*, hal/hw/*
+
+| API
+| hal/*, hal/hw/*
+
+| depends on
+| 
+
+|===
+
+todo
+
+=== library functions
+
+[cols="1,1"]
+|===
+| Files
+| lib/*
+
+| API
+| standard header, lib/*
+
+| depends on
+| 
+
+|===
+
+todo
+
+=== lwip
+
+[cols="1,1"]
+|===
+| Files
+| lwip/*
+
+| API
+| lwip/*
+
+| depends on
+| tinyUSB
+
+|===
+
+todo
+
+=== tinyusb
+
+[cols="1,1"]
+|===
+| Files
+| tinyusb/*
+
+| API
+| tinyusb/*
+
+| depends on
+| hal
+
+|===
+
+todo
+
+
+
 
 == folders
 The following lists all the folders and gives an overview what they contain.
@@ -131,16 +290,25 @@ file system.
 implementation of the gdb server protocol.
 
 === src/hal
-drivers to use the peripherals of the micro controller
+drivers to use the peripherals of the micro controller. (MBSP)
 
 === src/hal/hw
-definition of the special function registers for all peripherals.
+definition of the special function registers for all peripherals.(MBSP)
 
 === src/lib
 implementation of functionality usually provided by a "standard library". printf(), strlen(), atoi(), memcpy(),...
 
+=== src/lwip
+the lwIP TCP/IP stack.
+
+=== src/probe_api
+API header files that can be used by chip specific projects.
+
 === src/swd
 implementation of the ARM SWD debug interface.
+
+=== src/target
+functionaliyt specific for the chip that runs the firmware that gets debugged.
 
 === src/tinyusb
 configuration and interface to TinyUSB
