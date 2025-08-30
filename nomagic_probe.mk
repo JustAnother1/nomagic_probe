@@ -52,6 +52,7 @@ endif
 
 # gdb server
 ifeq ($(HAS_GDB_SERVER), yes)
+SRC += $(NOMAGIC_SRC_FOLDER)gdbserver/break_watch.c
 SRC += $(NOMAGIC_SRC_FOLDER)gdbserver/cmd_qsupported.c
 SRC += $(NOMAGIC_SRC_FOLDER)gdbserver/cmd_qxfer.c
 SRC += $(NOMAGIC_SRC_FOLDER)gdbserver/commands.c

@@ -26,6 +26,7 @@
 #include "target.h"
 #include "gdbserver.h"
 // commands:
+#include "break_watch.h"
 #include "cmd_qsupported.h"
 #include "cmd_qxfer.h"
 // replies:
@@ -348,12 +349,20 @@ void commands_execute(char* received, uint32_t length)
             handle_vee(received, length);
             break;
 
+        case 'z':  // clear breakpoints or watch points
+            handle_lowercase_zed(received, length);
+            break;
+
+        case 'Z':  // set breakpoints or watch points
+            handle_upercase_zed(received, length);
+            break;
+
+
         case 'p':  // read specific Register
         case 'r':  // reset entire system (Do not use -> use 'R' instead!)
         case 'R':  // Restart the program being run
         case 'T':  // report if a particular Thread is alive
         case 'X':  // load binary data
-        case 'Z':  // clear or set breakpoints or watch points
         default : // unknown or unsupported command
             debug_error("ERROR: gdb %s command not implemented !", received);
             send_unknown_command_reply();
