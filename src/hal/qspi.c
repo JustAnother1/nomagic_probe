@@ -412,6 +412,7 @@ void qspi_erase_sector(uint32_t number)
     flash_wait_ready();
 }
 
+#ifdef FEAT_CLI
 bool qspi_detect(uint32_t loop)
 {
     uint8_t data[12];
@@ -462,6 +463,7 @@ bool qspi_detect(uint32_t loop)
     }
     return false;
 }
+#endif
 
 
 

@@ -307,6 +307,7 @@ bool is_gdb_busy(void)
     return busy_processing_cmd;
 }
 
+#ifdef FEAT_CLI
 bool gdbs_info(const uint32_t loop)
 {
     switch(loop)
@@ -398,6 +399,7 @@ bool gdbs_info(const uint32_t loop)
     }
     return false;
 }
+#endif
 
 void gdbserver_received_ctrl_c(void)
 {

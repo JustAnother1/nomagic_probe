@@ -32,9 +32,20 @@ uint8_t network_gdb_get_next_received_byte(void);
 void network_gdb_putc(void* p, char c);
 bool network_gdb_is_connected(void);
 
+#ifdef FEAT_TARGET_UART
 // target UART
 uint32_t network_target_uart_get_num_received_bytes(void);
 uint8_t network_target_uart_get_next_received_byte(void);
 void network_target_uart_send_bytes(const uint8_t * data, const uint32_t length);
+#endif
+
+#ifdef FEAT_DEBUG_TCP_IP
+// command line interface (CLI)
+void network_cli_send_string(char * str);
+void network_cli_send_bytes(const uint8_t * data, const uint32_t length);
+uint32_t network_cli_get_num_received_bytes(void);
+uint8_t network_cli_get_next_received_byte(void);
+void network_cli_putc(void* p, char c);
+#endif
 
 #endif /* NOMAGIC_PROBE_SRC_LWIP_LWIP_H_ */

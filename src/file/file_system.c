@@ -131,6 +131,7 @@ uint32_t file_system_block_count(void)
     return block_count;
 }
 
+#ifdef FEAT_CLI
 bool file_system_report(const uint32_t loop)
 {
     if(0 == loop)
@@ -162,6 +163,7 @@ bool file_system_report(const uint32_t loop)
     }
     return false;
 }
+#endif
 
 int32_t file_system_read(const uint32_t offset, uint8_t* buffer, const uint32_t bufsize)
 {

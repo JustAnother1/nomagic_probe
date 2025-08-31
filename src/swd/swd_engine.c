@@ -46,7 +46,7 @@ static const order_handler order_look_up[NUM_ORDERS] = {
         disconnect_handler,
 };
 
-#if (defined FEAT_DEBUG_UART) || (defined FEAT_DEBUG_CDC)
+#ifdef FEAT_CLI
 static const char* order_names[NUM_ORDERS] = {
         "connect",
         "read",

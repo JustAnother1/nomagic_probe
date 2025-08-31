@@ -31,7 +31,7 @@ TST_LD = cc
 #
 # - HAS_CLI = yes
 #       Command line interface(CLI provides commands to directly controll the fimrware and to inspect he firmwares internal state.
-#       Must be used in combination with either "HAS_DEBUG_UART = yes" or "HAS_DEBUG_CDC = yes" !
+#       Must be used in combination with either "HAS_DEBUG_TCP_IP = yes", "HAS_DEBUG_UART = yes" or "HAS_DEBUG_CDC = yes" !
 #
 # - HAS_DEBUG_UART = yes
 #       Command Line Interface (CLI) on UART pins.
@@ -44,6 +44,9 @@ TST_LD = cc
 #
 # - HAS_NCM = yes
 #       USB Network interface. Allows other interfaces to be available as TCP Ports.
+#
+# - HAS_DEBUG_TCP_IP = yes
+#       Command Line Interface (CLI) on TCP Port. Can only be used with "HAS_NCM = yes".
 #
 # - USE_BOOT_ROM = yes
 #       use the functions stored in the boot rom in the RP2040 to access the QSPI flash.
@@ -60,6 +63,7 @@ HAS_CLI = yes
 HAS_GDB_SERVER = yes
 HAS_NCM = yes
 USE_BOOT_ROM = no
+HAS_DEBUG_TCP_IP = yes
 
 # tinyUSB logging has different levels 0 = no logging,1 = some logging, 2 = more logging, 3= all logging
 DDEFS += -DCFG_TUSB_DEBUG=1

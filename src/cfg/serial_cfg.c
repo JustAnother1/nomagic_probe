@@ -57,6 +57,7 @@ static is_connected_function is_connected_fct;
 static flush_function flush_fct;
 static is_buffer_full_function is_buffer_full_fct;
 
+#ifdef FEAT_TARGET_UART
 // target UART
 static send_string_function target_uart_send_string_fct;
 static send_bytes_function target_uart_send_bytes_fct;
@@ -66,6 +67,7 @@ static putc_function target_uart_putc_fct;
 static is_connected_function target_uart_is_connected_fct;
 static flush_function target_uart_flush_fct;
 static is_buffer_full_function target_uart_is_buffer_full_fct;
+#endif
 
 void serial_cfg_reset_to_default(void)
 {
@@ -141,8 +143,8 @@ void serial_cfg_apply(void)
         is_buffer_full_fct         = null_is_buffer_full_function;
     }
 
-    // Debug interface is handled by compiler switches (ifdef)
-
+    // Debug interface is handled by compiler switches -> ifdef
+#ifdef FEAT_TARGET_UART
     if(true == is_target_UART_enabled)
     {
 #ifdef FEAT_USB_NCM
@@ -169,6 +171,7 @@ void serial_cfg_apply(void)
             target_uart_is_buffer_full_fct         = null_is_buffer_full_function;
         }
     }
+#endif
 }
 
 bool serial_cfg_is_USB_CDC_enabled(void)
@@ -233,24 +236,27 @@ static bool null_is_buffer_full_function(void)
     return false;
 }
 
+#ifdef FEAT_CLI
 // DEBUG CLI interface
 // ===================
 void serial_debug_send_string(char * str)
 {
 #ifdef FEAT_DEBUG_UART
         debug_uart_send_string(str);
-#endif
-#ifdef FEAT_DEBUG_CDC
+#elif FEAT_DEBUG_CDC
         usb_cdc_send_string(str);
+#elif FEAT_DEBUG_TCP_IP
+        network_cli_send_string(str);
 #endif
 }
 void serial_debug_send_bytes(const uint8_t * data, const uint32_t length)
 {
 #ifdef FEAT_DEBUG_UART
     debug_uart_send_bytes(data, length);
-#endif
-#ifdef FEAT_DEBUG_CDC
+#elif FEAT_DEBUG_CDC
     usb_cdc_send_bytes(data, length);
+#elif FEAT_DEBUG_TCP_IP
+    network_cli_send_bytes(data, length);
 #endif
 }
 
@@ -260,6 +266,8 @@ uint32_t serial_debug_get_num_received_bytes(void)
     return debug_uart_get_num_received_bytes();
 #elif defined(FEAT_DEBUG_CDC)
     return usb_cdc_get_num_received_bytes();
+#elif FEAT_DEBUG_TCP_IP
+    return network_cli_get_num_received_bytes();
 #else
     return 0;
 #endif
@@ -272,6 +280,8 @@ uint8_t serial_debug_get_next_received_byte(void)
     return debug_uart_get_next_received_byte();
 #elif defined(FEAT_DEBUG_CDC)
     return usb_cdc_get_next_received_byte();
+#elif FEAT_DEBUG_TCP_IP
+    return network_cli_get_next_received_byte();
 #else
     return 0;
 #endif
@@ -281,11 +291,13 @@ void serial_debug_putc(void* p, char c)
 {
 #ifdef FEAT_DEBUG_UART
     debug_uart_putc(p, c);
-#endif
-#ifdef FEAT_DEBUG_CDC
+#elif FEAT_DEBUG_CDC
     usb_cdc_putc(p, c);
+#elif FEAT_DEBUG_TCP_IP
+    network_cli_putc(p, c);
 #endif
 }
+#endif // FEAT_CLI
 
 // GDB Interface
 // =============
@@ -329,6 +341,7 @@ bool serial_gdb_is_buffer_full(void)
     return (* is_buffer_full_fct)();
 }
 
+#ifdef FEAT_TARGET_UART
 // Target UART
 // ===========
 uint32_t target_uart_pc_get_num_received_bytes(void)
@@ -345,7 +358,7 @@ void target_uart_pc_send_bytes(const uint8_t * data, const uint32_t length)
 {
     (* target_uart_send_bytes_fct)(data, length);
 }
-
+#endif
 
 // new interfaces:
 // void send_string_function(char * str);

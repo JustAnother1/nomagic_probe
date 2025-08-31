@@ -29,12 +29,14 @@
 #define TARGET_UART_ENABLED_SETTING  "target"
 #define TARGET_UART_BAUDRATE_SETTING "baudrate_target"
 
+#ifdef FEAT_CLI
 // DEBUG CLI interface
 void serial_debug_send_string(char * str);
 void serial_debug_send_bytes(const uint8_t * data, const uint32_t length);
 uint32_t serial_debug_get_num_received_bytes(void);
 uint8_t serial_debug_get_next_received_byte(void);
 void serial_debug_putc(void* p, char c);
+#endif
 
 // GDB Interface
 #define MAX_COMMAND_LENGTH    1025 // TODO check if size is appropriate

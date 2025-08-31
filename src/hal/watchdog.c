@@ -56,6 +56,7 @@ void watchdog_feed(void)
     WATCHDOG->LOAD = reaload_value;
 }
 
+#ifdef FEAT_CLI
 bool watchdog_report(const uint32_t loop)
 {
     uint32_t i;
@@ -163,6 +164,7 @@ bool watchdog_report(const uint32_t loop)
     }
     return false;
 }
+#endif
 
 void watchdog_report_issue(const uint32_t issue)
 {

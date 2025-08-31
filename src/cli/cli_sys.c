@@ -228,7 +228,11 @@ bool cmd_info_overview(const uint32_t loop)
 #else
         case 8: break;
 #endif
+#ifdef FEAT_TARGET_UART
         case 9: cli_line("9: target UART"); break;
+#else
+        case 9: break;
+#endif
         default: cli_line("Done"); return true;  // we are done
     }
     return false;
@@ -267,7 +271,11 @@ bool cmd_info(const uint32_t loop)
 #else
         case 8: cli_line("gdb server not active !"); return true;
 #endif
+#ifdef FEAT_TARGET_UART
         case 9: return target_handler_cmd_info(loop);
+#else
+        case 9: cli_line("target UART not enabled !"); return true;
+#endif
 
         default:
             cli_line("ERROR: invalid information selector(%ld) !", which_info);

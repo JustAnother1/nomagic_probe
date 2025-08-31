@@ -116,7 +116,7 @@ void swd_protocol_set_AP_sel(uint32_t val)
     state.mem_ap.ap_sel = val;
 }
 
-#if (defined FEAT_DEBUG_UART) || (defined FEAT_DEBUG_CDC)
+#ifdef FEAT_CLI
 bool swd_info(uint32_t which)
 {
     bool done = false;

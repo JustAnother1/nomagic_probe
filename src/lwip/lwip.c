@@ -89,6 +89,9 @@ udp_send() or tcp_write()!
 #include "cfg/network_cfg.h"
 #include "hal/time_base.h"
 #include "probe_api/debug_log.h"
+#ifdef FEAT_DEBUG_UART
+#include "hal/debug_uart.h"
+#endif
 #include "probe_api/util.h"
 #include "dhcp_server.h"
 #include "tcp_pipe.h"
@@ -105,6 +108,7 @@ udp_send() or tcp_write()!
 // tinyusb
 #include "tusb.h"
 
+
 static err_t netif_init_function(struct netif *netif);
 // static err_t netif_input_function(struct pbuf *p, struct netif *inp);
 static err_t linkoutput_fn(struct netif *netif, struct pbuf *p);
@@ -120,8 +124,13 @@ static volatile uint16_t xmt_buff_len = 0;
 
 // GDB server TCP port
 static tcp_pipe_def gdb_def;
+#ifdef FEAT_TARGET_UART
 // target UART port
 static tcp_pipe_def target_uart_def;
+#endif
+#ifdef FEAT_DEBUG_TCP_IP
+static tcp_pipe_def cli_def;
+#endif
 
 
 void network_stack_init(void)
@@ -143,6 +152,12 @@ void network_stack_init(void)
         netif_set_up(&ncm_netif);  // TODO only set(_link)_up if the USB side is connected to the PC. set(_link)_down if the USB disconnects.
         etharp_gratuitous(&ncm_netif); // sending the host the ARP info of the probe might help speed up the connection process.
         dhcp_server_init();
+#ifdef FEAT_DEBUG_TCP_IP
+        // bring up the cli port
+        memset(&cli_def, 0, sizeof(cli_def));
+        cli_def.port = CLI_TCP_IP_PORT;
+        tcp_pipe_activate(&cli_def);
+#endif
         // if we provide gdb-server over Ethernet
         if(0 != net_cfg.gdb_port)
         {
@@ -151,6 +166,7 @@ void network_stack_init(void)
             gdb_def.port = net_cfg.gdb_port;
             tcp_pipe_activate(&gdb_def);
         }
+#ifdef FEAT_TARGET_UART
         // if we provide target UART over Ethernet
         if(0 != net_cfg.target_uart_port)
         {
@@ -159,6 +175,7 @@ void network_stack_init(void)
             target_uart_def.port = net_cfg.target_uart_port;
             tcp_pipe_activate(&target_uart_def);
         }
+#endif
     }
     // else no network
 }
@@ -408,8 +425,8 @@ bool network_gdb_is_buffer_full(void)
     }
 }
 
-// gdb_def
-
+// target UART:
+#ifdef FEAT_TARGET_UART
 uint32_t network_target_uart_get_num_received_bytes(void)
 {
     // report the number of bytes received from the host
@@ -459,5 +476,68 @@ void network_target_uart_send_bytes(const uint8_t * data, const uint32_t length)
         target_uart_def.connection_pcb = NULL;
     }
 }
+#endif
 
-// target_uart_def
+// CLI
+#ifdef FEAT_DEBUG_TCP_IP
+// command line interface (CLI)
+void network_cli_send_string(char * str)
+{
+    // send "str" over the network to the host
+    while(*str != 0)
+    {
+        network_cli_send_bytes((uint8_t *) str, 1);
+        str++;
+    }
+}
+
+uint32_t network_cli_get_num_received_bytes(void)
+{
+    // report the number of bytes received from the host
+    return tcp_pipe_get_num_received_bytes(&cli_def);
+}
+
+uint8_t network_cli_get_next_received_byte(void)
+{
+    // return the next byte received from the host
+    return tcp_pipe_get_next_received_byte(&cli_def);
+}
+
+void network_cli_putc(void* p, char c)
+{
+    // write a byte to the host
+    (void) p;
+    network_cli_send_bytes((uint8_t *) &c, 1);
+}
+
+void network_cli_send_bytes(const uint8_t * data, const uint32_t length)
+{
+    // send "data" bytes over the network to the host
+    uint32_t bytes_send = 0;
+
+    if((NULL == cli_def.connection_pcb) || (false == cli_def.is_connected))
+    {
+        // not connected
+#ifdef FEAT_DEBUG_UART
+        debug_uart_send_bytes(data, length);
+#endif
+        // -> nothing we can do :-(
+        return;
+    }
+
+    do {
+        const uint8_t * pos =  data + bytes_send;
+        bytes_send = bytes_send + tcp_pipe_write(&cli_def, pos, (uint16_t)(length - bytes_send));
+        if(bytes_send < length)
+        {
+            // wait for buffers to clear up
+            network_stack_tick();
+        }
+    } while((bytes_send < length) && (cli_def.connection_pcb->state != CLOSED));
+    if(cli_def.connection_pcb->state == CLOSED)
+    {
+        cli_def.is_connected = false;
+        cli_def.connection_pcb = NULL;
+    }
+}
+#endif

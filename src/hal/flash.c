@@ -238,7 +238,7 @@ void flash_read(uint32_t start_address, uint8_t* data, uint32_t length)
 #endif
 }
 
-
+#ifdef FEAT_CLI
 bool flash_report(uint32_t loop)
 {
     switch(loop)
@@ -262,4 +262,5 @@ bool flash_report(uint32_t loop)
     }
     return false;
 }
+#endif
 

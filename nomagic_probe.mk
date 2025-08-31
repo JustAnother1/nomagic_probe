@@ -9,18 +9,26 @@ GITREF = $(shell cd $(NOMAGIC_FOLDER) && git describe --abbrev=40 --dirty --alwa
 ifeq ($(USE_BOOT_ROM), yes)
 	DDEFS += -DBOOT_ROM_ENABLED=1
 endif
-
 # enable USB Mass Storage (Thumb Drive)
 ifeq ($(HAS_MSC), yes)
 	DDEFS += -DFEAT_USB_MSC
 endif
+
 # enable the command line interface for testing
+ifeq ($(HAS_CLI), yes)
+	DDEFS += -DFEAT_CLI
 ifeq ($(HAS_DEBUG_UART), yes)
 	DDEFS += -DFEAT_DEBUG_UART
 endif
 
 ifeq ($(HAS_DEBUG_CDC), yes)
 	DDEFS += -DFEAT_DEBUG_CDC
+endif
+
+ifeq ($(HAS_DEBUG_TCP_IP), yes)
+	DDEFS += -DFEAT_DEBUG_TCP_IP
+	DDEFS += -DCLI_TCP_IP_PORT=4321
+endif
 endif
 # enable the gdb-server
 ifeq ($(HAS_GDB_SERVER), yes)
@@ -31,6 +39,11 @@ ifeq ($(HAS_NCM), yes)
 	DDEFS += -DFEAT_USB_NCM
 	LWIP_DIR = $(NOMAGIC_SRC_FOLDER)lwip/
 endif
+# enable target UART
+ifeq ($(HAS_TARGET_UART), yes)
+	DDEFS += -DFEAT_TARGET_UART
+endif
+
 
 LKR_SCRIPT = $(NOMAGIC_SRC_FOLDER)hal/RP2040.ld
 
@@ -66,7 +79,9 @@ endif
 ifeq ($(HAS_DEBUG_UART), yes)
 SRC += $(NOMAGIC_SRC_FOLDER)hal/debug_uart.c
 endif
+ifeq ($(HAS_TARGET_UART), yes)
 SRC += $(NOMAGIC_SRC_FOLDER)hal/target_uart.c
+endif
 SRC += $(NOMAGIC_SRC_FOLDER)hal/startup.c
 SRC += $(NOMAGIC_SRC_FOLDER)hal/irq.c
 SRC += $(NOMAGIC_SRC_FOLDER)hal/hw_divider.c
@@ -190,7 +205,9 @@ SRC += $(NOMAGIC_SRC_FOLDER)target/activity.c
 SRC += $(NOMAGIC_SRC_FOLDER)target/common.c
 SRC += $(NOMAGIC_SRC_FOLDER)target/common_actions.c
 SRC += $(NOMAGIC_SRC_FOLDER)target/steps.c
+ifeq ($(HAS_TARGET_UART), yes)
 SRC += $(NOMAGIC_SRC_FOLDER)target/target_uart_handler.c
+endif
 
 # user feedback
 SRC += $(NOMAGIC_SRC_FOLDER)led.c

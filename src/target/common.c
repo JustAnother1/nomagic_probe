@@ -77,6 +77,7 @@ static const action_handler action_look_up[NUM_ACTIONS] = {
         TARGET_SPECIFIC_ACTION_HANDLERS
 };
 
+#ifdef FEAT_CLI
 static const char* action_names[NUM_ACTIONS] = {
         "connect",
         "close_connection",
@@ -95,7 +96,7 @@ static const char* action_names[NUM_ACTIONS] = {
 #endif
         TARGET_SPECIFIC_ACTION_NAMES
 };
-
+#endif
 
 static timeout_typ action_to;
 static bool attached;
@@ -176,6 +177,7 @@ void common_target_tick(void)
     }
 }
 
+#ifdef FEAT_CLI
 bool common_action_info(uint32_t loop)
 {
     if(0 == loop)
@@ -280,6 +282,7 @@ bool cmd_target_trace(uint32_t loop)
     }
     return false; // true == Done; false = call me again
 }
+#endif
 
 static action_data_typ * book_action_slot(void)
 {

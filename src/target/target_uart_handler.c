@@ -60,6 +60,7 @@ void target_uart_handler_tick(void)
     }
 }
 
+#ifdef FEAT_CLI
 bool target_handler_cmd_info(const uint32_t loop)
 {
     switch(loop)
@@ -75,3 +76,4 @@ bool target_handler_cmd_info(const uint32_t loop)
     }
     return false; // not yet done
 }
+#endif

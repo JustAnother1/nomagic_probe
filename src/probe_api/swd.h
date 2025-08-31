@@ -60,7 +60,7 @@
 #define AP_BANK_IDR      0xf  // 0xdf
 #define AP_REGISTER_IDR  0xc
 
-#if (defined FEAT_DEBUG_UART) || (defined FEAT_DEBUG_CDC)
+#ifdef FEAT_CLI
 /** prints all available information on the debug UART.
  *
  * @param which the information to report. (counting up until this returns true)

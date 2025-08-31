@@ -72,7 +72,9 @@ static void init_0(void)
     task_list = ALL_SUPERVISED_TASKS;
     watchdog_enable();
 
-init_printf(NULL, serial_debug_putc);
+#ifdef FEAT_CLI
+    init_printf(NULL, serial_debug_putc);
+#endif
 
 #ifdef FEAT_USB_MSC
     file_system_init();
@@ -92,12 +94,14 @@ init_printf(NULL, serial_debug_putc);
     gdbserver_init();
 #endif
 
+#ifdef FEAT_TARGET_UART
     if(true == serial_cfg_is_target_UART_enabled())
     {
         target_uart_handler_init();
     }
+#endif
 
-#if (defined FEAT_DEBUG_UART) || (defined FEAT_DEBUG_CDC)
+#ifdef FEAT_CLI
     cli_init(); // should be last to signal that initialization is complete.
 #endif
 }
@@ -120,7 +124,7 @@ static void loop_0(void)
     watchdog_leave_section(SECTION_WATCHDOG);
 
     // command line interface to debug this firmware(not the target)
-#if (defined FEAT_DEBUG_UART) || (defined FEAT_DEBUG_CDC)
+#ifdef FEAT_CLI
     watchdog_enter_section(SECTION_CLI);
 #if (defined FEAT_DEBUG_UART)
     debug_uart_tick();
@@ -168,6 +172,7 @@ static void loop_1(void)
     target_tick();
     watchdog_leave_section(SECTION_TARGET);
 
+#ifdef FEAT_TARGET_UART
     // move bytes from the UART that is connected to the debugged chip to the PC
     watchdog_enter_section(SECTION_TARGET_UART);
     if(true == serial_cfg_is_target_UART_enabled())
@@ -176,6 +181,7 @@ static void loop_1(void)
         target_uart_tick();
     }
     watchdog_leave_section(SECTION_TARGET_UART);
+#endif
 }
 
 #ifdef ENABLE_CORE_1

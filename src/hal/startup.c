@@ -125,7 +125,7 @@ __attribute__((__noreturn__)) void Reset_Handler(void)
     {
         ;
     }
-// switch clk_ref and clk_sys to XOSC
+    // switch clk_ref and clk_sys to XOSC
     CLOCKS->CLK_REF_CTRL = (CLOCKS_CLK_REF_CTRL_SRC_XOSC_CLKSRC << CLOCKS_CLK_REF_CTRL_SRC_OFFSET);
     CLOCKS->WAKE_EN0 = 0xffffffff; // all clocks enabled
     CLOCKS->WAKE_EN1 = 0x7fff; // all clocks enabled
@@ -171,7 +171,8 @@ __attribute__((__noreturn__)) void Reset_Handler(void)
     // wait for the clock generator to restart (2 clock cycles of clock source)
     __asm volatile ("nop");
     __asm volatile ("nop");
-// copy read only data from flash to RAM
+
+    // copy read only data from flash to RAM
     while(rodata_start_p < rodata_end_p)
     {
         *rodata_start_p = *rodata_src_p;
@@ -234,13 +235,17 @@ __attribute__((__noreturn__)) void Reset_Handler(void)
     IO_BANK0->GPIO25_CTRL = 5; // 5 == SIO
     SIO->GPIO_OE_SET = 1ul << 25;
 
-
+#ifdef FEAT_DEBUG_UART
     // initialize UART debug_uart
     debug_uart_init(115200);
+#endif
 
+#ifdef FEAT_TARGET_UART
     // initialize UART target_uart
     target_uart_init(115200);
-for(;;)
+#endif
+
+    for(;;)
     {
         main();
         // main exited - WTF???

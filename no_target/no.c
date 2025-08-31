@@ -38,6 +38,7 @@ void target_tick(void)
 
 }
 
+#ifdef FEAT_CLI
 bool cmd_target_info(uint32_t loop)
 {
     if(0 == loop)
@@ -52,6 +53,7 @@ bool cmd_target_info(uint32_t loop)
     }
     return false; // true == Done; false = call me again
 }
+#endif
 
 void target_send_file(char* filename, uint32_t offset, uint32_t len)
 {

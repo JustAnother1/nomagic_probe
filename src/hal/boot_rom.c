@@ -113,6 +113,7 @@ void boot_rom_check_if_valid(void)
     valid = true;
 }
 
+#ifdef FEAT_CLI
 bool boot_rom_report(uint32_t loop)
 {
     switch(loop)
@@ -149,5 +150,7 @@ bool boot_rom_report(uint32_t loop)
     }
     return false;
 }
+#endif
+
 #endif // BOOT_ROM_ENABLED
 
