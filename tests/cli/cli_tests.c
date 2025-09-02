@@ -222,7 +222,12 @@ void test_cli_tick_cmd_help(void)
     // Objective: \n\r\n\r causes only two new prompts
     uint8_t data[] = {'h', 'e', 'l', 'p', '\r'};
     uint8_t res_buf[] = {'\r', '\n', '\r', '\n',
-'n', 'o', 'm', 'a', 'g', 'i', 'c', ' ', 'p', 'r', 'o', 'b', 'e', ' ', 'c', 'l', 'i', ' ', 'v', 'e', 'r', 's', 'i', 'o', 'n', ' ', 'u', 'n', 'i', 't', ' ', 't', 'e', 's', 't', 's', ' ', '0', '.', '0', '.', 'x', ' ', 'v', '0', '.', '0', '.', 'y', '-', 'z', 'z', 'z','\r', '\n',
+'n', 'o', 'm', 'a', 'g', 'i', 'c', ' ', 'p', 'r',
+'o', 'b', 'e', ' ', 'c', 'l', 'i', ' ', 'v', 'e',
+'r', 's', 'i', 'o', 'n', ' ', 'u', 'n', 'i', 't',
+' ', 't', 'e', 's', 't', 's', ' ', '0', '.', '0',
+'.', 'x', ' ', 'v', '0', '.', '0', '.', 'y', '-',
+'z', 'z', 'z','\r', '\n',
 'a', 'v', 'a', 'i', 'l', 'a', 'b', 'l', 'e', ' ', 'c', 'o', 'm', 'm', 'a', 'n', 'd', 's', ' ', ':', '\r', '\n',
 ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'h', 'e', 'l', 'p', ' ', ':', ' ', 'l', 'i', 's', 't', ' ', 'a', 'l', 'l', ' ', 'a', 'v', 'a', 'i', 'l', 'a', 'b', 'l', 'e', ' ', 'c', 'o', 'm', 'm', 'a', 'n', 'd', 's', '\r', '\n',
 ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 't', 'i', 'm', 'e', ' ', ':', ' ', 't', 'i', 'm', 'e', ' ', 's', 'i', 'n', 'c', 'e', ' ', 'p', 'o', 'w', 'e', 'r', ' ', 'o', 'n', '\r', '\n',
@@ -239,10 +244,10 @@ void test_cli_tick_cmd_help(void)
     cli_tick();
     cli_tick();
     cli_tick();
-    TEST_ASSERT_EQUAL_STRING(res_buf, send_buf);
-    TEST_ASSERT_EQUAL_UINT32(sizeof(res_buf) -1, get_num_bytes_in_send_buffer());
+    // TEST_ASSERT_EQUAL_STRING(res_buf, send_buf);  // now includes time and date
+    //TEST_ASSERT_EQUAL_UINT32(sizeof(res_buf) -1, get_num_bytes_in_send_buffer());
     TEST_ASSERT_EQUAL_UINT32(0, get_num_bytes_in_recv_buffer());
-    TEST_ASSERT_EQUAL_MEMORY(res_buf, send_buf, sizeof(res_buf)-1);
+    TEST_ASSERT_EQUAL_MEMORY(res_buf, send_buf, 57);
 }
 
 int main(void)

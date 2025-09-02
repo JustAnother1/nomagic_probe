@@ -89,6 +89,7 @@ GDBSERVER_COMMANDS_OBJS =                                 \
  $(TEST_BIN_FOLDER)mock/gdbserver/cmd_qxfer_mock.o        \
  $(TEST_BIN_FOLDER)mock/gdbserver/cmd_qsupported_mock.o   \
  $(TEST_BIN_FOLDER)mock/gdbserver/monitor_commands_mock.o \
+ $(TEST_BIN_FOLDER)mock/gdbserver/break_watch_mock.o      \
  $(TEST_BIN_FOLDER)mock/target/common_mock.o
 
 #gdbserver/gdbserver
