@@ -41,9 +41,16 @@
 
 #include <stdint.h>
 
+enum interface_function{
+    DEBUG,
+    GDB,
+    TARGET_UART,
+};
+
 uint16_t const* tud_descriptor_string_cb(uint8_t index, uint16_t langid);
 uint8_t const * tud_descriptor_configuration_cb(uint8_t index);
 uint8_t const * tud_descriptor_device_cb(void);
 void update_descriptors(void);
+uint8_t usb_descriptor_get_cdc_itf(enum interface_function itf);
 
 #endif /* SRC_TINYUSB_USB_DESCRIPTORS_H_ */

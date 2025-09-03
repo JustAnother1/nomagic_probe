@@ -241,6 +241,7 @@ static hw_endpoint_t hw_endpoints[USB_NUM_ENDPOINTS][2];
 static uint8_t *next_buffer_ptr;
 #ifdef FEAT_DEBUG_CDC
 static bool cdc_connected = false;
+static uint8_t cli_cdc_itf = 0;
 #endif
 
 #if TUD_OPT_RP2040_USB_DEVICE_UFRAME_FIX
@@ -313,6 +314,7 @@ static void usb_peripheral_init(void)
 
 #ifdef FEAT_DEBUG_CDC
     cdc_connected = false;
+    cli_cdc_itf = usb_descriptor_get_cdc_itf(DEBUG);
 #endif
 
     NVIC_EnableIRQ(USBCTRL_IRQ_NUMBER, USBCTRL_IRQ_PRIORITY);
@@ -328,7 +330,7 @@ void usb_init(void)
 void usb_tick(void)
 {
 #ifdef FEAT_DEBUG_CDC
-    bool cdc_state = tud_cdc_connected();
+    bool cdc_state = tud_cdc_n_connected(cli_cdc_itf);
     if(cdc_connected != cdc_state)
     {
         cdc_connected = cdc_state;

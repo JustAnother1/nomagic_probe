@@ -41,13 +41,11 @@
 
 #include <stdint.h>
 
-#define INTERFACE   0
-
-void usb_cdc_send_string(char* str);
-void usb_cdc_send_bytes(const uint8_t *data, const uint32_t length);
-void usb_cdc_flush(void);
-uint32_t usb_cdc_get_num_received_bytes(void);
-uint8_t  usb_cdc_get_next_received_byte(void);
-void usb_cdc_putc(void* p, char c);
+void usb_cdc_send_string(char* str, uint8_t itf);
+void usb_cdc_send_bytes(const uint8_t *data, const uint32_t length, uint8_t itf);
+void usb_cdc_flush(uint8_t itf);
+uint32_t usb_cdc_get_num_received_bytes(uint8_t itf);
+uint8_t  usb_cdc_get_next_received_byte(uint8_t itf);
+void usb_cdc_putc(void* p, char c, uint8_t itf);
 
 #endif /* TINYUSB_USB_CDC_H_ */

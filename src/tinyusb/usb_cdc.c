@@ -44,18 +44,18 @@
 
 static uint8_t nextChar = 0;
 
-void usb_cdc_putc(void* p, char c)
+void usb_cdc_putc(void* p, char c, uint8_t itf)
 {
     uint32_t res;
     (void) p; // not used
-    if(true == tud_cdc_n_connected(INTERFACE))
+    if(true == tud_cdc_n_connected(itf))
     {
         for(;;)
         {
-            res = tud_cdc_n_write_char(INTERFACE, c);
+            res = tud_cdc_n_write_char(itf, c);
             if(1 == res)
             {
-                tud_cdc_n_write_flush(INTERFACE);
+                tud_cdc_n_write_flush(itf);
                 return;
             }
             else
@@ -67,13 +67,13 @@ void usb_cdc_putc(void* p, char c)
     // else ignore this character - nobody is listening anyway,..
 }
 
-void usb_cdc_send_string(char* str)
+void usb_cdc_send_string(char* str, uint8_t itf)
 {
     // tud_cdc_n_write_str(INTERFACE, str);
     uint32_t res = 0;
     while(0 != *str)
     {
-        res = tud_cdc_n_write_char(INTERFACE, *str);
+        res = tud_cdc_n_write_char(itf, *str);
         if(0 == res)
         {
             usb_tick();  // let the USB stack work
@@ -83,37 +83,37 @@ void usb_cdc_send_string(char* str)
             str++;
         }
     }
-    tud_cdc_n_write_flush(INTERFACE);
+    tud_cdc_n_write_flush(itf);
 }
 
-void usb_cdc_send_bytes(const uint8_t *data, const uint32_t length)
+void usb_cdc_send_bytes(const uint8_t *data, const uint32_t length, uint8_t itf)
 {
     // the buffer is 64 bytes long, so most of the time a single call will be enough, therefore we have this first case separate and not part of the loop.
-    uint32_t bytesSend = tud_cdc_n_write(INTERFACE, data, length);
+    uint32_t bytesSend = tud_cdc_n_write(itf, data, length);
     while(length > bytesSend)
     {
-        tud_cdc_n_write_flush(INTERFACE);
+        tud_cdc_n_write_flush(itf);
         usb_tick();  // let the USB stack work
-        bytesSend = bytesSend + tud_cdc_n_write(INTERFACE, &data[bytesSend], length - bytesSend);
+        bytesSend = bytesSend + tud_cdc_n_write(itf, &data[bytesSend], length - bytesSend);
     }
     // we have to flush every time, otherwise especially short replies get stuck in the queue for far too long.
-    tud_cdc_n_write_flush(INTERFACE); // TODO remove?
+    tud_cdc_n_write_flush(itf); // TODO remove?
 }
 
-void usb_cdc_flush(void)
+void usb_cdc_flush(uint8_t itf)
 {
-    tud_cdc_n_write_flush(INTERFACE);
+    tud_cdc_n_write_flush(itf);
 }
 
-uint32_t usb_cdc_get_num_received_bytes(void)
+uint32_t usb_cdc_get_num_received_bytes(uint8_t itf)
 {
-    return tud_cdc_n_available(INTERFACE);
+    return tud_cdc_n_available(itf);
 }
 
-uint8_t  usb_cdc_get_next_received_byte(void)
+uint8_t  usb_cdc_get_next_received_byte(uint8_t itf)
 {
     nextChar = 0;
-    tud_cdc_n_read(INTERFACE, &nextChar, 1);
+    tud_cdc_n_read(itf, &nextChar, 1);
     return nextChar;
 }
 

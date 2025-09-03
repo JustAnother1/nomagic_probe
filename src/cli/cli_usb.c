@@ -15,6 +15,7 @@
 
 #include "cli_usb.h"
 #include "cfg/cli_cfg.h"
+#include "tinyusb/usb_descriptors.h"
 #include "tinyusb/src/device/usbd.h"
 #include "tinyusb/src/class/cdc/cdc_device.h"
 #include "probe_api/debug_log.h"
@@ -48,8 +49,19 @@ bool cmd_usb_info(const uint32_t loop)
         print_bool(tud_mounted());
         cli_msg("suspended       : ");
         print_bool(tud_suspended());
-        cli_msg("CDC connected   : ");
-        print_bool(tud_cdc_connected());
+#ifdef FEAT_DEBUG_CDC
+        cli_msg("cli CDC connected   : ");
+        print_bool(tud_cdc_n_connected(usb_descriptor_get_cdc_itf(DEBUG)));
+#endif
+#ifdef FEAT_GDB_SERVER
+        cli_msg("gdb CDC connected   : ");
+        print_bool(tud_cdc_n_connected(usb_descriptor_get_cdc_itf(GDB)));
+#endif
+#ifdef FEAT_TARGET_UART
+        cli_msg("target UART CDC connected   : ");
+        print_bool(tud_cdc_n_connected(usb_descriptor_get_cdc_itf(TARGET_UART)));
+#endif
+
         return false; // true == Done; false = call me again
     }
     else

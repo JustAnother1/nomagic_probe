@@ -335,6 +335,7 @@ void update_descriptors(void)
 #endif
 #ifdef FEAT_USB_NCM
     interface_count++;
+    interface_count++;
     descriptor_length += TUD_CDC_NCM_DESC_LEN;
     interf_num_NCM = int_cnt;
     int_cnt++;
@@ -349,6 +350,7 @@ void update_descriptors(void)
 #endif
 #ifdef FEAT_DEBUG_CDC
     num_cdc++;
+    interface_count++;
     interface_count++;
     descriptor_length += TUD_CDC_DESC_LEN;
     interf_num_cli_CDC = int_cnt;
@@ -370,6 +372,7 @@ void update_descriptors(void)
     {
         // GDB on CDC !
         num_cdc++;
+        interface_count++;
         interface_count++;
         descriptor_length += TUD_CDC_DESC_LEN;
         interf_num_gdb_CDC = int_cnt;
@@ -409,6 +412,7 @@ void update_descriptors(void)
         {
             // target UART on USB CDC !
             num_cdc++;
+            interface_count++;
             interface_count++;
             descriptor_length += TUD_CDC_DESC_LEN;
             interf_num_target_CDC = int_cnt;
@@ -468,6 +472,38 @@ void update_descriptors(void)
     if(0 < num_cdc)
     {
         dynamic_product_id += 1;
+    }
+}
+
+uint8_t usb_descriptor_get_cdc_itf(enum interface_function itf)
+{
+    switch(itf)
+    {
+#ifdef FEAT_DEBUG_CDC
+    case DEBUG: return 0;
+    #ifdef FEAT_GDB_SERVER
+        case GDB: return 1;
+        #ifdef FEAT_TARGET_UART
+            case TARGET_UART:return 2;
+        #endif
+    #else
+        #ifdef FEAT_TARGET_UART
+            case TARGET_UART:return 1;
+        #endif
+    #endif
+#else
+    #ifdef FEAT_GDB_SERVER
+        case GDB: return 0;
+        #ifdef FEAT_TARGET_UART
+            case TARGET_UART:return 1;
+        #endif
+    #else
+        #ifdef FEAT_TARGET_UART
+            case TARGET_UART:return 0;
+        #endif
+    #endif
+#endif
+    default: return 0;
     }
 }
 
