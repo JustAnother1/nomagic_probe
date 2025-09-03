@@ -67,7 +67,6 @@
 // #define USB_PID           (0x4000 | _PID_MAP(CDC, 0) | _PID_MAP(MSC, 1) | _PID_MAP(HID, 2) | _PID_MAP(MIDI, 3) | _PID_MAP(VENDOR, 4) | _PID_MAP(ECM_RNDIS, 5) | _PID_MAP(NCM, 5) )
 // -> dynamic_product_id
 static uint16_t dynamic_product_id;
-uint32_t num_cdc = 0;
 
 /*******************************************************************************
  *        S T R I N G   D E S C R I P T O R
@@ -284,6 +283,7 @@ void update_descriptors(void)
 {
     uint32_t descriptor_length = TUD_CONFIG_DESC_LEN;
     uint8_t interface_count = 0;
+    uint32_t num_cdc = 0;
     uint32_t buf_offset = 0;
     uint8_t int_cnt = 0;
     uint8_t ep_out_cnt = 1;
