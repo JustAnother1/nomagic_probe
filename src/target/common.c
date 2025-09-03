@@ -73,8 +73,8 @@ static const action_handler action_look_up[NUM_ACTIONS] = {
         handle_target_reply_vFlashErase,      // GDB_CMD_VFLASH_ERASE
         handle_target_reply_vFlashWrite,      // GDB_CMD_VFLASH_WRITE
         handle_target_reply_write_register,   // GDB_CMD_WRITE_REGISTER
-#endif
         TARGET_SPECIFIC_ACTION_HANDLERS
+#endif
 };
 
 #ifdef FEAT_CLI
@@ -386,13 +386,13 @@ static void check_if_still_running(void)
 static void handle_actions(void)
 {
     Result res;
-
+#ifdef FEAT_GDB_SERVER
     if(true == serial_gdb_is_buffer_full())
     {
         // give the buffer time to drain -> try again next time
         return;
     }
-
+#endif
     if(NULL == cur_action)
     {
         // no action in processing -> try to process next action
@@ -451,9 +451,11 @@ static void handle_actions(void)
                        action_names[action_queue[action_read].action],
                        action_queue[action_read].cur_phase);
             // TODO can we do something better than to just skip this command?
+#ifdef FEAT_GDB_SERVER
             reply_packet_prepare();
             reply_packet_add(ERROR_TIMEOUT);
             reply_packet_send();
+#endif
             // do not try anymore
             cur_action = NULL;
             action_read++;

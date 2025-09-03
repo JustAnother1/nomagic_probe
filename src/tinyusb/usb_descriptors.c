@@ -47,52 +47,33 @@
 #include "tinyusb/src/tusb.h"
 #include "tinyusb/src/device/usbd.h"
 #include "tinyusb/src/common/tusb_types.h"
+#include "tinyusb/src/class/msc/msc.h"
 #include "tinyusb/src/class/net/net_device.h"
 
-#ifdef FEAT_USB_NCM
-static char hex(uint32_t value);
+#if (defined FEAT_USB_MSC) | (defined FEAT_USB_NCM) | (defined FEAT_DEBUG_CDC) | (defined FEAT_GDB_SERVER) | (defined FEAT_TARGET_UART)
+    // OK
+#else
+    #error "At least one USB interface needs to be enabled !"
 #endif
 
+
+// A combination of interfaces must have a unique product id, since PC will save device driver after the first plug.
+// Same VID/PID with different interface e.g MSC (first), then CDC (later) will possibly cause system error on PC.
+//
+// Auto ProductID layout's Bitmap:
+//   [MSB]       NET | VENDOR | MIDI | HID | MSC | CDC          [LSB]
+//
+// #define _PID_MAP(itf, n)  ( (CFG_TUD_##itf) << (n) )
+// #define USB_PID           (0x4000 | _PID_MAP(CDC, 0) | _PID_MAP(MSC, 1) | _PID_MAP(HID, 2) | _PID_MAP(MIDI, 3) | _PID_MAP(VENDOR, 4) | _PID_MAP(ECM_RNDIS, 5) | _PID_MAP(NCM, 5) )
+// -> dynamic_product_id
+static uint16_t dynamic_product_id;
+uint32_t num_cdc = 0;
+
+/*******************************************************************************
+ *        S T R I N G   D E S C R I P T O R
+ ***************************************************************************** */
+
 #define DESC_STR_MAX       20
-#define USBD_MAX_POWER_MA  250
-#define USBD_DESC_LEN      (TUD_CONFIG_DESC_LEN + TUD_CDC_DESC_LEN * CFG_TUD_CDC + TUD_MSC_DESC_LEN * CFG_TUD_MSC)
-#define USBD_DESC_MAX_LEN  (TUD_CONFIG_DESC_LEN + TUD_CDC_DESC_LEN * CFG_TUD_CDC + TUD_MSC_DESC_LEN * CFG_TUD_MSC + TUD_CDC_NCM_DESC_LEN * CFG_TUD_NCM)
-
-#define USBD_VID           0x2E8A // Raspberry Pi
-#define USB_BCD            0x0200 // supported USB Version in BCD : 0x0200 = USB 2.00
-
-/* A combination of interfaces must have a unique product id, since PC will save device driver after the first plug.
- * Same VID/PID with different interface e.g MSC (first), then CDC (later) will possibly cause system error on PC.
- *
- * Auto ProductID layout's Bitmap:
- *   [MSB]       NET | VENDOR | MIDI | HID | MSC | CDC          [LSB]
- */
-#define _PID_MAP(itf, n)  ( (CFG_TUD_##itf) << (n) )
-#define USB_PID           (0x4000 | _PID_MAP(CDC, 0) | _PID_MAP(MSC, 1) | _PID_MAP(HID, 2) | \
-                           _PID_MAP(MIDI, 3) | _PID_MAP(VENDOR, 4) | _PID_MAP(ECM_RNDIS, 5) | _PID_MAP(NCM, 5) )
-
-
-// Interface numbers:
-#define USBD_ITF_MSC       0
-#define USBD_ITF_CDC_0     1
-#define USBD_ITF_NCM       3
-#define USBD_ITF_MAX       3
-
-// End Points
-// OUT:
-#define EPNUM_CDC_OUT         0x02
-#define EPNUM_MSC_OUT         0x03
-#define EPNUM_NCM_OUT         0x04
-// IN
-#define EPNUM_CDC_CMD         0x81
-#define EPNUM_CDC_IN          0x82
-#define EPNUM_MSC_IN          0x83
-#define EPNUM_NCM_NOTIFY      0x84
-#define EPNUM_NCM_IN          0x85
-
-// CDC:
-#define USBD_CDC_CMD_MAX_SIZE     8
-#define USBD_CDC_IN_OUT_MAX_SIZE  64
 
 enum
 {
@@ -101,85 +82,48 @@ enum
     USBD_STR_PRODUCT,
     USBD_STR_SERIAL,
 #ifdef FEAT_USB_MSC
-    USBD_STR_MSC,       // MSC
+    USBD_STR_MSC,           // MSC
 #endif
-    USBD_STR_CDC,       // CDC
+#ifdef FEAT_USB_NCM
     USBD_STR_NCM_INTERFACE, // NCM
     USBD_STR_NCM_MAC,       // NCM
-};
-
-
-//! device descriptor
-static const tusb_desc_device_t usbd_desc_device = {
-    .bLength            = sizeof(tusb_desc_device_t),
-    .bDescriptorType    = TUSB_DESC_DEVICE,
-    .bcdUSB             = USB_BCD,  // supported USB Version in BCD : 0x0200 = USB 2.00
-    .bDeviceClass       = TUSB_CLASS_MISC,
-    .bDeviceSubClass    = MISC_SUBCLASS_COMMON,
-    .bDeviceProtocol    = MISC_PROTOCOL_IAD,
-    .bMaxPacketSize0    = CFG_TUD_ENDPOINT0_SIZE,
-    .idVendor           = USBD_VID,
-    .idProduct          = USB_PID,
-    .bcdDevice          = 0x0100, // TODO = 0x0101, ???
-    .iManufacturer      = USBD_STR_MANUF,
-    .iProduct           = USBD_STR_PRODUCT,
-    .iSerialNumber      = USBD_STR_SERIAL,
-    .bNumConfigurations = 1,
-};
-
-//! configuration descriptor
-static uint8_t usbd_desc_cfg[USBD_DESC_MAX_LEN] = {
-
-    TUD_CONFIG_DESCRIPTOR(1,                                  // configuration number
-                          USBD_ITF_MAX,                       // interface count
-                          USBD_STR_0,                         // string index
-                          USBD_DESC_LEN,                      // total length
-                          TUSB_DESC_CONFIG_ATT_REMOTE_WAKEUP, // attribute
-                          USBD_MAX_POWER_MA),                 // max power in mA
-
-#ifdef FEAT_USB_MSC
-    TUD_MSC_DESCRIPTOR(USBD_ITF_MSC,  // interface number
-                       USBD_STR_MSC,  // string index
-                       EPNUM_MSC_OUT, // bulk end point out number
-                       EPNUM_MSC_IN,  // bulk end point in number
-                       64),           // end point size (bytes)
 #endif
-
-    TUD_CDC_DESCRIPTOR(USBD_ITF_CDC_0,            // interface number
-                       USBD_STR_CDC,              // string index
-                       EPNUM_CDC_CMD,             // interrupt notification end point
-                       USBD_CDC_CMD_MAX_SIZE,     // notification end point size
-                       EPNUM_CDC_OUT,             // bulk end point out number
-                       EPNUM_CDC_IN,              // bulk end point in number
-                       USBD_CDC_IN_OUT_MAX_SIZE), // bulk end point size
-
-#ifdef FEAT_USB_NCM
-    TUD_CDC_NCM_DESCRIPTOR(USBD_ITF_NCM,              // Interface number
-                           USBD_STR_NCM_INTERFACE,    // description string index
-                           USBD_STR_NCM_MAC,          // MAC address string index
-                           EPNUM_NCM_NOTIFY,          // EP notification address (in)
-                           64,                        // EP notification size (bytes)
-                           EPNUM_NCM_OUT,             // EP data address (out)
-                           EPNUM_NCM_IN,              // EP data address (in)
-                           CFG_TUD_NET_ENDPOINT_SIZE, // EP data size (bytes)
-                           CFG_TUD_NET_MTU),          // max segment size (bytes)
+#ifdef FEAT_DEBUG_CDC
+    USBD_STR_CDC_CLI,       // CDC
+#endif
+#ifdef FEAT_GDB_SERVER
+    USBD_STR_CDC_GDB,       // CDC
+#endif
+#ifdef FEAT_TARGET_UART
+    USBD_STR_CDC_TARGET,    // CDC
 #endif
 };
 
 static const char *const usbd_desc_str[] = {
         // index 0 is not used
-    [USBD_STR_MANUF]     = "Raspberry Pi",
-    [USBD_STR_PRODUCT]   = "nomagic probe",
-    [USBD_STR_SERIAL]    = "000000000001",
-    [USBD_STR_CDC]       = "nomagic cdc",
+    [USBD_STR_MANUF]         = "Raspberry Pi",
+    [USBD_STR_PRODUCT]       = "nomagic probe",
+    [USBD_STR_SERIAL]        = "000000000001",
 #ifdef FEAT_USB_MSC
-    [USBD_STR_MSC]       = "nomagic msc",
+    [USBD_STR_MSC]           = "nomagic msc",
 #endif
 #ifdef FEAT_USB_NCM
     [USBD_STR_NCM_INTERFACE] = "nomagic NCM Network interface",
-    [USBD_STR_NCM_MAC]       = NULL,
+#endif
+#ifdef FEAT_DEBUG_CDC
+    [USBD_STR_CDC_CLI]       = "nomagic cli",
+#endif
+#ifdef FEAT_GDB_SERVER
+    [USBD_STR_CDC_GDB]       = "nomagic gdb",
+#endif
+#ifdef FEAT_TARGET_UART
+    [USBD_STR_CDC_TARGET]    = "nomagic target",
 #endif
 };
+
+#ifdef FEAT_USB_NCM
+static char hex(uint32_t value);
+#endif
 
 //! Invoked when received GET STRING DESCRIPTOR request
 //! Application return pointer to descriptor, whose contents must exist long enough for transfer to complete
@@ -226,95 +170,6 @@ uint16_t const* tud_descriptor_string_cb(uint8_t index, uint16_t langid)
     return desc_str;
 }
 
-//! Invoked when received GET CONFIGURATION DESCRIPTOR request
-//! Application return pointer to descriptor, whose contents must exist long enough for transfer to complete
-uint8_t const * tud_descriptor_configuration_cb(uint8_t index)
-{
-    (void) index;
-    return usbd_desc_cfg;
-}
-
-//! Invoked when received GET DEVICE DESCRIPTOR request
-//! Application return pointer to descriptor
-uint8_t const * tud_descriptor_device_cb(void)
-{
-    return (const uint8_t *) &usbd_desc_device;
-}
-
-void update_descriptors(void)
-{
-    // default: includes CDC does not include NCM
-    uint32_t descriptor_length = USBD_DESC_LEN;
-    uint8_t interface_count = USBD_ITF_MAX;
-    bool has_cdc = true;
-    uint8_t interface_number_ncm = USBD_ITF_NCM;
-
-    if(true == serial_cfg_is_USB_CDC_enabled())
-    {
-        // no change
-    }
-    else
-    {
-        interface_count = interface_count -2;
-        interface_number_ncm -= 2;
-        descriptor_length -= TUD_CDC_DESC_LEN;
-        has_cdc = false;
-    }
-
-#ifdef FEAT_USB_NCM
-    if(true == network_cfg_is_network_enabled())
-    {
-        interface_count += 2;
-        descriptor_length += TUD_CDC_NCM_DESC_LEN;
-    }
-    else
-    {
-        // no change
-    }
-#endif
-
-    // apply changes:
-    // ==============
-
-    // TUD_CONFIG_DESCRIPTOR = 9 bytes (TUD_CONFIG_DESC_LEN)
-    // adjust size + remove end points of Network
-    // interface count = idx 4
-    usbd_desc_cfg[4] = interface_count;
-    // total length =  idx 2(low)+3(high)
-    usbd_desc_cfg[2] = (descriptor_length & 0xff);
-    usbd_desc_cfg[3]= ((descriptor_length>>8) & 0xff);
-    // TUD_MSC_DESCRIPTOR = 23 bytes (TUD_MSC_DESC_LEN)
-    // TUD_CDC_DESCRIPTOR = 66 bytes (TUD_CDC_DESC_LEN)
-
-#ifdef FEAT_USB_NCM
-    // TUD_CDC_NCM_DESCRIPTOR = 85 bytes (TUD_CDC_NCM_DESC_LEN)
-    usbd_desc_cfg[98 + 2]  = interface_number_ncm;
-    usbd_desc_cfg[98 + 10] = interface_number_ncm;
-    usbd_desc_cfg[98 + 25] = interface_number_ncm;
-    usbd_desc_cfg[98 + 26] = interface_number_ncm + 1;
-    usbd_desc_cfg[98 + 55] = interface_number_ncm + 1;
-    usbd_desc_cfg[98 + 64] = interface_number_ncm + 1;
-#endif
-
-    // remove unused descriptors
-    if(false == has_cdc)
-    {
-#ifdef FEAT_USB_MSC
-        // overwrite CDC descriptor with the following descriptors
-        memcpy(&(usbd_desc_cfg[32]), // to the start of the CDC descriptor copy
-               &(usbd_desc_cfg[32 + TUD_CDC_DESC_LEN]), // whatever comes after it
-               descriptor_length -32); // and as many bytes come after the CDC
-               //(length of CDC is already subtracted from descriptor_length)
-#else
-        // overwrite CDC descriptor with the following descriptors
-        memcpy(&(usbd_desc_cfg[9]), // to the start of the CDC descriptor copy
-               &(usbd_desc_cfg[9 + TUD_CDC_DESC_LEN]), // whatever comes after it
-               descriptor_length -9); // and as many bytes come after the CDC
-               //(length of CDC is already subtracted from descriptor_length)
-#endif
-    }
-}
-
 #ifdef FEAT_USB_NCM
 static char hex(uint32_t value)
 {
@@ -341,29 +196,506 @@ static char hex(uint32_t value)
 }
 #endif
 
-// cheat sheet for descriptor offset numbers:
-// // Interface number, description string index, MAC address string index, EP notification address and size, EP data address (out, in), and size, max segment size.
-// #define TUD_CDC_NCM_DESCRIPTOR(_itfnum, _desc_stridx, _mac_stridx, _ep_notif, _ep_notif_size, _epout, _epin, _epsize, _maxsegmentsize)
-//   /* Interface Association (8)*/
-//   8[0], TUSB_DESC_INTERFACE_ASSOCIATION[1], _itfnum[2], 2[3], TUSB_CLASS_CDC[4], CDC_COMM_SUBCLASS_NETWORK_CONTROL_MODEL[5], 0[6], 0[7],
-//   /* CDC Control Interface (9)*/
-//   9[8], TUSB_DESC_INTERFACE[9], _itfnum[10], 0[11], 1[12], TUSB_CLASS_CDC[13], CDC_COMM_SUBCLASS_NETWORK_CONTROL_MODEL[14], 0[15], _desc_stridx[16],
-//   /* CDC-NCM Header (5)*/
-//   5[17], TUSB_DESC_CS_INTERFACE[18], CDC_FUNC_DESC_HEADER[19], U16_TO_U8S_LE(0x0110)[20+21],
-//   /* CDC-NCM Union (5)*/
-//   5[22], TUSB_DESC_CS_INTERFACE[23], CDC_FUNC_DESC_UNION[24], _itfnum[25], (uint8_t)((_itfnum) + 1)[26],
-//   /* CDC-NCM Functional Descriptor (13)*/
-//   13[27], TUSB_DESC_CS_INTERFACE[28], CDC_FUNC_DESC_ETHERNET_NETWORKING[29], _mac_stridx[30], 0[31], 0[32], 0[33], 0[34], U16_TO_U8S_LE(_maxsegmentsize)[35 + 36], U16_TO_U8S_LE(0)[37 + 38], 0[39],
-//   /* CDC-NCM Functional Descriptor (6)*/
-//   6[40], TUSB_DESC_CS_INTERFACE[41], CDC_FUNC_DESC_NCM[42], U16_TO_U8S_LE(0x0100)[43 + 44], 0[45],
-//   /* Endpoint Notification (7)*/
-//   7[46], TUSB_DESC_ENDPOINT[47], _ep_notif[48], TUSB_XFER_INTERRUPT[49], U16_TO_U8S_LE(_ep_notif_size)[50 + 51], 50[52],
-//   /* CDC Data Interface (default inactive) (9)*/
-//   9[53], TUSB_DESC_INTERFACE[54], (uint8_t)((_itfnum)+1)[55], 0[56], 0[57], TUSB_CLASS_CDC_DATA[58], 0[59], NCM_DATA_PROTOCOL_NETWORK_TRANSFER_BLOCK[60], 0[61],
-//   /* CDC Data Interface (alternative active) (9)*/
-//   9[62], TUSB_DESC_INTERFACE[63], (uint8_t)((_itfnum)+1)[64], 1[65], 2[66], TUSB_CLASS_CDC_DATA[67], 0[68], NCM_DATA_PROTOCOL_NETWORK_TRANSFER_BLOCK[69], 0[70],
-//   /* Endpoint In (7)*/
-//   7[71], TUSB_DESC_ENDPOINT[72], _epin[73], TUSB_XFER_BULK[74], U16_TO_U8S_LE(_epsize)[75 + 76], 0[77],
-//   /* Endpoint Out (7)*/
-//   7[78], TUSB_DESC_ENDPOINT[79], _epout[80], TUSB_XFER_BULK[81], U16_TO_U8S_LE(_epsize)[82 + 83], 0[84]
 
+/*******************************************************************************
+ *        D E V I C E   D E S C R I P T O R
+ ***************************************************************************** */
+
+
+#define USBD_VID           0x2E8A // Raspberry Pi
+#define USB_BCD            0x0200 // supported USB Version in BCD : 0x0200 = USB 2.00
+
+//! device descriptor
+static tusb_desc_device_t usbd_desc_device = {
+    .bLength            = sizeof(tusb_desc_device_t),
+    .bDescriptorType    = TUSB_DESC_DEVICE,
+    .bcdUSB             = USB_BCD,  // supported USB Version in BCD : 0x0200 = USB 2.00
+    .bDeviceClass       = TUSB_CLASS_MISC,
+    .bDeviceSubClass    = MISC_SUBCLASS_COMMON,
+    .bDeviceProtocol    = MISC_PROTOCOL_IAD,
+    .bMaxPacketSize0    = CFG_TUD_ENDPOINT0_SIZE,
+    .idVendor           = USBD_VID,
+    // .idProduct          = 0,
+    .bcdDevice          = 0x0100, // TODO = 0x0101, ???
+    .iManufacturer      = USBD_STR_MANUF,
+    .iProduct           = USBD_STR_PRODUCT,
+    .iSerialNumber      = USBD_STR_SERIAL,
+    .bNumConfigurations = 1,
+};
+
+//! Invoked when received GET DEVICE DESCRIPTOR request
+//! Application return pointer to descriptor
+uint8_t const * tud_descriptor_device_cb(void)
+{
+    usbd_desc_device.idProduct = dynamic_product_id;
+    return (const uint8_t *) &usbd_desc_device;
+}
+
+
+/*******************************************************************************
+ *        C O N F I G U R A T I O N   D E S C R I P T O R
+ ***************************************************************************** */
+
+
+#define USBD_MAX_POWER_MA  250
+
+/*
+
+ Configuration   | CDC | MSC | NCM | #define
+ ----------------+-----+-----+-----+------------------
+ HAS_MSC         |     |  +1 |     | FEAT_USB_MSC
+ HAS_NCM         |     |     | +1  | FEAT_USB_NCM
+ HAS_DEBUG_CDC   |  +1 |     |     | FEAT_DEBUG_CDC
+ HAS_TARGET_UART | (+1)|     |     | FEAT_TARGET_UART
+ HAS_GDB_SERVER  | (+1)|     |     | FEAT_GDB_SERVER
+ descriptor-size |  66 |  23 |  85 |
+
+configuration descriptor size = 9
+
+ max = 9 + 3*66 + 23 + 85 = 315
+
+*/
+
+//! configuration descriptor
+static uint8_t usbd_desc_cfg[315] = {0};
+
+static void write_config_desc(uint8_t * descr_buffer, uint32_t descriptor_length, uint8_t interface_count);
+#ifdef FEAT_USB_MSC
+static void write_msc_desc(uint8_t * descr_buffer, uint8_t if_num, uint8_t ep_out, uint8_t ep_in);
+#endif
+#ifdef FEAT_USB_NCM
+static void write_ncm_desc(uint8_t * descr_buffer, uint8_t if_num,  uint8_t ep_ctrl, uint8_t ep_out, uint8_t ep_in);
+#endif
+#if (defined FEAT_DEBUG_CDC) | (defined FEAT_GDB_SERVER) | (defined FEAT_TARGET_UART)
+static void write_cdc_desc(uint8_t * descr_buffer, uint8_t if_num,  uint8_t ep_ctrl, uint8_t ep_out, uint8_t ep_in, uint8_t string_idx);
+#endif
+
+
+//! Invoked when received GET CONFIGURATION DESCRIPTOR request
+//! Application return pointer to descriptor, whose contents must exist long enough for transfer to complete
+uint8_t const * tud_descriptor_configuration_cb(uint8_t index)
+{
+    (void) index;
+    return usbd_desc_cfg;
+}
+
+
+void update_descriptors(void)
+{
+    uint32_t descriptor_length = TUD_CONFIG_DESC_LEN;
+    uint8_t interface_count = 0;
+    uint32_t buf_offset = 0;
+    uint8_t int_cnt = 0;
+    uint8_t ep_out_cnt = 1;
+    uint8_t ep_in_cnt = 0x81;
+#ifdef FEAT_USB_MSC
+    uint8_t interf_num_MSC;
+    uint8_t ep_in_msc;
+    uint8_t ep_out_msc;
+#endif
+#ifdef FEAT_USB_NCM
+    uint8_t interf_num_NCM;
+    uint8_t ep_ctrl_ncm;
+    uint8_t ep_in_ncm;
+    uint8_t ep_out_ncm;
+#endif
+#ifdef FEAT_DEBUG_CDC
+    uint8_t interf_num_cli_CDC;
+    uint8_t ep_ctrl_cli_CDC;
+    uint8_t ep_in_cli_CDC;
+    uint8_t ep_out_cli_CDC;
+#endif
+#ifdef FEAT_GDB_SERVER
+    bool has_gdb_cdc = false;
+    uint8_t interf_num_gdb_CDC;
+    uint8_t ep_ctrl_gdb_CDC;
+    uint8_t ep_in_gdb_CDC;
+    uint8_t ep_out_gdb_CDC;
+#endif
+#ifdef FEAT_TARGET_UART
+    bool has_target_cdc = false;
+    uint8_t interf_num_target_CDC;
+    uint8_t ep_ctrl_target_CDC;
+    uint8_t ep_in_target_CDC;
+    uint8_t ep_out_target_CDC;
+#endif
+
+
+    // configuration descriptor
+    // 1.) collect data
+#ifdef FEAT_USB_MSC
+    interface_count++;
+    descriptor_length += TUD_MSC_DESC_LEN;
+    interf_num_MSC = int_cnt;
+    int_cnt++;
+    ep_in_msc = ep_in_cnt;
+    ep_in_cnt++;
+    ep_out_msc = ep_out_cnt;
+    ep_out_cnt++;
+#endif
+#ifdef FEAT_USB_NCM
+    interface_count++;
+    descriptor_length += TUD_CDC_NCM_DESC_LEN;
+    interf_num_NCM = int_cnt;
+    int_cnt++;
+    // NCM uses 2 interfaces.
+    int_cnt++;
+    ep_ctrl_ncm = ep_in_cnt;
+    ep_in_cnt++;
+    ep_in_ncm = ep_in_cnt;
+    ep_in_cnt++;
+    ep_out_ncm = ep_out_cnt;
+    ep_out_cnt++;
+#endif
+#ifdef FEAT_DEBUG_CDC
+    num_cdc++;
+    interface_count++;
+    descriptor_length += TUD_CDC_DESC_LEN;
+    interf_num_cli_CDC = int_cnt;
+    int_cnt++;
+    // CDC uses 2 interfaces.
+    int_cnt++;
+    ep_ctrl_cli_CDC = ep_in_cnt;
+    ep_in_cnt++;
+    ep_in_cli_CDC = ep_in_cnt;
+    ep_in_cnt++;
+    ep_out_cli_CDC = ep_out_cnt;
+    ep_out_cnt++;
+#endif
+
+
+#ifdef FEAT_GDB_SERVER
+    // GDB Server interface
+    if(true == serial_cfg_is_USB_CDC_enabled())
+    {
+        // GDB on CDC !
+        num_cdc++;
+        interface_count++;
+        descriptor_length += TUD_CDC_DESC_LEN;
+        interf_num_gdb_CDC = int_cnt;
+        int_cnt++;
+        // CDC uses 2 interfaces.
+        int_cnt++;
+        ep_ctrl_gdb_CDC = ep_in_cnt;
+        ep_in_cnt++;
+        ep_in_gdb_CDC = ep_in_cnt;
+        ep_in_cnt++;
+        ep_out_gdb_CDC = ep_out_cnt;
+        ep_out_cnt++;
+        has_gdb_cdc = true;
+    }
+#ifdef FEAT_USB_NCM
+    else if((true == network_cfg_is_network_enabled()) && (0 != net_cfg.gdb_port))
+    {
+        // GDB on Ethernet !
+    }
+#endif
+    else
+    {
+        // GDB not available !
+    }
+#endif
+
+#ifdef FEAT_TARGET_UART
+    if(true == serial_cfg_is_target_UART_enabled())
+    {
+#ifdef FEAT_USB_NCM
+        if((true == network_cfg_is_network_enabled()) && (0 != net_cfg.target_uart_port))
+        {
+            // target UART on Ethernet !
+        }
+        else
+#endif
+        {
+            // target UART on USB CDC !
+            num_cdc++;
+            interface_count++;
+            descriptor_length += TUD_CDC_DESC_LEN;
+            interf_num_target_CDC = int_cnt;
+            int_cnt++;
+            // CDC uses 2 interfaces.
+            int_cnt++;
+            ep_ctrl_target_CDC = ep_in_cnt;
+            ep_in_cnt++;
+            ep_in_target_CDC = ep_in_cnt;
+            ep_in_cnt++;
+            ep_out_target_CDC = ep_out_cnt;
+            ep_out_cnt++;
+            has_target_cdc = true;
+        }
+    }
+#endif
+
+    // 2.)write descriptor
+    write_config_desc(usbd_desc_cfg, descriptor_length, interface_count);
+    buf_offset = 9;
+#ifdef FEAT_USB_MSC
+    write_msc_desc(&(usbd_desc_cfg[buf_offset]), interf_num_MSC, ep_out_msc, ep_in_msc);
+    buf_offset += TUD_MSC_DESC_LEN;
+#endif
+#ifdef FEAT_USB_NCM
+    write_ncm_desc(&(usbd_desc_cfg[buf_offset]), interf_num_NCM, ep_ctrl_ncm, ep_out_ncm, ep_in_ncm);
+    buf_offset += TUD_CDC_NCM_DESC_LEN;
+#endif
+#ifdef FEAT_DEBUG_CDC
+    write_cdc_desc(&(usbd_desc_cfg[buf_offset]), interf_num_cli_CDC,  ep_ctrl_cli_CDC, ep_out_cli_CDC, ep_in_cli_CDC, USBD_STR_CDC_CLI);
+    buf_offset += TUD_CDC_DESC_LEN;
+#endif
+#ifdef FEAT_GDB_SERVER
+    if(true == has_gdb_cdc)
+    {
+        write_cdc_desc(&(usbd_desc_cfg[buf_offset]), interf_num_gdb_CDC,  ep_ctrl_gdb_CDC, ep_out_gdb_CDC, ep_in_gdb_CDC, USBD_STR_CDC_GDB);
+        buf_offset += TUD_CDC_DESC_LEN;
+    }
+#endif
+#ifdef FEAT_TARGET_UART
+    if(true == has_target_cdc)
+    {
+        write_cdc_desc(&(usbd_desc_cfg[buf_offset]), interf_num_target_CDC,  ep_ctrl_target_CDC, ep_out_target_CDC, ep_in_target_CDC, USBD_STR_CDC_TARGET);
+        buf_offset += TUD_CDC_DESC_LEN;
+    }
+#endif
+
+// USB Product ID/ USB_PID/ idProduct for device descriptor
+    dynamic_product_id = 0x4000
+#ifdef FEAT_USB_MSC
+            + 2
+#endif
+#ifdef FEAT_USB_NCM
+            + 0x20
+#endif
+            ;
+    if(0 < num_cdc)
+    {
+        dynamic_product_id += 1;
+    }
+}
+
+static void write_config_desc(uint8_t * descr_buffer, uint32_t descriptor_length, uint8_t interface_count)
+{
+    descr_buffer[0] = 9;
+    descr_buffer[1] = TUSB_DESC_CONFIGURATION;
+    descr_buffer[2] = ( descriptor_length      & 0xff); // total length (low)
+    descr_buffer[3] = ((descriptor_length >>8) & 0xff); // total length (High)
+    descr_buffer[4] = interface_count; // interface count
+    descr_buffer[5] = 1; // configuration number
+    descr_buffer[6] = USBD_STR_0; // string index
+    descr_buffer[7] = (1 << 7) | TUSB_DESC_CONFIG_ATT_REMOTE_WAKEUP;// attribute
+    descr_buffer[8] = USBD_MAX_POWER_MA/2; // max power in 2mA
+}
+
+#ifdef FEAT_USB_MSC
+static void write_msc_desc(uint8_t * descr_buffer, uint8_t if_num, uint8_t ep_out, uint8_t ep_in)
+{
+    // Interface
+    descr_buffer[ 0] = 9;
+    descr_buffer[ 1] = TUSB_DESC_INTERFACE;
+    descr_buffer[ 2] = if_num; // interface number
+    descr_buffer[ 3] = 0;
+    descr_buffer[ 4] = 2;
+    descr_buffer[ 5] = TUSB_CLASS_MSC;
+    descr_buffer[ 6] = MSC_SUBCLASS_SCSI;
+    descr_buffer[ 7] = MSC_PROTOCOL_BOT;
+    descr_buffer[ 8] = USBD_STR_MSC;  // string index
+    // Endpoint Out
+    descr_buffer[ 9] = 7;
+    descr_buffer[10] = TUSB_DESC_ENDPOINT;
+    descr_buffer[11] = ep_out;
+    descr_buffer[12] = TUSB_XFER_BULK;
+    descr_buffer[13] = 64; // EP size low
+    descr_buffer[14] = 0; // EP size high
+    descr_buffer[15] = 0;
+    // Endpoint In
+    descr_buffer[16] = 7;
+    descr_buffer[17] = TUSB_DESC_ENDPOINT;
+    descr_buffer[18] = ep_in;
+    descr_buffer[19] = TUSB_XFER_BULK;
+    descr_buffer[20] = 64; // EP size low
+    descr_buffer[21] = 0; // EP size high
+    descr_buffer[22] = 0;
+}
+#endif
+
+#ifdef FEAT_USB_NCM
+static void write_ncm_desc(uint8_t * descr_buffer, uint8_t if_num,  uint8_t ep_ctrl, uint8_t ep_out, uint8_t ep_in)
+{
+    // Interface Association
+    descr_buffer[ 0] = 8;
+    descr_buffer[ 1] = TUSB_DESC_INTERFACE_ASSOCIATION;
+    descr_buffer[ 2] = if_num; // interface number
+    descr_buffer[ 3] = 2;
+    descr_buffer[ 4] = TUSB_CLASS_CDC;
+    descr_buffer[ 5] = CDC_COMM_SUBCLASS_NETWORK_CONTROL_MODEL;
+    descr_buffer[ 6] = 0;
+    descr_buffer[ 7] = 0;
+    // Interface
+    descr_buffer[ 8] = 9;
+    descr_buffer[ 9] = TUSB_DESC_INTERFACE;
+    descr_buffer[10] = if_num; // interface number
+    descr_buffer[11] = 0;
+    descr_buffer[12] = 1;
+    descr_buffer[13] = TUSB_CLASS_CDC;
+    descr_buffer[14] = CDC_COMM_SUBCLASS_NETWORK_CONTROL_MODEL;
+    descr_buffer[15] = 0;
+    descr_buffer[16] = USBD_STR_NCM_INTERFACE;  // string index
+    // CDC-NCM Header
+    descr_buffer[17] = 5;
+    descr_buffer[18] = TUSB_DESC_CS_INTERFACE;
+    descr_buffer[19] = CDC_FUNC_DESC_HEADER;
+    descr_buffer[20] = 0x10;
+    descr_buffer[21] = 0x01;
+    // CDC-NCM Union
+    descr_buffer[22] = 5;
+    descr_buffer[23] = TUSB_DESC_CS_INTERFACE;
+    descr_buffer[24] = CDC_FUNC_DESC_UNION;
+    descr_buffer[25] = if_num;
+    descr_buffer[26] = if_num + 1;
+    // CDC-NCM Functional Descriptor
+    descr_buffer[27] = 13;
+    descr_buffer[28] = TUSB_DESC_CS_INTERFACE;
+    descr_buffer[29] = CDC_FUNC_DESC_ETHERNET_NETWORKING;
+    descr_buffer[30] = USBD_STR_NCM_MAC;
+    descr_buffer[31] = 0;
+    descr_buffer[32] = 0;
+    descr_buffer[33] = 0;
+    descr_buffer[34] = 0;
+    descr_buffer[35] = ( CFG_TUD_NET_MTU     & 0xff);
+    descr_buffer[36] = ((CFG_TUD_NET_MTU>>8) & 0xff);
+    descr_buffer[37] = 0;
+    descr_buffer[38] = 0;
+    descr_buffer[39] = 0;
+    // CDC-NCM Functional Descriptor
+    descr_buffer[40] = 6;
+    descr_buffer[41] = TUSB_DESC_CS_INTERFACE;
+    descr_buffer[42] = CDC_FUNC_DESC_NCM;
+    descr_buffer[43] = 0x00;
+    descr_buffer[44] = 0x01;
+    descr_buffer[45] = 0;
+    // Endpoint Notification
+    descr_buffer[46] = 7;
+    descr_buffer[47] = TUSB_DESC_ENDPOINT;
+    descr_buffer[48] = ep_ctrl;
+    descr_buffer[49] = TUSB_XFER_INTERRUPT;
+    descr_buffer[50] = 64; // EP size low
+    descr_buffer[51] = 0; // EP size high
+    descr_buffer[52] = 50;
+    // CDC Data Interface (default inactive)
+    descr_buffer[53] = 9;
+    descr_buffer[54] = TUSB_DESC_INTERFACE;
+    descr_buffer[55] = if_num + 1;
+    descr_buffer[56] = 0;
+    descr_buffer[57] = 0;
+    descr_buffer[58] = TUSB_CLASS_CDC_DATA;
+    descr_buffer[59] = 0;
+    descr_buffer[60] = NCM_DATA_PROTOCOL_NETWORK_TRANSFER_BLOCK;
+    descr_buffer[61] = 0;
+    // CDC Data Interface (alternative active)
+    descr_buffer[62] = 9;
+    descr_buffer[63] = TUSB_DESC_INTERFACE;
+    descr_buffer[64] = if_num + 1;
+    descr_buffer[65] = 1;
+    descr_buffer[66] = 2;
+    descr_buffer[67] = TUSB_CLASS_CDC_DATA;
+    descr_buffer[68] = 0;
+    descr_buffer[69] = NCM_DATA_PROTOCOL_NETWORK_TRANSFER_BLOCK;
+    descr_buffer[70] = 0;
+    // Endpoint In
+    descr_buffer[71] = 7;
+    descr_buffer[72] = TUSB_DESC_ENDPOINT;
+    descr_buffer[73] = ep_in;
+    descr_buffer[74] = TUSB_XFER_BULK;
+    descr_buffer[75] = 64; // EP size low
+    descr_buffer[76] = 0; // EP size high
+    descr_buffer[77] = 0;
+    // Endpoint Out
+    descr_buffer[78] = 7;
+    descr_buffer[79] = TUSB_DESC_ENDPOINT;
+    descr_buffer[80] = ep_out;
+    descr_buffer[81] = TUSB_XFER_BULK;
+    descr_buffer[82] = 64; // EP size low
+    descr_buffer[83] = 0; // EP size high
+    descr_buffer[84] = 0;
+}
+#endif
+
+#if (defined FEAT_DEBUG_CDC) | (defined FEAT_GDB_SERVER) | (defined FEAT_TARGET_UART)
+static void write_cdc_desc(uint8_t * descr_buffer, uint8_t if_num,  uint8_t ep_ctrl, uint8_t ep_out, uint8_t ep_in, uint8_t string_idx)
+{
+    // Interface Association
+    descr_buffer[ 0] = 8;
+    descr_buffer[ 1] = TUSB_DESC_INTERFACE_ASSOCIATION;
+    descr_buffer[ 2] = if_num; // interface number
+    descr_buffer[ 3] = 2;
+    descr_buffer[ 4] = TUSB_CLASS_CDC;
+    descr_buffer[ 5] = CDC_COMM_SUBCLASS_ABSTRACT_CONTROL_MODEL;
+    descr_buffer[ 6] = CDC_COMM_PROTOCOL_NONE;
+    descr_buffer[ 7] = 0;
+    // CDC Control Interface
+    descr_buffer[ 8] = 9;
+    descr_buffer[ 9] = TUSB_DESC_INTERFACE;
+    descr_buffer[10] = if_num; // interface number
+    descr_buffer[11] = 0;
+    descr_buffer[12] = 1;
+    descr_buffer[13] = TUSB_CLASS_CDC;
+    descr_buffer[14] = CDC_COMM_SUBCLASS_ABSTRACT_CONTROL_MODEL;
+    descr_buffer[15] = CDC_COMM_PROTOCOL_NONE;
+    descr_buffer[16] = string_idx;  // string index
+    // CDC Header
+    descr_buffer[17] = 5;
+    descr_buffer[18] = TUSB_DESC_CS_INTERFACE;
+    descr_buffer[19] = CDC_FUNC_DESC_HEADER;
+    descr_buffer[20] = 0x20;
+    descr_buffer[21] = 0x01;
+    // CDC Call
+    descr_buffer[22] = 5;
+    descr_buffer[23] = TUSB_DESC_CS_INTERFACE;
+    descr_buffer[24] = CDC_FUNC_DESC_CALL_MANAGEMENT;
+    descr_buffer[25] = 0;
+    descr_buffer[26] = if_num + 1;
+    // CDC ACM: support line request + send break
+    descr_buffer[27] = 4;
+    descr_buffer[28] = TUSB_DESC_CS_INTERFACE;
+    descr_buffer[29] = CDC_FUNC_DESC_ABSTRACT_CONTROL_MANAGEMENT;
+    descr_buffer[30] = 6;
+    // CDC Union
+    descr_buffer[31] = 5;
+    descr_buffer[32] = TUSB_DESC_CS_INTERFACE;
+    descr_buffer[33] = CDC_FUNC_DESC_UNION;
+    descr_buffer[34] = if_num;
+    descr_buffer[35] = if_num + 1;
+    // Endpoint Notification
+    descr_buffer[36] = 7;
+    descr_buffer[37] = TUSB_DESC_ENDPOINT;
+    descr_buffer[38] = ep_ctrl;
+    descr_buffer[39] = TUSB_XFER_INTERRUPT;
+    descr_buffer[40] = 8; // EP size low
+    descr_buffer[41] = 0; // EP size high
+    descr_buffer[42] = 16;
+    // CDC Data Interface
+    descr_buffer[43] = 9;
+    descr_buffer[44] = TUSB_DESC_INTERFACE;
+    descr_buffer[45] = if_num + 1;
+    descr_buffer[46] = 0;
+    descr_buffer[47] = 2;
+    descr_buffer[48] = TUSB_CLASS_CDC_DATA;
+    descr_buffer[49] = 0;
+    descr_buffer[50] = 0;
+    descr_buffer[51] = 0;
+    // Endpoint Out
+    descr_buffer[52] = 7;
+    descr_buffer[53] = TUSB_DESC_ENDPOINT;
+    descr_buffer[54] = ep_out;
+    descr_buffer[55] = TUSB_XFER_BULK;
+    descr_buffer[56] = 64; // EP size low
+    descr_buffer[57] = 0; // EP size high
+    descr_buffer[58] = 0;
+    // Endpoint In
+    descr_buffer[59] = 7;
+    descr_buffer[60] = TUSB_DESC_ENDPOINT;
+    descr_buffer[61] = ep_in;
+    descr_buffer[62] = TUSB_XFER_BULK;
+    descr_buffer[63] = 64; // EP size low
+    descr_buffer[64] = 0; // EP size high
+    descr_buffer[65] = 0;
+}
+#endif

@@ -177,6 +177,12 @@ TINYUSB_USB_MSC_OBJS =                           \
  $(TEST_BIN_FOLDER)mock/file/file_storage_mock.o \
  $(TEST_BIN_FOLDER)mock/tinyusb/tinyusb_mock.o
 
+TEST_EXECUTEABLES += $(TEST_BIN_FOLDER)tinyusb_usb_descriptors
+TINYUSB_USB_DESCRIPTORS_OBJS =                           \
+ $(TEST_BIN_FOLDER)tinyusb/usb_descriptors_tests.o       \
+ $(TEST_BIN_FOLDER)mock/cfg/serial_cfg_mock.o            \
+ $(TEST_BIN_FOLDER)src/tinyusb/usb_descriptors.o
+
 
 
 TEST_LOGS = $(patsubst %,%.txt, $(TEST_EXECUTEABLES))
@@ -294,6 +300,12 @@ $(TEST_BIN_FOLDER)tinyusb_usb_msc: $(TINYUSB_USB_MSC_OBJS) $(FRAMEWORK_OBJS)
 	@echo "linking test: tinyusb/usb_msc"
 	@echo "============================="
 	$(TST_LD) $(TST_LFLAGS) -o $(TEST_BIN_FOLDER)tinyusb_usb_msc $(TINYUSB_USB_MSC_OBJS) $(FRAMEWORK_OBJS)
+
+$(TEST_BIN_FOLDER)tinyusb_usb_descriptors: $(TINYUSB_USB_DESCRIPTORS_OBJS) $(FRAMEWORK_OBJS)
+	@echo ""
+	@echo "linking test: tinyusb/usb_descriptors"
+	@echo "====================================="
+	$(TST_LD) $(TST_LFLAGS) -o $(TEST_BIN_FOLDER)tinyusb_usb_descriptors $(TINYUSB_USB_DESCRIPTORS_OBJS) $(FRAMEWORK_OBJS)
 
 # run all tests
 $(TEST_BIN_FOLDER)%.txt: $(TEST_BIN_FOLDER)%

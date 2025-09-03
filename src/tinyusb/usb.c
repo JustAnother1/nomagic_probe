@@ -320,9 +320,7 @@ static void usb_peripheral_init(void)
 
 void usb_init(void)
 {
-#ifdef FEAT_USB_NCM
     update_descriptors();
-#endif
     tusb_init(); // initialize TinyUSB stack (requires logging to be set up)
 }
 

@@ -38,6 +38,7 @@ typedef bool (* is_connected_function)(void);
 typedef void (* flush_function)(void);
 typedef bool (* is_buffer_full_function)(void);
 
+#if (defined FEAT_GDB_SERVER) | (defined FEAT_USB_NCM)
 static void null_send_string_function(char * str);
 static void null_send_bytes_function(const uint8_t * data, const uint32_t length);
 static uint32_t null_get_num_received_bytes_function(void);
@@ -46,7 +47,9 @@ static void null_putc_function(void* p, char c);
 static bool null_is_connected_function(void);
 static void null_flush_function(void);
 static bool null_is_buffer_full_function(void);
+#endif
 
+#ifdef FEAT_GDB_SERVER
 // GDB
 static send_string_function send_string_fct;
 static send_bytes_function send_bytes_fct;
@@ -56,6 +59,7 @@ static putc_function putc_fct;
 static is_connected_function is_connected_fct;
 static flush_function flush_fct;
 static is_buffer_full_function is_buffer_full_fct;
+#endif
 
 #ifdef FEAT_TARGET_UART
 // target UART
@@ -102,6 +106,7 @@ void serial_cfg_set(char * setting, char * value)
 
 void serial_cfg_apply(void)
 {
+#ifdef FEAT_GDB_SERVER
     // GDB Server interface
     if(true == is_USB_CDC_enabled)
     {
@@ -142,7 +147,7 @@ void serial_cfg_apply(void)
         flush_fct                  = null_flush_function;
         is_buffer_full_fct         = null_is_buffer_full_function;
     }
-
+#endif
     // Debug interface is handled by compiler switches -> ifdef
 #ifdef FEAT_TARGET_UART
     if(true == is_target_UART_enabled)
@@ -188,7 +193,7 @@ uint32_t serial_cfg_get_target_UART_baudrate(void)
 {
     return target_uart_baudrate;
 }
-
+#ifdef FEAT_GDB_SERVER
 // NULL interface
 // ==============
 static void null_send_string_function(char * str)
@@ -235,6 +240,7 @@ static bool null_is_buffer_full_function(void)
     // buffer is never full
     return false;
 }
+#endif
 
 #ifdef FEAT_CLI
 // DEBUG CLI interface
@@ -299,6 +305,7 @@ void serial_debug_putc(void* p, char c)
 }
 #endif // FEAT_CLI
 
+#ifdef FEAT_GDB_SERVER
 // GDB Interface
 // =============
 void serial_gdb_send_string(char * str)
@@ -340,6 +347,7 @@ bool serial_gdb_is_buffer_full(void)
 {
     return (* is_buffer_full_fct)();
 }
+#endif
 
 #ifdef FEAT_TARGET_UART
 // Target UART

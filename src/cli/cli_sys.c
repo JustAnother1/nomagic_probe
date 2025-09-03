@@ -48,7 +48,9 @@ extern uint32_t __ro_data_start;
 extern uint32_t __ro_data_end;
 extern uint32_t __ro_data_in_flash;
 
+#ifdef FEAT_USB_MSC
 extern uint32_t file_system_start;
+#endif
 
 uint32_t log_state = 0;
 
@@ -196,8 +198,9 @@ static bool startup_report(const uint32_t loop)
     case 11: cli_line(".rodata end:            0x%08lx", (uint32_t)&__ro_data_end); break;
     case 12: cli_line(".rodata start in flash: 0x%08lx", (uint32_t)&__ro_data_in_flash); break;
     case 13: cli_line(".rodata end in flash:   0x%08lx", (uint32_t)(&__ro_data_in_flash + (&__ro_data_end - &__ro_data_start))); break;
-
+#ifdef FEAT_USB_MSC
     case 14: cli_line("file system start:      0x%08lx", file_system_start); break;
+#endif
     default: return true;
     }
     return false;

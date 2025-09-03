@@ -17,10 +17,12 @@
 
 void handle_lowercase_zed(char* received, uint32_t length)
 {
-
+    (void)received;
+    (void)length;
 }
 
 void handle_upercase_zed(char* received, uint32_t length)
 {
-
+    (void)received;
+    (void)length;
 }
