@@ -20,6 +20,7 @@ DIS = $(CP) -S
 OBJDUMP = arm-none-eabi-objdump
 TST_CC = gcc
 TST_LD = cc
+CAT = cat
 
 # configuration
 # =============
