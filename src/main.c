@@ -162,10 +162,14 @@ static void loop_1(void)
     // flag for watch dog that function has been called again
     task_list = task_list &~TASK_LOOP_1;
 
+#ifdef BOARD_PICO
     // blink the LED to let the user know everything is fine
     watchdog_enter_section(SECTION_LED);
     led_tick();
     watchdog_leave_section(SECTION_LED);
+#else
+    // pico-w has the led on a different gpio.
+#endif
 
     // debug protocol state machine (above SWD but below gdb-server)
     watchdog_enter_section(SECTION_TARGET);

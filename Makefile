@@ -57,6 +57,7 @@ SRC_FOLDER = src/
 NOMAGIC_FOLDER = nomagic_probe/
 
 
+BOARD = PICO
 HAS_MSC = yes
 HAS_DEBUG_UART = yes
 HAS_DEBUG_CDC = no

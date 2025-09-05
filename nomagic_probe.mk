@@ -1,6 +1,11 @@
 NOMAGIC_SRC_FOLDER = $(NOMAGIC_FOLDER)src/
 GITREF = $(shell cd $(NOMAGIC_FOLDER) && git describe --abbrev=40 --dirty --always --tags)
 
+# HARDWARE
+# ========
+# defines the board to compile for
+DDEFS += -DBOARD_$(BOARD)
+
 # COMPILER SWITCHES
 # =================
 # These switches enable or disable functionality
