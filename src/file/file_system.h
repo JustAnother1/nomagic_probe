@@ -31,7 +31,7 @@ sector that stores the file system control data. The super block can be located
 in any sector of the flash memory. The super block can be found by reading the
 first bytes of each sector. The super block starts with the bytes "nomagic fs
 version " followed by the version number (currently "0.1"). At offset 0x100 in
-the super block the scetorMap starts.The sectorMap is an array of uint16 with
+the super block the sectorMap starts.The sectorMap is an array of uint16 with
 one entry for each _used_ block in the flash memory. The first entry is for the
 first used sector. If the flash also contains firmware or if for another reason
 only part of the flash should be used then this first sector is not the first

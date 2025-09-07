@@ -23,11 +23,10 @@
 #include "probe_api/debug_log.h"
 
 
-// TODO dynamic size
 /* Idea of how to implement dynamic size:
  * if there is a working file system, then use that. If we need to format the file-system then do this:
  * 1.) scan Flash
- *     The addresses loop. If a Flash has2MB and we read the first block after
+ *     The addresses loop. If a Flash has 2MB and we read the first block after
  *     the 2MB then the flash will report back the first block of data it has.
  *     We know that the first block of the flash contains the  boot loader.
  *     If we read the flash at higher addresses until we find the boot loader
@@ -39,6 +38,7 @@
  */
 #define FLASH_MAX_SECTORS         512
 
+// TODO dynamic size
 // TODO detect flash size
 // 2MB = 0x10200000
 #define FILE_SYSTEM_END           0x10200000
@@ -46,6 +46,7 @@
 // do not erase sectors as long as this many sectors remain empty
 #define MIN_FREE_SECTORS          10
 
+// the linker file provides these:
 extern uint32_t __data_start;
 extern uint32_t __data_end;
 extern uint32_t __data_in_flash;
@@ -71,7 +72,7 @@ union buf_type
 static uint32_t sector_offset; // number of sectors before the file system starts
 static uint32_t block_count;
 static union buf_type buf;
-static uint16_t sector_map[FLASH_MAX_SECTORS];
+static uint16_t sector_map[FLASH_MAX_SECTORS];  // TODO only write to disc, do not keep in memory
 static uint32_t super_sector;
 static uint32_t start_search_sector;
 static uint32_t last_sector;

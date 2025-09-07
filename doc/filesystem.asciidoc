@@ -8,11 +8,11 @@ This document should help the reader to get a better understanding of the file s
 The file system consists of several components that together form a FAT formated storage area that can be accessed from the PC (USB-MSC).
 Some parts are "faked" others are backed up by real memory reagions in the QSPI flash memory. Being "faked" means that this area is not read from a storage space but rather the data is computed by the firmware.
 
-The flash can only be erased in 4KB or bigger blocks. sectors are therefore of size 4KB. Writes can be done in blocks of up to 256 bytes. Therefore blocks are 256 Bytes long. Therefore a sector consists of 16 blocks. USB usually access the area in chunks of 512 Bytes.
+The flash can only be erased in 4KB or bigger blocks. sectors are therefore of size 4KB. Writes can be done in blocks of up to 256 bytes. Therefore blocks are 256 Bytes long. Therefore a sector consists of 16 blocks. USB usually access the area in chunks of up to 512 Bytes.
 
 == FAT parameters
 
-The FAT used is Fat-12.
+The FAT used is Fat-12. FAT12 only needs 12 bit per cluster in the association table. It allows for files of up to 4GB, and can handle up to 4084 cluster. We limit the root folder to up to 128 Entries. (1 cluster = 4kB -> 16336kB; 16MB = 16384kB) RP2040 can only handle up tp 16MB of QSPI flash.
 
 === File Allacation Table
 
@@ -20,10 +20,10 @@ The FAT used is Fat-12.
 |===
 |FAT Cluster | usage
 
-|
+| (0)
 | FAT
 
-|
+| (1)
 | Root Directory
 
 | 2
@@ -41,13 +41,16 @@ The FAT used is Fat-12.
 |===
 
 == Memory layout
-From the pc the wholedisc can be read as a linear address area. The followinf therefore describes whcih blocks can be found at what offsets (address) in that area.
+From the pc the wholedisc can be read as a linear address area. The following therefore describes which elements can be found at what offsets (addresses) in that area.
 
 Unused areas will be reported to be all bytes = 0xff.
 
 The MBR is not part of the partition. Therefore reading the first partition will start with the boot sector of the FAT partition.
-I that case all addresses are 0x200 lower.
+In that case all addresses are 0x200( = 512 Bytes = size of MBR) lower.
+
 To read everything use /dev/sdb instead of /dev/sdb1 !
+
+Elements that are both "fake" and "stored in flash" means that the firmware applies some sort of filtering on the data read from flash.
 
 [cols="1,1,1,1,1,5"]
 |===
@@ -103,11 +106,124 @@ To read everything use /dev/sdb instead of /dev/sdb1 !
 | favicon.ico
 
 | 0x7400
-| 0x1f000
+| ...
 | N
 | Y
 | x kBytes
 | files written by PC
+
+|===
+
+== abstrcation layers
+
+The filesystem has an API. The API is implemented by several modules. These modules use the wear leveling layer to read and write the data. 
+The wear leveling layer is the lowest layer. It reads and writes data using the HAL functions. The HAL is not a part of the filesystem but an external dependency.
+
+=== API
+
+The API is implemented in file_storage.c. The calls are then given to fake_fs.c which uses the address to decide which module to use to retreive or to write the data.
+
+=== modules
+
+The master boot record is implemented in fake_mbr.c.
+
+The partition boot sector is implemented in fake_boot_sector.c.
+
+The file allocation table is implemented in fake_fat.c.
+
+The root folder is implemented in fake_root_folder.c.
+
+The autorin.inf and readme.txt files are implemented in fake_text_files.c.
+
+The nomagic logo is implemented in fake_favicon.c.
+
+== wear leveling
+
+The wear leveling translates between FAT clusters (4K) and Flash sectors (4K). 
+It reads and initializes(format) the filesystem. It uses the HAL functionality to read from and write to the Flash memory.
+
+implemented in file_system.c
+
+=== wear leveling algorithm
+The filesystem contains one super-sector. The super sector (4096 Bytes) starts with a defined byte sequence. That sequence is used to find the super sector in the flash memory.
+The super block also contains the mapping of which FAT sector is stored in which sector of the flash memory. If the FAT sector gets overwritten then the new data is written into a new sector and the old sector is marked as used ("dirty"). deleting sectors is slow. Moving the data to a new sector helps speeding up the writes and also will use the sectors more evenly. The used ("dirty") can then be erased at a more fitting time or if all free sectors have been used up to create new free sectors on demand.
+
+== structure
+
+This chapter describes the structure of the modules that make up the filesystem, as well as their interactions.
+
+These are the modules that make up the firmware:
+- file_system.c
+- file_storage.c
+- fake_text_files.c
+- fake_root_folder.c
+- fake_mbr.c
+- fake_fs
+- fake_favicon.c
+- fake_fat.c
+- fake_boot_sector.c
+
+=== file_system.c
+Implements the wear leveling. Uses functions from hal/flash.c to write to the QSPI flash.
+
+=== file_storage.c
+This is the Interface/API for tinyUSB.
+
+=== fake_text_files.c
+provides the bytes of the readme and the autorun.inf file.
+
+=== fake_root_folder.c
+read and write the faked root folder from/to the flash.
+
+=== fake_mbr.c
+provides the bytes of the faked master boot record(MBR).
+
+=== fake_fs
+takes read and write accesse from USB and mapps them to the module that fakes/handles them.
+
+=== fake_favicon.c
+provides the bytes of the nomagic logo.
+
+=== fake_fat.c
+read and write the faked FAT from/to the flash.
+
+=== fake_boot_sector.c
+provides the 512 bytes of the faked boot sector.
+
+
+== dictionary
+
+[cols="1,1"]
+|===
+| Word
+| description
+
+| FAT
+| File allocation tabel.
+
+| block (flash)
+| 256 bytes
+
+| block (FAT)
+| 512 bytes
+
+| chunk
+| up to 512 bytes
+
+| sector
+| 4096 bytes
+
+| cluster
+| memory block addressed in FAT. (4KB = sector)
+
+| USB-MSC
+| Mass Storage Class - Thumb Drive
+
+| QSPI
+| Quad Seial Peripheral Interface - data interface between RP2040 and Flash memory.
+
+| MBR
+| Master Boot Record - first 512 bytes of a disc that describes the size and partitioning of the disc.
 
 |===
 

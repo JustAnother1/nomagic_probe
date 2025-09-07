@@ -40,7 +40,7 @@ const uint8_t mbr_partition_table[66] = {
         0x01, // type = FAT12
         0xff, 0xff, 0xff, // CHS last sector
         0x01, 0x00, 0x00, 0x00,// LBA start
-        0xff, 0x07, 0x00, 0x00, // LBA length 0x7ff = 2047
+        0xff, 0x07, 0x00, 0x00, // LBA length 0x7ff = 2047 // TODO dynamic size
 
         // second entry:
         0x00, // do not boot
