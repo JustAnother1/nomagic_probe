@@ -22,6 +22,7 @@
 #ifdef FEAT_USB_NCM
 #include "cfg/network_cfg.h"
 #endif
+#include "cfg/serial_cfg.h"
 
 static void print_bool(const bool val);
 
@@ -54,12 +55,27 @@ bool cmd_usb_info(const uint32_t loop)
         print_bool(tud_cdc_n_connected(usb_descriptor_get_cdc_itf(DEBUG)));
 #endif
 #ifdef FEAT_GDB_SERVER
-        cli_msg("gdb CDC connected   : ");
-        print_bool(tud_cdc_n_connected(usb_descriptor_get_cdc_itf(GDB)));
+        if(true == serial_cfg_is_USB_CDC_enabled())
+        {
+            cli_msg("gdb CDC connected   : ");
+            print_bool(tud_cdc_n_connected(usb_descriptor_get_cdc_itf(GDB)));
+        }
 #endif
 #ifdef FEAT_TARGET_UART
-        cli_msg("target UART CDC connected   : ");
-        print_bool(tud_cdc_n_connected(usb_descriptor_get_cdc_itf(TARGET_UART)));
+        if(true == serial_cfg_is_target_UART_enabled())
+        {
+#ifdef FEAT_USB_NCM
+            if((true == network_cfg_is_network_enabled()) && (0 != net_cfg.target_uart_port))
+            {
+                // target UART on Ethernet !
+            }
+            else
+#endif
+            {
+                cli_msg("target UART CDC connected   : ");
+                print_bool(tud_cdc_n_connected(usb_descriptor_get_cdc_itf(TARGET_UART)));
+            }
+        }
 #endif
 
         return false; // true == Done; false = call me again
@@ -70,19 +86,31 @@ bool cmd_usb_info(const uint32_t loop)
         if(true == network_cfg_is_network_enabled())
         {
             cli_line("NCM (network)   : active");
+
             cli_msg("probe IP        : ");
             network_cfg_debug_print_ip_address(net_cfg.probe_ip.addr);
             cli_line(" ");
+
             cli_msg("probe net mask  : ");
             network_cfg_debug_print_ip_address(net_cfg.netmask.addr);
             cli_line(" ");
+
             cli_msg("DHCP IP         : ");
             network_cfg_debug_print_ip_address(net_cfg.host_pc_ip.addr);
             cli_line(" ");
+
             cli_msg("gateway IP      : ");
             network_cfg_debug_print_ip_address(net_cfg.gateway.addr);
             cli_line(" ");
+
             cli_line("gdb-server port : TCP:%d", net_cfg.gdb_port);
+
+#ifdef FEAT_TARGET_UART
+            if((true == network_cfg_is_network_enabled()) && (0 != net_cfg.target_uart_port))
+            {
+                cli_line("target UART port: TCP:%d", net_cfg.target_uart_port);
+            }
+#endif
         }
         else
         {
