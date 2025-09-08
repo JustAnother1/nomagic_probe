@@ -15,64 +15,69 @@ SECTIONS
         "nomagic_probe/src/hal/2ndstage.bin"
         KEEP (*(.vectors))
     } > FLASH
+    
 .third_stage_boot : {
         . = ALIGN(4);
-        __third_boot_start = .;
+        linker_third_boot_start = .;
 
         *(.third_stage_boot .third_stage_boot.*)
 
         . = ALIGN(4);
-        __third_boot_end = .;
+        linker_third_boot_end = .;
     } > FLASH
+    
 .code : {
         . = ALIGN(4);
-        __code_start = .;
+        linker_code_start = .;
 
         *(.text)
         *(.text.*)
         *(.time_critical.*)
 
         . = ALIGN(4);
-        __code_end = .;
+        linker_code_end = .;
     }  >RAM AT> FLASH
 
     /* used by the startup to copy code */
-    __code_in_flash = LOADADDR(.code);
+    linker_code_in_flash = LOADADDR(.code);
+    
 .rodata : {
         . = ALIGN(4);
-        __ro_data_start = .;
+        linker_ro_data_start = .;
 
         *(.rodata)
         *(.rodata.*)
 
         . = ALIGN(4);
-        __ro_data_end = .;
+        linker_ro_data_end = .;
     } >RAM AT> FLASH
 
     /* used by the startup to copy rodata */
-    __ro_data_in_flash = LOADADDR(.rodata);
+    linker_ro_data_in_flash = LOADADDR(.rodata);
+    
 .data : {
     . = ALIGN(4);
-    __data_start = .;
+    linker_data_start = .;
 
     *(.data)
     *(.data.*)
 
     . = ALIGN(4);
-    __data_end = .;
+    linker_data_end = .;
 } >RAM AT> FLASH
-
 /* used by the startup to initialize data */
-__data_in_flash = LOADADDR(.data);
+linker_data_in_flash = LOADADDR(.data);
+
 .bss (NOLOAD) : {
-    __bss_start = .;
+    linker_bss_start = .;
     *(.bss)
     *(.bss.*)
     *(COMMON)
     . = ALIGN(4);
-    __bss_end = .;
-    _end = __bss_end;
+    linker_bss_end = .;
+    _end = linker_bss_end;
     end = _end;
 }> RAM
+
 }
 

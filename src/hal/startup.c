@@ -44,20 +44,20 @@ __attribute__((__noreturn__)) void Reset_Handler(void) __attribute__ ((__noretur
 
 extern int main(void);
 
-extern uint32_t __bss_start;
-extern uint32_t __bss_end;
+extern uint32_t linker_bss_start;
+extern uint32_t linker_bss_end;
 
-extern uint32_t __data_start;
-extern uint32_t __data_end;
-extern uint32_t __data_in_flash;
+extern uint32_t linker_data_start;
+extern uint32_t linker_data_end;
+extern uint32_t linker_data_in_flash;
 
-extern uint32_t __code_start;
-extern uint32_t __code_end;
-extern uint32_t __code_in_flash;
+extern uint32_t linker_code_start;
+extern uint32_t linker_code_end;
+extern uint32_t linker_code_in_flash;
 
-extern uint32_t __ro_data_start;
-extern uint32_t __ro_data_end;
-extern uint32_t __ro_data_in_flash;
+extern uint32_t linker_ro_data_start;
+extern uint32_t linker_ro_data_end;
+extern uint32_t linker_ro_data_in_flash;
 
 extern const VECTOR_FUNCTION_Type __VECTOR_TABLE_RAM[64] __attribute__((aligned(0x100u)));
 
@@ -82,20 +82,20 @@ __attribute__((__noreturn__)) void error_state(void)
 __attribute__((__noreturn__)) void Reset_Handler(void)
 {
     /// !!! DO NOT CALL ANY FUNCTIONS BETWEEN THIS LINE
-    uint32_t *code_start_p =  &__code_start;
-    uint32_t *code_end_p = &__code_end;
-    uint32_t *code_src_p = &__code_in_flash;
+    uint32_t *code_start_p =  &linker_code_start;
+    uint32_t *code_end_p = &linker_code_end;
+    uint32_t *code_src_p = &linker_code_in_flash;
 
-    uint32_t *rodata_start_p =  &__ro_data_start;
-    uint32_t *rodata_end_p = &__ro_data_end;
-    uint32_t *rodata_src_p = &__ro_data_in_flash;
+    uint32_t *rodata_start_p =  &linker_ro_data_start;
+    uint32_t *rodata_end_p = &linker_ro_data_end;
+    uint32_t *rodata_src_p = &linker_ro_data_in_flash;
 
-    uint32_t *bss_start_p =  &__bss_start;
-    uint32_t *bss_end_p = &__bss_end;
+    uint32_t *bss_start_p =  &linker_bss_start;
+    uint32_t *bss_end_p = &linker_bss_end;
 
-    uint32_t *data_start_p =  &__data_start;
-    uint32_t *data_end_p = &__data_end;
-    uint32_t *data_src_p = &__data_in_flash;
+    uint32_t *data_start_p =  &linker_data_start;
+    uint32_t *data_end_p = &linker_data_end;
+    uint32_t *data_src_p = &linker_data_in_flash;
 
     // __asm volatile ("LDR     R0,=0x20041ffc \n"
     // "MOV     SP, R0"); // set stack pointer

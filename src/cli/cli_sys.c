@@ -33,20 +33,20 @@
 #include "probe_api/swd.h"
 #include "target/target_uart_handler.h"
 
-extern uint32_t __bss_start;
-extern uint32_t __bss_end;
+extern uint32_t linker_bss_start;
+extern uint32_t linker_bss_end;
 
-extern uint32_t __data_start;
-extern uint32_t __data_end;
-extern uint32_t __data_in_flash;
+extern uint32_t linker_data_start;
+extern uint32_t linker_data_end;
+extern uint32_t linker_data_in_flash;
 
-extern uint32_t __code_start;
-extern uint32_t __code_end;
-extern uint32_t __code_in_flash;
+extern uint32_t linker_code_start;
+extern uint32_t linker_code_end;
+extern uint32_t linker_code_in_flash;
 
-extern uint32_t __ro_data_start;
-extern uint32_t __ro_data_end;
-extern uint32_t __ro_data_in_flash;
+extern uint32_t linker_ro_data_start;
+extern uint32_t linker_ro_data_end;
+extern uint32_t linker_ro_data_in_flash;
 
 #ifdef FEAT_USB_MSC
 extern uint32_t file_system_start;
@@ -181,23 +181,23 @@ static bool startup_report(const uint32_t loop)
 {
     switch(loop)
     {
-    case 0:  cli_line(".code start:            0x%08lx", (uint32_t)&__code_start); break;
-    case 1:  cli_line(".code end:              0x%08lx", (uint32_t)&__code_end); break;
-    case 2:  cli_line(".code start in flash:   0x%08lx", (uint32_t)&__code_in_flash); break;
-    case 3:  cli_line(".code end in flash:     0x%08lx", (uint32_t)(&__code_in_flash + (&__code_end - &__code_start))); break;
+    case 0:  cli_line(".code start:            0x%08lx", (uint32_t)&linker_code_start); break;
+    case 1:  cli_line(".code end:              0x%08lx", (uint32_t)&linker_code_end); break;
+    case 2:  cli_line(".code start in flash:   0x%08lx", (uint32_t)&linker_code_in_flash); break;
+    case 3:  cli_line(".code end in flash:     0x%08lx", (uint32_t)(&linker_code_in_flash + (&linker_code_end - &linker_code_start))); break;
 
-    case 4:  cli_line(".bss start:             0x%08lx", (uint32_t)&__bss_start); break;
-    case 5:  cli_line(".bss end:               0x%08lx", (uint32_t)&__bss_end); break;
+    case 4:  cli_line(".bss start:             0x%08lx", (uint32_t)&linker_bss_start); break;
+    case 5:  cli_line(".bss end:               0x%08lx", (uint32_t)&linker_bss_end); break;
 
-    case 6:  cli_line(".data start:            0x%08lx", (uint32_t)&__data_start); break;
-    case 7:  cli_line(".data end:              0x%08lx", (uint32_t)&__data_end); break;
-    case 8:  cli_line(".data start in flash:   0x%08lx", (uint32_t)&__data_in_flash); break;
-    case 9:  cli_line(".data end in flash:     0x%08lx", (uint32_t)(&__data_in_flash + (&__data_end - &__data_start))); break;
+    case 6:  cli_line(".data start:            0x%08lx", (uint32_t)&linker_data_start); break;
+    case 7:  cli_line(".data end:              0x%08lx", (uint32_t)&linker_data_end); break;
+    case 8:  cli_line(".data start in flash:   0x%08lx", (uint32_t)&linker_data_in_flash); break;
+    case 9:  cli_line(".data end in flash:     0x%08lx", (uint32_t)(&linker_data_in_flash + (&linker_data_end - &linker_data_start))); break;
 
-    case 10: cli_line(".rodata start:          0x%08lx", (uint32_t)&__ro_data_start); break;
-    case 11: cli_line(".rodata end:            0x%08lx", (uint32_t)&__ro_data_end); break;
-    case 12: cli_line(".rodata start in flash: 0x%08lx", (uint32_t)&__ro_data_in_flash); break;
-    case 13: cli_line(".rodata end in flash:   0x%08lx", (uint32_t)(&__ro_data_in_flash + (&__ro_data_end - &__ro_data_start))); break;
+    case 10: cli_line(".rodata start:          0x%08lx", (uint32_t)&linker_ro_data_start); break;
+    case 11: cli_line(".rodata end:            0x%08lx", (uint32_t)&linker_ro_data_end); break;
+    case 12: cli_line(".rodata start in flash: 0x%08lx", (uint32_t)&linker_ro_data_in_flash); break;
+    case 13: cli_line(".rodata end in flash:   0x%08lx", (uint32_t)(&linker_ro_data_in_flash + (&linker_ro_data_end - &linker_ro_data_start))); break;
 #ifdef FEAT_USB_MSC
     case 14: cli_line("file system start:      0x%08lx", file_system_start); break;
 #endif

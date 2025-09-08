@@ -73,6 +73,18 @@ FILE_FAKE_ROOT_FOLDER_OBJS =                                 \
  $(TEST_BIN_FOLDER)src/file/fake_root_folder.o               \
  $(TEST_BIN_FOLDER)mock/file/file_system_mock.o 
 
+#file/file_system
+TEST_EXECUTEABLES += $(TEST_BIN_FOLDER)file_file_system
+FILE_FILE_SYSTEM_OBJS =                                 \
+ $(TEST_BIN_FOLDER)mock/lib/printf_mock.o               \
+ $(TEST_BIN_FOLDER)mock/hal/watchdog_mock.o             \
+ $(TEST_BIN_FOLDER)mock/hal/hw_divider_mock.o           \
+ $(TEST_BIN_FOLDER)mock/hal/flash_mock.o                \
+ $(TEST_BIN_FOLDER)mock/file/file_storage_mock.o        \
+ $(TEST_BIN_FOLDER)file/file_system_tests.o             \
+ $(TEST_BIN_FOLDER)src/lib/printf.o                     \
+ $(TEST_BIN_FOLDER)src/file/file_system.o
+
 # FOLDER gdbserver
 
 #gdbserver/commands
@@ -194,6 +206,7 @@ FRAMEWORK_OBJS = $(TEST_BIN_FOLDER)unity/unity.o
 IGNORES  = `grep -a -s IGNORE $(TEST_BIN_FOLDER)*.txt)`
 FAILURES = `grep -a -s FAIL   $(TEST_BIN_FOLDER)*.txt`
 PASSED   = `grep -a -s PASS   $(TEST_BIN_FOLDER)*.txt`
+SEGFAULT = `grep -a -s Segmentation $(TEST_BIN_FOLDER)*.txt`
 
 
 # Unit Test framework
@@ -259,6 +272,13 @@ $(TEST_BIN_FOLDER)file_fake_root_folder: $(FILE_FAKE_ROOT_FOLDER_OBJS) $(FRAMEWO
 	@echo "==================================="
 	$(TST_LD) $(TST_LFLAGS) -o $(TEST_BIN_FOLDER)file_fake_root_folder $(FILE_FAKE_ROOT_FOLDER_OBJS) $(FRAMEWORK_OBJS)
 
+$(TEST_BIN_FOLDER)file_file_system: $(FILE_FILE_SYSTEM_OBJS) $(FRAMEWORK_OBJS)
+	@echo ""
+	@echo "linking test: file/file_system"
+	@echo "=============================="
+	$(TST_LD) $(TST_LFLAGS) -o $(TEST_BIN_FOLDER)file_file_system $(FILE_FILE_SYSTEM_OBJS) $(FRAMEWORK_OBJS)
+
+
 $(TEST_BIN_FOLDER)gdbserver_util: $(GDBSERVER_UTIL_OBJS) $(FRAMEWORK_OBJS)
 	@echo ""
 	@echo "linking test: gdbserver/util"
@@ -323,6 +343,8 @@ test: $(TEST_LOGS)
 	@echo "$(IGNORES)"
 	@echo "-----------------------\nFAILURES:\n-----------------------"
 	@echo "$(FAILURES)"
+	@echo "-----------------------\nSegmentation faults:\n-----------------------"
+	@echo "$(SEGFAULT)"
 	@echo "\nDONE"
 
 

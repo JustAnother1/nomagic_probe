@@ -47,17 +47,17 @@
 #define MIN_FREE_SECTORS          10
 
 // the linker file provides these:
-extern uint32_t __data_start;
-extern uint32_t __data_end;
-extern uint32_t __data_in_flash;
+extern uint32_t linker_data_start;
+extern uint32_t linker_data_end;
+extern uint32_t linker_data_in_flash;
 
-extern uint32_t __code_start;
-extern uint32_t __code_end;
-extern uint32_t __code_in_flash;
+extern uint32_t linker_code_start;
+extern uint32_t linker_code_end;
+extern uint32_t linker_code_in_flash;
 
-extern uint32_t __ro_data_start;
-extern uint32_t __ro_data_end;
-extern uint32_t __ro_data_in_flash;
+extern uint32_t linker_ro_data_start;
+extern uint32_t linker_ro_data_end;
+extern uint32_t linker_ro_data_in_flash;
 
 
 uint32_t file_system_start;
@@ -94,17 +94,17 @@ static void mark_as_used(const uint32_t sector);
 void file_system_init(void)
 {
     file_system_start = 0;
-    if((uint32_t)(&__code_in_flash + (&__code_end - &__code_start)) > file_system_start)
+    if((uint32_t)(&linker_code_in_flash + (&linker_code_end - &linker_code_start)) > file_system_start)
     {
-        file_system_start = (uint32_t)(&__code_in_flash + (&__code_end - &__code_start));
+        file_system_start = (uint32_t)(&linker_code_in_flash + (&linker_code_end - &linker_code_start));
     }
-    if((uint32_t)(&__ro_data_in_flash + (&__ro_data_end - &__ro_data_start)) > file_system_start)
+    if((uint32_t)(&linker_ro_data_in_flash + (&linker_ro_data_end - &linker_ro_data_start)) > file_system_start)
     {
-        file_system_start = (uint32_t)(&__ro_data_in_flash + (&__ro_data_end - &__ro_data_start));
+        file_system_start = (uint32_t)(&linker_ro_data_in_flash + (&linker_ro_data_end - &linker_ro_data_start));
     }
-    if((uint32_t)(&__data_in_flash + (&__data_end - &__data_start)) > file_system_start)
+    if((uint32_t)(&linker_data_in_flash + (&linker_data_end - &linker_data_start)) > file_system_start)
     {
-        file_system_start = (uint32_t)(&__data_in_flash + (&__data_end - &__data_start));
+        file_system_start = (uint32_t)(&linker_data_in_flash + (&linker_data_end - &linker_data_start));
     }
     file_system_start = (file_system_start + 0x1000) & 0xfffff000; // file system needs to start at a 4k sector.
 
@@ -474,7 +474,8 @@ static uint32_t scan_flash(void)
                 num_sectors ++;
             }
         }
-    }while((num_sectors * FLASH_SECTOR_SIZE) < (FILE_SYSTEM_END - file_system_start));
+    }while( (num_sectors < FLASH_MAX_SECTORS)
+         && ((num_sectors * FLASH_SECTOR_SIZE) < (FILE_SYSTEM_END - file_system_start)) );
     last_sector = num_sectors -1;
     for(;num_sectors < FLASH_MAX_SECTORS; num_sectors ++)
     {
