@@ -41,18 +41,18 @@ int atoi (const char * string)
             case '7': res = (res * base) + 7; digits++; break;
             case '8': res = (res * base) + 8; digits++; break;
             case '9': res = (res * base) + 9; digits++; break;
-            case 'A':
-            case 'a': res = (res * base) + 10; digits++; break;
+            case 'A':                                                  // invalid string -> 0x prefix missing
+            case 'a': if(16 == base) {res = (res * base) + 10; digits++;} else {return 0;} break;
             case 'B':
-            case 'b': res = (res * base) + 11; digits++; break;
+            case 'b': if(16 == base) {res = (res * base) + 11; digits++;} else {return 0;} break;
             case 'C':
-            case 'c': res = (res * base) + 12; digits++; break;
+            case 'c': if(16 == base) {res = (res * base) + 12; digits++;} else {return 0;} break;
             case 'D':
-            case 'd': res = (res * base) + 13; digits++; break;
+            case 'd': if(16 == base) {res = (res * base) + 13; digits++;} else {return 0;} break;
             case 'E':
-            case 'e': res = (res * base) + 14; digits++; break;
+            case 'e': if(16 == base) {res = (res * base) + 14; digits++;} else {return 0;} break;
             case 'F':
-            case 'f': res = (res * base) + 15; digits++; break;
+            case 'f': if(16 == base) {res = (res * base) + 15; digits++;} else {return 0;} break;
 
             default:
                 // invalid string
