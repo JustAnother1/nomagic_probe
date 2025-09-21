@@ -234,6 +234,34 @@ INCDIRS +=$(NOMAGIC_SRC_FOLDER)lwip/contrib/
 
 INCDIR = $(patsubst %,-I%, $(INCDIRS))
 
+CFLAGS_LWIP  = -c -ggdb3 -MMD -MP
+# CFLAGS_LWIP += -O3
+CFLAGS_LWIP += -Os
+# sometimes helps with debugging:
+# CFLAGS_LWIP += -O0
+# CFLAGS_LWIP += -save-temps=obj
+CFLAGS_LWIP += -std=c17
+CFLAGS_LWIP += -mcpu=cortex-m0plus -mthumb
+CFLAGS_LWIP += -ffreestanding -funsigned-char
+CFLAGS_LWIP += -fno-builtin -fno-builtin-function
+CFLAGS_LWIP += -nostdlib -nolibc -nodefaultlibs 
+CFLAGS_LWIP += -Wall -pedantic -Wshadow -Wdouble-promotion -Wconversion 
+CFLAGS_LWIP += -ffunction-sections -fdata-sections
+CFLAGS_LWIP += -Wno-address -Wno-conversion
+CFLAGS_LWIP += -Wabsolute-value 
+CFLAGS_LWIP += -Wcast-function-type
+CFLAGS_LWIP += -Wclobbered -Wempty-body -Wenum-conversion
+CFLAGS_LWIP += -Wexpansion-to-defined -Wignored-qualifiers -Wimplicit-fallthrough=3
+CFLAGS_LWIP += -Wmaybe-uninitialized -Wmissing-field-initializers
+CFLAGS_LWIP += -Wmissing-parameter-type
+CFLAGS_LWIP += -Wold-style-declaration
+CFLAGS_LWIP += -Woverride-init
+CFLAGS_LWIP += -Wshift-negative-value
+CFLAGS_LWIP += -Wstring-compare
+CFLAGS_LWIP += -Wtype-limits
+CFLAGS_LWIP += -Wuninitialized
+CFLAGS_LWIP += -Wunused-but-set-parameter
+
 
 $(BIN_FOLDER)version.h:
 	@echo ""
@@ -260,4 +288,4 @@ $(BIN_FOLDER)$(NOMAGIC_SRC_FOLDER)lwip/src/%o: $(NOMAGIC_SRC_FOLDER)lwip/src/%c
 	@echo ""
 	@echo "=== compiling (lwip) $@"
 	@$(MKDIR_P) $(@D)
-	$(CC) $(CFLAGS) -Wno-address -Wno-conversion $(DDEFS) $(INCDIR) $< -o $@
+	$(CC) $(CFLAGS_LWIP) $(DDEFS) $(INCDIR) $< -o $@
