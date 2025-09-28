@@ -195,6 +195,24 @@
 #define DEMCR_VC_CORERESET_OFFSET 0
 #define DEMCR                     ((uint32_t*)0xe000edfc)
 
+/** Application Interrupt and Reset Control Register
+ *
+ * bit 31-16: VECTKEY:      Must be written as 0x05fa (write only)
+ * bit 15:    ENDIANNESS:   0 = little endian; 1 = big endian (read only)
+ * bit 2:     SYSRESETREQ   0 = no request; 1 = request system reset (write only)
+ * bit 1:     VECTCLRACTIVE 0 = do not clear; 1= clear state information for exceptions (write only)
+ */
+#define AIRCR_VECTKEY_MASK         0xffff0000
+#define AIRCR_VECTKEY_OFFSET       31
+#define AIRCR_ENDIANNESS_MASK      0x8000
+#define AIRCR_ENDIANNESSY_OFFSET   15
+#define AIRCR_SYSRESETREQ_MASK     4
+#define AIRCR_SYSRESETREQ_OFFSET   2
+#define AIRCR_VECTCLRACTIVE_MASK   2
+#define AIRCR_VECTCLRACTIVE_OFFSET 1
+#define AIRCR                      ((uint32_t*)0xe000ed0c)
+
+
 #define TARGET_XML_CONTENT  \
 "<?xml version=\"1.0\"?>\r\n" \
 "<!DOCTYPE target SYSTEM \"gdb-target.dtd\">\r\n" \
