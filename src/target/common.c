@@ -359,11 +359,12 @@ bool add_action_with_parameter(action_typ act, parameter_typ* parsed_parameter)
 void target_connect(void)
 {
     add_action(SWD_CONNECT);
-    target_command_halt_cpu();  // TODO
+    target_command_halt_cpu();  // TODO needs to be configurable
 }
 
 void target_close_connection(void)
 {
+    target_command_release_cpu(); // TODO needs to be configurable
     add_action(SWD_CLOSE_CONNECTION);
 }
 

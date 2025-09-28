@@ -26,3 +26,8 @@ bool target_command_halt_cpu(void)
 {
     return false;
 }
+
+bool target_command_release_cpu(void)
+{
+    return false;
+}

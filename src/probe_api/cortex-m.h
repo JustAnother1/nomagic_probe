@@ -212,6 +212,8 @@
 #define AIRCR_VECTCLRACTIVE_OFFSET 1
 #define AIRCR                      ((uint32_t*)0xe000ed0c)
 
+#define VECTKEY                    0x05fa0000
+
 
 #define TARGET_XML_CONTENT  \
 "<?xml version=\"1.0\"?>\r\n" \

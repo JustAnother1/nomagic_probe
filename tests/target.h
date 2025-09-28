@@ -48,5 +48,6 @@ Result target_write(uint32_t start_address, uint8_t* data, uint32_t length);
 #endif
 
 bool target_command_halt_cpu(void);
+bool target_command_release_cpu(void);
 
 #endif /* TARGET_H_ */

@@ -19,6 +19,9 @@
 #include "probe_api/common.h"
 
 bool target_command_halt_cortex_m_cpu(void);
+bool target_command_release_cortex_m_cpu(void);
+
 Result handle_cortex_m_halt(action_data_typ* const action);
+Result handle_cortex_m_release(action_data_typ* const action);
 
 #endif /* TARGET_CORTEX_M_ACTIONS_H_ */

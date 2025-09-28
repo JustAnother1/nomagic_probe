@@ -115,3 +115,8 @@ bool target_command_halt_cpu(void)
 {
     return true;
 }
+
+bool target_command_release_cpu(void)
+{
+    return true;
+}
