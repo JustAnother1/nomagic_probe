@@ -294,14 +294,20 @@ bool cmd_log(const uint32_t loop)
     if(0 == strncmp("off", type_str, 3))
     {
         // turn logging off
-        log_state = 0;
-        cli_line("Logging is now disabled!");
+        log_state = LOG_OFF;
+        cli_line("logging is now disabled!");
     }
     else if(0 == strncmp("on", type_str, 2))
     {
         // turn logging on
-        log_state = 1;
-        cli_line("Logging is now enabled!");
+        log_state = LOG_ON;
+        cli_line("logging is now enabled!");
+    }
+    else if(0 == strncmp("long", type_str, 4))
+    {
+        // turn long logging on
+        log_state = LOG_LONG;
+        cli_line("long logging is now enabled!");
     }
     else
     {
@@ -309,13 +315,17 @@ bool cmd_log(const uint32_t loop)
         {
             cli_line("ERROR: invalid switch %s ! (use : 'on' or 'off')", type_str);
         }
-        if(0 == log_state)
+        if(LOG_OFF == log_state)
         {
-            cli_line("Logging is disabled!");
+            cli_line("logging is disabled!");
         }
-        else if(1 == log_state)
+        else if(LOG_ON == log_state)
         {
-            cli_line("Logging is enabled!");
+            cli_line("logging is enabled!");
+        }
+        else if(LOG_LONG == log_state)
+        {
+            cli_line("long logging is enabled!");
         }
         else
         {

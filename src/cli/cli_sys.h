@@ -17,6 +17,10 @@
 
 #include "cfg/cli_cfg.h"
 
+#define LOG_OFF  0
+#define LOG_ON   1
+#define LOG_LONG 2
+
 bool cmd_die(const uint32_t loop);
 bool cmd_hil_test(const uint32_t loop);
 bool cmd_info(const uint32_t loop);

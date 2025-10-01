@@ -27,6 +27,11 @@
 #include "probe_api/util.h"
 #include "target.h"
 #include "target/common_actions.h"
+#ifdef FEAT_CLI
+#include "cli/cli_sys.h"
+
+extern uint32_t log_state;
+#endif
 
 
 #define GDB_BUSY_TIMEOUT_MS      5000
@@ -231,8 +236,12 @@ void reply_packet_send(void)
     reply_buffer[reply_length + 1] = (uint8_t)reply_checksum[0]; // high nibble
     reply_buffer[reply_length + 2] = (uint8_t)reply_checksum[1]; // low nibble
     reply_buffer[reply_length + 3]  = 0;
-
-    if(reply_length < 50)
+#ifdef FEAT_CLI
+    if(LOG_LONG == log_state)
+    {
+        debug_line("gdbs sending: %s", reply_buffer);
+    }
+    else if(reply_length < 50)
     {
         debug_line("gdbs sending: %s", reply_buffer);
     }
@@ -244,6 +253,7 @@ void reply_packet_send(void)
         buf[29] = 0;
         debug_line("gdbs sending: %s ... (something really long)", buf);
     }
+#endif
     serial_gdb_send_bytes(&(reply_buffer[reply_length]), 3);
     serial_gdb_flush();
 }
