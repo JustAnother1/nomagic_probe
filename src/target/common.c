@@ -93,6 +93,7 @@ static const char* action_names[NUM_ACTIONS] = {
         "flash done",
         "flash erase",
         "flash write",
+        "write register",
 #endif
         TARGET_SPECIFIC_ACTION_NAMES
 };
@@ -244,7 +245,7 @@ bool cmd_target_trace(uint32_t loop)
     if(0 == loop)
     {
         cli_line("trace end : %ld", trace_end);
-        cli_line("num, action(newest last), phase,   result");
+        cli_line("num, action(newest last),         phase,   result");
     }
     else
     {
@@ -260,16 +261,18 @@ bool cmd_target_trace(uint32_t loop)
         {
             idx = idx - ACTION_TRACE_LENGTH;
         }
-
-        if(0 != trace_buf[idx].action)
+        // trace_buf[idx].action contains action + 1  -> 0 is not a valid trace entry
+        if((0 != trace_buf[idx].action) && (NUM_ACTIONS + 1 > trace_buf[idx].action))
         {
             // print entry
-            cli_line("%3ld, %20s,     %ld,   %ld",
+            cli_line("%3ld, %20s(%2ld),  %2ld - %2ld,   %ld",
                      idx,
-                     action_names[trace_buf[idx].action -1], // 0 is a valid action
+                     action_names[(trace_buf[idx].action) -1], // 0 is a valid action
+                     (trace_buf[idx].action) -1,
                      trace_buf[idx].phase_in,
+                     trace_buf[idx].phase_out,
                      trace_buf[idx].result);
-        }
+        }/*
         else
         {
             // unused entries (not yet wrapped around)
@@ -278,7 +281,7 @@ bool cmd_target_trace(uint32_t loop)
                      "not used",
                      trace_buf[idx].phase_in,
                      trace_buf[idx].result);
-        }
+        }*/
     }
     return false; // true == Done; false = call me again
 }
@@ -319,17 +322,32 @@ static Result add_target_action(action_data_typ * const action)
 bool add_action(action_typ act)
 {
     Result res;
+    if(NUM_ACTIONS > act)
+    {
+        // OK
+    }
+    else
+    {
+#ifdef FEAT_CLI
+        debug_error("ERROR: could not add Action ! invalid action %d !", act);
+#endif
+        return false;
+    }
     action_data_typ* const action =  book_action_slot();
     if(NULL == action)
     {
+#ifdef FEAT_CLI
         debug_error("ERROR: could not add %s ! Action queue full!", action_names[act]);
+#endif
         return false;
     }
     action->action = act;
     res = add_target_action(action);
     if(RESULT_OK != res)
     {
+#ifdef FEAT_CLI
         debug_error("ERROR: could not add %s ! adding action failed(%ld)!", action_names[act], res);
+#endif
         return false;
     }
     return true;
@@ -338,10 +356,23 @@ bool add_action(action_typ act)
 bool add_action_with_parameter(action_typ act, parameter_typ* parsed_parameter)
 {
     Result res;
+    if(NUM_ACTIONS > act)
+    {
+        // OK
+    }
+    else
+    {
+#ifdef FEAT_CLI
+        debug_error("ERROR: could not add Action ! invalid action %d !", act);
+#endif
+        return false;
+    }
     action_data_typ* const action =  book_action_slot();
     if(NULL == action)
     {
+#ifdef FEAT_CLI
         debug_error("ERROR: could not add %s ! Action queue full!", action_names[act]);
+#endif
         return false;
     }
     action->action = act;
@@ -349,7 +380,9 @@ bool add_action_with_parameter(action_typ act, parameter_typ* parsed_parameter)
     res = add_target_action(action);
     if(RESULT_OK != res)
     {
+#ifdef FEAT_CLI
         debug_error("ERROR: could not add %s ! adding action failed(%ld)!", action_names[act], res);
+#endif
         return false;
     }
     return true;
@@ -401,11 +434,29 @@ static void handle_actions(void)
         {
             if(true == action_queue[action_read].can_run)
             {
-                // new action available
-                action_queue[action_read].cur_phase = 0;
-                cur_action = action_look_up[action_queue[action_read].action];
-                debug_line("ACTIONS: starting with action %s !", action_names[action_queue[action_read].action]);
-                start_timeout(&action_to, ACTION_TIMEOUT_TIME_MS);
+                if(NUM_ACTIONS > action_queue[action_read].action)
+                {
+                    // new action available
+                    action_queue[action_read].cur_phase = 0;
+                    cur_action = action_look_up[action_queue[action_read].action];
+#ifdef FEAT_CLI
+                    debug_line("ACTIONS: starting with action %s (%d)!", action_names[action_queue[action_read].action], action_queue[action_read].action);
+#endif
+                    start_timeout(&action_to, ACTION_TIMEOUT_TIME_MS);
+                }
+                else
+                {
+                    // invalid action -> skip
+#ifdef FEAT_CLI
+                    debug_line("ACTIONS: skipping invalid action  %d !", action_queue[action_read].action);
+#endif
+                    action_read++;
+                    if(ACTION_QUEUE_LENGTH == action_read)
+                    {
+                        action_read = 0;
+                    }
+                    return;
+                }
             }
             else
             {
@@ -433,14 +484,14 @@ static void handle_actions(void)
             trace_end = 0;
         }
     }
-    trace_buf[trace_end].action = action_queue[action_read].action + 1;  // 0 is a valid action
+    trace_buf[trace_end].action = (action_queue[action_read].action) + 1;  // 0 is a valid action
     trace_buf[trace_end].phase_in = action_queue[action_read].cur_phase;
 
     // call handler
     res = (*cur_action)(&action_queue[action_read]);
     // TODO I don't understand why these line cause an Hard Fault
-    // trace_buf[trace_end].phase_out = action_queue[action_read].cur_phase;
-    // trace_buf[trace_end].result = res;
+    trace_buf[trace_end].phase_out = action_queue[action_read].cur_phase;
+    trace_buf[trace_end].result = res;
 
 
     if(ERR_NOT_COMPLETED == res)
@@ -448,9 +499,20 @@ static void handle_actions(void)
         // order not done
         if(true == timeout_expired(&action_to))
         {
-            debug_error("ERROR: target: SWD: timeout in running '%s' phase %ld !",
-                       action_names[action_queue[action_read].action],
-                       action_queue[action_read].cur_phase);
+#ifdef FEAT_CLI
+            if(NUM_ACTIONS > action_queue[action_read].action)
+            {
+                debug_error("ERROR: target: SWD: timeout in running '%s' phase %ld !",
+                           action_names[action_queue[action_read].action],
+                           action_queue[action_read].cur_phase);
+            }
+            else
+            {
+                debug_error("ERROR: target: SWD: timeout in running invalid action %d phase %ld !",
+                           action_queue[action_read].action,
+                           action_queue[action_read].cur_phase);
+            }
+#endif
             // TODO can we do something better than to just skip this command?
 #ifdef FEAT_GDB_SERVER
             reply_packet_prepare();
@@ -479,10 +541,22 @@ static void handle_actions(void)
         if(RESULT_OK > res)
         {
             // error
-            debug_error("target: error %ld on action %s.%ld",
-                       res,
-                       action_names[action_queue[action_read].action],
-                       action_queue[action_read].cur_phase);
+#ifdef FEAT_CLI
+            if(NUM_ACTIONS > action_queue[action_read].action)
+            {
+                debug_error("target: error %ld on action %s.%ld",
+                           res,
+                           action_names[action_queue[action_read].action],
+                           action_queue[action_read].cur_phase);
+            }
+            else
+            {
+                debug_error("target: error %ld on invalid action %d.%ld",
+                           res,
+                           action_queue[action_read].action,
+                           action_queue[action_read].cur_phase);
+            }
+#endif
 #ifdef FEAT_GDB_SERVER
             if(true == is_gdb_busy())
             {
@@ -493,7 +567,16 @@ static void handle_actions(void)
         }
         else
         {
-            debug_line("ACTIONS: finished with action %s !", action_names[action_queue[action_read].action]);
+#ifdef FEAT_CLI
+            if(NUM_ACTIONS > action_queue[action_read].action)
+            {
+            debug_line("ACTIONS: finished with action %s (%d)!", action_names[action_queue[action_read].action], action_queue[action_read].action);
+            }
+            else
+            {
+                debug_line("ACTIONS: finished with invalid action %d !", action_queue[action_read].action);
+            }
+#endif
         }
         cur_action = NULL;
         action_read++;
