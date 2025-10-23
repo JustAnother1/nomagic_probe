@@ -119,30 +119,30 @@
  *  bits 15..5  = reserved
  *  bits 4..0   = REGSEL specifies the register to transfer:
  *
- *  0 0 0 0 0  : R0
- *  0 0 0 0 1  : R1
- *  0 0 0 1 0  : R2
- *  0 0 0 1 1  : R3
- *  0 0 1 0 0  : R4
- *  0 0 1 0 1  : R5
- *  0 0 1 1 0  : R6
- *  0 0 1 1 1  : R7
- *  0 1 0 0 0  : R8
- *  0 1 0 0 1  : R9
- *  0 1 0 1 0  : R10
- *  0 1 0 1 1  : R11
- *  0 1 1 0 0  : R12
- *  0 1 1 0 1  : SP (current stack pointer)
- *  0 1 1 1 0  : LR
- *  0 1 1 1 1  : Debug Return Address (first instruction to be executed on exit from Debug state)
- *  1 0 0 0 0  : xPSR
- *  1 0 0 0 1  : MSP (Main Stack Pointer)
- *  1 0 0 1 0  : PSP (Process Stack Pointer)
- *  1 0 0 1 1  : reserved
- *  1 0 1 0 0  : CONTROL / PRIMASK
- *  1 0 1 0 1  : reserved
- *   . . . .   : reserved
- *  1 1 1 1 1  : reserved
+ *  0 0 0 0 0 :  0 : R0
+ *  0 0 0 0 1 :  1 : R1
+ *  0 0 0 1 0 :  2 : R2
+ *  0 0 0 1 1 :  3 : R3
+ *  0 0 1 0 0 :  4 : R4
+ *  0 0 1 0 1 :  5 : R5
+ *  0 0 1 1 0 :  6 : R6
+ *  0 0 1 1 1 :  7 : R7
+ *  0 1 0 0 0 :  8 : R8
+ *  0 1 0 0 1 :  9 : R9
+ *  0 1 0 1 0 : 10 : R10
+ *  0 1 0 1 1 : 11 : R11
+ *  0 1 1 0 0 : 12 : R12
+ *  0 1 1 0 1 : 13 : SP (current stack pointer)
+ *  0 1 1 1 0 : 14 : LR
+ *  0 1 1 1 1 : 15 : Debug Return Address (first instruction to be executed on exit from Debug state)
+ *  1 0 0 0 0 : 16 : xPSR
+ *  1 0 0 0 1 : 17 : MSP (Main Stack Pointer)
+ *  1 0 0 1 0 : 18 : PSP (Process Stack Pointer)
+ *  1 0 0 1 1 : 19 : reserved
+ *  1 0 1 0 0 : 20 : CONTROL / PRIMASK (PRIMASK = 0..7)(CONTROL = 31..24)
+ *  1 0 1 0 1 : 21 : reserved
+ *   . . . .  : -- : reserved
+ *  1 1 1 1 1 : 31 : reserved
  */
 
 #define DCRSR_REGWNR_MASK         0x10000
@@ -235,17 +235,17 @@
 "<reg name=\"r11\" bitsize=\"32\" regnum=\"11\" save-restore=\"yes\" type=\"int\" group=\"general\"/>\r\n" \
 "<reg name=\"r12\" bitsize=\"32\" regnum=\"12\" save-restore=\"yes\" type=\"int\" group=\"general\"/>\r\n" \
 "<reg name=\"sp\" bitsize=\"32\" regnum=\"13\" save-restore=\"yes\" type=\"data_ptr\" group=\"general\"/>\r\n" \
-"<reg name=\"lr\" bitsize=\"32\" regnum=\"14\" save-restore=\"yes\" type=\"int\" group=\"general\"/>\r\n" \
+"<reg name=\"lr\" bitsize=\"32\" regnum=\"14\" save-restore=\"yes\" type=\"code_ptr\" group=\"general\"/>\r\n" \
 "<reg name=\"pc\" bitsize=\"32\" regnum=\"15\" save-restore=\"yes\" type=\"code_ptr\" group=\"general\"/>\r\n" \
 "<reg name=\"xPSR\" bitsize=\"32\" regnum=\"16\" save-restore=\"yes\" type=\"int\" group=\"general\"/>\r\n" \
 "</feature>\r\n" \
 "<feature name=\"org.gnu.gdb.arm.m-system\">\r\n" \
 "<reg name=\"msp\" bitsize=\"32\" regnum=\"17\" save-restore=\"yes\" type=\"data_ptr\" group=\"system\"/>\r\n" \
 "<reg name=\"psp\" bitsize=\"32\" regnum=\"18\" save-restore=\"yes\" type=\"data_ptr\" group=\"system\"/>\r\n" \
-"<reg name=\"primask\" bitsize=\"1\" regnum=\"20\" save-restore=\"yes\" type=\"int8\" group=\"system\"/>\r\n" \
-"<reg name=\"basepri\" bitsize=\"8\" regnum=\"21\" save-restore=\"yes\" type=\"int8\" group=\"system\"/>\r\n" \
-"<reg name=\"faultmask\" bitsize=\"1\" regnum=\"22\" save-restore=\"yes\" type=\"int8\" group=\"system\"/>\r\n" \
-"<reg name=\"control\" bitsize=\"3\" regnum=\"23\" save-restore=\"yes\" type=\"int8\" group=\"system\"/>\r\n" \
+"<reg name=\"primask\" bitsize=\"8\" regnum=\"20\" save-restore=\"no\" type=\"int8\" group=\"system\"/>\r\n" \
+"<reg name=\"basepri\" bitsize=\"8\" regnum=\"21\" save-restore=\"no\" type=\"int8\" group=\"system\"/>\r\n" \
+"<reg name=\"faultmask\" bitsize=\"8\" regnum=\"22\" save-restore=\"no\" type=\"int8\" group=\"system\"/>\r\n" \
+"<reg name=\"control\" bitsize=\"8\" regnum=\"23\" save-restore=\"no\" type=\"int8\" group=\"system\"/>\r\n" \
 "</feature>\r\n" \
 "</target>\r\n"
 
