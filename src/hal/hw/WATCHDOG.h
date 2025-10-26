@@ -103,69 +103,57 @@ volatile uint32_t LOAD;
 */
 volatile uint32_t REASON;
 
-/** SCRATCH0 (offset: 0xc)
+/** SCRATCH
+SCRATCH[0] (offset: 0xc)
   Scratch register. Information persists through soft reset of the chip.
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t SCRATCH0;
 
-/** SCRATCH1 (offset: 0x10)
+SCRATCH[1] (offset: 0x10)
   Scratch register. Information persists through soft reset of the chip.
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t SCRATCH1;
 
-/** SCRATCH2 (offset: 0x14)
+SCRATCH[2] (offset: 0x14)
   Scratch register. Information persists through soft reset of the chip.
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t SCRATCH2;
 
-/** SCRATCH3 (offset: 0x18)
+SCRATCH[3] (offset: 0x18)
   Scratch register. Information persists through soft reset of the chip.
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t SCRATCH3;
 
-/** SCRATCH4 (offset: 0x1c)
+SCRATCH[4] (offset: 0x1c)
   Scratch register. Information persists through soft reset of the chip.
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t SCRATCH4;
 
-/** SCRATCH5 (offset: 0x20)
+SCRATCH[5] (offset: 0x20)
   Scratch register. Information persists through soft reset of the chip.
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t SCRATCH5;
 
-/** SCRATCH6 (offset: 0x24)
+SCRATCH[6] (offset: 0x24)
   Scratch register. Information persists through soft reset of the chip.
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t SCRATCH6;
 
-/** SCRATCH7 (offset: 0x28)
+SCRATCH[7] (offset: 0x28)
   Scratch register. Information persists through soft reset of the chip.
   access : read-write
   reset value : 0x0
   reset mask : 0x0
+
 */
-volatile uint32_t SCRATCH7;
+volatile uint32_t SCRATCH[8];
 
 /** TICK (offset: 0x2c)
   Controls the tick generator

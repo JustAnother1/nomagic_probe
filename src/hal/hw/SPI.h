@@ -1,145 +1,148 @@
 /*
   automatically created from data available on https://chipselect.org/
 */
-#ifndef HW_SPI1_H
-#define HW_SPI1_H
+#ifndef HW_SPI_H
+#define HW_SPI_H
+/** Interrupt : SPI0_IRQ (Vector: 18)  */
 /** Interrupt : SPI1_IRQ (Vector: 19)  */
+/** Memory Block starting at 0x4003C000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
 /** Memory Block starting at 0x40040000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
 
 #include <stdint.h>
 
 
-#define SPI1_SSPCR0_SCR_OFFSET                             8u
-#define SPI1_SSPCR0_SCR_MASK                               0xff00u
+#define SPI_SSPCR0_SCR_OFFSET                              8u
+#define SPI_SSPCR0_SCR_MASK                                0xff00u
 
-#define SPI1_SSPCR0_SPH_OFFSET                             7u
-#define SPI1_SSPCR0_SPH_MASK                               0x80u
+#define SPI_SSPCR0_SPH_OFFSET                              7u
+#define SPI_SSPCR0_SPH_MASK                                0x80u
 
-#define SPI1_SSPCR0_SPO_OFFSET                             6u
-#define SPI1_SSPCR0_SPO_MASK                               0x40u
+#define SPI_SSPCR0_SPO_OFFSET                              6u
+#define SPI_SSPCR0_SPO_MASK                                0x40u
 
-#define SPI1_SSPCR0_FRF_OFFSET                             4u
-#define SPI1_SSPCR0_FRF_MASK                               0x30u
+#define SPI_SSPCR0_FRF_OFFSET                              4u
+#define SPI_SSPCR0_FRF_MASK                                0x30u
 
-#define SPI1_SSPCR0_DSS_OFFSET                             0u
-#define SPI1_SSPCR0_DSS_MASK                               0xfu
+#define SPI_SSPCR0_DSS_OFFSET                              0u
+#define SPI_SSPCR0_DSS_MASK                                0xfu
 
-#define SPI1_SSPCR1_SOD_OFFSET                             3u
-#define SPI1_SSPCR1_SOD_MASK                               8u
+#define SPI_SSPCR1_SOD_OFFSET                              3u
+#define SPI_SSPCR1_SOD_MASK                                8u
 
-#define SPI1_SSPCR1_MS_OFFSET                              2u
-#define SPI1_SSPCR1_MS_MASK                                4u
+#define SPI_SSPCR1_MS_OFFSET                               2u
+#define SPI_SSPCR1_MS_MASK                                 4u
 
-#define SPI1_SSPCR1_SSE_OFFSET                             1u
-#define SPI1_SSPCR1_SSE_MASK                               2u
+#define SPI_SSPCR1_SSE_OFFSET                              1u
+#define SPI_SSPCR1_SSE_MASK                                2u
 
-#define SPI1_SSPCR1_LBM_OFFSET                             0u
-#define SPI1_SSPCR1_LBM_MASK                               1u
+#define SPI_SSPCR1_LBM_OFFSET                              0u
+#define SPI_SSPCR1_LBM_MASK                                1u
 
-#define SPI1_SSPDR_DATA_OFFSET                             0u
-#define SPI1_SSPDR_DATA_MASK                               0xffffu
+#define SPI_SSPDR_DATA_OFFSET                              0u
+#define SPI_SSPDR_DATA_MASK                                0xffffu
 
-#define SPI1_SSPSR_BSY_OFFSET                              4u
-#define SPI1_SSPSR_BSY_MASK                                0x10u
+#define SPI_SSPSR_BSY_OFFSET                               4u
+#define SPI_SSPSR_BSY_MASK                                 0x10u
 
-#define SPI1_SSPSR_RFF_OFFSET                              3u
-#define SPI1_SSPSR_RFF_MASK                                8u
+#define SPI_SSPSR_RFF_OFFSET                               3u
+#define SPI_SSPSR_RFF_MASK                                 8u
 
-#define SPI1_SSPSR_RNE_OFFSET                              2u
-#define SPI1_SSPSR_RNE_MASK                                4u
+#define SPI_SSPSR_RNE_OFFSET                               2u
+#define SPI_SSPSR_RNE_MASK                                 4u
 
-#define SPI1_SSPSR_TNF_OFFSET                              1u
-#define SPI1_SSPSR_TNF_MASK                                2u
+#define SPI_SSPSR_TNF_OFFSET                               1u
+#define SPI_SSPSR_TNF_MASK                                 2u
 
-#define SPI1_SSPSR_TFE_OFFSET                              0u
-#define SPI1_SSPSR_TFE_MASK                                1u
+#define SPI_SSPSR_TFE_OFFSET                               0u
+#define SPI_SSPSR_TFE_MASK                                 1u
 
-#define SPI1_SSPCPSR_CPSDVSR_OFFSET                        0u
-#define SPI1_SSPCPSR_CPSDVSR_MASK                          0xffu
+#define SPI_SSPCPSR_CPSDVSR_OFFSET                         0u
+#define SPI_SSPCPSR_CPSDVSR_MASK                           0xffu
 
-#define SPI1_SSPIMSC_TXIM_OFFSET                           3u
-#define SPI1_SSPIMSC_TXIM_MASK                             8u
+#define SPI_SSPIMSC_TXIM_OFFSET                            3u
+#define SPI_SSPIMSC_TXIM_MASK                              8u
 
-#define SPI1_SSPIMSC_RXIM_OFFSET                           2u
-#define SPI1_SSPIMSC_RXIM_MASK                             4u
+#define SPI_SSPIMSC_RXIM_OFFSET                            2u
+#define SPI_SSPIMSC_RXIM_MASK                              4u
 
-#define SPI1_SSPIMSC_RTIM_OFFSET                           1u
-#define SPI1_SSPIMSC_RTIM_MASK                             2u
+#define SPI_SSPIMSC_RTIM_OFFSET                            1u
+#define SPI_SSPIMSC_RTIM_MASK                              2u
 
-#define SPI1_SSPIMSC_RORIM_OFFSET                          0u
-#define SPI1_SSPIMSC_RORIM_MASK                            1u
+#define SPI_SSPIMSC_RORIM_OFFSET                           0u
+#define SPI_SSPIMSC_RORIM_MASK                             1u
 
-#define SPI1_SSPRIS_TXRIS_OFFSET                           3u
-#define SPI1_SSPRIS_TXRIS_MASK                             8u
+#define SPI_SSPRIS_TXRIS_OFFSET                            3u
+#define SPI_SSPRIS_TXRIS_MASK                              8u
 
-#define SPI1_SSPRIS_RXRIS_OFFSET                           2u
-#define SPI1_SSPRIS_RXRIS_MASK                             4u
+#define SPI_SSPRIS_RXRIS_OFFSET                            2u
+#define SPI_SSPRIS_RXRIS_MASK                              4u
 
-#define SPI1_SSPRIS_RTRIS_OFFSET                           1u
-#define SPI1_SSPRIS_RTRIS_MASK                             2u
+#define SPI_SSPRIS_RTRIS_OFFSET                            1u
+#define SPI_SSPRIS_RTRIS_MASK                              2u
 
-#define SPI1_SSPRIS_RORRIS_OFFSET                          0u
-#define SPI1_SSPRIS_RORRIS_MASK                            1u
+#define SPI_SSPRIS_RORRIS_OFFSET                           0u
+#define SPI_SSPRIS_RORRIS_MASK                             1u
 
-#define SPI1_SSPMIS_TXMIS_OFFSET                           3u
-#define SPI1_SSPMIS_TXMIS_MASK                             8u
+#define SPI_SSPMIS_TXMIS_OFFSET                            3u
+#define SPI_SSPMIS_TXMIS_MASK                              8u
 
-#define SPI1_SSPMIS_RXMIS_OFFSET                           2u
-#define SPI1_SSPMIS_RXMIS_MASK                             4u
+#define SPI_SSPMIS_RXMIS_OFFSET                            2u
+#define SPI_SSPMIS_RXMIS_MASK                              4u
 
-#define SPI1_SSPMIS_RTMIS_OFFSET                           1u
-#define SPI1_SSPMIS_RTMIS_MASK                             2u
+#define SPI_SSPMIS_RTMIS_OFFSET                            1u
+#define SPI_SSPMIS_RTMIS_MASK                              2u
 
-#define SPI1_SSPMIS_RORMIS_OFFSET                          0u
-#define SPI1_SSPMIS_RORMIS_MASK                            1u
+#define SPI_SSPMIS_RORMIS_OFFSET                           0u
+#define SPI_SSPMIS_RORMIS_MASK                             1u
 
-#define SPI1_SSPICR_RTIC_OFFSET                            1u
-#define SPI1_SSPICR_RTIC_MASK                              2u
+#define SPI_SSPICR_RTIC_OFFSET                             1u
+#define SPI_SSPICR_RTIC_MASK                               2u
 
-#define SPI1_SSPICR_RORIC_OFFSET                           0u
-#define SPI1_SSPICR_RORIC_MASK                             1u
+#define SPI_SSPICR_RORIC_OFFSET                            0u
+#define SPI_SSPICR_RORIC_MASK                              1u
 
-#define SPI1_SSPDMACR_TXDMAE_OFFSET                        1u
-#define SPI1_SSPDMACR_TXDMAE_MASK                          2u
+#define SPI_SSPDMACR_TXDMAE_OFFSET                         1u
+#define SPI_SSPDMACR_TXDMAE_MASK                           2u
 
-#define SPI1_SSPDMACR_RXDMAE_OFFSET                        0u
-#define SPI1_SSPDMACR_RXDMAE_MASK                          1u
+#define SPI_SSPDMACR_RXDMAE_OFFSET                         0u
+#define SPI_SSPDMACR_RXDMAE_MASK                           1u
 
-#define SPI1_SSPPERIPHID0_PARTNUMBER0_OFFSET               0u
-#define SPI1_SSPPERIPHID0_PARTNUMBER0_MASK                 0xffu
+#define SPI_SSPPERIPHID0_PARTNUMBER0_OFFSET                0u
+#define SPI_SSPPERIPHID0_PARTNUMBER0_MASK                  0xffu
 
-#define SPI1_SSPPERIPHID1_DESIGNER0_OFFSET                 4u
-#define SPI1_SSPPERIPHID1_DESIGNER0_MASK                   0xf0u
+#define SPI_SSPPERIPHID1_DESIGNER0_OFFSET                  4u
+#define SPI_SSPPERIPHID1_DESIGNER0_MASK                    0xf0u
 
-#define SPI1_SSPPERIPHID1_PARTNUMBER1_OFFSET               0u
-#define SPI1_SSPPERIPHID1_PARTNUMBER1_MASK                 0xfu
+#define SPI_SSPPERIPHID1_PARTNUMBER1_OFFSET                0u
+#define SPI_SSPPERIPHID1_PARTNUMBER1_MASK                  0xfu
 
-#define SPI1_SSPPERIPHID2_REVISION_OFFSET                  4u
-#define SPI1_SSPPERIPHID2_REVISION_MASK                    0xf0u
+#define SPI_SSPPERIPHID2_REVISION_OFFSET                   4u
+#define SPI_SSPPERIPHID2_REVISION_MASK                     0xf0u
 
-#define SPI1_SSPPERIPHID2_DESIGNER1_OFFSET                 0u
-#define SPI1_SSPPERIPHID2_DESIGNER1_MASK                   0xfu
+#define SPI_SSPPERIPHID2_DESIGNER1_OFFSET                  0u
+#define SPI_SSPPERIPHID2_DESIGNER1_MASK                    0xfu
 
-#define SPI1_SSPPERIPHID3_CONFIGURATION_OFFSET             0u
-#define SPI1_SSPPERIPHID3_CONFIGURATION_MASK               0xffu
+#define SPI_SSPPERIPHID3_CONFIGURATION_OFFSET              0u
+#define SPI_SSPPERIPHID3_CONFIGURATION_MASK                0xffu
 
-#define SPI1_SSPPCELLID0_SSPPCELLID0_OFFSET                0u
-#define SPI1_SSPPCELLID0_SSPPCELLID0_MASK                  0xffu
+#define SPI_SSPPCELLID0_SSPPCELLID0_OFFSET                 0u
+#define SPI_SSPPCELLID0_SSPPCELLID0_MASK                   0xffu
 
-#define SPI1_SSPPCELLID1_SSPPCELLID1_OFFSET                0u
-#define SPI1_SSPPCELLID1_SSPPCELLID1_MASK                  0xffu
+#define SPI_SSPPCELLID1_SSPPCELLID1_OFFSET                 0u
+#define SPI_SSPPCELLID1_SSPPCELLID1_MASK                   0xffu
 
-#define SPI1_SSPPCELLID2_SSPPCELLID2_OFFSET                0u
-#define SPI1_SSPPCELLID2_SSPPCELLID2_MASK                  0xffu
+#define SPI_SSPPCELLID2_SSPPCELLID2_OFFSET                 0u
+#define SPI_SSPPCELLID2_SSPPCELLID2_MASK                   0xffu
 
-#define SPI1_SSPPCELLID3_SSPPCELLID3_OFFSET                0u
-#define SPI1_SSPPCELLID3_SSPPCELLID3_MASK                  0xffu
+#define SPI_SSPPCELLID3_SSPPCELLID3_OFFSET                 0u
+#define SPI_SSPPCELLID3_SSPPCELLID3_MASK                   0xffu
 
 
 typedef struct
 {
 
-/** SSPCR0 (offset: 0x0)
+/** SSPCR
+SSPCR[0] (offset: 0x0)
   Control register 0, SSPCR0 on page 3-4
   access : read-write
   reset value : 0x0
@@ -159,10 +162,8 @@ typedef struct
   Field: DSS
   offset: 0, size: 4, access: read-write
   Data Size Select: 0000 Reserved, undefined operation. 0001 Reserved, undefined operation. 0010 Reserved, undefined operation. 0011 4-bit data. 0100 5-bit data. 0101 6-bit data. 0110 7-bit data. 0111 8-bit data. 1000 9-bit data. 1001 10-bit data. 1010 11-bit data. 1011 12-bit data. 1100 13-bit data. 1101 14-bit data. 1110 15-bit data. 1111 16-bit data.
-*/
-volatile uint32_t SSPCR0;
 
-/** SSPCR1 (offset: 0x4)
+SSPCR[1] (offset: 0x4)
   Control register 1, SSPCR1 on page 3-5
   access : read-write
   reset value : 0x0
@@ -179,8 +180,9 @@ volatile uint32_t SSPCR0;
   Field: LBM
   offset: 0, size: 1, access: read-write
   Loop back mode: 0 Normal serial port operation enabled. 1 Output of transmit serial shifter is connected to input of receive serial shifter internally.
+
 */
-volatile uint32_t SSPCR1;
+volatile uint32_t SSPCR[2];
 
 /** SSPDR (offset: 0x8)
   Data register, SSPDR on page 3-6
@@ -316,7 +318,8 @@ volatile uint32_t SSPICR;
 volatile uint32_t SSPDMACR;
 volatile uint32_t reserved0[1006];
 
-/** SSPPERIPHID0 (offset: 0xfe0)
+/** SSPPERIPHID
+SSPPERIPHID[0] (offset: 0xfe0)
   Peripheral identification registers, SSPPeriphID0-3 on page 3-13
   access : read-write
   reset value : 0x22
@@ -324,10 +327,8 @@ volatile uint32_t reserved0[1006];
   Field: PARTNUMBER0
   offset: 0, size: 8, access: read-only
   These bits read back as 0x22
-*/
-volatile uint32_t SSPPERIPHID0;
 
-/** SSPPERIPHID1 (offset: 0xfe4)
+SSPPERIPHID[1] (offset: 0xfe4)
   Peripheral identification registers, SSPPeriphID0-3 on page 3-13
   access : read-write
   reset value : 0x10
@@ -338,10 +339,8 @@ volatile uint32_t SSPPERIPHID0;
   Field: PARTNUMBER1
   offset: 0, size: 4, access: read-only
   These bits read back as 0x0
-*/
-volatile uint32_t SSPPERIPHID1;
 
-/** SSPPERIPHID2 (offset: 0xfe8)
+SSPPERIPHID[2] (offset: 0xfe8)
   Peripheral identification registers, SSPPeriphID0-3 on page 3-13
   access : read-write
   reset value : 0x34
@@ -352,10 +351,8 @@ volatile uint32_t SSPPERIPHID1;
   Field: DESIGNER1
   offset: 0, size: 4, access: read-only
   These bits read back as 0x4
-*/
-volatile uint32_t SSPPERIPHID2;
 
-/** SSPPERIPHID3 (offset: 0xfec)
+SSPPERIPHID[3] (offset: 0xfec)
   Peripheral identification registers, SSPPeriphID0-3 on page 3-13
   access : read-write
   reset value : 0x0
@@ -363,10 +360,12 @@ volatile uint32_t SSPPERIPHID2;
   Field: CONFIGURATION
   offset: 0, size: 8, access: read-only
   These bits read back as 0x00
-*/
-volatile uint32_t SSPPERIPHID3;
 
-/** SSPPCELLID0 (offset: 0xff0)
+*/
+volatile uint32_t SSPPERIPHID[4];
+
+/** SSPPCELLID
+SSPPCELLID[0] (offset: 0xff0)
   PrimeCell identification registers, SSPPCellID0-3 on page 3-16
   access : read-write
   reset value : 0xD
@@ -374,10 +373,8 @@ volatile uint32_t SSPPERIPHID3;
   Field: SSPPCELLID0
   offset: 0, size: 8, access: read-only
   These bits read back as 0x0D
-*/
-volatile uint32_t SSPPCELLID0;
 
-/** SSPPCELLID1 (offset: 0xff4)
+SSPPCELLID[1] (offset: 0xff4)
   PrimeCell identification registers, SSPPCellID0-3 on page 3-16
   access : read-write
   reset value : 0xF0
@@ -385,10 +382,8 @@ volatile uint32_t SSPPCELLID0;
   Field: SSPPCELLID1
   offset: 0, size: 8, access: read-only
   These bits read back as 0xF0
-*/
-volatile uint32_t SSPPCELLID1;
 
-/** SSPPCELLID2 (offset: 0xff8)
+SSPPCELLID[2] (offset: 0xff8)
   PrimeCell identification registers, SSPPCellID0-3 on page 3-16
   access : read-write
   reset value : 0x5
@@ -396,10 +391,8 @@ volatile uint32_t SSPPCELLID1;
   Field: SSPPCELLID2
   offset: 0, size: 8, access: read-only
   These bits read back as 0x05
-*/
-volatile uint32_t SSPPCELLID2;
 
-/** SSPPCELLID3 (offset: 0xffc)
+SSPPCELLID[3] (offset: 0xffc)
   PrimeCell identification registers, SSPPCellID0-3 on page 3-16
   access : read-write
   reset value : 0xB1
@@ -407,10 +400,12 @@ volatile uint32_t SSPPCELLID2;
   Field: SSPPCELLID3
   offset: 0, size: 8, access: read-only
   These bits read back as 0xB1
+
 */
-volatile uint32_t SSPPCELLID3;
-} SPI1_type;
+volatile uint32_t SSPPCELLID[4];
+} SPI_type;
 
-#define SPI1 ((SPI1_type *) 0x40040000)
+#define SPI0 ((SPI_type *) 0x4003C000)
+#define SPI1 ((SPI_type *) 0x40040000)
 
-#endif // HW_SPI1_H
+#endif // HW_SPI_H

@@ -830,7 +830,8 @@ typedef struct
 */
 volatile uint32_t VOLTAGE_SELECT;
 
-/** GPIO0 (offset: 0x4)
+/** GPIO
+GPIO[0] (offset: 0x4)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -861,10 +862,8 @@ volatile uint32_t VOLTAGE_SELECT;
   Field: SLEWFAST
   offset: 0, size: 1, access: read-write
   Slew rate control. 1 = Fast, 0 = Slow
-*/
-volatile uint32_t GPIO0;
 
-/** GPIO1 (offset: 0x8)
+GPIO[1] (offset: 0x8)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -895,10 +894,8 @@ volatile uint32_t GPIO0;
   Field: SLEWFAST
   offset: 0, size: 1, access: read-write
   Slew rate control. 1 = Fast, 0 = Slow
-*/
-volatile uint32_t GPIO1;
 
-/** GPIO2 (offset: 0xc)
+GPIO[2] (offset: 0xc)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -929,10 +926,8 @@ volatile uint32_t GPIO1;
   Field: SLEWFAST
   offset: 0, size: 1, access: read-write
   Slew rate control. 1 = Fast, 0 = Slow
-*/
-volatile uint32_t GPIO2;
 
-/** GPIO3 (offset: 0x10)
+GPIO[3] (offset: 0x10)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -963,10 +958,8 @@ volatile uint32_t GPIO2;
   Field: SLEWFAST
   offset: 0, size: 1, access: read-write
   Slew rate control. 1 = Fast, 0 = Slow
-*/
-volatile uint32_t GPIO3;
 
-/** GPIO4 (offset: 0x14)
+GPIO[4] (offset: 0x14)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -997,10 +990,8 @@ volatile uint32_t GPIO3;
   Field: SLEWFAST
   offset: 0, size: 1, access: read-write
   Slew rate control. 1 = Fast, 0 = Slow
-*/
-volatile uint32_t GPIO4;
 
-/** GPIO5 (offset: 0x18)
+GPIO[5] (offset: 0x18)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -1031,10 +1022,8 @@ volatile uint32_t GPIO4;
   Field: SLEWFAST
   offset: 0, size: 1, access: read-write
   Slew rate control. 1 = Fast, 0 = Slow
-*/
-volatile uint32_t GPIO5;
 
-/** GPIO6 (offset: 0x1c)
+GPIO[6] (offset: 0x1c)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -1065,10 +1054,8 @@ volatile uint32_t GPIO5;
   Field: SLEWFAST
   offset: 0, size: 1, access: read-write
   Slew rate control. 1 = Fast, 0 = Slow
-*/
-volatile uint32_t GPIO6;
 
-/** GPIO7 (offset: 0x20)
+GPIO[7] (offset: 0x20)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -1099,10 +1086,8 @@ volatile uint32_t GPIO6;
   Field: SLEWFAST
   offset: 0, size: 1, access: read-write
   Slew rate control. 1 = Fast, 0 = Slow
-*/
-volatile uint32_t GPIO7;
 
-/** GPIO8 (offset: 0x24)
+GPIO[8] (offset: 0x24)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -1133,10 +1118,8 @@ volatile uint32_t GPIO7;
   Field: SLEWFAST
   offset: 0, size: 1, access: read-write
   Slew rate control. 1 = Fast, 0 = Slow
-*/
-volatile uint32_t GPIO8;
 
-/** GPIO9 (offset: 0x28)
+GPIO[9] (offset: 0x28)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -1167,10 +1150,8 @@ volatile uint32_t GPIO8;
   Field: SLEWFAST
   offset: 0, size: 1, access: read-write
   Slew rate control. 1 = Fast, 0 = Slow
-*/
-volatile uint32_t GPIO9;
 
-/** GPIO10 (offset: 0x2c)
+GPIO[10] (offset: 0x2c)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -1201,10 +1182,8 @@ volatile uint32_t GPIO9;
   Field: SLEWFAST
   offset: 0, size: 1, access: read-write
   Slew rate control. 1 = Fast, 0 = Slow
-*/
-volatile uint32_t GPIO10;
 
-/** GPIO11 (offset: 0x30)
+GPIO[11] (offset: 0x30)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -1235,10 +1214,8 @@ volatile uint32_t GPIO10;
   Field: SLEWFAST
   offset: 0, size: 1, access: read-write
   Slew rate control. 1 = Fast, 0 = Slow
-*/
-volatile uint32_t GPIO11;
 
-/** GPIO12 (offset: 0x34)
+GPIO[12] (offset: 0x34)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -1269,10 +1246,8 @@ volatile uint32_t GPIO11;
   Field: SLEWFAST
   offset: 0, size: 1, access: read-write
   Slew rate control. 1 = Fast, 0 = Slow
-*/
-volatile uint32_t GPIO12;
 
-/** GPIO13 (offset: 0x38)
+GPIO[13] (offset: 0x38)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -1303,10 +1278,8 @@ volatile uint32_t GPIO12;
   Field: SLEWFAST
   offset: 0, size: 1, access: read-write
   Slew rate control. 1 = Fast, 0 = Slow
-*/
-volatile uint32_t GPIO13;
 
-/** GPIO14 (offset: 0x3c)
+GPIO[14] (offset: 0x3c)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -1337,10 +1310,8 @@ volatile uint32_t GPIO13;
   Field: SLEWFAST
   offset: 0, size: 1, access: read-write
   Slew rate control. 1 = Fast, 0 = Slow
-*/
-volatile uint32_t GPIO14;
 
-/** GPIO15 (offset: 0x40)
+GPIO[15] (offset: 0x40)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -1371,10 +1342,8 @@ volatile uint32_t GPIO14;
   Field: SLEWFAST
   offset: 0, size: 1, access: read-write
   Slew rate control. 1 = Fast, 0 = Slow
-*/
-volatile uint32_t GPIO15;
 
-/** GPIO16 (offset: 0x44)
+GPIO[16] (offset: 0x44)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -1405,10 +1374,8 @@ volatile uint32_t GPIO15;
   Field: SLEWFAST
   offset: 0, size: 1, access: read-write
   Slew rate control. 1 = Fast, 0 = Slow
-*/
-volatile uint32_t GPIO16;
 
-/** GPIO17 (offset: 0x48)
+GPIO[17] (offset: 0x48)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -1439,10 +1406,8 @@ volatile uint32_t GPIO16;
   Field: SLEWFAST
   offset: 0, size: 1, access: read-write
   Slew rate control. 1 = Fast, 0 = Slow
-*/
-volatile uint32_t GPIO17;
 
-/** GPIO18 (offset: 0x4c)
+GPIO[18] (offset: 0x4c)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -1473,10 +1438,8 @@ volatile uint32_t GPIO17;
   Field: SLEWFAST
   offset: 0, size: 1, access: read-write
   Slew rate control. 1 = Fast, 0 = Slow
-*/
-volatile uint32_t GPIO18;
 
-/** GPIO19 (offset: 0x50)
+GPIO[19] (offset: 0x50)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -1507,10 +1470,8 @@ volatile uint32_t GPIO18;
   Field: SLEWFAST
   offset: 0, size: 1, access: read-write
   Slew rate control. 1 = Fast, 0 = Slow
-*/
-volatile uint32_t GPIO19;
 
-/** GPIO20 (offset: 0x54)
+GPIO[20] (offset: 0x54)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -1541,10 +1502,8 @@ volatile uint32_t GPIO19;
   Field: SLEWFAST
   offset: 0, size: 1, access: read-write
   Slew rate control. 1 = Fast, 0 = Slow
-*/
-volatile uint32_t GPIO20;
 
-/** GPIO21 (offset: 0x58)
+GPIO[21] (offset: 0x58)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -1575,10 +1534,8 @@ volatile uint32_t GPIO20;
   Field: SLEWFAST
   offset: 0, size: 1, access: read-write
   Slew rate control. 1 = Fast, 0 = Slow
-*/
-volatile uint32_t GPIO21;
 
-/** GPIO22 (offset: 0x5c)
+GPIO[22] (offset: 0x5c)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -1609,10 +1566,8 @@ volatile uint32_t GPIO21;
   Field: SLEWFAST
   offset: 0, size: 1, access: read-write
   Slew rate control. 1 = Fast, 0 = Slow
-*/
-volatile uint32_t GPIO22;
 
-/** GPIO23 (offset: 0x60)
+GPIO[23] (offset: 0x60)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -1643,10 +1598,8 @@ volatile uint32_t GPIO22;
   Field: SLEWFAST
   offset: 0, size: 1, access: read-write
   Slew rate control. 1 = Fast, 0 = Slow
-*/
-volatile uint32_t GPIO23;
 
-/** GPIO24 (offset: 0x64)
+GPIO[24] (offset: 0x64)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -1677,10 +1630,8 @@ volatile uint32_t GPIO23;
   Field: SLEWFAST
   offset: 0, size: 1, access: read-write
   Slew rate control. 1 = Fast, 0 = Slow
-*/
-volatile uint32_t GPIO24;
 
-/** GPIO25 (offset: 0x68)
+GPIO[25] (offset: 0x68)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -1711,10 +1662,8 @@ volatile uint32_t GPIO24;
   Field: SLEWFAST
   offset: 0, size: 1, access: read-write
   Slew rate control. 1 = Fast, 0 = Slow
-*/
-volatile uint32_t GPIO25;
 
-/** GPIO26 (offset: 0x6c)
+GPIO[26] (offset: 0x6c)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -1745,10 +1694,8 @@ volatile uint32_t GPIO25;
   Field: SLEWFAST
   offset: 0, size: 1, access: read-write
   Slew rate control. 1 = Fast, 0 = Slow
-*/
-volatile uint32_t GPIO26;
 
-/** GPIO27 (offset: 0x70)
+GPIO[27] (offset: 0x70)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -1779,10 +1726,8 @@ volatile uint32_t GPIO26;
   Field: SLEWFAST
   offset: 0, size: 1, access: read-write
   Slew rate control. 1 = Fast, 0 = Slow
-*/
-volatile uint32_t GPIO27;
 
-/** GPIO28 (offset: 0x74)
+GPIO[28] (offset: 0x74)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -1813,10 +1758,8 @@ volatile uint32_t GPIO27;
   Field: SLEWFAST
   offset: 0, size: 1, access: read-write
   Slew rate control. 1 = Fast, 0 = Slow
-*/
-volatile uint32_t GPIO28;
 
-/** GPIO29 (offset: 0x78)
+GPIO[29] (offset: 0x78)
   Pad control register
   access : read-write
   reset value : 0x56
@@ -1847,8 +1790,9 @@ volatile uint32_t GPIO28;
   Field: SLEWFAST
   offset: 0, size: 1, access: read-write
   Slew rate control. 1 = Fast, 0 = Slow
+
 */
-volatile uint32_t GPIO29;
+volatile uint32_t GPIO[30];
 
 /** SWCLK (offset: 0x7c)
   Pad control register

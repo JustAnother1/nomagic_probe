@@ -1506,7 +1506,8 @@ volatile uint32_t FC0_STATUS;
 */
 volatile uint32_t FC0_RESULT;
 
-/** WAKE_EN0 (offset: 0xa0)
+/** WAKE_EN
+WAKE_EN[0] (offset: 0xa0)
   enable clock in wake mode
   access : read-write
   reset value : 0xFFFFFFFF
@@ -1575,10 +1576,8 @@ volatile uint32_t FC0_RESULT;
   offset: 1, size: 1, access: read-write
   Field: clk_sys_clocks
   offset: 0, size: 1, access: read-write
-*/
-volatile uint32_t WAKE_EN0;
 
-/** WAKE_EN1 (offset: 0xa4)
+WAKE_EN[1] (offset: 0xa4)
   enable clock in wake mode
   access : read-write
   reset value : 0x7FFF
@@ -1613,10 +1612,12 @@ volatile uint32_t WAKE_EN0;
   offset: 1, size: 1, access: read-write
   Field: clk_sys_sram4
   offset: 0, size: 1, access: read-write
-*/
-volatile uint32_t WAKE_EN1;
 
-/** SLEEP_EN0 (offset: 0xa8)
+*/
+volatile uint32_t WAKE_EN[2];
+
+/** SLEEP_EN
+SLEEP_EN[0] (offset: 0xa8)
   enable clock in sleep mode
   access : read-write
   reset value : 0xFFFFFFFF
@@ -1685,10 +1686,8 @@ volatile uint32_t WAKE_EN1;
   offset: 1, size: 1, access: read-write
   Field: clk_sys_clocks
   offset: 0, size: 1, access: read-write
-*/
-volatile uint32_t SLEEP_EN0;
 
-/** SLEEP_EN1 (offset: 0xac)
+SLEEP_EN[1] (offset: 0xac)
   enable clock in sleep mode
   access : read-write
   reset value : 0x7FFF
@@ -1723,10 +1722,12 @@ volatile uint32_t SLEEP_EN0;
   offset: 1, size: 1, access: read-write
   Field: clk_sys_sram4
   offset: 0, size: 1, access: read-write
-*/
-volatile uint32_t SLEEP_EN1;
 
-/** ENABLED0 (offset: 0xb0)
+*/
+volatile uint32_t SLEEP_EN[2];
+
+/** ENABLED
+ENABLED[0] (offset: 0xb0)
   indicates the state of the clock enable
   access : read-write
   reset value : 0x0
@@ -1795,10 +1796,8 @@ volatile uint32_t SLEEP_EN1;
   offset: 1, size: 1, access: read-only
   Field: clk_sys_clocks
   offset: 0, size: 1, access: read-only
-*/
-volatile uint32_t ENABLED0;
 
-/** ENABLED1 (offset: 0xb4)
+ENABLED[1] (offset: 0xb4)
   indicates the state of the clock enable
   access : read-write
   reset value : 0x0
@@ -1833,8 +1832,9 @@ volatile uint32_t ENABLED0;
   offset: 1, size: 1, access: read-only
   Field: clk_sys_sram4
   offset: 0, size: 1, access: read-only
+
 */
-volatile uint32_t ENABLED1;
+volatile uint32_t ENABLED[2];
 
 /** INTR (offset: 0xb8)
   Raw Interrupts

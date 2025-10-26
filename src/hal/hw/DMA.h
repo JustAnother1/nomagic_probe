@@ -3914,7 +3914,8 @@ volatile uint32_t INTF1;
 */
 volatile uint32_t INTS1;
 
-/** TIMER0 (offset: 0x420)
+/** TIMER
+TIMER[0] (offset: 0x420)
   Pacing (X/Y) Fractional Timer
 
  The pacing timer produces TREQ assertions at a rate set by ((X/Y) * sys_clk). This equation is evaluated every sys_clk cycles and therefore can only generate TREQs at a rate of 1 per sys_clk (i.e. permanent TREQ) or less.
@@ -3927,10 +3928,8 @@ volatile uint32_t INTS1;
   Field: Y
   offset: 0, size: 16, access: read-write
   Pacing Timer Divisor. Specifies the Y value for the (X/Y) fractional timer.
-*/
-volatile uint32_t TIMER0;
 
-/** TIMER1 (offset: 0x424)
+TIMER[1] (offset: 0x424)
   Pacing (X/Y) Fractional Timer
 
  The pacing timer produces TREQ assertions at a rate set by ((X/Y) * sys_clk). This equation is evaluated every sys_clk cycles and therefore can only generate TREQs at a rate of 1 per sys_clk (i.e. permanent TREQ) or less.
@@ -3943,10 +3942,8 @@ volatile uint32_t TIMER0;
   Field: Y
   offset: 0, size: 16, access: read-write
   Pacing Timer Divisor. Specifies the Y value for the (X/Y) fractional timer.
-*/
-volatile uint32_t TIMER1;
 
-/** TIMER2 (offset: 0x428)
+TIMER[2] (offset: 0x428)
   Pacing (X/Y) Fractional Timer
 
  The pacing timer produces TREQ assertions at a rate set by ((X/Y) * sys_clk). This equation is evaluated every sys_clk cycles and therefore can only generate TREQs at a rate of 1 per sys_clk (i.e. permanent TREQ) or less.
@@ -3958,10 +3955,8 @@ volatile uint32_t TIMER1;
   Field: Y
   offset: 0, size: 16, access: read-write
   Pacing Timer Divisor. Specifies the Y value for the (X/Y) fractional timer.
-*/
-volatile uint32_t TIMER2;
 
-/** TIMER3 (offset: 0x42c)
+TIMER[3] (offset: 0x42c)
   Pacing (X/Y) Fractional Timer
 
  The pacing timer produces TREQ assertions at a rate set by ((X/Y) * sys_clk). This equation is evaluated every sys_clk cycles and therefore can only generate TREQs at a rate of 1 per sys_clk (i.e. permanent TREQ) or less.
@@ -3973,8 +3968,9 @@ volatile uint32_t TIMER2;
   Field: Y
   offset: 0, size: 16, access: read-write
   Pacing Timer Divisor. Specifies the Y value for the (X/Y) fractional timer.
+
 */
-volatile uint32_t TIMER3;
+volatile uint32_t TIMER[4];
 
 /** MULTI_CHAN_TRIGGER (offset: 0x430)
   Trigger one or more channels simultaneously

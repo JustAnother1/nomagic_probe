@@ -1,3 +1,6 @@
+/*
+  automatically created liner file
+*/
 ENTRY(Reset_Handler)
 TARGET(binary)
 INPUT("nomagic_probe/src/hal/2ndstage.bin")
@@ -15,7 +18,6 @@ SECTIONS
         "nomagic_probe/src/hal/2ndstage.bin"
         KEEP (*(.vectors))
     } > FLASH
-    
 .third_stage_boot : {
         . = ALIGN(4);
         linker_third_boot_start = .;
@@ -25,7 +27,6 @@ SECTIONS
         . = ALIGN(4);
         linker_third_boot_end = .;
     } > FLASH
-    
 .code : {
         . = ALIGN(4);
         linker_code_start = .;
@@ -40,7 +41,6 @@ SECTIONS
 
     /* used by the startup to copy code */
     linker_code_in_flash = LOADADDR(.code);
-    
 .rodata : {
         . = ALIGN(4);
         linker_ro_data_start = .;
@@ -51,10 +51,8 @@ SECTIONS
         . = ALIGN(4);
         linker_ro_data_end = .;
     } >RAM AT> FLASH
-
     /* used by the startup to copy rodata */
     linker_ro_data_in_flash = LOADADDR(.rodata);
-    
 .data : {
     . = ALIGN(4);
     linker_data_start = .;
@@ -67,7 +65,6 @@ SECTIONS
 } >RAM AT> FLASH
 /* used by the startup to initialize data */
 linker_data_in_flash = LOADADDR(.data);
-
 .bss (NOLOAD) : {
     linker_bss_start = .;
     *(.bss)
@@ -78,6 +75,4 @@ linker_data_in_flash = LOADADDR(.data);
     _end = linker_bss_end;
     end = _end;
 }> RAM
-
 }
-

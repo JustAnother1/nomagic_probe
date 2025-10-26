@@ -75,7 +75,7 @@ bool watchdog_report(const uint32_t loop)
         break;
 
     case 1:
-        i = WATCHDOG->SCRATCH0;
+        i = WATCHDOG->SCRATCH[0];
         if(0 != i)
         {
             cli_line("data in scratch0 : 0x%08lx", i);
@@ -83,7 +83,7 @@ bool watchdog_report(const uint32_t loop)
         break;
 
     case 2:
-        i = WATCHDOG->SCRATCH1;
+        i = WATCHDOG->SCRATCH[1];
         if(0 != i)
         {
             cli_line("data in scratch1 : 0x%08lx", i);
@@ -91,7 +91,7 @@ bool watchdog_report(const uint32_t loop)
         break;
 
     case 3:
-        i = WATCHDOG->SCRATCH2;
+        i = WATCHDOG->SCRATCH[2];
         if(0 != i)
         {
             cli_line("data in scratch2 : 0x%08lx", i);
@@ -99,7 +99,7 @@ bool watchdog_report(const uint32_t loop)
         break;
 
     case 4:
-        i = WATCHDOG->SCRATCH3;
+        i = WATCHDOG->SCRATCH[3];
         if(0 != i)
         {
             cli_line("data in scratch3 : 0x%08lx", i);
@@ -107,7 +107,7 @@ bool watchdog_report(const uint32_t loop)
         break;
 
     case 5:
-        i = WATCHDOG->SCRATCH4;
+        i = WATCHDOG->SCRATCH[4];
         if(0 != i)
         {
             cli_line("data in scratch4 : 0x%08lx", i);
@@ -115,32 +115,32 @@ bool watchdog_report(const uint32_t loop)
         break;
 
     case 6:
-        i = WATCHDOG->SCRATCH5;
+        i = WATCHDOG->SCRATCH[5];
         if(0 != i)
         {
             // cli_line("data in scratch5 : 0x%08lx", i);
             cli_line("Core 1 was in section : 0x%08lx", i);
-            WATCHDOG->SCRATCH5 = 0;
+            WATCHDOG->SCRATCH[5] = 0;
         }
         break;
 
     case 7:
-        i = WATCHDOG->SCRATCH6;
+        i = WATCHDOG->SCRATCH[6];
         if(0 != i)
         {
             // cli_line("data in scratch6 : 0x%08lx", i);
             cli_line("Core 0 was in section : 0x%08lx", i);
-            WATCHDOG->SCRATCH6 = 0;
+            WATCHDOG->SCRATCH[6] = 0;
         }
         break;
 
     case 8:
-        i = WATCHDOG->SCRATCH7;
+        i = WATCHDOG->SCRATCH[7];
         if(0 != i)
         {
             // cli_line("data in scratch7 : 0x%08lx", i);
             cli_line("reported reset reason : 0x%08lx", i);
-            WATCHDOG->SCRATCH7 = 0;
+            WATCHDOG->SCRATCH[7] = 0;
         }
         break;
 
@@ -169,35 +169,35 @@ bool watchdog_report(const uint32_t loop)
 void watchdog_report_issue(const uint32_t issue)
 {
     debug_line(" ");
-    WATCHDOG->SCRATCH7 = WATCHDOG->SCRATCH7 | issue;
-    debug_line("watch dog : reported issues 0x%08lx", WATCHDOG->SCRATCH7);
+    WATCHDOG->SCRATCH[7] = WATCHDOG->SCRATCH[7] | issue;
+    debug_line("watch dog : reported issues 0x%08lx", WATCHDOG->SCRATCH[7]);
 }
 
 void watchdog_enter_section(const uint32_t section)
 {
     if(0 == SIO->CPUID)
     {
-        WATCHDOG->SCRATCH6 = WATCHDOG->SCRATCH6 | section;
+        WATCHDOG->SCRATCH[6] = WATCHDOG->SCRATCH[6] | section;
     }
     else
     {
-        WATCHDOG->SCRATCH5 = WATCHDOG->SCRATCH5 | section;
+        WATCHDOG->SCRATCH[5] = WATCHDOG->SCRATCH[5] | section;
     }
 }
 void watchdog_leave_section(const uint32_t section)
 {
     if(0 == SIO->CPUID)
     {
-        WATCHDOG->SCRATCH6 = WATCHDOG->SCRATCH6 & ~section;
+        WATCHDOG->SCRATCH[6] = WATCHDOG->SCRATCH[6] & ~section;
     }
     else
     {
-        WATCHDOG->SCRATCH5 = WATCHDOG->SCRATCH5 & ~section;
+        WATCHDOG->SCRATCH[5] = WATCHDOG->SCRATCH[5] & ~section;
     }
 }
 
 void watchdog_report_value(const uint32_t value)
 {
     debug_line("watch dog : reported value 0x%08lx", value);
-    WATCHDOG->SCRATCH4 = value;
+    WATCHDOG->SCRATCH[4] = value;
 }

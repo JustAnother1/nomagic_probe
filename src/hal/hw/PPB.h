@@ -454,7 +454,8 @@ volatile uint32_t reserved4[31];
 volatile uint32_t NVIC_ICPR;
 volatile uint32_t reserved5[95];
 
-/** NVIC_IPR0 (offset: 0xe400)
+/** NVIC_IPR
+NVIC_IPR[0] (offset: 0xe400)
   Use the Interrupt Priority Registers to assign a priority from 0 to 3 to each of the available interrupts. 0 is the highest priority, and 3 is the lowest.
 
  Note: Writing 1 to an NVIC_ICPR bit does not affect the active state of the corresponding interrupt.
@@ -475,10 +476,8 @@ volatile uint32_t reserved5[95];
   Field: IP_0
   offset: 6, size: 2, access: read-write
   Priority of interrupt 0
-*/
-volatile uint32_t NVIC_IPR0;
 
-/** NVIC_IPR1 (offset: 0xe404)
+NVIC_IPR[1] (offset: 0xe404)
   Use the Interrupt Priority Registers to assign a priority from 0 to 3 to each of the available interrupts. 0 is the highest priority, and 3 is the lowest.
   access : read-write
   reset value : 0x0
@@ -495,10 +494,8 @@ volatile uint32_t NVIC_IPR0;
   Field: IP_4
   offset: 6, size: 2, access: read-write
   Priority of interrupt 4
-*/
-volatile uint32_t NVIC_IPR1;
 
-/** NVIC_IPR2 (offset: 0xe408)
+NVIC_IPR[2] (offset: 0xe408)
   Use the Interrupt Priority Registers to assign a priority from 0 to 3 to each of the available interrupts. 0 is the highest priority, and 3 is the lowest.
   access : read-write
   reset value : 0x0
@@ -515,10 +512,8 @@ volatile uint32_t NVIC_IPR1;
   Field: IP_8
   offset: 6, size: 2, access: read-write
   Priority of interrupt 8
-*/
-volatile uint32_t NVIC_IPR2;
 
-/** NVIC_IPR3 (offset: 0xe40c)
+NVIC_IPR[3] (offset: 0xe40c)
   Use the Interrupt Priority Registers to assign a priority from 0 to 3 to each of the available interrupts. 0 is the highest priority, and 3 is the lowest.
   access : read-write
   reset value : 0x0
@@ -535,10 +530,8 @@ volatile uint32_t NVIC_IPR2;
   Field: IP_12
   offset: 6, size: 2, access: read-write
   Priority of interrupt 12
-*/
-volatile uint32_t NVIC_IPR3;
 
-/** NVIC_IPR4 (offset: 0xe410)
+NVIC_IPR[4] (offset: 0xe410)
   Use the Interrupt Priority Registers to assign a priority from 0 to 3 to each of the available interrupts. 0 is the highest priority, and 3 is the lowest.
   access : read-write
   reset value : 0x0
@@ -555,10 +548,8 @@ volatile uint32_t NVIC_IPR3;
   Field: IP_16
   offset: 6, size: 2, access: read-write
   Priority of interrupt 16
-*/
-volatile uint32_t NVIC_IPR4;
 
-/** NVIC_IPR5 (offset: 0xe414)
+NVIC_IPR[5] (offset: 0xe414)
   Use the Interrupt Priority Registers to assign a priority from 0 to 3 to each of the available interrupts. 0 is the highest priority, and 3 is the lowest.
   access : read-write
   reset value : 0x0
@@ -575,10 +566,8 @@ volatile uint32_t NVIC_IPR4;
   Field: IP_20
   offset: 6, size: 2, access: read-write
   Priority of interrupt 20
-*/
-volatile uint32_t NVIC_IPR5;
 
-/** NVIC_IPR6 (offset: 0xe418)
+NVIC_IPR[6] (offset: 0xe418)
   Use the Interrupt Priority Registers to assign a priority from 0 to 3 to each of the available interrupts. 0 is the highest priority, and 3 is the lowest.
   access : read-write
   reset value : 0x0
@@ -595,10 +584,8 @@ volatile uint32_t NVIC_IPR5;
   Field: IP_24
   offset: 6, size: 2, access: read-write
   Priority of interrupt 24
-*/
-volatile uint32_t NVIC_IPR6;
 
-/** NVIC_IPR7 (offset: 0xe41c)
+NVIC_IPR[7] (offset: 0xe41c)
   Use the Interrupt Priority Registers to assign a priority from 0 to 3 to each of the available interrupts. 0 is the highest priority, and 3 is the lowest.
   access : read-write
   reset value : 0x0
@@ -615,8 +602,9 @@ volatile uint32_t NVIC_IPR6;
   Field: IP_28
   offset: 6, size: 2, access: read-write
   Priority of interrupt 28
+
 */
-volatile uint32_t NVIC_IPR7;
+volatile uint32_t NVIC_IPR[8];
 volatile uint32_t reserved6[568];
 
 /** CPUID (offset: 0xed00)

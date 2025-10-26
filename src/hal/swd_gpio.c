@@ -32,7 +32,7 @@ void swd_gpio_init(void)
 
 // Pin:  RUN
     // RUN = /RESET (Output, High)  High = not in Reset
-    PADS_BANK0->PADS_GPIO_RUN = (PADS_BANK0_GPIO0_DRIVE_2MA << PADS_BANK0_GPIO0_DRIVE_OFFSET)
+    PADS_BANK0->GPIO[PIN_RUN] = (PADS_BANK0_GPIO0_DRIVE_2MA << PADS_BANK0_GPIO0_DRIVE_OFFSET)
                               | (0 << PADS_BANK0_GPIO0_PUE_OFFSET) // pull up
                               | (0 << PADS_BANK0_GPIO0_PDE_OFFSET) // pull down
                               | (1 << PADS_BANK0_GPIO0_SLEWFAST_OFFSET);
@@ -42,7 +42,7 @@ void swd_gpio_init(void)
 
 // Pin:  SWDIO
     // SWDIO (Output, High) Target is supposed to have a 100k pull up. Having SWDIO on high when idle saves a tiny bit of power
-    PADS_BANK0->PADS_GPIO_SWDIO = (PADS_BANK0_GPIO0_DRIVE_2MA << PADS_BANK0_GPIO0_DRIVE_OFFSET)
+    PADS_BANK0->GPIO[PIN_SWDIO] = (PADS_BANK0_GPIO0_DRIVE_2MA << PADS_BANK0_GPIO0_DRIVE_OFFSET)
                                 | (0 << PADS_BANK0_GPIO0_PUE_OFFSET) // pull up
                                 | (0 << PADS_BANK0_GPIO0_PDE_OFFSET) // pull down
                                 | (1 << PADS_BANK0_GPIO0_SLEWFAST_OFFSET)
@@ -53,7 +53,7 @@ void swd_gpio_init(void)
 
 // Pin:  SWCLK
     // SWCLK (Output, Low)
-    PADS_BANK0->PADS_GPIO_SWCLK = (PADS_BANK0_GPIO0_DRIVE_2MA << PADS_BANK0_GPIO0_DRIVE_OFFSET)
+    PADS_BANK0->GPIO[PIN_SWCLK] = (PADS_BANK0_GPIO0_DRIVE_2MA << PADS_BANK0_GPIO0_DRIVE_OFFSET)
                                 | (0 << PADS_BANK0_GPIO0_PUE_OFFSET) // pull up
                                 | (0 << PADS_BANK0_GPIO0_PDE_OFFSET) // pull down
                                 | (1 << PADS_BANK0_GPIO0_SLEWFAST_OFFSET);
@@ -63,7 +63,7 @@ void swd_gpio_init(void)
 
 // Pin:  SWDIR
     // SWDIR (Output, High)
-    PADS_BANK0->PADS_GPIO_SWDIR = (PADS_BANK0_GPIO0_DRIVE_2MA << PADS_BANK0_GPIO0_DRIVE_OFFSET)
+    PADS_BANK0->GPIO[PIN_SWDIR] = (PADS_BANK0_GPIO0_DRIVE_2MA << PADS_BANK0_GPIO0_DRIVE_OFFSET)
                                 | (0 << PADS_BANK0_GPIO0_PUE_OFFSET) // pull up
                                 | (0 << PADS_BANK0_GPIO0_PDE_OFFSET) // pull down
                                 | (1 << PADS_BANK0_GPIO0_SLEWFAST_OFFSET);

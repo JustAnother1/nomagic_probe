@@ -133,7 +133,8 @@ volatile uint32_t TIMEHR;
 */
 volatile uint32_t TIMELR;
 
-/** ALARM0 (offset: 0x10)
+/** ALARM
+ALARM[0] (offset: 0x10)
   Arm alarm 0, and configure the time it will fire.
 
  Once armed, the alarm fires when TIMER_ALARM0 == TIMELR.
@@ -144,10 +145,8 @@ volatile uint32_t TIMELR;
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t ALARM0;
 
-/** ALARM1 (offset: 0x14)
+ALARM[1] (offset: 0x14)
   Arm alarm 1, and configure the time it will fire.
 
  Once armed, the alarm fires when TIMER_ALARM1 == TIMELR.
@@ -158,10 +157,8 @@ volatile uint32_t ALARM0;
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t ALARM1;
 
-/** ALARM2 (offset: 0x18)
+ALARM[2] (offset: 0x18)
   Arm alarm 2, and configure the time it will fire.
 
  Once armed, the alarm fires when TIMER_ALARM2 == TIMELR.
@@ -172,10 +169,8 @@ volatile uint32_t ALARM1;
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t ALARM2;
 
-/** ALARM3 (offset: 0x1c)
+ALARM[3] (offset: 0x1c)
   Arm alarm 3, and configure the time it will fire.
 
  Once armed, the alarm fires when TIMER_ALARM3 == TIMELR.
@@ -186,8 +181,9 @@ volatile uint32_t ALARM2;
   access : read-write
   reset value : 0x0
   reset mask : 0x0
+
 */
-volatile uint32_t ALARM3;
+volatile uint32_t ALARM[4];
 
 /** ARMED (offset: 0x20)
   Indicates the armed/disarmed status of each alarm.

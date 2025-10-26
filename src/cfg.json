@@ -45,6 +45,7 @@
             "peripheral" : "UART0",
             "IRQ" : "20",
             "IRQ_priority" : "0",
+            "enable_define": "FEAT_DEBUG_UART",
         },
         "target_uart": {
             "pad_tx": "4",
@@ -59,6 +60,7 @@
             "peripheral" : "UART1",
             "IRQ" : "21",
             "IRQ_priority" : "3",
+            "enable_define": "FEAT_TARGET_UART",
         },
     },
 }

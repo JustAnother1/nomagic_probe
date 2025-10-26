@@ -22,22 +22,18 @@
 // GPIO:
 // Run = /Reset
 #define PIN_RUN          6
-#define PADS_GPIO_RUN    GPIO6
 #define IO_RUN           GPIO6_CTRL
 
 // SWDIO
 #define PIN_SWDIO        3
-#define PADS_GPIO_SWDIO  GPIO3
 #define IO_SWDIO         GPIO3_CTRL
 
 // SWCLK
 #define PIN_SWCLK        2
-#define PADS_GPIO_SWCLK  GPIO2
 #define IO_SWCLK         GPIO2_CTRL
 
 // SWDIR
 #define PIN_SWDIR        1
-#define PADS_GPIO_SWDIR  GPIO1
 #define IO_SWDIR         GPIO1_CTRL
 
 extern uint32_t swd_freq_delay;
@@ -72,7 +68,7 @@ static inline void switch_SWDIO_to_Output(void)
 {
     // SWDIO
     SIO->GPIO_OE_SET = 1ul << PIN_SWDIO;
-    PADS_BANK0->PADS_GPIO_SWDIO = (PADS_BANK0_GPIO0_DRIVE_2MA << PADS_BANK0_GPIO0_DRIVE_OFFSET)
+    PADS_BANK0->GPIO[PIN_SWDIO] = (PADS_BANK0_GPIO0_DRIVE_2MA << PADS_BANK0_GPIO0_DRIVE_OFFSET)
                                 | (0 << PADS_BANK0_GPIO0_PUE_OFFSET) // pull up
                                 | (0 << PADS_BANK0_GPIO0_PDE_OFFSET) // pull down
                                 | (1 << PADS_BANK0_GPIO0_SLEWFAST_OFFSET)
@@ -85,7 +81,7 @@ static inline void switch_SWDIO_to_Input(void)
 {
     //SWDIO
     SIO->GPIO_OE_CLR = 1ul << PIN_SWDIO;
-    PADS_BANK0->PADS_GPIO_SWDIO = (1 << PADS_BANK0_GPIO0_IE_OFFSET)  // input enabled
+    PADS_BANK0->GPIO[PIN_SWDIO] = (1 << PADS_BANK0_GPIO0_IE_OFFSET)  // input enabled
                                 | (0 << PADS_BANK0_GPIO0_PUE_OFFSET) // pull up
                                 | (0 << PADS_BANK0_GPIO0_PDE_OFFSET) // pull down
                                 | (1 << PADS_BANK0_GPIO0_SLEWFAST_OFFSET)

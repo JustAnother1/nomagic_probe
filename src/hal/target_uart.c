@@ -5,7 +5,7 @@
 #include <hal/hw/IO_BANK0.h>
 #include <hal/hw/PSM.h>
 #include <hal/hw/RESETS.h>
-#include <hal/hw/UART1.h>
+#include <hal/hw/UART.h>
 #include <hal/irq.h>
 #include <hal/target_uart.h>
 #include <stdbool.h>
@@ -20,81 +20,9 @@ static volatile uint32_t UART1_send_write_pos;
 
 
 
-void UART1_IRQ(void)
-{
-    uint32_t irq = UART1->UARTMIS;
-    if (0 != (irq & (1 << UART1_UARTRIS_OERIS_OFFSET))) // Overrun error
-    {
-        UART1->UARTICR = (1 << UART1_UARTRIS_OERIS_OFFSET); // clear Interrupt
-    }
-    if (0 != (irq & (1 << UART1_UARTRIS_BERIS_OFFSET))) // Break error
-    {
-        UART1->UARTICR = (1 << UART1_UARTRIS_BERIS_OFFSET); // clear Interrupt
-    }
-    if (0 != (irq & (1 << UART1_UARTRIS_PERIS_OFFSET))) // Parity error
-    {
-        UART1->UARTICR = (1 << UART1_UARTRIS_PERIS_OFFSET); // clear Interrupt
-    }
-    if (0 != (irq & (1 << UART1_UARTRIS_FERIS_OFFSET))) // Framing error
-    {
-        UART1->UARTICR = (1 << UART1_UARTRIS_FERIS_OFFSET); // clear Interrupt
-    }
-    if (0 != (irq & (1 << UART1_UARTRIS_RTRIS_OFFSET))) // Receive timeout
-    {
-        UART1->UARTICR = (1 << UART1_UARTRIS_RTRIS_OFFSET); // clear Interrupt
-    }
-    if (0 != (irq & (1 << UART1_UARTRIS_TXRIS_OFFSET))) {  // Transmit
-        // we can send a byte
-        UART1_is_sending = false;
-        UART1->UARTICR = (1 << UART1_UARTRIS_TXRIS_OFFSET); // clear Interrupt
-    }
-    if (0 != (irq & (1 << UART1_UARTRIS_RXRIS_OFFSET))) // Receive
-    {
-        // we received a byte
-        uint32_t data = UART1->UARTDR;
-        if (0 != (data & 0xf00))
-        {
-            // error
-        }
-        else
-        {
-            uint32_t nextWrite;
-            UART1_recv_buf[UART1_recv_write_pos] = (uint8_t)(data & 0xff);
-            nextWrite = UART1_recv_write_pos + 1;
-            if (50 == nextWrite)
-            {
-                nextWrite = 0;
-            }
-            if (nextWrite == UART1_recv_read_pos)
-            {
-                // buffer full -> lost Byte
-            }
-            else
-            {
-                UART1_recv_write_pos = nextWrite;
-            }
-        }
-        UART1->UARTICR = (1 << UART1_UARTRIS_RXRIS_OFFSET); // clear Interrupt
-    }
-    if (0 != (irq & (1 << UART1_UARTRIS_DSRRMIS_OFFSET))) // DSR
-    {
-        UART1->UARTICR = (1 << UART1_UARTRIS_DSRRMIS_OFFSET); // clear Interrupt
-    }
-    if (0 != (irq & (1 << UART1_UARTRIS_DCDRMIS_OFFSET))) // DCD
-    {
-        UART1->UARTICR = (1 << UART1_UARTRIS_DCDRMIS_OFFSET); // clear Interrupt
-    }
-    if (0 != (irq & (1 << UART1_UARTRIS_CTSRMIS_OFFSET))) // CTS
-    {
-        UART1->UARTICR = (1 << UART1_UARTRIS_CTSRMIS_OFFSET); // clear Interrupt
-    }
-    if (0 != (irq & (1 << UART1_UARTRIS_RIRMIS_OFFSET))) // RI
-    {
-        UART1->UARTICR = (1 << UART1_UARTRIS_RIRMIS_OFFSET); // clear Interrupt
-    }
-}
+void UART1_IRQ(void);
 
-            
+
 void target_uart_init(uint32_t baud_rate)
 {
     uint32_t reg_baud = 0;
@@ -140,16 +68,16 @@ void target_uart_init(uint32_t baud_rate)
     // UART1 configuration
     // baud rate:
     UART1->UARTIBRD = reg_baud; // integer
-    UART1->UARTFBRD = reg_fract; // fraction// FIFO disabled + 8,n,1
-    UART1->UARTLCR_H = (3 << UART1_UARTLCR_H_WLEN_OFFSET);  // Word length = 8 bit// FIFO Level trigger IRQ
-    UART1->UARTIFLS = (0 << UART1_UARTIFLS_RXIFLSEL_OFFSET)  // trigger when RX FIFO is 1/8 full
-                    | (4 << UART1_UARTIFLS_TXIFLSEL_OFFSET); // trigger when TX FIFO is 7/8 full
+    UART1->UARTFBRD = reg_fract; // fraction    // FIFO disabled + 8,n,1
+    UART1->UARTLCR_H = (3 << UART_UARTLCR_H_WLEN_OFFSET);  // Word length = 8 bit    // FIFO Level trigger IRQ
+    UART1->UARTIFLS = (0 << UART_UARTIFLS_RXIFLSEL_OFFSET)  // trigger when RX FIFO is 1/8 full
+                    | (4 << UART_UARTIFLS_TXIFLSEL_OFFSET); // trigger when TX FIFO is 7/8 full
     UART1->UARTIMSC = 0x7fe; // enable all IRQs (but not Ring Indication)
-    UART1->UARTLCR_H = (3 << UART1_UARTLCR_H_WLEN_OFFSET);  // Word length = 8 bit TODO
+    UART1->UARTLCR_H = (3 << UART_UARTLCR_H_WLEN_OFFSET);  // Word length = 8 bit 
     // UART mode + RX+TX enabled
-    UART1->UARTCR = (1 << UART1_UARTCR_RXE_OFFSET)
-            | (1 << UART1_UARTCR_TXE_OFFSET)
-            | (1 << UART1_UARTCR_UARTEN_OFFSET);
+    UART1->UARTCR = (1 << UART_UARTCR_RXE_OFFSET)
+            | (1 << UART_UARTCR_TXE_OFFSET)
+            | (1 << UART_UARTCR_UARTEN_OFFSET);
 
     NVIC_EnableIRQ(21, 3);
 }
@@ -292,4 +220,81 @@ bool target_uart_get_received_bytes(uint8_t *buf, const uint32_t length)
     }
     return true;
 }
+
+
+void UART1_IRQ(void)
+{
+    uint32_t irq = UART1->UARTMIS;
+    if (0 != (irq & (1 << UART_UARTRIS_OERIS_OFFSET))) // Overrun error
+    {
+        UART1->UARTICR = (1 << UART_UARTRIS_OERIS_OFFSET); // clear Interrupt
+    }
+    if (0 != (irq & (1 << UART_UARTRIS_BERIS_OFFSET))) // Break error
+    {
+        UART1->UARTICR = (1 << UART_UARTRIS_BERIS_OFFSET); // clear Interrupt
+    }
+    if (0 != (irq & (1 << UART_UARTRIS_PERIS_OFFSET))) // Parity error
+    {
+        UART1->UARTICR = (1 << UART_UARTRIS_PERIS_OFFSET); // clear Interrupt
+    }
+    if (0 != (irq & (1 << UART_UARTRIS_FERIS_OFFSET))) // Framing error
+    {
+        UART1->UARTICR = (1 << UART_UARTRIS_FERIS_OFFSET); // clear Interrupt
+    }
+    if (0 != (irq & (1 << UART_UARTRIS_RTRIS_OFFSET))) // Receive timeout
+    {
+        UART1->UARTICR = (1 << UART_UARTRIS_RTRIS_OFFSET); // clear Interrupt
+    }
+    if (0 != (irq & (1 << UART_UARTRIS_TXRIS_OFFSET))) {  // Transmit
+        // we can send a byte
+        UART1_is_sending = false;
+        UART1->UARTICR = (1 << UART_UARTRIS_TXRIS_OFFSET); // clear Interrupt
+    }
+    if (0 != (irq & (1 << UART_UARTRIS_RXRIS_OFFSET))) // Receive
+    {
+        // we received a byte
+        uint32_t data = UART1->UARTDR;
+        if (0 != (data & 0xf00))
+        {
+            // error
+        }
+        else
+        {
+            uint32_t nextWrite;
+            UART1_recv_buf[UART1_recv_write_pos] = (uint8_t)(data & 0xff);
+            nextWrite = UART1_recv_write_pos + 1;
+            if (50 == nextWrite)
+            {
+                nextWrite = 0;
+            }
+            if (nextWrite == UART1_recv_read_pos)
+            {
+                // buffer full -> lost Byte
+            }
+            else
+            {
+                UART1_recv_write_pos = nextWrite;
+            }
+        }
+        UART1->UARTICR = (1 << UART_UARTRIS_RXRIS_OFFSET); // clear Interrupt
+    }
+    if (0 != (irq & (1 << UART_UARTRIS_DSRRMIS_OFFSET))) // DSR
+    {
+        UART1->UARTICR = (1 << UART_UARTRIS_DSRRMIS_OFFSET); // clear Interrupt
+    }
+    if (0 != (irq & (1 << UART_UARTRIS_DCDRMIS_OFFSET))) // DCD
+    {
+        UART1->UARTICR = (1 << UART_UARTRIS_DCDRMIS_OFFSET); // clear Interrupt
+    }
+    if (0 != (irq & (1 << UART_UARTRIS_CTSRMIS_OFFSET))) // CTS
+    {
+        UART1->UARTICR = (1 << UART_UARTRIS_CTSRMIS_OFFSET); // clear Interrupt
+    }
+    if (0 != (irq & (1 << UART_UARTRIS_RIRMIS_OFFSET))) // RI
+    {
+        UART1->UARTICR = (1 << UART_UARTRIS_RIRMIS_OFFSET); // clear Interrupt
+    }
+}
+
+            
 

@@ -8065,7 +8065,8 @@ volatile uint32_t GPIO29_STATUS;
 */
 volatile uint32_t GPIO29_CTRL;
 
-/** INTR0 (offset: 0xf0)
+/** INTR
+INTR[0] (offset: 0xf0)
   Raw Interrupts
   access : read-write
   reset value : 0x0
@@ -8134,10 +8135,8 @@ volatile uint32_t GPIO29_CTRL;
   offset: 1, size: 1, access: read-only
   Field: GPIO0_LEVEL_LOW
   offset: 0, size: 1, access: read-only
-*/
-volatile uint32_t INTR0;
 
-/** INTR1 (offset: 0xf4)
+INTR[1] (offset: 0xf4)
   Raw Interrupts
   access : read-write
   reset value : 0x0
@@ -8206,10 +8205,8 @@ volatile uint32_t INTR0;
   offset: 1, size: 1, access: read-only
   Field: GPIO8_LEVEL_LOW
   offset: 0, size: 1, access: read-only
-*/
-volatile uint32_t INTR1;
 
-/** INTR2 (offset: 0xf8)
+INTR[2] (offset: 0xf8)
   Raw Interrupts
   access : read-write
   reset value : 0x0
@@ -8278,10 +8275,8 @@ volatile uint32_t INTR1;
   offset: 1, size: 1, access: read-only
   Field: GPIO16_LEVEL_LOW
   offset: 0, size: 1, access: read-only
-*/
-volatile uint32_t INTR2;
 
-/** INTR3 (offset: 0xfc)
+INTR[3] (offset: 0xfc)
   Raw Interrupts
   access : read-write
   reset value : 0x0
@@ -8334,10 +8329,12 @@ volatile uint32_t INTR2;
   offset: 1, size: 1, access: read-only
   Field: GPIO24_LEVEL_LOW
   offset: 0, size: 1, access: read-only
-*/
-volatile uint32_t INTR3;
 
-/** PROC0_INTE0 (offset: 0x100)
+*/
+volatile uint32_t INTR[4];
+
+/** PROC0_INTE
+PROC0_INTE[0] (offset: 0x100)
   Interrupt Enable for proc0
   access : read-write
   reset value : 0x0
@@ -8406,10 +8403,8 @@ volatile uint32_t INTR3;
   offset: 1, size: 1, access: read-write
   Field: GPIO0_LEVEL_LOW
   offset: 0, size: 1, access: read-write
-*/
-volatile uint32_t PROC0_INTE0;
 
-/** PROC0_INTE1 (offset: 0x104)
+PROC0_INTE[1] (offset: 0x104)
   Interrupt Enable for proc0
   access : read-write
   reset value : 0x0
@@ -8478,10 +8473,8 @@ volatile uint32_t PROC0_INTE0;
   offset: 1, size: 1, access: read-write
   Field: GPIO8_LEVEL_LOW
   offset: 0, size: 1, access: read-write
-*/
-volatile uint32_t PROC0_INTE1;
 
-/** PROC0_INTE2 (offset: 0x108)
+PROC0_INTE[2] (offset: 0x108)
   Interrupt Enable for proc0
   access : read-write
   reset value : 0x0
@@ -8550,10 +8543,8 @@ volatile uint32_t PROC0_INTE1;
   offset: 1, size: 1, access: read-write
   Field: GPIO16_LEVEL_LOW
   offset: 0, size: 1, access: read-write
-*/
-volatile uint32_t PROC0_INTE2;
 
-/** PROC0_INTE3 (offset: 0x10c)
+PROC0_INTE[3] (offset: 0x10c)
   Interrupt Enable for proc0
   access : read-write
   reset value : 0x0
@@ -8606,10 +8597,12 @@ volatile uint32_t PROC0_INTE2;
   offset: 1, size: 1, access: read-write
   Field: GPIO24_LEVEL_LOW
   offset: 0, size: 1, access: read-write
-*/
-volatile uint32_t PROC0_INTE3;
 
-/** PROC0_INTF0 (offset: 0x110)
+*/
+volatile uint32_t PROC0_INTE[4];
+
+/** PROC0_INTF
+PROC0_INTF[0] (offset: 0x110)
   Interrupt Force for proc0
   access : read-write
   reset value : 0x0
@@ -8678,10 +8671,8 @@ volatile uint32_t PROC0_INTE3;
   offset: 1, size: 1, access: read-write
   Field: GPIO0_LEVEL_LOW
   offset: 0, size: 1, access: read-write
-*/
-volatile uint32_t PROC0_INTF0;
 
-/** PROC0_INTF1 (offset: 0x114)
+PROC0_INTF[1] (offset: 0x114)
   Interrupt Force for proc0
   access : read-write
   reset value : 0x0
@@ -8750,10 +8741,8 @@ volatile uint32_t PROC0_INTF0;
   offset: 1, size: 1, access: read-write
   Field: GPIO8_LEVEL_LOW
   offset: 0, size: 1, access: read-write
-*/
-volatile uint32_t PROC0_INTF1;
 
-/** PROC0_INTF2 (offset: 0x118)
+PROC0_INTF[2] (offset: 0x118)
   Interrupt Force for proc0
   access : read-write
   reset value : 0x0
@@ -8822,10 +8811,8 @@ volatile uint32_t PROC0_INTF1;
   offset: 1, size: 1, access: read-write
   Field: GPIO16_LEVEL_LOW
   offset: 0, size: 1, access: read-write
-*/
-volatile uint32_t PROC0_INTF2;
 
-/** PROC0_INTF3 (offset: 0x11c)
+PROC0_INTF[3] (offset: 0x11c)
   Interrupt Force for proc0
   access : read-write
   reset value : 0x0
@@ -8878,10 +8865,12 @@ volatile uint32_t PROC0_INTF2;
   offset: 1, size: 1, access: read-write
   Field: GPIO24_LEVEL_LOW
   offset: 0, size: 1, access: read-write
-*/
-volatile uint32_t PROC0_INTF3;
 
-/** PROC0_INTS0 (offset: 0x120)
+*/
+volatile uint32_t PROC0_INTF[4];
+
+/** PROC0_INTS
+PROC0_INTS[0] (offset: 0x120)
   Interrupt status after masking &amp; forcing for proc0
   access : read-write
   reset value : 0x0
@@ -8950,10 +8939,8 @@ volatile uint32_t PROC0_INTF3;
   offset: 1, size: 1, access: read-only
   Field: GPIO0_LEVEL_LOW
   offset: 0, size: 1, access: read-only
-*/
-volatile uint32_t PROC0_INTS0;
 
-/** PROC0_INTS1 (offset: 0x124)
+PROC0_INTS[1] (offset: 0x124)
   Interrupt status after masking &amp; forcing for proc0
   access : read-write
   reset value : 0x0
@@ -9022,10 +9009,8 @@ volatile uint32_t PROC0_INTS0;
   offset: 1, size: 1, access: read-only
   Field: GPIO8_LEVEL_LOW
   offset: 0, size: 1, access: read-only
-*/
-volatile uint32_t PROC0_INTS1;
 
-/** PROC0_INTS2 (offset: 0x128)
+PROC0_INTS[2] (offset: 0x128)
   Interrupt status after masking &amp; forcing for proc0
   access : read-write
   reset value : 0x0
@@ -9094,10 +9079,8 @@ volatile uint32_t PROC0_INTS1;
   offset: 1, size: 1, access: read-only
   Field: GPIO16_LEVEL_LOW
   offset: 0, size: 1, access: read-only
-*/
-volatile uint32_t PROC0_INTS2;
 
-/** PROC0_INTS3 (offset: 0x12c)
+PROC0_INTS[3] (offset: 0x12c)
   Interrupt status after masking &amp; forcing for proc0
   access : read-write
   reset value : 0x0
@@ -9150,10 +9133,12 @@ volatile uint32_t PROC0_INTS2;
   offset: 1, size: 1, access: read-only
   Field: GPIO24_LEVEL_LOW
   offset: 0, size: 1, access: read-only
-*/
-volatile uint32_t PROC0_INTS3;
 
-/** PROC1_INTE0 (offset: 0x130)
+*/
+volatile uint32_t PROC0_INTS[4];
+
+/** PROC1_INTE
+PROC1_INTE[0] (offset: 0x130)
   Interrupt Enable for proc1
   access : read-write
   reset value : 0x0
@@ -9222,10 +9207,8 @@ volatile uint32_t PROC0_INTS3;
   offset: 1, size: 1, access: read-write
   Field: GPIO0_LEVEL_LOW
   offset: 0, size: 1, access: read-write
-*/
-volatile uint32_t PROC1_INTE0;
 
-/** PROC1_INTE1 (offset: 0x134)
+PROC1_INTE[1] (offset: 0x134)
   Interrupt Enable for proc1
   access : read-write
   reset value : 0x0
@@ -9294,10 +9277,8 @@ volatile uint32_t PROC1_INTE0;
   offset: 1, size: 1, access: read-write
   Field: GPIO8_LEVEL_LOW
   offset: 0, size: 1, access: read-write
-*/
-volatile uint32_t PROC1_INTE1;
 
-/** PROC1_INTE2 (offset: 0x138)
+PROC1_INTE[2] (offset: 0x138)
   Interrupt Enable for proc1
   access : read-write
   reset value : 0x0
@@ -9366,10 +9347,8 @@ volatile uint32_t PROC1_INTE1;
   offset: 1, size: 1, access: read-write
   Field: GPIO16_LEVEL_LOW
   offset: 0, size: 1, access: read-write
-*/
-volatile uint32_t PROC1_INTE2;
 
-/** PROC1_INTE3 (offset: 0x13c)
+PROC1_INTE[3] (offset: 0x13c)
   Interrupt Enable for proc1
   access : read-write
   reset value : 0x0
@@ -9422,10 +9401,12 @@ volatile uint32_t PROC1_INTE2;
   offset: 1, size: 1, access: read-write
   Field: GPIO24_LEVEL_LOW
   offset: 0, size: 1, access: read-write
-*/
-volatile uint32_t PROC1_INTE3;
 
-/** PROC1_INTF0 (offset: 0x140)
+*/
+volatile uint32_t PROC1_INTE[4];
+
+/** PROC1_INTF
+PROC1_INTF[0] (offset: 0x140)
   Interrupt Force for proc1
   access : read-write
   reset value : 0x0
@@ -9494,10 +9475,8 @@ volatile uint32_t PROC1_INTE3;
   offset: 1, size: 1, access: read-write
   Field: GPIO0_LEVEL_LOW
   offset: 0, size: 1, access: read-write
-*/
-volatile uint32_t PROC1_INTF0;
 
-/** PROC1_INTF1 (offset: 0x144)
+PROC1_INTF[1] (offset: 0x144)
   Interrupt Force for proc1
   access : read-write
   reset value : 0x0
@@ -9566,10 +9545,8 @@ volatile uint32_t PROC1_INTF0;
   offset: 1, size: 1, access: read-write
   Field: GPIO8_LEVEL_LOW
   offset: 0, size: 1, access: read-write
-*/
-volatile uint32_t PROC1_INTF1;
 
-/** PROC1_INTF2 (offset: 0x148)
+PROC1_INTF[2] (offset: 0x148)
   Interrupt Force for proc1
   access : read-write
   reset value : 0x0
@@ -9638,10 +9615,8 @@ volatile uint32_t PROC1_INTF1;
   offset: 1, size: 1, access: read-write
   Field: GPIO16_LEVEL_LOW
   offset: 0, size: 1, access: read-write
-*/
-volatile uint32_t PROC1_INTF2;
 
-/** PROC1_INTF3 (offset: 0x14c)
+PROC1_INTF[3] (offset: 0x14c)
   Interrupt Force for proc1
   access : read-write
   reset value : 0x0
@@ -9694,10 +9669,12 @@ volatile uint32_t PROC1_INTF2;
   offset: 1, size: 1, access: read-write
   Field: GPIO24_LEVEL_LOW
   offset: 0, size: 1, access: read-write
-*/
-volatile uint32_t PROC1_INTF3;
 
-/** PROC1_INTS0 (offset: 0x150)
+*/
+volatile uint32_t PROC1_INTF[4];
+
+/** PROC1_INTS
+PROC1_INTS[0] (offset: 0x150)
   Interrupt status after masking &amp; forcing for proc1
   access : read-write
   reset value : 0x0
@@ -9766,10 +9743,8 @@ volatile uint32_t PROC1_INTF3;
   offset: 1, size: 1, access: read-only
   Field: GPIO0_LEVEL_LOW
   offset: 0, size: 1, access: read-only
-*/
-volatile uint32_t PROC1_INTS0;
 
-/** PROC1_INTS1 (offset: 0x154)
+PROC1_INTS[1] (offset: 0x154)
   Interrupt status after masking &amp; forcing for proc1
   access : read-write
   reset value : 0x0
@@ -9838,10 +9813,8 @@ volatile uint32_t PROC1_INTS0;
   offset: 1, size: 1, access: read-only
   Field: GPIO8_LEVEL_LOW
   offset: 0, size: 1, access: read-only
-*/
-volatile uint32_t PROC1_INTS1;
 
-/** PROC1_INTS2 (offset: 0x158)
+PROC1_INTS[2] (offset: 0x158)
   Interrupt status after masking &amp; forcing for proc1
   access : read-write
   reset value : 0x0
@@ -9910,10 +9883,8 @@ volatile uint32_t PROC1_INTS1;
   offset: 1, size: 1, access: read-only
   Field: GPIO16_LEVEL_LOW
   offset: 0, size: 1, access: read-only
-*/
-volatile uint32_t PROC1_INTS2;
 
-/** PROC1_INTS3 (offset: 0x15c)
+PROC1_INTS[3] (offset: 0x15c)
   Interrupt status after masking &amp; forcing for proc1
   access : read-write
   reset value : 0x0
@@ -9966,10 +9937,12 @@ volatile uint32_t PROC1_INTS2;
   offset: 1, size: 1, access: read-only
   Field: GPIO24_LEVEL_LOW
   offset: 0, size: 1, access: read-only
-*/
-volatile uint32_t PROC1_INTS3;
 
-/** DORMANT_WAKE_INTE0 (offset: 0x160)
+*/
+volatile uint32_t PROC1_INTS[4];
+
+/** DORMANT_WAKE_INTE
+DORMANT_WAKE_INTE[0] (offset: 0x160)
   Interrupt Enable for dormant_wake
   access : read-write
   reset value : 0x0
@@ -10038,10 +10011,8 @@ volatile uint32_t PROC1_INTS3;
   offset: 1, size: 1, access: read-write
   Field: GPIO0_LEVEL_LOW
   offset: 0, size: 1, access: read-write
-*/
-volatile uint32_t DORMANT_WAKE_INTE0;
 
-/** DORMANT_WAKE_INTE1 (offset: 0x164)
+DORMANT_WAKE_INTE[1] (offset: 0x164)
   Interrupt Enable for dormant_wake
   access : read-write
   reset value : 0x0
@@ -10110,10 +10081,8 @@ volatile uint32_t DORMANT_WAKE_INTE0;
   offset: 1, size: 1, access: read-write
   Field: GPIO8_LEVEL_LOW
   offset: 0, size: 1, access: read-write
-*/
-volatile uint32_t DORMANT_WAKE_INTE1;
 
-/** DORMANT_WAKE_INTE2 (offset: 0x168)
+DORMANT_WAKE_INTE[2] (offset: 0x168)
   Interrupt Enable for dormant_wake
   access : read-write
   reset value : 0x0
@@ -10182,10 +10151,8 @@ volatile uint32_t DORMANT_WAKE_INTE1;
   offset: 1, size: 1, access: read-write
   Field: GPIO16_LEVEL_LOW
   offset: 0, size: 1, access: read-write
-*/
-volatile uint32_t DORMANT_WAKE_INTE2;
 
-/** DORMANT_WAKE_INTE3 (offset: 0x16c)
+DORMANT_WAKE_INTE[3] (offset: 0x16c)
   Interrupt Enable for dormant_wake
   access : read-write
   reset value : 0x0
@@ -10238,10 +10205,12 @@ volatile uint32_t DORMANT_WAKE_INTE2;
   offset: 1, size: 1, access: read-write
   Field: GPIO24_LEVEL_LOW
   offset: 0, size: 1, access: read-write
-*/
-volatile uint32_t DORMANT_WAKE_INTE3;
 
-/** DORMANT_WAKE_INTF0 (offset: 0x170)
+*/
+volatile uint32_t DORMANT_WAKE_INTE[4];
+
+/** DORMANT_WAKE_INTF
+DORMANT_WAKE_INTF[0] (offset: 0x170)
   Interrupt Force for dormant_wake
   access : read-write
   reset value : 0x0
@@ -10310,10 +10279,8 @@ volatile uint32_t DORMANT_WAKE_INTE3;
   offset: 1, size: 1, access: read-write
   Field: GPIO0_LEVEL_LOW
   offset: 0, size: 1, access: read-write
-*/
-volatile uint32_t DORMANT_WAKE_INTF0;
 
-/** DORMANT_WAKE_INTF1 (offset: 0x174)
+DORMANT_WAKE_INTF[1] (offset: 0x174)
   Interrupt Force for dormant_wake
   access : read-write
   reset value : 0x0
@@ -10382,10 +10349,8 @@ volatile uint32_t DORMANT_WAKE_INTF0;
   offset: 1, size: 1, access: read-write
   Field: GPIO8_LEVEL_LOW
   offset: 0, size: 1, access: read-write
-*/
-volatile uint32_t DORMANT_WAKE_INTF1;
 
-/** DORMANT_WAKE_INTF2 (offset: 0x178)
+DORMANT_WAKE_INTF[2] (offset: 0x178)
   Interrupt Force for dormant_wake
   access : read-write
   reset value : 0x0
@@ -10454,10 +10419,8 @@ volatile uint32_t DORMANT_WAKE_INTF1;
   offset: 1, size: 1, access: read-write
   Field: GPIO16_LEVEL_LOW
   offset: 0, size: 1, access: read-write
-*/
-volatile uint32_t DORMANT_WAKE_INTF2;
 
-/** DORMANT_WAKE_INTF3 (offset: 0x17c)
+DORMANT_WAKE_INTF[3] (offset: 0x17c)
   Interrupt Force for dormant_wake
   access : read-write
   reset value : 0x0
@@ -10510,10 +10473,12 @@ volatile uint32_t DORMANT_WAKE_INTF2;
   offset: 1, size: 1, access: read-write
   Field: GPIO24_LEVEL_LOW
   offset: 0, size: 1, access: read-write
-*/
-volatile uint32_t DORMANT_WAKE_INTF3;
 
-/** DORMANT_WAKE_INTS0 (offset: 0x180)
+*/
+volatile uint32_t DORMANT_WAKE_INTF[4];
+
+/** DORMANT_WAKE_INTS
+DORMANT_WAKE_INTS[0] (offset: 0x180)
   Interrupt status after masking &amp; forcing for dormant_wake
   access : read-write
   reset value : 0x0
@@ -10582,10 +10547,8 @@ volatile uint32_t DORMANT_WAKE_INTF3;
   offset: 1, size: 1, access: read-only
   Field: GPIO0_LEVEL_LOW
   offset: 0, size: 1, access: read-only
-*/
-volatile uint32_t DORMANT_WAKE_INTS0;
 
-/** DORMANT_WAKE_INTS1 (offset: 0x184)
+DORMANT_WAKE_INTS[1] (offset: 0x184)
   Interrupt status after masking &amp; forcing for dormant_wake
   access : read-write
   reset value : 0x0
@@ -10654,10 +10617,8 @@ volatile uint32_t DORMANT_WAKE_INTS0;
   offset: 1, size: 1, access: read-only
   Field: GPIO8_LEVEL_LOW
   offset: 0, size: 1, access: read-only
-*/
-volatile uint32_t DORMANT_WAKE_INTS1;
 
-/** DORMANT_WAKE_INTS2 (offset: 0x188)
+DORMANT_WAKE_INTS[2] (offset: 0x188)
   Interrupt status after masking &amp; forcing for dormant_wake
   access : read-write
   reset value : 0x0
@@ -10726,10 +10687,8 @@ volatile uint32_t DORMANT_WAKE_INTS1;
   offset: 1, size: 1, access: read-only
   Field: GPIO16_LEVEL_LOW
   offset: 0, size: 1, access: read-only
-*/
-volatile uint32_t DORMANT_WAKE_INTS2;
 
-/** DORMANT_WAKE_INTS3 (offset: 0x18c)
+DORMANT_WAKE_INTS[3] (offset: 0x18c)
   Interrupt status after masking &amp; forcing for dormant_wake
   access : read-write
   reset value : 0x0
@@ -10782,8 +10741,9 @@ volatile uint32_t DORMANT_WAKE_INTS2;
   offset: 1, size: 1, access: read-only
   Field: GPIO24_LEVEL_LOW
   offset: 0, size: 1, access: read-only
+
 */
-volatile uint32_t DORMANT_WAKE_INTS3;
+volatile uint32_t DORMANT_WAKE_INTS[4];
 } IO_BANK0_type;
 
 #define IO_BANK0 ((IO_BANK0_type *) 0x40014000)

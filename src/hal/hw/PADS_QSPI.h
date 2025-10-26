@@ -214,7 +214,8 @@ volatile uint32_t VOLTAGE_SELECT;
 */
 volatile uint32_t GPIO_QSPI_SCLK;
 
-/** GPIO_QSPI_SD0 (offset: 0x8)
+/** GPIO_QSPI_SD
+GPIO_QSPI_SD[0] (offset: 0x8)
   Pad control register
   access : read-write
   reset value : 0x52
@@ -245,10 +246,8 @@ volatile uint32_t GPIO_QSPI_SCLK;
   Field: SLEWFAST
   offset: 0, size: 1, access: read-write
   Slew rate control. 1 = Fast, 0 = Slow
-*/
-volatile uint32_t GPIO_QSPI_SD0;
 
-/** GPIO_QSPI_SD1 (offset: 0xc)
+GPIO_QSPI_SD[1] (offset: 0xc)
   Pad control register
   access : read-write
   reset value : 0x52
@@ -279,10 +278,8 @@ volatile uint32_t GPIO_QSPI_SD0;
   Field: SLEWFAST
   offset: 0, size: 1, access: read-write
   Slew rate control. 1 = Fast, 0 = Slow
-*/
-volatile uint32_t GPIO_QSPI_SD1;
 
-/** GPIO_QSPI_SD2 (offset: 0x10)
+GPIO_QSPI_SD[2] (offset: 0x10)
   Pad control register
   access : read-write
   reset value : 0x52
@@ -313,10 +310,8 @@ volatile uint32_t GPIO_QSPI_SD1;
   Field: SLEWFAST
   offset: 0, size: 1, access: read-write
   Slew rate control. 1 = Fast, 0 = Slow
-*/
-volatile uint32_t GPIO_QSPI_SD2;
 
-/** GPIO_QSPI_SD3 (offset: 0x14)
+GPIO_QSPI_SD[3] (offset: 0x14)
   Pad control register
   access : read-write
   reset value : 0x52
@@ -347,8 +342,9 @@ volatile uint32_t GPIO_QSPI_SD2;
   Field: SLEWFAST
   offset: 0, size: 1, access: read-write
   Slew rate control. 1 = Fast, 0 = Slow
+
 */
-volatile uint32_t GPIO_QSPI_SD3;
+volatile uint32_t GPIO_QSPI_SD[4];
 
 /** GPIO_QSPI_SS (offset: 0x18)
   Pad control register

@@ -635,61 +635,59 @@ volatile uint32_t DIV_REMAINDER;
 volatile uint32_t DIV_CSR;
 volatile uint32_t reserved1;
 
-/** INTERP0_ACCUM0 (offset: 0x80)
+/** INTERP0_ACCUM
+INTERP0_ACCUM[0] (offset: 0x80)
   Read/write access to accumulator 0
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t INTERP0_ACCUM0;
 
-/** INTERP0_ACCUM1 (offset: 0x84)
+INTERP0_ACCUM[1] (offset: 0x84)
   Read/write access to accumulator 1
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t INTERP0_ACCUM1;
 
-/** INTERP0_BASE0 (offset: 0x88)
+*/
+volatile uint32_t INTERP0_ACCUM[2];
+
+/** INTERP0_BASE
+INTERP0_BASE[0] (offset: 0x88)
   Read/write access to BASE0 register.
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t INTERP0_BASE0;
 
-/** INTERP0_BASE1 (offset: 0x8c)
+INTERP0_BASE[1] (offset: 0x8c)
   Read/write access to BASE1 register.
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t INTERP0_BASE1;
 
-/** INTERP0_BASE2 (offset: 0x90)
+INTERP0_BASE[2] (offset: 0x90)
   Read/write access to BASE2 register.
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t INTERP0_BASE2;
 
-/** INTERP0_POP_LANE0 (offset: 0x94)
+*/
+volatile uint32_t INTERP0_BASE[3];
+
+/** INTERP0_POP_LANE
+INTERP0_POP_LANE[0] (offset: 0x94)
   Read LANE0 result, and simultaneously write lane results to both accumulators (POP).
   access : read-only
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t INTERP0_POP_LANE0;
 
-/** INTERP0_POP_LANE1 (offset: 0x98)
+INTERP0_POP_LANE[1] (offset: 0x98)
   Read LANE1 result, and simultaneously write lane results to both accumulators (POP).
   access : read-only
   reset value : 0x0
   reset mask : 0x0
+
 */
-volatile uint32_t INTERP0_POP_LANE1;
+volatile uint32_t INTERP0_POP_LANE[2];
 
 /** INTERP0_POP_FULL (offset: 0x9c)
   Read FULL result, and simultaneously write lane results to both accumulators (POP).
@@ -699,21 +697,21 @@ volatile uint32_t INTERP0_POP_LANE1;
 */
 volatile uint32_t INTERP0_POP_FULL;
 
-/** INTERP0_PEEK_LANE0 (offset: 0xa0)
+/** INTERP0_PEEK_LANE
+INTERP0_PEEK_LANE[0] (offset: 0xa0)
   Read LANE0 result, without altering any internal state (PEEK).
   access : read-only
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t INTERP0_PEEK_LANE0;
 
-/** INTERP0_PEEK_LANE1 (offset: 0xa4)
+INTERP0_PEEK_LANE[1] (offset: 0xa4)
   Read LANE1 result, without altering any internal state (PEEK).
   access : read-only
   reset value : 0x0
   reset mask : 0x0
+
 */
-volatile uint32_t INTERP0_PEEK_LANE1;
+volatile uint32_t INTERP0_PEEK_LANE[2];
 
 /** INTERP0_PEEK_FULL (offset: 0xa8)
   Read FULL result, without altering any internal state (PEEK).
@@ -723,7 +721,8 @@ volatile uint32_t INTERP0_PEEK_LANE1;
 */
 volatile uint32_t INTERP0_PEEK_FULL;
 
-/** INTERP0_CTRL_LANE0 (offset: 0xac)
+/** INTERP0_CTRL_LANE
+INTERP0_CTRL_LANE[0] (offset: 0xac)
   Control register for lane 0
   access : read-write
   reset value : 0x0
@@ -786,10 +785,8 @@ volatile uint32_t INTERP0_PEEK_FULL;
   Field: SHIFT
   offset: 0, size: 5, access: read-write
   Logical right-shift applied to accumulator before masking
-*/
-volatile uint32_t INTERP0_CTRL_LANE0;
 
-/** INTERP0_CTRL_LANE1 (offset: 0xb0)
+INTERP0_CTRL_LANE[1] (offset: 0xb0)
   Control register for lane 1
   access : read-write
   reset value : 0x0
@@ -828,8 +825,9 @@ volatile uint32_t INTERP0_CTRL_LANE0;
   Field: SHIFT
   offset: 0, size: 5, access: read-write
   Logical right-shift applied to accumulator before masking
+
 */
-volatile uint32_t INTERP0_CTRL_LANE1;
+volatile uint32_t INTERP0_CTRL_LANE[2];
 
 /** INTERP0_ACCUM0_ADD (offset: 0xb4)
   Values written here are atomically added to ACCUM0
@@ -865,61 +863,59 @@ volatile uint32_t INTERP0_ACCUM1_ADD;
 */
 volatile uint32_t INTERP0_BASE_1AND0;
 
-/** INTERP1_ACCUM0 (offset: 0xc0)
+/** INTERP1_ACCUM
+INTERP1_ACCUM[0] (offset: 0xc0)
   Read/write access to accumulator 0
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t INTERP1_ACCUM0;
 
-/** INTERP1_ACCUM1 (offset: 0xc4)
+INTERP1_ACCUM[1] (offset: 0xc4)
   Read/write access to accumulator 1
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t INTERP1_ACCUM1;
 
-/** INTERP1_BASE0 (offset: 0xc8)
+*/
+volatile uint32_t INTERP1_ACCUM[2];
+
+/** INTERP1_BASE
+INTERP1_BASE[0] (offset: 0xc8)
   Read/write access to BASE0 register.
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t INTERP1_BASE0;
 
-/** INTERP1_BASE1 (offset: 0xcc)
+INTERP1_BASE[1] (offset: 0xcc)
   Read/write access to BASE1 register.
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t INTERP1_BASE1;
 
-/** INTERP1_BASE2 (offset: 0xd0)
+INTERP1_BASE[2] (offset: 0xd0)
   Read/write access to BASE2 register.
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t INTERP1_BASE2;
 
-/** INTERP1_POP_LANE0 (offset: 0xd4)
+*/
+volatile uint32_t INTERP1_BASE[3];
+
+/** INTERP1_POP_LANE
+INTERP1_POP_LANE[0] (offset: 0xd4)
   Read LANE0 result, and simultaneously write lane results to both accumulators (POP).
   access : read-only
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t INTERP1_POP_LANE0;
 
-/** INTERP1_POP_LANE1 (offset: 0xd8)
+INTERP1_POP_LANE[1] (offset: 0xd8)
   Read LANE1 result, and simultaneously write lane results to both accumulators (POP).
   access : read-only
   reset value : 0x0
   reset mask : 0x0
+
 */
-volatile uint32_t INTERP1_POP_LANE1;
+volatile uint32_t INTERP1_POP_LANE[2];
 
 /** INTERP1_POP_FULL (offset: 0xdc)
   Read FULL result, and simultaneously write lane results to both accumulators (POP).
@@ -929,21 +925,21 @@ volatile uint32_t INTERP1_POP_LANE1;
 */
 volatile uint32_t INTERP1_POP_FULL;
 
-/** INTERP1_PEEK_LANE0 (offset: 0xe0)
+/** INTERP1_PEEK_LANE
+INTERP1_PEEK_LANE[0] (offset: 0xe0)
   Read LANE0 result, without altering any internal state (PEEK).
   access : read-only
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t INTERP1_PEEK_LANE0;
 
-/** INTERP1_PEEK_LANE1 (offset: 0xe4)
+INTERP1_PEEK_LANE[1] (offset: 0xe4)
   Read LANE1 result, without altering any internal state (PEEK).
   access : read-only
   reset value : 0x0
   reset mask : 0x0
+
 */
-volatile uint32_t INTERP1_PEEK_LANE1;
+volatile uint32_t INTERP1_PEEK_LANE[2];
 
 /** INTERP1_PEEK_FULL (offset: 0xe8)
   Read FULL result, without altering any internal state (PEEK).
@@ -953,7 +949,8 @@ volatile uint32_t INTERP1_PEEK_LANE1;
 */
 volatile uint32_t INTERP1_PEEK_FULL;
 
-/** INTERP1_CTRL_LANE0 (offset: 0xec)
+/** INTERP1_CTRL_LANE
+INTERP1_CTRL_LANE[0] (offset: 0xec)
   Control register for lane 0
   access : read-write
   reset value : 0x0
@@ -1010,10 +1007,8 @@ volatile uint32_t INTERP1_PEEK_FULL;
   Field: SHIFT
   offset: 0, size: 5, access: read-write
   Logical right-shift applied to accumulator before masking
-*/
-volatile uint32_t INTERP1_CTRL_LANE0;
 
-/** INTERP1_CTRL_LANE1 (offset: 0xf0)
+INTERP1_CTRL_LANE[1] (offset: 0xf0)
   Control register for lane 1
   access : read-write
   reset value : 0x0
@@ -1052,8 +1047,9 @@ volatile uint32_t INTERP1_CTRL_LANE0;
   Field: SHIFT
   offset: 0, size: 5, access: read-write
   Logical right-shift applied to accumulator before masking
+
 */
-volatile uint32_t INTERP1_CTRL_LANE1;
+volatile uint32_t INTERP1_CTRL_LANE[2];
 
 /** INTERP1_ACCUM0_ADD (offset: 0xf4)
   Values written here are atomically added to ACCUM0
@@ -1089,7 +1085,8 @@ volatile uint32_t INTERP1_ACCUM1_ADD;
 */
 volatile uint32_t INTERP1_BASE_1AND0;
 
-/** SPINLOCK0 (offset: 0x100)
+/** SPINLOCK
+SPINLOCK[0] (offset: 0x100)
   Reading from a spinlock address will:
 
  - Return 0 if lock is already locked
@@ -1105,10 +1102,8 @@ volatile uint32_t INTERP1_BASE_1AND0;
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t SPINLOCK0;
 
-/** SPINLOCK1 (offset: 0x104)
+SPINLOCK[1] (offset: 0x104)
   Reading from a spinlock address will:
 
  - Return 0 if lock is already locked
@@ -1124,10 +1119,8 @@ volatile uint32_t SPINLOCK0;
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t SPINLOCK1;
 
-/** SPINLOCK2 (offset: 0x108)
+SPINLOCK[2] (offset: 0x108)
   Reading from a spinlock address will:
 
  - Return 0 if lock is already locked
@@ -1143,10 +1136,8 @@ volatile uint32_t SPINLOCK1;
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t SPINLOCK2;
 
-/** SPINLOCK3 (offset: 0x10c)
+SPINLOCK[3] (offset: 0x10c)
   Reading from a spinlock address will:
 
  - Return 0 if lock is already locked
@@ -1162,10 +1153,8 @@ volatile uint32_t SPINLOCK2;
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t SPINLOCK3;
 
-/** SPINLOCK4 (offset: 0x110)
+SPINLOCK[4] (offset: 0x110)
   Reading from a spinlock address will:
 
  - Return 0 if lock is already locked
@@ -1181,10 +1170,8 @@ volatile uint32_t SPINLOCK3;
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t SPINLOCK4;
 
-/** SPINLOCK5 (offset: 0x114)
+SPINLOCK[5] (offset: 0x114)
   Reading from a spinlock address will:
 
  - Return 0 if lock is already locked
@@ -1200,10 +1187,8 @@ volatile uint32_t SPINLOCK4;
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t SPINLOCK5;
 
-/** SPINLOCK6 (offset: 0x118)
+SPINLOCK[6] (offset: 0x118)
   Reading from a spinlock address will:
 
  - Return 0 if lock is already locked
@@ -1219,10 +1204,8 @@ volatile uint32_t SPINLOCK5;
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t SPINLOCK6;
 
-/** SPINLOCK7 (offset: 0x11c)
+SPINLOCK[7] (offset: 0x11c)
   Reading from a spinlock address will:
 
  - Return 0 if lock is already locked
@@ -1238,10 +1221,8 @@ volatile uint32_t SPINLOCK6;
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t SPINLOCK7;
 
-/** SPINLOCK8 (offset: 0x120)
+SPINLOCK[8] (offset: 0x120)
   Reading from a spinlock address will:
 
  - Return 0 if lock is already locked
@@ -1257,10 +1238,8 @@ volatile uint32_t SPINLOCK7;
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t SPINLOCK8;
 
-/** SPINLOCK9 (offset: 0x124)
+SPINLOCK[9] (offset: 0x124)
   Reading from a spinlock address will:
 
  - Return 0 if lock is already locked
@@ -1276,10 +1255,8 @@ volatile uint32_t SPINLOCK8;
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t SPINLOCK9;
 
-/** SPINLOCK10 (offset: 0x128)
+SPINLOCK[10] (offset: 0x128)
   Reading from a spinlock address will:
 
  - Return 0 if lock is already locked
@@ -1295,10 +1272,8 @@ volatile uint32_t SPINLOCK9;
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t SPINLOCK10;
 
-/** SPINLOCK11 (offset: 0x12c)
+SPINLOCK[11] (offset: 0x12c)
   Reading from a spinlock address will:
 
  - Return 0 if lock is already locked
@@ -1314,10 +1289,8 @@ volatile uint32_t SPINLOCK10;
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t SPINLOCK11;
 
-/** SPINLOCK12 (offset: 0x130)
+SPINLOCK[12] (offset: 0x130)
   Reading from a spinlock address will:
 
  - Return 0 if lock is already locked
@@ -1333,10 +1306,8 @@ volatile uint32_t SPINLOCK11;
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t SPINLOCK12;
 
-/** SPINLOCK13 (offset: 0x134)
+SPINLOCK[13] (offset: 0x134)
   Reading from a spinlock address will:
 
  - Return 0 if lock is already locked
@@ -1352,10 +1323,8 @@ volatile uint32_t SPINLOCK12;
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t SPINLOCK13;
 
-/** SPINLOCK14 (offset: 0x138)
+SPINLOCK[14] (offset: 0x138)
   Reading from a spinlock address will:
 
  - Return 0 if lock is already locked
@@ -1371,10 +1340,8 @@ volatile uint32_t SPINLOCK13;
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t SPINLOCK14;
 
-/** SPINLOCK15 (offset: 0x13c)
+SPINLOCK[15] (offset: 0x13c)
   Reading from a spinlock address will:
 
  - Return 0 if lock is already locked
@@ -1390,10 +1357,8 @@ volatile uint32_t SPINLOCK14;
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t SPINLOCK15;
 
-/** SPINLOCK16 (offset: 0x140)
+SPINLOCK[16] (offset: 0x140)
   Reading from a spinlock address will:
 
  - Return 0 if lock is already locked
@@ -1409,10 +1374,8 @@ volatile uint32_t SPINLOCK15;
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t SPINLOCK16;
 
-/** SPINLOCK17 (offset: 0x144)
+SPINLOCK[17] (offset: 0x144)
   Reading from a spinlock address will:
 
  - Return 0 if lock is already locked
@@ -1428,10 +1391,8 @@ volatile uint32_t SPINLOCK16;
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t SPINLOCK17;
 
-/** SPINLOCK18 (offset: 0x148)
+SPINLOCK[18] (offset: 0x148)
   Reading from a spinlock address will:
 
  - Return 0 if lock is already locked
@@ -1447,10 +1408,8 @@ volatile uint32_t SPINLOCK17;
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t SPINLOCK18;
 
-/** SPINLOCK19 (offset: 0x14c)
+SPINLOCK[19] (offset: 0x14c)
   Reading from a spinlock address will:
 
  - Return 0 if lock is already locked
@@ -1466,10 +1425,8 @@ volatile uint32_t SPINLOCK18;
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t SPINLOCK19;
 
-/** SPINLOCK20 (offset: 0x150)
+SPINLOCK[20] (offset: 0x150)
   Reading from a spinlock address will:
 
  - Return 0 if lock is already locked
@@ -1485,10 +1442,8 @@ volatile uint32_t SPINLOCK19;
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t SPINLOCK20;
 
-/** SPINLOCK21 (offset: 0x154)
+SPINLOCK[21] (offset: 0x154)
   Reading from a spinlock address will:
 
  - Return 0 if lock is already locked
@@ -1504,10 +1459,8 @@ volatile uint32_t SPINLOCK20;
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t SPINLOCK21;
 
-/** SPINLOCK22 (offset: 0x158)
+SPINLOCK[22] (offset: 0x158)
   Reading from a spinlock address will:
 
  - Return 0 if lock is already locked
@@ -1523,10 +1476,8 @@ volatile uint32_t SPINLOCK21;
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t SPINLOCK22;
 
-/** SPINLOCK23 (offset: 0x15c)
+SPINLOCK[23] (offset: 0x15c)
   Reading from a spinlock address will:
 
  - Return 0 if lock is already locked
@@ -1542,10 +1493,8 @@ volatile uint32_t SPINLOCK22;
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t SPINLOCK23;
 
-/** SPINLOCK24 (offset: 0x160)
+SPINLOCK[24] (offset: 0x160)
   Reading from a spinlock address will:
 
  - Return 0 if lock is already locked
@@ -1561,10 +1510,8 @@ volatile uint32_t SPINLOCK23;
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t SPINLOCK24;
 
-/** SPINLOCK25 (offset: 0x164)
+SPINLOCK[25] (offset: 0x164)
   Reading from a spinlock address will:
 
  - Return 0 if lock is already locked
@@ -1580,10 +1527,8 @@ volatile uint32_t SPINLOCK24;
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t SPINLOCK25;
 
-/** SPINLOCK26 (offset: 0x168)
+SPINLOCK[26] (offset: 0x168)
   Reading from a spinlock address will:
 
  - Return 0 if lock is already locked
@@ -1599,10 +1544,8 @@ volatile uint32_t SPINLOCK25;
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t SPINLOCK26;
 
-/** SPINLOCK27 (offset: 0x16c)
+SPINLOCK[27] (offset: 0x16c)
   Reading from a spinlock address will:
 
  - Return 0 if lock is already locked
@@ -1618,10 +1561,8 @@ volatile uint32_t SPINLOCK26;
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t SPINLOCK27;
 
-/** SPINLOCK28 (offset: 0x170)
+SPINLOCK[28] (offset: 0x170)
   Reading from a spinlock address will:
 
  - Return 0 if lock is already locked
@@ -1637,10 +1578,8 @@ volatile uint32_t SPINLOCK27;
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t SPINLOCK28;
 
-/** SPINLOCK29 (offset: 0x174)
+SPINLOCK[29] (offset: 0x174)
   Reading from a spinlock address will:
 
  - Return 0 if lock is already locked
@@ -1656,10 +1595,8 @@ volatile uint32_t SPINLOCK28;
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t SPINLOCK29;
 
-/** SPINLOCK30 (offset: 0x178)
+SPINLOCK[30] (offset: 0x178)
   Reading from a spinlock address will:
 
  - Return 0 if lock is already locked
@@ -1675,10 +1612,8 @@ volatile uint32_t SPINLOCK29;
   access : read-write
   reset value : 0x0
   reset mask : 0x0
-*/
-volatile uint32_t SPINLOCK30;
 
-/** SPINLOCK31 (offset: 0x17c)
+SPINLOCK[31] (offset: 0x17c)
   Reading from a spinlock address will:
 
  - Return 0 if lock is already locked
@@ -1694,8 +1629,9 @@ volatile uint32_t SPINLOCK30;
   access : read-write
   reset value : 0x0
   reset mask : 0x0
+
 */
-volatile uint32_t SPINLOCK31;
+volatile uint32_t SPINLOCK[32];
 } SIO_type;
 
 #define SIO ((SIO_type *) 0xD0000000)

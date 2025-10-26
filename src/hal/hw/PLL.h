@@ -1,42 +1,43 @@
 /*
   automatically created from data available on https://chipselect.org/
 */
-#ifndef HW_PLL_USB_H
-#define HW_PLL_USB_H
+#ifndef HW_PLL_H
+#define HW_PLL_H
+/** Memory Block starting at 0x40028000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
 /** Memory Block starting at 0x4002C000 + 0x0 is 0x1000 bytes in size. It is used for registers. Protection: n */
 
 #include <stdint.h>
 
 
-#define PLL_USB_CS_LOCK_OFFSET                             31u
-#define PLL_USB_CS_LOCK_MASK                               0x80000000u
+#define PLL_CS_LOCK_OFFSET                                 31u
+#define PLL_CS_LOCK_MASK                                   0x80000000u
 
-#define PLL_USB_CS_BYPASS_OFFSET                           8u
-#define PLL_USB_CS_BYPASS_MASK                             0x100u
+#define PLL_CS_BYPASS_OFFSET                               8u
+#define PLL_CS_BYPASS_MASK                                 0x100u
 
-#define PLL_USB_CS_REFDIV_OFFSET                           0u
-#define PLL_USB_CS_REFDIV_MASK                             0x3fu
+#define PLL_CS_REFDIV_OFFSET                               0u
+#define PLL_CS_REFDIV_MASK                                 0x3fu
 
-#define PLL_USB_PWR_VCOPD_OFFSET                           5u
-#define PLL_USB_PWR_VCOPD_MASK                             0x20u
+#define PLL_PWR_VCOPD_OFFSET                               5u
+#define PLL_PWR_VCOPD_MASK                                 0x20u
 
-#define PLL_USB_PWR_POSTDIVPD_OFFSET                       3u
-#define PLL_USB_PWR_POSTDIVPD_MASK                         8u
+#define PLL_PWR_POSTDIVPD_OFFSET                           3u
+#define PLL_PWR_POSTDIVPD_MASK                             8u
 
-#define PLL_USB_PWR_DSMPD_OFFSET                           2u
-#define PLL_USB_PWR_DSMPD_MASK                             4u
+#define PLL_PWR_DSMPD_OFFSET                               2u
+#define PLL_PWR_DSMPD_MASK                                 4u
 
-#define PLL_USB_PWR_PD_OFFSET                              0u
-#define PLL_USB_PWR_PD_MASK                                1u
+#define PLL_PWR_PD_OFFSET                                  0u
+#define PLL_PWR_PD_MASK                                    1u
 
-#define PLL_USB_FBDIV_INT_FBDIV_INT_OFFSET                 0u
-#define PLL_USB_FBDIV_INT_FBDIV_INT_MASK                   0xfffu
+#define PLL_FBDIV_INT_FBDIV_INT_OFFSET                     0u
+#define PLL_FBDIV_INT_FBDIV_INT_MASK                       0xfffu
 
-#define PLL_USB_PRIM_POSTDIV1_OFFSET                       16u
-#define PLL_USB_PRIM_POSTDIV1_MASK                         0x70000u
+#define PLL_PRIM_POSTDIV1_OFFSET                           16u
+#define PLL_PRIM_POSTDIV1_MASK                             0x70000u
 
-#define PLL_USB_PRIM_POSTDIV2_OFFSET                       12u
-#define PLL_USB_PRIM_POSTDIV2_MASK                         0x7000u
+#define PLL_PRIM_POSTDIV2_OFFSET                           12u
+#define PLL_PRIM_POSTDIV2_MASK                             0x7000u
 
 
 typedef struct
@@ -129,8 +130,9 @@ volatile uint32_t FBDIV_INT;
   divide by 1-7
 */
 volatile uint32_t PRIM;
-} PLL_USB_type;
+} PLL_type;
 
-#define PLL_USB ((PLL_USB_type *) 0x4002C000)
+#define PLL_SYS ((PLL_type *) 0x40028000)
+#define PLL_USB ((PLL_type *) 0x4002C000)
 
-#endif // HW_PLL_USB_H
+#endif // HW_PLL_H

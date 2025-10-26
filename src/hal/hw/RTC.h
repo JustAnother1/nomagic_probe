@@ -141,7 +141,8 @@ typedef struct
 */
 volatile uint32_t CLKDIV_M1;
 
-/** SETUP_0 (offset: 0x4)
+/** SETUP_
+SETUP_[0] (offset: 0x4)
   RTC setup register 0
   access : read-write
   reset value : 0x0
@@ -155,10 +156,8 @@ volatile uint32_t CLKDIV_M1;
   Field: DAY
   offset: 0, size: 5, access: read-write
   Day of the month (1..31)
-*/
-volatile uint32_t SETUP_0;
 
-/** SETUP_1 (offset: 0x8)
+SETUP_[1] (offset: 0x8)
   RTC setup register 1
   access : read-write
   reset value : 0x0
@@ -175,8 +174,9 @@ volatile uint32_t SETUP_0;
   Field: SEC
   offset: 0, size: 6, access: read-write
   Seconds
+
 */
-volatile uint32_t SETUP_1;
+volatile uint32_t SETUP_[2];
 
 /** CTRL (offset: 0xc)
   RTC Control and status
@@ -200,7 +200,8 @@ volatile uint32_t SETUP_1;
 */
 volatile uint32_t CTRL;
 
-/** IRQ_SETUP_0 (offset: 0x10)
+/** IRQ_SETUP_
+IRQ_SETUP_[0] (offset: 0x10)
   Interrupt setup register 0
   access : read-write
   reset value : 0x0
@@ -228,10 +229,8 @@ volatile uint32_t CTRL;
   Field: DAY
   offset: 0, size: 5, access: read-write
   Day of the month (1..31)
-*/
-volatile uint32_t IRQ_SETUP_0;
 
-/** IRQ_SETUP_1 (offset: 0x14)
+IRQ_SETUP_[1] (offset: 0x14)
   Interrupt setup register 1
   access : read-write
   reset value : 0x0
@@ -260,8 +259,9 @@ volatile uint32_t IRQ_SETUP_0;
   Field: SEC
   offset: 0, size: 6, access: read-write
   Seconds
+
 */
-volatile uint32_t IRQ_SETUP_1;
+volatile uint32_t IRQ_SETUP_[2];
 
 /** RTC_1 (offset: 0x18)
   RTC register 1.

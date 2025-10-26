@@ -284,7 +284,8 @@
 typedef struct
 {
 
-/** CTRLR0 (offset: 0x0)
+/** CTRLR
+CTRLR[0] (offset: 0x0)
   Control register 0
   access : read-write
   reset value : 0x0
@@ -335,10 +336,8 @@ typedef struct
   Field: DFS
   offset: 0, size: 4, access: read-write
   Data frame size
-*/
-volatile uint32_t CTRLR0;
 
-/** CTRLR1 (offset: 0x4)
+CTRLR[1] (offset: 0x4)
   Master Control register 1
   access : read-write
   reset value : 0x0
@@ -346,8 +345,9 @@ volatile uint32_t CTRLR0;
   Field: NDF
   offset: 0, size: 16, access: read-write
   Number of data frames
+
 */
-volatile uint32_t CTRLR1;
+volatile uint32_t CTRLR[2];
 
 /** SSIENR (offset: 0x8)
   SSI Enable

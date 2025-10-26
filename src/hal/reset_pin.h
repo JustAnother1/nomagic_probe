@@ -24,7 +24,7 @@ static inline void reset_pin_init(void)
 {
     SIO->GPIO_OE_CLR = 1ul << 6;
     SIO->GPIO_OUT_CLR = 1ul << 6;
-    PADS_BANK0->GPIO6 = 0x00000030;
+    PADS_BANK0->GPIO[6] = 0x00000030;
     IO_BANK0->GPIO22_CTRL = 5;  // 5 == SIO
     SIO->GPIO_OE_SET = 1ul << 6;
 }

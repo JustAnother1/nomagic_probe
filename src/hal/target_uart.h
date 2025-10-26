@@ -3,6 +3,7 @@
 */
 
 
+
 #ifndef HAL_target_uart_H_
 #define HAL_target_uart_H_
 

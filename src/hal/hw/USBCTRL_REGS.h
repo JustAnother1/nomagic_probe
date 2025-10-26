@@ -1217,7 +1217,8 @@
 typedef struct
 {
 
-/** ADDR_ENDP (offset: 0x0)
+/** ADDR_ENDP
+ADDR_ENDP[] (offset: 0x0)
   Device address and endpoint control
   access : read-write
   reset value : 0x0
@@ -1228,10 +1229,8 @@ typedef struct
   Field: ADDRESS
   offset: 0, size: 7, access: read-write
   In device mode, the address that the device should respond to. Set in response to a SET_ADDR setup packet from the host. In host mode set to the address of the device to communicate with.
-*/
-volatile uint32_t ADDR_ENDP;
 
-/** ADDR_ENDP1 (offset: 0x4)
+ADDR_ENDP[1] (offset: 0x4)
   Interrupt endpoint 1. Only valid for HOST mode.
   access : read-write
   reset value : 0x0
@@ -1248,10 +1247,8 @@ volatile uint32_t ADDR_ENDP;
   Field: ADDRESS
   offset: 0, size: 7, access: read-write
   Device address
-*/
-volatile uint32_t ADDR_ENDP1;
 
-/** ADDR_ENDP2 (offset: 0x8)
+ADDR_ENDP[2] (offset: 0x8)
   Interrupt endpoint 2. Only valid for HOST mode.
   access : read-write
   reset value : 0x0
@@ -1268,10 +1265,8 @@ volatile uint32_t ADDR_ENDP1;
   Field: ADDRESS
   offset: 0, size: 7, access: read-write
   Device address
-*/
-volatile uint32_t ADDR_ENDP2;
 
-/** ADDR_ENDP3 (offset: 0xc)
+ADDR_ENDP[3] (offset: 0xc)
   Interrupt endpoint 3. Only valid for HOST mode.
   access : read-write
   reset value : 0x0
@@ -1288,10 +1283,8 @@ volatile uint32_t ADDR_ENDP2;
   Field: ADDRESS
   offset: 0, size: 7, access: read-write
   Device address
-*/
-volatile uint32_t ADDR_ENDP3;
 
-/** ADDR_ENDP4 (offset: 0x10)
+ADDR_ENDP[4] (offset: 0x10)
   Interrupt endpoint 4. Only valid for HOST mode.
   access : read-write
   reset value : 0x0
@@ -1308,10 +1301,8 @@ volatile uint32_t ADDR_ENDP3;
   Field: ADDRESS
   offset: 0, size: 7, access: read-write
   Device address
-*/
-volatile uint32_t ADDR_ENDP4;
 
-/** ADDR_ENDP5 (offset: 0x14)
+ADDR_ENDP[5] (offset: 0x14)
   Interrupt endpoint 5. Only valid for HOST mode.
   access : read-write
   reset value : 0x0
@@ -1328,10 +1319,8 @@ volatile uint32_t ADDR_ENDP4;
   Field: ADDRESS
   offset: 0, size: 7, access: read-write
   Device address
-*/
-volatile uint32_t ADDR_ENDP5;
 
-/** ADDR_ENDP6 (offset: 0x18)
+ADDR_ENDP[6] (offset: 0x18)
   Interrupt endpoint 6. Only valid for HOST mode.
   access : read-write
   reset value : 0x0
@@ -1348,10 +1337,8 @@ volatile uint32_t ADDR_ENDP5;
   Field: ADDRESS
   offset: 0, size: 7, access: read-write
   Device address
-*/
-volatile uint32_t ADDR_ENDP6;
 
-/** ADDR_ENDP7 (offset: 0x1c)
+ADDR_ENDP[7] (offset: 0x1c)
   Interrupt endpoint 7. Only valid for HOST mode.
   access : read-write
   reset value : 0x0
@@ -1368,10 +1355,8 @@ volatile uint32_t ADDR_ENDP6;
   Field: ADDRESS
   offset: 0, size: 7, access: read-write
   Device address
-*/
-volatile uint32_t ADDR_ENDP7;
 
-/** ADDR_ENDP8 (offset: 0x20)
+ADDR_ENDP[8] (offset: 0x20)
   Interrupt endpoint 8. Only valid for HOST mode.
   access : read-write
   reset value : 0x0
@@ -1388,10 +1373,8 @@ volatile uint32_t ADDR_ENDP7;
   Field: ADDRESS
   offset: 0, size: 7, access: read-write
   Device address
-*/
-volatile uint32_t ADDR_ENDP8;
 
-/** ADDR_ENDP9 (offset: 0x24)
+ADDR_ENDP[9] (offset: 0x24)
   Interrupt endpoint 9. Only valid for HOST mode.
   access : read-write
   reset value : 0x0
@@ -1408,10 +1391,8 @@ volatile uint32_t ADDR_ENDP8;
   Field: ADDRESS
   offset: 0, size: 7, access: read-write
   Device address
-*/
-volatile uint32_t ADDR_ENDP9;
 
-/** ADDR_ENDP10 (offset: 0x28)
+ADDR_ENDP[10] (offset: 0x28)
   Interrupt endpoint 10. Only valid for HOST mode.
   access : read-write
   reset value : 0x0
@@ -1428,10 +1409,8 @@ volatile uint32_t ADDR_ENDP9;
   Field: ADDRESS
   offset: 0, size: 7, access: read-write
   Device address
-*/
-volatile uint32_t ADDR_ENDP10;
 
-/** ADDR_ENDP11 (offset: 0x2c)
+ADDR_ENDP[11] (offset: 0x2c)
   Interrupt endpoint 11. Only valid for HOST mode.
   access : read-write
   reset value : 0x0
@@ -1448,10 +1427,8 @@ volatile uint32_t ADDR_ENDP10;
   Field: ADDRESS
   offset: 0, size: 7, access: read-write
   Device address
-*/
-volatile uint32_t ADDR_ENDP11;
 
-/** ADDR_ENDP12 (offset: 0x30)
+ADDR_ENDP[12] (offset: 0x30)
   Interrupt endpoint 12. Only valid for HOST mode.
   access : read-write
   reset value : 0x0
@@ -1468,10 +1445,8 @@ volatile uint32_t ADDR_ENDP11;
   Field: ADDRESS
   offset: 0, size: 7, access: read-write
   Device address
-*/
-volatile uint32_t ADDR_ENDP12;
 
-/** ADDR_ENDP13 (offset: 0x34)
+ADDR_ENDP[13] (offset: 0x34)
   Interrupt endpoint 13. Only valid for HOST mode.
   access : read-write
   reset value : 0x0
@@ -1488,10 +1463,8 @@ volatile uint32_t ADDR_ENDP12;
   Field: ADDRESS
   offset: 0, size: 7, access: read-write
   Device address
-*/
-volatile uint32_t ADDR_ENDP13;
 
-/** ADDR_ENDP14 (offset: 0x38)
+ADDR_ENDP[14] (offset: 0x38)
   Interrupt endpoint 14. Only valid for HOST mode.
   access : read-write
   reset value : 0x0
@@ -1508,10 +1481,8 @@ volatile uint32_t ADDR_ENDP13;
   Field: ADDRESS
   offset: 0, size: 7, access: read-write
   Device address
-*/
-volatile uint32_t ADDR_ENDP14;
 
-/** ADDR_ENDP15 (offset: 0x3c)
+ADDR_ENDP[15] (offset: 0x3c)
   Interrupt endpoint 15. Only valid for HOST mode.
   access : read-write
   reset value : 0x0
@@ -1528,8 +1499,9 @@ volatile uint32_t ADDR_ENDP14;
   Field: ADDRESS
   offset: 0, size: 7, access: read-write
   Device address
+
 */
-volatile uint32_t ADDR_ENDP15;
+volatile uint32_t ADDR_ENDP[16];
 
 /** MAIN_CTRL (offset: 0x40)
   Main control register

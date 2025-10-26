@@ -2,7 +2,10 @@
   automatically created hal/irq.c
 */
 
+#include <hal/hw/WATCHDOG.h>
 #include <hal/irq.h>
+
+
 
 
 void default_Handler(void)    __attribute__ ((__noreturn__, section(".third_stage_boot")));
@@ -179,161 +182,161 @@ const VECTOR_FUNCTION_Type __VECTOR_TABLE_RAM[64] __attribute__((used, aligned(0
 
 void default_Handler(void)
 {
-   for(;;) {;}
+    for(;;) {;}
 }
 
 void NMI_Handler(void)
 {
-   for(;;) {;}
+    for(;;) {;}
 }
 
 void Hard_Fault_Handler(void)
 {
-   for(;;) {;}
+    for(;;) {;}
 }
 
 void SVCall_Handler(void)
 {
-   for(;;) {;}
+    for(;;) {;}
 }
 
 void PendSV_Handler(void)
 {
-   for(;;) {;}
+    for(;;) {;}
 }
 
 void SysTick_Handler(void)
 {
-   for(;;) {;}
+    for(;;) {;}
 }
 
 void TIMER_IRQ_0(void)
 {
-   for(;;) {;}
+    for(;;) {;}
 }
 
 void TIMER_IRQ_1(void)
 {
-   for(;;) {;}
+    for(;;) {;}
 }
 
 void TIMER_IRQ_2(void)
 {
-   for(;;) {;}
+    for(;;) {;}
 }
 
 void TIMER_IRQ_3(void)
 {
-   for(;;) {;}
+    for(;;) {;}
 }
 
 void PWM_IRQ_WRAP(void)
 {
-   for(;;) {;}
+    for(;;) {;}
 }
 
 void USBCTRL_IRQ(void)
 {
-   for(;;) {;}
+    for(;;) {;}
 }
 
 void XIP_IRQ(void)
 {
-   for(;;) {;}
+    for(;;) {;}
 }
 
 void PIO0_IRQ_0(void)
 {
-   for(;;) {;}
+    for(;;) {;}
 }
 
 void PIO0_IRQ_1(void)
 {
-   for(;;) {;}
+    for(;;) {;}
 }
 
 void PIO1_IRQ_0(void)
 {
-   for(;;) {;}
+    for(;;) {;}
 }
 
 void PIO1_IRQ_1(void)
 {
-   for(;;) {;}
+    for(;;) {;}
 }
 
 void DMA_IRQ_0(void)
 {
-   for(;;) {;}
+    for(;;) {;}
 }
 
 void DMA_IRQ_1(void)
 {
-   for(;;) {;}
+    for(;;) {;}
 }
 
 void IO_IRQ_BANK0(void)
 {
-   for(;;) {;}
+    for(;;) {;}
 }
 
 void IO_IRQ_QSPI(void)
 {
-   for(;;) {;}
+    for(;;) {;}
 }
 
 void SIO_IRQ_PROC0(void)
 {
-   for(;;) {;}
+    for(;;) {;}
 }
 
 void SIO_IRQ_PROC1(void)
 {
-   for(;;) {;}
+    for(;;) {;}
 }
 
 void CLOCKS_IRQ(void)
 {
-   for(;;) {;}
+    for(;;) {;}
 }
 
 void SPI0_IRQ(void)
 {
-   for(;;) {;}
+    for(;;) {;}
 }
 
 void SPI1_IRQ(void)
 {
-   for(;;) {;}
+    for(;;) {;}
 }
 
 void UART0_IRQ(void)
 {
-   for(;;) {;}
+    for(;;) {;}
 }
 
 void UART1_IRQ(void)
 {
-   for(;;) {;}
+    for(;;) {;}
 }
 
 void ADC_IRQ_FIFO(void)
 {
-   for(;;) {;}
+    for(;;) {;}
 }
 
 void I2C0_IRQ(void)
 {
-   for(;;) {;}
+    for(;;) {;}
 }
 
 void I2C1_IRQ(void)
 {
-   for(;;) {;}
+    for(;;) {;}
 }
 
 void RTC_IRQ(void)
 {
-   for(;;) {;}
+    for(;;) {;}
 }
 

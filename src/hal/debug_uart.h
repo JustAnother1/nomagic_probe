@@ -3,6 +3,7 @@
 */
 
 
+
 #ifndef HAL_debug_uart_H_
 #define HAL_debug_uart_H_
 

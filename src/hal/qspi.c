@@ -134,23 +134,23 @@ static void init_qspi_pads(void)
                               | (1 << PADS_QSPI_GPIO_QSPI_SCLK_PDE_OFFSET)       // Pull down enable
                               | (1 << PADS_QSPI_GPIO_QSPI_SCLK_SCHMITT_OFFSET)   // enable schmitt trigger
                               | (1 << PADS_QSPI_GPIO_QSPI_SCLK_SLEWFAST_OFFSET); // slew rate fast
-    PADS_QSPI->GPIO_QSPI_SD0 = (1<< PADS_QSPI_GPIO_QSPI_SD0_IE_OFFSET)           // Input enable
+    PADS_QSPI->GPIO_QSPI_SD[0] = (1<< PADS_QSPI_GPIO_QSPI_SD0_IE_OFFSET)           // Input enable
                               | (PADS_QSPI_GPIO_QSPI_SD0_DRIVE_4MA << PADS_QSPI_GPIO_QSPI_SD0_DRIVE_OFFSET)
                               | (1 << PADS_QSPI_GPIO_QSPI_SD0_PDE_OFFSET)        // Pull down enable
                               | (1 << PADS_QSPI_GPIO_QSPI_SD0_SCHMITT_OFFSET)    // enable schmitt trigger
                               | (1 << PADS_QSPI_GPIO_QSPI_SD0_SLEWFAST_OFFSET);  // slew rate fast
-    PADS_QSPI->GPIO_QSPI_SD1 = (1<< PADS_QSPI_GPIO_QSPI_SD1_IE_OFFSET)           // Input enable
+    PADS_QSPI->GPIO_QSPI_SD[1] = (1<< PADS_QSPI_GPIO_QSPI_SD1_IE_OFFSET)           // Input enable
                               | (PADS_QSPI_GPIO_QSPI_SD1_DRIVE_4MA << PADS_QSPI_GPIO_QSPI_SD1_DRIVE_OFFSET)
                               | (1 << PADS_QSPI_GPIO_QSPI_SD1_PDE_OFFSET)        // Pull down enable
                               | (1 << PADS_QSPI_GPIO_QSPI_SD1_SCHMITT_OFFSET)    // enable schmitt trigger
                               | (1 << PADS_QSPI_GPIO_QSPI_SD1_SLEWFAST_OFFSET);  // slew rate fast
 // put pull-up on SD2/SD3 as these may be used as WPn/HOLDn
-    PADS_QSPI->GPIO_QSPI_SD2 =  (1<< PADS_QSPI_GPIO_QSPI_SD2_IE_OFFSET)          // Input enable
+    PADS_QSPI->GPIO_QSPI_SD[2] =  (1<< PADS_QSPI_GPIO_QSPI_SD2_IE_OFFSET)          // Input enable
                               | (PADS_QSPI_GPIO_QSPI_SD2_DRIVE_4MA << PADS_QSPI_GPIO_QSPI_SD2_DRIVE_OFFSET)
                               | (1 << PADS_QSPI_GPIO_QSPI_SD2_PUE_OFFSET)        // Pull up enable
                               | (1 << PADS_QSPI_GPIO_QSPI_SD2_SCHMITT_OFFSET)    // enable schmitt trigger
                               | (1 << PADS_QSPI_GPIO_QSPI_SD2_SLEWFAST_OFFSET);  // slew rate fast
-    PADS_QSPI->GPIO_QSPI_SD3 =  (1<< PADS_QSPI_GPIO_QSPI_SD3_IE_OFFSET)          // Input enable
+    PADS_QSPI->GPIO_QSPI_SD[3] =  (1<< PADS_QSPI_GPIO_QSPI_SD3_IE_OFFSET)          // Input enable
                               | (PADS_QSPI_GPIO_QSPI_SD3_DRIVE_4MA << PADS_QSPI_GPIO_QSPI_SD3_DRIVE_OFFSET)
                               | (1 << PADS_QSPI_GPIO_QSPI_SD3_PUE_OFFSET)        // Pull up enable
                               | (1 << PADS_QSPI_GPIO_QSPI_SD3_SCHMITT_OFFSET)    // enable schmitt trigger
@@ -171,10 +171,10 @@ static void pads_qspi_output_disabled_pull_up(void)
                  | (1 << PADS_QSPI_GPIO_QSPI_SD0_SCHMITT_OFFSET)    // enable schmitt trigger
                  | (1 << PADS_QSPI_GPIO_QSPI_SD0_SLEWFAST_OFFSET);  // slew rate fast
 
-    PADS_QSPI->GPIO_QSPI_SD0 = val;
-    PADS_QSPI->GPIO_QSPI_SD1 = val;
-    PADS_QSPI->GPIO_QSPI_SD2 = val;
-    PADS_QSPI->GPIO_QSPI_SD3 = val;
+    PADS_QSPI->GPIO_QSPI_SD[0] = val;
+    PADS_QSPI->GPIO_QSPI_SD[1] = val;
+    PADS_QSPI->GPIO_QSPI_SD[2] = val;
+    PADS_QSPI->GPIO_QSPI_SD[3] = val;
 }
 
 static void pads_qspi_output_disabled_pull_down(void)
@@ -186,10 +186,10 @@ static void pads_qspi_output_disabled_pull_down(void)
                  | (1 << PADS_QSPI_GPIO_QSPI_SD0_SCHMITT_OFFSET)    // enable schmitt trigger
                  | (1 << PADS_QSPI_GPIO_QSPI_SD0_SLEWFAST_OFFSET);  // slew rate fast
 
-    PADS_QSPI->GPIO_QSPI_SD0 = val;
-    PADS_QSPI->GPIO_QSPI_SD1 = val;
-    PADS_QSPI->GPIO_QSPI_SD2 = val;
-    PADS_QSPI->GPIO_QSPI_SD3 = val;
+    PADS_QSPI->GPIO_QSPI_SD[0] = val;
+    PADS_QSPI->GPIO_QSPI_SD[1] = val;
+    PADS_QSPI->GPIO_QSPI_SD[2] = val;
+    PADS_QSPI->GPIO_QSPI_SD[3] = val;
 }
 
 static void init_qspi_gpio(void)
@@ -258,7 +258,7 @@ static void init_xip_ssi(void)
     XIP_SSI->TXD_DRIVE_EDGE = 0;
 
     // Set up the SSI controller for standard SPI mode,i.e. for every byte sent we get one back
-    XIP_SSI->CTRLR0 =  //TODO Quad SPI, 32bit
+    XIP_SSI->CTRLR[0] =  //TODO Quad SPI, 32bit
             // SSTE = Slave select toggle enable
             (XIP_SSI_CTRLR0_SPI_FRF_STD << XIP_SSI_CTRLR0_SPI_FRF_OFFSET) | // Standard 1-bit SPI serial frames
             (7 << XIP_SSI_CTRLR0_DFS_32_OFFSET) | // 8 clocks per data frame
@@ -269,7 +269,7 @@ static void init_xip_ssi(void)
             // SPI MOD = 0 = (SCPOL = 0; SCPH = 0)
             // FRF = 00 = Motorola SPI
             // DFS = invalid (dfs_32 is used) writing has no effect!
-    XIP_SSI->CTRLR1 = 0; // NDF = 0 = number of data frames used with Quad SPI // TODO
+    XIP_SSI->CTRLR[1] = 0; // NDF = 0 = number of data frames used with Quad SPI // TODO
     XIP_SSI->SPI_CTRLR0 =  // TODO
               (3 << XIP_SSI_SPI_CTRLR0_XIP_CMD_OFFSET) //  SPI Command 0x03 = read
             | (0 << XIP_SSI_SPI_CTRLR0_WAIT_CYCLES_OFFSET)
