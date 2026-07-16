@@ -289,3 +289,9 @@ $(BIN_FOLDER)$(NOMAGIC_SRC_FOLDER)lwip/src/%o: $(NOMAGIC_SRC_FOLDER)lwip/src/%c
 	@echo "=== compiling (lwip) $@"
 	@$(MKDIR_P) $(@D)
 	$(CC) $(CFLAGS_LWIP) $(DDEFS) $(INCDIR) $< -o $@
+
+$(BIN_FOLDER)$(NOMAGIC_SRC_FOLDER)swd/%o: $(NOMAGIC_SRC_FOLDER)swd/%c
+	@echo ""
+	@echo "=== compiling (swd) $@"
+	@$(MKDIR_P) $(@D)
+	$(CC) $(CFLAGS_LWIP) $(DDEFS) $(INCDIR) -I$(NOMAGIC_SRC_FOLDER)probe_api/ -I$(NOMAGIC_SRC_FOLDER)hal/ $< -o $@
