@@ -15,8 +15,19 @@
 #ifndef HAL_TIME_BASE_H_
 #define HAL_TIME_BASE_H_
 
+#include<stdbool.h>
 #include <stdint.h>
 #include "hal/hw/TIMER.h"
+
+typedef struct{
+    uint32_t timeout_time;
+    bool wait_for_wrap_around;
+} timeout_typ;
+
+
+void start_timeout(timeout_typ* to, const uint32_t time_ms);
+
+bool timeout_expired(timeout_typ* to);
 
 void delay_us(const uint32_t usec);
 

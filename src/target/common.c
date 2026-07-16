@@ -18,6 +18,7 @@
 #include <stddef.h>
 #include <string.h>
 #include "cfg/serial_cfg.h"
+#include "hal/time_base.h"
 #include "probe_api/common.h"
 #include "probe_api/debug_log.h"
 #include "probe_api/gdb_error_codes.h"
@@ -25,7 +26,6 @@
 #include "probe_api/hex.h"
 #include "probe_api/result.h"
 #include "probe_api/swd.h"
-#include "probe_api/time.h"
 #include "target.h"
 #include "target/common_actions.h"
 

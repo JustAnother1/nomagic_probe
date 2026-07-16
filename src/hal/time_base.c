@@ -17,7 +17,6 @@
 
 #include "hal/hw/PPB.h"
 #include "hal/time_base.h"
-#include "probe_api/time.h"
 #if (defined FEAT_DEBUG_UART)
 #include "hal/debug_uart.h"
 #endif
