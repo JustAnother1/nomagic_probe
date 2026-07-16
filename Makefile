@@ -92,7 +92,7 @@ CFLAGS += -ffunction-sections -fdata-sections
 LFLAGS  = -ffreestanding -nostartfiles
 # disabled the following due to this issue:
 #  undefined reference to `__gnu_thumb1_case_si'
-LFLAGS += -nostdlib -nolibc -nodefaultlibs 
+#LFLAGS += -nostdlib -nolibc -nodefaultlibs 
 LFLAGS += -specs=nosys.specs
 LFLAGS += -fno-builtin -fno-builtin-function
 # https://wiki.osdev.org/Libgcc : All code compiled with GCC must be linked with libgcc. 
