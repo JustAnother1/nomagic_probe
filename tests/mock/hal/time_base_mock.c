@@ -15,7 +15,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-#include "probe_api/time.h"
+#include "hal/time_base.h"
 
 void start_timeout(timeout_typ* to, const uint32_t time_ms)
 {
