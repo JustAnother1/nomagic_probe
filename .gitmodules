@@ -1,0 +1,3 @@
+[submodule "src/swd"]
+	path = src/swd
+	url = ssh://git@codeberg.org/JustAnother1/lib_debug_swd.git
