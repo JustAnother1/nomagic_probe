@@ -14,7 +14,7 @@
  */
 
 #include "probe_api/steps.h"
-#include "probe_api/swd.h"
+#include "swd/swd.h"
 #include "probe_api/debug_log.h"
 
 

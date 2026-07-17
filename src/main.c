@@ -31,7 +31,6 @@
 #include "hal/watchdog.h"
 #include "led.h"
 #include "lib/printf.h"
-#include "swd/swd_engine.h"
 #include "target.h"
 #include "target/target_uart_handler.h"
 #include "tinyusb/usb.h"

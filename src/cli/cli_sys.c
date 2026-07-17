@@ -30,7 +30,7 @@
 #include "hal/watchdog.h"
 #include "probe_api/cli.h"
 #include "probe_api/debug_log.h"
-#include "probe_api/swd.h"
+#include "swd/swd.h"
 #include "target/target_uart_handler.h"
 
 extern uint32_t linker_bss_start;

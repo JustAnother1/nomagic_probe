@@ -277,7 +277,19 @@ $(BIN_FOLDER)$(NOMAGIC_SRC_FOLDER)cli/cli.o: $(NOMAGIC_SRC_FOLDER)cli/cli.c $(BI
 	@echo "=== compiling (cli) $@"
 	@$(MKDIR_P) $(@D)
 	$(CC) $(CFLAGS) $(DDEFS) $(INCDIR) $< -o $@
-	
+
+$(BIN_FOLDER)$(NOMAGIC_SRC_FOLDER)cli/cli_swd.o: $(NOMAGIC_SRC_FOLDER)cli/cli_swd.c
+	@echo ""
+	@echo "=== compiling (cli_swd) $@"
+	@$(MKDIR_P) $(@D)
+	$(CC) $(CFLAGS) $(DDEFS) $(INCDIR) -I$(NOMAGIC_SRC_FOLDER)probe_api/ $< -o $@
+
+$(BIN_FOLDER)$(NOMAGIC_SRC_FOLDER)cli/cli_sys.o: $(NOMAGIC_SRC_FOLDER)cli/cli_sys.c
+	@echo ""
+	@echo "=== compiling (cli_sys) $@"
+	@$(MKDIR_P) $(@D)
+	$(CC) $(CFLAGS) $(DDEFS) $(INCDIR) -I$(NOMAGIC_SRC_FOLDER)probe_api/ $< -o $@
+
 $(BIN_FOLDER)$(NOMAGIC_SRC_FOLDER)gdbserver/monitor_commands.o: $(NOMAGIC_SRC_FOLDER)gdbserver/monitor_commands.c $(BIN_FOLDER)version.h
 	@echo ""
 	@echo "=== compiling (monitor commands) $@"
@@ -295,3 +307,16 @@ $(BIN_FOLDER)$(NOMAGIC_SRC_FOLDER)swd/%o: $(NOMAGIC_SRC_FOLDER)swd/%c
 	@echo "=== compiling (swd) $@"
 	@$(MKDIR_P) $(@D)
 	$(CC) $(CFLAGS_LWIP) $(DDEFS) $(INCDIR) -I$(NOMAGIC_SRC_FOLDER)probe_api/ -I$(NOMAGIC_SRC_FOLDER)hal/ $< -o $@
+
+$(BIN_FOLDER)$(NOMAGIC_SRC_FOLDER)target/common%o: $(NOMAGIC_SRC_FOLDER)target/common%c
+	@echo ""
+	@echo "=== compiling (target/common) $@"
+	@$(MKDIR_P) $(@D)
+	$(CC) $(CFLAGS_LWIP) $(DDEFS) $(INCDIR) -I$(NOMAGIC_SRC_FOLDER)probe_api/ -I$(NOMAGIC_SRC_FOLDER)hal/ $< -o $@
+
+$(BIN_FOLDER)$(NOMAGIC_SRC_FOLDER)target/steps.o: $(NOMAGIC_SRC_FOLDER)target/steps.c
+	@echo ""
+	@echo "=== compiling (target/common) $@"
+	@$(MKDIR_P) $(@D)
+	$(CC) $(CFLAGS_LWIP) $(DDEFS) $(INCDIR) -I$(NOMAGIC_SRC_FOLDER)probe_api/ -I$(NOMAGIC_SRC_FOLDER)hal/ $< -o $@
+

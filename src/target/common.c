@@ -25,7 +25,7 @@
 #include "probe_api/gdb_packets.h"
 #include "probe_api/hex.h"
 #include "probe_api/result.h"
-#include "probe_api/swd.h"
+#include "swd/swd.h"
 #include "target.h"
 #include "target/common_actions.h"
 

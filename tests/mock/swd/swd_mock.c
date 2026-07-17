@@ -13,7 +13,7 @@
  *
  */
 
-#include "probe_api/swd.h"
+#include "swd/swd.h"
 
 bool swd_info(uint32_t which)
 {
