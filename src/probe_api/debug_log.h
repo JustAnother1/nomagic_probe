@@ -24,7 +24,7 @@ extern uint32_t log_state;
 #ifdef UNIT_TEST
     #define debug_msg(...)         my_printf(__VA_ARGS__)
     #define debug_line(...)        my_printf(__VA_ARGS__); my_printf("\r\n")
-    #define debug_error(...)       my_printf(__VA_ARGS__)
+    #define debug_error(...)       my_printf(__VA_ARGS__); my_printf("  ")
     #define debug_flush()
     #define cli_msg(...)           my_printf(__VA_ARGS__)
     #define cli_line(...)          my_printf(__VA_ARGS__); my_printf("\r\n")
